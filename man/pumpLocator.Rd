@@ -4,16 +4,16 @@
 \alias{pumpLocator}
 \title{Locate well by numerical ID.}
 \usage{
-pumpLocator(pump.id, zoom = FALSE, radius = 2, data.source = "pumps")
+pumpLocator(id, zoom = FALSE, radius = 2, vestry = FALSE)
 }
 \arguments{
-\item{pump.id}{Numeric or Integer. Whole number between 1 and 13.}
+\item{id}{Numeric or Integer. Whole number between 1 and 14}
 
 \item{zoom}{Logical.}
 
 \item{radius}{Numeric. Controls the degree of zoom. Default value is 2.}
 
-\item{data.source}{Character. "pumps" for original 13. "vestry" for the 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump.}
+\item{vestry}{Logigcal. FALSE for original 13. TRUE for the 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump.}
 }
 \value{
 A base R graphics plot.
@@ -26,6 +26,6 @@ selected water pump.
 pumpLocator(7) # Broad Street Pump
 pumpLocator(7, zoom = TRUE)
 pumpLocator(7, zoom = TRUE, radius = 1)
-pumpLocator(14, data.source = "vestry", zoom = TRUE, radius = 1)
+pumpLocator(14, vestry = TRUE, zoom = TRUE, radius = 1)
 }
 

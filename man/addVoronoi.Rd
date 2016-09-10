@@ -10,7 +10,7 @@ addVoronoi(select = NULL, data.source = "pumps", col = "black",
 \arguments{
 \item{select}{Numeric. Vector of selected or excluded pumps are used. For "pumps", there are 13 possibilities; for "vestry", there are 14. Default is NULL: all pumps used.}
 
-\item{data.source}{Character. 'pumps' for original 13. 'pumpsB' for 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump.}
+\item{data.source}{Character. 'pumps' for the original 13. 'vestry' for 14 from Vestry Report, which includes the Hanover Square pump and a relocated Broad Street pump.}
 
 \item{col}{Character. Color of circle. Default is "black".}
 

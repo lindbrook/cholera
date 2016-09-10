@@ -49,8 +49,8 @@ fatalityLocator <- function(case, zoom = FALSE, radius = 2, stacked = TRUE) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = 15, cex = 0.5, col = "gray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
-    points(HistData::Snow.pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(HistData::Snow.pumps[, c("x", "y")], label = HistData::Snow.pumps$pump,
+    points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
+    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$pump.id,
       pos = 1)
     points(cholera::fatalities[cholera::fatalities$case == case, c("x", "y")],
       col = "red", lwd = 2)
@@ -62,8 +62,8 @@ fatalityLocator <- function(case, zoom = FALSE, radius = 2, stacked = TRUE) {
     plot(cholera::fatalities.address[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = 15,cex = 0.5, col = "gray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
-    points(HistData::Snow.pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(HistData::Snow.pumps[, c("x", "y")], label = HistData::Snow.pumps$pump,
+    points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
+    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$pump.id,
       pos = 1)
     points(cholera::fatalities.address[cholera::fatalities.address$anchor.case
       == case.b, c("x", "y")], col = "red", lwd = 2)

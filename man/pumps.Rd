@@ -6,7 +6,7 @@
 \title{Dodson and Tobler's pump data with road location.}
 \format{A data frame with 13 observations and 4 variables that describe the pumps on Snow's map.
 \describe{
-  \item{\code{id}}{pump number, which ranges between 1 and 13}
+  \item{\code{id}}{pump number between 1 and 13}
   \item{\code{street}}{nearest street}
   \item{\code{x}}{x-coordinate}
   \item{\code{y}}{y-coordinate}

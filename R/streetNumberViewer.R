@@ -39,7 +39,7 @@ streetNumberViewer <- function(road.number, zoom = FALSE, radius = 1) {
       asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
     points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1,
+    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$pump.id, pos = 1,
       col = "blue")
     invisible(lapply(roads.list[paste(road.number)], lines, col = "red",
       lwd = 3))
@@ -54,7 +54,7 @@ streetNumberViewer <- function(road.number, zoom = FALSE, radius = 1) {
     text(cholera::fatalities.address[, c("x", "y")], labels =
       cholera::fatalities.address$anchor.case, cex = 0.5)
     points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1)
+    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$pump.id, pos = 1)
     invisible(lapply(roads.list[paste(road.number)], lines, col = "red",
       lwd = 3))
     st.name <- unique(cholera::roads[cholera::roads$street == road.number,
@@ -66,7 +66,7 @@ streetNumberViewer <- function(road.number, zoom = FALSE, radius = 1) {
       pch = 15, cex = 0.5, col = "gray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
     points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id,
+    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$pump.id,
       pos = 1)
     invisible(lapply(roads.list[paste(road.number)], lines, col = "red",
       lwd = 3))
