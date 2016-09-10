@@ -2,18 +2,20 @@ Package: cholera
 Type: Package
 Title: Amends and Augments Data from John Snow's 1854 Cholera Map
 Version: 0.0.0.9017
-Date: 2016-09-09
+Date: 2016-09-10
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com", role = c("aut", "cre"))
 Description: Amends errors, "unstacks" cases, and adds road names.
+URL: https://github.com/lindbrook/cholera
 License: GPL-3
 LazyData: true
+Depends: R (>= 2.10)
 Imports:
     HistData (>= 0.7-8)
 Suggests:
     deldir,
     ggplot2,
-    KernSmooth (>= 2.23-15),
-    knitr (>= 1.12.3),
-    rmarkdown (>= 0.9.5),
+    KernSmooth,
+    knitr,
+    rmarkdown,
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
