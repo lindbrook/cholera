@@ -1,0 +1,125 @@
+cholera 0.0.0.9017
+----------------------------------------------------------------
+
+* add ortho.proj and ortho.proj.sp datasets
+* remove neighborhood data from fatalities, fatalities.unstacked and fatalities.address
+
+
+cholera 0.0.0.9016
+----------------------------------------------------------------
+
+* update addLandmarks()
+* add addPlaguePit()
+* add plague.pit data
+* add addVoronoi()
+* add addWhitehead()
+* update pumpLocator()
+* update Readme.md
+* add time series vignette
+* update zoom defaults
+* add border data
+
+
+cholera 0.0.0.9015
+----------------------------------------------------------------
+
+* add pumpsB data
+* update SnowMap()
+* document Queen Street (I) and Marlborough Mews amendment in "Appending Road Names" vignette
+
+
+cholera 0.0.0.9014
+----------------------------------------------------------------
+
+* add addLandmarks()
+* add landmarks to snowMap()
+
+
+cholera 0.0.0.9013
+----------------------------------------------------------------
+
+* add Snow and Vestry Report time series data
+
+
+cholera 0.0.0.9012
+----------------------------------------------------------------
+
+* add pump neighborhoods data
+* update documentation
+
+
+cholera 0.0.0.9011
+----------------------------------------------------------------
+
+* add snowMap()
+* remove allPumpsPlot()
+
+
+cholera 0.0.0.9010
+----------------------------------------------------------------
+
+* add streetNameViewer() and streetNumberViewer()
+* remove streetLocatorName() and streetLocatorNumber()
+
+
+cholera 0.0.0.9009
+----------------------------------------------------------------
+
+* adds amended pump data
+* updates datasets
+
+
+cholera 0.0.0.9008
+----------------------------------------------------------------
+
+* amend Unstacking fatalities vignette
+* fix fatalities.address visible binding issue
+
+
+cholera 0.0.0.9007
+----------------------------------------------------------------
+
+* amend fatalities address
+
+
+cholera 0.0.0.9006
+----------------------------------------------------------------
+
+* add pump ID to plots
+* edit/revise duplicate and missing cases vignette
+
+
+cholera 0.0.0.9005
+----------------------------------------------------------------
+
+* add pumpLocator() and allPumpsPlot()
+
+
+cholera 0.0.0.9004
+----------------------------------------------------------------
+
+* add zoom and radius arguments to streetLocatorName() and streetLocatorNumber()
+
+
+cholera 0.0.0.9003
+----------------------------------------------------------------
+
+* add/amend HistData ver. number
+
+
+cholera 0.0.0.9002
+----------------------------------------------------------------
+
+* document note on "no visible binding for global variable" issue
+
+
+cholera 0.0.0.9001
+----------------------------------------------------------------
+
+* add note on map's coordinate unit
+
+
+cholera 0.0.0.9000
+----------------------------------------------------------------
+
+* first development release

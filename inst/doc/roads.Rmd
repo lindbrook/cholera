@@ -1,0 +1,197 @@
+---
+title: "Roads"
+author: "lindbrook"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Roads}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(cholera)
+```
+
+## Overview
+
+John Snow's map of the 1854 cholera outbreak in London is a canonical example of the use of maps in data visualization and public health:^[The map was published in Snow's 1855 book, "On The Mode Of Communication Of Cholera", which was reprinted as John Snow et. al., 1936. _Snow on Cholera: Being a Reprint of Two Papers_. New York: The Common Wealth Fund. You can also find the map online (e.g., http://www.ph.ucla.edu/epi/snow/highressnowmap.html) and in many books, including Edward Tufte's 1997 "Visual Explanations: Images and Quantities, Evidence and Narrative".]
+
+![](msu-snows-mapB.jpg)
+
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. However, the data are no longer available.^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] Fortunately, they are preserved in Michael Friendly's _HistData_ R package. The amended data from this package are plotted below:
+
+```{r, fig.width = 7, fig.height = 7, fig.align = "center", echo = FALSE}
+
+roads.list <- split(roads[, c("x", "y")], roads$street)
+
+plot(fatalities[, c("x", "y")], xlim = range(roads$x), ylim = range(roads$y),
+     pch = 15, cex = 0.5, col = "gray", asp = 1)
+invisible(lapply(roads.list, lines, col = "gray"))
+points(HistData::Snow.pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
+text(HistData::Snow.pumps[, c("x", "y")], labels = HistData::Snow.pumps$pump, 
+     pos = 1)
+```
+
+However, Dodson and Tobler did not include the names of roads (e.g., Broad Street) in their efforts. While not strictly necessary to the task of visualizing the spatial distribution of cases, having the names can be of help to analysts. To that end, I append the actual street names to the data. This appended data set is called _roads_.
+
+While great effort was made to get the names right, there may still be errors. Error reports and suggestions for amendments are welcome.
+
+## Road data
+
+Before discussing road names, some discussion of the structure of _roads_ is warranted. The data contain 1241 x-y coordinates that are used to define the endpoints for 528 "streets", which are defined by one or more line segments.
+
+```{r}
+head(roads)
+nrow(roads)
+length(unique(roads$street))
+
+```
+
+This complexity reflects three thing about the data. First, a "street" does not necessarily correspond to a street in the "real-world". For example, 50 of the 528 "street" segments are used to draw the rectangular border that frames Snow's map. Second, the remaining 478 "street" segments actually describe only 206 "real-world" roads (e.g., Oxford Street, Regent Street). Third, 40% of "real-world" roads are composed of multiple "street" segments. For example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
+
+```{r}
+# Map Border "Streets" ##
+
+top <- c(1:12, 14)
+right <- c(37, 62, 74, 142, 147, 205, 240, 248, 280, 360, 405, 419, 465)
+bottom <- c(483, seq(487, 495, 2), 498, 500, seq(503, 519, 2))
+left <- c(31, 79, 114, 285, 348, 397, 469)
+border <- sort(c(bottom, left, top, right))
+
+length(border)
+
+```
+
+## Road names
+
+The primary source for names was Snow's map. A high resolution version is available [here](http://www.ph.ucla.edu/epi/snow/highressnowmap.html).
+
+While great effort was made to read and cross-reference names, there may still be errors. Some roads on the map do not have a name. So I attached unique labels like "Unknown-D". Some names appear multiple times even though they lie at different locations. For these, I use Roman numerals to distinguish them (e.g., "King Street (I)" and "King Street (II)").
+
+## Queen Street (I) and Marlborough Mews
+
+There is one apparent coding error in Dodson and Tobler's road data. Queen Street (I) extends too far: the water pump (#7) that is clearly located on Marlborough Mews (see [map](http://www.ph.ucla.edu/epi/snow/highressnowmap.html), cited above), ends up on Queen Street (I). 
+
+I amend this by moving the end point of Queen Street (I) westward so that the street only runs north-south. I do so by reassigning the segment that runs east-west so that it is now part of Marlborough Mews.
+
+```{r, eval = FALSE}
+snow.streets <- HistData::Snow.streets
+snow.streets$id <- seq_len(nrow(snow.streets))
+
+# Data frame of road names
+road.data <- read.csv("~/Documents/Data IV/Snow/road3b.csv",
+                      stringsAsFactors = FALSE)
+
+roads <- merge(snow.streets, road.data, by = "street", all.x = TRUE)
+roads[is.na(roads$name), "name"] <- "Map Frame"
+
+roads[roads$id == 277, "street"] <- 116
+roads[roads$id == 277, "name"] <- "Marlborough Mews"
+roads[roads$id == 277, c("x", "y")] <- roads[roads$id == 276, c("x", "y")]
+roads[roads$name == "Queen Street (I)", "n"] <- 4
+roads[roads$name == "Marlborough Mews", "n"] <- 3
+roads <- roads[order(roads$id), ]
+```
+
+This amended _roads_ data frame is included in the _cholera_ package.
+
+## Finding streets by name or road segment number
+
+To help locate and visualize streets and road segments (including map frame segments), you can use the _streetLocatorName_() and _streetLocatorNumber_() functions.
+
+To match names in the _roads_ data set, _streetLocatorName_() corrects for case and removes extraneous spaces.
+
+## List of road names
+
+There are 206 "valid" road names; 207, if we include "Map Frame":
+
+1 -70 | 71 - 140 | 141 - 207
+----------------------|----------------------|----------------------
+Adam and Eve Court | Greek Street | Phoenix Yard
+Air Street | Green Dragon Yard | Picadilly
+Albany Street | Greens Court | Plough Yard
+Albemarle Street | Ham Yard | Poland Street
+Allens Court | Hanover Street | Pollen Street
+Angel Court | Hanway Street | Portland Mews
+Archer Street | Haymarket | Portland Street
+Argyll Place | Heddon Court | Princes Street (I)
+Argyll Street | Heddon Street | Princes Street (II)
+Arundel Place | Hollen Street | Princes Street (III)
+Arundel Street | Hopkins Street | Princes Street/Hanover Square
+Batemans Buildings | Jermyn Street | Pulteney Court (I)
+Beak Street | John Street | Pulteney Court (II)
+Bentinck Street | Kemps Court | Queen Street (I)
+Berners Street | King Street (I) | Queen Street (II)
+Berwick Street | King Street (II) | Queen Street (III)
+Black Lion Court | Kings Arms Yard | Queens Head Court
+Blenheim Mews | Leicester Street (I) | Rathbone Place
+Blenheim Street | Leicester Street (II) | Regent Street
+Boyle Street | Lisle Street | Regents Quadrant
+Brewer Street | Little Argyll Street | Richmond Buildings/Mews
+Bridle Street | Little Chapel Street | Richmond Street
+Broad Street | Little Crown Court | Rupert Street
+Bruton Street | Little Dean Street | Sackville Street
+Bull Yard | Little Marlborough Street | Saville Row
+Burlington Arcade | Little Pulteney Street | Sherrard Street
+Burlington Gardens | Little Windmill Street | Ship Yard
+Cambridge Street | Lower James Street | Sidney Alley
+Carlisle Street | Lower John Street | Silver Street
+Carnaby Court | Lowndes Court | Smiths Court/Yard
+Carnaby Street | Macclesfield Street | Soho Square
+Castle Street East | Macclesfield Street/Gerrard Street | South Row
+Catherine Wheel Yard | Maddox Street | St Anns Court
+Chapel Place | Maidenhead Court | St Anns Place
+Charles Street | **Map Frame** | St James Workhouse
+Church Street | Margaret Court | Sutton Street
+Clifford Street | Margaret Street | Swallow Place
+Coach & Horses Yard | Market Court | Swallow Street
+Cock Court | Market Place | Tichborne Street
+Conduit Street | Market Row | Titchfield Street
+Cork Mews | Market Street | Turks Head Yard
+Cork Street | Marlborough Court | Tyler Court
+Coventry Street | Marlborough Mews | Tyler Street
+Cross Street | Marlborough Row | Tylers Court
+Crown Court | Marshall Street | Unknown-A1
+Dean Street | Marylebone Street | Unknown-A2
+Dover Street | Masons Arms Yard | Unknown-B
+Duck Lane/Ham Square | Meards Court/Street | Unknown-C
+Dufours Place | Mill Street | Unknown-D
+Edward Street | Nags Head Yard | Unknown-E
+Falconberg Court | Naylors Yard | Unknown-F
+Falconberg Mews | New Bond Street | Upper James Street
+Fouberts Place | New Burlington Mews | Upper John Street
+Francis Street | New Burlington Street | Upper Rupert Street
+Frith Street | New Street | Vigo Street
+George Court (I) | New Street/Husband Street | Vine Street
+George Court (II) | Newman Street | Walkers Court
+George Place | Noel Street | Wardour Mews
+George Street | Norris's Place | Wardour Street
+George Yard | North Coventry Street | Warwick Street
+Glasshouse Street | Old Burlington Mews | Wellington Mews
+Golden Place | Old Burlington Street | Wells Street
+Golden Square | Old Compton Street | West Street
+Grafton Street | Orchard Place | Whitcomb Court
+Great Castle Street | Oxendon Street | White Bear Yard
+Great Chapel Street | Oxford Street | William and Mary Yard
+Great Crown Court | Panton Street | Winsley Street
+Great Marlborough Street | Perrys Place |
+Great Pulteney Street | Peter Street |
+Great Windmill Street | Pews Place |
+
+### Three examples
+
+```{r, fig.width = 7, fig.height = 7, fig.align = "center", echo = TRUE}
+streetNameViewer("Oxford Street")
+streetNameViewer("Cambridge Street", zoom = TRUE, radius = 0.5)
+streetNumberViewer(50)
+```
+
+## Coordinate unit
+
+The original map is 14.5 x 15.5 inches with a nominal scale of 30 inches per mile.
+
+Dodson and Tobler write that "The scale of the source map is approx. 1:2000. Coordinate units are meters." By my calculation one unit on the map is approximately 177 feet or 54 meters per unit.^[According to Dodson and Tobler's street data, the length of Carnaby Street from its intersection with Great Marlborough to its intersection with Silver Street is 2.61 units. According to Google Maps, the approximate analog of that segment is the distance along parts of Great Marlborough Street and Carnaby Street between 19-21 Great Marlborough Street and 43 Carnaby Street (@ Ganton Street): 463 ft. This translates into approximately 177 feet/unit or 54 meters/unit.]
+
+## Notes
