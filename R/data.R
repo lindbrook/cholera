@@ -112,6 +112,30 @@
 #'  }
 "ortho.proj.sp"
 
+#' Orthogonal projection of 13 original pumps.
+#'
+#' @format A data frame with 5 variable that records the position of the orthogonal projection of the 13 original pumps onto the network of roads.
+#'  \describe{
+#'     \item{\code{road.segment}}{"address" road segment}
+#'     \item{\code{x.proj}}{x-coordinate}
+#'     \item{\code{y.proj}}{y-coordinate}
+#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+#'     \item{\code{pump.id}}{numeric ID}
+#'  }
+"ortho.proj.pump"
+
+#' Orthogonal projection of the 14 pumps from the Vestry Report.
+#'
+#' @format A data frame with 5 variable that records the position of the orthogonal projection of the 14 pumps onto the network of roads.
+#'  \describe{
+#'     \item{\code{road.segment}}{"address" road segment}
+#'     \item{\code{x.proj}}{x-coordinate}
+#'     \item{\code{y.proj}}{y-coordinate}
+#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+#'     \item{\code{pump.id}}{numeric ID}
+#'  }
+"ortho.proj.pump.vestry"
+
 #' Plague pit coordinates
 #'
 #' Coordinates for polygon() or sp::Polygon(). In progress.
