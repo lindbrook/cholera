@@ -129,7 +129,7 @@
 #'
 #' @format A data frame with 13 observations and 4 variables that describe the pumps on Snow's map.
 #' \describe{
-#'   \item{\code{id}}{pump number, between 1 and 13}
+#'   \item{\code{id}}{pump number between 1 and 13}
 #'   \item{\code{street}}{nearest street}
 #'   \item{\code{x}}{x-coordinate}
 #'   \item{\code{y}}{y-coordinate}
@@ -143,7 +143,7 @@
 #'
 #' @format A data frame with 14 observations and 4 variables that describe the pumps on the Vestry Report version of Snow's map. Amends Broad Street pump location.
 #' \describe{
-#'   \item{\code{id}}{pump number, between 1 and 14}
+#'   \item{\code{id}}{pump number between 1 and 14}
 #'   \item{\code{street}}{nearest street}
 #'   \item{\code{x}}{x-coordinate}
 #'   \item{\code{y}}{y-coordinate}
