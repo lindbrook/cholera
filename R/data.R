@@ -42,7 +42,7 @@
 #' \code{\link[cholera]{streetNumberViewer}}
 "fatalities"
 
-#' "Unstacked" Dodson and Tobler's cholera data: addresss as unit of observation.
+#' "Unstacked" Dodson and Tobler's cholera data: address as unit of observation.
 #'
 #' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinate of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
 #'
@@ -175,7 +175,6 @@
 #' @docType data
 "pumps.vestry"
 
-
 #' "Expected" cases.
 #'
 #' The result of generating 5000 regularly spaced simulated cases within the map's border frame via sp::spsample() and sp::Polygon().
@@ -212,7 +211,7 @@
 
 #' Snow Time Series Data.
 #'
-#' Time series of Fatalities from Snow's contribution to the Vertry Report (p. 117). Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
+#' Time series of Fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
 #'
 #' @format A data frame with 43 observations and 3 variables.
 #' \describe{
@@ -225,7 +224,7 @@
 
 #' Vestry Report Time Series Data.
 #'
-#' Time series of Fatalities from Vertry Report Appendix B. Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
+#' Time series of Fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
 #'
 #' @format A data frame with 61 observations and 3 variables.
 #' \describe{

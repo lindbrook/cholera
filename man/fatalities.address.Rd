@@ -3,7 +3,7 @@
 \docType{data}
 \name{fatalities.address}
 \alias{fatalities.address}
-\title{"Unstacked" Dodson and Tobler's cholera data: addresss as unit of observation.}
+\title{"Unstacked" Dodson and Tobler's cholera data: address as unit of observation.}
 \format{A data frame with 4 variables for 321 addresses
  \describe{
     \item{\code{anchor.case}}{numerical case ID of address}

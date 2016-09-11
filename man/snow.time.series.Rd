@@ -14,7 +14,7 @@
 snow.time.series
 }
 \description{
-Time series of Fatalities from Snow's contribution to the Vertry Report (p. 117). Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
+Time series of Fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
 }
 \keyword{datasets}
 

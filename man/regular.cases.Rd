@@ -13,7 +13,7 @@
 regular.cases
 }
 \description{
-The result of generating 5000 regularly spaced simulated cases within the map's border frame: sp::spsample() and sp::Polygon().
+The result of generating 5000 regularly spaced simulated cases within the map's border frame via sp::spsample() and sp::Polygon().
 }
 \keyword{datasets}
 
