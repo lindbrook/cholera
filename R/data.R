@@ -178,7 +178,7 @@
 
 #' "Expected" cases.
 #'
-#' The result of generating 5000 regularly spaced simulated cases within the map's border frame: sp::spsample() and sp::Polygon().
+#' The result of generating 5000 regularly spaced simulated cases within the map's border frame via sp::spsample() and sp::Polygon().
 #'
 #' @format A data frame with 2 variable that records the position 4993 "expected" cases.
 #'  \describe{
