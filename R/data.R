@@ -175,6 +175,19 @@
 #' @docType data
 "pumps.vestry"
 
+
+#' "Expected" cases.
+#'
+#' The result of generating 5000 regularly spaced simulated cases within the map's border frame: sp::spsample() and sp::Polygon().
+#'
+#' @format A data frame with 2 variable that records the position 4993 "expected" cases.
+#'  \describe{
+#'     \item{\code{x}}{x-coordinate}
+#'     \item{\code{y}}{y-coordinate}
+#'  }
+#' @docType data
+"regular.cases"
+
 #' Dodson and Tobler's street data with appended road names.
 #'
 #' Adds road names from John Snow's map to Dodson and Tobler's street data. The latter are available at Michael Friendly's HistData::Snow.streets.
