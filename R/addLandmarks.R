@@ -76,28 +76,24 @@ addPlaguePit <- function(col = "black", lty = "solid") {
 #' @examples
 #' snowMap(add.landmarks = FALSE)
 #' addVoronoi()
-addVoronoi <- function(select = NULL, data.source = "pumps", col = "black",
+addVoronoi <- function(select = NULL, vestry = FALSE, col = "black",
   lty = "solid") {
 
-  if (data.source %in% c("pumps", "vestry") == "FALSE") {
-    stop("data.source must be 'pumps' or 'pumpsB'.")
-  }
-
   if (is.null(select)) {
-    if (data.source == "pumps") {
+    if (vestry == FALSE) {
       dat <- cholera::pumps[, c("x", "y")]
-    } else if (data.source == "vestry") {
+    } else {
       dat <- cholera::pumps.vestry[, c("x", "y")]
     }
   } else {
-    if (data.source == "pumps") {
+    if (vestry == FALSE) {
       if (is.numeric(select) == FALSE | any(abs(select) %in% 1:13) == FALSE) {
         stop("For 'pumps', 'select' must be a vector with 1 >= |x| <= 13.")
       } else {
         dat <- cholera::pumps[select, c("x", "y")]
       }
     }
-    if (data.source == "vestry") {
+    if (vestry) {
       if (is.numeric(select) == FALSE | any(abs(select) %in% 1:14) == FALSE) {
         stop("For 'pumpsB', 'select' must be a vector with 1 >= |x| <= 14.")
       } else {
