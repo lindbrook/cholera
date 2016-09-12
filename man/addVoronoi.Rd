@@ -4,13 +4,12 @@
 \alias{addVoronoi}
 \title{Add Voronoi cells.}
 \usage{
-addVoronoi(select = NULL, data.source = "pumps", col = "black",
-  lty = "solid")
+addVoronoi(select = NULL, vestry = FALSE, col = "black", lty = "solid")
 }
 \arguments{
 \item{select}{Numeric. Vector of selected or excluded pumps are used. For "pumps", there are 13 possibilities; for "vestry", there are 14. Default is NULL: all pumps used.}
 
-\item{data.source}{Character. 'pumps' for the original 13. 'vestry' for 14 from Vestry Report, which includes the Hanover Square pump and a relocated Broad Street pump.}
+\item{vestry}{Logical. FALSE for original 13 pumps. TRUE for 14 pumps in Vestry Report.}
 
 \item{col}{Character. Color of circle. Default is "black".}
 
