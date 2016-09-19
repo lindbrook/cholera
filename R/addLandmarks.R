@@ -49,7 +49,7 @@ addLandmarks <- function() {
 
 #' Add plague pit (Marshall Street).
 #'
-#' Draws a polygon for the plague pit located around Marshall Street. From Vestry Report map.
+#' Draws a polygon that approximates the plague pit located around Marshall Street. From Vestry Report map.
 #' @param col Character. Color of circle. Default is "black".
 #' @param lty Character. Type of line for circle. Default is "solid".
 #' @return Adds a polygon, based on multiple base R line segments, to a graphics plot.
@@ -80,13 +80,13 @@ addVoronoi <- function(select = NULL, vestry = FALSE, col = "black",
   lty = "solid") {
 
   if (is.null(select)) {
-    if (vestry == FALSE) {
+    if (!vestry) {
       dat <- cholera::pumps[, c("x", "y")]
     } else {
       dat <- cholera::pumps.vestry[, c("x", "y")]
     }
   } else {
-    if (vestry == FALSE) {
+    if (!vestry) {
       if (is.numeric(select) == FALSE | any(abs(select) %in% 1:13) == FALSE) {
         stop("For 'pumps', 'select' must be a vector with 1 >= |x| <= 13.")
       } else {

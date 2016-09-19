@@ -15,7 +15,7 @@ addPlaguePit(col = "black", lty = "solid")
 Adds a polygon, based on multiple base R line segments, to a graphics plot.
 }
 \description{
-Draws a polygon for the plague pit located around Marshall Street. From Vestry Report map.
+Draws a polygon that approximates the plague pit located around Marshall Street. From Vestry Report map.
 }
 \examples{
 snowMap(add.landmarks = FALSE)
