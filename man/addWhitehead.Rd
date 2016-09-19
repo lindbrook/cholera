@@ -10,11 +10,11 @@ addWhitehead(radius = 210, pump = "Broad Street", col = "black",
 \arguments{
 \item{radius}{Numeric. Distance from a pump in yards}
 
-\item{pump}{Character. The name of the pump, the street name where it is located. See \code{pumps} or \code{pumpsB}.}
+\item{pump}{Character. The name of the pump, the street name where it is located. See \code{pumps} or \code{pumps.vestry}.}
 
-\item{col}{Character. Color of circle. Default is "black".}
+\item{col}{Character. Color of circle.}
 
-\item{lty}{Character. Circle line type. Default is "solid".}
+\item{lty}{Character. Circle line type.}
 }
 \value{
 Draws a circle, based on multiple line segments, to a graphics plot.

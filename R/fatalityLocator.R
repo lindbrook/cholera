@@ -4,7 +4,7 @@
 #' selected case.
 #' @param case Numeric or Integer. Whole number between 1 and 578.
 #' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom. Default value is 2.
+#' @param radius Numeric. Controls the degree of zoom.
 #' @param stacked Logical. TRUE uses \code{fatalities} ("stacked"); FALSE uses \code{fatalities.address} ("unstacked").
 #' @return A base R graphics plot.
 #' @seealso \code{fatalities}

@@ -11,7 +11,7 @@ pumpLocator(id, zoom = FALSE, radius = 2, vestry = FALSE)
 
 \item{zoom}{Logical.}
 
-\item{radius}{Numeric. Controls the degree of zoom. Default value is 2.}
+\item{radius}{Numeric. Controls the degree of zoom.}
 
 \item{vestry}{Logigcal. FALSE for original 13. TRUE for the 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump.}
 }

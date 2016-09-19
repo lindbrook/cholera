@@ -4,7 +4,7 @@
 #' selected water pump.
 #' @param id Numeric or Integer. Whole number between 1 and 14
 #' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom. Default value is 2.
+#' @param radius Numeric. Controls the degree of zoom.
 #' @param vestry Logigcal. FALSE for original 13. TRUE for the 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump.
 #' @return A base R graphics plot.
 #' @export

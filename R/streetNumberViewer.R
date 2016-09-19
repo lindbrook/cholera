@@ -4,7 +4,7 @@
 #' selected road segment. See \code{vignette}("road.names") for details.
 #' @param road.number Numeric or integer. Whole number between 1 and 528.
 #' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom. Default value is 1. For values <= 5, the anchor case number is plotted rather than a point for each case.
+#' @param radius Numeric. Controls the degree of zoom. For values <= 5, the anchor case number is plotted rather than a point for each case.
 #' @return A base R graphics plot.
 #' @seealso \code{roads}
 #'

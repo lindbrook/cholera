@@ -8,13 +8,13 @@ addKernelDensity(bandwidth = 0.5, color = "black", line.type = "solid",
   data = NULL)
 }
 \arguments{
-\item{bandwidth}{Numeric. bandwidth for kernel density esitmation. Default is 0.5}
+\item{bandwidth}{Numeric. bandwidth for kernel density esitmation.}
 
-\item{color}{Character. Color of cotour lines. Default is "black".}
+\item{color}{Character. Color of cotour lines.}
 
-\item{line.type}{Character. Line type for contour. Default is "solid"}
+\item{line.type}{Character. Line type for contour.}
 
-\item{data}{Character. Default is NULL uses "fatalities.unstacked". "address" uses "fatalities.address". "stacked" uses "fatalities".}
+\item{data}{Character. NULL, uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "stacked" uses \code{fatalities}.}
 }
 \value{
 Add contours to a graphics plot.

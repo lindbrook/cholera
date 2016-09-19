@@ -11,7 +11,7 @@ streetViewer(road.name, zoom = TRUE, radius = 1)
 
 \item{zoom}{Logical.}
 
-\item{radius}{Numeric. Controls the degree of zoom. Default value is 1. For values <= 5, the anchor case number is plotted rather than a point for each case.}
+\item{radius}{Numeric. Controls the degree of zoom. For values <= 5, the anchor case number is plotted rather than a point for each case.}
 }
 \value{
 A base R graphics plot.

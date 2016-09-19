@@ -7,13 +7,13 @@
 addVoronoi(select = NULL, vestry = FALSE, col = "black", lty = "solid")
 }
 \arguments{
-\item{select}{Numeric. Vector of selected or excluded pumps are used. For "pumps", there are 13 possibilities; for "vestry", there are 14. Default is NULL: all pumps used.}
+\item{select}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
 \item{vestry}{Logical. FALSE for original 13 pumps. TRUE for 14 pumps in Vestry Report.}
 
-\item{col}{Character. Color of circle. Default is "black".}
+\item{col}{Character. Color of borders.}
 
-\item{lty}{Character. Type of line for circle. Default is "solid".}
+\item{lty}{Character. Type of line for borders.}
 }
 \description{
 Compute and draws Voronoi cells using deldir::deldir().

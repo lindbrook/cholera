@@ -4,7 +4,7 @@
 #' selected road segment. See the list of road names in \code{vignette}("road.names").
 #' @param road.name Character vector. To match names in the data set, \code{streetNameViewer}() corrects for case and removes extraneous spaces.
 #' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom. Default value is 1. For values <= 5, the anchor case number is plotted rather than a point for each case.
+#' @param radius Numeric. Controls the degree of zoom. For values <= 5, the anchor case number is plotted rather than a point for each case.
 #' @return A base R graphics plot.
 #' @seealso \code{roads}
 #'
@@ -230,7 +230,7 @@ caseAndSpace <- function(name) {
 #' Diagnostic plot with appropriate defaults.
 #' @param road.name Character vector. To match names in the data set, \code{streetNameViewer}() corrects for case and removes extraneous spaces.
 #' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom. Default value is 1. For values <= 5, the anchor case number is plotted rather than a point for each case.
+#' @param radius Numeric. Controls the degree of zoom. For values <= 5, the anchor case number is plotted rather than a point for each case.
 #' @return A base R graphics plot.
 #' @export
 

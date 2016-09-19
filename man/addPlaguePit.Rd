@@ -7,9 +7,9 @@
 addPlaguePit(col = "black", lty = "solid")
 }
 \arguments{
-\item{col}{Character. Color of circle. Default is "black".}
+\item{col}{Character. Color of circle.}
 
-\item{lty}{Character. Type of line for circle. Default is "solid".}
+\item{lty}{Character. Type of line for circle.}
 }
 \value{
 Adds a polygon, based on multiple base R line segments, to a graphics plot.

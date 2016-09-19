@@ -11,7 +11,7 @@ fatalityLocator(case, zoom = FALSE, radius = 2, stacked = TRUE)
 
 \item{zoom}{Logical.}
 
-\item{radius}{Numeric. Controls the degree of zoom. Default value is 2.}
+\item{radius}{Numeric. Controls the degree of zoom.}
 
 \item{stacked}{Logical. TRUE uses \code{fatalities} ("stacked"); FALSE uses \code{fatalities.address} ("unstacked").}
 }

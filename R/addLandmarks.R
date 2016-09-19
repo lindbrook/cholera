@@ -50,10 +50,10 @@ addLandmarks <- function() {
 #' Add 2D kernel density contours.
 #'
 #' Uses KernSmooth::bkde2D().
-#' @param bandwidth Numeric. bandwidth for kernel density esitmation. Default is 0.5
-#' @param color Character. Color of cotour lines. Default is "black".
-#' @param line.type Character. Line type for contour. Default is "solid"
-#' @param data Character. Default is NULL uses "fatalities.unstacked". "address" uses "fatalities.address". "stacked" uses "fatalities".
+#' @param bandwidth Numeric. bandwidth for kernel density esitmation.
+#' @param color Character. Color of cotour lines.
+#' @param line.type Character. Line type for contour.
+#' @param data Character. NULL, uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "stacked" uses \code{fatalities}.
 #' @return Add contours to a graphics plot.
 #' @import graphics
 #' @export
@@ -91,8 +91,8 @@ addKernelDensity <- function(bandwidth = 0.5, color = "black",
 #' Add plague pit (Marshall Street).
 #'
 #' Draws a polygon that approximates the plague pit located around Marshall Street. From Vestry Report map.
-#' @param col Character. Color of circle. Default is "black".
-#' @param lty Character. Type of line for circle. Default is "solid".
+#' @param col Character. Color of circle.
+#' @param lty Character. Type of line for circle.
 #' @return Adds a polygon, based on multiple base R line segments, to a graphics plot.
 #' @seealso \code{\link[cholera]{addLandmarks}}, \code{\link[cholera]{addWhitehead}}
 #' @import graphics
@@ -108,10 +108,10 @@ addPlaguePit <- function(col = "black", lty = "solid") {
 #'
 #' Compute and draws Voronoi cells using deldir::deldir().
 
-#' @param select Numeric. Vector of selected or excluded pumps are used. For "pumps", there are 13 possibilities; for "vestry", there are 14. Default is NULL: all pumps used.
+#' @param select Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. FALSE for original 13 pumps. TRUE for 14 pumps in Vestry Report.
-#' @param col Character. Color of circle. Default is "black".
-#' @param lty Character. Type of line for circle. Default is "solid".
+#' @param col Character. Color of borders.
+#' @param lty Character. Type of line for borders.
 #' @import graphics
 #' @export
 #' @examples
@@ -153,9 +153,9 @@ addVoronoi <- function(select = NULL, vestry = FALSE, col = "black",
 #'
 #' Adds a circle with a given radius from a specified water pump. By default, the function draws Whitehead's Broad Street pump neighborhood: a circle, centered on the Broad Street pump, with a radius of 210 yards.
 #' @param radius Numeric. Distance from a pump in yards
-#' @param pump Character. The name of the pump, the street name where it is located. See \code{pumps} or \code{pumpsB}.
-#' @param col Character. Color of circle. Default is "black".
-#' @param lty Character. Circle line type. Default is "solid".
+#' @param pump Character. The name of the pump, the street name where it is located. See \code{pumps} or \code{pumps.vestry}.
+#' @param col Character. Color of circle.
+#' @param lty Character. Circle line type.
 #' @return Draws a circle, based on multiple line segments, to a graphics plot.
 #' @seealso \code{\link[cholera]{addLandmarks}}
 #' @import graphics
