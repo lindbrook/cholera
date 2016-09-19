@@ -33,7 +33,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
   y.rng <- range(cholera::roads$y)
 
   if (is.null(select)) {
-    if (vestry == FALSE) {
+    if (!vestry) {
       pump.id <- cholera::pumps$id
       voronoi <- deldir::deldir(cholera::pumps[, c("x", "y")],
         rw = c(x.rng, y.rng))
@@ -45,7 +45,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
       colors <- snowColors(vestry = TRUE)
     }
   } else {
-    if (vestry == FALSE) {
+    if (!vestry) {
       pump.id <- cholera::pumps$id[select]
       voronoi <- deldir::deldir(cholera::pumps[select, c("x", "y")],
         rw = c(x.rng, y.rng))
@@ -118,7 +118,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
 
   if (is.null(output)) {
     if (is.null(select)) {
-      if (vestry == FALSE) {
+      if (!vestry) {
         points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
         text(cholera::pumps[, c("x", "y")], label = pump.id, pos = 1)
       } else {
@@ -126,7 +126,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
         text(cholera::pumps.vestry[, c("x", "y")], label = pump.id, pos = 1)
       }
     } else {
-      if (vestry == FALSE) {
+      if (!vestry) {
         points(cholera::pumps[select, c("x", "y")], pch = 2, col = colors)
         text(cholera::pumps[select, c("x", "y")], label = pump.id, pos = 1)
       } else {
@@ -172,13 +172,13 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
     address.count <- vapply(voronoi.address, sum, numeric(1L))
 
     if (is.null(select)) {
-      if (vestry == FALSE) {
+      if (!vestry) {
         text(cholera::pumps[, c("x", "y")], label = address.count)
       } else {
         text(cholera::pumps.vestry[, c("x", "y")], label = address.count)
       }
     } else {
-      if (vestry == FALSE) {
+      if (!vestry) {
         text(cholera::pumps[select, c("x", "y")], label = address.count)
       } else {
         text(cholera::pumps.vestry[select, c("x", "y")], label = address.count)
@@ -201,7 +201,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
     fatality.count <- vapply(voronoi.fatalities, sum, numeric(1L))
 
     if (is.null(select)) {
-      if (vestry == FALSE) {
+      if (!vestry) {
         text(cholera::pumps[, c("x", "y")], label = fatality.count)
         caption <- "Snow Fatalities Count by Pump Neighborhood"
 
@@ -223,7 +223,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
       }
 
     } else {
-      if (vestry == FALSE) {
+      if (!vestry) {
         text(cholera::pumps[select, c("x", "y")], label = fatality.count)
         caption <- "Snow Fatalities Count by Pump Neighborhood"
 
@@ -250,7 +250,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
 snowColors <- function(vestry = FALSE) {
   colors.pair <- RColorBrewer::brewer.pal(10, "Paired")
   colors.dark <- RColorBrewer::brewer.pal(8, "Dark2")
-  if (vestry == FALSE) {
+  if (!vestry) {
     c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
       "red", colors.pair[1])
   } else {

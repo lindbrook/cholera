@@ -9,8 +9,6 @@
 #' @seealso \code{roads}
 #'
 #' \code{\link[cholera]{streetNameViewer}}
-#'
-#' \url{http://r.789695.n4.nabble.com/no-visible-binding-for-global-variable-for-data-sets-in-a-package-td4696053.html}
 #' @import graphics
 #' @export
 #' @examples
@@ -33,7 +31,7 @@ streetNumberViewer <- function(road.number, zoom = FALSE, radius = 1) {
   x.rng <- c(min(rng$x) - radius, max(rng$x) + radius)
   y.rng <- c(min(rng$y) - radius, max(rng$y) + radius)
 
-  if (zoom == FALSE) {
+  if (!zoom) {
     plot(cholera::fatalities[, c("x", "y")], xlim = range(cholera::roads$x),
       ylim = range(cholera::roads$y), pch = 15, cex = 0.5, col = "gray",
       asp = 1)
@@ -47,7 +45,7 @@ streetNumberViewer <- function(road.number, zoom = FALSE, radius = 1) {
       "name"])
     title(main = paste0(st.name, ": 'Street' # ", road.number))
 
-   } else if (zoom == TRUE & radius <= 5) {
+   } else if (zoom & radius <= 5) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = NA, asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))

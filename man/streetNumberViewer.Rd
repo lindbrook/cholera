@@ -29,7 +29,5 @@ streetNumberViewer(243, zoom = TRUE, radius = 0)
 \code{roads}
 
 \code{\link[cholera]{streetNameViewer}}
-
-\url{http://r.789695.n4.nabble.com/no-visible-binding-for-global-variable-for-data-sets-in-a-package-td4696053.html}
 }
 

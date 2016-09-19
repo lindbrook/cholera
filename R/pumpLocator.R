@@ -19,20 +19,18 @@ pumpLocator <- function(id, zoom = FALSE, radius = 2, vestry = FALSE) {
     stop("id must be numeric.")
   }
 
-  if (vestry == FALSE & id %in% unique(cholera::pumps$id) == FALSE) {
-    stop('For original pumps, "id" must lie between 1 and 13.')
+  if (!vestry & id %in% unique(cholera::pumps$id) == FALSE) {
+    stop('For original pumps, "id" must be a whole number between 1 and 13.')
   }
 
   if (vestry & id %in% unique(cholera::pumps.vestry$id) == FALSE) {
-      stop('For Vestry pumps, "id" must lie between 1 and 14.')
+      stop('For Vestry pumps, "id" must lie be a whole number 1 and 14.')
   }
 
-  if (vestry == FALSE) {
+  if (!vestry) {
     well <- cholera::pumps
     title <- "Water Pumps"
-  }
-
-  if (vestry) {
+  } else {
     well <- cholera::pumps.vestry
     title <- "Vestry Water Pumps"
   }
@@ -41,7 +39,7 @@ pumpLocator <- function(id, zoom = FALSE, radius = 2, vestry = FALSE) {
   death <- cholera::fatalities
   roads.list <- split(road[, c("x", "y")], road$street)
 
-  if (zoom == FALSE) {
+  if (!zoom) {
     plot(death[, c("x", "y")], xlim = range(road$x), ylim = range(road$y),
       pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))

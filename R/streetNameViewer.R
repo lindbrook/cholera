@@ -11,8 +11,6 @@
 #' \code{vignette}("road.names")
 #'
 #' \code{\link[cholera]{streetNumberViewer}}
-#'
-#' \url{http://r.789695.n4.nabble.com/no-visible-binding-for-global-variable-for-data-sets-in-a-package-td4696053.html}
 #' @import graphics
 #' @export
 #' @examples
@@ -43,8 +41,7 @@ streetNameViewer <- function(road.name, zoom = FALSE, radius = 1) {
   x.rng <- c(min(rng$x) - radius, max(rng$x) + radius)
   y.rng <- c(min(rng$y) - radius, max(rng$y) + radius)
 
-  if (zoom == FALSE) {
-
+  if (!zoom) {
     plot(cholera::fatalities[, c("x", "y")], xlim = range(cholera::roads$x),
       ylim = range(cholera::roads$y), pch = 15, cex = 0.5, col = "gray",
       asp = 1)
@@ -56,7 +53,7 @@ streetNameViewer <- function(road.name, zoom = FALSE, radius = 1) {
       lwd = 3))
     title(main = name)
 
-  } else if (zoom == TRUE & radius <= 5) {
+  } else if (zoom & radius <= 5) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = NA, asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
@@ -251,7 +248,7 @@ streetViewer <- function(road.name, zoom = TRUE, radius = 1) {
     } else name <- case.name
   } else name <- road.name
 
-  selected.road <- cholera::roads[cholera::roads$name == name, "street"]
+  # selected.road <- cholera::roads[cholera::roads$name == name, "street"]
   roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)
 
   rng <- lapply(cholera::roads[cholera::roads$name == name, c("x", "y")],
@@ -259,8 +256,7 @@ streetViewer <- function(road.name, zoom = TRUE, radius = 1) {
   x.rng <- c(min(rng$x) - radius, max(rng$x) + radius)
   y.rng <- c(min(rng$y) - radius, max(rng$y) + radius)
 
-  if (zoom == FALSE) {
-
+  if (!zoom) {
     plot(cholera::fatalities[, c("x", "y")], xlim = range(cholera::roads$x),
       ylim = range(cholera::roads$y), pch = 15, cex = 0.5, col = "gray",
       asp = 1)
@@ -272,7 +268,7 @@ streetViewer <- function(road.name, zoom = TRUE, radius = 1) {
     #   lwd = 3))
     title(main = name)
 
-  } else if (zoom == TRUE & radius <= 5) {
+  } else if (zoom & radius <= 5) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = NA, asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
@@ -281,7 +277,7 @@ streetViewer <- function(road.name, zoom = TRUE, radius = 1) {
     points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
     text(cholera::pumps[, c("x", "y")], label = cholera::pumps$pump.id,
       pos = 1)
-    selected.road <- cholera::roads[cholera::roads$name == name, "street"]
+    # selected.road <- cholera::roads[cholera::roads$name == name, "street"]
     # invisible(lapply(roads.list[paste(selected.road)], lines, col = "red",
     #   lwd = 3))
     title(main = name)
@@ -293,7 +289,7 @@ streetViewer <- function(road.name, zoom = TRUE, radius = 1) {
     points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
     text(cholera::pumps[, c("x", "y")], label = cholera::pumps$pump.id,
       pos = 1)
-    selected.road <- cholera::roads[cholera::roads$name == name, "street"]
+    # selected.road <- cholera::roads[cholera::roads$name == name, "street"]
     # invisible(lapply(roads.list[paste(selected.road)], lines, col = "red",
     #   lwd = 3))
     title(main = name)

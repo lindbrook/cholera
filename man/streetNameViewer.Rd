@@ -32,7 +32,5 @@ streetNameViewer("Cambridge Street", zoom = TRUE, radius = 0)
 \code{vignette}("road.names")
 
 \code{\link[cholera]{streetNumberViewer}}
-
-\url{http://r.789695.n4.nabble.com/no-visible-binding-for-global-variable-for-data-sets-in-a-package-td4696053.html}
 }
 
