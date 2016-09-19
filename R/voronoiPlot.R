@@ -10,10 +10,12 @@
 #' @export
 #' @examples
 #' voronoiPlot()
+#' voronoiPlot(output = "addresses")
 #' voronoiPlot(vestry = TRUE)
+#' voronoiPlot(select = 6:7)
 #' voronoiPlot(select = -6)
 #' voronoiPlot(select = -6, output = "fatalities")
-#' voronoiPlot(select = 6:7)
+
 
 voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
   if (is.null(output) == FALSE) {
@@ -207,7 +209,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
         if (is.null(select)) {
           title(main = caption)
         } else {
-          title(main = paste(caption, ":\n", "pumps: ", select.string))
+          title(main = paste0(caption, "\n", "Pumps ", select.string))
         }
 
       } else {

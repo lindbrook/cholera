@@ -21,10 +21,11 @@ Plot  Voronoi diagrams of John Snow's 1854 London cholera data.
 }
 \examples{
 voronoiPlot()
+voronoiPlot(output = "addresses")
 voronoiPlot(vestry = TRUE)
+voronoiPlot(select = 6:7)
 voronoiPlot(select = -6)
 voronoiPlot(select = -6, output = "fatalities")
-voronoiPlot(select = 6:7)
 }
 \seealso{
 \code{addVoronoi()}
