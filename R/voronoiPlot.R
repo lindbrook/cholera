@@ -16,7 +16,6 @@
 #' voronoiPlot(select = -6)
 #' voronoiPlot(select = -6, output = "fatalities")
 
-
 voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
   if (is.null(output) == FALSE) {
     if (all(output %in% c("addresses", "fatalities") == FALSE)) {
