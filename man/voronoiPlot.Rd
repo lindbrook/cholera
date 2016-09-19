@@ -7,7 +7,7 @@
 voronoiPlot(select = NULL, vestry = FALSE, output = NULL)
 }
 \arguments{
-\item{select}{Numeric vector. Selection by numeric id: 1 to 13 for "pumps"; 1 to 14 for "pumps.vestry". Default is NULL; all pumps are used.}
+\item{select}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by numeric id: 1 to 13 for "pumps" and  1 to 14 for "pumps.vestry".}
 
 \item{vestry}{Logical. Use the 14 pumps from the Vestry Report rather than the 13 in the original map.}
 

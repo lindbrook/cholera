@@ -1,7 +1,7 @@
 #' Plot Voronoi diagram.
 #'
 #' Plot  Voronoi diagrams of John Snow's 1854 London cholera data.
-#' @param select Numeric vector. Selection by numeric id: 1 to 13 for "pumps"; 1 to 14 for "pumps.vestry". Default is NULL; all pumps are used.
+#' @param select Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for "pumps"; 1 to 14 for "pumps.vestry".
 #' @param vestry Logical. Use the 14 pumps from the Vestry Report rather than the 13 in the original map.
 #' @param output Character. NULL plots address points. "addresses" plots the total count of addresses at pumps' locations. "fatalities" plots the total count of fatalities at pumps' locations.
 #' @return A base R graphics plot.
