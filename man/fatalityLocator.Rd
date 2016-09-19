@@ -7,7 +7,7 @@
 fatalityLocator(case, zoom = FALSE, radius = 2, stacked = TRUE)
 }
 \arguments{
-\item{case}{Whole number between 1 and 578. Need not be of integer type.}
+\item{case}{Numeric or Integer. Whole number between 1 and 578.}
 
 \item{zoom}{Logical.}
 
@@ -32,7 +32,5 @@ fatalityLocator(290, zoom = TRUE, stacked = FALSE)
 \code{fatalities}
 
 \code{fatalities.address}
-
-\url{http://r.789695.n4.nabble.com/no-visible-binding-for-global-variable-for-data-sets-in-a-package-td4696053.html}
 }
 

@@ -2,7 +2,7 @@
 #'
 #' Plots John Snow's map of the 1854 London cholera outbreak and highlights the
 #' selected case.
-#' @param case Whole number between 1 and 578. Need not be of integer type.
+#' @param case Numeric or Integer. Whole number between 1 and 578.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. Default value is 2.
 #' @param stacked Logical. TRUE uses \code{fatalities} ("stacked"); FALSE uses \code{fatalities.address} ("unstacked").
@@ -10,8 +10,6 @@
 #' @seealso \code{fatalities}
 #'
 #' \code{fatalities.address}
-#'
-#' \url{http://r.789695.n4.nabble.com/no-visible-binding-for-global-variable-for-data-sets-in-a-package-td4696053.html}
 #' @import graphics
 #' @export
 #' @examples
@@ -21,15 +19,15 @@
 #' fatalityLocator(290, zoom = TRUE, stacked = FALSE)
 
 fatalityLocator <- function(case, zoom = FALSE, radius = 2, stacked = TRUE) {
-  if (is.numeric(case) == FALSE) {
+  if (!is.numeric(case)) {
     stop("case must be numeric.")
   }
 
   if (case %in% unique(cholera::fatalities$case) == FALSE) {
-    stop("case must lie between 1 and 578.")
+    stop("case must be a whole number between 1 and 578.")
   }
 
-  if (zoom == FALSE) {
+  if (!zoom) {
     x.rng <- range(cholera::roads$x)
     y.rng <- range(cholera::roads$y)
   } else {
@@ -45,7 +43,7 @@ fatalityLocator <- function(case, zoom = FALSE, radius = 2, stacked = TRUE) {
 
   roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)
 
-  if (stacked == TRUE) {
+  if (stacked) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = 15, cex = 0.5, col = "gray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
