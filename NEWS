@@ -2,6 +2,7 @@ cholera 0.0.0.9018
 ----------------------------------------------------------------
 
 * add voronoiPlot()
+* add addKernelDensity()
 
 
 cholera 0.0.0.9017

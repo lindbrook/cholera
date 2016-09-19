@@ -47,6 +47,47 @@ addLandmarks <- function() {
   text(Falconberg$x, Falconberg$y, labels = "Falconberg\nCourt & Mews", cex = 0.5)
 }
 
+#' Add 2D kernel density contours.
+#'
+#' Uses KernSmooth::bkde2D().
+#' @param bandwidth Numeric. bandwidth for kernel density esitmation. Default is 0.5
+#' @param color Character. Color of cotour lines. Default is "black".
+#' @param line.type Character. Line type for contour. Default is "solid"
+#' @param data Character. Default is NULL uses "fatalities.unstacked". "address" uses "fatalities.address". "stacked" uses "fatalities".
+#' @return Add contours to a graphics plot.
+#' @import graphics
+#' @export
+#' @examples
+#' snowMap(add.landmarks = FALSE)
+#' addKernelDensity()
+
+addKernelDensity <- function(bandwidth = 0.5, color = "black",
+  line.type = "solid", data = NULL) {
+
+  if (is.null(data) == FALSE) {
+    if (all(data %in% c("address", "stacked") == FALSE)) {
+      stop('If specified, "output" must either be "address" or "stacked".')
+    }
+  }
+
+  bw.value <- bandwidth
+  bw <- rep(bw.value, 2)
+
+  if (is.null(data)) {
+    kde2d <- KernSmooth::bkde2D(cholera::fatalities.unstacked[, c("x", "y")],
+      bandwidth = bw)
+  } else if (data == "address") {
+    kde2d <- KernSmooth::bkde2D(cholera::fatalities.address[, c("x", "y")],
+      bandwidth = bw)
+  } else if (data == "stacked") {
+    kde2d <- KernSmooth::bkde2D(cholera::fatalities[, c("x", "y")],
+      bandwidth = bw)
+  }
+
+  contour(x = kde2d$x1, y = kde2d$x2, z = kde2d$fhat, col = color,
+    lty = line.type, add = TRUE)
+}
+
 #' Add plague pit (Marshall Street).
 #'
 #' Draws a polygon that approximates the plague pit located around Marshall Street. From Vestry Report map.
