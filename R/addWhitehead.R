@@ -13,7 +13,7 @@
 #' @examples
 #' snowMap(add.landmarks = FALSE)
 #' addWhitehead()
-addWhitehead <- function(radius = 210, pump = "Broad Street", col = "black",
+addWhitehead <- function(pump = "Broad Street", radius = 210, col = "black",
   lty = "solid", vestry = FALSE) {
   r <- radius / 59
   unit.base <- 100
