@@ -10,7 +10,6 @@ cholera 0.0.0.9017
 
 * add ortho.proj, ortho.proj.sp, ortho.proj.pump, ortho.proj.pump.vestry and regular.cases datasets
 * remove neighborhood data from fatalities, fatalities.unstacked and fatalities.address
-* update function documentation
 
 
 cholera 0.0.0.9016
@@ -53,7 +52,6 @@ cholera 0.0.0.9012
 ----------------------------------------------------------------
 
 * add pump neighborhoods data
-* update documentation
 
 
 cholera 0.0.0.9011
