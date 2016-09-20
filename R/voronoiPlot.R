@@ -91,7 +91,6 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
 
       corner.id <- which(colSums(do.call(rbind, corners)) == 0)
       corner.solution <- four.corners[corner.id]
-
       a <- rbind(a, b[nrow(b), ], corner.solution[[1]])
       b <- rbind(b, do.call(rbind, corner.solution))
     }
@@ -114,7 +113,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
     pch = NA, asp = 1)
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
-  plot(voronoi, add = TRUE, wline = "tess", wpoints = "none",lty = "solid")
+  plot(voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
 
   if (is.null(output)) {
     if (is.null(select)) {
@@ -143,7 +142,6 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
     })
 
     voronoi.address.id <- lapply(voronoi.address, function(x) which(x == 1))
-
     elements <- length(unlist(voronoi.address.id))
     voronoi.colors <- vector(length = elements)
 
@@ -156,7 +154,6 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
       pch = 20, cex = 0.75)
 
     caption <- "Snow Addresses by Neighborhood"
-
     if (is.null(select)) {
       title(main = caption)
     } else {
@@ -204,24 +201,20 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
       if (!vestry) {
         text(cholera::pumps[, c("x", "y")], label = fatality.count)
         caption <- "Snow Fatalities Count by Pump Neighborhood"
-
         if (is.null(select)) {
           title(main = caption)
         } else {
           title(main = paste0(caption, "\n", "Pumps ", select.string))
         }
-
       } else {
         text(cholera::pumps.vestry[, c("x", "y")], label = fatality.count)
         caption <- "Vestry Fatalities Count by Pump Neighborhood"
-
         if (is.null(select)) {
           title(main = caption)
         } else {
           title(main = paste0(caption, "\n", "Pumps ", select.string))
         }
       }
-
     } else {
       if (!vestry) {
         text(cholera::pumps[select, c("x", "y")], label = fatality.count)
@@ -232,7 +225,6 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
         } else {
           title(main = paste0(caption, "\n", "Pumps ", select.string))
         }
-
       } else {
         text(cholera::pumps.vestry[select, c("x", "y")], label = fatality.count)
         caption <- "Vestry Fatalities Count by Pump Neighborhood"
@@ -274,7 +266,7 @@ fourCorners <- function() {
 # @param s0, t0, s1, t2 Coordinates of second segment's endpoints.
 # @return A data frame.
 # @seealso \url{http://stackoverflow.com/questions/20519231/finding-point-of-intersection-in-r}
-segmentIntersection <- function(x0, y0, x1, y1, s0, t0, s1, t1){
+segmentIntersection <- function(x0, y0, x1, y1, s0, t0, s1, t1) {
   denom <- (t1 - t0) * (x1 - x0) - (s1 - s0) * (y1 - y0)
   denom[abs(denom) < 1e-10] <- NA # parallel lines
   ua <- ((s1 - s0) * (y0 - t0) - (t1 - t0) * (x0 - s0)) / denom
