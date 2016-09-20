@@ -22,38 +22,42 @@ addWhitehead <- function(radius = 210, pump = "Broad Street", col = "black",
     if (is.character(pump)) {
       if (pump %in% cholera::pumps.vestry$street == FALSE) {
         stop(paste0("Invalid Vestry pump name. Check spelling or see pumps.vestry$street."))
+      } else {
+        circumference.x <- cholera::pumps.vestry[cholera::pumps.vestry$street ==
+          pump, "x"] + r * cos(0:unit.base * unit.radians)
+        circumference.y <- cholera::pumps.vestry[cholera::pumps.vestry$street ==
+          pump, "y"] + r * sin(0:unit.base * unit.radians)
       }
-      circumference.x <- cholera::pumps.vestry[cholera::pumps.vestry$street ==
-        pump, "x"] + r * cos(0:unit.base * unit.radians)
-      circumference.y <- cholera::pumps.vestry[cholera::pumps.vestry$street ==
-        pump, "y"] + r * sin(0:unit.base * unit.radians)
     } else if (is.numeric(pump)) {
       if (pump %in% cholera::pumps.vestry$id == FALSE) {
         stop("Vestry pump ID must be a whole number between 1 and 14.")
+      } else {
+        circumference.x <- cholera::pumps.vestry[cholera::pumps.vestry$id ==
+          pump, "x"] + r * cos(0:unit.base * unit.radians)
+        circumference.y <- cholera::pumps.vestry[cholera::pumps.vestry$id ==
+          pump, "y"] + r * sin(0:unit.base * unit.radians)
       }
     }
-    circumference.x <- cholera::pumps.vestry[cholera::pumps.vestry$id ==
-      pump, "x"] + r * cos(0:unit.base * unit.radians)
-    circumference.y <- cholera::pumps.vestry[cholera::pumps.vestry$id ==
-      pump, "y"] + r * sin(0:unit.base * unit.radians)
   } else {
     if (is.character(pump)) {
       if (pump %in% cholera::pumps$street == FALSE) {
         stop(paste0("Invalid Snow pump name. Check spelling or see pumps$street."))
+      } else {
+        circumference.x <- cholera::pumps[cholera::pumps$street == pump, "x"] +
+          r * cos(0:unit.base * unit.radians)
+        circumference.y <- cholera::pumps[cholera::pumps$street == pump, "y"] +
+          r * sin(0:unit.base * unit.radians)
       }
-      circumference.x <- cholera::pumps[cholera::pumps$street == pump, "x"] +
-        r * cos(0:unit.base * unit.radians)
-      circumference.y <- cholera::pumps[cholera::pumps$street == pump, "y"] +
-        r * sin(0:unit.base * unit.radians)
     } else if (is.numeric(pump)) {
       if (pump %in% cholera::pumps.vestry$id == FALSE) {
         stop("Snow pump ID must be a whole number between 1 and 13.")
-      }
-      circumference.x <- cholera::pumps[cholera::pumps$id == pump, "x"] +
-        r * cos(0:unit.base * unit.radians)
-      circumference.y <- cholera::pumps[cholera::pumps$id == pump, "y"] +
-        r * sin(0:unit.base * unit.radians)
+      } else {
+        circumference.x <- cholera::pumps[cholera::pumps$id == pump, "x"] +
+          r * cos(0:unit.base * unit.radians)
+        circumference.y <- cholera::pumps[cholera::pumps$id == pump, "y"] +
+          r * sin(0:unit.base * unit.radians)
       }
     }
+  }
   lines(circumference.x, circumference.y, col = col, lty = lty)
 }
