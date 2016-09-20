@@ -5,7 +5,7 @@
 #' @param id Numeric or Integer. Whole number between 1 and 14
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param vestry Logigcal. FALSE for original 13. TRUE for the 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump.
+#' @param vestry Logigcal. TRUE for the 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump. FALSE for original 13.
 #' @return A base R graphics plot.
 #' @export
 #' @examples
@@ -19,11 +19,11 @@ pumpLocator <- function(id, zoom = FALSE, radius = 2, vestry = FALSE) {
     stop("id must be numeric.")
   }
 
-  if (!vestry & id %in% unique(cholera::pumps$id) == FALSE) {
+  if (!vestry & id %in% cholera::pumps$id == FALSE) {
     stop('For original pumps, "id" must be a whole number between 1 and 13.')
   }
 
-  if (vestry & id %in% unique(cholera::pumps.vestry$id) == FALSE) {
+  if (vestry & id %in% cholera::pumps.vestry$id == FALSE) {
       stop('For Vestry pumps, "id" must lie be a whole number 1 and 14.')
   }
 

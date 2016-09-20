@@ -13,7 +13,7 @@ pumpLocator(id, zoom = FALSE, radius = 2, vestry = FALSE)
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
-\item{vestry}{Logigcal. FALSE for original 13. TRUE for the 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump.}
+\item{vestry}{Logigcal. TRUE for the 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump. FALSE for original 13.}
 }
 \value{
 A base R graphics plot.
