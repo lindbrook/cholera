@@ -15,7 +15,6 @@
 #' addWhitehead()
 addWhitehead <- function(radius = 210, pump = "Broad Street", col = "black",
   lty = "solid", vestry = FALSE) {
-
   r <- radius / 59
   unit.base <- 100
   unit.radians <- 2 * pi / unit.base
@@ -28,7 +27,6 @@ addWhitehead <- function(radius = 210, pump = "Broad Street", col = "black",
         pump, "x"] + r * cos(0:unit.base * unit.radians)
       circumference.y <- cholera::pumps.vestry[cholera::pumps.vestry$street ==
         pump, "y"] + r * sin(0:unit.base * unit.radians)
-
     } else if (is.numeric(pump)) {
       if (pump %in% cholera::pumps.vestry$id == FALSE) {
         stop("Vestry pump ID must be a whole number between 1 and 14.")
