@@ -9,7 +9,7 @@ voronoiPlot(select = NULL, vestry = FALSE, output = NULL)
 \arguments{
 \item{select}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
-\item{vestry}{Logical. Use the 14 pumps from the Vestry Report rather than the 13 in the original map.}
+\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
 \item{output}{Character. NULL plots address points. "addresses" plots the total count of addresses at pumps' locations. "fatalities" plots the total count of fatalities at pumps' locations.}
 }
