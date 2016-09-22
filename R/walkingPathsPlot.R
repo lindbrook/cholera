@@ -7,7 +7,6 @@
 #' @param weighted Logical. Shortest path weighted by road distance.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param selection Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
-#' @param use.arrows Logical. TRUE uses arrows. FALSE uses segments
 #' @return A base R graphics plot.
 #' @seealso \code{fatalities}
 #'
@@ -19,9 +18,7 @@
 #' walkingPathPlot(1, selection = -7)
 
 walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
-  vestry = FALSE, selection = NULL, use.arrows = TRUE) {
-
-  ## --------------- Network Data --------------- ##
+  vestry = FALSE, selection = NULL) {
 
   roadsB <- cholera::roads[cholera::roads$street %in%
     cholera::border == FALSE, ]
@@ -41,7 +38,7 @@ walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
 
   road.segments <- do.call(rbind, road.segments)
 
-  if (vestry == FALSE) {
+  if (!vestry) {
     colors <- snowColors()
 
     pump.coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
@@ -224,9 +221,17 @@ walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
     pch = 15, cex = 0.5, col = "lightgray", asp = 1)
   invisible(lapply(roads.list, lines, col = "lightgray"))
-  points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = colors)
-  text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id,
-    pos = 1)
+
+  if (is.null(selection)) {
+    points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = colors)
+    text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+  } else {
+    sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
+    points(cholera::pumps[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+      col = colors)
+    text(cholera::pumps[sel.pumps, c("x", "y")], label = pump.names, pos = 1)
+  }
+
   points(cholera::fatalities[cholera::fatalities$case == x, c("x", "y")],
     col = "red", lwd = 2)
   points(dat[1, c("x", "y")], col = case.color, pch = 0)
@@ -235,10 +240,17 @@ walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
   title(main = paste("Case #", x))
 
-  if (use.arrows) {
-    arrows(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2, length = 0.075)
+  if (zoom) {
+    arrows(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2, length = 0.1)
   } else {
-    segments(n1$x, n1$y, n2$x, n2$y, col = colors[nearest.pump.id], lwd = 2)
+    sel <- seq_len(nrow(dat))
+    med <- round(stats::median(sel))
+    selA <- sel[-med]
+    selB <- sel[med]
+    segments(n1$x[selA], n1$y[selA], n2$x[selA], n2$y[selA],
+             col = colors[nearest.pump.id], lwd = 2)
+    arrows(n1$x[selB], n1$y[selB], n2$x[selB], n2$y[selB],
+           col = case.color, lwd = 3, length = 0.125)
   }
 }
 

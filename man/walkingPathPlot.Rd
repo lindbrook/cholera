@@ -5,7 +5,7 @@
 \title{Plot shortest walking path.}
 \usage{
 walkingPathPlot(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
-  vestry = FALSE, selection = NULL, use.arrows = TRUE)
+  vestry = FALSE, selection = NULL)
 }
 \arguments{
 \item{x}{Numeric or Integer. Whole number between 1 and 578 for fatality.}
@@ -19,8 +19,6 @@ walkingPathPlot(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
 \item{selection}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
-
-\item{use.arrows}{Logical. TRUE uses arrows. FALSE uses segments}
 }
 \value{
 A base R graphics plot.
