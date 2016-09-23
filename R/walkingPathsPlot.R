@@ -20,6 +20,20 @@
 walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   vestry = FALSE, selection = NULL) {
 
+  if (vestry) {
+    if (is.null(selection) == FALSE) {
+      if (abs(selection) %in% 1:14 == FALSE) {
+        stop('With "pumps.vestry", "selection" must be between 1 and 14.')
+      }
+    }
+  } else {
+    if (is.null(selection) == FALSE) {
+      if (abs(selection) %in% 1:13 == FALSE) {
+        stop('With "pumps", "selection" must be between 1 and 13.')
+      }
+    }
+  }
+
   roadsB <- cholera::roads[cholera::roads$street %in%
     cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
@@ -126,7 +140,6 @@ walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
     road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
     road.segments$d <- sqrt((road.segments$x1 - road.segments$x2)^2 +
                             (road.segments$y1 - road.segments$y2)^2)
-    road.segments
   }
 
   if (is.null(selection)) {
@@ -223,13 +236,27 @@ walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   invisible(lapply(roads.list, lines, col = "lightgray"))
 
   if (is.null(selection)) {
-    points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = colors)
-    text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+    if (vestry) {
+      points(cholera::pumps.vestry[, c("x", "y")], pch = 17, cex = 1,
+        col = colors)
+      text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
+    } else {
+      points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = colors)
+      text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+    }
   } else {
-    sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-    points(cholera::pumps[sel.pumps, c("x", "y")], pch = 17, cex = 1,
-      col = colors)
-    text(cholera::pumps[sel.pumps, c("x", "y")], label = pump.names, pos = 1)
+    if (vestry) {
+      sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
+      points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+        col = colors)
+      text(cholera::pumps.vestry[sel.pumps, c("x", "y")], label = pump.names,
+        pos = 1)
+    } else {
+      sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
+      points(cholera::pumps[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+        col = colors)
+      text(cholera::pumps[sel.pumps, c("x", "y")], label = pump.names, pos = 1)
+    }
   }
 
   points(cholera::fatalities[cholera::fatalities$case == x, c("x", "y")],
