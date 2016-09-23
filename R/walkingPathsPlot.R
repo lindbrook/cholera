@@ -249,13 +249,13 @@ walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
     if (vestry) {
       sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
       points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 17, cex = 1,
-        col = colors)
+        col = colors[sel.pumps])
       text(cholera::pumps.vestry[sel.pumps, c("x", "y")], label = pump.names,
         pos = 1)
     } else {
       sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
       points(cholera::pumps[sel.pumps, c("x", "y")], pch = 17, cex = 1,
-        col = colors)
+        col = colors[sel.pumps])
       text(cholera::pumps[sel.pumps, c("x", "y")], label = pump.names, pos = 1)
     }
   }
