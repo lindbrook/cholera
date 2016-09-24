@@ -30,12 +30,12 @@ snowMap <- function(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE) {
   invisible(lapply(roads.list, lines, col = "gray"))
   invisible(lapply(border.list, lines))
 
-  if (!vestry) {
-    well <- cholera::pumps
+  if (vestry) {
+    well <- cholera::pumps.vestry
     points(well[, c("x", "y")], pch = 2, cex = 1, col = "blue")
     text(well[, c("x", "y")], label = well$id, pos = 1, col = "blue")
   } else {
-    well <- cholera::pumps.vestry
+    well <- cholera::pumps
     points(well[, c("x", "y")], pch = 2, cex = 1, col = "blue")
     text(well[, c("x", "y")], label = well$id, pos = 1, col = "blue")
   }

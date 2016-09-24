@@ -27,21 +27,26 @@ pumpLocator <- function(id, zoom = FALSE, radius = 2, vestry = FALSE) {
       stop('For Vestry pumps, "id" must lie be a whole number 1 and 14.')
   }
 
-  if (!vestry) {
-    well <- cholera::pumps
-    title <- "Water Pumps"
-  } else {
+  if (vestry) {
     well <- cholera::pumps.vestry
     title <- "Vestry Water Pumps"
+  } else {
+    well <- cholera::pumps
+    title <- "Water Pumps"
   }
 
   road <- cholera::roads
   death <- cholera::fatalities
   roads.list <- split(road[, c("x", "y")], road$street)
 
-  if (!zoom) {
-    plot(death[, c("x", "y")], xlim = range(road$x), ylim = range(road$y),
-      pch = 15, cex = 0.5, col = "lightgray", asp = 1)
+  if (zoom) {
+    x.rng <- c(well[well$id == id, "x"] - radius,
+               well[well$id == id, "x"] + radius)
+    y.rng <- c(well[well$id == id, "y"] - radius,
+               well[well$id == id, "y"] + radius)
+
+    plot(death[, c("x", "y")], xlim = x.rng, ylim = y.rng, pch = 15, cex = 0.5,
+      col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
     points(well[well$id != id, c("x", "y")], pch = 2, cex = 1,
       col = "blue")
@@ -52,13 +57,8 @@ pumpLocator <- function(id, zoom = FALSE, radius = 2, vestry = FALSE) {
     title(main = title)
 
   } else {
-    x.rng <- c(well[well$id == id, "x"] - radius,
-               well[well$id == id, "x"] + radius)
-    y.rng <- c(well[well$id == id, "y"] - radius,
-               well[well$id == id, "y"] + radius)
-
-    plot(death[, c("x", "y")], xlim = x.rng, ylim = y.rng, pch = 15, cex = 0.5,
-      col = "lightgray", asp = 1)
+    plot(death[, c("x", "y")], xlim = range(road$x), ylim = range(road$y),
+      pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
     points(well[well$id != id, c("x", "y")], pch = 2, cex = 1,
       col = "blue")
