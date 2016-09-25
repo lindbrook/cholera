@@ -22,12 +22,16 @@ walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   vestry = FALSE, selection = NULL) {
 
   if (vestry) {
-    if (is.null(selection) == FALSE & any(abs(selection) %in% 1:14 == FALSE)) {
-      stop('With "pumps.vestry", "selection" must be between 1 and 14.')
+    if (is.null(selection) == FALSE) {
+      if (any(abs(selection) %in% 1:14 == FALSE)) {
+        stop('With "vestry = TRUE", "selection" must be between 1 and 14.')
+      }
     }
   } else {
-    if (is.null(selection) == FALSE & any(abs(selection) %in% 1:13 == FALSE)) {
-      stop('With "pumps", "selection" must be between 1 and 13.')
+    if (is.null(selection) == FALSE ) {
+      if (any(abs(selection) %in% 1:13 == FALSE)) {
+        stop('With "vestry = FALSE", "selection" must be between 1 and 13.')
+      }
     }
   }
 

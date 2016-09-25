@@ -4,10 +4,10 @@
 \alias{voronoiPlot}
 \title{Plot Voronoi diagram.}
 \usage{
-voronoiPlot(select = NULL, vestry = FALSE, output = NULL)
+voronoiPlot(selection = NULL, vestry = FALSE, output = NULL)
 }
 \arguments{
-\item{select}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
+\item{selection}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -23,9 +23,9 @@ Plot  Voronoi diagrams of John Snow's 1854 London cholera data.
 voronoiPlot()
 voronoiPlot(output = "addresses")
 voronoiPlot(vestry = TRUE)
-voronoiPlot(select = 6:7)
-voronoiPlot(select = -6)
-voronoiPlot(select = -6, output = "fatalities")
+voronoiPlot(selection = 6:7)
+voronoiPlot(selection = -6)
+voronoiPlot(selection = -6, output = "fatalities")
 }
 \seealso{
 \code{addVoronoi()}

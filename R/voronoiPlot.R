@@ -1,7 +1,7 @@
 #' Plot Voronoi diagram.
 #'
 #' Plot  Voronoi diagrams of John Snow's 1854 London cholera data.
-#' @param select Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
+#' @param selection Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param output Character. NULL plots address points. "addresses" plots the total count of addresses at pumps' locations. "fatalities" plots the total count of fatalities at pumps' locations.
 #' @return A base R graphics plot.
@@ -12,14 +12,40 @@
 #' voronoiPlot()
 #' voronoiPlot(output = "addresses")
 #' voronoiPlot(vestry = TRUE)
-#' voronoiPlot(select = 6:7)
-#' voronoiPlot(select = -6)
-#' voronoiPlot(select = -6, output = "fatalities")
+#' voronoiPlot(selection = 6:7)
+#' voronoiPlot(selection = -6)
+#' voronoiPlot(selection = -6, output = "fatalities")
 
-voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
+voronoiPlot <- function(selection = NULL, vestry = FALSE, output = NULL) {
   if (is.null(output) == FALSE) {
-    if (all(output %in% c("addresses", "fatalities") == FALSE)) {
+    if (all(output %in% c("addresses", "fatalities")) == FALSE) {
       stop('If specified, "output" must either be "addresses" or "fatalities".')
+    }
+  }
+
+  if (vestry) {
+    msg1 <- 'With "vestry = TRUE", "selection" must include at least 2 pumps:'
+    msg2 <- "  two different numbers between 1 and 14."
+
+    if (is.null(selection) == FALSE) {
+      test1 <- length(unique((1:14)[selection])) < 2
+      test2 <- any(abs(selection) %in% 1:14 == FALSE)
+
+      if (test1 | test2) {
+        stop(paste(msg1, "\n", msg2))
+      }
+    }
+  } else {
+    msg1 <- 'With "vestry = FALSE", "selection" must include at least 2 pumps:'
+    msg2 <- "  two different numbers between 1 and 13."
+
+    if (is.null(selection) == FALSE ) {
+      test1 <- length(unique((1:13)[selection])) < 2
+      test2 <- any(abs(selection) %in% 1:13 == FALSE)
+
+      if (test1 | test2) {
+        stop(paste(msg1, "\n", msg2))
+      }
     }
   }
 
@@ -32,31 +58,31 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
   x.rng <- range(cholera::roads$x)
   y.rng <- range(cholera::roads$y)
 
-  if (is.null(select)) {
-    if (!vestry) {
-      pump.id <- cholera::pumps$id
-      voronoi <- deldir::deldir(cholera::pumps[, c("x", "y")],
-        rw = c(x.rng, y.rng))
-      colors <- snowColors()
-    } else {
+  if (is.null(selection)) {
+    if (vestry) {
       pump.id <- cholera::pumps.vestry$id
       voronoi <- deldir::deldir(cholera::pumps.vestry[, c("x", "y")],
         rw = c(x.rng, y.rng))
       colors <- snowColors(vestry = TRUE)
+    } else {
+      pump.id <- cholera::pumps$id
+      voronoi <- deldir::deldir(cholera::pumps[, c("x", "y")],
+        rw = c(x.rng, y.rng))
+      colors <- snowColors()
     }
   } else {
-    if (!vestry) {
-      pump.id <- cholera::pumps$id[select]
-      voronoi <- deldir::deldir(cholera::pumps[select, c("x", "y")],
+    if (vestry) {
+      pump.id <- cholera::pumps.vestry$id[selection]
+      voronoi <- deldir::deldir(cholera::pumps.vestry[selection, c("x", "y")],
         rw = c(x.rng, y.rng))
-      colors <- snowColors()[select]
-      select.string <- paste(sort(select), collapse = ", ")
+      colors <- snowColors(vestry = TRUE)[selection]
+      select.string <- paste(sort(selection), collapse = ", ")
     } else {
-      pump.id <- cholera::pumps.vestry$id[select]
-      voronoi <- deldir::deldir(cholera::pumps.vestry[select, c("x", "y")],
+      pump.id <- cholera::pumps$id[selection]
+      voronoi <- deldir::deldir(cholera::pumps[selection, c("x", "y")],
         rw = c(x.rng, y.rng))
-      colors <- snowColors(vestry = TRUE)[select]
-      select.string <- paste(sort(select), collapse = ", ")
+      colors <- snowColors()[selection]
+      select.string <- paste(sort(selection), collapse = ", ")
     }
   }
 
@@ -116,7 +142,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
   plot(voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
 
   if (is.null(output)) {
-    if (is.null(select)) {
+    if (is.null(selection)) {
       if (!vestry) {
         points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
         text(cholera::pumps[, c("x", "y")], label = pump.id, pos = 1)
@@ -126,12 +152,12 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
       }
     } else {
       if (!vestry) {
-        points(cholera::pumps[select, c("x", "y")], pch = 2, col = colors)
-        text(cholera::pumps[select, c("x", "y")], label = pump.id, pos = 1)
+        points(cholera::pumps[selection, c("x", "y")], pch = 2, col = colors)
+        text(cholera::pumps[selection, c("x", "y")], label = pump.id, pos = 1)
       } else {
-        points(cholera::pumps.vestry[select, c("x", "y")], pch = 2,
+        points(cholera::pumps.vestry[selection, c("x", "y")], pch = 2,
           col = colors)
-        text(cholera::pumps.vestry[select, c("x", "y")], label = pump.id,
+        text(cholera::pumps.vestry[selection, c("x", "y")], label = pump.id,
           pos = 1)
       }
     }
@@ -154,7 +180,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
       pch = 20, cex = 0.75)
 
     caption <- "Snow Addresses by Neighborhood"
-    if (is.null(select)) {
+    if (is.null(selection)) {
       title(main = caption)
     } else {
       title(main = paste0(caption, "\n", "Pumps ", select.string))
@@ -168,7 +194,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
 
     address.count <- vapply(voronoi.address, sum, numeric(1L))
 
-    if (is.null(select)) {
+    if (is.null(selection)) {
       if (!vestry) {
         text(cholera::pumps[, c("x", "y")], label = address.count)
       } else {
@@ -176,14 +202,15 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
       }
     } else {
       if (!vestry) {
-        text(cholera::pumps[select, c("x", "y")], label = address.count)
+        text(cholera::pumps[selection, c("x", "y")], label = address.count)
       } else {
-        text(cholera::pumps.vestry[select, c("x", "y")], label = address.count)
+        text(cholera::pumps.vestry[selection, c("x", "y")],
+          label = address.count)
       }
     }
 
     caption <- "Snow Address Count by Pump Neighborhood"
-    if (is.null(select)) {
+    if (is.null(selection)) {
       title(main = caption)
     } else {
       title(main = paste0(caption, "\n", "Pumps ", select.string))
@@ -197,11 +224,11 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
 
     fatality.count <- vapply(voronoi.fatalities, sum, numeric(1L))
 
-    if (is.null(select)) {
+    if (is.null(selection)) {
       if (!vestry) {
         text(cholera::pumps[, c("x", "y")], label = fatality.count)
         caption <- "Snow Fatalities Count by Pump Neighborhood"
-        if (is.null(select)) {
+        if (is.null(selection)) {
           title(main = caption)
         } else {
           title(main = paste0(caption, "\n", "Pumps ", select.string))
@@ -209,7 +236,7 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
       } else {
         text(cholera::pumps.vestry[, c("x", "y")], label = fatality.count)
         caption <- "Vestry Fatalities Count by Pump Neighborhood"
-        if (is.null(select)) {
+        if (is.null(selection)) {
           title(main = caption)
         } else {
           title(main = paste0(caption, "\n", "Pumps ", select.string))
@@ -217,19 +244,20 @@ voronoiPlot <- function(select = NULL, vestry = FALSE, output = NULL) {
       }
     } else {
       if (!vestry) {
-        text(cholera::pumps[select, c("x", "y")], label = fatality.count)
+        text(cholera::pumps[selection, c("x", "y")], label = fatality.count)
         caption <- "Snow Fatalities Count by Pump Neighborhood"
 
-        if (is.null(select)) {
+        if (is.null(selection)) {
           title(main = caption)
         } else {
           title(main = paste0(caption, "\n", "Pumps ", select.string))
         }
       } else {
-        text(cholera::pumps.vestry[select, c("x", "y")], label = fatality.count)
+        text(cholera::pumps.vestry[selection, c("x", "y")],
+          label = fatality.count)
         caption <- "Vestry Fatalities Count by Pump Neighborhood"
 
-        if (is.null(select)) {
+        if (is.null(selection)) {
           title(main = caption)
         } else {
           title(main = paste0(caption, "\n", "Pumps ", select.string))
@@ -266,6 +294,7 @@ fourCorners <- function() {
 # @param s0, t0, s1, t2 Coordinates of second segment's endpoints.
 # @return A data frame.
 # @seealso \url{http://stackoverflow.com/questions/20519231/finding-point-of-intersection-in-r}
+
 segmentIntersection <- function(x0, y0, x1, y1, s0, t0, s1, t1) {
   denom <- (t1 - t0) * (x1 - x0) - (s1 - s0) * (y1 - y0)
   denom[abs(denom) < 1e-10] <- NA # parallel lines
