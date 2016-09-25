@@ -2,6 +2,8 @@ cholera 0.0.0.9019
 ----------------------------------------------------------------
 
 * add walkingNeighborhoodPlot(), beta version
+* add walking.neighborhoods vignette
+
 
 cholera 0.0.0.9018
 ----------------------------------------------------------------

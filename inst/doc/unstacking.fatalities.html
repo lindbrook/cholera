@@ -12,7 +12,7 @@
 
 <meta name="author" content="lindbrook" />
 
-<meta name="date" content="2016-09-05" />
+<meta name="date" content="2016-09-25" />
 
 <title>Unstacking Bars</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">‘Unstacking’ Bars</h1>
 <h4 class="author"><em>lindbrook</em></h4>
-<h4 class="date"><em>2016-09-05</em></h4>
+<h4 class="date"><em>2016-09-25</em></h4>
 
 
 
@@ -121,60 +121,35 @@ fatalities[fatalities$case %in%<span class="st"> </span>broad38, ]
 <span class="co"># With fatalities.unstacked, all members of the stack have identical coordinates</span>
 
 fatalities.unstacked[fatalities.unstacked$case %in%<span class="st"> </span>broad38, ]
-<span class="co">#&gt;     case        x        y snow voronoi path.pump path.distance</span>
-<span class="co">#&gt; 12    12 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 59    59 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 61    61 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 138  138 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 174  174 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 190  190 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 239  239 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 290  290 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 310  310 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 340  340 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 397  397 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 398  398 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 421  421 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 508  508 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 521  521 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 523  523 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 547  547 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt; 562  562 12.31552 11.51159 TRUE       7         7             1</span>
-<span class="co">#&gt;     wtd.path.pump wtd.path.distance</span>
-<span class="co">#&gt; 12              7         0.3144154</span>
-<span class="co">#&gt; 59              7         0.3040351</span>
-<span class="co">#&gt; 61              7         0.3132509</span>
-<span class="co">#&gt; 138             7         0.3060096</span>
-<span class="co">#&gt; 174             7         0.3166389</span>
-<span class="co">#&gt; 190             7         0.3127561</span>
-<span class="co">#&gt; 239             7         0.3244637</span>
-<span class="co">#&gt; 290             7         0.3103201</span>
-<span class="co">#&gt; 310             7         0.3187117</span>
-<span class="co">#&gt; 340             7         0.3037701</span>
-<span class="co">#&gt; 397             7         0.3113619</span>
-<span class="co">#&gt; 398             7         0.3184654</span>
-<span class="co">#&gt; 421             7         0.3107056</span>
-<span class="co">#&gt; 508             7         0.3008916</span>
-<span class="co">#&gt; 521             7         0.3053476</span>
-<span class="co">#&gt; 523             7         0.3082497</span>
-<span class="co">#&gt; 547             7         0.3102102</span>
-<span class="co">#&gt; 562             7         0.3156149</span></code></pre></div>
+<span class="co">#&gt;     case        x        y</span>
+<span class="co">#&gt; 12    12 12.31552 11.51159</span>
+<span class="co">#&gt; 59    59 12.31552 11.51159</span>
+<span class="co">#&gt; 61    61 12.31552 11.51159</span>
+<span class="co">#&gt; 138  138 12.31552 11.51159</span>
+<span class="co">#&gt; 174  174 12.31552 11.51159</span>
+<span class="co">#&gt; 190  190 12.31552 11.51159</span>
+<span class="co">#&gt; 239  239 12.31552 11.51159</span>
+<span class="co">#&gt; 290  290 12.31552 11.51159</span>
+<span class="co">#&gt; 310  310 12.31552 11.51159</span>
+<span class="co">#&gt; 340  340 12.31552 11.51159</span>
+<span class="co">#&gt; 397  397 12.31552 11.51159</span>
+<span class="co">#&gt; 398  398 12.31552 11.51159</span>
+<span class="co">#&gt; 421  421 12.31552 11.51159</span>
+<span class="co">#&gt; 508  508 12.31552 11.51159</span>
+<span class="co">#&gt; 521  521 12.31552 11.51159</span>
+<span class="co">#&gt; 523  523 12.31552 11.51159</span>
+<span class="co">#&gt; 547  547 12.31552 11.51159</span>
+<span class="co">#&gt; 562  562 12.31552 11.51159</span></code></pre></div>
 <p>The code below shows the structure of <em>unstacked.address</em>. Here, the 18 cases at 38 Broad Street are represented by a single observation, case 239, which serves as the nominal representative for the “address”:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The 18 cases at 38 Broad street are nominally represented by case 239</span>
 
 fatalities.address[<span class="dv">136</span>:<span class="dv">140</span>, ]
-<span class="co">#&gt;     anchor.case         x        y case.count  snow voronoi path.pump</span>
-<span class="co">#&gt; 136         237 15.775540 13.98787          2  TRUE       7         3</span>
-<span class="co">#&gt; 137         238 12.900190 10.33882          1  TRUE       7         9</span>
-<span class="co">#&gt; 138         239 12.315520 11.51159         18  TRUE       7         7</span>
-<span class="co">#&gt; 139         240  9.794394 11.77236          1 FALSE       6         7</span>
-<span class="co">#&gt; 140         242 12.677590 12.05460          1  TRUE       7         7</span>
-<span class="co">#&gt;     path.distance wtd.path.pump wtd.path.distance</span>
-<span class="co">#&gt; 136             7             7         4.2829877</span>
-<span class="co">#&gt; 137             5             7         2.1035009</span>
-<span class="co">#&gt; 138             1             7         0.3244637</span>
-<span class="co">#&gt; 139             6             6         1.7245854</span>
-<span class="co">#&gt; 140             2             7         0.2327078</span></code></pre></div>
+<span class="co">#&gt;     anchor.case         x        y case.count</span>
+<span class="co">#&gt; 236         237 15.775540 13.98787          2</span>
+<span class="co">#&gt; 238         238 12.900190 10.33882          1</span>
+<span class="co">#&gt; 239         239 12.315520 11.51159         18</span>
+<span class="co">#&gt; 257         240  9.794394 11.77236          1</span>
+<span class="co">#&gt; 258         242 12.677590 12.05460          1</span></code></pre></div>
 </div>
 <div id="virtues-of-unstacking" class="section level2">
 <h2>Virtues of “unstacking”</h2>
