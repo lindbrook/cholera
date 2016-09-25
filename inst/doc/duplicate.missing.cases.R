@@ -3,7 +3,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(cholera)
 library(HistData)
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 street.list <- split(Snow.streets[, c("x", "y")], Snow.streets$street)
 
@@ -603,7 +603,7 @@ text(broad.df["32", "x"] + 0.5 * r, broad.df["32", "y"], pos = 3,
 abline(ols)
 
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 sel <- "216"  # street list element, one with 2 endpoints
 
@@ -717,7 +717,7 @@ legend(x = "bottomleft",
 text(cam.x, cam.y, "Cambridge St", srt = cam.angle)
 text(broad.x, broad.y, "Broad St", srt = broad.angle)
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 noel.street <- c(282, 422)
 

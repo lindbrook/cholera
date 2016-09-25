@@ -33,7 +33,7 @@ road.segments <- lapply(unique(roads$street), function(i) {
 road.segments <- do.call(rbind, road.segments)
 
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 roads.list <- split(roads[, c("x", "y")], roads$street)
 
@@ -63,7 +63,7 @@ fatalities.unstacked[fatalities.unstacked$case %in% broad38, ]
 
 fatalities.address[136:140, ]
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 ## Graph parameters ##
 bw <- 1:4
@@ -154,7 +154,7 @@ p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
             angle = cambridge.angle)
 
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 ## Data ##
 
@@ -200,7 +200,7 @@ p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
             angle = cambridge.angle)
 
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 plot(fatalities.address[, c("x", "y")], pch = 20, asp = 1, xlim = x.range,
   ylim = y.range, cex = 1/3)
@@ -260,7 +260,7 @@ broad.df <- data.frame(x = broad.x, y = broad.y)
 text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 case.select <- 12
 case <- Snow.deaths[case.select, c("x", "y")]
@@ -318,7 +318,7 @@ text(cambridge.df$x, cambridge.df$y, "Cambridge St", srt = cambridge.angle)
 text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 case.select <- 290
 case <- Snow.deaths[case.select, c("x", "y")]
@@ -375,7 +375,7 @@ text(cambridge.df$x, cambridge.df$y, "Cambridge St", srt = cambridge.angle)
 text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 broad.st.cases <- c(12, 21, 25, 32, 42, 72, 91, 93, 122, 190, 194, 212, 232,
                     239, 310, 321, 343, 373, 389, 396, 397, 398, 421, 496, 562,
@@ -544,7 +544,7 @@ broad.df <- data.frame(x = broad.x, y = broad.y)
 text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 sel <- c(321, 239)
 
@@ -614,7 +614,7 @@ broad.df <- data.frame(x = broad.x, y = broad.y)
 text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 
-## ---- fig.width = 7, fig.height = 7, echo = FALSE------------------------
+## ---- fig.width = 6, fig.height = 6, echo = FALSE------------------------
 
 cutpoint <- 0.05
 

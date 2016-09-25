@@ -39,30 +39,10 @@ The figure below plots the "addresses" and the Voronoi cells for the 13 pumps in
 voronoiPlot()
 ```
 
-The next figure plots the total count of "addresses" in each of the 13 cells in the original map.
-
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
-voronoiPlot(output = "addresses")
-```
-
-The final figure plots the total count of "fatalities" in each of the 13 cells. 
-
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
-voronoiPlot(output = "fatalities")
-```
-
-Snow wrote that some people who lived near the pump at Carnaby and Little Marlborough Street (#6) found its drinking water to be of low quality and actually preferred to go to the Broad Street pump. To explore this possibility, we can exclude that pump and replot the graphs above.
+Snow wrote that some people who lived near the pump at Carnaby and Little Marlborough Street (#6) found its drinking water to be of low quality and actually preferred to go to the Broad Street pump. To explore this possibility, we can exclude that pump and replot the graph above.
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE}
 voronoiPlot(select = -6)
-```
-
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
-voronoiPlot(select = -6, output = "fatalities")
-```
-
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
-voronoiPlot(select = -6, output = "addresses")
 ```
 
 For more information about voronoiPlot(), see the documentation.

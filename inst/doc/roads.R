@@ -2,7 +2,7 @@
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 library(cholera)
 
-## ---- fig.width = 7, fig.height = 7, fig.align = "center", echo = FALSE----
+## ---- fig.width = 6, fig.height = 6, fig.align = "center", echo = FALSE----
 
 roads.list <- split(roads[, c("x", "y")], roads$street)
 
@@ -10,7 +10,7 @@ plot(fatalities[, c("x", "y")], xlim = range(roads$x), ylim = range(roads$y),
      pch = 15, cex = 0.5, col = "gray", asp = 1)
 invisible(lapply(roads.list, lines, col = "gray"))
 points(HistData::Snow.pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-text(HistData::Snow.pumps[, c("x", "y")], labels = HistData::Snow.pumps$pump, 
+text(HistData::Snow.pumps[, c("x", "y")], labels = HistData::Snow.pumps$pump,
      pos = 1)
 
 ## ------------------------------------------------------------------------
@@ -49,7 +49,7 @@ length(border)
 #  roads[roads$name == "Marlborough Mews", "n"] <- 3
 #  roads <- roads[order(roads$id), ]
 
-## ---- fig.width = 7, fig.height = 7, fig.align = "center", echo = TRUE----
+## ---- fig.width = 6, fig.height = 6, fig.align = "center", echo = TRUE----
 streetNameViewer("Oxford Street")
 streetNameViewer("Cambridge Street", zoom = TRUE, radius = 0.5)
 streetNumberViewer(50)

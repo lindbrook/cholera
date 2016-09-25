@@ -22,7 +22,7 @@ John Snow's map of the 1854 cholera outbreak in London is a canonical example of
 
 In 1992, Rusty Dodson and Waldo Tobler digitized the map. However, the data are no longer available.^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] Fortunately, they are preserved in Michael Friendly's _HistData_ R package. The amended data from this package are plotted below:
 
-```{r, fig.width = 7, fig.height = 7, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "center", echo = FALSE}
 
 roads.list <- split(roads[, c("x", "y")], roads$street)
 
@@ -30,7 +30,7 @@ plot(fatalities[, c("x", "y")], xlim = range(roads$x), ylim = range(roads$y),
      pch = 15, cex = 0.5, col = "gray", asp = 1)
 invisible(lapply(roads.list, lines, col = "gray"))
 points(HistData::Snow.pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-text(HistData::Snow.pumps[, c("x", "y")], labels = HistData::Snow.pumps$pump, 
+text(HistData::Snow.pumps[, c("x", "y")], labels = HistData::Snow.pumps$pump,
      pos = 1)
 ```
 
@@ -72,7 +72,7 @@ While great effort was made to read and cross-reference names, there may still b
 
 ## Queen Street (I) and Marlborough Mews
 
-There is one apparent coding error in Dodson and Tobler's road data. Queen Street (I) extends too far: the water pump (#7) that is clearly located on Marlborough Mews (see [map](http://www.ph.ucla.edu/epi/snow/highressnowmap.html), cited above), ends up on Queen Street (I). 
+There is one apparent coding error in Dodson and Tobler's road data. Queen Street (I) extends too far: the water pump (#7) that is clearly located on Marlborough Mews (see [map](http://www.ph.ucla.edu/epi/snow/highressnowmap.html), cited above), ends up on Queen Street (I).
 
 I amend this by moving the end point of Queen Street (I) westward so that the street only runs north-south. I do so by reassigning the segment that runs east-west so that it is now part of Marlborough Mews.
 
@@ -182,7 +182,7 @@ Great Windmill Street | Pews Place |
 
 ### Three examples
 
-```{r, fig.width = 7, fig.height = 7, fig.align = "center", echo = TRUE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "center", echo = TRUE}
 streetNameViewer("Oxford Street")
 streetNameViewer("Cambridge Street", zoom = TRUE, radius = 0.5)
 streetNumberViewer(50)
