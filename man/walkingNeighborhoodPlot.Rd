@@ -5,7 +5,8 @@
 \title{Plots walking neighborhoods.}
 \usage{
 walkingNeighborhoodPlot(selection = NULL, vestry = FALSE, streets = TRUE,
-  weighted = TRUE, add.obs = FALSE, add.landmarks = TRUE, cores = 1L)
+  weighted = TRUE, add.obs = FALSE, add.landmarks = TRUE, arrow = FALSE,
+  alpha.level = NULL, obs.lwd = 2, sim.lwd = 2, cores = 1L)
 }
 \arguments{
 \item{selection}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}}
@@ -20,16 +21,24 @@ walkingNeighborhoodPlot(selection = NULL, vestry = FALSE, streets = TRUE,
 
 \item{add.landmarks}{Logical. Include landmarks.}
 
-\item{cores}{Numeric or "all". Number of cores to use; default is 1. If you select more than 1 core or use "all", which uses parallel::detectCores(), you should run this function in batch, not interactive mode (i.e., not in GUI).}
+\item{arrow}{Logical. Use arrows.}
+
+\item{alpha.level, }{Numeric. If desired, set alpha level.}
+
+\item{obs.lwd}{Numeric. Set line width for observed paths.}
+
+\item{sim.lwd}{Numeric. Set line width for expected paths}
+
+\item{cores}{Numeric or "all". Number of cores to use (default is 1). If you select more than 1 core or use "all", which uses parallel::detectCores(), you should run this function in batch not interactive mode (i.e., not in GUI).}
 }
 \value{
 A base R graphics plot.
 }
 \description{
-Plots walking neighborhoods based on the weighted shortest paths between a fatalities and the nearest pump. Beta version.
+Plots walking neighborhoods based on the weighted shortest paths between a fatalities and the nearest pump.
 }
 \details{
-Currently computationally intensive. For now, it is better to run in batch mode in parallel with multiple cores. See \code{vignette}("walking.neighborhoods") for details
+Currently computationally intensive (streets = TRUE appox 2.5 minutes; streets = FALSE appox 2 minutes). For better performance, run in batch mode in parallel with multiple cores. See \code{vignette}("walking.neighborhoods") for details.
 }
 \seealso{
 \code{addLandmarks()}
