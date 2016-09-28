@@ -1,7 +1,7 @@
 cholera 0.1.0
 ----------------------------------------------------------------
 
-* add walkingNeighborhoodPlot(), beta version
+* add walkingNeighborhoodPlot()
 * add walking.neighborhoods vignette
 
 
