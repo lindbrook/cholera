@@ -15,7 +15,7 @@ walkingNeighborhoodPlot(selection = NULL, vestry = FALSE, streets = TRUE,
 
 \item{streets}{TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods.}
 
-\item{weighted}{Logical. Shortest path weighted by road distance.}
+\item{weighted}{Logical. TRUE uses shortest path weighted by road distance.}
 
 \item{add.obs}{Logical. Include observed addresses.}
 
@@ -39,6 +39,11 @@ Plots walking neighborhoods based on the weighted shortest paths between a fatal
 }
 \details{
 Currently computationally intensive (streets = TRUE appox 90 seocnds; streets = FALSE appox 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores. See \code{vignette}("walking.neighborhoods") for details.
+}
+\examples{
+# walkingNeighborhoodPlot()
+# walkingNeighborhoodPlot(streets = FALSE)
+# walkingNeighborhoodPlot(streets = FALSE, weighted = FALSE)
 }
 \seealso{
 \code{addLandmarks()}
