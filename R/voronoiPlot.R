@@ -89,23 +89,27 @@ voronoiPlot <- function(selection = NULL, vestry = FALSE, output = NULL) {
   cell.data <- voronoi$dirsgs
   cell.id <- sort(unique(c(cell.data$ind1, cell.data$ind2)))
 
+  # Polygon coordinates
+
   coordinates <- lapply(cell.id, function(i) {
     pump <- cholera::pumps[pump.id[i], c("x", "y")]
     cell <- cell.data[cell.data$ind1 == i | cell.data$ind2 == i, ]
-
     a <- cell[, c("x1", "y1")]
     b <- cell[, c("x2", "y2")]
     names(a) <- c("x", "y")
     names(b) <- c("x", "y")
+
+    # "Open" polygon test
 
     test1 <- any(cell$thirdv1 < 0 | cell$thirdv2 < 0)
 
     test2 <- unlist(cell[, c("thirdv1", "thirdv2")])
     test2 <- length(unique(test2[test2 < 0])) != 1
 
+    # Close "open" polygons at corners
+
     if (test1 & test2) {
       four.corners <- fourCorners()
-
       corners <- lapply(seq_len(nrow(cell)), function(j) {
         intersection.points <- lapply(four.corners, function(corner) {
           segmentIntersection(pump$x, pump$y, corner$x, corner$y,
@@ -180,6 +184,7 @@ voronoiPlot <- function(selection = NULL, vestry = FALSE, output = NULL) {
       pch = 20, cex = 0.75)
 
     caption <- "Snow Addresses by Neighborhood"
+
     if (is.null(selection)) {
       title(main = caption)
     } else {
@@ -246,7 +251,6 @@ voronoiPlot <- function(selection = NULL, vestry = FALSE, output = NULL) {
       if (!vestry) {
         text(cholera::pumps[selection, c("x", "y")], label = fatality.count)
         caption <- "Snow Fatalities Count by Pump Neighborhood"
-
         if (is.null(selection)) {
           title(main = caption)
         } else {
@@ -256,7 +260,6 @@ voronoiPlot <- function(selection = NULL, vestry = FALSE, output = NULL) {
         text(cholera::pumps.vestry[selection, c("x", "y")],
           label = fatality.count)
         caption <- "Vestry Fatalities Count by Pump Neighborhood"
-
         if (is.null(selection)) {
           title(main = caption)
         } else {
@@ -289,11 +292,11 @@ fourCorners <- function() {
 
 # Point of intersection between two segments.
 #
-# Returns the point of intersection between two segments or NA if none.
+# Returns the point of intersection between two segments or NA if none. \url{http://stackoverflow.com/questions/20519231/finding-point-of-intersection-in-r}
+#
 # @param x0, y0, x1, x2 Coordinates of first segment's endpoints.
 # @param s0, t0, s1, t2 Coordinates of second segment's endpoints.
 # @return A data frame.
-# @seealso \url{http://stackoverflow.com/questions/20519231/finding-point-of-intersection-in-r}
 
 segmentIntersection <- function(x0, y0, x1, y1, s0, t0, s1, t1) {
   denom <- (t1 - t0) * (x1 - x0) - (s1 - s0) * (y1 - y0)
