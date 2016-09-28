@@ -6,7 +6,7 @@
 #' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param streets TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods.
-#' @param weighted Logical. Shortest path weighted by road distance.
+#' @param weighted Logical. TRUE uses shortest path weighted by road distance.
 #' @param add.obs Logical. Include observed addresses.
 #' @param add.landmarks Logical. Include landmarks.
 #' @param arrow Logical. Use arrows.
@@ -18,6 +18,10 @@
 #' @seealso \code{addLandmarks()}
 #'
 #' @export
+#' @examples
+#' # walkingNeighborhoodPlot()
+#' # walkingNeighborhoodPlot(streets = FALSE)
+#' # walkingNeighborhoodPlot(streets = FALSE, weighted = FALSE)
 
 walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
   streets = TRUE, weighted = TRUE, add.obs = FALSE, add.landmarks = TRUE,
@@ -154,8 +158,14 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
       which(igraph::V(g)$name == p)
     }, numeric(1L))
 
-    wts <- case.road.segments.sp[[x]]$d
-    d <- unname(igraph::distances(g, case.node, pump.nodes, weights = wts))
+    if (weighted) {
+      wts <- case.road.segments.sp[[x]]$d
+      d <- unname(igraph::distances(g, case.node, pump.nodes, weights = wts))
+    } else {
+      d <- unname(igraph::distances(g, case.node, pump.nodes))
+    }
+
+    d
   }, mc.cores = cores)
 
   wtd.dist.sp <- data.frame(do.call(rbind, wtd.dist.sp))
@@ -176,8 +186,14 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
 
   exp.address$col <- NA
 
-  for (i in 1:13) {
-    exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
+  if (!vestry) {
+    for (i in 1:13) {
+      exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
+    }
+  } else {
+    for (i in 1:14) {
+      exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
+    }
   }
 
   x.range <- range(cholera::roads$x)
@@ -221,9 +237,16 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
       }
     }))
 
-    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, cex = 1,
-         pos = 1)
-    points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
+    if (!vestry) {
+      text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, cex = 1,
+        pos = 1)
+      points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
+    } else {
+      text(cholera::pumps.vestry[, c("x", "y")], cex = 1, pos = 1,
+        label = cholera::pumps.vestry$id, )
+      points(cholera::pumps.vestry[, c("x", "y")], pch = 2, col = colors)
+    }
+
     title(main = "Expected Paths")
 
   } else {
@@ -233,13 +256,26 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
     invisible(lapply(border.list, lines))
 
     if (is.null(selection)) {
-      text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, cex = 1,
-        col = "white", pos = 1)
-      points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white")
+      if (!vestry) {
+        text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, cex = 1,
+          col = "white", pos = 1)
+        points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white")
+      } else {
+        text(cholera::pumps.vestry[, c("x", "y")], col = "white", pos = 1,
+          label = cholera::pumps.vestry$id, cex = 1)
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 24, bg = "white")
+      }
     } else {
-      text(cholera::pumps[selection, c("x", "y")], cex = 1, col = "white",
-        pos = 1, label = cholera::pumps$id[selection])
-      points(cholera::pumps[selection, c("x", "y")], pch = 24, bg = "white")
+      if (!vestry) {
+        text(cholera::pumps[selection, c("x", "y")], cex = 1, col = "white",
+          pos = 1, label = cholera::pumps$id[selection])
+        points(cholera::pumps[selection, c("x", "y")], pch = 24, bg = "white")
+      } else {
+        text(cholera::pumps.vestry[selection, c("x", "y")], cex = 1,
+          col = "white", pos = 1, label = cholera::pumps.vestry$id[selection])
+        points(cholera::pumps.vestry[selection, c("x", "y")], pch = 24,
+          bg = "white")
+      }
     }
     title(main = "Expected Path Neighborhoods")
   }
