@@ -29,7 +29,7 @@ walkingNeighborhoodPlot(selection = NULL, vestry = FALSE, streets = TRUE,
 
 \item{sim.lwd}{Numeric. Set line width for expected paths}
 
-\item{cores}{Numeric or "all". Number of cores to use (default is 1). If you select more than 1 core or use "all", which uses parallel::detectCores(), you should run this function in batch not interactive mode (i.e., not in GUI).}
+\item{cores}{Numeric or "all". Number of cores to use (default is 1). If you select more than 1 core or use "all", which uses parallel::detectCores(), you must run this in batch not interactive mode (i.e., not in GUI). See parallel::mclapply() for details.}
 }
 \value{
 A base R graphics plot.
@@ -38,7 +38,7 @@ A base R graphics plot.
 Plots walking neighborhoods based on the weighted shortest paths between a fatalities and the nearest pump.
 }
 \details{
-Currently computationally intensive (streets = TRUE appox 2.5 minutes; streets = FALSE appox 2 minutes). For better performance, run in batch mode in parallel with multiple cores. See \code{vignette}("walking.neighborhoods") for details.
+Currently computationally intensive (streets = TRUE appox 90 seocnds; streets = FALSE appox 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores. See \code{vignette}("walking.neighborhoods") for details.
 }
 \seealso{
 \code{addLandmarks()}

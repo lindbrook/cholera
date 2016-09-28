@@ -2,7 +2,7 @@
 #'
 #' Plots walking neighborhoods based on the weighted shortest paths between a fatalities and the nearest pump.
 #'
-#' Currently computationally intensive (streets = TRUE appox 2.5 minutes; streets = FALSE appox 2 minutes). For better performance, run in batch mode in parallel with multiple cores. See \code{vignette}("walking.neighborhoods") for details.
+#' Currently computationally intensive (streets = TRUE appox 90 seocnds; streets = FALSE appox 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores. See \code{vignette}("walking.neighborhoods") for details.
 #' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param streets TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods.
@@ -13,7 +13,7 @@
 #' @param alpha.level, Numeric. If desired, set alpha level.
 #' @param obs.lwd Numeric. Set line width for observed paths.
 #' @param sim.lwd Numeric. Set line width for expected paths
-#' @param cores Numeric or "all". Number of cores to use (default is 1). If you select more than 1 core or use "all", which uses parallel::detectCores(), you should run this function in batch not interactive mode (i.e., not in GUI).
+#' @param cores Numeric or "all". Number of cores to use (default is 1). If you select more than 1 core or use "all", which uses parallel::detectCores(), you must run this in batch not interactive mode (i.e., not in GUI). See parallel::mclapply() for details.
 #' @return A base R graphics plot.
 #' @seealso \code{addLandmarks()}
 #'
@@ -104,7 +104,7 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
   selected.case.sp <- split(selected.case.sp, selected.case.sp$case)
 
   # Integrates case into road netowrk
-  
+
   case.road.segments.sp <- parallel::mclapply(selected.case.sp, function(x) {
     seg <- unlist(strsplit(road.segments$id, "a"))
     seg <- unlist(strsplit(seg, "b"))
