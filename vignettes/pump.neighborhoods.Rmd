@@ -55,7 +55,7 @@ Snow's annotation is an attempt to addresses this issue. He writes that the anno
 
 The figure below plots the path between the case 50 and its nearest pump, the Broad Street pump ("p7").
 
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
+```{r, fig.width = 6, fig.height = 6, message = FALSE, eval = FALSE}
 walkingPathPlot(150)
 ```
 
@@ -67,13 +67,13 @@ To get a sense of an entire neighborhood, I extend the approach from "observed" 
 
 I do so in two ways. In the first (Figure 8), I identify neighborhoods by coloring roads.^[Shiode (2012) uses this approach.] 
 
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
+```{r, fig.width = 6, fig.height = 6, message = FALSE, eval = FALSE}
 walkingNeighborhoodPlot()
 ```
 
 In the second, Figure 9, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach]. 
 
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
+```{r, fig.width = 6, fig.height = 6, message = FALSE, eval = FALSE}
 walkingNeighborhoodPlot(streets = FALSE)
 ```
 
