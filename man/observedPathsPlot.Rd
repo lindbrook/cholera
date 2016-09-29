@@ -20,9 +20,9 @@ A base R graphics plot.
 Plots the shortest walking path between observed addressses and their nearest pump.
 }
 \examples{
-observedPathsPlot()
-observedPathsPlot(selection = -7) # exclude pump 7
-observedPathsPlot(selection = 6)  # only consider pump 6
+# observedPathsPlot()
+# observedPathsPlot(selection = -7) # exclude pump 7
+# observedPathsPlot(selection = 6)  # only consider pump 6
 }
 \seealso{
 \code{fatalities.address}

@@ -10,9 +10,9 @@
 #' @import graphics
 #' @export
 #' @examples
-#' observedPathsPlot()
-#' observedPathsPlot(selection = -7) # exclude pump 7
-#' observedPathsPlot(selection = 6)  # only consider pump 6
+#' # observedPathsPlot()
+#' # observedPathsPlot(selection = -7) # exclude pump 7
+#' # observedPathsPlot(selection = 6)  # only consider pump 6
 observedPathsPlot <- function(weighted = TRUE, vestry = FALSE,
   selection = NULL) {
 
@@ -170,13 +170,13 @@ observedPathsPlot <- function(weighted = TRUE, vestry = FALSE,
       points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 2, cex = 1,
         col = colors[sel.pumps])
       text(cholera::pumps.vestry[sel.pumps, c("x", "y")],
-        label = cholera::pumps$id, pos = 1)
+        label = cholera::pumps$id[sel.pumps], pos = 1)
     } else {
       sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
       points(cholera::pumps[sel.pumps, c("x", "y")], pch = 2, cex = 1,
         col = colors[sel.pumps])
       text(cholera::pumps[sel.pumps, c("x", "y")],
-        label = cholera::pumps.vestry$id, pos = 1)
+        label = cholera::pumps.vestry$id[sel.pumps], pos = 1)
     }
   }
 
