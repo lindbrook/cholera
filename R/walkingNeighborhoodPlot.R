@@ -265,7 +265,6 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
         label = cholera::pumps.vestry$id)
       points(cholera::pumps.vestry[, c("x", "y")], pch = 2, col = colors)
     }
-
     title(main = "Expected Paths")
 
   } else {
@@ -358,8 +357,7 @@ integratePumpNodes <- function(road.segments, vestry = FALSE) {
   out <- out[order(out$street, out$id), ]
   out$node1 <- paste0(out$x1, "-", out$y1)
   out$node2 <- paste0(out$x2, "-", out$y2)
-  out$d <- sqrt((out$x1 - out$x2)^2 +
-                (out$y1 - out$y2)^2)
+  out$d <- sqrt((out$x1 - out$x2)^2 + (out$y1 - out$y2)^2)
   out
 }
 
