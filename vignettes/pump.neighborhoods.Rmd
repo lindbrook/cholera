@@ -61,6 +61,9 @@ walkingPathPlot(150)
 
 By applying this function to all observed cases, we can begin to get a sense of the different pump neighborhoods.
 
+```{r, fig.width = 6, fig.height = 6, message = FALSE, eval = FALSE}
+observedPathsPlot()
+```
 ![](walking.paths.graph8.all.png)
 
 To get a sense of an entire neighborhood, I extend the approach from "observed" data to "expected" data. Using sp::spsample() and sp::Polygon(), I place 5000 regularly spaced points on the map and compute their walking path to the nearest pump. This allows me to see the full extent and range of a pump's neighborhood.
