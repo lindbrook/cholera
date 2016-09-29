@@ -154,9 +154,15 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
     case.coord <- paste0(case$x.proj, "-", case$y.proj)
     case.node <- which(igraph::V(g)$name == case.coord)
 
-    pump.nodes <- vapply(pump.coordinates, function(p) {
-      which(igraph::V(g)$name == p)
-    }, numeric(1L))
+    if (is.null(selection)) {
+      pump.nodes <- vapply(pump.coordinates, function(p) {
+        which(igraph::V(g)$name == p)
+      }, numeric(1L))
+    } else {
+      pump.nodes <- vapply(pump.coordinates[selection], function(p) {
+        which(igraph::V(g)$name == p)
+      }, numeric(1L))
+    }
 
     if (weighted) {
       wts <- case.road.segments.sp[[x]]$d
@@ -187,12 +193,25 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
   exp.address$col <- NA
 
   if (!vestry) {
-    for (i in 1:13) {
-      exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
+    if (is.null(selection)) {
+      for (i in 1:13) {
+        exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
+      }
+    } else {
+      obs.pumps <- sort(unique(exp.address$wtd.pump))
+      for (i in seq_along(obs.pumps)) {
+        exp.address[exp.address$wtd.pump == obs.pumps[i], "col"] <- colors[i]
+      }
     }
   } else {
-    for (i in 1:14) {
-      exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
+    if (is.null(vestry)) {
+      for (i in 1:14) {
+        exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
+      }
+    } else {
+      for (i in sort(unique(exp.address$wtd.pump))) {
+        exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
+      }
     }
   }
 
@@ -243,7 +262,7 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
       points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
     } else {
       text(cholera::pumps.vestry[, c("x", "y")], cex = 1, pos = 1,
-        label = cholera::pumps.vestry$id, )
+        label = cholera::pumps.vestry$id)
       points(cholera::pumps.vestry[, c("x", "y")], pch = 2, col = colors)
     }
 
