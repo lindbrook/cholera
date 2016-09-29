@@ -202,15 +202,16 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
       }
     }
   } else {
-    if (is.null(vestry)) {
-      for (i in 1:14) {
-        exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
-      }
-    } else {
-      for (i in sort(unique(exp.address$wtd.pump))) {
-        exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
-      }
-    }
+     if (is.null(selection)) {
+       for (i in 1:13) {
+         exp.address[exp.address$wtd.pump == i, "col"] <- colors[i]
+       }
+     } else {
+       obs.pumps <- sort(unique(exp.address$wtd.pump))
+       for (i in seq_along(obs.pumps)) {
+         exp.address[exp.address$wtd.pump == obs.pumps[i], "col"] <- colors[i]
+       }
+     }
   }
 
   x.range <- range(cholera::roads$x)
