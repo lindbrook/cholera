@@ -25,13 +25,13 @@ By identifying the pump's neighborhood, Snow sets limits on where we should expe
 
 To help assess Snow's argument, I provide functions that allow one to analyze and visualize the two systematic approaches to computing pump neighborhoods: Voronoi tessellation, which is based on the Euclidean distance between pumps, and walking distance, which applies graph theory to the network of roads on Snow's map of Soho. Regardless of the choice of computing neighborhoods (Snow's annotation included), the guiding principle is straightforward: because fetching water entails physical effort, all else being equal, people will choose the closest pump. By aggregating these individual choices, pump neighborhoods emerge.
 
-This package allows users not only to compare different methods, it also allows one to explore the data. First, one can consider different scenarios. For example, Snow argues that residents found the water from the Carnaby and Little Marlborough Street pump (#6) to be of low quality and actually preferred to actually go to the Broad Street pump instead (#7).^[Snow writes: "It requires to be stated that the water of the pump in Marlborough Street, at the end of Carnaby Street, was so impure that many persons avoided using it; and I found that the persons who died near this pump, in the beginning of September, had water from the Broad Street pump."] Using this package, one can see and analyze the effect of excluding this pump. One can, in fact, include or exclude any set of pumps one wants. Second, one can compare the two different sets of pump: the 13 pumps in the original map and the 14 pumps in the Vestry Report.^[Note that in "pumps.vestry", I eyeball estimate the location of the two amendments: the pump on Hanover Street and the relocation of the Broad Street Pump.] 
+This package allows users not only to compare different methods, it also allows one to explore the data. First, one can consider different scenarios. For example, Snow argues that residents found the water from the Carnaby and Little Marlborough Street pump (#6) to be of low quality and actually preferred to actually go to the Broad Street pump instead (#7).^[Snow writes: "It requires to be stated that the water of the pump in Marlborough Street, at the end of Carnaby Street, was so impure that many persons avoided using it; and I found that the persons who died near this pump, in the beginning of September, had water from the Broad Street pump."] Using this package, one can see and analyze the effect of excluding this pump. One can, in fact, include or exclude any set of pumps one wants. Second, one can compare the two different sets of pump: the 13 pumps in the original map and the 14 pumps in the Vestry Report.^[Note that in "pumps.vestry", I eyeball estimate the location of the two amendments: the pump on Hanover Street and the relocation of the Broad Street Pump.]
 
 ### Voronoi tessellation
 
 Cliff and Haggett (1988) appear to be the first to use Voronoi tessellation^[http://www.ams.org/samplings/feature-column/fcarc-voronoi] to describe the neighborhoods for the pumps on Snow's original map. Dodson and Tolber (1992), in their digitization of the map, included coordinates for 13 Voronoi cells. These data are available in HistData::Snow.polygons. To replicate those results, I recompute the data using deldir::deldir(). With the exception of the border between the neighborhoods of the Market Place and the Adam and Eve Court pumps (pumps #1 and #2), Dodson and Tobler's computation are otherwise identical.
 
-To allow users to explore this method, I wrote voronoiPlot(). 
+To allow users to explore this method, I wrote voronoiPlot().
 
 The figure below plots the "addresses" and the Voronoi cells for the 13 pumps in the original map.
 
@@ -55,7 +55,7 @@ Snow's annotation is an attempt to addresses this issue. He writes that the anno
 
 The figure below plots the path between the case 50 and its nearest pump, the Broad Street pump ("p7").
 
-```{r, fig.width = 6, fig.height = 6, message = FALSE, eval = FALSE}
+```{r, fig.width = 6, fig.height = 6, message = FALSE}
 walkingPathPlot(150)
 ```
 
@@ -65,16 +65,18 @@ By applying this function to all observed cases, we can begin to get a sense of 
 
 To get a sense of an entire neighborhood, I extend the approach from "observed" data to "expected" data. Using sp::spsample() and sp::Polygon(), I place 5000 regularly spaced points on the map and compute their walking path to the nearest pump. This allows me to see the full extent and range of a pump's neighborhood.
 
-I do so in two ways. In the first (Figure 8), I identify neighborhoods by coloring roads.^[Shiode (2012) uses this approach.] 
+I do so in two ways. In the first (Figure 8), I identify neighborhoods by coloring roads.^[Shiode (2012) uses this approach.]
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE, eval = FALSE}
 walkingNeighborhoodPlot()
 ```
+![](walking.roads.png)
 
-In the second, Figure 9, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach]. 
+In the second, Figure 9, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach].
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE, eval = FALSE}
 walkingNeighborhoodPlot(streets = FALSE)
 ```
+![](walking.area.png)
 
 While the latter is easier to "read" due to its familiarity, it is potentially less accurate and more misleading. Conceptually, the problem is that the latter takes the focus away from roads and walking distances, and puts it on regions, which do not necessarily have a relevant meaning because they include points or locations where there are no roads or residences. Computationally, the problem is that the shape of neighborhoods will be sensitive to the algorithm that determines the closest pump. Depending on our choices, this can produce different results.^[Cliff and Haggett also produce an adjusted Voronoi cells that reflect walking distances: "So far we have assumed that access to each pump was determined by 'crow-fly' distances. While the physical effort of carrying water mean that most people visited their nearest pump, recognition must be made of the complex street pattern in this area of London. Therefore in (D), the Thiessen polygons have been adjusted to take into account the patterns of access made possible by the street system shown in diagram (A) (Cliff and Haggett 1988, 53). However, details about how this was done do not appear to be available. Moreover, because the graphic only shows the outline of the polygon and not the streets, comparisons with other approaches is difficult.]
