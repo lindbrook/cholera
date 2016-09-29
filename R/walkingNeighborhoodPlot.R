@@ -2,7 +2,7 @@
 #'
 #' Plots walking neighborhoods based on the weighted shortest paths between a fatalities and the nearest pump.
 #'
-#' Currently computationally intensive (streets = TRUE appox 90 seocnds; streets = FALSE appox 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores. See \code{vignette}("walking.neighborhoods") for details.
+#' Currently computationally intensive (streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores (appox. 45 and 30 seconds). See \code{vignette}("walking.neighborhoods") for details.
 #' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param streets TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods.
@@ -13,7 +13,7 @@
 #' @param alpha.level, Numeric. If desired, set alpha level.
 #' @param obs.lwd Numeric. Set line width for observed paths.
 #' @param sim.lwd Numeric. Set line width for expected paths
-#' @param cores Numeric or "all". Number of cores to use (default is 1). If you select more than 1 core or use "all", which uses parallel::detectCores(), you must run this in batch not interactive mode (i.e., not in GUI). See parallel::mclapply() for details.
+#' @param mutli.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that you must run this in batch not interactive mode (i.e., not in GUI). See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI.
 #' @return A base R graphics plot.
 #' @seealso \code{addLandmarks()}
 #'
@@ -25,7 +25,8 @@
 
 walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
   streets = TRUE, weighted = TRUE, add.obs = FALSE, add.landmarks = TRUE,
-  arrow = FALSE, alpha.level = NULL, obs.lwd = 2, sim.lwd = 2, cores = 1L) {
+  arrow = FALSE, alpha.level = NULL, obs.lwd = 2, sim.lwd = 2,
+  mutli.core = FALSE) {
 
   if (vestry) {
     if (is.null(selection) == FALSE) {
@@ -41,9 +42,7 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
     }
   }
 
-  if (is.numeric(cores) == FALSE & cores != "all") {
-    stop('The only non-numeric choice for "cores" is "all".')
-  }
+  if (mutli.core) cores <- parallel::detectCores() else cores <- 1L
 
   roadsB <- cholera::roads[cholera::roads$street %in%
                            cholera::border == FALSE, ]
@@ -148,7 +147,6 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
   })
 
   wtd.dist.sp <- parallel::mclapply(seq_along(case.network.sp), function(x) {
-    # id <- which(x == expected.cases)
     g <- case.network.sp[[x]]
     case <- selected.case.sp[[x]]
     case.coord <- paste0(case$x.proj, "-", case$y.proj)
@@ -256,14 +254,27 @@ walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
       }
     }))
 
-    if (!vestry) {
-      text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, cex = 1,
-        pos = 1)
-      points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
+    if (is.null(selection)) {
+      if (!vestry) {
+        text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, cex = 1,
+          pos = 1)
+        points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
+      } else {
+        text(cholera::pumps.vestry[, c("x", "y")], cex = 1, pos = 1,
+          label = cholera::pumps.vestry$id)
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 2, col = colors)
+      }
     } else {
-      text(cholera::pumps.vestry[, c("x", "y")], cex = 1, pos = 1,
-        label = cholera::pumps.vestry$id)
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 2, col = colors)
+      if (!vestry) {
+        text(cholera::pumps[selection, c("x", "y")], cex = 1, pos = 1,
+          label = cholera::pumps$id[selection])
+        points(cholera::pumps[selection, c("x", "y")], pch = 2, col = colors)
+      } else {
+        text(cholera::pumps.vestry[selection, c("x", "y")], cex = 1, pos = 1,
+          label = cholera::pumps.vestry$id[selection])
+        points(cholera::pumps.vestry[selection, c("x", "y")], pch = 2,
+          col = colors)
+      }
     }
     title(main = "Expected Paths")
 
