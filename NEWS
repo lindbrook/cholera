@@ -3,6 +3,7 @@ cholera 0.1.0
 
 * add walkingNeighborhoodPlot()
 * add walking.neighborhoods vignette
+# add observedPathsPlot()
 
 
 cholera 0.0.0.9018
