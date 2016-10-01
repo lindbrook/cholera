@@ -13,6 +13,7 @@
 #' # observedPathsPlot()
 #' # observedPathsPlot(selection = -7) # exclude pump 7
 #' # observedPathsPlot(selection = 6)  # only consider pump 6
+
 observedPathsPlot <- function(weighted = TRUE, vestry = FALSE,
   selection = NULL) {
 
@@ -184,7 +185,6 @@ observedPathsPlot <- function(weighted = TRUE, vestry = FALSE,
 
   for (i in seq_along(addr)) {
     case <- caseSelector(addr[i])
-
     seg <- unlist(strsplit(road.segments$id, "a"))
     seg <- unlist(strsplit(seg, "b"))
     temp <- road.segments[which(case$road.segment == seg), ]
@@ -235,11 +235,12 @@ observedPathsPlot <- function(weighted = TRUE, vestry = FALSE,
     names(d) <- pump.names
 
     nearest.pump <- names(which.min(d))
-    nearest.pump.node <- pump.coordinates[names(pump.coordinates) == nearest.pump]
+    nearest.pump.node <- pump.coordinates[names(pump.coordinates) ==
+      nearest.pump]
 
     if (weighted) {
-      case.path <- unlist(igraph::shortest_paths(g, case.node, nearest.pump.node,
-        weights = wts)$vpath)
+      case.path <- unlist(igraph::shortest_paths(g, case.node,
+        nearest.pump.node, weights = wts)$vpath)
       case.path <- names(case.path)
     } else {
       case.path <- unlist(igraph::shortest_paths(g, case.node,
