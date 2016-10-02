@@ -1,4 +1,4 @@
-![](walking.paths.graph8.all.png)
+![](vignettes/walking.paths.graph8.all.png)
 
 ## cholera: amends and augments data from John Snow's 1854 cholera map
 
