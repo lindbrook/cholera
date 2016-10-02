@@ -1,3 +1,5 @@
+![](walking.paths.graph8.all.png)
+
 ## cholera: amends and augments data from John Snow's 1854 cholera map
 
 In his map of the 1854 London cholera outbreak, John Snow used stacked horizontal bars to represent the number of fatalities at individual addresses. In 1992, [Dodson and Tobler](http://www.ncgia.ucsb.edu/pubs/snow/snow.html) digitized Snow's map. These data, which are probably the most complete representation of the data in Snow's map, are preserved in the Michael Friendly's `HistData` package.
@@ -10,5 +12,5 @@ This is a development version.
 
 ```R
 # install.packages("devtools")
-devtools::install_github("lindbrook/cholera")
+devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
