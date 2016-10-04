@@ -7,6 +7,7 @@
 #' @param weighted Logical. Shortest path weighted by road distance.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param selection Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
+#' @param unit Character. Default is NULL; returns graph unit. "yard" returns distance in yards. "meter" returns distance in meters.
 #' @return A base R graphics plot.
 #' @seealso \code{fatalities}
 #'
@@ -19,7 +20,7 @@
 #' walkingPathPlot(1, selection = 6)  # only consider pump 6
 
 walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
-  vestry = FALSE, selection = NULL) {
+  vestry = FALSE, selection = NULL, unit = NULL) {
 
   if (vestry) {
     if (is.null(selection) == FALSE) {
@@ -267,6 +268,14 @@ walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
     labels = x, pos = 1, col = "red")
   points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
   title(main = paste("Case #", x))
+
+  if (is.null(unit)) {
+    title(sub = paste("Distance =", round(min(d), 1), "units"))
+  } else if (unit == "yard") {
+    title(sub = paste("Distance =", round(min(d) * 177 / 3, 1), "yards"))
+  } else if (unit == "meter") {
+    title(sub = paste("Distance =", round(min(d) * 54), 1 , "meters"))
+  }
 
   if (zoom) {
     arrows(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2, length = 0.1)
