@@ -263,10 +263,14 @@ walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
 
   points(cholera::fatalities[cholera::fatalities$case == x, c("x", "y")],
     col = "red", lwd = 2)
-  points(dat[1, c("x", "y")], col = case.color, pch = 0)
   text(cholera::fatalities[cholera::fatalities$case == x, c("x", "y")],
     labels = x, pos = 1, col = "red")
-  points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
+
+  if (zoom) {
+    points(dat[1, c("x", "y")], col = case.color, pch = 0)
+    points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
+  }
+
   title(main = paste("Case #", x))
 
   if (is.null(unit)) {
@@ -287,7 +291,7 @@ walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
     segments(n1$x[selA], n1$y[selA], n2$x[selA], n2$y[selA],
              col = colors[nearest.pump.id], lwd = 2)
     arrows(n1$x[selB], n1$y[selB], n2$x[selB], n2$y[selB],
-           col = case.color, lwd = 3, length = 0.125)
+           col = case.color, lwd = 2, length = 0.075)
   }
 }
 
