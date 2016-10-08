@@ -1,4 +1,4 @@
-#' Plots walking neighborhoods.
+#' Plots shortest path walking neighborhoods.
 #'
 #' Plots walking neighborhoods based on the weighted shortest paths between a fatalities and the nearest pump.
 #'
@@ -23,7 +23,7 @@
 #' # walkingNeighborhoodPlot(streets = FALSE)
 #' # walkingNeighborhoodPlot(streets = FALSE, weighted = FALSE)
 
-walkingNeighborhoodPlot <- function(selection = NULL, vestry = FALSE,
+walkingNeighborhood <- function(selection = NULL, vestry = FALSE,
   streets = TRUE, weighted = TRUE, add.obs = FALSE, add.landmarks = TRUE,
   arrow = FALSE, alpha.level = NULL, obs.lwd = 2, sim.lwd = 2,
   mutli.core = FALSE) {
