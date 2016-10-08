@@ -20,12 +20,12 @@ A base R graphics plot.
 Plot  Voronoi diagrams of John Snow's 1854 London cholera data.
 }
 \examples{
-voronoiPlot()
-voronoiPlot(output = "addresses")
-voronoiPlot(vestry = TRUE)
-voronoiPlot(selection = 6:7)
-voronoiPlot(selection = -6)
-voronoiPlot(selection = -6, output = "fatalities")
+voronoiNeighborhood()
+voronoiNeighborhood(output = "addresses")
+voronoiNeighborhood(vestry = TRUE)
+voronoiNeighborhood(selection = 6:7)
+voronoiNeighborhood(selection = -6)
+voronoiNeighborhood(selection = -6, output = "fatalities")
 }
 \seealso{
 \code{addVoronoi()}

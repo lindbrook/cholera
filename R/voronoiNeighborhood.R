@@ -9,12 +9,12 @@
 #' @import graphics
 #' @export
 #' @examples
-#' voronoiPlot()
-#' voronoiPlot(output = "addresses")
-#' voronoiPlot(vestry = TRUE)
-#' voronoiPlot(selection = 6:7)
-#' voronoiPlot(selection = -6)
-#' voronoiPlot(selection = -6, output = "fatalities")
+#' voronoiNeighborhood()
+#' voronoiNeighborhood(output = "addresses")
+#' voronoiNeighborhood(vestry = TRUE)
+#' voronoiNeighborhood(selection = 6:7)
+#' voronoiNeighborhood(selection = -6)
+#' voronoiNeighborhood(selection = -6, output = "fatalities")
 
 voronoiNeighborhood <- function(selection = NULL, vestry = FALSE, output = NULL) {
   if (is.null(output) == FALSE) {
