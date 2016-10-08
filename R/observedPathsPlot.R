@@ -234,16 +234,21 @@ observedPathsPlot <- function(weighted = TRUE, vestry = FALSE,
     d <- data.frame(d)
     names(d) <- pump.names
 
-    nearest.pump <- names(which.min(d))
-    nearest.pump.node <- pump.coordinates[names(pump.coordinates) ==
-      nearest.pump]
+    # nearest.pump <- names(which.min(d))
+    # nearest.pump.node <- pump.coordinates[names(pump.coordinates) ==    
+    #   nearest.pump]
+    
+    nearest.pump <- pump.coordinates[names(pump.coordinates) ==  
+      names(which.min(d))]
+
+    nearest.pump.node <- which(igraph::V(g)$name == nearest.pump)
 
     if (weighted) {
-      case.path <- unlist(igraph::shortest_paths(g, case.node,
+      case.path <- unlist(igraph::shortest_paths(g, case.node, 
         nearest.pump.node, weights = wts)$vpath)
       case.path <- names(case.path)
     } else {
-      case.path <- unlist(igraph::shortest_paths(g, case.node,
+      case.path <- unlist(igraph::shortest_paths(g, case.node, 
         nearest.pump.node)$vpath)
       case.path <- names(case.path)
     }
@@ -251,7 +256,8 @@ observedPathsPlot <- function(weighted = TRUE, vestry = FALSE,
     dat <- numericNodeCoordinates(case.path)
     n1 <- dat[1:(nrow(dat) - 1), ]
     n2 <- dat[2:nrow(dat), ]
-    nearest.pump.id <- as.numeric(substr(nearest.pump, 2, nchar(nearest.pump)))
+    nearest.pump.id <- as.numeric(substr(names(nearest.pump), 2, 
+      nchar(names(nearest.pump))))
     case.color <- colors[nearest.pump.id]
     points(cholera::fatalities.address[ i,
       c("x", "y")], pch = 20, col = colors[nearest.pump.id], cex = 0.75)
