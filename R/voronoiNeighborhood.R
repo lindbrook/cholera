@@ -16,7 +16,7 @@
 #' voronoiPlot(selection = -6)
 #' voronoiPlot(selection = -6, output = "fatalities")
 
-voronoiPlot <- function(selection = NULL, vestry = FALSE, output = NULL) {
+voronoiNeighborhood <- function(selection = NULL, vestry = FALSE, output = NULL) {
   if (is.null(output) == FALSE) {
     if (all(output %in% c("addresses", "fatalities")) == FALSE) {
       stop('If specified, "output" must either be "addresses" or "fatalities".')
