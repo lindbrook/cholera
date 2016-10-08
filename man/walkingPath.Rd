@@ -29,9 +29,9 @@ A base R graphics plot.
 Plots the weighted shortest walking path between a fatality and its nearest pump.
 }
 \examples{
-walkingPathPlot(1)
-walkingPathPlot(1, selection = -7) # exclude pump 7
-walkingPathPlot(1, selection = 6)  # only consider pump 6
+walkingPath(1)
+walkingPath(1, selection = -7) # exclude pump 7
+walkingPath(1, selection = 6)  # only consider pump 6
 }
 \seealso{
 \code{fatalities}
