@@ -15,9 +15,9 @@
 #' @import graphics
 #' @export
 #' @examples
-#' walkingPathPlot(1)
-#' walkingPathPlot(1, selection = -7) # exclude pump 7
-#' walkingPathPlot(1, selection = 6)  # only consider pump 6
+#' walkingPath(1)
+#' walkingPath(1, selection = -7) # exclude pump 7
+#' walkingPath(1, selection = 6)  # only consider pump 6
 
 walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   vestry = FALSE, selection = NULL, unit = NULL) {
