@@ -1,4 +1,4 @@
-#' Plot shortest walking path.
+#' Plot shortest walking path between a case and its nearest pump.
 #'
 #' Plots the weighted shortest walking path between a fatality and its nearest pump.
 #' @param x Numeric or Integer. Whole number between 1 and 578 for fatality.
@@ -19,7 +19,7 @@
 #' walkingPathPlot(1, selection = -7) # exclude pump 7
 #' walkingPathPlot(1, selection = 6)  # only consider pump 6
 
-walkingPathPlot <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
+walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   vestry = FALSE, selection = NULL, unit = NULL) {
 
   if (vestry) {
