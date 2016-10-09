@@ -1,9 +1,10 @@
 cholera 0.1.0
 ----------------------------------------------------------------
 
-* add walkingNeighborhoodPlot()
-* add walking.neighborhoods vignette
-# add observedPathsPlot()
+* add observedNeighborhood()
+* add voronoiNeighborhood()
+* add walkingNeighborhood()
+* add pump.neighborhoods vignette
 
 
 cholera 0.0.0.9018
