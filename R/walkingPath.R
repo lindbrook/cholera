@@ -285,7 +285,7 @@ walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   } else if (unit == "yard") {
     title(sub = paste("Distance =", round(min(d) * 177 / 3, 1), "yards"))
   } else if (unit == "meter") {
-    title(sub = paste("Distance =", round(min(d) * 54), 1 , "meters"))
+    title(sub = paste("Distance =", round(min(d) * 54, 1), "meters"))
   }
 
   if (zoom) {
