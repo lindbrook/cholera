@@ -4,6 +4,7 @@ cholera 0.1.0
 * add observedNeighborhood()
 * add voronoiNeighborhood()
 * add walkingNeighborhood()
+* add walkingPath()
 * add pump.neighborhoods vignette
 
 

@@ -7,10 +7,9 @@
 #' @param weighted Logical. Shortest path weighted by road distance.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param selection Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
-#' @param unit Character. Default is NULL; returns graph unit. "yard" returns distance in yards. "meter" returns distance in meters.
+#' @param unit Character. Default is NULL; returns graph unit. "yard" returns distance in yards. "meter" returns distance in meters. Either implies "weighted" is TRUE.
 #' @return A base R graphics plot.
 #' @seealso \code{fatalities}
-#'
 #' \code{fatalities.address}
 #' @import graphics
 #' @export
@@ -18,6 +17,7 @@
 #' walkingPath(1)
 #' walkingPath(1, selection = -7) # exclude pump 7
 #' walkingPath(1, selection = 6)  # only consider pump 6
+#' walkingPath(1, unit = "meter", selection = 3) # distance from case 1 to pump 3.
 
 walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   vestry = FALSE, selection = NULL, unit = NULL) {
@@ -34,6 +34,11 @@ walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
         stop('With "vestry = FALSE", "selection" must be between 1 and 13.')
       }
     }
+  }
+
+  if (is.null(unit) == FALSE) {
+    if (unit %in% c("meter", "yard") == FALSE)
+      stop('If specified, "unit" must either be "meter" or "yard".')
   }
 
   roadsB <- cholera::roads[cholera::roads$street %in%
@@ -54,14 +59,14 @@ walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
 
   road.segments <- do.call(rbind, road.segments)
 
-  if (!vestry) {
-    colors <- snowColors()
+  if (vestry) {
+    colors <- snowColors(vestry = TRUE)
 
-    pump.coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
-                               cholera::ortho.proj.pump$y.proj)
+    pump.coordinates <- paste0(cholera::ortho.proj.pump.vestry$x.proj, "-",
+                               cholera::ortho.proj.pump.vestry$y.proj)
     names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
 
-    pump.data <- cholera::ortho.proj.pump
+    pump.data <- cholera::ortho.proj.pump.vestry
     pump.segments <- pump.data$road.segment
 
     mat <- matrix(0, ncol = ncol(road.segments), nrow = 2 *
@@ -99,13 +104,13 @@ walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
     road.segments$d <- sqrt((road.segments$x1 - road.segments$x2)^2 +
                             (road.segments$y1 - road.segments$y2)^2)
   } else {
-    colors <- snowColors(vestry = TRUE)
+    colors <- snowColors()
 
-    pump.coordinates <- paste0(cholera::ortho.proj.pump.vestry$x.proj, "-",
-                               cholera::ortho.proj.pump.vestry$y.proj)
+    pump.coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
+                               cholera::ortho.proj.pump$y.proj)
     names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
 
-    pump.data <- cholera::ortho.proj.pump.vestry
+    pump.data <- cholera::ortho.proj.pump
     pump.segments <- pump.data$road.segment
 
     mat <- matrix(0, ncol = ncol(road.segments), nrow = 2 *
@@ -195,27 +200,41 @@ walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
     which(igraph::V(g)$name == select.pumps[i])
   }, numeric(1L))
 
-  if (weighted) {
-    wts <- case.road.segments$d
-    d <- unname(igraph::distances(g, case.node, pump.nodes, weights = wts))
+  wts <- case.road.segments$d
+  wtd.d <- unname(igraph::distances(g, case.node, pump.nodes, weights = wts))
+  wtd.d <- data.frame(wtd.d)
+  names(wtd.d) <- pump.names
+
+  unwtd.d <- unname(igraph::distances(g, case.node, pump.nodes))
+  unwtd.d <- data.frame(unwtd.d)
+  names(unwtd.d) <- pump.names
+
+  wtd.test <- wtd.d == min(wtd.d)
+  unwtd.test <- unwtd.d == min(unwtd.d)
+
+  if (weighted | is.null(unit) == FALSE) {
+    if (sum(wtd.test) > 1) {
+      # randomly select among ties; note when x of sample(x, size) equals 1
+      nearest.pump <- names(wtd.d[sample(which(wtd.test), 1)])
+    } else {
+      nearest.pump <- names(which.min(wtd.d))
+    }
   } else {
-    d <- unname(igraph::distances(g, case.node, pump.nodes))
+    if (sum(unwtd.test) > 1) {
+      nearest.pump <- names(unwtd.d[sample(which(unwtd.test), 1)])
+    } else {
+      nearest.pump <- names(which.min(unwtd.d))
+    }
   }
 
-  d <- data.frame(d)
-  names(d) <- pump.names
-
-  nearest.pump <- names(which.min(d))
   nearest.pump.node <- pump.coordinates[names(pump.coordinates) == nearest.pump]
 
-  if (weighted) {
-    case.path <- unlist(igraph::shortest_paths(g, case.node, nearest.pump.node,
-      weights = wts)$vpath)
-    case.path <- names(case.path)
+  if (weighted | is.null(unit) == FALSE) {
+    case.path <- names(unlist(igraph::shortest_paths(g, case.node,
+      nearest.pump.node, weights = wts)$vpath))
   } else {
-    case.path <- unlist(igraph::shortest_paths(g, case.node,
-      nearest.pump.node)$vpath)
-    case.path <- names(case.path)
+    case.path <- names(unlist(igraph::shortest_paths(g, case.node,
+      nearest.pump.node)$vpath))
   }
 
   dat <- numericNodeCoordinates(case.path)
@@ -281,12 +300,20 @@ walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   title(main = paste("Case #", x))
 
   if (is.null(unit)) {
-    title(sub = paste("Distance =", round(min(d), 1), "units"))
-  } else if (unit == "yard") {
-    title(sub = paste("Distance =", round(min(d) * 177 / 3, 1), "yards"))
-  } else if (unit == "meter") {
-    title(sub = paste("Distance =", round(min(d) * 54, 1), "meters"))
+    if (weighted) {
+      title(sub = paste("Distance =", round(min(wtd.d), 1), "units"))
+    } else {
+      title(sub = paste("Distance =", round(min(unwtd.d), 1), "nodes"))
+    }
+  } else {
+    if (unit == "yard") {
+      title(sub = paste("Distance =", round(min(wtd.d) * 177 / 3, 1), "yards"))
+    }
+    if (unit == "meter") {
+      title(sub = paste("Distance =", round(min(wtd.d) * 54, 1), "meters"))
+    }
   }
+
 
   if (zoom) {
     arrows(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2, length = 0.1)
@@ -296,9 +323,9 @@ walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
     selA <- sel[-med]
     selB <- sel[med]
     segments(n1$x[selA], n1$y[selA], n2$x[selA], n2$y[selA],
-             col = colors[nearest.pump.id], lwd = 2)
+      col = colors[nearest.pump.id], lwd = 2)
     arrows(n1$x[selB], n1$y[selB], n2$x[selB], n2$y[selB],
-           col = case.color, lwd = 2, length = 0.075)
+      col = case.color, lwd = 2, length = 0.075)
   }
 }
 
