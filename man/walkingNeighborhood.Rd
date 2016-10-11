@@ -29,7 +29,7 @@ walkingNeighborhood(selection = NULL, vestry = FALSE, streets = TRUE,
 
 \item{sim.lwd}{Numeric. Set line width for expected paths}
 
-\item{multi.core}{Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that you must run this in batch not interactive mode (i.e., not in GUI). See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI.}
+\item{multi.core}{Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that you must run this in the terminal or in batch mode (i.e., not in interactive mode in the GUI). See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI.}
 }
 \value{
 A base R graphics plot.
