@@ -1,6 +1,6 @@
 #' Plots shortest path walking neighborhoods.
 #'
-#' Plots walking neighborhoods based on the weighted shortest paths between a fatalities and the nearest pump.
+#' Plots walking neighborhoods based on the weighted shortest paths between a fatality's address and its nearest pump.
 #'
 #' Currently computationally intensive (streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores (appox. 45 and 30 seconds). See \code{vignette}("walking.neighborhoods") for details.
 #' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
