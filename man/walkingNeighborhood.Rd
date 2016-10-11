@@ -35,7 +35,7 @@ walkingNeighborhood(selection = NULL, vestry = FALSE, streets = TRUE,
 A base R graphics plot.
 }
 \description{
-Plots walking neighborhoods based on the weighted shortest paths between a fatality's address and its nearest pump.
+Plots walking neighborhoods based on the shortest paths between a fatality's address and its nearest pump.
 }
 \details{
 Currently computationally intensive (streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores (appox. 45 and 30 seconds). See \code{vignette}("walking.neighborhoods") for details.
