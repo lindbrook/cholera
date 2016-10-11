@@ -2,11 +2,10 @@
 #'
 #' Plots walking neighborhoods based on the weighted shortest paths between a fatalities and the nearest pump.
 #'
-#' Currently computationally intensive (streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores (appox. 45 and 30 seconds). See \code{vignette}("walking.neighborhoods") for details.
 #' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE uses shortest path weighted by road distance.
-#' @param addresses Logical. Use addresses rather than fatalities
+#' @param output Character. NULL plots address points. "addresses" plots the total count of addresses at pumps' locations. "fatalities" plots the total count of fatalities at pumps' locations.
 #' @param add.landmarks Logical. Include landmarks.
 #' @return A base R graphics plot.
 #' @seealso \code{addLandmarks()}
@@ -18,7 +17,7 @@
 #' # observedNeighborhood(selection = 6:7)
 
 observedNeighborhood <- function(selection = NULL, vestry = FALSE,
-  weighted = TRUE, addresses = TRUE, add.landmarks = TRUE) {
+  weighted = TRUE, output = NULL, add.landmarks = TRUE) {
 
   if (vestry) {
     if (is.null(selection) == FALSE) {
@@ -31,6 +30,12 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
       if (any(abs(selection) %in% 1:13 == FALSE)) {
         stop('With "vestry = FALSE", "selection" must be between 1 and 13.')
       }
+    }
+  }
+
+  if (is.null(output) == FALSE) {
+    if (all(output %in% c("addresses", "fatalities")) == FALSE) {
+      stop('If specified, "output" must either be "addresses" or "fatalities".')
     }
   }
 
@@ -59,7 +64,8 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
     pump.data <- cholera::ortho.proj.pump.vestry
     pump.segments <- pump.data$road.segment
 
-    mat <- matrix(0, ncol = ncol(road.segments ), nrow = 2 * length(pump.segments))
+    mat <- matrix(0, ncol = ncol(road.segments ),
+      nrow = 2 * length(pump.segments))
     road.pump.data <- data.frame(mat)
     start.pt <- seq(1, nrow(road.pump.data), 2)
     end.pt <- seq(2, nrow(road.pump.data), 2)
@@ -100,7 +106,8 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
     pump.data <- cholera::ortho.proj.pump
     pump.segments <- pump.data$road.segment
 
-    mat <- matrix(0, ncol = ncol(road.segments ), nrow = 2 * length(pump.segments))
+    mat <- matrix(0, ncol = ncol(road.segments ),
+      nrow = 2 * length(pump.segments))
     road.pump.data <- data.frame(mat)
     start.pt <- seq(1, nrow(road.pump.data), 2)
     end.pt <- seq(2, nrow(road.pump.data), 2)
@@ -146,27 +153,31 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
     pump.names <- names(pump.coordinates[selection])
   }
 
-  ##
-
-  if (addresses) {
+  if (is.null(output)) {
     sel <- cholera::fatalities.address$anchor.case
+    ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+    case <- split(ortho, ortho$case)
   } else {
-    sel <- cholera::fatalities.unstacked$case
+    if (output == "addresses") {
+      sel <- cholera::fatalities.address$anchor.case
+      ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+      case <- split(ortho, ortho$case)
+    }
+
+    if (output == "fatalities") {
+      sel <- cholera::fatalities.unstacked$case
+      ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+      case <- split(ortho, ortho$case)
+    }
   }
 
   # integrate case into road network
 
-  case.road.segments <- lapply(sel, function(x) {
-    if (addresses) {
-      case <- cholera::ortho.proj[cholera::ortho.proj$case == x, ]
-    } else {
-      case <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case == x, ]
-    }
-
+  case.road.segments <- lapply(case, function(x) {
     seg <- unlist(strsplit(road.segments$id, "a"))
     seg <- unlist(strsplit(seg, "b"))
-    temp <- road.segments[which(case$road.segment == seg), ]
-    case.coord <- case[, c("x.proj", "y.proj")]
+    temp <- road.segments[which(x$road.segment == seg), ]
+    case.coord <- x[, c("x.proj", "y.proj")]
 
     # case is on street with a well so nrow(temp) > 1
     # id != 1 : 9  12  18 119 138 191 283 317 320
@@ -192,7 +203,7 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
                        (appended$y1 - appended$y2)^2)
 
     road.segments2 <- road.segments
-    rbind(road.segments2[road.segments2$id != case$road.segment, ], appended)
+    rbind(road.segments2[road.segments2$id != x$road.segment, ], appended)
   })
 
   g <- lapply(case.road.segments, function(x) {
@@ -200,14 +211,8 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
     igraph::graph_from_data_frame(edge.list, directed = FALSE)
   })
 
-  case.node <- vapply(seq_along(sel), function(i) {
-    if (addresses) {
-      case <- cholera::ortho.proj[cholera::ortho.proj$case == sel[i], ]
-    } else {
-      case <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case == sel[i], ]
-    }
-
-    case.coord <- paste0(case$x.proj, "-", case$y.proj)
+  case.node <- vapply(seq_along(case), function(i) {
+    case.coord <- paste0(ortho[i, "x.proj"], "-", ortho[i, "y.proj"])
     which(igraph::V(g[[i]])$name == case.coord)
   }, numeric(1L))
 
@@ -217,7 +222,7 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
     }, numeric(1L))
   })
 
-  nearest.pump.data <- lapply(seq_along(sel), function(i) {
+  nearest.pump.data <- lapply(seq_along(case), function(i) {
     if (weighted) {
       wts <- case.road.segments[[i]]$d
       d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]],
@@ -269,40 +274,75 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
 
-  points(cholera::fatalities.address[, c("x", "y")], pch = 20, cex = 0.75,
-    col = colors[pump.census])
+  if (is.null(output)) {
+    points(cholera::fatalities.address[, c("x", "y")], pch = 20, cex = 0.75,
+      col = colors[pump.census])
+  }
 
   if (is.null(selection)) {
     if (vestry) {
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 2, col = colors)
-      text(cholera::pumps.vestry[, c("x", "y")],
-        label = cholera::pumps.vestry$id, pos = 1)
+      if (is.null(output)) {
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 2, col = colors)
+        text(cholera::pumps.vestry[, c("x", "y")],
+          label = cholera::pumps.vestry$id, pos = 1)
+      } else {
+        obs <- as.numeric(names(census))
+        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.75, lwd = 4,
+          label = census, col = colors[obs], font = 2)
+      }
     } else {
-      points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
-      text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1)
+      if (is.null(output)) {
+        points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
+        text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1)
+      } else {
+        obs <- as.numeric(names(census))
+        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.75,
+          label = census, col = colors[obs], font = 2)
+      }
     }
   } else {
     if (vestry) {
-      sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-      points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 2,
-        col = colors[sel.pumps])
-      text(cholera::pumps.vestry[sel.pumps, c("x", "y")],
-        label = cholera::pumps$id[sel.pumps], pos = 1)
+      if (is.null(output)) {
+        sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
+        points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 2,
+          col = colors[sel.pumps])
+        text(cholera::pumps.vestry[sel.pumps, c("x", "y")],
+          label = cholera::pumps$id[sel.pumps], pos = 1)
+      } else {
+        obs <- as.numeric(names(census))
+        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.75,
+          label = census, col = colors[obs], font = 2)
+      }
     } else {
-      sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-      points(cholera::pumps[sel.pumps, c("x", "y")], pch = 2,
-        col = colors[sel.pumps])
-      text(cholera::pumps[sel.pumps, c("x", "y")],
-        label = cholera::pumps.vestry$id[sel.pumps], pos = 1)
+      if (is.null(output)) {
+        sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
+        points(cholera::pumps[sel.pumps, c("x", "y")], pch = 2,
+          col = colors[sel.pumps])
+        text(cholera::pumps[sel.pumps, c("x", "y")],
+          label = cholera::pumps.vestry$id[sel.pumps], pos = 1)
+      } else {
+        obs <- as.numeric(names(census))
+        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.75,
+          label = census, col = colors[obs], font = 2)
+      }
     }
   }
 
-  invisible(lapply(seq_along(path.data), function(i) {
-    dat <- path.data[[i]]
-    n1 <- dat[1:(nrow(dat) - 1), ]
-    n2 <- dat[2:nrow(dat), ]
-    segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i], lwd = 2)
-  }))
+  if (is.null(output)) {
+    invisible(lapply(seq_along(path.data), function(i) {
+      dat <- path.data[[i]]
+      n1 <- dat[1:(nrow(dat) - 1), ]
+      n2 <- dat[2:nrow(dat), ]
+      segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i], lwd = 2)
+    }))
+  } else {
+    invisible(lapply(seq_along(path.data), function(i) {
+      dat <- path.data[[i]]
+      n1 <- dat[1:(nrow(dat) - 1), ]
+      n2 <- dat[2:nrow(dat), ]
+      segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i])
+    }))
+  }
 
   title(main = "Observed Walking Path Neighborhoods")
 

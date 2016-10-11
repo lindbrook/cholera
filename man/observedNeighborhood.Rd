@@ -5,7 +5,7 @@
 \title{Plots walking neighborhoods.}
 \usage{
 observedNeighborhood(selection = NULL, vestry = FALSE, weighted = TRUE,
-  addresses = TRUE, add.landmarks = TRUE)
+  output = NULL, add.landmarks = TRUE)
 }
 \arguments{
 \item{selection}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}}
@@ -14,7 +14,7 @@ observedNeighborhood(selection = NULL, vestry = FALSE, weighted = TRUE,
 
 \item{weighted}{Logical. TRUE uses shortest path weighted by road distance.}
 
-\item{addresses}{Logical. Use addresses rather than fatalities}
+\item{output}{Character. NULL plots address points. "addresses" plots the total count of addresses at pumps' locations. "fatalities" plots the total count of fatalities at pumps' locations.}
 
 \item{add.landmarks}{Logical. Include landmarks.}
 }
@@ -23,9 +23,6 @@ A base R graphics plot.
 }
 \description{
 Plots walking neighborhoods based on the weighted shortest paths between a fatalities and the nearest pump.
-}
-\details{
-Currently computationally intensive (streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores (appox. 45 and 30 seconds). See \code{vignette}("walking.neighborhoods") for details.
 }
 \examples{
 # observedNeighborhood()
