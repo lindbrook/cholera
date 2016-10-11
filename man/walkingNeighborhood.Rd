@@ -6,7 +6,7 @@
 \usage{
 walkingNeighborhood(selection = NULL, vestry = FALSE, streets = TRUE,
   weighted = TRUE, add.obs = FALSE, add.landmarks = TRUE, arrow = FALSE,
-  alpha.level = NULL, obs.lwd = 2, sim.lwd = 2, mutli.core = FALSE)
+  alpha.level = NULL, obs.lwd = 2, sim.lwd = 2, multi.core = FALSE)
 }
 \arguments{
 \item{selection}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}}
@@ -29,7 +29,7 @@ walkingNeighborhood(selection = NULL, vestry = FALSE, streets = TRUE,
 
 \item{sim.lwd}{Numeric. Set line width for expected paths}
 
-\item{mutli.core}{Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that you must run this in batch not interactive mode (i.e., not in GUI). See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI.}
+\item{multi.core}{Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that you must run this in batch not interactive mode (i.e., not in GUI). See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI.}
 }
 \value{
 A base R graphics plot.

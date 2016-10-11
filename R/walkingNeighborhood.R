@@ -13,7 +13,7 @@
 #' @param alpha.level, Numeric. If desired, set alpha level.
 #' @param obs.lwd Numeric. Set line width for observed paths.
 #' @param sim.lwd Numeric. Set line width for expected paths
-#' @param mutli.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that you must run this in batch not interactive mode (i.e., not in GUI). See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI.
+#' @param multi.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that you must run this in batch not interactive mode (i.e., not in GUI). See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI.
 #' @return A base R graphics plot.
 #' @seealso \code{addLandmarks()}
 #'
@@ -26,7 +26,7 @@
 walkingNeighborhood <- function(selection = NULL, vestry = FALSE,
   streets = TRUE, weighted = TRUE, add.obs = FALSE, add.landmarks = TRUE,
   arrow = FALSE, alpha.level = NULL, obs.lwd = 2, sim.lwd = 2,
-  mutli.core = FALSE) {
+  multi.core = FALSE) {
 
   if (vestry) {
     if (is.null(selection) == FALSE) {
@@ -42,7 +42,7 @@ walkingNeighborhood <- function(selection = NULL, vestry = FALSE,
     }
   }
 
-  if (mutli.core) cores <- parallel::detectCores() else cores <- 1L
+  if (multi.core) cores <- parallel::detectCores() else cores <- 1L
 
   roadsB <- cholera::roads[cholera::roads$street %in%
                            cholera::border == FALSE, ]
