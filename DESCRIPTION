@@ -1,0 +1,15 @@
+Package: cholera
+Type: Package
+Title: Amend and Augment Analysis of Snow's Cholera Data
+Version: 0.1.1
+Date: 2016-10-11
+Authors@R: person("lindbrook", email = "lindbrook@gmail.com", role = c("aut", "cre"))
+Description: Amends errors, "unstacks" cases, and adds road names.
+URL: https://github.com/lindbrook/cholera
+License: GPL-3
+LazyData: true
+Depends: R (>= 2.10)
+Imports: HistData (>= 0.7-8), deldir (>= 0.0-18), igraph, pracma, RColorBrewer, scales, sp, stats
+Suggests: ggplot2, KernSmooth, knitr, rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1
