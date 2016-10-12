@@ -2,10 +2,10 @@
 % Please edit documentation in R/observedNeighborhood.R
 \name{observedNeighborhood}
 \alias{observedNeighborhood}
-\title{Plots walking neighborhoods.}
+\title{Plots observed walking neighborhoods.}
 \usage{
 observedNeighborhood(selection = NULL, vestry = FALSE, weighted = TRUE,
-  output = NULL, add.landmarks = TRUE)
+  statistic = NULL, add.landmarks = TRUE)
 }
 \arguments{
 \item{selection}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}}
@@ -14,7 +14,7 @@ observedNeighborhood(selection = NULL, vestry = FALSE, weighted = TRUE,
 
 \item{weighted}{Logical. TRUE uses shortest path weighted by road distance.}
 
-\item{output}{Character. NULL plots address points. "addresses" plots the total count of addresses at pumps' locations. "fatalities" plots the total count of fatalities at pumps' locations.}
+\item{statistic}{Character. NULL plots address points. "addresses" plots the total count of addresses at pumps' locations. "fatalities" plots the total count of fatalities at pumps' locations.}
 
 \item{add.landmarks}{Logical. Include landmarks.}
 }
@@ -22,7 +22,7 @@ observedNeighborhood(selection = NULL, vestry = FALSE, weighted = TRUE,
 A base R graphics plot.
 }
 \description{
-Plots walking neighborhoods based on the weighted shortest paths between a fatalities and the nearest pump.
+Plots walking neighborhoods based on the shortest paths between a fatality's address and its nearest pump.
 }
 \examples{
 # observedNeighborhood()
