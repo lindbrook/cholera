@@ -4,7 +4,7 @@
 \name{pumps.vestry}
 \alias{pumps.vestry}
 \title{Vestry report pump data.}
-\format{A data frame with 14 observations and 4 variables that describe the pumps on the Vestry Report version of Snow's map. Amends Broad Street pump location.
+\format{A data frame with 14 observations and 4 variables.
 \describe{
   \item{\code{id}}{pump number between 1 and 14}
   \item{\code{street}}{nearest street}
@@ -15,7 +15,7 @@
 pumps.vestry
 }
 \description{
-From the version Snow includes in the Vestry Report, this data set adds the Hanover Square pump and moves the Broad Street pump.
+From the map Snow includes in the Vestry Report, this data set adds the pump at Hanover Square and relocates the Broad Street pump.
 }
 \keyword{datasets}
 

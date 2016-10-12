@@ -3,7 +3,7 @@
 \docType{data}
 \name{snow.time.series}
 \alias{snow.time.series}
-\title{Snow Time Series Data.}
+\title{Snow time series data.}
 \format{A data frame with 43 observations and 3 variables.
 \describe{
   \item{\code{date}}{calendar date}
@@ -14,7 +14,7 @@
 snow.time.series
 }
 \description{
-Time series of Fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
+Time series of recorded fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of the removal of the handle on the Broad Street pump on 08 September 1854.
 }
 \keyword{datasets}
 

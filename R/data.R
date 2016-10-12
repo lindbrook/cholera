@@ -163,9 +163,9 @@
 
 #' Vestry report pump data.
 #'
-#' From the version Snow includes in the Vestry Report, this data set adds the Hanover Square pump and moves the Broad Street pump.
+#' From the map Snow includes in the Vestry Report, this data set adds the pump at Hanover Square and relocates the Broad Street pump.
 #'
-#' @format A data frame with 14 observations and 4 variables that describe the pumps on the Vestry Report version of Snow's map. Amends Broad Street pump location.
+#' @format A data frame with 14 observations and 4 variables.
 #' \describe{
 #'   \item{\code{id}}{pump number between 1 and 14}
 #'   \item{\code{street}}{nearest street}
@@ -177,7 +177,7 @@
 
 #' "Expected" cases.
 #'
-#' The result of generating 5000 regularly spaced simulated cases within the map's border frame via sp::spsample() and sp::Polygon().
+#' The result of using sp::spsample() and sp::Polygon() to generate 5000 regularly spaced simulated cases within the map's border.
 #'
 #' @format A data frame with 2 variable that records the position 4993 "expected" cases.
 #'  \describe{
@@ -189,9 +189,9 @@
 
 #' Dodson and Tobler's street data with appended road names.
 #'
-#' Adds road names from John Snow's map to Dodson and Tobler's street data. The latter are available at Michael Friendly's HistData::Snow.streets.
+#' This data set adds road names from John Snow's map to Dodson and Tobler's street data. The latter are also available from HistData::Snow.streets.
 #'
-#' @format A data frame with 206 observations and 5 variables that describe the straight line segments used to recreate the roads on Snow's map.
+#' @format A data frame with 206 observations and 5 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
 #' \describe{
 #'   \item{\code{street}}{street segment number, which range between 1 and 528}
 #'   \item{\code{n}}{number of points in this street line segment}
@@ -209,9 +209,9 @@
 #' \code{\link[cholera]{streetNumberViewer}}
 "roads"
 
-#' Snow Time Series Data.
+#' Snow time series data.
 #'
-#' Time series of Fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
+#' Time series of recorded fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of the removal of the handle on the Broad Street pump on 08 September 1854.
 #'
 #' @format A data frame with 43 observations and 3 variables.
 #' \describe{
@@ -224,7 +224,7 @@
 
 #' Vestry Report Time Series Data.
 #'
-#' Time series of Fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
+#' Time series of recorded fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
 #'
 #' @format A data frame with 61 observations and 3 variables.
 #' \describe{

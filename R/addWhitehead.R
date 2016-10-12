@@ -13,15 +13,19 @@
 #' @examples
 #' snowMap(add.landmarks = FALSE)
 #' addWhitehead()
+
 addWhitehead <- function(pump = "Broad Street", radius = 210, col = "black",
   lty = "solid", vestry = FALSE) {
   r <- radius / 59
   unit.base <- 100
   unit.radians <- 2 * pi / unit.base
+ 
   if (vestry) {
     if (is.character(pump)) {
       if (pump %in% cholera::pumps.vestry$street == FALSE) {
-        stop(paste0("Invalid Vestry pump name. Check spelling or see pumps.vestry$street."))
+        text.a <- "Invalid Vestry pump name."
+        text.b <- "Check spelling or see pumps.vestry$street."
+        stop(paste(text.a, text.b))
       } else {
         circumference.x <- cholera::pumps.vestry[cholera::pumps.vestry$street ==
           pump, "x"] + r * cos(0:unit.base * unit.radians)
@@ -41,7 +45,9 @@ addWhitehead <- function(pump = "Broad Street", radius = 210, col = "black",
   } else {
     if (is.character(pump)) {
       if (pump %in% cholera::pumps$street == FALSE) {
-        stop(paste0("Invalid Snow pump name. Check spelling or see pumps$street."))
+        text.a <- "Invalid Snow pump name."
+        text.b <- "Check spelling or see pumps$street."
+        stop(paste(text.a, text.b))
       } else {
         circumference.x <- cholera::pumps[cholera::pumps$street == pump, "x"] +
           r * cos(0:unit.base * unit.radians)

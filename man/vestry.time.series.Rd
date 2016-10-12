@@ -14,7 +14,7 @@
 vestry.time.series
 }
 \description{
-Time series of Fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
+Time series of recorded fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
 }
 \keyword{datasets}
 

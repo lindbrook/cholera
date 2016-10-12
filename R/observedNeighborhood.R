@@ -1,6 +1,6 @@
 #' Plots observed walking neighborhoods.
 #'
-#' Plots walking neighborhoods based on the shortest paths between a fatality's address and its nearest pump.
+#' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 #'
 #' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.

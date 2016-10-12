@@ -8,19 +8,19 @@ addKernelDensity(bandwidth = 0.5, color = "black", line.type = "solid",
   data = NULL)
 }
 \arguments{
-\item{bandwidth}{Numeric. bandwidth for kernel density esitmation.}
+\item{bandwidth}{Numeric. Bandwidth for kernel density esitmation.}
 
 \item{color}{Character. Color of cotour lines.}
 
-\item{line.type}{Character. Line type for contour.}
+\item{line.type}{Character. Line type for contour lines.}
 
-\item{data}{Character. NULL, uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "stacked" uses \code{fatalities}.}
+\item{data}{Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "stacked" uses \code{fatalities}.}
 }
 \value{
 Add contours to a graphics plot.
 }
 \description{
-Uses KernSmooth::bkde2D().
+Uses KernSmooth::bkde2D() to add density contours to a plot.
 }
 \examples{
 snowMap(add.landmarks = FALSE)

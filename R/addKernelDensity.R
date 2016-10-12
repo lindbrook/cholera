@@ -1,10 +1,10 @@
 #' Add 2D kernel density contours.
 #'
-#' Uses KernSmooth::bkde2D().
-#' @param bandwidth Numeric. bandwidth for kernel density esitmation.
+#' Uses KernSmooth::bkde2D() to add density contours to a plot.
+#' @param bandwidth Numeric. Bandwidth for kernel density esitmation.
 #' @param color Character. Color of cotour lines.
-#' @param line.type Character. Line type for contour.
-#' @param data Character. NULL, uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "stacked" uses \code{fatalities}.
+#' @param line.type Character. Line type for contour lines.
+#' @param data Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "stacked" uses \code{fatalities}.
 #' @return Add contours to a graphics plot.
 #' @import graphics
 #' @export

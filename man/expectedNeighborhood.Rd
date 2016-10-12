@@ -9,11 +9,11 @@ expectedNeighborhood(selection = NULL, vestry = FALSE, streets = TRUE,
   alpha.level = NULL, obs.lwd = 2, sim.lwd = 2, multi.core = FALSE)
 }
 \arguments{
-\item{selection}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}}
+\item{selection}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: from 1 to 13 for \code{pumps}; from 1 to 14 for \code{pumps.vestry}}
 
-\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
+\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.}
 
-\item{streets}{TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods.}
+\item{streets}{Logical. TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods (area).}
 
 \item{weighted}{Logical. TRUE uses shortest path weighted by road distance.}
 
@@ -23,22 +23,22 @@ expectedNeighborhood(selection = NULL, vestry = FALSE, streets = TRUE,
 
 \item{arrow}{Logical. Use arrows.}
 
-\item{alpha.level, }{Numeric. If desired, set alpha level.}
+\item{alpha.level, }{Numeric. Set alpha level of paths.}
 
 \item{obs.lwd}{Numeric. Set line width for observed paths.}
 
 \item{sim.lwd}{Numeric. Set line width for expected paths}
 
-\item{multi.core}{Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that you must run this in the terminal or in batch mode (i.e., not in interactive mode in the GUI). See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI.}
+\item{multi.core}{Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Not available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.}
 }
 \value{
 A base R graphics plot.
 }
 \description{
-Plots walking neighborhoods based on the shortest paths between a fatality's address and its nearest pump.
+Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 }
 \details{
-Currently computationally intensive (streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores (appox. 45 and 30 seconds). See \code{vignette}("walking.neighborhoods") for details.
+Currently computationally intensive (On an Intel Core i7, streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds). For better performance, run in terminal or batch mode in parallel with multiple cores (appox. 45 and 30 seconds). Note that this is unavailable on Windows. See \code{vignette}("walking.neighborhoods") for details.
 }
 \examples{
 # expectedNeighborhood()

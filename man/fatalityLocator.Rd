@@ -13,7 +13,7 @@ fatalityLocator(case, zoom = FALSE, radius = 2, stacked = TRUE)
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
-\item{stacked}{Logical. TRUE uses \code{fatalities} ("stacked"); FALSE uses \code{fatalities.address} ("unstacked").}
+\item{stacked}{Logical. TRUE uses \code{fatalities} ("stacked" data); FALSE uses \code{fatalities.address} ("unstacked" data).}
 }
 \value{
 A base R graphics plot.

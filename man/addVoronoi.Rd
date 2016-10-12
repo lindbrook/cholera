@@ -16,7 +16,7 @@ addVoronoi(select = NULL, vestry = FALSE, col = "black", lty = "solid")
 \item{lty}{Character. Type of line for borders.}
 }
 \description{
-Compute and draws Voronoi cells using deldir::deldir().
+Computes and draws Voronoi cells using deldir::deldir().
 }
 \examples{
 snowMap(add.landmarks = FALSE)

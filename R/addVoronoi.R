@@ -1,6 +1,6 @@
 #' Add Voronoi cells.
 #'
-#' Compute and draws Voronoi cells using deldir::deldir().
+#' Computes and draws Voronoi cells using deldir::deldir().
 
 #' @param select Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. FALSE for original 13 pumps. TRUE for 14 pumps in Vestry Report.
@@ -11,6 +11,7 @@
 #' @examples
 #' snowMap(add.landmarks = FALSE)
 #' addVoronoi()
+
 addVoronoi <- function(select = NULL, vestry = FALSE, col = "black",
   lty = "solid") {
 

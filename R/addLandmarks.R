@@ -1,6 +1,6 @@
-#' Add landmarks to map.
+#' Add landmarks.
 #'
-#' Adds Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews, 18 Sackville (John Snow residence) and 28 Dean Street (Karl Marx residence) to an existing plot. Falconberg Court & Mews is technically an isolate in the network of roads. Consequently, both are technically unreachable.
+#' Adds Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews, 18 Sackville (John Snow residence) and 28 Dean Street (Karl Marx residence) to an existing plot. Falconberg Court & Mews are technically an isolate that is not part of the network of roads and is, consequently, technically unreachable.
 #' @return Add base R points and text to a graphics plot.
 #' @seealso \code{\link[cholera]{snowMap}}, \code{\link[cholera]{addWhitehead}}
 #' @import graphics

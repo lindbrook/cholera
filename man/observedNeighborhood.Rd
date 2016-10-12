@@ -22,7 +22,7 @@ observedNeighborhood(selection = NULL, vestry = FALSE, weighted = TRUE,
 A base R graphics plot.
 }
 \description{
-Plots walking neighborhoods based on the shortest paths between a fatality's address and its nearest pump.
+Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 }
 \examples{
 # observedNeighborhood()

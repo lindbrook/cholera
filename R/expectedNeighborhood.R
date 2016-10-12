@@ -1,19 +1,19 @@
 #' Plots expected walking neighborhoods.
 #'
-#' Plots walking neighborhoods based on the shortest paths between a fatality's address and its nearest pump.
+#' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 #'
-#' Currently computationally intensive (streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds on Intel Core i7). For better performance, run in batch mode in parallel with multiple cores (appox. 45 and 30 seconds). See \code{vignette}("walking.neighborhoods") for details.
-#' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param streets TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods.
+#' Currently computationally intensive (On an Intel Core i7, streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds). For better performance, run in terminal or batch mode in parallel with multiple cores (appox. 45 and 30 seconds). Note that this is unavailable on Windows. See \code{vignette}("walking.neighborhoods") for details.
+#' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: from 1 to 13 for \code{pumps}; from 1 to 14 for \code{pumps.vestry}
+#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
+#' @param streets Logical. TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods (area).
 #' @param weighted Logical. TRUE uses shortest path weighted by road distance.
 #' @param add.obs Logical. Include observed addresses.
 #' @param add.landmarks Logical. Include landmarks.
 #' @param arrow Logical. Use arrows.
-#' @param alpha.level, Numeric. If desired, set alpha level.
+#' @param alpha.level, Numeric. Set alpha level of paths.
 #' @param obs.lwd Numeric. Set line width for observed paths.
 #' @param sim.lwd Numeric. Set line width for expected paths
-#' @param multi.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that you must run this in the terminal or in batch mode (i.e., not in interactive mode in the GUI). See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI.
+#' @param multi.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Not available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.
 #' @return A base R graphics plot.
 #' @seealso \code{addLandmarks()}
 #'
