@@ -62,7 +62,7 @@ walkingPath(150)
 By applying this function to all observed cases, we can begin to get a sense of the different pump neighborhoods.
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE, eval = FALSE}
-observedPathsPlot()
+observedNeighborhood()
 ```
 ![](walking.paths.graph8.all.png)
 
@@ -71,14 +71,14 @@ To get a sense of an entire neighborhood, I extend the approach from "observed" 
 I do so in two ways. In the first (Figure 8), I identify neighborhoods by coloring roads.^[Shiode (2012) uses this approach.]
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE, eval = FALSE}
-walkingNeighborhood()
+expectedNeighborhood()
 ```
 ![](walking.roads.png)
 
 In the second, Figure 9, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach].
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE, eval = FALSE}
-walkingNeighborhood(streets = FALSE)
+expectedNeighborhood(streets = FALSE)
 ```
 ![](walking.area.png)
 
