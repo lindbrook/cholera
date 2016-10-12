@@ -4,7 +4,7 @@ Title: Amends and Augments Analysis of Snow's Cholera Data
 Version: 0.1.1
 Date: 2016-10-11
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com", role = c("aut", "cre"))
-Description: Amends errors, "unstacks" cases, and adds road names.
+Description: Amends errors, augments data and aids analysis of John Snow's 1854 cholera data.
 URL: https://github.com/lindbrook/cholera
 License: GPL-3
 LazyData: true
