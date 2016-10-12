@@ -1,8 +1,8 @@
 Package: cholera
 Type: Package
-Title: Amends and Augments Data from John Snow's 1854 Cholera Map
-Version: 0.1.0
-Date: 2016-09-25
+Title: Amend and Augment Analysis of Data from John Snow's 1854 Cholera Map
+Version: 0.1.1
+Date: 2016-10-11
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com", role = c("aut", "cre"))
 Description: Amends errors, "unstacks" cases, and adds road names.
 URL: https://github.com/lindbrook/cholera
