@@ -287,7 +287,7 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
           label = cholera::pumps.vestry$id, pos = 1)
       } else {
         obs <- as.numeric(names(census))
-        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.75, lwd = 4,
+        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.25,
           label = census, col = colors[obs], font = 2)
       }
     } else {
@@ -296,7 +296,7 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
         text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1)
       } else {
         obs <- as.numeric(names(census))
-        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.75,
+        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.25,
           label = census, col = colors[obs], font = 2)
       }
     }
@@ -310,7 +310,7 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
           label = cholera::pumps$id[sel.pumps], pos = 1)
       } else {
         obs <- as.numeric(names(census))
-        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.75,
+        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.25,
           label = census, col = colors[obs], font = 2)
       }
     } else {
@@ -322,7 +322,7 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
           label = cholera::pumps.vestry$id[sel.pumps], pos = 1)
       } else {
         obs <- as.numeric(names(census))
-        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.75,
+        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.25,
           label = census, col = colors[obs], font = 2)
       }
     }
