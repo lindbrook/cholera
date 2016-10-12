@@ -9,7 +9,7 @@ snowMap(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE)
 \arguments{
 \item{add.landmarks}{Logical. Add landmarks.}
 
-\item{vestry}{Logical. Use the 14 pumps from the Vestry Report.}
+\item{vestry}{Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.}
 
 \item{stacked}{Logical. Use stacked fatalities.}
 }
@@ -17,7 +17,7 @@ snowMap(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE)
 A base R graphics plot.
 }
 \description{
-Plots Dodson and Tober's digitization of Snow's map and landmarks
+Dodson and Tober's digitization of Snow's map with added landmarks.
 }
 \examples{
 snowMap()

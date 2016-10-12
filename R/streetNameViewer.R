@@ -1,10 +1,10 @@
-#' Plot road by name.
+#' Locate road by name.
 #'
 #' Plots John Snow's map of the 1854 London cholera outbreak and highlights the
 #' selected road segment. See the list of road names in \code{vignette}("road.names").
-#' @param road.name Character vector. To match names in the data set, \code{streetNameViewer}() corrects for case and removes extraneous spaces.
+#' @param road.name Character vector. Note that \code{streetNameViewer}() tries to correct for case and removes extra spaces.
 #' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom. For values <= 5, the anchor case number is plotted rather than a point for each case.
+#' @param radius Numeric. Controls the degree of zoom. For "radius" <= 5, the anchor case number is plotted.
 #' @return A base R graphics plot.
 #' @seealso \code{roads}
 #'

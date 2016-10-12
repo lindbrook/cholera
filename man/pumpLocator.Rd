@@ -2,18 +2,18 @@
 % Please edit documentation in R/pumpLocator.R
 \name{pumpLocator}
 \alias{pumpLocator}
-\title{Locate well by numerical ID.}
+\title{Locate water pump by numerical ID.}
 \usage{
 pumpLocator(id, zoom = FALSE, radius = 2, vestry = FALSE)
 }
 \arguments{
-\item{id}{Numeric or Integer. Whole number between 1 and 14}
+\item{id}{Numeric or Integer. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 qnd 13.}
 
 \item{zoom}{Logical.}
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
-\item{vestry}{Logigcal. TRUE for the 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump. FALSE for original 13.}
+\item{vestry}{Logigcal. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.}
 }
 \value{
 A base R graphics plot.

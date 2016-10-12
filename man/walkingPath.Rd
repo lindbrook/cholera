@@ -20,7 +20,7 @@ walkingPath(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
 
 \item{selection}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
-\item{unit}{Character. Default is NULL; returns graph unit. "yard" returns distance in yards. "meter" returns distance in meters. Either implies "weighted" is TRUE.}
+\item{unit}{Character. Default is NULL, which returns the graph's unit scale. "yard" returns distance in yards. "meter" returns distance in meters. Either implies "weighted" is TRUE.}
 }
 \value{
 A base R graphics plot.

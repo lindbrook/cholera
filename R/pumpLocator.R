@@ -1,11 +1,11 @@
-#' Locate well by numerical ID.
+#' Locate water pump by numerical ID.
 #'
 #' Plots John Snow's map of the 1854 London cholera outbreak and highlights the
 #' selected water pump.
-#' @param id Numeric or Integer. Whole number between 1 and 14
+#' @param id Numeric or Integer. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 qnd 13.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param vestry Logigcal. TRUE for the 14 from Vestry Report: Hanover Square pump and a relocated Broad Street pump. FALSE for original 13.
+#' @param vestry Logigcal. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.
 #' @return A base R graphics plot.
 #' @export
 #' @examples

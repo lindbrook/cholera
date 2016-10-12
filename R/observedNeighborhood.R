@@ -35,7 +35,9 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
 
   if (is.null(statistic) == FALSE) {
     if (all(statistic %in% c("addresses", "fatalities")) == FALSE) {
-      stop('If specified, "statistic" must either be "addresses" or "fatalities".')
+      text.a <- 'If specified, "statistic" must either be "addresses"'
+      text.b <- 'or "fatalities".'
+      stop(paste(text.a, text.b))
     }
   }
 

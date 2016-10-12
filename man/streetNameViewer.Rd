@@ -2,16 +2,16 @@
 % Please edit documentation in R/streetNameViewer.R
 \name{streetNameViewer}
 \alias{streetNameViewer}
-\title{Plot road by name.}
+\title{Locate road by name.}
 \usage{
 streetNameViewer(road.name, zoom = FALSE, radius = 1)
 }
 \arguments{
-\item{road.name}{Character vector. To match names in the data set, \code{streetNameViewer}() corrects for case and removes extraneous spaces.}
+\item{road.name}{Character vector. Note that \code{streetNameViewer}() tries to correct for case and removes extra spaces.}
 
 \item{zoom}{Logical.}
 
-\item{radius}{Numeric. Controls the degree of zoom. For values <= 5, the anchor case number is plotted rather than a point for each case.}
+\item{radius}{Numeric. Controls the degree of zoom. For "radius" <= 5, the anchor case number is plotted.}
 }
 \value{
 A base R graphics plot.

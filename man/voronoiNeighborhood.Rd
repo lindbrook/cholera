@@ -7,7 +7,7 @@
 voronoiNeighborhood(selection = NULL, vestry = FALSE, output = NULL)
 }
 \arguments{
-\item{selection}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
+\item{selection}{Numeric. Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -17,7 +17,7 @@ voronoiNeighborhood(selection = NULL, vestry = FALSE, output = NULL)
 A base R graphics plot.
 }
 \description{
-Plot  Voronoi diagrams of John Snow's 1854 London cholera data.
+Plot Voronoi diagrams of John Snow's 1854 London cholera data.
 }
 \examples{
 voronoiNeighborhood()

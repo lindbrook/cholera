@@ -38,7 +38,7 @@ A base R graphics plot.
 Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 }
 \details{
-Currently computationally intensive (On an Intel Core i7, streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds). For better performance, run in terminal or batch mode in parallel with multiple cores (appox. 45 and 30 seconds). Note that this is unavailable on Windows. See \code{vignette}("walking.neighborhoods") for details.
+Currently computationally intensive (On an Intel Core i7, streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds). For better performance, run in parallel with multiple cores in the terminal or in batch mode (appox. 45 and 30 seconds). Note that this is currently unavailable on Windows. See \code{vignette}("walking.neighborhoods") for details.
 }
 \examples{
 # expectedNeighborhood()
