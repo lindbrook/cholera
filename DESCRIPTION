@@ -1,6 +1,6 @@
 Package: cholera
 Type: Package
-Title: Amend and Augment Analysis of Snow's Cholera Data
+Title: Amends and Augments Analysis of Snow's Cholera Data
 Version: 0.1.1
 Date: 2016-10-11
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com", role = c("aut", "cre"))
