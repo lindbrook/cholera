@@ -41,106 +41,24 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
     }
   }
 
-  roadsB <- cholera::roads[cholera::roads$street %in%
-    cholera::border == FALSE, ]
+  roads <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-  roads.list <- split(roadsB[, c("x", "y")], roadsB$street)
+  roads.list <- split(roads[, c("x", "y")], roads$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
-
-  road.segments <- lapply(unique(roadsB$street), function(i) {
-    dat <- roadsB[roadsB$street == i, ]
-    names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
-    seg.data <- dat[-1, c("x1", "y1")]
-    names(seg.data) <- c("x2", "y2")
-    dat <- cbind(dat[-nrow(dat), ], seg.data)
-    dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
-    dat
-  })
-
-  road.segments <- do.call(rbind, road.segments)
 
   # integrate pumps into road network
 
   if (vestry) {
     colors <- snowColors(vestry = TRUE)
-    pump.data <- cholera::ortho.proj.pump.vestry
-    pump.segments <- pump.data$road.segment
-
-    mat <- matrix(0, ncol = ncol(road.segments ),
-      nrow = 2 * length(pump.segments))
-    road.pump.data <- data.frame(mat)
-    start.pt <- seq(1, nrow(road.pump.data), 2)
-    end.pt <- seq(2, nrow(road.pump.data), 2)
-
-    for (i in seq_along(pump.segments)) {
-      road.data <- road.segments [road.segments $id == pump.segments[i], ]
-      pump.coords <- pump.data[pump.data$road.segment == pump.segments[i],
-                               c("x.proj", "y.proj")]
-
-      temp <- road.data[, names(road.data) %in% c("x1", "y1") == FALSE]
-      temp <- cbind(temp[, c("street", "n")],
-                    pump.coords,
-                    temp[, c("id", "name", "x2", "y2")])
-
-      names(temp)[names(temp) %in% c("x.proj", "y.proj")] <- c("x1", "y1")
-      road.data[, c("x2", "y2")] <- pump.coords
-      temp <- rbind(road.data, temp)
-      temp$id <- paste0(road.data$id, letters[seq_len(nrow(temp))])
-      road.pump.data[start.pt[i]:end.pt[i], ] <- temp
-    }
-
-    names(road.pump.data) <- names(road.segments)
-
-    road.segments <- road.segments[road.segments$id %in%
-      pump.segments == FALSE, ]
-    out <- rbind(road.segments, road.pump.data)
-    out <- out[order(out$street, out$id), ]
-    out$node1 <- paste0(out$x1, "-", out$y1)
-    out$node2 <- paste0(out$x2, "-", out$y2)
-    out$d <- sqrt((out$x1 - out$x2)^2 + (out$y1 - out$y2)^2)
-    road.segments <- out
+    road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
 
     pump.coordinates <- paste0(cholera::ortho.proj.pump.vestry$x.proj, "-",
                                cholera::ortho.proj.pump.vestry$y.proj)
     names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
+
   } else {
     colors <- snowColors()
-    pump.data <- cholera::ortho.proj.pump
-    pump.segments <- pump.data$road.segment
-
-    mat <- matrix(0, ncol = ncol(road.segments ),
-      nrow = 2 * length(pump.segments))
-    road.pump.data <- data.frame(mat)
-    start.pt <- seq(1, nrow(road.pump.data), 2)
-    end.pt <- seq(2, nrow(road.pump.data), 2)
-
-    for (i in seq_along(pump.segments)) {
-      road.data <- road.segments [road.segments $id == pump.segments[i], ]
-      pump.coords <- pump.data[pump.data$road.segment == pump.segments[i],
-                               c("x.proj", "y.proj")]
-
-      temp <- road.data[, names(road.data) %in% c("x1", "y1") == FALSE]
-      temp <- cbind(temp[, c("street", "n")],
-                    pump.coords,
-                    temp[, c("id", "name", "x2", "y2")])
-
-      names(temp)[names(temp) %in% c("x.proj", "y.proj")] <- c("x1", "y1")
-      road.data[, c("x2", "y2")] <- pump.coords
-      temp <- rbind(road.data, temp)
-      temp$id <- paste0(road.data$id, letters[seq_len(nrow(temp))])
-      road.pump.data[start.pt[i]:end.pt[i], ] <- temp
-    }
-
-    names(road.pump.data) <- names(road.segments)
-
-    road.segments <- road.segments[road.segments$id %in%
-      pump.segments == FALSE, ]
-    out <- rbind(road.segments, road.pump.data)
-    out <- out[order(out$street, out$id), ]
-    out$node1 <- paste0(out$x1, "-", out$y1)
-    out$node2 <- paste0(out$x2, "-", out$y2)
-    out$d <- sqrt((out$x1 - out$x2)^2 + (out$y1 - out$y2)^2)
-    road.segments <- out
+    road.segments <- pumpIntegrator()
 
     pump.coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
                                cholera::ortho.proj.pump$y.proj)
@@ -361,4 +279,61 @@ snowColors <- function(vestry = FALSE) {
     c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
       "red", colors.pair[1], "darkorange")
   }
+}
+
+roadSegments <- function() {
+  roadsB <- cholera::roads[cholera::roads$street %in%
+    cholera::border == FALSE, ]
+
+  out <- lapply(unique(roadsB$street), function(i) {
+    dat <- roadsB[roadsB$street == i, ]
+    names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
+    seg.data <- dat[-1, c("x1", "y1")]
+    names(seg.data) <- c("x2", "y2")
+    dat <- cbind(dat[-nrow(dat), ], seg.data)
+    dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
+    dat
+  })
+
+  do.call(rbind, out)
+}
+
+pumpIntegrator <- function(pump.data = cholera::ortho.proj.pump,
+  road.segments = roadSegments()) {
+
+  pump.segments <- pump.data$road.segment
+
+  mat <- matrix(0, ncol = ncol(road.segments),
+    nrow = 2 * length(pump.segments))
+  road.pump.data <- data.frame(mat)
+  start.pt <- seq(1, nrow(road.pump.data), 2)
+  end.pt <- seq(2, nrow(road.pump.data), 2)
+
+  for (i in seq_along(pump.segments)) {
+    road.data <- road.segments [road.segments $id == pump.segments[i], ]
+    pump.coords <- pump.data[pump.data$road.segment == pump.segments[i],
+                             c("x.proj", "y.proj")]
+
+    temp <- road.data[, names(road.data) %in% c("x1", "y1") == FALSE]
+    temp <- cbind(temp[, c("street", "n")],
+                  pump.coords,
+                  temp[, c("id", "name", "x2", "y2")])
+
+    names(temp)[names(temp) %in% c("x.proj", "y.proj")] <- c("x1", "y1")
+    road.data[, c("x2", "y2")] <- pump.coords
+    temp <- rbind(road.data, temp)
+    temp$id <- paste0(road.data$id, letters[seq_len(nrow(temp))])
+    road.pump.data[start.pt[i]:end.pt[i], ] <- temp
+  }
+
+  names(road.pump.data) <- names(road.segments)
+
+  road.segments <- road.segments[road.segments$id %in%
+    pump.segments == FALSE, ]
+  out <- rbind(road.segments, road.pump.data)
+  out <- out[order(out$street, out$id), ]
+  out$node1 <- paste0(out$x1, "-", out$y1)
+  out$node2 <- paste0(out$x2, "-", out$y2)
+  out$d <- sqrt((out$x1 - out$x2)^2 + (out$y1 - out$y2)^2)
+  out
 }
