@@ -13,7 +13,7 @@
 #' @param alpha.level, Numeric. Set alpha level of paths.
 #' @param obs.lwd Numeric. Set line width for observed paths.
 #' @param sim.lwd Numeric. Set line width for expected paths
-#' @param multi.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Not available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.
+#' @param multi.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that this option is not currently available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.
 #' @return A base R graphics plot.
 #' @seealso \code{addLandmarks()}
 #'
