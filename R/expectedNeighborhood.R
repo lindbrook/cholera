@@ -50,27 +50,15 @@ expectedNeighborhood <- function(selection = NULL, vestry = FALSE,
   roads.list <- split(roadsB[, c("x", "y")], roadsB$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
-  road.segments <- lapply(unique(roadsB$street), function(i) {
-    dat <- roadsB[roadsB$street == i, ]
-    names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
-    seg.data <- dat[-1, c("x1", "y1")]
-    names(seg.data) <- c("x2", "y2")
-    dat <- cbind(dat[-nrow(dat), ], seg.data)
-    dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
-    dat
-  })
-
-  road.segments <- do.call(rbind, road.segments)
-
   if (vestry) {
     colors <- snowColors(vestry = TRUE)
-    road.segments <- integratePumpNodes(road.segments, vestry = TRUE)
+    road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
     pump.coordinates <- paste0(cholera::ortho.proj.pump.vestry$x.proj, "-",
                                cholera::ortho.proj.pump.vestry$y.proj)
     names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
   } else {
     colors <- snowColors()
-    road.segments <- integratePumpNodes(road.segments)
+    road.segments <- pumpIntegrator()
     pump.coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
                                cholera::ortho.proj.pump$y.proj)
     names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
@@ -330,12 +318,30 @@ snowColors <- function(vestry = FALSE) {
   }
 }
 
-integratePumpNodes <- function(road.segments, vestry = FALSE) {
-  if (vestry == FALSE) {
-    pump.data <- cholera::ortho.proj.pump
-  } else {
-    pump.data <- cholera::ortho.proj.pump.vestry
-  }
+numericNodeCoordinates <- function(x) {
+  nodes <- do.call(rbind, (strsplit(x, "-")))
+  data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
+}
+
+roadSegments <- function() {
+  roadsB <- cholera::roads[cholera::roads$street %in%
+    cholera::border == FALSE, ]
+
+  out <- lapply(unique(roadsB$street), function(i) {
+    dat <- roadsB[roadsB$street == i, ]
+    names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
+    seg.data <- dat[-1, c("x1", "y1")]
+    names(seg.data) <- c("x2", "y2")
+    dat <- cbind(dat[-nrow(dat), ], seg.data)
+    dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
+    dat
+  })
+
+  do.call(rbind, out)
+}
+
+pumpIntegrator <- function(pump.data = cholera::ortho.proj.pump,
+  road.segments = roadSegments()) {
 
   pump.segments <- pump.data$road.segment
 
@@ -350,9 +356,8 @@ integratePumpNodes <- function(road.segments, vestry = FALSE) {
       c("x.proj", "y.proj")]
 
     temp <- road.data[, names(road.data) %in% c("x1", "y1") == FALSE]
-    temp <- cbind(temp[, c("street", "n")],
-                  pump.coords,
-                  temp[, c("id", "name", "x2", "y2")])
+    temp <- cbind(temp[, c("street", "n")], pump.coords,
+      temp[, c("id", "name", "x2", "y2")])
 
     names(temp)[names(temp) %in% c("x.proj", "y.proj")] <- c("x1", "y1")
     road.data[, c("x2", "y2")] <- pump.coords
@@ -370,9 +375,4 @@ integratePumpNodes <- function(road.segments, vestry = FALSE) {
   out$node2 <- paste0(out$x2, "-", out$y2)
   out$d <- sqrt((out$x1 - out$x2)^2 + (out$y1 - out$y2)^2)
   out
-}
-
-numericNodeCoordinates <- function(x) {
-  nodes <- do.call(rbind, (strsplit(x, "-")))
-  data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
 }
