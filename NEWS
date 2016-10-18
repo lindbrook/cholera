@@ -1,3 +1,11 @@
+cholera 0.1.2
+----------------------------------------------------------------
+
+* rename expectedNeighborhood() to neighborhoodExpected()
+* rename observedNeighborhood() to neighborhoodObserved()
+* rename voronoiNeighborhood() to neighborhoodVoronoi()
+
+
 cholera 0.1.1
 ----------------------------------------------------------------
 

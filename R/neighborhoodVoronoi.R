@@ -1,4 +1,4 @@
-#' Plot Voronoi diagram.
+#' Plot Voronoi neighborhoods.
 #'
 #' Plot Voronoi diagrams of John Snow's 1854 London cholera data.
 #' @param selection Numeric. Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
@@ -9,14 +9,14 @@
 #' @import graphics
 #' @export
 #' @examples
-#' voronoiNeighborhood()
-#' voronoiNeighborhood(output = "addresses")
-#' voronoiNeighborhood(vestry = TRUE)
-#' voronoiNeighborhood(selection = 6:7)
-#' voronoiNeighborhood(selection = -6)
-#' voronoiNeighborhood(selection = -6, output = "fatalities")
+#' neighborhoodVoronoi()
+#' neighborhoodVoronoi(output = "addresses")
+#' neighborhoodVoronoi(vestry = TRUE)
+#' neighborhoodVoronoi(selection = 6:7)
+#' neighborhoodVoronoi(selection = -6)
+#' neighborhoodVoronoi(selection = -6, output = "fatalities")
 
-voronoiNeighborhood <- function(selection = NULL, vestry = FALSE, output = NULL) {
+neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE, output = NULL) {
   if (is.null(output) == FALSE) {
     if (all(output %in% c("addresses", "fatalities")) == FALSE) {
       stop('If specified, "output" must either be "addresses" or "fatalities".')
@@ -291,14 +291,12 @@ fourCorners <- function() {
 }
 
 # Point of intersection between two segments.
-#
-# Returns the point of intersection between two segments or NA if none. \url{http://stackoverflow.com/questions/20519231/finding-point-of-intersection-in-r}
-#
-# @param x0, y0, x1, x2 Coordinates of first segment's endpoints.
-# @param s0, t0, s1, t2 Coordinates of second segment's endpoints.
-# @return A data frame.
 
 segmentIntersection <- function(x0, y0, x1, y1, s0, t0, s1, t1) {
+  # returns the point of intersection between two segments or NA if none.
+  # http://stackoverflow.com/questions/20519231/finding-point-of-intersection-in-r
+  # x0, y0, x1, x2 Coordinates of first segment's endpoints.
+  # s0, t0, s1, t2 Coordinates of second segment's endpoints.
   denom <- (t1 - t0) * (x1 - x0) - (s1 - s0) * (y1 - y0)
   denom[abs(denom) < 1e-10] <- NA # parallel lines
   ua <- ((s1 - s0) * (y0 - t0) - (t1 - t0) * (x0 - s0)) / denom

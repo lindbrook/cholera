@@ -13,10 +13,10 @@
 #' \code{vignette}("walking.neighborhoods")
 #' @export
 #' @examples
-#' # observedNeighborhood()
-#' # observedNeighborhood(selection = 6:7)
+#' # neighborhoodObserved()
+#' # neighborhoodObserved(selection = 6:7)
 
-observedNeighborhood <- function(selection = NULL, vestry = FALSE,
+neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
   weighted = TRUE, statistic = NULL, add.landmarks = TRUE) {
 
   if (vestry) {

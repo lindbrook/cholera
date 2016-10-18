@@ -19,10 +19,10 @@
 #'
 #' @export
 #' @examples
-#' # expectedNeighborhood()
-#' # expectedNeighborhood(streets = FALSE)
+#' # neighborhoodExpected()
+#' # neighborhoodExpected(streets = FALSE)
 
-expectedNeighborhood <- function(selection = NULL, vestry = FALSE,
+neighborhoodExpected <- function(selection = NULL, vestry = FALSE,
   streets = TRUE, weighted = TRUE, add.obs = FALSE, add.landmarks = TRUE,
   arrow = FALSE, alpha.level = NULL, obs.lwd = 2, sim.lwd = 2,
   multi.core = FALSE) {
