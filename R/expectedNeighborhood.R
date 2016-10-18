@@ -95,38 +95,8 @@ expectedNeighborhood <- function(selection = NULL, vestry = FALSE,
 
   # Integrates case into road netowrk
 
-  case.road.segments.sp <- parallel::mclapply(selected.case.sp, function(x) {
-    seg <- unlist(strsplit(road.segments$id, "a"))
-    seg <- unlist(strsplit(seg, "b"))
-
-    temp <- road.segments[which(x$road.segment == seg), ]
-    case.coord <- x[, c("x.proj", "y.proj")]
-
-    distance <- vapply(seq_len(nrow(temp)), function(i) {
-      sqrt(sum((case.coord - temp[i, c("x1", "y1")])^2)) +
-      sqrt(sum((case.coord - temp[i, c("x2", "y2")])^2))
-    }, numeric(1L))
-
-    temp <- temp[which(signif(temp$d) == signif(distance)), , drop = FALSE]
-    appended <- rbind(temp, temp)
-    appended[1, c("x2", "y2")] <- case.coord
-    appended[2, c("x1", "y1")] <- case.coord
-
-    if (grepl("a", temp$id) | grepl("b", temp$id)) {
-      appended$id <- paste0(appended$id, seq_len(nrow(appended)))
-    } else {
-      appended$id <- paste0(appended$id, letters[seq_len(nrow(appended))])
-    }
-
-    appended$node1 <- paste0(appended$x1, "-", appended$y1)
-    appended$node2 <- paste0(appended$x2, "-", appended$y2)
-    appended$d <- sqrt((appended$x1 - appended$x2)^2 +
-                       (appended$y1 - appended$y2)^2)
-
-    road.segments2 <- road.segments
-    sel <- road.segments2$id != x$road.segment
-    rbind(road.segments2[sel, ], appended)
-  }, mc.cores = cores)
+  case.road.segments.sp <- parallel::mclapply(selected.case.sp, function(x)
+    caseIntegrator(x, road.segments), mc.cores = cores)
 
   case.network.sp <- lapply(case.road.segments.sp, function(x) {
     edge.list <- x[, c("node1", "node2")]
@@ -170,7 +140,7 @@ expectedNeighborhood <- function(selection = NULL, vestry = FALSE,
   nearest.pump.sp$wtd.pump <- as.numeric(substr(nearest.pump.sp$wtd.pump, 2,
     length(nearest.pump.sp$wtd.pump)))
 
-  ## ------------------- Graphs ------------------- ##
+  # ## ------------------- Graphs ------------------- ##
 
   exp.address <- data.frame(ortho.cases[, c("case", "x.proj", "y.proj")],
     wtd.pump = nearest.pump.sp$wtd.pump)
@@ -375,4 +345,36 @@ pumpIntegrator <- function(pump.data = cholera::ortho.proj.pump,
   out$node2 <- paste0(out$x2, "-", out$y2)
   out$d <- sqrt((out$x1 - out$x2)^2 + (out$y1 - out$y2)^2)
   out
+}
+
+caseIntegrator <- function(x, dat) {
+  seg <- unlist(strsplit(dat$id, "a"))
+  seg <- unlist(strsplit(seg, "b"))
+  temp <- dat[which(x$road.segment == seg), ]
+  case.coord <- x[, c("x.proj", "y.proj")]
+
+  # if case is on street with a well, nrow(temp) > 1
+  # id != 1 : 9  12  18 119 138 191 283 317 320
+  distance <- vapply(seq_len(nrow(temp)), function(i) {
+    sqrt(sum((case.coord - temp[i, c("x1", "y1")])^2)) +
+    sqrt(sum((case.coord - temp[i, c("x2", "y2")])^2))
+  }, numeric(1L))
+
+  temp <- temp[which(signif(temp$d) == signif(distance)), ]
+  appended <- rbind(temp, temp)
+  appended[1, c("x2", "y2")] <- case.coord
+  appended[2, c("x1", "y1")] <- case.coord
+
+  if (grepl("a", temp$id) | grepl("b", temp$id)) {
+    appended$id <- paste0(appended$id, seq_len(nrow(appended)))
+  } else {
+    appended$id <- paste0(appended$id, letters[seq_len(nrow(appended))])
+  }
+
+  appended$node1 <- paste0(appended$x1, "-", appended$y1)
+  appended$node2 <- paste0(appended$x2, "-", appended$y2)
+  appended$d <- sqrt((appended$x1 - appended$x2)^2 +
+                     (appended$y1 - appended$y2)^2)
+  road.segments2 <- dat
+  rbind(road.segments2[road.segments2$id != x$road.segment, ], appended)
 }
