@@ -157,6 +157,22 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
   invisible(lapply(border.list, lines))
 
   if (is.null(statistic)) {
+    invisible(lapply(seq_along(path.data), function(i) {
+      dat <- path.data[[i]]
+      n1 <- dat[1:(nrow(dat) - 1), ]
+      n2 <- dat[2:nrow(dat), ]
+      segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i], lwd = 2)
+    }))
+  } else {
+    invisible(lapply(seq_along(path.data), function(i) {
+      dat <- path.data[[i]]
+      n1 <- dat[1:(nrow(dat) - 1), ]
+      n2 <- dat[2:nrow(dat), ]
+      segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i])
+    }))
+  }
+
+  if (is.null(statistic)) {
     points(cholera::fatalities.address[, c("x", "y")], pch = 20, cex = 0.75,
       col = colors[pump.census])
   }
@@ -208,22 +224,6 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
           label = census, col = colors[obs], font = 2)
       }
     }
-  }
-
-  if (is.null(statistic)) {
-    invisible(lapply(seq_along(path.data), function(i) {
-      dat <- path.data[[i]]
-      n1 <- dat[1:(nrow(dat) - 1), ]
-      n2 <- dat[2:nrow(dat), ]
-      segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i], lwd = 2)
-    }))
-  } else {
-    invisible(lapply(seq_along(path.data), function(i) {
-      dat <- path.data[[i]]
-      n1 <- dat[1:(nrow(dat) - 1), ]
-      n2 <- dat[2:nrow(dat), ]
-      segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i])
-    }))
   }
 
   title(main = "Observed Walking Path Neighborhoods")
