@@ -51,7 +51,6 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
   if (vestry) {
     colors <- snowColors(vestry = TRUE)
     road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
-
     pump.coordinates <- paste0(cholera::ortho.proj.pump.vestry$x.proj, "-",
                                cholera::ortho.proj.pump.vestry$y.proj)
     names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
@@ -59,7 +58,6 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
   } else {
     colors <- snowColors()
     road.segments <- pumpIntegrator()
-
     pump.coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
                                cholera::ortho.proj.pump$y.proj)
     names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
@@ -93,38 +91,8 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
 
   # integrate case into road network
 
-  case.road.segments <- lapply(case, function(x) {
-    seg <- unlist(strsplit(road.segments$id, "a"))
-    seg <- unlist(strsplit(seg, "b"))
-    temp <- road.segments[which(x$road.segment == seg), ]
-    case.coord <- x[, c("x.proj", "y.proj")]
-
-    # case is on street with a well so nrow(temp) > 1
-    # id != 1 : 9  12  18 119 138 191 283 317 320
-    distance <- vapply(seq_len(nrow(temp)), function(i) {
-      sqrt(sum((case.coord - temp[i, c("x1", "y1")])^2)) +
-      sqrt(sum((case.coord - temp[i, c("x2", "y2")])^2))
-    }, numeric(1L))
-
-    temp <- temp[which(signif(temp$d) == signif(distance)), ]
-    appended <- rbind(temp, temp)
-    appended[1, c("x2", "y2")] <- case.coord
-    appended[2, c("x1", "y1")] <- case.coord
-
-    if (grepl("a", temp$id) | grepl("b", temp$id)) {
-      appended$id <- paste0(appended$id, seq_len(nrow(appended)))
-    } else {
-      appended$id <- paste0(appended$id, letters[seq_len(nrow(appended))])
-    }
-
-    appended$node1 <- paste0(appended$x1, "-", appended$y1)
-    appended$node2 <- paste0(appended$x2, "-", appended$y2)
-    appended$d <- sqrt((appended$x1 - appended$x2)^2 +
-                       (appended$y1 - appended$y2)^2)
-
-    road.segments2 <- road.segments
-    rbind(road.segments2[road.segments2$id != x$road.segment, ], appended)
-  })
+  case.road.segments <- lapply(case, function(x)
+    caseIntegrator(x, road.segments))
 
   g <- lapply(case.road.segments, function(x) {
     edge.list <- x[, c("node1", "node2")]
@@ -177,15 +145,9 @@ observedNeighborhood <- function(selection = NULL, vestry = FALSE,
   census <- table(pump.census)
 
   if (weighted) {
-    path.data <- lapply(wtd.paths, function(x) {
-      nodes <- do.call(rbind, strsplit(names(unlist(x)), "-"))
-      data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
-    })
+    path.data <- lapply(wtd.paths, pathData)
   } else {
-    path.data <- lapply(paths, function(x) {
-      nodes <- do.call(rbind, strsplit(names(unlist(x)), "-"))
-      data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
-    })
+    path.data <- lapply(paths, pathData)
   }
 
   plot(cholera::fatalities[, c("x", "y")], xlim = range(cholera::roads$x),
@@ -284,7 +246,6 @@ snowColors <- function(vestry = FALSE) {
 roadSegments <- function() {
   roadsB <- cholera::roads[cholera::roads$street %in%
     cholera::border == FALSE, ]
-
   out <- lapply(unique(roadsB$street), function(i) {
     dat <- roadsB[roadsB$street == i, ]
     names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
@@ -302,7 +263,6 @@ pumpIntegrator <- function(pump.data = cholera::ortho.proj.pump,
   road.segments = roadSegments()) {
 
   pump.segments <- pump.data$road.segment
-
   mat <- matrix(0, ncol = ncol(road.segments), nrow = 2 * length(pump.segments))
   road.pump.data <- data.frame(mat)
   start.pt <- seq(1, nrow(road.pump.data), 2)
@@ -325,7 +285,6 @@ pumpIntegrator <- function(pump.data = cholera::ortho.proj.pump,
   }
 
   names(road.pump.data) <- names(road.segments)
-
   road.segments <- road.segments[road.segments$id %in% pump.segments == FALSE, ]
   out <- rbind(road.segments, road.pump.data)
   out <- out[order(out$street, out$id), ]
@@ -333,4 +292,41 @@ pumpIntegrator <- function(pump.data = cholera::ortho.proj.pump,
   out$node2 <- paste0(out$x2, "-", out$y2)
   out$d <- sqrt((out$x1 - out$x2)^2 + (out$y1 - out$y2)^2)
   out
+}
+
+caseIntegrator <- function(x, dat) {
+  seg <- unlist(strsplit(dat$id, "a"))
+  seg <- unlist(strsplit(seg, "b"))
+  temp <- dat[which(x$road.segment == seg), ]
+  case.coord <- x[, c("x.proj", "y.proj")]
+
+  # if case is on street with a well, nrow(temp) > 1
+  # id != 1 : 9  12  18 119 138 191 283 317 320
+  distance <- vapply(seq_len(nrow(temp)), function(i) {
+    sqrt(sum((case.coord - temp[i, c("x1", "y1")])^2)) +
+    sqrt(sum((case.coord - temp[i, c("x2", "y2")])^2))
+  }, numeric(1L))
+
+  temp <- temp[which(signif(temp$d) == signif(distance)), ]
+  appended <- rbind(temp, temp)
+  appended[1, c("x2", "y2")] <- case.coord
+  appended[2, c("x1", "y1")] <- case.coord
+
+  if (grepl("a", temp$id) | grepl("b", temp$id)) {
+    appended$id <- paste0(appended$id, seq_len(nrow(appended)))
+  } else {
+    appended$id <- paste0(appended$id, letters[seq_len(nrow(appended))])
+  }
+
+  appended$node1 <- paste0(appended$x1, "-", appended$y1)
+  appended$node2 <- paste0(appended$x2, "-", appended$y2)
+  appended$d <- sqrt((appended$x1 - appended$x2)^2 +
+                     (appended$y1 - appended$y2)^2)
+  road.segments2 <- dat
+  rbind(road.segments2[road.segments2$id != x$road.segment, ], appended)
+}
+
+pathData <- function(x) {
+  nodes <- do.call(rbind, strsplit(names(unlist(x)), "-"))
+  data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
 }
