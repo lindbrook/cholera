@@ -51,16 +51,12 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
   if (vestry) {
     colors <- snowColors(vestry = TRUE)
     road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
-    pump.coordinates <- paste0(cholera::ortho.proj.pump.vestry$x.proj, "-",
-                               cholera::ortho.proj.pump.vestry$y.proj)
-    names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
+    pump.coordinates <- pumpCoordinates(vestry = TRUE)
 
   } else {
     colors <- snowColors()
     road.segments <- pumpIntegrator()
-    pump.coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
-                               cholera::ortho.proj.pump$y.proj)
-    names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
+    pump.coordinates <- pumpCoordinates()
   }
 
   if (is.null(selection)) {
@@ -132,21 +128,21 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
 
   pump.census <- as.numeric(substr(pump.id, 2, nchar(pump.id)))
   nearest.pump <- unname(select.pumps[pump.census])
-
-  wtd.paths <- lapply(seq_along(g), function(i) {
-    igraph::shortest_paths(g[[i]], case.node[i], nearest.pump.node[i],
-      weights = case.road.segments[[i]]$d)$vpath
-  })
-
-  paths <- lapply(seq_along(g), function(i) {
-    igraph::shortest_paths(g[[i]], case.node[i], nearest.pump.node[i])$vpath
-  })
-
   census <- table(pump.census)
 
   if (weighted) {
-    path.data <- lapply(wtd.paths, pathData)
+    paths <- lapply(seq_along(g), function(i) {
+      igraph::shortest_paths(g[[i]], case.node[i], nearest.pump.node[i],
+        weights = case.road.segments[[i]]$d)$vpath
+    })
+
+    path.data <- lapply(paths, pathData)
+
   } else {
+    paths <- lapply(seq_along(g), function(i) {
+      igraph::shortest_paths(g[[i]], case.node[i], nearest.pump.node[i])$vpath
+    })
+
     path.data <- lapply(paths, pathData)
   }
 
@@ -241,6 +237,19 @@ snowColors <- function(vestry = FALSE) {
     c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
       "red", colors.pair[1], "darkorange")
   }
+}
+
+pumpCoordinates <- function(vestry = FALSE) {
+  if (vestry) {
+    coordinates <- paste0(cholera::ortho.proj.pump.vestry$x.proj, "-",
+                          cholera::ortho.proj.pump.vestry$y.proj)
+    names(coordinates) <- paste0("p", seq_along(coordinates))
+  } else {
+    coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
+                          cholera::ortho.proj.pump$y.proj)
+    names(coordinates) <- paste0("p", seq_along(coordinates))
+  }
+  coordinates
 }
 
 roadSegments <- function() {
