@@ -53,15 +53,11 @@ neighborhoodExpected <- function(selection = NULL, vestry = FALSE,
   if (vestry) {
     colors <- snowColors(vestry = TRUE)
     road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
-    pump.coordinates <- paste0(cholera::ortho.proj.pump.vestry$x.proj, "-",
-                               cholera::ortho.proj.pump.vestry$y.proj)
-    names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
+    pump.coordinates <- pumpCoordinates(vestry = TRUE)
   } else {
     colors <- snowColors()
     road.segments <- pumpIntegrator()
-    pump.coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
-                               cholera::ortho.proj.pump$y.proj)
-    names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
+    pump.coordinates <- pumpCoordinates()
   }
 
   if (is.null(selection)) {
@@ -286,6 +282,19 @@ snowColors <- function(vestry = FALSE) {
     c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
       "red", colors.pair[1], "darkorange")
   }
+}
+
+pumpCoordinates <- function(vestry = FALSE) {
+  if (vestry) {
+    coordinates <- paste0(cholera::ortho.proj.pump.vestry$x.proj, "-",
+                          cholera::ortho.proj.pump.vestry$y.proj)
+    names(coordinates) <- paste0("p", seq_along(coordinates))
+  } else {
+    coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
+                          cholera::ortho.proj.pump$y.proj)
+    names(coordinates) <- paste0("p", seq_along(coordinates))
+  }
+  coordinates
 }
 
 numericNodeCoordinates <- function(x) {
