@@ -50,12 +50,12 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
 
   if (vestry) {
     colors <- snowColors(vestry = TRUE)
-    road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
+    pump.road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
     pump.coordinates <- pumpCoordinates(vestry = TRUE)
 
   } else {
     colors <- snowColors()
-    road.segments <- pumpIntegrator()
+    pump.road.segments <- pumpIntegrator()
     pump.coordinates <- pumpCoordinates()
   }
 
@@ -87,12 +87,14 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
 
   # integrate case into road network
 
-  case.road.segments <- lapply(case, function(x)
-    caseIntegrator(x, road.segments))
+  case.pump.road.segments <- lapply(case, function(x)
+    caseIntegrator(x, pump.road.segments))
 
-  g <- lapply(case.road.segments, function(x) {
-    edge.list <- x[, c("node1", "node2")]
-    igraph::graph_from_data_frame(edge.list, directed = FALSE)
+  edge.list <- case.pump.road.segments
+
+  g <- lapply(edge.list, function(x) {
+    edges <- x[, c("node1", "node2")]
+    igraph::graph_from_data_frame(edges, directed = FALSE)
   })
 
   case.node <- vapply(seq_along(case), function(i) {
@@ -108,7 +110,7 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
 
   nearest.pump.data <- lapply(seq_along(case), function(i) {
     if (weighted) {
-      wts <- case.road.segments[[i]]$d
+      wts <- case.pump.road.segments[[i]]$d
       d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]],
         weights = wts))
     } else {
@@ -133,7 +135,7 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
   if (weighted) {
     paths <- lapply(seq_along(g), function(i) {
       igraph::shortest_paths(g[[i]], case.node[i], nearest.pump.node[i],
-        weights = case.road.segments[[i]]$d)$vpath
+        weights = case.pump.road.segments[[i]]$d)$vpath
     })
 
     path.data <- lapply(paths, pathData)
