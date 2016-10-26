@@ -52,11 +52,11 @@ neighborhoodExpected <- function(selection = NULL, vestry = FALSE,
 
   if (vestry) {
     colors <- snowColors(vestry = TRUE)
-    road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
+    pump.road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
     pump.coordinates <- pumpCoordinates(vestry = TRUE)
   } else {
     colors <- snowColors()
-    road.segments <- pumpIntegrator()
+    pump.road.segments <- pumpIntegrator()
     pump.coordinates <- pumpCoordinates()
   }
 
@@ -76,70 +76,77 @@ neighborhoodExpected <- function(selection = NULL, vestry = FALSE,
   no.pump <- cholera::ortho.proj.sp[is.na(cholera::ortho.proj.sp$x.proj),
     "case"]
 
-  falconberg.id <- road.segments[road.segments$name == "Falconberg Court" |
-                                 road.segments$name == "Falconberg Mews", "id"]
+  falconberg.id <- pump.road.segments[pump.road.segments$name == 
+    "Falconberg Court" | pump.road.segments$name == "Falconberg Mews", "id"]
 
   falconberg <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$road.segment %in%
     falconberg.id, "case"]
 
   # Expected cases
 
-  selected.case.sp <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case %in%
+  selected.case <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case %in%
     c(no.pump, falconberg) == FALSE, ]
 
-  selected.case.sp <- split(selected.case.sp, selected.case.sp$case)
+  selected.case <- split(selected.case, selected.case$case)
 
   # Integrates case into road netowrk
 
-  case.road.segments.sp <- parallel::mclapply(selected.case.sp, function(x)
-    caseIntegrator(x, road.segments), mc.cores = cores)
+  case.pump.road.segments <- parallel::mclapply(selected.case, function(x)
+    caseIntegrator(x, pump.road.segments), mc.cores = cores)
 
-  case.network.sp <- lapply(case.road.segments.sp, function(x) {
-    edge.list <- x[, c("node1", "node2")]
-    igraph::graph_from_data_frame(edge.list, directed = FALSE)
+  edge.list <- case.pump.road.segments
+
+  g <- lapply(edge.list, function(x) {
+    edges <- x[, c("node1", "node2")]
+    igraph::graph_from_data_frame(edges, directed = FALSE)
   })
 
-  wtd.dist.sp <- parallel::mclapply(seq_along(case.network.sp), function(x) {
-    g <- case.network.sp[[x]]
-    case <- selected.case.sp[[x]]
+  # wtd.dist.sp <- parallel::mclapply(seq_along(case.network.sp), function(x) {
+
+  nearest.pump.data <- parallel::mclapply(seq_along(g), function(x) {
+    case <- selected.case[[x]]
+    case.graph <- g[[x]]
     case.coord <- paste0(case$x.proj, "-", case$y.proj)
-    case.node <- which(igraph::V(g)$name == case.coord)
+    case.node <- which(igraph::V(case.graph)$name == case.coord)
 
     if (is.null(selection)) {
       pump.nodes <- vapply(pump.coordinates, function(p) {
-        which(igraph::V(g)$name == p)
+        which(igraph::V(case.graph)$name == p)
       }, numeric(1L))
     } else {
       pump.nodes <- vapply(pump.coordinates[selection], function(p) {
-        which(igraph::V(g)$name == p)
+        which(igraph::V(case.graph)$name == p)
       }, numeric(1L))
     }
 
     if (weighted) {
-      wts <- case.road.segments.sp[[x]]$d
-      d <- unname(igraph::distances(g, case.node, pump.nodes, weights = wts))
+      wts <- case.pump.road.segments[[x]]$d
+      d <- unname(igraph::distances(case.graph, case.node, pump.nodes,
+        weights = wts))
     } else {
-      d <- unname(igraph::distances(g, case.node, pump.nodes))
+      d <- unname(igraph::distances(case.graph, case.node, pump.nodes))
     }
 
     d
   }, mc.cores = cores)
 
-  wtd.dist.sp <- data.frame(do.call(rbind, wtd.dist.sp))
-  names(wtd.dist.sp) <- pump.names
+  nearest.pump.data <- data.frame(do.call(rbind, nearest.pump.data))
+  names(nearest.pump.data) <- pump.names
 
-  ortho.cases <- do.call(rbind, selected.case.sp)
-  nearest.pump.sp <- names(wtd.dist.sp)[apply(wtd.dist.sp, 1, which.min)]
-  nearest.pump.sp <- data.frame(case = ortho.cases$case,
-                                wtd.pump = nearest.pump.sp)
+  ortho.cases <- do.call(rbind, selected.case)
 
-  nearest.pump.sp$wtd.pump <- as.numeric(substr(nearest.pump.sp$wtd.pump, 2,
-    length(nearest.pump.sp$wtd.pump)))
+  id <- apply(nearest.pump.data, 1, which.min)
+
+  nearest.pump <- data.frame(case = ortho.cases$case,
+                             wtd.pump = names(nearest.pump.data)[id])
+
+  nearest.pump$wtd.pump <- as.numeric(substr(nearest.pump$wtd.pump, 2,
+    length(nearest.pump$wtd.pump)))
 
   # ## ------------------- Graphs ------------------- ##
 
   exp.address <- data.frame(ortho.cases[, c("case", "x.proj", "y.proj")],
-    wtd.pump = nearest.pump.sp$wtd.pump)
+    wtd.pump = nearest.pump$wtd.pump)
 
   exp.address$col <- NA
 
@@ -179,15 +186,15 @@ neighborhoodExpected <- function(selection = NULL, vestry = FALSE,
 
     invisible(lapply(exp.address$case, function(x) {
       id <- which(exp.address$case == x)
-      g <- case.network.sp[[id]]
-      case <- selected.case.sp[[id]]
+      case <- selected.case[[id]]
+      case.graph <- g[[id]]
       case.coord <- paste0(case$x.proj, "-", case$y.proj)
-      case.node <- which(igraph::V(g)$name == case.coord)
-      sel <- nearest.pump.sp[nearest.pump.sp$case == x, "wtd.pump"]
-      pump.node <- which(igraph::V(g)$name == pump.coordinates[sel])
-      wts <- case.road.segments.sp[[id]]$d
-      case.path <- unlist(igraph::shortest_paths(g, case.node, pump.node,
-        weights = wts)$vpath)
+      case.node <- which(igraph::V(case.graph)$name == case.coord)
+      sel <- nearest.pump[nearest.pump$case == x, "wtd.pump"]
+      pump.node <- which(igraph::V(case.graph)$name == pump.coordinates[sel])
+      wts <- case.pump.road.segments[[id]]$d
+      case.path <- unlist(igraph::shortest_paths(case.graph, case.node, 
+        pump.node, weights = wts)$vpath)
       case.path <- names(case.path)
       dat <- numericNodeCoordinates(case.path)
       n1 <- dat[1:(nrow(dat) - 1), ]
