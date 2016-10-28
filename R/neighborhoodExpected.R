@@ -76,7 +76,7 @@ neighborhoodExpected <- function(selection = NULL, vestry = FALSE,
   no.pump <- cholera::ortho.proj.sp[is.na(cholera::ortho.proj.sp$x.proj),
     "case"]
 
-  falconberg.id <- pump.road.segments[pump.road.segments$name == 
+  falconberg.id <- pump.road.segments[pump.road.segments$name ==
     "Falconberg Court" | pump.road.segments$name == "Falconberg Mews", "id"]
 
   falconberg <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$road.segment %in%
@@ -100,8 +100,6 @@ neighborhoodExpected <- function(selection = NULL, vestry = FALSE,
     edges <- x[, c("node1", "node2")]
     igraph::graph_from_data_frame(edges, directed = FALSE)
   })
-
-  # wtd.dist.sp <- parallel::mclapply(seq_along(case.network.sp), function(x) {
 
   nearest.pump.data <- parallel::mclapply(seq_along(g), function(x) {
     case <- selected.case[[x]]
@@ -193,7 +191,7 @@ neighborhoodExpected <- function(selection = NULL, vestry = FALSE,
       sel <- nearest.pump[nearest.pump$case == x, "wtd.pump"]
       pump.node <- which(igraph::V(case.graph)$name == pump.coordinates[sel])
       wts <- case.pump.road.segments[[id]]$d
-      case.path <- unlist(igraph::shortest_paths(case.graph, case.node, 
+      case.path <- unlist(igraph::shortest_paths(case.graph, case.node,
         pump.node, weights = wts)$vpath)
       case.path <- names(case.path)
       dat <- numericNodeCoordinates(case.path)
@@ -277,6 +275,137 @@ neighborhoodExpected <- function(selection = NULL, vestry = FALSE,
   }
 
   if (add.landmarks) cholera::addLandmarks()
+}
+
+#' Summary statistics for expected walking neighborhoods.
+#'
+#' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
+#'
+#' Currently computationally intensive (On an Intel Core i7, streets = TRUE appox. 90 seocnds; streets = FALSE appox. 75 seconds). For better performance, run in parallel with multiple cores in the terminal or in batch mode (appox. 45 and 30 seconds). Note that this is currently unavailable on Windows. See \code{vignette}("walking.neighborhoods") for details.
+#' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: from 1 to 13 for \code{pumps}; from 1 to 14 for \code{pumps.vestry}
+#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
+#' @param weighted Logical. TRUE uses shortest path weighted by road distance.
+#' @param multi.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that this option is not currently available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.
+#' @return A data frame.
+#' @export
+#' @examples
+#' # neighborhoodExpectedCensus()
+#' # neighborhoodExpectedCensus(streets = FALSE)
+
+neighborhoodExpectedCensus <- function(selection = NULL, vestry = FALSE,
+  weighted = TRUE, multi.core = FALSE) {
+
+  if (vestry) {
+    if (is.null(selection) == FALSE) {
+      if (any(abs(selection) %in% 1:14 == FALSE)) {
+        stop('With "vestry = TRUE", "selection" must be between 1 and 14.')
+      }
+    }
+  } else {
+    if (is.null(selection) == FALSE ) {
+      if (any(abs(selection) %in% 1:13 == FALSE)) {
+        stop('With "vestry = FALSE", "selection" must be between 1 and 13.')
+      }
+    }
+  }
+
+  if (multi.core) cores <- parallel::detectCores() else cores <- 1L
+
+  if (vestry) {
+    pump.road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
+    pump.coordinates <- pumpCoordinates(vestry = TRUE)
+  } else {
+    pump.road.segments <- pumpIntegrator()
+    pump.coordinates <- pumpCoordinates()
+  }
+
+  if (is.null(selection)) {
+    select.pumps <- pump.coordinates
+    pump.names <- names(pump.coordinates)
+  } else {
+    select.pumps <- pump.coordinates[selection]
+    pump.names <- names(pump.coordinates[selection])
+  }
+
+  ## --------------- Case Data --------------- ##
+
+  # Isolates are technically not part of road network
+
+  no.pump <- cholera::ortho.proj.sp[is.na(cholera::ortho.proj.sp$x.proj),
+    "case"]
+
+  falconberg.id <- pump.road.segments[pump.road.segments$name ==
+    "Falconberg Court" | pump.road.segments$name == "Falconberg Mews", "id"]
+
+  falconberg <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$road.segment %in%
+    falconberg.id, "case"]
+
+  # Expected cases
+
+  selected.case <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case %in%
+    c(no.pump, falconberg) == FALSE, ]
+
+  selected.case <- split(selected.case, selected.case$case)
+
+  # Integrates case into road netowrk
+
+  case.pump.road.segments <- parallel::mclapply(selected.case, function(x)
+    caseIntegrator(x, pump.road.segments), mc.cores = cores)
+
+  edge.list <- case.pump.road.segments
+
+  g <- lapply(edge.list, function(x) {
+    edges <- x[, c("node1", "node2")]
+    igraph::graph_from_data_frame(edges, directed = FALSE)
+  })
+
+  # wtd.dist.sp <- parallel::mclapply(seq_along(case.network.sp), function(x) {
+
+  nearest.pump.data <- parallel::mclapply(seq_along(g), function(x) {
+    case <- selected.case[[x]]
+    case.graph <- g[[x]]
+    case.coord <- paste0(case$x.proj, "-", case$y.proj)
+    case.node <- which(igraph::V(case.graph)$name == case.coord)
+
+    if (is.null(selection)) {
+      pump.nodes <- vapply(pump.coordinates, function(p) {
+        which(igraph::V(case.graph)$name == p)
+      }, numeric(1L))
+    } else {
+      pump.nodes <- vapply(pump.coordinates[selection], function(p) {
+        which(igraph::V(case.graph)$name == p)
+      }, numeric(1L))
+    }
+
+    if (weighted) {
+      wts <- case.pump.road.segments[[x]]$d
+      d <- unname(igraph::distances(case.graph, case.node, pump.nodes,
+        weights = wts))
+    } else {
+      d <- unname(igraph::distances(case.graph, case.node, pump.nodes))
+    }
+
+    d
+  }, mc.cores = cores)
+
+  nearest.pump.data <- data.frame(do.call(rbind, nearest.pump.data))
+  names(nearest.pump.data) <- pump.names
+
+  ortho.cases <- do.call(rbind, selected.case)
+
+  id <- apply(nearest.pump.data, 1, which.min)
+
+  nearest.pump <- data.frame(case = ortho.cases$case,
+                             wtd.pump = names(nearest.pump.data)[id])
+
+  nearest.pump$wtd.pump <- as.numeric(substr(nearest.pump$wtd.pump, 2,
+    length(nearest.pump$wtd.pump)))
+
+  census <- unclass(table(nearest.pump$wtd.pump))
+  
+  data.frame(pump.id = as.numeric(names(census)),
+             Count = census,
+             Percent = round(100 * census / sum(census), 2))
 }
 
 snowColors <- function(vestry = FALSE) {
