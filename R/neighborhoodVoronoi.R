@@ -1,25 +1,27 @@
 #' Plot Voronoi neighborhoods.
 #'
-#' Plot Voronoi diagrams of John Snow's 1854 London cholera data.
+#' Voronoi diagram of John Snow's 1854 London cholera data.
 #' @param selection Numeric. Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param output Character. NULL plots address points. "addresses" plots the total count of addresses at pumps' locations. "fatalities" plots the total count of fatalities at pumps' locations.
+#' @param statistic Character. NULL plots address points. "address" plots the total count of addresses in a neighborhood at its pump's location. "fatality" plots the total count of fatalities in a neighborhood at its pump's location.
 #' @return A base R graphics plot.
 #' @seealso \code{addVoronoi()}
 #' @import graphics
 #' @export
 #' @examples
 #' neighborhoodVoronoi()
-#' neighborhoodVoronoi(output = "addresses")
+#' neighborhoodVoronoi(statistic = "address")
 #' neighborhoodVoronoi(vestry = TRUE)
 #' neighborhoodVoronoi(selection = 6:7)
 #' neighborhoodVoronoi(selection = -6)
-#' neighborhoodVoronoi(selection = -6, output = "fatalities")
+#' neighborhoodVoronoi(selection = -6, statistic = "fatality")
 
-neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE, output = NULL) {
-  if (is.null(output) == FALSE) {
-    if (all(output %in% c("addresses", "fatalities")) == FALSE) {
-      stop('If specified, "output" must either be "addresses" or "fatalities".')
+neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
+  statistic = NULL) {
+
+  if (is.null(statistic) == FALSE) {
+    if (all(statistic %in% c("address", "fatality")) == FALSE) {
+      stop('If specified, "statistic" must either be "address" or "fatality".')
     }
   }
 
@@ -145,7 +147,7 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE, output = NULL)
   invisible(lapply(border.list, lines))
   plot(voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
 
-  if (is.null(output)) {
+  if (is.null(statistic)) {
     if (is.null(selection)) {
       if (!vestry) {
         points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
@@ -191,7 +193,7 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE, output = NULL)
       title(main = paste0(caption, "\n", "Pumps ", select.string))
     }
 
-  } else if (output == "addresses") {
+  } else if (statistic == "address") {
     voronoi.address <- lapply(coordinates, function(cell) {
       sp::point.in.polygon(cholera::fatalities.address$x,
                            cholera::fatalities.address$y, cell$x, cell$y)
@@ -221,7 +223,7 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE, output = NULL)
       title(main = paste0(caption, "\n", "Pumps ", select.string))
     }
 
-  } else if (output == "fatalities") {
+  } else if (statistic == "fatality") {
     voronoi.fatalities <- lapply(coordinates, function(cell) {
       sp::point.in.polygon(cholera::fatalities.unstacked$x,
                            cholera::fatalities.unstacked$y, cell$x, cell$y)
@@ -267,6 +269,157 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE, output = NULL)
         }
       }
     }
+  }
+}
+
+#' Summary statistics for Voronoi neighborhoods.
+#'
+#' @param selection Numeric. Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
+#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
+#' @param statistic Character. "address" plots the total count of addresses at pumps' locations. "fatality" plots the total count of fatalities at pumps' locations.
+#' @return A data frame.
+#' @export
+#' @examples
+#' neighborhoodVoronoiCensus()
+#' neighborhoodVoronoiCensus(selection = 6:7)
+#' neighborhoodVoronoiCensus(selection = -6)
+#' neighborhoodVoronoiCensus(statistic = "address")
+
+neighborhoodVoronoiCensus <- function(selection = NULL, vestry = FALSE,
+  statistic = "address") {
+
+  if (all(statistic %in% c("address", "fatality")) == FALSE) {
+    stop('If specified, "statistic" must either be "address" or "fatality".')
+  }
+
+  if (vestry) {
+    msg1 <- 'With "vestry = TRUE", "selection" must include at least 2 pumps:'
+    msg2 <- "  two different numbers between 1 and 14."
+
+    if (is.null(selection) == FALSE) {
+      test1 <- length(unique((1:14)[selection])) < 2
+      test2 <- any(abs(selection) %in% 1:14 == FALSE)
+
+      if (test1 | test2) {
+        stop(paste(msg1, "\n", msg2))
+      }
+    }
+  } else {
+    msg1 <- 'With "vestry = FALSE", "selection" must include at least 2 pumps:'
+    msg2 <- "  two different numbers between 1 and 13."
+
+    if (is.null(selection) == FALSE ) {
+      test1 <- length(unique((1:13)[selection])) < 2
+      test2 <- any(abs(selection) %in% 1:13 == FALSE)
+
+      if (test1 | test2) {
+        stop(paste(msg1, "\n", msg2))
+      }
+    }
+  }
+
+  x.rng <- range(cholera::roads$x)
+  y.rng <- range(cholera::roads$y)
+
+  if (is.null(selection)) {
+    if (vestry) {
+      pump.id <- cholera::pumps.vestry$id
+      voronoi <- deldir::deldir(cholera::pumps.vestry[, c("x", "y")],
+        rw = c(x.rng, y.rng))
+    } else {
+      pump.id <- cholera::pumps$id
+      voronoi <- deldir::deldir(cholera::pumps[, c("x", "y")],
+        rw = c(x.rng, y.rng))
+    }
+  } else {
+    if (vestry) {
+      pump.id <- cholera::pumps.vestry$id[selection]
+      voronoi <- deldir::deldir(cholera::pumps.vestry[selection, c("x", "y")],
+        rw = c(x.rng, y.rng))
+
+    } else {
+      pump.id <- cholera::pumps$id[selection]
+      voronoi <- deldir::deldir(cholera::pumps[selection, c("x", "y")],
+        rw = c(x.rng, y.rng))
+    }
+  }
+
+  cell.data <- voronoi$dirsgs
+  cell.id <- sort(unique(c(cell.data$ind1, cell.data$ind2)))
+
+  # Polygon coordinates
+
+  coordinates <- lapply(cell.id, function(i) {
+    pump <- cholera::pumps[pump.id[i], c("x", "y")]
+    cell <- cell.data[cell.data$ind1 == i | cell.data$ind2 == i, ]
+    a <- cell[, c("x1", "y1")]
+    b <- cell[, c("x2", "y2")]
+    names(a) <- c("x", "y")
+    names(b) <- c("x", "y")
+
+    # "Open" polygon test
+
+    test1 <- any(cell$thirdv1 < 0 | cell$thirdv2 < 0)
+
+    test2 <- unlist(cell[, c("thirdv1", "thirdv2")])
+    test2 <- length(unique(test2[test2 < 0])) != 1
+
+    # Close "open" polygons at corners
+
+    if (test1 & test2) {
+      four.corners <- fourCorners()
+      corners <- lapply(seq_len(nrow(cell)), function(j) {
+        intersection.points <- lapply(four.corners, function(corner) {
+          segmentIntersection(pump$x, pump$y, corner$x, corner$y,
+            cell[j, "x1"], cell[j, "y1"], cell[j, "x2"], cell[j, "y2"])
+        })
+        vapply(intersection.points, function(x) all(is.na(x)) == FALSE,
+          logical(1L))
+      })
+
+      corner.id <- which(colSums(do.call(rbind, corners)) == 0)
+      corner.solution <- four.corners[corner.id]
+      a <- rbind(a, b[nrow(b), ], corner.solution[[1]])
+      b <- rbind(b, do.call(rbind, corner.solution))
+    }
+
+    coords <- unique(rbind(a, b))
+    coords.centered <- data.frame(x = coords$x - pump$x, y = coords$y - pump$y)
+
+    # transform cartesian to polar coordinates
+    # then sort vertices by phi (angle); counter-clockwise order
+    idx <- order(apply(coords.centered, 1, pracma::cart2pol)[1, ])
+    coords <- coords[idx, ]
+
+    # adds first vertex to last to close polygon
+    rbind(coords, coords[1, ])
+  })
+
+  names(coordinates) <- pump.id
+
+  if (statistic == "address") {
+    voronoi.address <- lapply(coordinates, function(cell) {
+      sp::point.in.polygon(cholera::fatalities.address$x,
+                           cholera::fatalities.address$y, cell$x, cell$y)
+    })
+
+    address.count <- vapply(voronoi.address, sum, numeric(1L))
+
+    data.frame(pump.id = as.numeric(names(address.count)),
+               Count = address.count,
+               Percent = round(100 * address.count / sum(address.count), 2))
+               
+  } else if (statistic == "fatality") {
+    voronoi.fatalities <- lapply(coordinates, function(cell) {
+      sp::point.in.polygon(cholera::fatalities.unstacked$x,
+                           cholera::fatalities.unstacked$y, cell$x, cell$y)
+    })
+
+    fatality.count <- vapply(voronoi.fatalities, sum, numeric(1L))
+
+    data.frame(pump.id = as.numeric(names(fatality.count)),
+               Count = fatality.count,
+               Percent = round(100 * fatality.count / sum(fatality.count), 2))
   }
 }
 

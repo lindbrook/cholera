@@ -4,28 +4,28 @@
 \alias{neighborhoodVoronoi}
 \title{Plot Voronoi neighborhoods.}
 \usage{
-neighborhoodVoronoi(selection = NULL, vestry = FALSE, output = NULL)
+neighborhoodVoronoi(selection = NULL, vestry = FALSE, statistic = NULL)
 }
 \arguments{
 \item{selection}{Numeric. Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
-\item{output}{Character. NULL plots address points. "addresses" plots the total count of addresses at pumps' locations. "fatalities" plots the total count of fatalities at pumps' locations.}
+\item{statistic}{Character. NULL plots address points. "address" plots the total count of addresses in a neighborhood at its pump's location. "fatality" plots the total count of fatalities in a neighborhood at its pump's location.}
 }
 \value{
 A base R graphics plot.
 }
 \description{
-Plot Voronoi diagrams of John Snow's 1854 London cholera data.
+Voronoi diagram of John Snow's 1854 London cholera data.
 }
 \examples{
 neighborhoodVoronoi()
-neighborhoodVoronoi(output = "addresses")
+neighborhoodVoronoi(statistic = "address")
 neighborhoodVoronoi(vestry = TRUE)
 neighborhoodVoronoi(selection = 6:7)
 neighborhoodVoronoi(selection = -6)
-neighborhoodVoronoi(selection = -6, output = "fatalities")
+neighborhoodVoronoi(selection = -6, statistic = "fatality")
 }
 \seealso{
 \code{addVoronoi()}
