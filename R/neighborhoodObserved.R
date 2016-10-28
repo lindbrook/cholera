@@ -5,7 +5,7 @@
 #' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE uses shortest path weighted by road distance.
-#' @param statistic Character. NULL plots address points. "addresses" plots the total count of addresses at pumps' locations. "fatalities" plots the total count of fatalities at pumps' locations.
+#' @param statistic Character. NULL plots address points. "address" plots the total count of address in a neighborhood at its pump's location. "fatality" plots the total count of fatality in a neighborhood at its pump's location.
 #' @param add.landmarks Logical. Include landmarks.
 #' @return A base R graphics plot.
 #' @seealso \code{addLandmarks()}
@@ -34,9 +34,9 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
   }
 
   if (is.null(statistic) == FALSE) {
-    if (all(statistic %in% c("addresses", "fatalities")) == FALSE) {
-      text.a <- 'If specified, "statistic" must either be "addresses"'
-      text.b <- 'or "fatalities".'
+    if (all(statistic %in% c("address", "fatality")) == FALSE) {
+      text.a <- 'If specified, "statistic" must either be "address"'
+      text.b <- 'or "fatality".'
       stop(paste(text.a, text.b))
     }
   }
@@ -72,13 +72,13 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
     ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
     case <- split(ortho, ortho$case)
   } else {
-    if (statistic == "addresses") {
+    if (statistic == "address") {
       sel <- cholera::fatalities.address$anchor.case
       ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
       case <- split(ortho, ortho$case)
     }
 
-    if (statistic == "fatalities") {
+    if (statistic == "fatality") {
       sel <- cholera::fatalities.unstacked$case
       ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
       case <- split(ortho, ortho$case)
@@ -227,6 +227,125 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
   title(main = "Observed Walking Path Neighborhoods")
 
   if (add.landmarks) cholera::addLandmarks()
+}
+
+#' Summary statistics for observed walking neighborhoods.
+#'
+#' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
+#'
+#' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
+#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
+#' @param weighted Logical. TRUE uses shortest path weighted by road distance.
+#' @param statistic Character. "address" uses the count of address at pumps' locations. "fatality" plots the total count of fatality at pumps' locations.
+#' @return A data frame.
+#' @seealso  \code{vignette}("walking.neighborhoods")
+#' @export
+#' @examples
+#' # neighborhoodObservedCensus()
+#' # neighborhoodObservedCensus(6:7)
+
+neighborhoodObservedCensus <- function(selection = NULL, vestry = FALSE,
+  weighted = TRUE, statistic = "address") {
+
+  if (vestry) {
+    if (is.null(selection) == FALSE) {
+      if (any(abs(selection) %in% 1:14 == FALSE)) {
+        stop('With "vestry = TRUE", "selection" must be between 1 and 14.')
+      }
+    }
+  } else {
+    if (is.null(selection) == FALSE ) {
+      if (any(abs(selection) %in% 1:13 == FALSE)) {
+        stop('With "vestry = FALSE", "selection" must be between 1 and 13.')
+      }
+    }
+  }
+
+  if (all(statistic %in% c("address", "fatality")) == FALSE) {
+    text.a <- 'If specified, "statistic" must either be "address"'
+    text.b <- 'or "fatality".'
+    stop(paste(text.a, text.b))
+  }
+
+  # integrate pumps into road network
+
+  if (vestry) {
+    pump.road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
+    pump.coordinates <- pumpCoordinates(vestry = TRUE)
+
+  } else {
+    pump.road.segments <- pumpIntegrator()
+    pump.coordinates <- pumpCoordinates()
+  }
+
+  if (is.null(selection)) {
+    select.pumps <- pump.coordinates
+    pump.names <- names(pump.coordinates)
+  } else {
+    select.pumps <- pump.coordinates[selection]
+    pump.names <- names(pump.coordinates[selection])
+  }
+
+  if (statistic == "address") {
+    sel <- cholera::fatalities.address$anchor.case
+    ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+    case <- split(ortho, ortho$case)
+  } else if (statistic == "fatality") {
+    sel <- cholera::fatalities.unstacked$case
+    ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+    case <- split(ortho, ortho$case)
+  }
+
+  # integrate case into road network
+
+  case.pump.road.segments <- lapply(case, function(x)
+    caseIntegrator(x, pump.road.segments))
+
+  edge.list <- case.pump.road.segments
+
+  g <- lapply(edge.list, function(x) {
+    edges <- x[, c("node1", "node2")]
+    igraph::graph_from_data_frame(edges, directed = FALSE)
+  })
+
+  case.node <- vapply(seq_along(case), function(i) {
+    case.coord <- paste0(ortho[i, "x.proj"], "-", ortho[i, "y.proj"])
+    which(igraph::V(g[[i]])$name == case.coord)
+  }, numeric(1L))
+
+  pump.nodes <- lapply(g, function(graph) {
+    vapply(select.pumps, function(pump) {
+      which(igraph::V(graph)$name == pump)
+    }, numeric(1L))
+  })
+
+  nearest.pump.data <- lapply(seq_along(case), function(i) {
+    if (weighted) {
+      wts <- case.pump.road.segments[[i]]$d
+      d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]],
+        weights = wts))
+    } else {
+      d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]]))
+    }
+
+    d <- data.frame(d)
+    names(d) <- pump.names
+    pump.coordinates[names(pump.coordinates) == names(which.min(d))]
+  })
+
+  pump.id <- names(unlist(nearest.pump.data))
+
+  nearest.pump.node <- vapply(seq_along(pump.id), function(i) {
+    pump.nodes[[i]][pump.id[i]]
+  }, numeric(1L))
+
+  pump.census <- as.numeric(substr(pump.id, 2, nchar(pump.id)))
+
+  census <- unclass(table(pump.census))
+
+  data.frame(pump.id = as.numeric(names(census)),
+             Count = census,
+             Precent = round(100 * census / sum(census), 2))
 }
 
 snowColors <- function(vestry = FALSE) {
