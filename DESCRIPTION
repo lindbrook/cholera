@@ -1,6 +1,6 @@
 Package: cholera
 Type: Package
-Title: Amends and Augments Analysis of Snow's Cholera Data
+Title: Amends, Augments and Aids Analysis of John Snow's Cholera Data
 Version: 0.1.3
 Date: 2016-10-28
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com", role = c("aut", "cre"))
