@@ -64,25 +64,25 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
     if (vestry) {
       pump.id <- cholera::pumps.vestry$id
       voronoi <- deldir::deldir(cholera::pumps.vestry[, c("x", "y")],
-        rw = c(x.rng, y.rng))
+        rw = c(x.rng, y.rng), suppressMsge = TRUE)
       colors <- snowColors(vestry = TRUE)
     } else {
       pump.id <- cholera::pumps$id
       voronoi <- deldir::deldir(cholera::pumps[, c("x", "y")],
-        rw = c(x.rng, y.rng))
+        rw = c(x.rng, y.rng), suppressMsge = TRUE)
       colors <- snowColors()
     }
   } else {
     if (vestry) {
       pump.id <- cholera::pumps.vestry$id[selection]
       voronoi <- deldir::deldir(cholera::pumps.vestry[selection, c("x", "y")],
-        rw = c(x.rng, y.rng))
+        rw = c(x.rng, y.rng), suppressMsge = TRUE)
       colors <- snowColors(vestry = TRUE)[selection]
       select.string <- paste(sort(selection), collapse = ", ")
     } else {
       pump.id <- cholera::pumps$id[selection]
       voronoi <- deldir::deldir(cholera::pumps[selection, c("x", "y")],
-        rw = c(x.rng, y.rng))
+        rw = c(x.rng, y.rng), suppressMsge = TRUE)
       colors <- snowColors()[selection]
       select.string <- paste(sort(selection), collapse = ", ")
     }
@@ -325,22 +325,21 @@ neighborhoodVoronoiCensus <- function(selection = NULL, vestry = FALSE,
     if (vestry) {
       pump.id <- cholera::pumps.vestry$id
       voronoi <- deldir::deldir(cholera::pumps.vestry[, c("x", "y")],
-        rw = c(x.rng, y.rng))
+        rw = c(x.rng, y.rng), suppressMsge = TRUE)
     } else {
       pump.id <- cholera::pumps$id
       voronoi <- deldir::deldir(cholera::pumps[, c("x", "y")],
-        rw = c(x.rng, y.rng))
+        rw = c(x.rng, y.rng), suppressMsge = TRUE)
     }
   } else {
     if (vestry) {
       pump.id <- cholera::pumps.vestry$id[selection]
       voronoi <- deldir::deldir(cholera::pumps.vestry[selection, c("x", "y")],
-        rw = c(x.rng, y.rng))
-
+        rw = c(x.rng, y.rng), suppressMsge = TRUE)
     } else {
       pump.id <- cholera::pumps$id[selection]
       voronoi <- deldir::deldir(cholera::pumps[selection, c("x", "y")],
-        rw = c(x.rng, y.rng))
+        rw = c(x.rng, y.rng), suppressMsge = TRUE)
     }
   }
 
@@ -408,7 +407,7 @@ neighborhoodVoronoiCensus <- function(selection = NULL, vestry = FALSE,
     data.frame(pump.id = as.numeric(names(address.count)),
                Count = address.count,
                Percent = round(100 * address.count / sum(address.count), 2))
-               
+
   } else if (statistic == "fatality") {
     voronoi.fatalities <- lapply(coordinates, function(cell) {
       sp::point.in.polygon(cholera::fatalities.unstacked$x,
