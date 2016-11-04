@@ -1,3 +1,9 @@
+cholera 0.1.4
+----------------------------------------------------------------
+
+* add pump.select and neighborhood.display arguments to neighborhoodObserved()
+
+
 cholera 0.1.3
 ----------------------------------------------------------------
 

@@ -4,11 +4,11 @@
 \alias{neighborhoodObservedCensus}
 \title{Summary statistics for observed walking neighborhoods.}
 \usage{
-neighborhoodObservedCensus(selection = NULL, vestry = FALSE,
+neighborhoodObservedCensus(pump.select = NULL, vestry = FALSE,
   weighted = TRUE, statistic = "address")
 }
 \arguments{
-\item{selection}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}}
+\item{pump.select}{Numeric. Default is NULL; all pumps are used. Otherwise, pump.select is a vector of numeric IDs that ranges from 1 to 13 for \code{pumps} or 1 to 14 for \code{pumps.vestry}. This determines which pumps are used to compute neighborhoods.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 

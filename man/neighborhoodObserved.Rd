@@ -2,19 +2,22 @@
 % Please edit documentation in R/neighborhoodObserved.R
 \name{neighborhoodObserved}
 \alias{neighborhoodObserved}
-\title{Plots observed walking neighborhoods.}
+\title{Plot observed walking path neighborhoods.}
 \usage{
-neighborhoodObserved(selection = NULL, vestry = FALSE, weighted = TRUE,
-  statistic = NULL, add.landmarks = TRUE)
+neighborhoodObserved(pump.select = NULL, neighborhood.display = NULL,
+  vestry = FALSE, statistic = NULL, weighted = TRUE,
+  add.landmarks = TRUE)
 }
 \arguments{
-\item{selection}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}}
+\item{pump.select}{Numeric. Default is NULL; all pumps are used. Otherwise, pump.select is a vector of numeric IDs that ranges from 1 to 13 for \code{pumps} or 1 to 14 for \code{pumps.vestry}. This determines which pumps are used to compute neighborhoods.}
 
-\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
+\item{neighborhood.display}{Numeric. This vector determines which computed neighborhoods are displayed. It should be a subset of "pump.select".}
 
-\item{weighted}{Logical. TRUE uses shortest path weighted by road distance.}
+\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 from the original map.}
 
 \item{statistic}{Character. NULL plots address points. "address" plots the total count of address in a neighborhood at its pump's location. "fatality" plots the total count of fatality in a neighborhood at its pump's location.}
+
+\item{weighted}{Logical. TRUE uses shortest path weighted by road distance.}
 
 \item{add.landmarks}{Logical. Include landmarks.}
 }
@@ -22,11 +25,12 @@ neighborhoodObserved(selection = NULL, vestry = FALSE, weighted = TRUE,
 A base R graphics plot.
 }
 \description{
-Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
+Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump along the streets of Soho.
 }
 \examples{
 # neighborhoodObserved()
-# neighborhoodObserved(selection = 6:7)
+# neighborhoodObserved(pump.select = 6:7)
+# neighborhoodObserved(neighborhood.display = 6:7)
 }
 \seealso{
 \code{addLandmarks()}

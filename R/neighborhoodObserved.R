@@ -1,11 +1,12 @@
-#' Plots observed walking neighborhoods.
+#' Plot observed walking path neighborhoods.
 #'
-#' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
+#' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump along the streets of Soho.
 #'
-#' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param weighted Logical. TRUE uses shortest path weighted by road distance.
+#' @param pump.select Numeric. Default is NULL; all pumps are used. Otherwise, pump.select is a vector of numeric IDs that ranges from 1 to 13 for \code{pumps} or 1 to 14 for \code{pumps.vestry}. This determines which pumps are used to compute neighborhoods.
+#' @param neighborhood.display Numeric. This vector determines which computed neighborhoods are displayed. It should be a subset of "pump.select".
 #' @param statistic Character. NULL plots address points. "address" plots the total count of address in a neighborhood at its pump's location. "fatality" plots the total count of fatality in a neighborhood at its pump's location.
+#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 from the original map.
+#' @param weighted Logical. TRUE uses shortest path weighted by road distance.
 #' @param add.landmarks Logical. Include landmarks.
 #' @return A base R graphics plot.
 #' @seealso \code{addLandmarks()}
@@ -14,21 +15,23 @@
 #' @export
 #' @examples
 #' # neighborhoodObserved()
-#' # neighborhoodObserved(selection = 6:7)
+#' # neighborhoodObserved(pump.select = 6:7)
+#' # neighborhoodObserved(neighborhood.display = 6:7)
 
-neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
-  weighted = TRUE, statistic = NULL, add.landmarks = TRUE) {
+neighborhoodObserved <- function(pump.select = NULL,
+  neighborhood.display = NULL, vestry = FALSE, statistic = NULL,
+  weighted = TRUE, add.landmarks = TRUE) {
 
   if (vestry) {
-    if (is.null(selection) == FALSE) {
-      if (any(abs(selection) %in% 1:14 == FALSE)) {
-        stop('With "vestry = TRUE", "selection" must be between 1 and 14.')
+    if (is.null(pump.select) == FALSE) {
+      if (any(abs(pump.select) %in% 1:14 == FALSE)) {
+        stop('With "vestry = TRUE", "pump.select" must be between 1 and 14.')
       }
     }
   } else {
-    if (is.null(selection) == FALSE ) {
-      if (any(abs(selection) %in% 1:13 == FALSE)) {
-        stop('With "vestry = FALSE", "selection" must be between 1 and 13.')
+    if (is.null(pump.select) == FALSE ) {
+      if (any(abs(pump.select) %in% 1:13 == FALSE)) {
+        stop('With "vestry = FALSE", "pump.select" must be between 1 and 13.')
       }
     }
   }
@@ -38,6 +41,22 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
       text.a <- 'If specified, "statistic" must either be "address"'
       text.b <- 'or "fatality".'
       stop(paste(text.a, text.b))
+    }
+  }
+
+  if (is.null(neighborhood.display) == FALSE) {
+    if (is.null(pump.select)) {
+      if (vestry) {
+        select.test <- neighborhood.display %in% 1:14
+      } else {
+        select.test <- neighborhood.display %in% 1:13
+      }
+    } else {
+      select.test <- union(pump.select, neighborhood.display) == pump.select
+    }
+
+    if (any(select.test) == FALSE) {
+      stop('"neighborhood.display" must be a subset of "pump.select"')
     }
   }
 
@@ -59,12 +78,12 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
     pump.coordinates <- pumpCoordinates()
   }
 
-  if (is.null(selection)) {
+  if (is.null(pump.select)) {
     select.pumps <- pump.coordinates
     pump.names <- names(pump.coordinates)
   } else {
-    select.pumps <- pump.coordinates[selection]
-    pump.names <- names(pump.coordinates[selection])
+    select.pumps <- pump.coordinates[pump.select]
+    pump.names <- names(pump.coordinates[pump.select])
   }
 
   if (is.null(statistic)) {
@@ -148,84 +167,120 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
     path.data <- lapply(paths, pathData)
   }
 
+  if (is.null(neighborhood.display) == FALSE) {
+    neighborhood.id <- which(pump.census %in% neighborhood.display)
+  }
+
   plot(cholera::fatalities[, c("x", "y")], xlim = range(cholera::roads$x),
     ylim = range(cholera::roads$y), pch = NA, asp = 1)
 
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
 
-  if (is.null(statistic)) {
-    invisible(lapply(seq_along(path.data), function(i) {
-      dat <- path.data[[i]]
-      n1 <- dat[1:(nrow(dat) - 1), ]
-      n2 <- dat[2:nrow(dat), ]
-      segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i], lwd = 2)
-    }))
-  } else {
-    invisible(lapply(seq_along(path.data), function(i) {
-      dat <- path.data[[i]]
-      n1 <- dat[1:(nrow(dat) - 1), ]
-      n2 <- dat[2:nrow(dat), ]
-      segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i])
-    }))
-  }
+  # plot address points
 
   if (is.null(statistic)) {
-    points(cholera::fatalities.address[, c("x", "y")], pch = 20, cex = 0.75,
-      col = colors[pump.census])
-  }
-
-  if (is.null(selection)) {
-    if (vestry) {
-      if (is.null(statistic)) {
-        points(cholera::pumps.vestry[, c("x", "y")], pch = 2, col = colors)
-        text(cholera::pumps.vestry[, c("x", "y")],
-          label = cholera::pumps.vestry$id, pos = 1)
-      } else {
-        obs <- as.numeric(names(census))
-        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.25,
-          label = census, col = colors[obs], font = 2)
-      }
+    if (is.null(neighborhood.display)) {
+      points(cholera::fatalities.address[, c("x", "y")], pch = 20, cex = 0.75,
+        col = colors[pump.census])
     } else {
-      if (is.null(statistic)) {
-        points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
-        text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1)
-      } else {
-        obs <- as.numeric(names(census))
-        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.25,
-          label = census, col = colors[obs], font = 2)
-      }
+      sel.col <- pump.census[pump.census %in% neighborhood.display]
+      points(cholera::fatalities.address[neighborhood.id, c("x", "y")],
+        pch = 20, cex = 0.75, col = colors[sel.col])
+    }
+  }
+
+  # draw paths
+
+  if (is.null(statistic)) {
+    if (is.null(neighborhood.display)) {
+      invisible(lapply(seq_along(path.data), function(i) {
+        dat <- path.data[[i]]
+        n1 <- dat[1:(nrow(dat) - 1), ]
+        n2 <- dat[2:nrow(dat), ]
+        segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i], lwd = 2)
+      }))
+    } else {
+      invisible(lapply(neighborhood.id, function(i) {
+        dat <- path.data[[i]]
+        n1 <- dat[1:(nrow(dat) - 1), ]
+        n2 <- dat[2:nrow(dat), ]
+        segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i], lwd = 2)
+      }))
     }
   } else {
+    if (is.null(neighborhood.display)) {
+      invisible(lapply(seq_along(path.data), function(i) {
+        dat <- path.data[[i]]
+        n1 <- dat[1:(nrow(dat) - 1), ]
+        n2 <- dat[2:nrow(dat), ]
+        segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i])
+      }))
+    } else {
+      invisible(lapply(neighborhood.id, function(i) {
+        dat <- path.data[[i]]
+        n1 <- dat[1:(nrow(dat) - 1), ]
+        n2 <- dat[2:nrow(dat), ]
+        segments(n1$x, n1$y, n2$x, n2$y, col = colors[pump.census][i])
+      }))
+    }
+  }
+
+  # display pump ID or neighborhood statistic
+
+  if (is.null(pump.select)) {
     if (vestry) {
       if (is.null(statistic)) {
-        sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-        points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 2,
-          col = colors[sel.pumps])
-        text(cholera::pumps.vestry[sel.pumps, c("x", "y")],
-          label = cholera::pumps$id[sel.pumps], pos = 1)
+        if (is.null(neighborhood.display)) {
+          points(cholera::pumps.vestry[, c("x", "y")], pch = 2, col = colors)
+          text(cholera::pumps.vestry[, c("x", "y")],
+            label = cholera::pumps.vestry$id, pos = 1)
+        } else {
+          points(cholera::pumps.vestry[neighborhood.display, c("x", "y")],
+            pch = 2, col = colors[neighborhood.display])
+          text(cholera::pumps.vestry[neighborhood.display, c("x", "y")],
+            label = cholera::pumps.vestry$id[neighborhood.display], pos = 1)
+        }
       } else {
-        obs <- as.numeric(names(census))
-        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.25,
-          label = census, col = colors[obs], font = 2)
+        if (is.null(neighborhood.display)) {
+          obs <- as.numeric(names(census))
+          text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.25,
+            label = census, col = colors[obs], font = 2)
+
+        } else {
+          text(cholera::pumps.vestry[neighborhood.display, c("x", "y")],
+            cex = 1.25, label = census[names(census) %in% neighborhood.display],
+            col = colors[neighborhood.display], font = 2)
+        }
       }
     } else {
       if (is.null(statistic)) {
-        sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-        points(cholera::pumps[sel.pumps, c("x", "y")], pch = 2,
-          col = colors[sel.pumps])
-        text(cholera::pumps[sel.pumps, c("x", "y")],
-          label = cholera::pumps.vestry$id[sel.pumps], pos = 1)
+        if (is.null(neighborhood.display)) {
+          points(cholera::pumps[, c("x", "y")], pch = 2, col = colors)
+          text(cholera::pumps[, c("x", "y")],
+            label = cholera::pumps$id, pos = 1)
+        } else {
+          points(cholera::pumps[neighborhood.display, c("x", "y")],
+            pch = 2, col = colors[neighborhood.display])
+          text(cholera::pumps[neighborhood.display, c("x", "y")],
+            label = cholera::pumps$id[neighborhood.display], pos = 1)
+        }
       } else {
-        obs <- as.numeric(names(census))
-        text(cholera::pumps.vestry[obs, c("x", "y")], cex = 1.25,
-          label = census, col = colors[obs], font = 2)
+        if (is.null(neighborhood.display)) {
+          obs <- as.numeric(names(census))
+          text(cholera::pumps[obs, c("x", "y")], cex = 1.25,
+            label = census, col = colors[obs], font = 2)
+
+        } else {
+          text(cholera::pumps[neighborhood.display, c("x", "y")],
+            cex = 1.25, label = census[names(census) %in% neighborhood.display],
+            col = colors[neighborhood.display], font = 2)
+        }
       }
     }
   }
 
   title(main = "Observed Walking Path Neighborhoods")
-
   if (add.landmarks) cholera::addLandmarks()
 }
 
@@ -233,7 +288,7 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
 #'
 #' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 #'
-#' @param selection Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}
+#' @param pump.select Numeric. Default is NULL; all pumps are used. Otherwise, pump.select is a vector of numeric IDs that ranges from 1 to 13 for \code{pumps} or 1 to 14 for \code{pumps.vestry}. This determines which pumps are used to compute neighborhoods.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE uses shortest path weighted by road distance.
 #' @param statistic Character. "address" uses the count of address at pumps' locations. "fatality" plots the total count of fatality at pumps' locations.
@@ -244,19 +299,19 @@ neighborhoodObserved <- function(selection = NULL, vestry = FALSE,
 #' # neighborhoodObservedCensus()
 #' # neighborhoodObservedCensus(6:7)
 
-neighborhoodObservedCensus <- function(selection = NULL, vestry = FALSE,
+neighborhoodObservedCensus <- function(pump.select = NULL, vestry = FALSE,
   weighted = TRUE, statistic = "address") {
 
   if (vestry) {
-    if (is.null(selection) == FALSE) {
-      if (any(abs(selection) %in% 1:14 == FALSE)) {
-        stop('With "vestry = TRUE", "selection" must be between 1 and 14.')
+    if (is.null(pump.select) == FALSE) {
+      if (any(abs(pump.select) %in% 1:14 == FALSE)) {
+        stop('With "vestry = TRUE", "pump.select" must be between 1 and 14.')
       }
     }
   } else {
-    if (is.null(selection) == FALSE ) {
-      if (any(abs(selection) %in% 1:13 == FALSE)) {
-        stop('With "vestry = FALSE", "selection" must be between 1 and 13.')
+    if (is.null(pump.select) == FALSE ) {
+      if (any(abs(pump.select) %in% 1:13 == FALSE)) {
+        stop('With "vestry = FALSE", "pump.select" must be between 1 and 13.')
       }
     }
   }
@@ -278,12 +333,12 @@ neighborhoodObservedCensus <- function(selection = NULL, vestry = FALSE,
     pump.coordinates <- pumpCoordinates()
   }
 
-  if (is.null(selection)) {
+  if (is.null(pump.select)) {
     select.pumps <- pump.coordinates
     pump.names <- names(pump.coordinates)
   } else {
-    select.pumps <- pump.coordinates[selection]
-    pump.names <- names(pump.coordinates[selection])
+    select.pumps <- pump.coordinates[pump.select]
+    pump.names <- names(pump.coordinates[pump.select])
   }
 
   if (statistic == "address") {
