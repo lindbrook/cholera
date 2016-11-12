@@ -2,6 +2,7 @@ cholera 0.1.4
 ----------------------------------------------------------------
 
 * add pump.select and neighborhood.display arguments to neighborhoodObserved()
+* add Adam and Eve Court to addLandmarks()
 
 
 cholera 0.1.3

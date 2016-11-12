@@ -1,6 +1,6 @@
 #' Add landmarks.
 #'
-#' Adds Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews, 18 Sackville (John Snow residence) and 28 Dean Street (Karl Marx residence) to an existing plot. Falconberg Court & Mews are technically an isolate that is not part of the network of roads and is, consequently, technically unreachable.
+#' Adds Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews, 18 Sackville (John Snow residence) and 28 Dean Street (Karl Marx residence) to an existing plot. Falconberg Court & Mews are technically an isolate that is not part of the network of roads and is, consequently, technically unreachable. Adam and Eve Court and its pump also form an isolate.
 #' @return Add base R points and text to a graphics plot.
 #' @seealso \code{\link[cholera]{snowMap}}, \code{\link[cholera]{addWhitehead}}
 #' @import graphics
@@ -42,9 +42,14 @@ addLandmarks <- function() {
   text(brewery$x, brewery$y, labels = "Lion'\nBrewery", cex = 0.5)
   points(brewery$x, brewery$y, pch = 15, cex = 1/3)
 
-  # Falconberg Court and Mews
+  # Falconberg Court and Mews (isolate)
   Falconberg <- data.frame(x = 19.5, y = 17.184)
   text(Falconberg$x, Falconberg$y, labels = "Falconberg\nCourt & Mews", cex = 0.5)
+
+  # Adam and Eve Court (isolate)
+  adam.eve <- colMeans(cholera::roads[cholera::roads$name ==
+    "Adam and Eve Court", c("x", "y")])
+  text(adam.eve["x"], adam.eve["y"], labels = "Adam & Eve\nCourt", cex = 0.5)
 }
 
 #' Add plague pit (Marshall Street).
