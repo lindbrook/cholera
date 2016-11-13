@@ -14,7 +14,7 @@ neighborhoodExpectedCensus(pump.select = NULL, vestry = FALSE,
 
 \item{weighted}{Logical. TRUE uses shortest path weighted by road distance.}
 
-\item{multi.core}{Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that this option is not currently available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.}
+\item{multi.core}{Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that this should NOT be used in the GUI and is not currently available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.}
 }
 \value{
 A data frame.

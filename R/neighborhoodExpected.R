@@ -13,7 +13,7 @@
 
 #' @param obs.lwd Numeric. Set line width for observed paths.
 #' @param sim.lwd Numeric. Set line width for expected paths
-#' @param multi.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that this option is not currently available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.
+#' @param multi.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that this should NOT be used in the GUI and is not currently available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.
 #' @return A base R graphics plot.
 #' @seealso \code{addLandmarks()}
 #'
@@ -349,7 +349,7 @@ neighborhoodExpected <- function(pump.select = NULL,
         pump.node <- which(igraph::V(case.graph)$name == pump.coordinates[sel])
         wts <- case.pump.road.segments[[id]]$d
         case.path <- unlist(igraph::shortest_paths(case.graph, case.node,
-         pump.node, weights = wts)$vpath)
+          pump.node, weights = wts)$vpath)
         case.path <- names(case.path)
         dat <- numericNodeCoordinates(case.path)
         n1 <- dat[1:(nrow(dat) - 1), ]
@@ -538,7 +538,7 @@ neighborhoodExpected <- function(pump.select = NULL,
 #' @param pump.select Numeric. Default is NULL; all pumps are used. Otherwise, pump.select by a vector of numeric IDs: from 1 to 13 for \code{pumps}; from 1 to 14 for \code{pumps.vestry}
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param weighted Logical. TRUE uses shortest path weighted by road distance.
-#' @param multi.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that this option is not currently available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.
+#' @param multi.core Logical. TRUE uses parallel::mclapply and parallel::detectCores(). Note that this should NOT be used in the GUI and is not currently available on Windows. See parallel::mclapply() for details. FALSE uses 1 logical core and can be run in GUI and on Windows.
 #' @return A data frame.
 #' @export
 #' @examples
