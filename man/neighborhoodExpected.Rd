@@ -4,12 +4,14 @@
 \alias{neighborhoodExpected}
 \title{Plots expected walking neighborhoods.}
 \usage{
-neighborhoodExpected(selection = NULL, vestry = FALSE, streets = TRUE,
-  weighted = TRUE, add.obs = FALSE, add.landmarks = TRUE, arrow = FALSE,
-  alpha.level = NULL, obs.lwd = 2, sim.lwd = 2, multi.core = FALSE)
+neighborhoodExpected(pump.select = NULL, neighborhood.display = NULL,
+  vestry = FALSE, streets = TRUE, weighted = TRUE, add.obs = FALSE,
+  add.landmarks = TRUE, obs.lwd = 2, sim.lwd = 2, multi.core = FALSE)
 }
 \arguments{
-\item{selection}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: from 1 to 13 for \code{pumps}; from 1 to 14 for \code{pumps.vestry}}
+\item{pump.select}{Numeric. Default is NULL; all pumps are used. Otherwise, pump.select is a vector of numeric IDs that ranges from 1 to 13 for \code{pumps} or 1 to 14 for \code{pumps.vestry}. Determines the pumps used to compute neighborhoods. Negative values for exclusion are possible.}
+
+\item{neighborhood.display}{Numeric. Determines which computed neighborhoods are displayed. It should be a subset of "pump.select". Negative values for exclusion are possible.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.}
 
@@ -20,10 +22,6 @@ neighborhoodExpected(selection = NULL, vestry = FALSE, streets = TRUE,
 \item{add.obs}{Logical. Include observed addresses.}
 
 \item{add.landmarks}{Logical. Include landmarks.}
-
-\item{arrow}{Logical. Use arrows.}
-
-\item{alpha.level, }{Numeric. Set alpha level of paths.}
 
 \item{obs.lwd}{Numeric. Set line width for observed paths.}
 
@@ -42,7 +40,7 @@ Currently computationally intensive (On an Intel Core i7, streets = TRUE appox. 
 }
 \examples{
 # neighborhoodExpected()
-# neighborhoodExpected(streets = FALSE)
+# eighborhoodExpected(streets = FALSE, neighborhood.display = 6:7)
 }
 \seealso{
 \code{addLandmarks()}
