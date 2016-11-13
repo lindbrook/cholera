@@ -44,12 +44,15 @@ addLandmarks <- function() {
 
   # Falconberg Court and Mews (isolate)
   Falconberg <- data.frame(x = 19.5, y = 17.184)
-  text(Falconberg$x, Falconberg$y, labels = "Falconberg\nCourt & Mews", cex = 0.5)
+  text(Falconberg$x, Falconberg$y, labels = "Falconberg\nCourt & Mews",
+    cex = 0.5)
 
   # Adam and Eve Court (isolate)
-  adam.eve <- colMeans(cholera::roads[cholera::roads$name ==
-    "Adam and Eve Court", c("x", "y")])
-  text(adam.eve["x"], adam.eve["y"], labels = "Adam & Eve\nCourt", cex = 0.5)
+  adam.eve <- cholera::roads[cholera::roads$name == "Adam and Eve Court",
+    c("x", "y")]
+  text(stats::quantile(adam.eve[, "x"], 0.25),
+       stats::quantile(adam.eve[, "y"], 0.25),
+       labels = "Adam & Eve\nCourt", cex = 0.5)
 }
 
 #' Add plague pit (Marshall Street).
