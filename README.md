@@ -1,4 +1,4 @@
-## cholera: amends and augments data from John Snow's 1854 cholera map
+## cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
 John Snow's map of the 1854 London cholera outbreak is one of the best known examples of data visualization.
 
