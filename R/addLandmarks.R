@@ -39,7 +39,7 @@ addLandmarks <- function() {
 
   # Lion Brewery (Huggins proprietors)
   brewery <- data.frame(x = 13.9022, y = 11.87315)
-  text(brewery$x, brewery$y, labels = "Lion'\nBrewery", cex = 0.5)
+  text(brewery$x, brewery$y, labels = "Lion\nBrewery", cex = 0.5)
   points(brewery$x, brewery$y, pch = 15, cex = 1/3)
 
   # Falconberg Court and Mews (isolate)
