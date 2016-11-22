@@ -3,6 +3,7 @@ cholera 0.1.6
 
 add snow.neighborhood
 add snow.trimmed.segments
+add neighborhoodSnow()
 
 
 cholera 0.1.5
