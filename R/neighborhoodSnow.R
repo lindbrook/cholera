@@ -2,7 +2,7 @@
 #'
 #' Reproduces Snow's graphic annotation in the Vestry Report.
 #' @param zoom Logical.
-#' @param add.address Logical. Plots the address of cases in the neighborhood, the base case in the stack of fatalities.
+#' @param add.address Logical. Plots the address of cases both in and out of the neighborhood. These are the base case in a stack of fatalities.
 #' @param add.landmarks Logical. Include landmarks.
 #' @import graphics
 #' @export
