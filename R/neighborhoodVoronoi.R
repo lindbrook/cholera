@@ -9,7 +9,7 @@
 #' @import graphics
 #' @export
 #' @examples
-#' neighborhoodVoronoi()
+#' # neighborhoodVoronoi()
 #' neighborhoodVoronoi(statistic = "address")
 #' neighborhoodVoronoi(vestry = TRUE)
 #' neighborhoodVoronoi(selection = 6:7)

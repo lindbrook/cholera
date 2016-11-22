@@ -20,7 +20,7 @@ A base R graphics plot.
 Voronoi diagram of John Snow's 1854 London cholera data.
 }
 \examples{
-neighborhoodVoronoi()
+# neighborhoodVoronoi()
 neighborhoodVoronoi(statistic = "address")
 neighborhoodVoronoi(vestry = TRUE)
 neighborhoodVoronoi(selection = 6:7)
