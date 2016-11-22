@@ -209,6 +209,17 @@
 #' \code{\link[cholera]{streetNumberViewer}}
 "roads"
 
+#' Snow neighborhood cases.
+#'
+#' Numeric IDs of cases that fall within Snow's Broad Street pump neighborhood. Taken from from Dodson and Tobler.
+#'
+#' @format A vector with 384 observations.
+#' \describe{
+#'   \item{\code{snow.neighborhood}}{numeric case ID}
+#' }
+#' @docType data
+"snow.neighborhood"
+
 #' Snow time series data.
 #'
 #' Time series of recorded fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of the removal of the handle on the Broad Street pump on 08 September 1854.
@@ -221,6 +232,22 @@
 #' }
 #' @docType data
 "snow.time.series"
+
+#' "Trimmed" Snow neighborhood road segments.
+#'
+#' The road segments (i.e., endpoints) that describe Snow's Broad Street pump neighborhood (Vestry Report 1855b). Note that "outer" segments are trimmed: only the portion of the segment transversed by the walking path of the most "distant" case on that segment is included.
+#'
+#' @format A data frame with 6 variables and 384 observations.
+#' \describe{
+#'   \item{\code{road.segment}}{road segment ID}
+#'   \item{\code{x1}}{first x-coordinate}
+#'   \item{\code{y1}}{first y-coordinate}
+#'   \item{\code{x2}}{second x-coordinate}
+#'   \item{\code{y2}}{second y-coordinate}
+#'   \item{\code{trimmed}}{trimmed road segment}
+#' }
+#' @docType data
+"snow.trimmed.segments"
 
 #' Vestry Report Time Series Data.
 #'
