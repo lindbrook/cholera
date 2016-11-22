@@ -7,7 +7,7 @@
 #' @import graphics
 #' @export
 #' @examples
-#' neighborhoodSnow()
+#' neighborhoodSnow(); addKernelDensity()
 
 neighborhoodSnow <- function(zoom = TRUE, add.address = TRUE,
   add.landmarks = TRUE) {
@@ -41,9 +41,13 @@ neighborhoodSnow <- function(zoom = TRUE, add.address = TRUE,
       cholera::snow.neighborhood
     if (zoom) {
       points(cholera::fatalities.address[id, c("x", "y")], pch = 16,
-        col = "gray")
+        col = "dodgerblue")
+        points(cholera::fatalities.address[!id, c("x", "y")], pch = 16,
+          col = "gray")
     } else  {
-      points(cholera::fatalities.address[id, c("x", "y")], cex = 0.5)
+      points(cholera::fatalities.address[id, c("x", "y")], cex = 0.5,
+        col = "dodgerblue")
+        points(cholera::fatalities.address[!id, c("x", "y")], cex = 0.5)
     }
   }
 

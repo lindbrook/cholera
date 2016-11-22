@@ -17,6 +17,6 @@ neighborhoodSnow(zoom = TRUE, add.address = TRUE, add.landmarks = TRUE)
 Reproduces Snow's graphic annotation in the Vestry Report.
 }
 \examples{
-neighborhoodSnow()
+neighborhoodSnow(); addKernelDensity()
 }
 
