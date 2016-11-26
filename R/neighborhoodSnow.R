@@ -8,7 +8,9 @@
 #' @import graphics
 #' @export
 #' @examples
-#' neighborhoodSnow(); addKernelDensity()
+#' neighborhoodSnow()
+#' neighborhoodSnow(streets = FALSE)
+#' neighborhoodSnow(zoom = FALSE, add.address = TRUE); addKernelDensity()
 
 neighborhoodSnow <- function(zoom = TRUE, streets = TRUE, add.address = FALSE,
   add.landmarks = TRUE) {

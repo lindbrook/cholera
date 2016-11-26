@@ -20,6 +20,8 @@ neighborhoodSnow(zoom = TRUE, streets = TRUE, add.address = FALSE,
 Reproduces Snow's graphic annotation in the Vestry Report.
 }
 \examples{
-neighborhoodSnow(); addKernelDensity()
+neighborhoodSnow()
+neighborhoodSnow(streets = FALSE)
+neighborhoodSnow(zoom = FALSE, add.address = TRUE); addKernelDensity()
 }
 
