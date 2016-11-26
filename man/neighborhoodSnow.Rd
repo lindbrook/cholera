@@ -4,10 +4,13 @@
 \alias{neighborhoodSnow}
 \title{Plot Snow's Broad Street pump walking neighborhood.}
 \usage{
-neighborhoodSnow(zoom = TRUE, add.address = TRUE, add.landmarks = TRUE)
+neighborhoodSnow(zoom = TRUE, streets = TRUE, add.address = FALSE,
+  add.landmarks = TRUE)
 }
 \arguments{
 \item{zoom}{Logical.}
+
+\item{streets}{Logical. TRUE plots streets. FALSE plots orthogonal area.}
 
 \item{add.address}{Logical. Plots the address of cases both in and out of the neighborhood. These are the base case in a stack of fatalities.}
 
