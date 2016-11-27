@@ -612,8 +612,6 @@ neighborhoodExpectedCensus <- function(pump.select = NULL, vestry = FALSE,
     igraph::graph_from_data_frame(edges, directed = FALSE)
   })
 
-  # wtd.dist.sp <- parallel::mclapply(seq_along(case.network.sp), function(x) {
-
   nearest.pump.data <- parallel::mclapply(seq_along(g), function(x) {
     case <- selected.case[[x]]
     case.graph <- g[[x]]
