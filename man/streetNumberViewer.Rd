@@ -2,12 +2,12 @@
 % Please edit documentation in R/streetNumberViewer.R
 \name{streetNumberViewer}
 \alias{streetNumberViewer}
-\title{Plot road segment by numerical ID.}
+\title{Locate road by its numerical ID.}
 \usage{
 streetNumberViewer(road.number, zoom = FALSE, radius = 1)
 }
 \arguments{
-\item{road.number}{Numeric or integer. Whole number between 1 and 528.}
+\item{road.number}{Numeric or integer. A whole number between 1 and 528.}
 
 \item{zoom}{Logical.}
 
@@ -18,7 +18,7 @@ A base R graphics plot.
 }
 \description{
 Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-selected road segment. See \code{vignette}("road.names") for details.
+selected road. See \code{vignette}("road.names") for details.
 }
 \examples{
 streetNumberViewer(243)

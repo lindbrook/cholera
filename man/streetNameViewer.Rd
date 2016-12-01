@@ -18,7 +18,7 @@ A base R graphics plot.
 }
 \description{
 Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-selected road segment. See the list of road names in \code{vignette}("road.names").
+selected road. See the list of road names in \code{vignette}("road.names").
 }
 \examples{
 streetNameViewer("Oxford Street")

@@ -1,7 +1,7 @@
 #' Locate road by name.
 #'
 #' Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-#' selected road segment. See the list of road names in \code{vignette}("road.names").
+#' selected road. See the list of road names in \code{vignette}("road.names").
 #' @param road.name Character vector. Note that \code{streetNameViewer}() tries to correct for case and removes extra spaces.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. For "radius" <= 5, the anchor case number is plotted.
