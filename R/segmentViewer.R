@@ -49,7 +49,8 @@ segmentViewer <- function(id, zoom = TRUE, radius = 0.5) {
     text(cholera::fatalities.address[, c("x", "y")], labels =
       cholera::fatalities.address$anchor.case, cex = 0.75)
     points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1)
+    text(cholera::pumps[, c("x", "y")], label = paste0("p", cholera::pumps$id),
+      pos = 1, col = "blue")
     segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
     title(main = paste0(st$name, ": Segment # ", id))
 
@@ -58,8 +59,8 @@ segmentViewer <- function(id, zoom = TRUE, radius = 0.5) {
       pch = 15, cex = 0.5, col = "gray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
     points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id,
-      pos = 1)
+    text(cholera::pumps[, c("x", "y")], label = paste0("p", cholera::pumps$id),
+      pos = 1, col = "blue")
     segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
     title(main = paste0(st$name, ": Segment # ", id))
   }
