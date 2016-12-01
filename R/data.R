@@ -187,11 +187,28 @@
 #' @docType data
 "regular.cases"
 
+#' Dodson and Tobler's street data transformed into road segments.
+#'
+#' This data set transforms Dodson and Tobler's street data to give each straight line segment of a "road" a unique ID.
+#'
+#' @format A data frame with 657 observations and 7 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
+#' \describe{
+#'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
+#'   \item{\code{id}}{characger segement ID}
+#'   \item{\code{name}}{road name}
+#'   \item{\code{x1}}{x-coordinate of first endpoint}
+#'   \item{\code{y1}}{y-coordinate of first endpoint}
+#'   \item{\code{x2}}{x-coordinate of second endpoint}
+#'   \item{\code{y2}}{y-coordinate of second endpoint}
+#' }
+#' @docType data
+"road.segments"
+
 #' Dodson and Tobler's street data with appended road names.
 #'
 #' This data set adds road names from John Snow's map to Dodson and Tobler's street data. The latter are also available from HistData::Snow.streets.
 #'
-#' @format A data frame with 206 observations and 5 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
+#' @format A data frame with 206 observations and 5 variables. The data describe the roads on Snow's map.
 #' \describe{
 #'   \item{\code{street}}{street segment number, which range between 1 and 528}
 #'   \item{\code{n}}{number of points in this street line segment}

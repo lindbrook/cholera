@@ -2,6 +2,8 @@ cholera 0.1.7
 ----------------------------------------------------------------
 
 add orthogonal area plot to neighborhoodSnow()
+add segmentViewer()
+add road.segments
 
 
 cholera 0.1.6
