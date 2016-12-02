@@ -428,24 +428,8 @@ pumpCoordinates <- function(vestry = FALSE) {
   coordinates
 }
 
-roadSegments <- function() {
-  roadsB <- cholera::roads[cholera::roads$street %in%
-    cholera::border == FALSE, ]
-  out <- lapply(unique(roadsB$street), function(i) {
-    dat <- roadsB[roadsB$street == i, ]
-    names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
-    seg.data <- dat[-1, c("x1", "y1")]
-    names(seg.data) <- c("x2", "y2")
-    dat <- cbind(dat[-nrow(dat), ], seg.data)
-    dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
-    dat
-  })
-
-  do.call(rbind, out)
-}
-
 pumpIntegrator <- function(pump.data = cholera::ortho.proj.pump,
-  road.segments = roadSegments()) {
+  road.segments = cholera::road.segments) {
 
   pump.segments <- pump.data$road.segment
   mat <- matrix(0, ncol = ncol(road.segments), nrow = 2 * length(pump.segments))
@@ -457,11 +441,9 @@ pumpIntegrator <- function(pump.data = cholera::ortho.proj.pump,
     road.data <- road.segments[road.segments$id == pump.segments[i], ]
     pump.coords <- pump.data[pump.data$road.segment == pump.segments[i],
                              c("x.proj", "y.proj")]
-
     temp <- road.data[, names(road.data) %in% c("x1", "y1") == FALSE]
-    temp <- cbind(temp[, c("street", "n")], pump.coords,
-      temp[, c("id", "name", "x2", "y2")])
-
+    temp <- cbind(temp[, c("street", "id", "name")], pump.coords,
+                  temp[, c("x2", "y2")])
     names(temp)[names(temp) %in% c("x.proj", "y.proj")] <- c("x1", "y1")
     road.data[, c("x2", "y2")] <- pump.coords
     temp <- rbind(road.data, temp)
