@@ -304,15 +304,15 @@ walkingPath <- function(x, obs = TRUE, zoom = TRUE, radius = 0.5,
     }
 
     if (zoom) {
-      points(cholera::fatalities[cholera::fatalities$case == case$case, c("x", "y")],
-        col = "red", lwd = 2)
-      text(cholera::fatalities[cholera::fatalities$case == case$case, c("x", "y")],
-        labels = case$case, pos = 1, col = "red")
+      points(cholera::fatalities[cholera::fatalities$case == case$case,
+        c("x", "y")],col = "red")
+      text(cholera::fatalities[cholera::fatalities$case == case$case,
+        c("x", "y")], labels = case$case, pos = 1, col = "red")
       points(dat[1, c("x", "y")], col = case.color, pch = 0)
       points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
     } else {
-      points(cholera::fatalities[cholera::fatalities$case == case$case, c("x", "y")],
-        col = "red")
+      points(cholera::fatalities[cholera::fatalities$case == case$case,
+        c("x", "y")], col = "red")
       points(dat[1, c("x", "y")], col = case.color, pch = 0)
       points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
     }
@@ -349,14 +349,13 @@ walkingPath <- function(x, obs = TRUE, zoom = TRUE, radius = 0.5,
     }
 
     if (zoom) {
-      points(cholera::regular.cases[case$case, c("x", "y")], col = "red",
-        lwd = 2)
+      points(cholera::regular.cases[case$case, c("x", "y")], col = "red")
       text(cholera::regular.cases[case$case, c("x", "y")], labels = case$case,
         pos = 1, col = "red")
       points(dat[1, c("x", "y")], col = case.color, pch = 0)
       points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
     } else {
-      points(cholera::regular.cases[case$case, c("x.proj", "y.proj")],
+      points(cholera::regular.cases[case$case, c("x", "y")],
         col = "red")
       points(dat[1, c("x", "y")], col = case.color, pch = 0)
       points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
