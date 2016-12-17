@@ -40,9 +40,11 @@ Currently computationally intensive (On an Intel Core i7, streets = TRUE appox. 
 }
 \examples{
 # neighborhoodExpected()
-# eighborhoodExpected(streets = FALSE, neighborhood.display = 6:7)
+# neighborhoodExpected(streets = FALSE, neighborhood.display = 6:7)
 }
 \seealso{
 \code{addLandmarks()}
+
+\code{vignette}("walking.neighborhoods")
 }
 

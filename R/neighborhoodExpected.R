@@ -17,10 +17,11 @@
 #' @return A base R graphics plot.
 #' @seealso \code{addLandmarks()}
 #'
+#' \code{vignette}("walking.neighborhoods")
 #' @export
 #' @examples
 #' # neighborhoodExpected()
-#' # eighborhoodExpected(streets = FALSE, neighborhood.display = 6:7)
+#' # neighborhoodExpected(streets = FALSE, neighborhood.display = 6:7)
 
 neighborhoodExpected <- function(pump.select = NULL,
   neighborhood.display = NULL, vestry = FALSE, streets = TRUE, weighted = TRUE,
