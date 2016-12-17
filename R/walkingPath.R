@@ -1,7 +1,8 @@
-#' Plot shortest walking path between a case and its nearest pump.
+#' Plot shortest walking path between a case and the nearest pump.
 #'
-#' Plots the weighted shortest walking path between a fatality and its nearest pump.
-#' @param x Numeric or Integer. Whole number between 1 and 578 for fatality.
+#' Plot shortest walking path between an observed or simulated case and the nearest pump.
+#' @param x Numeric or Integer. Observed cases must be a whole number between 1 and 578. "Simulated" cases must be a whole number between 1 and 4993 with the following 21 exceptions: 3334, 4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720. See \code{vignette}("walking.neighborhoods").
+#' @param obs Logical. TRUE for observed cases; FALSE for "regular" simulated cases.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param weighted Logical. Shortest path weighted by road distance.
@@ -15,12 +16,27 @@
 #' @export
 #' @examples
 #' walkingPath(1)
+#' walkingPath(1, obs = FALSE)
 #' walkingPath(1, selection = -7) # exclude pump 7
 #' walkingPath(1, selection = 6)  # only consider pump 6
 #' walkingPath(1, unit = "meter", selection = 3) # distance from case 1 to pump 3.
 
-walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
-  vestry = FALSE, selection = NULL, unit = NULL) {
+walkingPath <- function(x, obs = TRUE, zoom = TRUE, radius = 0.5,
+  weighted = TRUE, vestry = FALSE, selection = NULL, unit = NULL) {
+
+  if (obs) {
+    if (x %in% 1:578 == FALSE) {
+     stop('With observed cases, x must be between 1 and 578.')
+    }
+  } else {
+    excluded <- c(3334, 4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573,
+      4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720)
+    if (x %in% (1:4993)[-excluded] == FALSE) {
+      msg1 <- "With simulated cases,"
+      msg2 <- "x must be a valid number between 1 and 4993."
+      stop(paste(msg1, msg2))
+    }
+  }
 
   if (vestry) {
     if (is.null(selection) == FALSE) {
@@ -159,7 +175,11 @@ walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
 
   ## --------------- Case Data --------------- ##
 
-  case <- caseSelector(x)
+  if (obs == TRUE) {
+    case <- caseSelector(x)
+  } else {
+    case <- caseSelector(x, FALSE)
+  }
 
   seg <- unlist(strsplit(road.segments$id, "a"))
   seg <- unlist(strsplit(seg, "b"))
@@ -252,52 +272,96 @@ walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
   nearest.pump.id <- as.numeric(substr(nearest.pump, 2, nchar(nearest.pump)))
   case.color <- colors[nearest.pump.id]
 
-  plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
-    pch = 15, cex = 0.5, col = "lightgray", asp = 1)
-  invisible(lapply(roads.list, lines, col = "lightgray"))
+  if (obs == TRUE) {
+    plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
+      pch = 15, cex = 0.5, col = "lightgray", asp = 1)
+    invisible(lapply(roads.list, lines, col = "lightgray"))
+    title(main = paste("Observed Case #", case$case))
 
-  if (is.null(selection)) {
-    if (vestry) {
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 17, cex = 1,
-        col = colors)
-      text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
+    if (is.null(selection)) {
+      if (vestry) {
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 17, cex = 1,
+          col = colors)
+        text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
+      } else {
+        points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = colors)
+        text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+      }
     } else {
-      points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = colors)
-      text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+      if (vestry) {
+        sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
+        points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+          col = colors[sel.pumps])
+        text(cholera::pumps.vestry[sel.pumps, c("x", "y")], label = pump.names,
+          pos = 1)
+      } else {
+        sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
+        points(cholera::pumps[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+          col = colors[sel.pumps])
+        text(cholera::pumps[sel.pumps, c("x", "y")], label = pump.names,
+          pos = 1)
+      }
     }
-  } else {
-    if (vestry) {
-      sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-      points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 17, cex = 1,
-        col = colors[sel.pumps])
-      text(cholera::pumps.vestry[sel.pumps, c("x", "y")], label = pump.names,
-        pos = 1)
+
+    if (zoom) {
+      points(cholera::fatalities[cholera::fatalities$case == case$case, c("x", "y")],
+        col = "red", lwd = 2)
+      text(cholera::fatalities[cholera::fatalities$case == case$case, c("x", "y")],
+        labels = case$case, pos = 1, col = "red")
+      points(dat[1, c("x", "y")], col = case.color, pch = 0)
+      points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
     } else {
-      sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-      points(cholera::pumps[sel.pumps, c("x", "y")], pch = 17, cex = 1,
-        col = colors[sel.pumps])
-      text(cholera::pumps[sel.pumps, c("x", "y")], label = pump.names, pos = 1)
+      points(cholera::fatalities[cholera::fatalities$case == case$case, c("x", "y")],
+        col = "red")
+      points(dat[1, c("x", "y")], col = case.color, pch = 0)
+      points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
+    }
+
+  } else {
+    plot(cholera::ortho.proj.sp[, c("x.proj", "y.proj")], xlim = x.rng,
+      ylim = y.rng, pch = NA, asp = 1)
+    invisible(lapply(roads.list, lines, col = "lightgray"))
+    title(main = paste('"Simulated" Case #', case$case))
+
+    if (is.null(selection)) {
+      if (vestry) {
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 17, cex = 1,
+          col = colors)
+        text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
+      } else {
+        points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = colors)
+        text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+      }
+    } else {
+      if (vestry) {
+        sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
+        points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+          col = colors[sel.pumps])
+        text(cholera::pumps.vestry[sel.pumps, c("x", "y")], label = pump.names,
+          pos = 1)
+      } else {
+        sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
+        points(cholera::pumps[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+          col = colors[sel.pumps])
+        text(cholera::pumps[sel.pumps, c("x", "y")], label = pump.names,
+          pos = 1)
+      }
+    }
+
+    if (zoom) {
+      points(cholera::regular.cases[case$case, c("x", "y")], col = "red",
+        lwd = 2)
+      text(cholera::regular.cases[case$case, c("x", "y")], labels = case$case,
+        pos = 1, col = "red")
+      points(dat[1, c("x", "y")], col = case.color, pch = 0)
+      points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
+    } else {
+      points(cholera::regular.cases[case$case, c("x.proj", "y.proj")],
+        col = "red")
+      points(dat[1, c("x", "y")], col = case.color, pch = 0)
+      points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
     }
   }
-
-  points(cholera::fatalities[cholera::fatalities$case == x, c("x", "y")],
-    col = "red", lwd = 2)
-  text(cholera::fatalities[cholera::fatalities$case == x, c("x", "y")],
-    labels = x, pos = 1, col = "red")
-
-  if (zoom) {
-    points(cholera::fatalities[cholera::fatalities$case == x, c("x", "y")],
-      col = "red", lwd = 2)
-    points(dat[1, c("x", "y")], col = case.color, pch = 0)
-    points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
-  } else {
-    points(cholera::fatalities[cholera::fatalities$case == x, c("x", "y")],
-      col = "red")
-    points(dat[1, c("x", "y")], col = case.color, pch = 0)
-    points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
-  }
-
-  title(main = paste("Case #", x))
 
   if (is.null(unit)) {
     if (weighted) {
@@ -313,7 +377,6 @@ walkingPath <- function(x, zoom = TRUE, radius = 0.5, weighted = TRUE,
       title(sub = paste("Distance =", round(min(wtd.d) * 54, 1), "meters"))
     }
   }
-
 
   if (zoom) {
     arrows(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2, length = 0.1)
