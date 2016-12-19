@@ -2,13 +2,13 @@
 % Please edit documentation in R/walkingPath.R
 \name{walkingPath}
 \alias{walkingPath}
-\title{Plot shortest walking path between a case and the nearest pump.}
+\title{Plot the walking path from a case to the nearest pump.}
 \usage{
 walkingPath(x, obs = TRUE, zoom = TRUE, radius = 0.5, weighted = TRUE,
   vestry = FALSE, selection = NULL, unit = NULL)
 }
 \arguments{
-\item{x}{Numeric or Integer. Observed cases must be a whole number between 1 and 578. "Simulated" cases must be a whole number between 1 and 4993 with the following 21 exceptions: 3334, 4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720. See \code{vignette}("walking.neighborhoods").}
+\item{x}{Numeric or Integer. Observed cases must be a whole number between 1 and 578. "Simulated" cases must be a whole number between 1 and 4993 with the following exceptions: 3334, 4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720. See "walking.neighborhoods" vignette for details.}
 
 \item{obs}{Logical. TRUE for observed cases; FALSE for "regular" simulated cases.}
 
@@ -28,7 +28,7 @@ walkingPath(x, obs = TRUE, zoom = TRUE, radius = 0.5, weighted = TRUE,
 A base R graphics plot.
 }
 \description{
-Plot shortest walking path between an observed or simulated case and the nearest pump.
+Plot shortest walking path from an observed or "simulated" case to the nearest pump.
 }
 \examples{
 walkingPath(1)
