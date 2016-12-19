@@ -4,7 +4,10 @@
 \alias{addLandmarks}
 \title{Add landmarks.}
 \usage{
-addLandmarks()
+addLandmarks(text.size = 0.65)
+}
+\arguments{
+\item{text.size}{Numeric. cex for text labels.}
 }
 \value{
 Add base R points and text to a graphics plot.

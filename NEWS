@@ -2,6 +2,7 @@ cholera 0.1.8
 ----------------------------------------------------------------
 
 add ability to plot "simulated" regular cases to walkingPath()
+add text.size argument to addLandmarks()
 
 
 cholera 0.1.7
