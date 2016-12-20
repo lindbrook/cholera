@@ -12,7 +12,7 @@
 snow.neighborhood
 }
 \description{
-Numeric IDs of cases that fall within Snow's Broad Street pump neighborhood. Taken from from Dodson and Tobler.
+Data frame of the numeric IDs of cases, taken from from Dodson and Tobler, that fall within Snow's Broad Street pump neighborhood.
 }
 \keyword{datasets}
 
