@@ -228,7 +228,7 @@
 
 #' Snow neighborhood cases.
 #'
-#' Numeric IDs of cases that fall within Snow's Broad Street pump neighborhood. Taken from from Dodson and Tobler.
+#' Data frame of the numeric IDs of cases, taken from from Dodson and Tobler, that fall within Snow's Broad Street pump neighborhood.
 #'
 #' @format A vector with 384 observations.
 #' \describe{
@@ -236,19 +236,6 @@
 #' }
 #' @docType data
 "snow.neighborhood"
-
-#' Snow time series data.
-#'
-#' Time series of recorded fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of the removal of the handle on the Broad Street pump on 08 September 1854.
-#'
-#' @format A data frame with 43 observations and 3 variables.
-#' \describe{
-#'   \item{\code{date}}{calendar date}
-#'   \item{\code{fatalities}}{fatal attacks}
-#'   \item{\code{deaths}}{daily deaths}
-#' }
-#' @docType data
-"snow.time.series"
 
 #' "Trimmed" Snow neighborhood road segments.
 #'
@@ -277,4 +264,17 @@
 #'   \item{\code{deaths}}{deaths}
 #' }
 #' @docType data
-"vestry.time.series"
+"time.series.vestry"
+
+#' Snow time series data.
+#'
+#' Time series of recorded fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of the removal of the handle on the Broad Street pump on 08 September 1854.
+#'
+#' @format A data frame with 43 observations and 3 variables.
+#' \describe{
+#'   \item{\code{date}}{calendar date}
+#'   \item{\code{fatalities}}{fatal attacks}
+#'   \item{\code{deaths}}{daily deaths}
+#' }
+#' @docType data
+"time.series.snow"

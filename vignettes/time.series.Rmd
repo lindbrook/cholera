@@ -18,29 +18,29 @@ library(cholera)
 
 One of the standard stories regarding the Broad Street pump is that John Snow helped to stem the outbreak by getting the local government to remove the pump's handle.^[https://www.cdc.gov/mmwr/preview/mmwrhtml/mm5334a1.htm].
 
-While Snow likely believed that this would have a positive effect, he was skeptical of its actual effect. This was because by the time the pump was removed on Friday, 08 September 1854, "the epidemic had evidently subsided" (Snow 1855b, 153). 
+While Snow likely believed that this would have a positive effect, he was skeptical of its actual effect. This was because by the time the pump was removed on Friday, 08 September 1854, "the epidemic had evidently subsided" (Snow 1855b, 153).
 
-As part of the Vestry Report, both he and the committee included separate tables that recorded the number of fatalities. I have included both as separate data sets, "snow.time.series" and "vestry.time.series", in this package.
+As part of the Vestry Report, both he and the committee included separate tables that recorded the number of fatalities. I have included both as separate data sets, "time.series.snow" and "time.series.vestry", in this package.
 
-The data are plotted below. 
+The data are plotted below.
 
 ## Figures
 
 ```{r, fig.width = 6, fig.height = 6, echo = FALSE}
-plot(vestry.time.series$date, vestry.time.series$fatalities, type = "o",
+plot(time.series.vestry$date, time.series.vestry$fatalities, type = "o",
   xlab = "Date", ylab = "fatalities")
 abline(v = as.Date("1854-09-08"), col = "red", lty = "dotted")
-text(vestry.time.series[vestry.time.series$date == "1854-09-08",
+text(time.series.vestry[time.series.vestry$date == "1854-09-08",
   c("date", "fatalities")], label = "Sep 08", cex = 0.75, col = "red", pos = 4)
 title(main = "Vestry Report: Removal of the Broad Street Pump Handle")
 
 ```
 
 ```{r, fig.width = 6, fig.height = 6, echo = FALSE}
-plot(snow.time.series$date, snow.time.series$deaths, type = "o", xlab = "Date", 
-  ylab = "fatalities", xlim = range(vestry.time.series$date), ylim = range(vestry.time.series$fatalities))
+plot(time.series.snow$date, time.series.snow$deaths, type = "o", xlab = "Date",
+  ylab = "fatalities", xlim = range(time.series.vestry$date), ylim = range(time.series.vestry$fatalities))
 abline(v = as.Date("1854-09-08"), col = "red", lty = "dotted")
-text(snow.time.series[snow.time.series$date == "1854-09-08",
+text(time.series.snow[time.series.snow$date == "1854-09-08",
   c("date", "deaths")], label = "Sep 08", cex = 0.75, col = "red", pos = 4)
 title(main = "Snow: Removal of the Broad Street Pump Handle")
 ```
