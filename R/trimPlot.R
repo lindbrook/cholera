@@ -32,26 +32,26 @@ trimPlot <- function(streets = TRUE, add.landmarks = TRUE,
 
     for (i in cholera::pumps$id) {
       plotSegment(cholera::neighborhood.segments[[i]], color[i])
-      points(cholera::pumps.vestry[i, c("x", "y")], pch = 17,
+      points(cholera::pumps[i, c("x", "y")], pch = 17,
         col = color[i])
     }
 
-    text(cholera::pumps.vestry[, c("x", "y")], cex = 1, pos = 1,
-      label = cholera::pumps.vestry$id)
+    text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1,
+      label = cholera::pumps$id)
     title(main = "Expected Paths")
 
   } else {
     for (i in cholera::pumps$id) {
       points(cholera::regular.cases[cholera::pump.cases[[i]], ], col = color[i],
         pch = 15)
-      points(cholera::pumps.vestry[i, c("x", "y")], pch = 24, bg = color[i],
+      points(cholera::pumps[i, c("x", "y")], pch = 24, bg = color[i],
         col = "white")
     }
 
     invisible(lapply(roads.list, lines))
     invisible(lapply(border.list, lines))
-    text(cholera::pumps.vestry[, c("x", "y")], cex = 1, pos = 1, col = "white",
-      label = cholera::pumps.vestry$id)
+    text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1, col = "white",
+      label = cholera::pumps$id)
     title(main = "Expected Path Neighborhoods")
   }
 
