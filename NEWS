@@ -1,3 +1,11 @@
+cholera 0.1.9
+----------------------------------------------------------------
+
+add trimPlot()
+add neighborhood.segments and pump.cases
+document snowColors()
+
+
 cholera 0.1.8
 ----------------------------------------------------------------
 
