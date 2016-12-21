@@ -38,6 +38,7 @@ trimPlot <- function(streets = TRUE, add.landmarks = TRUE,
 
     text(cholera::pumps.vestry[, c("x", "y")], cex = 1, pos = 1,
       label = cholera::pumps.vestry$id)
+    title(main = "Expected Paths")
 
   } else {
     for (i in cholera::pumps$id) {
@@ -51,6 +52,7 @@ trimPlot <- function(streets = TRUE, add.landmarks = TRUE,
     invisible(lapply(border.list, lines))
     text(cholera::pumps.vestry[, c("x", "y")], cex = 1, pos = 1, col = "white",
       label = cholera::pumps.vestry$id)
+    title(main = "Expected Path Neighborhoods")
   }
 
   if (add.landmarks) cholera::addLandmarks(text.size = 0.5)
