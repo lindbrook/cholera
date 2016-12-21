@@ -88,6 +88,21 @@
 #' \code{\link[cholera]{streetNumberViewer}}
 "fatalities.unstacked"
 
+#' List of data frames of road segments in the original 13 pump neighborhoods.
+#'
+#' @format A list of 13 data frames. Each data frame has 7 variables that describe the straight line segments in each pump neighborhood.
+#' \describe{
+#'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
+#'   \item{\code{id}}{characger segement ID}
+#'   \item{\code{name}}{road name}
+#'   \item{\code{x1}}{x-coordinate of first endpoint}
+#'   \item{\code{y1}}{y-coordinate of first endpoint}
+#'   \item{\code{x2}}{x-coordinate of second endpoint}
+#'   \item{\code{y2}}{y-coordinate of second endpoint}
+#' }
+#' @docType data
+"neighborhood.segments"
+
 #' Orthogonal projection of observed cases onto road network.
 #'
 #' @format A data frame with 5 variable that records the position of the orthogonal projection of the 578 cases onto the network of roads.
@@ -146,6 +161,14 @@
 #' }
 #' @docType data
 "plague.pit"
+
+#' List of regular "simulated" cases by pump neighborhood
+#'
+#' @format A data frame with 13 observations and 2 variables.
+#' \describe{
+#'  \item{\code{pump.cases}}{numerical ID}
+#' }
+"pump.cases"
 
 #' Dodson and Tobler's pump data with road location.
 #'
