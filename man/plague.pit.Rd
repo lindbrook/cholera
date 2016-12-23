@@ -3,7 +3,7 @@
 \docType{data}
 \name{plague.pit}
 \alias{plague.pit}
-\title{Plague pit coordinates}
+\title{Plague pit coordinates.}
 \format{A data frame with 13 observations and 2 variables.
 \describe{
   \item{\code{x}}{x-coordinate}
