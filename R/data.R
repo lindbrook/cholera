@@ -88,9 +88,9 @@
 #' \code{\link[cholera]{streetNumberViewer}}
 "fatalities.unstacked"
 
-#' List of data frames of road segments in the original 13 pump neighborhoods.
+#' List of 13 data frames describing the road segments of observed cases grouped by pump neighborhood.
 #'
-#' @format A list of 13 data frames. Each data frame has 7 variables that describe the straight line segments in each pump neighborhood.
+#' @format Each data frame has 8 variables that describe the straight line segments of road segments.
 #' \describe{
 #'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
 #'   \item{\code{id}}{characger segement ID}
@@ -99,9 +99,26 @@
 #'   \item{\code{y1}}{y-coordinate of first endpoint}
 #'   \item{\code{x2}}{x-coordinate of second endpoint}
 #'   \item{\code{y2}}{y-coordinate of second endpoint}
+#'   \item{\code{trimmed}}{logical indicates whether road segment is trimmed}
 #' }
 #' @docType data
 "neighborhood.segments"
+
+#' List of 13 data frames describing the road segments of "regular" simulated cases grouped by pump neighborhood.
+#'
+#' @format Each data frame has 8 variables that describe the straight line segments of road segments.
+#' \describe{
+#'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
+#'   \item{\code{id}}{characger segement ID}
+#'   \item{\code{name}}{road name}
+#'   \item{\code{x1}}{x-coordinate of first endpoint}
+#'   \item{\code{y1}}{y-coordinate of first endpoint}
+#'   \item{\code{x2}}{x-coordinate of second endpoint}
+#'   \item{\code{y2}}{y-coordinate of second endpoint}
+#'   \item{\code{trimmed}}{logical indicates whether road segment is trimmed}
+#' }
+#' @docType data
+"neighborhood.segments.sp"
 
 #' Orthogonal projection of observed cases onto road network.
 #'
@@ -151,7 +168,7 @@
 #'  }
 "ortho.proj.pump.vestry"
 
-#' Plague pit coordinates
+#' Plague pit coordinates.
 #'
 #' Coordinates for polygon() or sp::Polygon(). In progress.
 #' @format A data frame with 13 observations and 2 variables.
@@ -162,13 +179,21 @@
 #' @docType data
 "plague.pit"
 
-#' List of regular "simulated" cases by pump neighborhood
+#' List of the 578 observed cholera cases grouped by pump neighborhood.
 #'
-#' @format A data frame with 13 observations and 2 variables.
+#' @format A list with 13 vectors.
 #' \describe{
 #'  \item{\code{pump.cases}}{numerical ID}
 #' }
 "pump.cases"
+
+#' List of 4972 regular "simulated" cases grouped by pump neighborhood.
+#'
+#' @format A list with 13 vectors.
+#' \describe{
+#'  \item{\code{pump.cases.sp}}{numerical ID}
+#' }
+"pump.cases.sp"
 
 #' Dodson and Tobler's pump data with road location.
 #'

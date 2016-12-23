@@ -3,8 +3,8 @@
 \docType{data}
 \name{pump.cases}
 \alias{pump.cases}
-\title{List of regular "simulated" cases by pump neighborhood}
-\format{A data frame with 13 observations and 2 variables.
+\title{List of the 578 observed cholera cases grouped by pump neighborhood.}
+\format{A list with 13 vectors.
 \describe{
  \item{\code{pump.cases}}{numerical ID}
 }}
@@ -12,7 +12,7 @@
 pump.cases
 }
 \description{
-List of regular "simulated" cases by pump neighborhood
+List of the 578 observed cholera cases grouped by pump neighborhood.
 }
 \keyword{datasets}
 
