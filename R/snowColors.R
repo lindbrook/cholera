@@ -1,4 +1,4 @@
-#' Creates a uniform set of colors for plots.
+#' Create a uniform set of colors for all plots.
 #'
 #' @param vestry Logical. TRUE uses the 14 pumps in the Vestry Report. FALSE uses the original 13.
 #' @return A character vector of colors.
