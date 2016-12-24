@@ -2,6 +2,7 @@ cholera 0.1.9
 ----------------------------------------------------------------
 
 add trimPlot()
+deprecate neighborhoodObserved() and neighborhoodExpected()
 add neighborhood.segments, pump.cases, neighborhood.segments.sp, pump.cases.sp
 document snowColors()
 

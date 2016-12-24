@@ -1,18 +1,19 @@
-#' Plots the 13 expected walking neighborhoods.
+#' Plots observed and expected walking neighborhoods.
 #'
 #' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 #'
 #' @param streets Logical. TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods (area).
+#' @param obs Logical. TRUE uses observed cases. FALSE uses "regular" simulated cases.
 #' @param add.landmarks Logical. Include landmarks.
 #' @param color Character. Uses snowColor().
 #' @return A base R graphics plot.
 #' @export
 #' @examples
-#' trimPlot()
-#' trimPlot(streets = FALSE)
+#' # trimPlot()
+#' # trimPlot(streets = FALSE)
 
-trimPlot <- function(streets = TRUE, add.landmarks = TRUE,
-  color = snowColors()) {
+trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
+  color = cholera::snowColors()) {
 
   roadsB <- cholera::roads[cholera::roads$street %in%
                            cholera::border == FALSE, ]
@@ -30,49 +31,76 @@ trimPlot <- function(streets = TRUE, add.landmarks = TRUE,
     invisible(lapply(roads.list, lines, col = "gray"))
     invisible(lapply(border.list, lines))
 
-    for (i in cholera::pumps$id) {
-      plotSegment(cholera::neighborhood.segments[[i]], color[i])
-      points(cholera::pumps[i, c("x", "y")], pch = 17,
-        col = color[i])
+    if (obs) {
+      obs.pump <- which(vapply(cholera::pump.cases, function(x) {
+        length(x) != 0
+      }, logical(1L)))
+
+      invisible(lapply(seq_along(cholera::neighborhood.segments), function(i) {
+        plotSegment(cholera::neighborhood.segments[[i]], color[obs.pump[i]])
+      }))
+
+      invisible(lapply(cholera::pumps$id, function(i) {
+        points(cholera::pumps[i, c("x", "y")], pch = 17, col = color[i])
+      }))
+
+      title(main = "Observed Paths")
+
+    } else {
+
+      for (i in cholera::pumps$id) {
+        plotSegment(cholera::neighborhood.segments.sp[[i]], color[i])
+        points(cholera::pumps[i, c("x", "y")], pch = 17, col = color[i])
+      }
+
+      title(main = "Expected Paths")
     }
 
     text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1,
       label = cholera::pumps$id)
-    title(main = "Expected Paths")
 
   } else {
-    for (i in cholera::pumps$id) {
-      points(cholera::regular.cases[cholera::pump.cases[[i]], ], col = color[i],
-        pch = 15)
-      points(cholera::pumps[i, c("x", "y")], pch = 24, bg = color[i],
-        col = "white")
+    if (obs) {
+      obs.pump <- which(vapply(cholera::pump.cases, function(x) {
+        length(x) != 0
+      }, logical(1L)))
+
+      invisible(lapply(roads.list, lines, col = "lightgray"))
+      invisible(lapply(border.list, lines))
+
+      for (i in cholera::pumps$id) {
+        points(cholera::regular.cases[cholera::pump.cases.sp[[i]], ],
+          col = scales::alpha(color[i], 0.33), pch = 15)
+        points(cholera::pumps[i, c("x", "y")], pch = 24, bg = color[i])
+      }
+
+      invisible(lapply(seq_along(cholera::neighborhood.segments), function(i) {
+        plotSegment(cholera::neighborhood.segments[[i]], color[obs.pump[i]])
+      }))
+
+      text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1,
+        label = cholera::pumps$id)
+
+      title(main = "Observed Neighborhoods and Paths")
+
+    } else {
+      for (i in cholera::pumps$id) {
+        points(cholera::regular.cases[cholera::pump.cases.sp[[i]], ],
+          col = color[i], pch = 15)
+        points(cholera::pumps[i, c("x", "y")], pch = 24, bg = color[i],
+          col = "white")
+      }
+
+      invisible(lapply(roads.list, lines))
+      invisible(lapply(border.list, lines))
+      text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1, col = "white",
+           label = cholera::pumps$id)
+      title(main = "Expected Neighborhoods")
+
+      }
     }
 
-    invisible(lapply(roads.list, lines))
-    invisible(lapply(border.list, lines))
-    text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1, col = "white",
-      label = cholera::pumps$id)
-    title(main = "Expected Path Neighborhoods")
-  }
-
   if (add.landmarks) cholera::addLandmarks(text.size = 0.5)
-}
-
-#' Uniform set of colors for plots.
-#'
-#' @param vestry Logical. TRUE uses the 14 pumps in the Vestry Report. FALSE uses the original 13.
-#' @return A character vector of colors.
-
-snowColors <- function(vestry = FALSE) {
-  colors.pair <- RColorBrewer::brewer.pal(10, "Paired")
-  colors.dark <- RColorBrewer::brewer.pal(8, "Dark2")
-  if (!vestry) {
-    c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
-      "red", colors.pair[1])
-  } else {
-    c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
-      "red", colors.pair[1], "darkorange")
-  }
 }
 
 plotSegment <- function(neighborhood, snow.color) {
