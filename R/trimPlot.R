@@ -44,6 +44,13 @@ trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
         points(cholera::pumps[i, c("x", "y")], pch = 17, col = color[i])
       }))
 
+      invisible(lapply(obs.pump, function(i) {
+        points(
+          cholera::fatalities.address[cholera::fatalities.address$anchor.case
+          %in% cholera::pump.cases[[i]], c("x", "y")], pch = 20, cex = 0.75,
+          col = color[i])
+        }))
+
       title(main = "Observed Paths")
 
     } else {
@@ -105,8 +112,8 @@ trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
 
 plotSegment <- function(neighborhood, snow.color) {
   invisible(lapply(neighborhood$id, function(x) {
-    lines(cholera::road.segments[cholera::road.segments$id == x, c("x1", "x2")],
-          cholera::road.segments[cholera::road.segments$id == x, c("y1", "y2")],
+    lines(neighborhood[neighborhood$id == x, c("x1", "x2")],
+          neighborhood[neighborhood$id == x, c("y1", "y2")],
           col = snow.color, lwd = 2)
   }))
 }
