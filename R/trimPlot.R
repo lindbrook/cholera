@@ -9,8 +9,8 @@
 #' @return A base R graphics plot.
 #' @export
 #' @examples
-#' # trimPlot()
-#' # trimPlot(streets = FALSE)
+#' trimPlot()
+#' trimPlot(streets = FALSE)
 
 trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
   color = cholera::snowColors()) {

@@ -23,7 +23,7 @@ A base R graphics plot.
 Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 }
 \examples{
-# trimPlot()
-# trimPlot(streets = FALSE)
+trimPlot()
+trimPlot(streets = FALSE)
 }
 
