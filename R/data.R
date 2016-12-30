@@ -88,9 +88,9 @@
 #' \code{\link[cholera]{streetNumberViewer}}
 "fatalities.unstacked"
 
-#' List of 13 data frames describing the road segments of observed cases grouped by pump neighborhood.
+#' List of data frames describing the road segments of the 10 observed pump neighborhood.
 #'
-#' @format Each data frame has 8 variables that describe the straight line segments of road segments.
+#' @format Each data frame has 8 variables that describe a road's straight line segments.
 #' \describe{
 #'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
 #'   \item{\code{id}}{characger segement ID}
@@ -99,14 +99,14 @@
 #'   \item{\code{y1}}{y-coordinate of first endpoint}
 #'   \item{\code{x2}}{x-coordinate of second endpoint}
 #'   \item{\code{y2}}{y-coordinate of second endpoint}
-#'   \item{\code{trimmed}}{logical indicates whether road segment is trimmed}
+#'   \item{\code{trimmed}}{logical indicates whether entire road segment is included or is trimmed}
 #' }
 #' @docType data
 "neighborhood.segments"
 
-#' List of 13 data frames describing the road segments of "regular" simulated cases grouped by pump neighborhood.
+#' List of data frames describing the road segments of the 13 expected (simulated) pump Neighborhoods.
 #'
-#' @format Each data frame has 8 variables that describe the straight line segments of road segments.
+#' @format Each data frame has 8 variables that describe a road's straight line segments.
 #' \describe{
 #'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
 #'   \item{\code{id}}{characger segement ID}
@@ -115,7 +115,7 @@
 #'   \item{\code{y1}}{y-coordinate of first endpoint}
 #'   \item{\code{x2}}{x-coordinate of second endpoint}
 #'   \item{\code{y2}}{y-coordinate of second endpoint}
-#'   \item{\code{trimmed}}{logical indicates whether road segment is trimmed}
+#'   \item{\code{trimmed}}{logical indicates whether entire road segment is included or is trimmed}
 #' }
 #' @docType data
 "neighborhood.segments.sp"
