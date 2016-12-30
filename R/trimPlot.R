@@ -49,12 +49,11 @@ trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
           cholera::fatalities.address[cholera::fatalities.address$anchor.case
           %in% cholera::pump.cases[[i]], c("x", "y")], pch = 20, cex = 0.75,
           col = color[i])
-        }))
+      }))
 
       title(main = "Observed Paths")
 
     } else {
-
       for (i in cholera::pumps$id) {
         plotSegment(cholera::neighborhood.segments.sp[[i]], color[i])
         points(cholera::pumps[i, c("x", "y")], pch = 17, col = color[i])
@@ -78,12 +77,22 @@ trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
       for (i in cholera::pumps$id) {
         points(cholera::regular.cases[cholera::pump.cases.sp[[i]], ],
           col = scales::alpha(color[i], 0.33), pch = 15)
-        points(cholera::pumps[i, c("x", "y")], pch = 24, bg = color[i])
       }
 
       invisible(lapply(seq_along(cholera::neighborhood.segments), function(i) {
         plotSegment(cholera::neighborhood.segments[[i]], color[obs.pump[i]])
       }))
+
+      invisible(lapply(obs.pump, function(i) {
+        points(
+          cholera::fatalities.address[cholera::fatalities.address$anchor.case
+          %in% cholera::pump.cases[[i]], c("x", "y")], pch = 20, cex = 0.75,
+          col = color[i])
+      }))
+
+      for (i in cholera::pumps$id) {
+        points(cholera::pumps[i, c("x", "y")], pch = 24, bg = color[i])
+      }
 
       text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1,
         label = cholera::pumps$id)
@@ -103,9 +112,8 @@ trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
       text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1, col = "white",
            label = cholera::pumps$id)
       title(main = "Expected Neighborhoods")
-
-      }
     }
+  }
 
   if (add.landmarks) cholera::addLandmarks(text.size = 0.5)
 }
