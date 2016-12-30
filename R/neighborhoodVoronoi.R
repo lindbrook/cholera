@@ -90,6 +90,24 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
 
   cell.data <- voronoi$dirsgs
   cell.id <- sort(unique(c(cell.data$ind1, cell.data$ind2)))
+  voronoi.order <- as.numeric(rownames(voronoi$summary))
+
+
+  if (vestry) {
+    pump.sel <- cholera::pumps.vestry$id
+  } else {
+    pump.sel <- cholera::pumps$id
+  }
+
+  if (is.null(selection)) {
+    expected.data <- data.frame(pump = pump.sel[voronoi.order],
+                                area = voronoi$summary$dir.area)
+  } else {
+    expected.data <- data.frame(pump = pump.sel[selection][voronoi.order],
+                                area = voronoi$summary$dir.area)
+  }
+
+  expected.data$pct <- expected.data$area / sum(expected.data$area)
 
   # Polygon coordinates
 
@@ -201,20 +219,45 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
 
     address.count <- vapply(voronoi.address, sum, numeric(1L))
 
+    stat.data <- data.frame(pump.id = as.numeric(names(address.count)),
+                            Count = address.count,
+                            Percent = round(100 * address.count /
+                              sum(address.count), 2))
+
+    stat.data <- merge(stat.data, expected.data[, c("pump", "pct")],
+      by.x = "pump.id", by.y = "pump")
+
+    stat.data$Expected <- stat.data$pct * sum(stat.data$Count)
+    stat.data$pct <- NULL
+    pearson.resid <- round((stat.data$Count - stat.data$Expected) /
+      sqrt(stat.data$Expected), 2)
+
     if (is.null(selection)) {
       if (!vestry) {
         text(cholera::pumps[, c("x", "y")], label = address.count)
+        text(cholera::pumps[, c("x", "y")], label = pearson.resid, pos = 1,
+          cex = 0.8, col = "red")
       } else {
         text(cholera::pumps.vestry[, c("x", "y")], label = address.count)
+        text(cholera::pumps.vestry[, c("x", "y")], label = pearson.resid,
+          pos = 1, cex = 0.8, col = "red")
       }
     } else {
       if (!vestry) {
         text(cholera::pumps[selection, c("x", "y")], label = address.count)
+        text(cholera::pumps[selection, c("x", "y")], label = pearson.resid,
+          pos = 1, cex = 0.8, col = "red")
       } else {
         text(cholera::pumps.vestry[selection, c("x", "y")],
           label = address.count)
+        text(cholera::pumps.vestry[selection, c("x", "y")],
+          label = pearson.resid, pos = 1, cex = 0.8, col = "red")
       }
     }
+
+    # text(cholera::pumps[, c("x", "y")], label = round((stat.data$Count -
+    #   stat.data$Expected) / sqrt(stat.data$Expected), 2), pos = 1, cex = 0.8,
+    #   col = "red")
 
     caption <- "Snow Address Count by Pump Neighborhood"
     if (is.null(selection)) {
@@ -231,9 +274,24 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
 
     fatality.count <- vapply(voronoi.fatalities, sum, numeric(1L))
 
+    stat.data <- data.frame(pump.id = as.numeric(names(fatality.count)),
+                            Count = fatality.count,
+                            Percent = round(100 * fatality.count /
+                              sum(fatality.count), 2))
+
+    stat.data <- merge(stat.data, expected.data[, c("pump", "pct")],
+      by.x = "pump.id", by.y = "pump")
+
+    stat.data$Expected <- stat.data$pct * sum(stat.data$Count)
+    stat.data$pct <- NULL
+    pearson.resid <- round((stat.data$Count - stat.data$Expected) /
+      sqrt(stat.data$Expected), 2)
+
     if (is.null(selection)) {
       if (!vestry) {
         text(cholera::pumps[, c("x", "y")], label = fatality.count)
+        text(cholera::pumps[, c("x", "y")], label = pearson.resid, pos = 1,
+          cex = 0.8, col = "red")
         caption <- "Snow Fatalities Count by Pump Neighborhood"
         if (is.null(selection)) {
           title(main = caption)
@@ -242,6 +300,8 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
         }
       } else {
         text(cholera::pumps.vestry[, c("x", "y")], label = fatality.count)
+        text(cholera::pumps.vestry[, c("x", "y")], label = pearson.resid,
+          pos = 1, cex = 0.8, col = "red")
         caption <- "Vestry Fatalities Count by Pump Neighborhood"
         if (is.null(selection)) {
           title(main = caption)
@@ -252,6 +312,8 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
     } else {
       if (!vestry) {
         text(cholera::pumps[selection, c("x", "y")], label = fatality.count)
+        text(cholera::pumps[selection, c("x", "y")], label = pearson.resid,
+          pos = 1, cex = 0.8, col = "red")
         caption <- "Snow Fatalities Count by Pump Neighborhood"
         if (is.null(selection)) {
           title(main = caption)
@@ -261,6 +323,8 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
       } else {
         text(cholera::pumps.vestry[selection, c("x", "y")],
           label = fatality.count)
+        text(cholera::pumps.vestry[selection, c("x", "y")],
+          label = pearson.resid, pos = 1, cex = 0.8, col = "red")
         caption <- "Vestry Fatalities Count by Pump Neighborhood"
         if (is.null(selection)) {
           title(main = caption)
@@ -277,7 +341,7 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
 #' @param selection Numeric. Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param statistic Character. "address" plots the total count of addresses at pumps' locations. "fatality" plots the total count of fatalities at pumps' locations.
-#' @return A data frame.
+#' @return A data frame with observed and expected counts, observed percentage, and Pearson residual (obs - exp) / sqrt(exp).
 #' @export
 #' @examples
 #' neighborhoodVoronoiCensus()
@@ -345,6 +409,23 @@ neighborhoodVoronoiCensus <- function(selection = NULL, vestry = FALSE,
 
   cell.data <- voronoi$dirsgs
   cell.id <- sort(unique(c(cell.data$ind1, cell.data$ind2)))
+  voronoi.order <- as.numeric(rownames(voronoi$summary))
+
+  if (vestry) {
+    pump.sel <- cholera::pumps.vestry$id
+  } else {
+    pump.sel <- cholera::pumps$id
+  }
+
+  if (is.null(selection)) {
+    expected.data <- data.frame(pump = pump.sel[voronoi.order],
+                                area = voronoi$summary$dir.area)
+  } else {
+    expected.data <- data.frame(pump = pump.sel[selection][voronoi.order],
+                                area = voronoi$summary$dir.area)
+  }
+
+  expected.data$pct <- expected.data$area / sum(expected.data$area)
 
   # Polygon coordinates
 
@@ -404,9 +485,19 @@ neighborhoodVoronoiCensus <- function(selection = NULL, vestry = FALSE,
 
     address.count <- vapply(voronoi.address, sum, numeric(1L))
 
-    data.frame(pump.id = as.numeric(names(address.count)),
-               Count = address.count,
-               Percent = round(100 * address.count / sum(address.count), 2))
+    stat.data <- data.frame(pump.id = as.numeric(names(address.count)),
+                            Count = address.count,
+                            Percent = round(100 * address.count /
+                              sum(address.count), 2))
+
+    stat.data <- merge(stat.data, expected.data[, c("pump", "pct")],
+      by.x = "pump.id", by.y = "pump")
+
+    stat.data$Expected <- stat.data$pct * sum(stat.data$Count)
+    stat.data$pct <- NULL
+    stat.data$Pearson <- (stat.data$Count - stat.data$Expected) /
+                          sqrt(stat.data$Expected)
+    stat.data
 
   } else if (statistic == "fatality") {
     voronoi.fatalities <- lapply(coordinates, function(cell) {
@@ -416,9 +507,19 @@ neighborhoodVoronoiCensus <- function(selection = NULL, vestry = FALSE,
 
     fatality.count <- vapply(voronoi.fatalities, sum, numeric(1L))
 
-    data.frame(pump.id = as.numeric(names(fatality.count)),
-               Count = fatality.count,
-               Percent = round(100 * fatality.count / sum(fatality.count), 2))
+    stat.data <- data.frame(pump.id = as.numeric(names(fatality.count)),
+                            Count = fatality.count,
+                            Percent = round(100 * fatality.count /
+                              sum(fatality.count), 2))
+
+    stat.data <- merge(stat.data, expected.data[, c("pump", "pct")],
+      by.x = "pump.id", by.y = "pump")
+
+    stat.data$Expected <- stat.data$pct * sum(stat.data$Count)
+    stat.data$pct <- NULL
+    stat.data$Pearson <- (stat.data$Count - stat.data$Expected) /
+                          sqrt(stat.data$Expected)
+    stat.data
   }
 }
 

@@ -15,7 +15,7 @@ neighborhoodVoronoiCensus(selection = NULL, vestry = FALSE,
 \item{statistic}{Character. "address" plots the total count of addresses at pumps' locations. "fatality" plots the total count of fatalities at pumps' locations.}
 }
 \value{
-A data frame.
+A data frame with observed and expected counts, observed percentage, and Pearson residual (obs - exp) / sqrt(exp).
 }
 \description{
 Summary statistics for Voronoi neighborhoods.
