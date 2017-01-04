@@ -577,6 +577,11 @@ polygonColors <- function(resid.vector, upper.limit = 70, alpha = FALSE) {
     col <- scales::col_numeric("RdBu", domain = NULL)(seq_along(vec))[color.id]
     scales::alpha(col, 0.5)
   } else {
+    color <- scales::col_numeric("RdBu", domain = NULL)(seq_along(vec))[color.id]
+    scales::alpha(color, 0.5)
+  }
+  else {
+>>>>>>> 8b3971f577c30b46f8e13f92f93f6809fbe1105e
     scales::col_numeric("RdBu", domain = NULL)(seq_along(vec))[color.id]
   }
 }
