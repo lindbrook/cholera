@@ -25,37 +25,28 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
     }
   }
 
-  if (vestry) {
-    msg1 <- 'With "vestry = TRUE", "selection" must include at least 2 pumps:'
-    msg2 <- "  two different numbers between 1 and 14."
-
-    if (is.null(selection) == FALSE) {
-      test1 <- length(unique((1:14)[selection])) < 2
-      test2 <- any(abs(selection) %in% 1:14 == FALSE)
-
-      if (test1 | test2) {
-        stop(paste(msg1, "\n", msg2))
+  if (is.null(selection) == FALSE) {
+    msg1 <- '"selection" must include at least 2 different pumps'
+    if (vestry) {
+      if (length(unique((1:14)[selection])) < 2) {
+        stop(msg1)
       }
-    }
-  } else {
-    msg1 <- 'With "vestry = FALSE", "selection" must include at least 2 pumps:'
-    msg2 <- "  two different numbers between 1 and 13."
-
-    if (is.null(selection) == FALSE ) {
-      test1 <- length(unique((1:13)[selection])) < 2
-      test2 <- any(abs(selection) %in% 1:13 == FALSE)
-
-      if (test1 | test2) {
-        stop(paste(msg1, "\n", msg2))
+      if (any(abs(selection) %in% 1:14 == FALSE)) {
+        stop('With "vestry = TRUE", 1 >= |selection| <= 14')
+      }
+    } else {
+      if (length(unique((1:13)[selection])) < 2) {
+        stop(msg1)
+      }
+      if (any(abs(selection) %in% 1:13 == FALSE)) {
+        stop('With "vestry = FALSE", 1 >= |selection| <= 13')
       }
     }
   }
 
-  roadsB <- cholera::roads[cholera::roads$street %in%
-                           cholera::border == FALSE, ]
-
+  rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-  roads.list <- split(roadsB[, c("x", "y")], roadsB$street)
+  roads.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
   x.rng <- range(cholera::roads$x)
   y.rng <- range(cholera::roads$y)
@@ -106,8 +97,6 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
   }
 
   expected.data$pct <- expected.data$area / sum(expected.data$area)
-
-  # Polygon coordinates
   coordinates <- polygonCoordinates(pump.id, cell.data, vestry)
 
   plot(cholera::fatalities.address[, c("x", "y")], xlim = x.rng, ylim = y.rng,
@@ -115,29 +104,33 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
 
   if (is.null(statistic)) {
     if (is.null(selection)) {
-      if (!vestry) {
-        points(cholera::pumps[, c("x", "y")], pch = 2, col = snow.colors)
-        text(cholera::pumps[, c("x", "y")], label = pump.id, pos = 1)
-      } else {
+      if (vestry) {
         points(cholera::pumps.vestry[, c("x", "y")], pch = 2, col = snow.colors)
-        text(cholera::pumps.vestry[, c("x", "y")], label = pump.id, pos = 1)
+        text(cholera::pumps.vestry[, c("x", "y")], label = paste0("p", pump.id),
+          pos = 1)
+      } else {
+        points(cholera::pumps[, c("x", "y")], pch = 2, col = snow.colors)
+        text(cholera::pumps[, c("x", "y")], label = paste0("p", pump.id),
+          pos = 1)
       }
     } else {
-      if (!vestry) {
-        points(cholera::pumps[selection, c("x", "y")], pch = 2,
-          col = snow.colors)
-        text(cholera::pumps[selection, c("x", "y")], label = pump.id, pos = 1)
-      } else {
+      if (vestry) {
         points(cholera::pumps.vestry[selection, c("x", "y")], pch = 2,
           col = snow.colors)
-        text(cholera::pumps.vestry[selection, c("x", "y")], label = pump.id,
-          pos = 1)
+        text(cholera::pumps.vestry[selection, c("x", "y")],
+          label = paste0("p", pump.id), pos = 1)
+      } else {
+        points(cholera::pumps[selection, c("x", "y")], pch = 2,
+          col = snow.colors)
+        text(cholera::pumps[selection, c("x", "y")],
+          label = paste0("p", pump.id), pos = 1)
       }
     }
 
     voronoi.address <- lapply(coordinates, function(cell) {
       sp::point.in.polygon(cholera::fatalities.address$x,
-                           cholera::fatalities.address$y, cell$x, cell$y)
+                           cholera::fatalities.address$y,
+                           cell$x, cell$y)
     })
 
     voronoi.address.id <- lapply(voronoi.address, function(x) which(x == 1))
@@ -152,12 +145,9 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
     invisible(lapply(roads.list, lines, col = "lightgray"))
     invisible(lapply(border.list, lines))
     plot(voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
-
     points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
       pch = 20, cex = 0.75)
-
     caption <- "Snow Addresses by Neighborhood"
-
     if (is.null(selection)) {
       title(main = caption)
     } else {
@@ -167,25 +157,24 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
   } else if (statistic == "address") {
     voronoi.address <- lapply(coordinates, function(cell) {
       sp::point.in.polygon(cholera::fatalities.address$x,
-                           cholera::fatalities.address$y, cell$x, cell$y)
+                           cholera::fatalities.address$y,
+                           cell$x, cell$y)
     })
 
     address.count <- vapply(voronoi.address, sum, numeric(1L))
 
-    stat.data <- data.frame(pump.id = as.numeric(names(address.count)),
-                            Count = address.count,
-                            Percent = round(100 * address.count /
-                              sum(address.count), 2))
+    stat.data <- data.frame(
+      pump.id = as.numeric(names(address.count)),
+      Count = address.count,
+      Percent = round(100 * address.count / sum(address.count), 2))
 
     stat.data <- merge(stat.data, expected.data[, c("pump", "pct")],
       by.x = "pump.id", by.y = "pump")
-
     stat.data$Expected <- stat.data$pct * sum(stat.data$Count)
     stat.data$pct <- NULL
 
     pearson.resid0 <- round((stat.data$Count - stat.data$Expected) /
       sqrt(stat.data$Expected))
-
     pearson.resid2 <- round((stat.data$Count - stat.data$Expected) /
       sqrt(stat.data$Expected), 2)
 
@@ -201,25 +190,25 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
     plot(voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
 
     if (is.null(selection)) {
-      if (!vestry) {
-        text(cholera::pumps[, c("x", "y")], label = address.count)
-        text(cholera::pumps[, c("x", "y")], label = pearson.resid2, pos = 1,
-          cex = 0.8, col = "blue")
-      } else {
+      if (vestry) {
         text(cholera::pumps.vestry[, c("x", "y")], label = address.count)
         text(cholera::pumps.vestry[, c("x", "y")], label = pearson.resid2,
           pos = 1, cex = 0.8, col = "blue")
+      } else {
+        text(cholera::pumps[, c("x", "y")], label = address.count)
+        text(cholera::pumps[, c("x", "y")], label = pearson.resid2, pos = 1,
+          cex = 0.8, col = "blue")
       }
     } else {
-      if (!vestry) {
-        text(cholera::pumps[selection, c("x", "y")], label = address.count)
-        text(cholera::pumps[selection, c("x", "y")], label = pearson.resid2,
-          pos = 1, cex = 0.8, col = "blue")
-      } else {
+      if (vestry) {
         text(cholera::pumps.vestry[selection, c("x", "y")],
           label = address.count)
         text(cholera::pumps.vestry[selection, c("x", "y")],
           label = pearson.resid2, pos = 1, cex = 0.8, col = "blue")
+      } else {
+        text(cholera::pumps[selection, c("x", "y")], label = address.count)
+        text(cholera::pumps[selection, c("x", "y")], label = pearson.resid2,
+          pos = 1, cex = 0.8, col = "blue")
       }
     }
 
@@ -234,25 +223,24 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
   } else if (statistic == "fatality") {
     voronoi.fatalities <- lapply(coordinates, function(cell) {
       sp::point.in.polygon(cholera::fatalities.unstacked$x,
-                           cholera::fatalities.unstacked$y, cell$x, cell$y)
+                           cholera::fatalities.unstacked$y,
+                           cell$x, cell$y)
     })
 
     fatality.count <- vapply(voronoi.fatalities, sum, numeric(1L))
 
-    stat.data <- data.frame(pump.id = as.numeric(names(fatality.count)),
-                            Count = fatality.count,
-                            Percent = round(100 * fatality.count /
-                              sum(fatality.count), 2))
+    stat.data <- data.frame(
+      pump.id = as.numeric(names(fatality.count)),
+      Count = fatality.count,
+      Percent = round(100 * fatality.count / sum(fatality.count), 2))
 
     stat.data <- merge(stat.data, expected.data[, c("pump", "pct")],
       by.x = "pump.id", by.y = "pump")
-
     stat.data$Expected <- stat.data$pct * sum(stat.data$Count)
     stat.data$pct <- NULL
 
     pearson.resid0 <- round((stat.data$Count - stat.data$Expected) /
       sqrt(stat.data$Expected))
-
     pearson.resid2 <- round((stat.data$Count - stat.data$Expected) /
       sqrt(stat.data$Expected), 2)
 
@@ -268,19 +256,7 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
     plot(voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
 
     if (is.null(selection)) {
-      if (!vestry) {
-        text(cholera::pumps[, c("x", "y")], label = fatality.count)
-        text(cholera::pumps[, c("x", "y")], label = pearson.resid2, pos = 1,
-          cex = 0.8, col = "blue")
-        caption <- "Snow Fatalities Count by Pump Neighborhood"
-
-        if (is.null(selection)) {
-          title(main = caption)
-        } else {
-          title(main = paste0(caption, "\n", "Pumps ", select.string))
-        }
-
-      } else {
+      if (vestry) {
         text(cholera::pumps.vestry[, c("x", "y")], label = fatality.count)
         text(cholera::pumps.vestry[, c("x", "y")], label = pearson.resid2,
           pos = 1, cex = 0.8, col = "blue")
@@ -290,24 +266,34 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
         } else {
           title(main = paste0(caption, "\n", "Pumps ", select.string))
         }
-      }
-    } else {
-      if (!vestry) {
-        text(cholera::pumps[selection, c("x", "y")], label = fatality.count)
-        text(cholera::pumps[selection, c("x", "y")], label = pearson.resid2,
-          pos = 1, cex = 0.8, col = "blue")
+      } else {
+        text(cholera::pumps[, c("x", "y")], label = fatality.count)
+        text(cholera::pumps[, c("x", "y")], label = pearson.resid2, pos = 1,
+          cex = 0.8, col = "blue")
         caption <- "Snow Fatalities Count by Pump Neighborhood"
         if (is.null(selection)) {
           title(main = caption)
         } else {
           title(main = paste0(caption, "\n", "Pumps ", select.string))
         }
-      } else {
+      }
+    } else {
+      if (vestry) {
         text(cholera::pumps.vestry[selection, c("x", "y")],
           label = fatality.count)
         text(cholera::pumps.vestry[selection, c("x", "y")],
           label = pearson.resid2, pos = 1, cex = 0.8, col = "blue")
         caption <- "Vestry Fatalities Count by Pump Neighborhood"
+        if (is.null(selection)) {
+          title(main = caption)
+        } else {
+          title(main = paste0(caption, "\n", "Pumps ", select.string))
+        }
+      } else {
+        text(cholera::pumps[selection, c("x", "y")], label = fatality.count)
+        text(cholera::pumps[selection, c("x", "y")], label = pearson.resid2,
+          pos = 1, cex = 0.8, col = "blue")
+        caption <- "Snow Fatalities Count by Pump Neighborhood"
         if (is.null(selection)) {
           title(main = caption)
         } else {
@@ -335,31 +321,24 @@ neighborhoodVoronoiCensus <- function(selection = NULL, vestry = FALSE,
   statistic = "address") {
 
   if (all(statistic %in% c("address", "fatality")) == FALSE) {
-    stop('If specified, "statistic" must either be "address" or "fatality".')
+    stop('"statistic" must either be "address" or "fatality".')
   }
 
-  if (vestry) {
-    msg1 <- 'With "vestry = TRUE", "selection" must include at least 2 pumps:'
-    msg2 <- "  two different numbers between 1 and 14."
-
-    if (is.null(selection) == FALSE) {
-      test1 <- length(unique((1:14)[selection])) < 2
-      test2 <- any(abs(selection) %in% 1:14 == FALSE)
-
-      if (test1 | test2) {
-        stop(paste(msg1, "\n", msg2))
+  if (is.null(selection) == FALSE) {
+    msg1 <- '"selection" must include at least 2 different pumps'
+    if (vestry) {
+      if (length(unique((1:14)[selection])) < 2) {
+        stop(msg1)
       }
-    }
-  } else {
-    msg1 <- 'With "vestry = FALSE", "selection" must include at least 2 pumps:'
-    msg2 <- "  two different numbers between 1 and 13."
-
-    if (is.null(selection) == FALSE ) {
-      test1 <- length(unique((1:13)[selection])) < 2
-      test2 <- any(abs(selection) %in% 1:13 == FALSE)
-
-      if (test1 | test2) {
-        stop(paste(msg1, "\n", msg2))
+      if (any(abs(selection) %in% 1:14 == FALSE)) {
+        stop('With "vestry = TRUE", 1 >= |selection| <= 14')
+      }
+    } else {
+      if (length(unique((1:13)[selection])) < 2) {
+        stop(msg1)
+      }
+      if (any(abs(selection) %in% 1:13 == FALSE)) {
+        stop('With "vestry = FALSE", 1 >= |selection| <= 13')
       }
     }
   }
@@ -426,13 +405,11 @@ neighborhoodVoronoiCensus <- function(selection = NULL, vestry = FALSE,
 
     stat.data <- merge(stat.data, expected.data[, c("pump", "pct")],
       by.x = "pump.id", by.y = "pump")
-
     stat.data$Expected <- stat.data$pct * sum(stat.data$Count)
     stat.data$pct <- NULL
     stat.data$Pearson <- (stat.data$Count - stat.data$Expected) /
                           sqrt(stat.data$Expected)
     stat.data
-
   } else if (statistic == "fatality") {
     voronoi.fatalities <- lapply(coordinates, function(cell) {
       sp::point.in.polygon(cholera::fatalities.unstacked$x,
@@ -449,24 +426,11 @@ neighborhoodVoronoiCensus <- function(selection = NULL, vestry = FALSE,
 
     stat.data <- merge(stat.data, expected.data[, c("pump", "pct")],
       by.x = "pump.id", by.y = "pump")
-
     stat.data$Expected <- stat.data$pct * sum(stat.data$Count)
     stat.data$pct <- NULL
     stat.data$Pearson <- (stat.data$Count - stat.data$Expected) /
                           sqrt(stat.data$Expected)
     stat.data
-  }
-}
-
-snowColors <- function(vestry = FALSE) {
-  colors.pair <- RColorBrewer::brewer.pal(10, "Paired")
-  colors.dark <- RColorBrewer::brewer.pal(8, "Dark2")
-  if (!vestry) {
-    c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
-      "red", colors.pair[1])
-  } else {
-    c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
-      "red", colors.pair[1], "darkorange")
   }
 }
 
@@ -561,7 +525,8 @@ polygonCoordinates <- function(pump.id, cell.data, vestry,
   coordinates
 }
 
-polygonColors <- function(resid.vector, upper.limit = 70, alpha = FALSE) {
+polygonColors <- function(resid.vector, upper.limit = 67, alpha = FALSE) {
+  # colors for Voronoi cells based on Pearson residuals.
   vec <- upper.limit:-upper.limit
   color.map <- data.frame(resid = vec, id = rev(order(vec)))
   color.id <- vapply(round(resid.vector), function(x) {
