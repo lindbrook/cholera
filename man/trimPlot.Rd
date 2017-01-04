@@ -4,13 +4,13 @@
 \alias{trimPlot}
 \title{Plots observed and expected walking neighborhoods.}
 \usage{
-trimPlot(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
+trimPlot(streets = TRUE, observed = TRUE, add.landmarks = TRUE,
   color = cholera::snowColors())
 }
 \arguments{
 \item{streets}{Logical. TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods (area).}
 
-\item{obs}{Logical. TRUE uses observed cases. FALSE uses "regular" simulated cases.}
+\item{observed}{Logical. TRUE uses observed cases. FALSE uses "regular" simulated cases.}
 
 \item{add.landmarks}{Logical. Include landmarks.}
 

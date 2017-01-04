@@ -3,7 +3,7 @@
 #' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 #'
 #' @param streets Logical. TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods (area).
-#' @param obs Logical. TRUE uses observed cases. FALSE uses "regular" simulated cases.
+#' @param observed Logical. TRUE uses observed cases. FALSE uses "regular" simulated cases.
 #' @param add.landmarks Logical. Include landmarks.
 #' @param color Character. Uses snowColor().
 #' @return A base R graphics plot.
@@ -12,7 +12,7 @@
 #' trimPlot()
 #' trimPlot(streets = FALSE)
 
-trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
+trimPlot <- function(streets = TRUE, observed = TRUE, add.landmarks = TRUE,
   color = cholera::snowColors()) {
 
   roadsB <- cholera::roads[cholera::roads$street %in%
@@ -31,7 +31,7 @@ trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
     invisible(lapply(roads.list, lines, col = "gray"))
     invisible(lapply(border.list, lines))
 
-    if (obs) {
+    if (observed) {
       obs.pump <- which(vapply(cholera::pump.cases, function(x) {
         length(x) != 0
       }, logical(1L)))
@@ -51,7 +51,7 @@ trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
           col = color[i])
       }))
 
-      title(main = "Observed Paths")
+      title(main = "Observed Walking Paths")
 
     } else {
       for (i in cholera::pumps$id) {
@@ -59,14 +59,14 @@ trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
         points(cholera::pumps[i, c("x", "y")], pch = 17, col = color[i])
       }
 
-      title(main = "Expected Paths")
+      title(main = "Expected Walking Paths")
     }
 
     text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1,
-      label = cholera::pumps$id)
+      label = paste0("p", cholera::pumps$id))
 
   } else {
-    if (obs) {
+    if (observed) {
       obs.pump <- which(vapply(cholera::pump.cases, function(x) {
         length(x) != 0
       }, logical(1L)))
@@ -95,9 +95,9 @@ trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
       }
 
       text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1,
-        label = cholera::pumps$id)
+        label = paste0("p", cholera::pumps$id))
 
-      title(main = "Observed Neighborhoods and Paths")
+      title(main = "Observed Walking Neighborhoods and Paths")
 
     } else {
       for (i in cholera::pumps$id) {
@@ -110,8 +110,8 @@ trimPlot <- function(streets = TRUE, obs = TRUE, add.landmarks = TRUE,
       invisible(lapply(roads.list, lines))
       invisible(lapply(border.list, lines))
       text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1, col = "white",
-           label = cholera::pumps$id)
-      title(main = "Expected Neighborhoods")
+        label = paste0("p", cholera::pumps$id))
+      title(main = "Expected Walking Neighborhoods")
     }
   }
 
