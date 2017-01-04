@@ -574,8 +574,8 @@ polygonColors <- function(resid.vector, upper.limit = 70, alpha = FALSE) {
   }, integer(1L))
 
   if (alpha) {
-    scales::alpha(scales::col_numeric("RdBu",
-      domain = NULL)(seq_along(vec))[color.id], 0.5)
+    color <- scales::col_numeric("RdBu", domain = NULL)(seq_along(vec))[color.id]
+    scales::alpha(color, 0.5)
   }
   else {
     scales::col_numeric("RdBu", domain = NULL)(seq_along(vec))[color.id]
