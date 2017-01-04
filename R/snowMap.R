@@ -42,5 +42,7 @@ snowMap <- function(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE) {
       col = "blue")
   }
 
+  title(main = "Snow's Cholera Map")
+
   if (add.landmarks) addLandmarks()
 }
