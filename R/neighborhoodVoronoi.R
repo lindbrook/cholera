@@ -89,7 +89,6 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
   }
 
   cell.data <- voronoi$dirsgs
-  # cell.id <- sort(unique(c(cell.data$ind1, cell.data$ind2)))
   voronoi.order <- as.numeric(rownames(voronoi$summary))
 
   if (vestry) {
@@ -113,9 +112,6 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
 
   plot(cholera::fatalities.address[, c("x", "y")], xlim = x.rng, ylim = y.rng,
     pch = NA, asp = 1)
-  # invisible(lapply(roads.list, lines, col = "lightgray"))
-  # invisible(lapply(border.list, lines))
-  # plot(voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
 
   if (is.null(statistic)) {
     if (is.null(selection)) {
@@ -259,7 +255,6 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
 
     pearson.resid2 <- round((stat.data$Count - stat.data$Expected) /
       sqrt(stat.data$Expected), 2)
-
 
     polygon.cols <- polygonColors(pearson.resid0)
 
