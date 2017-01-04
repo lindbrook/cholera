@@ -15,8 +15,8 @@ snowMap <- function(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE) {
   x.range <- range(cholera::roads$x)
   y.range <- range(cholera::roads$y)
   borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  roadsB <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  roads.list <- split(roadsB[, c("x", "y")], roadsB$street)
+  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  roads.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(borders[, c("x", "y")], borders$street)
 
   if (stacked) {
@@ -33,11 +33,13 @@ snowMap <- function(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE) {
   if (vestry) {
     well <- cholera::pumps.vestry
     points(well[, c("x", "y")], pch = 2, cex = 1, col = "blue")
-    text(well[, c("x", "y")], label = well$id, pos = 1, col = "blue")
+    text(well[, c("x", "y")], label = paste0("p", well$id), pos = 1,
+      col = "blue")
   } else {
     well <- cholera::pumps
     points(well[, c("x", "y")], pch = 2, cex = 1, col = "blue")
-    text(well[, c("x", "y")], label = well$id, pos = 1, col = "blue")
+    text(well[, c("x", "y")], label = paste0("p", well$id), pos = 1,
+      col = "blue")
   }
 
   if (add.landmarks) addLandmarks()
