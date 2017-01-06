@@ -14,7 +14,7 @@ trimPaths(pump.select = NULL, vestry = FALSE, obs = TRUE,
 
 \item{obs}{Logical. TRUE uses paths of observed cases. FALSE uses paths of simulated cases.}
 
-\item{multi.core}{Logical. TRUE uses detectCores(). FALSE uses 1 core.}
+\item{multi.core}{Logical. TRUE uses parallel::detectCores(). FALSE uses one, single core.}
 
 \item{save.file}{Logical. TRUE save output to working directory.}
 }
@@ -22,7 +22,7 @@ trimPaths(pump.select = NULL, vestry = FALSE, obs = TRUE,
 A list of data frames.
 }
 \description{
-Combines pump neighborhood walking paths and remove duplicate road segments. To eliminate duplication, only "anchor cases" are used.
+To reduce duplication when plotting, this function computes the unique road segments of all walking paths. Note that only "anchor cases" are used.
 }
 \examples{
 # trimPaths()
