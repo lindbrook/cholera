@@ -125,13 +125,22 @@ trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
   neighborhood <- which(vapply(pump.cases, function(x) length(x) != 0,
     logical(1L)))
 
-  case.segments <- parallel::mclapply(seq_along(neighborhood.paths),
-    caseSegments, intermediate.segments, neighborhood, neighborhood.paths,
-    paths, pump.cases, sel.cases.data, mc.cores = cores)
+  if (obs) {
+    case.segments <- parallel::mclapply(seq_along(neighborhood.paths),
+      caseSegments, intermediate.segments, neighborhood, neighborhood.paths,
+      paths, pump.cases, sel.cases.data, mc.cores = cores)
 
-  pump.segments <- lapply(seq_along(neighborhood.paths), pumpSegments,
-    neighborhood, neighborhood.paths, pump.cases)
+    pump.segments <- lapply(seq_along(neighborhood.paths), pumpSegments,
+      neighborhood, neighborhood.paths, pump.cases)
+  } else {
+    case.segments <- parallel::mclapply(seq_along(neighborhood.paths),
+      caseSegments, intermediate.segments, neighborhood, neighborhood.paths,
+      paths, pump.cases, sel.cases.data, obs = FALSE, mc.cores = cores)
 
+    pump.segments <- lapply(seq_along(neighborhood.paths), pumpSegments,
+      neighborhood, neighborhood.paths, obs = FALSE, pump.cases)
+  }
+  
   intermediate.segments <- lapply(intermediate.segments, function(x) {
     if (is.null(x)) {
       dat <- NULL
