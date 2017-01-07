@@ -5,7 +5,7 @@
 \title{Trim computed walking paths}
 \usage{
 trimPaths(pump.select = NULL, vestry = FALSE, obs = TRUE,
-  multi.core = FALSE, save.file = FALSE)
+  multi.core = FALSE, save = FALSE)
 }
 \arguments{
 \item{pump.select}{Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
@@ -14,9 +14,9 @@ trimPaths(pump.select = NULL, vestry = FALSE, obs = TRUE,
 
 \item{obs}{Logical. TRUE uses paths of observed cases. FALSE uses paths of simulated cases.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you can specify the number logical cores to use. On Windows, only "multi.core = FALSE" is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you can specify the number logical cores to use (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 
-\item{save.file}{Logical. TRUE save output to working directory.}
+\item{save}{Logical. TRUE save output to working directory.}
 }
 \value{
 A list of data frames (e.g., "neighborhood.segments") and a list of vectors (e.g., "pump.cases")
