@@ -1,7 +1,6 @@
 #' Trim computed walking paths
 #'
 #' To reduce duplication when plotting, this function computes the unique road segments of all walking paths. Note that for observed cases only "anchor cases" are used. This function is computationally intensive: for the 321 observed "anchor cases" this takes about 15 seconds on a single core; for the 4993 simulated cases, this takes about 3.5 minutes on a single core. Use multiple cores if available and applicable.
-#'
 #' @param pump.select Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param obs Logical. TRUE uses paths of observed cases. FALSE uses paths of simulated cases.
