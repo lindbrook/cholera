@@ -22,7 +22,7 @@ trimPaths(pump.select = NULL, vestry = FALSE, obs = TRUE,
 A list of data frames.
 }
 \description{
-To reduce duplication when plotting, this function computes the unique road segments of all walking paths. Note that only "anchor cases" are used.
+To reduce duplication when plotting, this function computes the unique road segments of all walking paths. Note that for observed cases only "anchor cases" are used. This function is computationally intensive: for the 321 observed "anchor cases" this takes about 13 seconds; for the 4993 simulated cases, this takes about 3.5 minutes (use multiple cores if available and applicable).
 }
 \examples{
 # trimPaths()
