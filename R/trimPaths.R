@@ -1,12 +1,17 @@
 #' Trim computed walking paths
 #'
-#' To reduce duplication when plotting, this function computes the unique road segments of all walking paths. Note that for observed cases only "anchor cases" are used. This function is computationally intensive: for the 321 observed "anchor cases" this takes about 15 seconds on a single core; for the 4993 simulated cases, this takes about 3.5 minutes on a single core. Use multiple cores if available and applicable.
+#' To reduce duplication when plotting, this function computes the unique road segments of all walking paths. Note that for observed cases only "anchor cases" are used. This function is computationally intensive: for the 321 observed "anchor cases" this takes about 10 seconds on a single core; for the 4993 simulated cases, this takes about 150 seconds on a single core. Use multiple cores if available and applicable (about 4 seconds and 50 seconds, respectively, on 4 cores).
 #' @param pump.select Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param obs Logical. TRUE uses paths of observed cases. FALSE uses paths of simulated cases.
-#' @param multi.core Logical. TRUE uses parallel::detectCores(). FALSE uses one, single core.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you can specify the number logical cores to use. On Windows, only "multi.core = FALSE" is available.
 #' @param save.file Logical. TRUE save output to working directory.
-#' @return A list of data frames.
+#' @return A list of data frames (e.g., "neighborhood.segments") and a list of vectors (e.g., "pump.cases")
+#' @seealso
+#'  \code{neighborhood.segments},
+#'  \code{neighborhood.segments.sp},
+#'  \code{pump.cases},
+#'  \code{pump.cases.sp}
 #' @export
 #' @examples
 #' # trimPaths()
@@ -38,6 +43,14 @@ trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
     cores <- parallel::detectCores()
   } else {
     cores <- 1L
+  }
+
+  if (is.numeric(multi.core)) {
+    if (is.integer(multi.core)) {
+      cores <- multi.core
+    } else {
+      cores <- as.integer(multi.core)
+    }
   }
 
   if (obs) {
@@ -140,7 +153,7 @@ trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
     pump.segments <- lapply(seq_along(neighborhood.paths), pumpSegments,
       neighborhood, neighborhood.paths, obs = FALSE, pump.cases)
   }
-  
+
   intermediate.segments <- lapply(intermediate.segments, function(x) {
     if (is.null(x)) {
       dat <- NULL
@@ -392,7 +405,7 @@ pumpSegments <- function(x, neighborhood, neighborhood.paths, pump.cases,
 
   if (length(neighborhood.pump) == 1) {
     seg <- cholera::ortho.proj.pump[cholera::ortho.proj.pump$pump.id ==
-                                      neighborhood.pump, "road.segment"]
+      neighborhood.pump, "road.segment"]
     st <- cholera::road.segments[cholera::road.segments$id == seg, ]
   } else {
     stop("Error")

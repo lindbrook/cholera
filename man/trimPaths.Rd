@@ -14,20 +14,26 @@ trimPaths(pump.select = NULL, vestry = FALSE, obs = TRUE,
 
 \item{obs}{Logical. TRUE uses paths of observed cases. FALSE uses paths of simulated cases.}
 
-\item{multi.core}{Logical. TRUE uses parallel::detectCores(). FALSE uses one, single core.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you can specify the number logical cores to use. On Windows, only "multi.core = FALSE" is available.}
 
 \item{save.file}{Logical. TRUE save output to working directory.}
 }
 \value{
-A list of data frames.
+A list of data frames (e.g., "neighborhood.segments") and a list of vectors (e.g., "pump.cases")
 }
 \description{
-To reduce duplication when plotting, this function computes the unique road segments of all walking paths. Note that for observed cases only "anchor cases" are used. This function is computationally intensive: for the 321 observed "anchor cases" this takes about 15 seconds on a single core; for the 4993 simulated cases, this takes about 3.5 minutes on a single core. Use multiple cores if available and applicable.
+To reduce duplication when plotting, this function computes the unique road segments of all walking paths. Note that for observed cases only "anchor cases" are used. This function is computationally intensive: for the 321 observed "anchor cases" this takes about 10 seconds on a single core; for the 4993 simulated cases, this takes about 150 seconds on a single core. Use multiple cores if available and applicable (about 4 seconds and 50 seconds, respectively, on 4 cores).
 }
 \examples{
 # trimPaths()
 # trimPaths(6:7)
 # trimPaths(-6)
 # trimPaths(vestry = TRUE)
+}
+\seealso{
+\code{neighborhood.segments},
+ \code{neighborhood.segments.sp},
+ \code{pump.cases},
+ \code{pump.cases.sp}
 }
 
