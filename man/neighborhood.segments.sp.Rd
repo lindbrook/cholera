@@ -3,7 +3,7 @@
 \docType{data}
 \name{neighborhood.segments.sp}
 \alias{neighborhood.segments.sp}
-\title{List of data frames describing the road segments of the 13 expected (simulated) pump Neighborhoods.}
+\title{List of data frames that specify the unique road segments needed to describe the 13 expected (simulated) pump Neighborhoods.}
 \format{Each data frame has 8 variables that describe a road's straight line segments.
 \describe{
   \item{\code{street}}{numeric street ID, which range between 1 and 528}
@@ -19,7 +19,7 @@
 neighborhood.segments.sp
 }
 \description{
-List of data frames describing the road segments of the 13 expected (simulated) pump Neighborhoods.
+To eliminate overplotting, these data describe the minimal set of road segments. This includes "trimming" the first and last segment to reflect the location of a case and its pump.
 }
 \keyword{datasets}
 
