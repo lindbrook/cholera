@@ -14,7 +14,7 @@ trimPaths(pump.select = NULL, vestry = FALSE, obs = TRUE,
 
 \item{obs}{Logical. TRUE uses paths of observed cases. FALSE uses paths of simulated cases.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you can specify the number logical cores to use (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 
 \item{save}{Logical. TRUE save output to working directory.}
 }
