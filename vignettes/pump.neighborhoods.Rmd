@@ -36,13 +36,13 @@ To allow users to explore this method, I wrote neighborhoodVoronoi().
 The figure below plots the "addresses" and the Voronoi cells for the 13 pumps in the original map.
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE}
-neighborhoodVoronoi()
+plot(neighborhoodVoronoi())
 ```
 
 Snow wrote that some people who lived near the pump at Carnaby and Little Marlborough Street (#6) found its drinking water to be of low quality and actually preferred to go to the Broad Street pump. To explore this possibility, we can exclude that pump and re-plot the graph above.
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE}
-neighborhoodVoronoi(select = -6)
+plot(neighborhoodVoronoi(selection = -6))
 ```
 
 For more information about neighborhoodVoronoi(), see the documentation.
