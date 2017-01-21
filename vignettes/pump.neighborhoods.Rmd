@@ -31,21 +31,17 @@ This package allows users not only to compare different methods, it also allows 
 
 Cliff and Haggett (1988) appear to be the first to use Voronoi tessellation^[http://www.ams.org/samplings/feature-column/fcarc-voronoi] to describe the neighborhoods for the pumps on Snow's original map. Dodson and Tolber (1992), in their digitization of the map, included coordinates for 13 Voronoi cells. These data are available in HistData::Snow.polygons. To replicate those results, I recompute the data using deldir::deldir(). With the exception of the border between the neighborhoods of the Market Place and the Adam and Eve Court pumps (pumps #1 and #2), Dodson and Tobler's computation are otherwise identical.
 
-To allow users to explore this method, I wrote neighborhoodVoronoi().
-
-The figure below plots the "addresses" and the Voronoi cells for the 13 pumps in the original map.
+To allow users to explore the data with this approach, I wrote neighborhoodVoronoi(). It creates an R data object for one's desired neighborhood configuration. We can graph the result with plot(). The figure below plots the "addresses" and the Voronoi cells for the 13 pumps in the original map.
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodVoronoi())
 ```
 
-Snow wrote that some people who lived near the pump at Carnaby and Little Marlborough Street (#6) found its drinking water to be of low quality and actually preferred to go to the Broad Street pump. To explore this possibility, we can exclude that pump and re-plot the graph above.
+Snow wrote that some people who lived near the pump at Carnaby and Little Marlborough Street (#6) found its drinking water to be of low quality and actually preferred to go to the Broad Street pump. To explore this possibility, we can exclude that pump and re-plot the graph.
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodVoronoi(selection = -6))
 ```
-
-For more information about neighborhoodVoronoi(), see the documentation.
 
 ### Walking distance
 
