@@ -112,8 +112,12 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
 #' @param statistic NULL or Character. NULL plots the address, a stack's base case. "address" plots the number of addresses and its Pearson residual in each selected pump neighborhood. "fatality" plots the number of fatalities and its Pearson resiudual in pump neighborhoods.
 #' @param ... Additional plotting parameters.
 #' @return A base R graph.
-#' @seealso \code{addVoronoi()}
-#' \code{pumpSummary()}
+#' @seealso
+#'
+#' \code{neighborhoodVornoi()}
+#'
+#' \code{addVoronoi()}
+#'
 #' @export
 #' @examples
 #' dat <- neighborhoodVoronoi()

@@ -26,7 +26,8 @@ plot(x = dat)
 plot(x = dat, statistic = "fatality")
 }
 \seealso{
+\code{neighborhoodVornoi()}
+
 \code{addVoronoi()}
-\code{pumpSummary()}
 }
 
