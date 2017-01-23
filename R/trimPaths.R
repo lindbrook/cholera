@@ -178,8 +178,6 @@ trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
 
   names(neighborhood.segments) <- neighborhood
 
-  neighborhood.segments
-
   if (save) {
     if (obs) {
       save(neighborhood.segments, file = "neighborhood.segments.RData")
@@ -191,6 +189,27 @@ trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
       save(pump.cases.sp, file = "pump.cases.sp.RData")
     }
   }
+
+  neighborhood.segments
+}
+
+#' Compute total road length in pump neighborhood
+#'
+#' @param trimmed.data List of trimmed road segments created by trimPaths().
+#' @return A vector of total length of roads in pump neighbohood.
+#' @export
+#' @examples
+#' # dat <- trimPaths(6:7)
+#' # roadLength(dat)
+
+roadLength <- function(trimmed.data) {
+  output <- lapply(trimmed.data, function(dat) {
+    vapply(seq_len(nrow(dat)), function(i) {
+      sqrt((dat[i, "x1"] - dat[i, "x2"])^2 + (dat[i, "y1"] - dat[i, "y2"])^2)
+    }, numeric(1L))
+  })
+
+  vapply(output, sum, numeric(1L))
 }
 
 pumpCoordinates <- function(vestry = FALSE) {
