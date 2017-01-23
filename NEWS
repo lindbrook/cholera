@@ -4,7 +4,7 @@ cholera 0.1.95
 amend neighborhoodVoronoi()
 add plot.voronoi()
 add pumpCases() and pumpSummary() generics and implement "voronoi" methods
-move fourCorners(), polygonCoordinates(), polygonColors() and segmentIntersection() to voronoi.R
+add roadLength()
 
 
 cholera 0.1.94
