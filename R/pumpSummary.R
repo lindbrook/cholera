@@ -66,3 +66,63 @@ pumpSummary.voronoi <- function(obj, statistic = "fatality") {
 
   output
 }
+
+pumpSummary.walking <- function(obj) {
+  if (class(obj) != "walking") {
+    stop('Input object\'s class needs to be "walking".')
+  }
+
+  pump.distances <- obj$distance
+  tot.distances <- colSums(pump.distances)
+  names(tot.distances) <- obj$pump
+  total <- tot.distances[is.infinite(tot.distances) == FALSE]
+
+  pct <- total / sum(total)
+  pct <- c(pct, 0)
+  names(pct)[length(pct)] <- names(which(is.infinite(tot.distances)))
+
+  pct <- data.frame(pct)
+  pct$pump.id <- rownames(pct)
+
+  nearest.pump <- obj$pump[apply(pump.distances, 1, which.min)]
+  count <- as.data.frame(table(nearest.pump), stringsAsFactors = FALSE)
+  temp <- merge(count, pct, by.x = "nearest.pump", by.y = "pump.id",
+    all.y = TRUE)
+
+  temp$nearest.pump <- as.numeric(substr(temp$nearest.pump, 2, nchar(temp$nearest.pump)))
+
+  temp$Freq[is.na(temp$Freq)] <- 0
+  names(temp) <- c("pump.id", "Count", "exp.pct")
+
+  expected <- temp$exp.pct * sum(temp$Count)
+
+  output <- data.frame(temp[, c("pump.id", "Count")],
+    Percent = round(100 * temp$Count / sum(temp$Count), 2),
+    Expected = expected)
+  output[order(output$pump.id), ]
+
+}
+
+
+# id <- apply(pump.distances, 1, which.min)
+#
+# lapply(id, function(i) pump.distances[, i])
+#
+#
+# apply(pump.distances, 1, function(x) x[id])
+#
+# d.mat <- matrix(0, nrow(pump.distances), 2)
+#
+# for (i in seq_len(nrow(pump.distances))) {
+#   temp <- pump.distances[i, ]
+#
+#   for (j in id) {
+#     d.mat[i, ] <- temp[c(6, j)]
+#   }
+# }
+
+## cases
+
+# nearest.pump <- pump.names[apply(pump.distances, 1, which.min)]
+# output <- lapply(unique(nearest.pump), function(x) which(nearest.pump == x))
+# names(output) <- unique(nearest.pump)
