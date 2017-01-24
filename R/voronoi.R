@@ -15,6 +15,10 @@
 #' neighborhoodVoronoi(selection = 6:7)
 #' neighborhoodVoronoi(selection = -6)
 #' neighborhoodVoronoi(selection = -6, polygon.vertices = TRUE)
+#'
+#' # coordinate for vertices also available in object
+#' dat <- neighborhoodVoronoi(selection = -6)
+#' dat$coordinates
 
 neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
   polygon.vertices = FALSE) {
