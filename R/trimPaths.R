@@ -203,9 +203,13 @@ trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
 #' # roadLength(dat)
 
 roadLength <- function(trimmed.data) {
-  vapply(trimmed.data, function(dat) {
+  if (is.data.frame(trimmed.data)) {
     sum(sqrt((dat$x1 - dat$x2)^2 + (dat$y1 - dat$y2)^2))
-  }, numeric(1L))
+  } else {
+    vapply(trimmed.data, function(dat) {
+      sum(sqrt((dat$x1 - dat$x2)^2 + (dat$y1 - dat$y2)^2))
+    }, numeric(1L))
+  }
 }
 
 pumpCoordinates <- function(vestry = FALSE) {
