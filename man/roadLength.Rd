@@ -4,10 +4,10 @@
 \alias{roadLength}
 \title{Compute total road length in pump neighborhood}
 \usage{
-roadLength(trimmed.data)
+roadLength(dat)
 }
 \arguments{
-\item{trimmed.data}{List of trimmed road segments created by trimPaths().}
+\item{dat}{List of trimmed road segment data frames created by trimPaths().}
 }
 \value{
 A vector of total length of roads in pump neighbohood.

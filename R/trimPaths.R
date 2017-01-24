@@ -195,18 +195,18 @@ trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
 
 #' Compute total road length in pump neighborhood
 #'
-#' @param trimmed.data List of trimmed road segments created by trimPaths().
+#' @param dat List of trimmed road segment data frames created by trimPaths().
 #' @return A vector of total length of roads in pump neighbohood.
 #' @export
 #' @examples
 #' # dat <- trimPaths(6:7)
 #' # roadLength(dat)
 
-roadLength <- function(trimmed.data) {
-  if (is.data.frame(trimmed.data)) {
+roadLength <- function(dat) {
+  if (is.data.frame(dat)) {
     sum(sqrt((dat$x1 - dat$x2)^2 + (dat$y1 - dat$y2)^2))
   } else {
-    vapply(trimmed.data, function(dat) {
+    vapply(dat, function(dat) {
       sum(sqrt((dat$x1 - dat$x2)^2 + (dat$y1 - dat$y2)^2))
     }, numeric(1L))
   }
