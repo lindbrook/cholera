@@ -31,14 +31,14 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
         stop(msg1)
       }
       if (any(abs(selection) %in% 1:14 == FALSE)) {
-        stop('With "vestry = TRUE", 1 >= |selection| <= 14')
+        stop('With "vestry = TRUE", 1 >= |"selection"| <= 14')
       }
     } else {
       if (length(unique((1:13)[selection])) < 2) {
         stop(msg1)
       }
       if (any(abs(selection) %in% 1:13 == FALSE)) {
-        stop('With "vestry = FALSE", 1 >= |selection| <= 13')
+        stop('With "vestry = FALSE", 1 >= |"selection"| <= 13')
       }
     }
   }
