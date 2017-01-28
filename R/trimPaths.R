@@ -5,7 +5,6 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param obs Logical. TRUE uses paths of observed cases. FALSE uses paths of simulated cases.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
-#' @param save Logical. TRUE save output to working directory.
 #' @return A list of data frames (e.g., "neighborhood.segments") and a list of vectors (e.g., "pump.cases")
 #' @seealso
 #'  \code{neighborhood.segments},
@@ -20,7 +19,7 @@
 #' # trimPaths(vestry = TRUE)
 
 trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
-  multi.core = FALSE, save = FALSE) {
+  multi.core = FALSE) {
 
   if (vestry) {
     pump.road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
@@ -39,21 +38,21 @@ trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
     pump.coordinates <- pump.coordinates[pump.select]
   }
 
-  if (multi.core == TRUE) {
-    cores <- parallel::detectCores()
-  } else {
-    if (is.numeric(multi.core)) {
-      if (is.integer(multi.core)) {
-        cores <- multi.core
-      } else {
-        cores <- as.integer(multi.core)
-      }
+  if (is.logical(multi.core)) {
+    if (multi.core == TRUE) {
+      cores <- parallel::detectCores()
     } else {
-      cores <- 1L
+      if (is.numeric(multi.core)) {
+        if (is.integer(multi.core)) {
+          cores <- multi.core
+        } else {
+          cores <- as.integer(multi.core)
+        }
+      } else {
+        cores <- 1L
+      }
     }
-  }
-
-  if (is.numeric(multi.core)) {
+  } else if (is.numeric(multi.core)) {
     if (is.integer(multi.core)) {
       cores <- multi.core
     } else {
@@ -150,7 +149,7 @@ trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
     case.segments <- parallel::mclapply(seq_along(neighborhood.paths),
       caseSegments, intermediate.segments, neighborhood, neighborhood.paths,
       paths, pump.cases, sel.cases.data, mc.cores = cores)
-
+      
     pump.segments <- lapply(seq_along(neighborhood.paths), pumpSegments,
       neighborhood, neighborhood.paths, pump.cases)
   } else {
@@ -177,19 +176,6 @@ trimPaths <- function(pump.select = NULL, vestry = FALSE, obs = TRUE,
   })
 
   names(neighborhood.segments) <- neighborhood
-
-  if (save) {
-    if (obs) {
-      save(neighborhood.segments, file = "neighborhood.segments.RData")
-      save(pump.cases, file = "pump.cases.RData")
-    } else {
-      neighborhood.segments.sp <- neighborhood.segments
-      pump.cases.sp <- pump.cases
-      save(neighborhood.segments.sp, file = "neighborhood.segments.sp.RData")
-      save(pump.cases.sp, file = "pump.cases.sp.RData")
-    }
-  }
-
   neighborhood.segments
 }
 
@@ -268,7 +254,7 @@ caseIntegrator <- function(x, dat) {
   # id != 1 : 9  12  18 119 138 191 283 317 320
   distance <- vapply(seq_len(nrow(temp)), function(i) {
     sqrt(sum((case.coord - temp[i, c("x1", "y1")])^2)) +
-      sqrt(sum((case.coord - temp[i, c("x2", "y2")])^2))
+    sqrt(sum((case.coord - temp[i, c("x2", "y2")])^2))
   }, numeric(1L))
 
   temp <- temp[which(signif(temp$d) == signif(distance)), ]
