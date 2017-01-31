@@ -15,4 +15,3 @@ A character vector of colors.
 \description{
 Create a uniform set of colors for pump neighborhoods.
 }
-

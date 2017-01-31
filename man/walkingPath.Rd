@@ -41,4 +41,3 @@ walkingPath(1, unit = "meter", selection = 3) # distance from case 1 to pump 3.
 \code{fatalities}
 \code{fatalities.address}
 }
-

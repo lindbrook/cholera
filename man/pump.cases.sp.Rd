@@ -15,4 +15,3 @@ pump.cases.sp
 List of 4972 regular "simulated" cases grouped by pump neighborhood.
 }
 \keyword{datasets}
-

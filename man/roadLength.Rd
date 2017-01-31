@@ -19,4 +19,3 @@ Compute total road length in pump neighborhood
 # dat <- trimPaths(6:7)
 # roadLength(dat)
 }
-

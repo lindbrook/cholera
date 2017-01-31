@@ -16,4 +16,3 @@ plague.pit
 Coordinates for polygon() or sp::Polygon(). In progress.
 }
 \keyword{datasets}
-

@@ -15,4 +15,3 @@ snow.neighborhood
 Data frame of the numeric IDs of cases, taken from from Dodson and Tobler, that fall within Snow's Broad Street pump neighborhood.
 }
 \keyword{datasets}
-

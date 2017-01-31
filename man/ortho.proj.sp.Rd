@@ -19,4 +19,3 @@ ortho.proj.sp
 Orthogonal projection of "expected" cases onto road network.
 }
 \keyword{datasets}
-

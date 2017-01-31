@@ -28,4 +28,3 @@ pumpLocator(7, zoom = TRUE)
 pumpLocator(7, zoom = TRUE, radius = 1)
 pumpLocator(14, vestry = TRUE, zoom = TRUE, radius = 1)
 }
-

@@ -4,12 +4,10 @@
 \alias{plot.voronoi}
 \title{Plot Voronoi neighborhoods.}
 \usage{
-\method{plot}{voronoi}(x, statistic = NULL, ...)
+\method{plot}{voronoi}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "voronoi" created by neighborhoodVoronoi().}
-
-\item{statistic}{NULL or Character. NULL plots the address, a stack's base case. "address" plots the number of addresses and its Pearson residual in each selected pump neighborhood. "fatality" plots the number of fatalities and its Pearson resiudual in pump neighborhoods.}
+\item{x}{An objectect of class "voronoi" created by neighborhoodVoronoi().}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -21,13 +19,10 @@ Plot Voronoi neighborhoods.
 }
 \examples{
 dat <- neighborhoodVoronoi()
-plot(x = dat)
-
-plot(x = dat, statistic = "fatality")
+plot(dat)
 }
 \seealso{
 \code{neighborhoodVornoi()}
 
 \code{addVoronoi()}
 }
-

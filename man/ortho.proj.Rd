@@ -19,4 +19,3 @@ ortho.proj
 Orthogonal projection of observed cases onto road network.
 }
 \keyword{datasets}
-
