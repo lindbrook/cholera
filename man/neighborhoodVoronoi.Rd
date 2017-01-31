@@ -2,9 +2,9 @@
 % Please edit documentation in R/voronoi.R
 \name{neighborhoodVoronoi}
 \alias{neighborhoodVoronoi}
-\title{Voronoi neighborhood object.}
+\title{Voronoi neighborhoods.}
 \usage{
-neighborhoodVoronoi(selection = NULL, vestry = FALSE,
+neighborhoodVoronoi(selection = NULL, vestry = FALSE, statistic = NULL,
   polygon.vertices = FALSE)
 }
 \arguments{
@@ -12,10 +12,12 @@ neighborhoodVoronoi(selection = NULL, vestry = FALSE,
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
-\item{polygon.vertices}{Logical. TRUE returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for sp::point.in.polygon() and used in choleraSummary().}
+\item{statistic}{NULL or Character. NULL, the default, makes no summary computation. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.}
+
+\item{polygon.vertices}{Logical. TRUE returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for sp::point.in.polygon() as used in summary.voronoi() method.}
 }
 \value{
-A list of data and parameters of computed Voronoi neighborhoods. "voronoi" class.
+A list of data and parameters of computed Voronoi neighborhoods.
 }
 \description{
 Data for Voronoi tessellation of John Snow's 1854 London cholera data.
@@ -27,13 +29,14 @@ neighborhoodVoronoi(selection = 6:7)
 neighborhoodVoronoi(selection = -6)
 neighborhoodVoronoi(selection = -6, polygon.vertices = TRUE)
 
-# coordinate for vertices also available in object
+# coordinate for vertices also available in returned objectect.
 dat <- neighborhoodVoronoi(selection = -6)
 dat$coordinates
 }
 \seealso{
 \code{addVoronoi()}
-\code{choleraSummary()}
+
+\code{summary.voronoi()}
+
 \code{plot.voronoi()}
 }
-
