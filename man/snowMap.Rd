@@ -26,4 +26,3 @@ snowMap(vestry = TRUE, stacked = FALSE)
 \seealso{
 \code{\link[cholera]{addLandmarks}}
 }
-

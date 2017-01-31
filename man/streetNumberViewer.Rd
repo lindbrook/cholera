@@ -30,4 +30,3 @@ streetNumberViewer(243, zoom = TRUE, radius = 0)
 
 \code{\link[cholera]{streetNameViewer}}
 }
-

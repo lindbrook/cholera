@@ -27,4 +27,3 @@ This data set adds road names from John Snow's map to Dodson and Tobler's street
 \code{\link[cholera]{streetNumberViewer}}
 }
 \keyword{datasets}
-

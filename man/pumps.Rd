@@ -18,4 +18,3 @@ pumps
 Adds and amends road locations for water pumps from John Snow's map to Dodson and Tobler's street data. The latter are available at Michael Friendly's HistData::Snow.streets.
 }
 \keyword{datasets}
-

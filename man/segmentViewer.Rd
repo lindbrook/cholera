@@ -24,4 +24,3 @@ selected road segment. With Dodson and Tobler's data, a street (e.g., Broad Stre
 segmentViewer("190-1")
 segmentViewer("216-1")
 }
-

@@ -19,4 +19,3 @@ ortho.proj.pump.vestry
 Orthogonal projection of the 14 pumps from the Vestry Report.
 }
 \keyword{datasets}
-

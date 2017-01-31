@@ -18,4 +18,3 @@ pumps.vestry
 From the map Snow includes in the Vestry Report, this data set adds the pump at Hanover Square and relocates the Broad Street pump.
 }
 \keyword{datasets}
-

@@ -16,4 +16,3 @@ regular.cases
 The result of using sp::spsample() and sp::Polygon() to generate 5000 regularly spaced simulated cases within the map's border.
 }
 \keyword{datasets}
-

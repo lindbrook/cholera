@@ -17,4 +17,3 @@ time.series.snow
 Time series of recorded fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of the removal of the handle on the Broad Street pump on 08 September 1854.
 }
 \keyword{datasets}
-

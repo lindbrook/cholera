@@ -24,4 +24,3 @@ neighborhoodSnow()
 neighborhoodSnow(streets = FALSE)
 neighborhoodSnow(zoom = FALSE, add.address = TRUE); addKernelDensity()
 }
-

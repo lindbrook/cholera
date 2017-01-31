@@ -20,4 +20,3 @@ snow.trimmed.segments
 The road segments (i.e., endpoints) that describe Snow's Broad Street pump neighborhood (Vestry Report 1855b). Note that "outer" segments are trimmed: only the portion of the segment transversed by the walking path of the most "distant" case on that segment is included.
 }
 \keyword{datasets}
-

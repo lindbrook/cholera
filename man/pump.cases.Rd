@@ -15,4 +15,3 @@ pump.cases
 List of the 578 observed cholera cases grouped by pump neighborhood.
 }
 \keyword{datasets}
-
