@@ -27,4 +27,3 @@ An amended version of Dodson and Tobler's digitization of John Snow's map of the
 \code{\link[cholera]{streetNumberViewer}}
 }
 \keyword{datasets}
-

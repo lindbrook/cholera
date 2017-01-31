@@ -22,4 +22,3 @@ Computes and draws Voronoi cells using deldir::deldir().
 snowMap(add.landmarks = FALSE)
 addVoronoi()
 }
-

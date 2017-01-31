@@ -26,4 +26,3 @@ Uses KernSmooth::bkde2D() to add density contours to a plot.
 snowMap(add.landmarks = FALSE)
 addKernelDensity()
 }
-

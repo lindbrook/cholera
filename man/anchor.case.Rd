@@ -15,4 +15,3 @@ anchor.case
 Data frame that links a case to its stack. which is the case at the base of a stack. For use with \code{\link{fatalityLocator}}.
 }
 \keyword{datasets}
-

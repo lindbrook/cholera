@@ -22,4 +22,3 @@ addLandmarks()
 \seealso{
 \code{\link[cholera]{snowMap}}, \code{\link[cholera]{addWhitehead}}
 }
-

@@ -31,4 +31,3 @@ addWhitehead()
 \seealso{
 \code{\link[cholera]{addLandmarks}}
 }
-

@@ -14,4 +14,3 @@ border
 Vector of ordered numbers that identify the line segments that make up the frame of the map. For use with sp::Polygon().
 }
 \keyword{datasets}
-

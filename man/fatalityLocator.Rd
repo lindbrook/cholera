@@ -33,4 +33,3 @@ fatalityLocator(290, zoom = TRUE, stacked = FALSE)
 
 \code{fatalities.address}
 }
-

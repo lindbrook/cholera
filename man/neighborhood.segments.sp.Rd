@@ -22,4 +22,3 @@ neighborhood.segments.sp
 To eliminate overplotting, these data describe the minimal set of road segments. This includes "trimming" the first and last segment to reflect the location of a case and its pump.
 }
 \keyword{datasets}
-

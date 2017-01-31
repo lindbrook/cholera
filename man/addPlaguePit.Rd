@@ -24,4 +24,3 @@ addPlaguePit()
 \seealso{
 \code{\link[cholera]{addLandmarks}}, \code{\link[cholera]{addWhitehead}}
 }
-
