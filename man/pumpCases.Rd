@@ -4,12 +4,10 @@
 \alias{pumpCases}
 \title{Numerical case IDs by Voronoi neighborhood.}
 \usage{
-pumpCases(obj, statistic)
+pumpCases(obj)
 }
 \arguments{
 \item{obj}{An object of class "voronoi" created by neighborhoodVoronoi().}
-
-\item{statistic}{Character. "address" summarizes the number of addresses in pump neighbohoods. "fatality", the default, summarizes the number of fatalities in pump neighborhoods.}
 }
 \value{
 A list of pump neighborhoods with the numeric ID of observed cases.
@@ -20,7 +18,4 @@ Numerical case IDs by Voronoi neighborhood.
 \examples{
 dat <- neighborhoodVoronoi()
 pumpCases(dat)
-
-pumpCases(dat, statistic = "address")
 }
-
