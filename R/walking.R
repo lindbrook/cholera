@@ -15,146 +15,158 @@
 neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
   statistic = "address", weighted = TRUE, multi.core = FALSE) {
 
-  if (vestry) {
-    if (is.null(selection) == FALSE) {
-      if (any(abs(selection) %in% 1:14 == FALSE)) {
-        stop('With "vestry = TRUE", 1 >= |"selection"| <= 14.')
-      }
-    }
-  } else {
-    if (is.null(selection) == FALSE ) {
-      if (any(abs(selection) %in% 1:13 == FALSE)) {
-        stop('With "vestry = FALSE", 1 >= |"selection"| <= 13.')
-      }
-    }
-  }
+  test1 <- is.null(selection) & vestry == FALSE & statistic == "address" &
+    weighted
 
-  if (is.logical(multi.core)) {
-    if (multi.core == TRUE) {
-      cores <- parallel::detectCores()
-    } else {
-      if (is.numeric(multi.core)) {
-        if (is.integer(multi.core)) {
-          cores <- multi.core
-        } else {
-          cores <- as.integer(multi.core)
+  test2 <- all((1:13)[selection] == (1:13)[-6]) & vestry == FALSE &
+    statistic == "address" & weighted
+
+  if (test1) {
+    walking.data[["address"]]
+  } else if (test2) {
+    walking.data[["address.not6"]]
+  } else {
+    if (vestry) {
+      if (is.null(selection) == FALSE) {
+        if (any(abs(selection) %in% 1:14 == FALSE)) {
+          stop('With "vestry = TRUE", 1 >= |"selection"| <= 14.')
         }
-      } else {
-        cores <- 1L
+      }
+    } else {
+      if (is.null(selection) == FALSE ) {
+        if (any(abs(selection) %in% 1:13 == FALSE)) {
+          stop('With "vestry = FALSE", 1 >= |"selection"| <= 13.')
+        }
       }
     }
-  } else if (is.numeric(multi.core)) {
-    if (is.integer(multi.core)) {
-      cores <- multi.core
-    } else {
-      cores <- as.integer(multi.core)
+
+    if (is.logical(multi.core)) {
+      if (multi.core == TRUE) {
+        cores <- parallel::detectCores()
+      } else {
+        if (is.numeric(multi.core)) {
+          if (is.integer(multi.core)) {
+            cores <- multi.core
+          } else {
+            cores <- as.integer(multi.core)
+          }
+        } else {
+          cores <- 1L
+        }
+      }
+    } else if (is.numeric(multi.core)) {
+      if (is.integer(multi.core)) {
+        cores <- multi.core
+      } else {
+        cores <- as.integer(multi.core)
+      }
     }
-  }
 
-  # pumps #
+    # pumps #
 
-  if (vestry) {
-    pump.road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
-    pump.coordinates <- pumpCoordinates(vestry = TRUE)
-    snow.colors <- cholera::snowColors(vestry = TRUE)
-  } else {
-    pump.road.segments <- pumpIntegrator()
-    pump.coordinates <- pumpCoordinates()
-    snow.colors <- cholera::snowColors()
-  }
+    if (vestry) {
+      pump.road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
+      pump.coordinates <- pumpCoordinates(vestry = TRUE)
+      snow.colors <- cholera::snowColors(vestry = TRUE)
+    } else {
+      pump.road.segments <- pumpIntegrator()
+      pump.coordinates <- pumpCoordinates()
+      snow.colors <- cholera::snowColors()
+    }
 
-  if (is.null(selection)) {
-    select.pumps <- pump.coordinates
-    pump.names <- names(pump.coordinates)
-  } else {
-    select.pumps <- pump.coordinates[selection]
-    pump.names <- names(pump.coordinates)[selection]
-    snow.colors <- snow.colors[selection]
-  }
+    if (is.null(selection)) {
+      select.pumps <- pump.coordinates
+      pump.names <- names(pump.coordinates)
+    } else {
+      select.pumps <- pump.coordinates[selection]
+      pump.names <- names(pump.coordinates)[selection]
+      snow.colors <- snow.colors[selection]
+    }
 
-  # cases #
+    # cases #
 
-  if (statistic == "address") {
-    sel <- cholera::fatalities.address$anchor.case
-    ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
-  }
+    if (statistic == "address") {
+      sel <- cholera::fatalities.address$anchor.case
+      ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+    }
 
-  if (statistic == "fatality") {
-    sel <- cholera::fatalities.unstacked$case
-    ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
-  }
+    if (statistic == "fatality") {
+      sel <- cholera::fatalities.unstacked$case
+      ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+    }
 
-  case <- split(ortho, ortho$case)
+    case <- split(ortho, ortho$case)
 
-  case.pump.road.segments <- lapply(case, function(x)
-    caseIntegrator(x, pump.road.segments))
+    case.pump.road.segments <- lapply(case, function(x)
+      caseIntegrator(x, pump.road.segments))
 
-  g <- lapply(case.pump.road.segments, function(x) {
-    edge.list <- x[, c("node1", "node2")]
-    igraph::graph_from_data_frame(edge.list, directed = FALSE)
-  })
+    g <- lapply(case.pump.road.segments, function(x) {
+      edge.list <- x[, c("node1", "node2")]
+      igraph::graph_from_data_frame(edge.list, directed = FALSE)
+    })
 
-  case.node <- vapply(seq_along(case), function(i) {
-    case.coord <- paste0(ortho[i, "x.proj"], "-", ortho[i, "y.proj"])
-    which(igraph::V(g[[i]])$name == case.coord)
-  }, numeric(1L))
-
-  pump.nodes <- lapply(g, function(graph) {
-    vapply(select.pumps, function(pump) {
-      which(igraph::V(graph)$name == pump)
+    case.node <- vapply(seq_along(case), function(i) {
+      case.coord <- paste0(ortho[i, "x.proj"], "-", ortho[i, "y.proj"])
+      which(igraph::V(g[[i]])$name == case.coord)
     }, numeric(1L))
-  })
 
-  nearest.pump <- lapply(seq_along(case), function(i) {
-    if (weighted) {
-      wts <- case.pump.road.segments[[i]]$d
-      d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]],
-        weights = wts))
-    } else {
-      d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]]))
-    }
-  })
+    pump.nodes <- lapply(g, function(graph) {
+      vapply(select.pumps, function(pump) {
+        which(igraph::V(graph)$name == pump)
+      }, numeric(1L))
+    })
 
-  distances <- do.call(rbind, nearest.pump)
+    nearest.pump <- lapply(seq_along(case), function(i) {
+      if (weighted) {
+        wts <- case.pump.road.segments[[i]]$d
+        d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]],
+          weights = wts))
+      } else {
+        d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]]))
+      }
+    })
 
-  nearest.pump <- pump.names[apply(distances, 1, which.min)]
-  nearest.pump.data <- table(nearest.pump)
+    distances <- do.call(rbind, nearest.pump)
 
-  obs.pumps <- names(nearest.pump.data)
-  obs.pumps <- as.numeric(substr(obs.pumps, 2, length(obs.pumps)))
+    nearest.pump <- pump.names[apply(distances, 1, which.min)]
+    nearest.pump.data <- table(nearest.pump)
 
-  observed <- data.frame(pump.id = obs.pumps,
-                         count = unname(c(nearest.pump.data)))
+    obs.pumps <- names(nearest.pump.data)
+    obs.pumps <- as.numeric(substr(obs.pumps, 2, length(obs.pumps)))
 
-  neighborhoods <- trimPaths2(obs = TRUE, selection, pump.road.segments,
-    pump.coordinates, select.pumps, pump.names, cores)
+    observed <- data.frame(pump.id = obs.pumps,
+                           count = unname(c(nearest.pump.data)))
 
-  sim.neighborhoods <- trimPaths2(obs = FALSE, selection, pump.road.segments,
-    pump.coordinates, select.pumps, pump.names, cores)
+    neighborhoods <- trimPaths2(obs = TRUE, selection, pump.road.segments,
+      pump.coordinates, select.pumps, pump.names, cores)
 
-  sim.road.length <- roadLength(sim.neighborhoods$trimmed.segments)
+    sim.neighborhoods <- trimPaths2(obs = FALSE, selection, pump.road.segments,
+      pump.coordinates, select.pumps, pump.names, cores)
 
-  expected <- sum(observed$count) * sim.road.length / sum(sim.road.length)
-  expected <- data.frame(pump.id = as.numeric(names(expected)),
-                         count = expected)
+    sim.road.length <- roadLength(sim.neighborhoods$trimmed.segments)
 
-  output <- list(
-    distances = distances,
-    pump = pump.names,
-    nearest.pump = nearest.pump,
-    pump.seg = neighborhoods$trimmed.segments,
-    pump.case = neighborhoods$pump.cases,
-    sim.pump.seg = sim.neighborhoods$trimmed.segments,
-    sim.pump.case = sim.neighborhoods$pump.cases,
-    observed = observed,
-    expected = expected,
-    snow.colors = snow.colors,
-    selection = selection,
-    statistic = statistic,
-    vestry = vestry)
+    expected <- sum(observed$count) * sim.road.length / sum(sim.road.length)
+    expected <- data.frame(pump.id = as.numeric(names(expected)),
+                           count = expected)
 
-  class(output) <- "walking"
-  output
+    output <- list(
+      distances = distances,
+      pump = pump.names,
+      nearest.pump = nearest.pump,
+      pump.seg = neighborhoods$trimmed.segments,
+      pump.case = neighborhoods$pump.cases,
+      sim.pump.seg = sim.neighborhoods$trimmed.segments,
+      sim.pump.case = sim.neighborhoods$pump.cases,
+      observed = observed,
+      expected = expected,
+      snow.colors = snow.colors,
+      selection = selection,
+      statistic = statistic,
+      vestry = vestry)
+
+    class(output) <- "walking"
+    output
+  }
 }
 
 #' Plot observed and simulated walking neighborhoods.
