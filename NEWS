@@ -1,3 +1,11 @@
+cholera 0.1.96 (beta)
+----------------------------------------------------------------
+
+amend neighborhoodWalking()
+add plot.walking() and summary.walking() methods
+add plot.voronoi() and summary.voronoi() methods
+
+
 cholera 0.1.95
 ----------------------------------------------------------------
 
