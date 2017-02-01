@@ -58,7 +58,8 @@ walkingPath(150)
 By applying this function to all observed cases, we can begin to get a sense of the different pump neighborhoods.
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodWalking())
+dat <- neighborhoodWalking()
+plot(dat)
 ```
 
 To get a sense of an entire neighborhood, I extend the approach from "observed" data to "expected" data. Using sp::spsample() and sp::Polygon(), I place 5000 regularly spaced points on the map and compute their walking path to the nearest pump. This allows me to see the full extent and range of a pump's neighborhood.
@@ -66,13 +67,13 @@ To get a sense of an entire neighborhood, I extend the approach from "observed" 
 I do so in two ways. In the first (Figure 8), I identify neighborhoods by coloring roads.^[Shiode (2012) uses this approach.]
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodWalking(), observed = FALSE)
+plot(dat, observed = FALSE)
 ```
 
 In the second, Figure 9, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach].
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodWalking(), street = FALSE, observed = FALSE)
+plot(dat, street = FALSE, observed = FALSE)
 ```
 
 While the latter is easier to "read" due to its familiarity, it is potentially less accurate and more misleading. Conceptually, the problem is that the latter takes the focus away from roads and walking distances, and puts it on regions, which do not necessarily have a relevant meaning because they include points or locations where there are no roads or residences. Computationally, the problem is that the shape of neighborhoods will be sensitive to the algorithm that determines the closest pump. Depending on our choices, this can produce different results.^[Cliff and Haggett also produce an adjusted Voronoi cells that reflect walking distances: "So far we have assumed that access to each pump was determined by 'crow-fly' distances. While the physical effort of carrying water mean that most people visited their nearest pump, recognition must be made of the complex street pattern in this area of London. Therefore in (D), the Thiessen polygons have been adjusted to take into account the patterns of access made possible by the street system shown in diagram (A) (Cliff and Haggett 1988, 53). However, details about how this was done do not appear to be available. Moreover, because the graphic only shows the outline of the polygon and not the streets, comparisons with other approaches is difficult.]
