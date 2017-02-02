@@ -7,6 +7,7 @@
 #' @param weighted Logical. TRUE uses distance weighted by edge length (i.e., road length). FALSE uses unweighted distance.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @return A list of data and parameters of computed walking path neighborhoods.
+#' @section Notes: This function is computationally intensive (the default configuration takes about 4 minutes to run on a single core). However, two configurations will return pre-computed results: the default set of arguments, and the default set with pump 6 (Little Marlborough Street) excluded: neighborhoodWalking(selection = -6).
 #' @export
 #' @examples
 #' neighborhoodWalking()

@@ -24,6 +24,10 @@ A list of data and parameters of computed walking path neighborhoods.
 \description{
 Data for walking neighbohoods for John Snow's 1854 London cholera data.
 }
+\section{Notes}{
+ This function is computationally intensive (the default configuration takes about 4 minutes to run on a single core). However, two configurations will return pre-computed results: the default set of arguments, and the default set with pump 6 (Little Marlborough Street) excluded: neighborhoodWalking(selection = -6).
+}
+
 \examples{
 neighborhoodWalking()
 neighborhoodWalking(selection = -6)
