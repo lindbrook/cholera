@@ -18,6 +18,6 @@ A data frame with observed and expected counts, observed percentage, and the Pea
 Summary statistics for walking path neighborhoods.
 }
 \examples{
-# dat <- neighborhoodWalking(6:7)
-# summary(dat)
+dat <- neighborhoodWalking()
+summary(dat)
 }

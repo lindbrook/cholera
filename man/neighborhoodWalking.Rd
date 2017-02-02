@@ -25,6 +25,6 @@ A list of data and parameters of computed walking path neighborhoods.
 Data for walking neighbohoods for John Snow's 1854 London cholera data.
 }
 \examples{
-# neighborhoodWalking()
-# neighborhoodWalking(selection = 6:7)
+neighborhoodWalking()
+neighborhoodWalking(selection = -6)
 }

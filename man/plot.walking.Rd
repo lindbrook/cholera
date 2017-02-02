@@ -22,6 +22,6 @@ A base R graphics plot.
 Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 }
 \examples{
-# dat <- neighborhoodWalking(6:7)
-# plot(dat)
+dat <- neighborhoodWalking()
+plot(dat)
 }
