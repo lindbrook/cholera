@@ -1,10 +1,10 @@
-cholera 0.1.96 (beta)
+cholera 0.1.96
 ----------------------------------------------------------------
 
 amend neighborhoodWalking()
 add plot.walking() and summary.walking() methods
 add plot.voronoi() and summary.voronoi() methods
-
+remove trimPlot()
 
 cholera 0.1.95
 ----------------------------------------------------------------
