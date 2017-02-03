@@ -19,7 +19,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
   # address <- cholera::neighborhoodWalking(multi.core = TRUE)
   # address.not6 <- cholera::neighborhoodWalking(-6, multi.core = TRUE)
   # walking.data <- list(address = address, address.not6 = address.not6)
-  # devtools::use_data(walking.data, internal = TRUE)
+  # devtools::use_data(walking.data, internal = TRUE, overwrite = TRUE)
 
   test1 <- (is.null(selection) & vestry == FALSE & statistic == "address" &
     weighted)
@@ -122,7 +122,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
       }, numeric(1L))
     }, mc.cores = cores)
 
-    nearest.pump <- parallel::mclapply(seq_along(case), function(i) {
+    nearest.pump.data <- parallel::mclapply(seq_along(case), function(i) {
       if (weighted) {
         wts <- case.pump.road.segments[[i]]$d
         d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]],
@@ -132,22 +132,67 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
       }
     }, mc.cores = cores)
 
-    distances <- do.call(rbind, nearest.pump)
+    nearest.pump.data <- do.call(rbind, nearest.pump.data)
+    idx <- apply(nearest.pump.data, 1, which.min)
+    nearest.pump <- names(select.pumps)[idx]
 
-    nearest.pump <- pump.names[apply(distances, 1, which.min)]
-    nearest.pump.data <- table(nearest.pump)
+    obs.pumps <- table(nearest.pump)
+    pump.id <- as.numeric(substr(names(obs.pumps), 2, length(names(obs.pumps))))
+    observed <- data.frame(pump.id = pump.id, count = unname(c(obs.pumps)))
 
-    obs.pumps <- names(nearest.pump.data)
-    obs.pumps <- as.numeric(substr(obs.pumps, 2, length(obs.pumps)))
+    paths <- parallel::mclapply(seq_along(g), function(i) {
+      sel <- names(pump.nodes[[i]]) == nearest.pump[i]
+      p.node <- pump.nodes[[i]][sel]
+      igraph::shortest_paths(g[[i]], case.node[i], p.node,
+        weights = case.pump.road.segments[[i]]$d)$vpath
+    }, mc.cores = cores)
 
-    observed <- data.frame(pump.id = obs.pumps,
-                           count = unname(c(nearest.pump.data)))
+    neighborhood.paths <- split(paths, nearest.pump)
 
-    neighborhoods <- trimPaths2(obs = TRUE, selection, pump.road.segments,
-      pump.coordinates, select.pumps, pump.names, vestry)
+    intermediate.segments <- lapply(neighborhood.paths,
+      intermediateSegments)
 
-    sim.neighborhoods <- trimPaths2(obs = FALSE, selection, pump.road.segments,
-      pump.coordinates, select.pumps, pump.names, vestry)
+    intermediate.segments <- lapply(intermediate.segments, function(x) {
+      if (is.null(x)) {
+        dat <- NULL
+      } else {
+        dat <- cholera::road.segments[cholera::road.segments$id %in% x, ]
+        dat$trimmed <- FALSE
+      }
+      dat
+    })
+
+    if (vestry) {
+      pump.cases <- lapply(cholera::pumps.vestry$id, function(i) {
+        ortho[which(nearest.pump == paste0("p", i)), "case"]
+      })
+    } else {
+      pump.cases <- lapply(cholera::pumps$id, function(i) {
+        ortho[which(nearest.pump == paste0("p", i)), "case"]
+      })
+    }
+
+    neighborhood.id <- sort(pump.id)
+
+    case.segments <- lapply(seq_along(neighborhood.paths),
+      caseSegments, intermediate.segments, neighborhood.id, neighborhood.paths,
+      paths, pump.cases, ortho, vestry)
+
+    pump.segments <- lapply(seq_along(neighborhood.paths), pumpSegments,
+      neighborhood.id, neighborhood.paths, pump.cases, vestry)
+
+    neighborhood.segments <- lapply(seq_along(neighborhood.id), function(i) {
+      rbind(case.segments[[i]], intermediate.segments[[i]], pump.segments[[i]])
+    })
+
+    names(neighborhood.segments) <- neighborhood.id
+
+    neighborhoods <- list(trimmed.segments = neighborhood.segments,
+                          pump.cases = pump.cases)
+
+
+    sim.neighborhoods <- trimExpPaths(selection, pump.road.segments,
+      pump.coordinates, select.pumps, pump.names, vestry, weighted, cores)
 
     sim.road.length <- roadLength(sim.neighborhoods$trimmed.segments)
 
@@ -156,7 +201,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
                            count = expected)
 
     output <- list(
-      distances = distances,
+      distances = nearest.pump.data,
       pump = pump.names,
       nearest.pump = nearest.pump,
       pump.seg = neighborhoods$trimmed.segments,
@@ -589,117 +634,68 @@ pumpSegments <- function(x, neighborhood.id, neighborhood.paths, pump.cases,
   st
 }
 
-trimPaths2 <- function(obs = TRUE, selection, pump.road.segments, pump.coordinates,
-  select.pumps, pump.names, vestry) {
+trimExpPaths <- function(selection, pump.road.segments, pump.coordinates,
+  select.pumps, pump.names, vestry, weighted, cores) {
 
-  if (obs) {
-    sel <- cholera::fatalities.address$anchor.case
-    ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
-  } else {
-    edge.case <- cholera::ortho.proj.sp[is.na(cholera::ortho.proj.sp$x.proj),
-      "case"]
-    falconberg.id <- pump.road.segments[pump.road.segments$name ==
-      "Falconberg Court" | pump.road.segments$name == "Falconberg Mews", "id"]
-    falconberg <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$road.segment
-      %in% falconberg.id, "case"]
-    ortho <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case
-      %in% c(edge.case, falconberg) == FALSE, ]
-  }
+  edge.case <- cholera::ortho.proj.sp[is.na(cholera::ortho.proj.sp$x.proj),
+    "case"]
+  falconberg.id <- pump.road.segments[pump.road.segments$name ==
+    "Falconberg Court" | pump.road.segments$name == "Falconberg Mews", "id"]
+  falconberg <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$road.segment
+    %in% falconberg.id, "case"]
+  ortho <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case
+    %in% c(edge.case, falconberg) == FALSE, ]
 
   case <- split(ortho, ortho$case)
 
-  case.pump.road.segments <- lapply(case, function(x) {
-    caseIntegrator(x, pump.road.segments)
-  })
+  case.pump.road.segments <- parallel::mclapply(case, function(x)
+    caseIntegrator(x, pump.road.segments), mc.cores = cores)
 
-  g <- lapply(case.pump.road.segments, function(x) {
+  g <- parallel::mclapply(case.pump.road.segments, function(x) {
     edge.list <- x[, c("node1", "node2")]
     igraph::graph_from_data_frame(edge.list, directed = FALSE)
-  })
+  }, mc.cores = cores)
 
-  nearest.pump.data <- lapply(seq_along(g), function(x) {
-    sel.case <- case[[x]]
-    case.graph <- g[[x]]
-    case.coord <- paste0(sel.case$x.proj, "-", sel.case$y.proj)
-    case.node <- which(igraph::V(case.graph)$name == case.coord)
-
-    if (is.null(selection)) {
-      pump.nodes <- vapply(pump.coordinates, function(p) {
-        which(igraph::V(case.graph)$name == p)
-      }, numeric(1L))
-    } else {
-      pump.nodes <- vapply(pump.coordinates[selection], function(p) {
-        which(igraph::V(case.graph)$name == p)
-      }, numeric(1L))
-    }
-
-    wts <- case.pump.road.segments[[x]]$d
-    unname(igraph::distances(case.graph, case.node, pump.nodes, weights = wts))
-  })
-
-  nearest.pump.data <- data.frame(do.call(rbind, nearest.pump.data))
-  names(nearest.pump.data) <- pump.names
-
-  nearest.pump <- vapply(seq_along(g), function(i) {
-    dat <- nearest.pump.data[i, ]
-    if (all(is.infinite(unlist(dat))) == FALSE) {
-      p.name <- names(which.min(dat))
-      as.integer(substr(p.name, 2, nchar(p.name)))
-    } else {
-      NA
-    }
-  }, integer(1L))
-
-  case.node <- vapply(seq_along(g), function(i) {
-    sel.case <- case[[i]]
-    case.coord <- paste0(sel.case$x.proj, "-", sel.case$y.proj)
+  case.node <- vapply(seq_along(case), function(i) {
+    case.coord <- paste0(ortho[i, "x.proj"], "-", ortho[i, "y.proj"])
     which(igraph::V(g[[i]])$name == case.coord)
   }, numeric(1L))
 
-  # pump nodes in a case's graph
-  case.pump.nodes <- lapply(g, function(graph) {
+  pump.nodes <- parallel::mclapply(g, function(graph) {
     vapply(select.pumps, function(pump) {
       which(igraph::V(graph)$name == pump)
     }, numeric(1L))
-  })
+  }, mc.cores = cores)
 
-  paths <- lapply(seq_along(g), function(i) {
-    sel <- names(case.pump.nodes[[i]]) == paste0("p", nearest.pump[i])
-    pump.node <- case.pump.nodes[[i]][sel]
-    igraph::shortest_paths(g[[i]], case.node[i], pump.node,
+  nearest.pump.data <- parallel::mclapply(seq_along(case), function(i) {
+    if (weighted) {
+      wts <- case.pump.road.segments[[i]]$d
+      d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]],
+        weights = wts))
+    } else {
+      d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]]))
+    }
+  }, mc.cores = cores)
+
+  nearest.pump.data <- do.call(rbind, nearest.pump.data)
+  idx <- apply(nearest.pump.data, 1, which.min)
+  nearest.pump <- names(select.pumps)[idx]
+
+  obs.pumps <- table(nearest.pump)
+  pump.id <- as.numeric(substr(names(obs.pumps), 2, length(names(obs.pumps))))
+  observed <- data.frame(pump.id = pump.id, count = unname(c(obs.pumps)))
+
+  paths <- parallel::mclapply(seq_along(g), function(i) {
+    sel <- names(pump.nodes[[i]]) == nearest.pump[i]
+    p.node <- pump.nodes[[i]][sel]
+    igraph::shortest_paths(g[[i]], case.node[i], p.node,
       weights = case.pump.road.segments[[i]]$d)$vpath
-  })
+  }, mc.cores = cores)
 
   neighborhood.paths <- split(paths, nearest.pump)
 
-  # list of vectors of cases for each pump neighborhood
-  pump.cases <- lapply(cholera::pumps$id, function(i) {
-    ortho[which(nearest.pump == i), "case"]
-  })
-
   intermediate.segments <- lapply(neighborhood.paths,
     intermediateSegments)
-
-  neighborhood.id <- which(vapply(pump.cases, function(x) length(x) != 0,
-    logical(1L)))
-
-  if (obs) {
-    case.segments <- lapply(seq_along(neighborhood.paths),
-      caseSegments, intermediate.segments, neighborhood.id, neighborhood.paths,
-      paths, pump.cases, ortho, vestry)
-
-    pump.segments <- lapply(seq_along(neighborhood.paths), pumpSegments,
-      neighborhood.id, neighborhood.paths, pump.cases, vestry)
-
-
-  } else {
-    case.segments <- lapply(seq_along(neighborhood.paths),
-      caseSegments, intermediate.segments, neighborhood.id, neighborhood.paths,
-      paths, pump.cases, ortho, vestry, obs = FALSE)
-
-    pump.segments <- lapply(seq_along(neighborhood.paths), pumpSegments,
-      neighborhood.id, neighborhood.paths, pump.cases, vestry)
-  }
 
   intermediate.segments <- lapply(intermediate.segments, function(x) {
     if (is.null(x)) {
@@ -711,11 +707,31 @@ trimPaths2 <- function(obs = TRUE, selection, pump.road.segments, pump.coordinat
     dat
   })
 
+  if (vestry) {
+    pump.cases <- lapply(cholera::pumps.vestry$id, function(i) {
+      ortho[which(nearest.pump == paste0("p", i)), "case"]
+    })
+  } else {
+    pump.cases <- lapply(cholera::pumps$id, function(i) {
+      ortho[which(nearest.pump == paste0("p", i)), "case"]
+    })
+  }
+
+  neighborhood.id <- sort(pump.id)
+
+  case.segments <- lapply(seq_along(neighborhood.paths),
+    caseSegments, intermediate.segments, neighborhood.id, neighborhood.paths,
+    paths, pump.cases, ortho, vestry)
+
+  pump.segments <- lapply(seq_along(neighborhood.paths), pumpSegments,
+    neighborhood.id, neighborhood.paths, pump.cases, vestry)
+
   neighborhood.segments <- lapply(seq_along(neighborhood.id), function(i) {
     rbind(case.segments[[i]], intermediate.segments[[i]], pump.segments[[i]])
   })
 
   names(neighborhood.segments) <- neighborhood.id
+
   list(trimmed.segments = neighborhood.segments, pump.cases = pump.cases)
 }
 
