@@ -1,6 +1,6 @@
 #' Anchor or base case of each stack of fatalities.
 #'
-#' Data frame that links a case to its stack. which is the case at the base of a stack. For use with \code{\link{fatalityLocator}}.
+#' Data frame that links a case to its stack. which is the case at the base of a stack. For use with \code{\link{caseLocator}}.
 #'
 #' @format
 #'  \describe{
@@ -35,7 +35,7 @@
 #' @docType data
 #' @seealso \code{vignette}("duplicate.missing.cases")
 #'
-#' \code{\link{fatalityLocator}}
+#' \code{\link{caseLocator}}
 #'
 #' \code{\link[cholera]{streetNameViewer}}
 #'
@@ -58,7 +58,7 @@
 #'
 #' \code{vignette}("unstacking.fatalities")
 #'
-#' \code{\link{fatalityLocator}}
+#' \code{\link{caseLocator}}
 #'
 #' \code{\link[cholera]{streetNameViewer}}
 #'
@@ -81,7 +81,7 @@
 #'
 #' \code{vignette}("unstacking.fatalities")
 #'
-#' \code{\link{fatalityLocator}}
+#' \code{\link{caseLocator}}
 #'
 #' \code{\link[cholera]{streetNameViewer}}
 #'
