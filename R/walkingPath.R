@@ -21,7 +21,7 @@
 #' walkingPath(1, selection = 6)  # only consider pump 6
 #' walkingPath(1, unit = "meter", selection = 3) # distance from case 1 to pump 3.
 
-walkingPath <- function(x, obs = TRUE, zoom = TRUE, radius = 0.5,
+walkingPath <- function(x, obs = TRUE, zoom = FALSE, radius = 0.5,
   weighted = TRUE, vestry = FALSE, selection = NULL, unit = NULL) {
 
   if (obs) {
@@ -57,14 +57,13 @@ walkingPath <- function(x, obs = TRUE, zoom = TRUE, radius = 0.5,
       stop('If specified, "unit" must either be "meter" or "yard".')
   }
 
-  roadsB <- cholera::roads[cholera::roads$street %in%
-    cholera::border == FALSE, ]
+  rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-  roads.list <- split(roadsB[, c("x", "y")], roadsB$street)
+  roads.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
-  road.segments <- lapply(unique(roadsB$street), function(i) {
-    dat <- roadsB[roadsB$street == i, ]
+  road.segments <- lapply(unique(rd$street), function(i) {
+    dat <- rd[rd$street == i, ]
     names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
     seg.data <- dat[-1, c("x1", "y1")]
     names(seg.data) <- c("x2", "y2")
@@ -274,8 +273,9 @@ walkingPath <- function(x, obs = TRUE, zoom = TRUE, radius = 0.5,
 
   if (obs == TRUE) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
-      pch = 15, cex = 0.5, col = "lightgray", asp = 1)
+      xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "lightgray"))
+    invisible(lapply(border.list, lines))
     title(main = paste("Observed Case #", case$case))
 
     if (is.null(selection)) {
@@ -319,8 +319,9 @@ walkingPath <- function(x, obs = TRUE, zoom = TRUE, radius = 0.5,
 
   } else {
     plot(cholera::ortho.proj.sp[, c("x.proj", "y.proj")], xlim = x.rng,
-      ylim = y.rng, pch = NA, asp = 1)
+      ylim = y.rng, xlab = "x", ylab = "y", pch = NA, asp = 1)
     invisible(lapply(roads.list, lines, col = "lightgray"))
+    invisible(lapply(border.list, lines))
     title(main = paste('"Simulated" Case #', case$case))
 
     if (is.null(selection)) {

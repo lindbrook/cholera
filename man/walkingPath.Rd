@@ -4,7 +4,7 @@
 \alias{walkingPath}
 \title{Plot the walking path from a case to the nearest pump.}
 \usage{
-walkingPath(x, obs = TRUE, zoom = TRUE, radius = 0.5, weighted = TRUE,
+walkingPath(x, obs = TRUE, zoom = FALSE, radius = 0.5, weighted = TRUE,
   vestry = FALSE, selection = NULL, unit = NULL)
 }
 \arguments{
