@@ -20,7 +20,7 @@ An amended version of Dodson and Tobler's digitization of John Snow's map of the
 \seealso{
 \code{vignette}("duplicate.missing.cases")
 
-\code{\link{fatalityLocator}}
+\code{\link{caseLocator}}
 
 \code{\link[cholera]{streetNameViewer}}
 

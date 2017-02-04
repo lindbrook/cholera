@@ -22,7 +22,7 @@ An "unstacked" version of the \code{fatalities} dataset. It changes the unit of 
 
 \code{vignette}("unstacking.fatalities")
 
-\code{\link{fatalityLocator}}
+\code{\link{caseLocator}}
 
 \code{\link[cholera]{streetNameViewer}}
 
