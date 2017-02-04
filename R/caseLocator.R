@@ -27,10 +27,12 @@ caseLocator <- function(case, zoom = FALSE, obs = TRUE, radius = 2,
     stop("case must be numeric.")
   }
 
-  if (case %in% unique(cholera::fatalities$case) == FALSE) {
-    stop("case must be a whole number between 1 and 578.")
+  if (obs) {
+    if (case %in% unique(cholera::fatalities$case) == FALSE) {
+      stop("Obaserved case must be a whole number between 1 and 578.")
+    }
   }
-
+  
   if (zoom) {
     if (obs) {
       x.rng <- c(cholera::fatalities[cholera::fatalities$case == case, "x"] -
