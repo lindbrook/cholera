@@ -2,6 +2,7 @@ cholera 0.1.97
 ----------------------------------------------------------------
 
 remove trimPaths()
+replace fatalityLocator() with caseLocator()
 
 
 cholera 0.1.96
