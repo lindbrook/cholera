@@ -51,29 +51,29 @@ Edward R. Tufte. 1997. \emph{Visual Explanations: Images and Quantities, Evidenc
 \seealso{
   \code{library}(HistData)
 
-  \code{fatalities}
+  \code{\link[cholera]{fatalities}}
 
-  \code{fatalities.address}
+  \code{\link[cholera]{fatalities.address}}
 
-  \code{fatalities.unstacked}
+  \code{\link[cholera]{fatalities.unstacked}}
 
-  \code{roads}
+  \code{\link[cholera]{roads}}
 
-  \code{snow.time.series}
+  \code{\link[cholera]{time.series.snow}}
 
-  \code{vestry.time.series}
+  \code{\link[cholera]{time.series.vestry}}
 
-  \code{\link{fatalityLocator}}
+  \code{\link[cholera]{caseLocator}}
 
   \code{\link[cholera]{streetNameViewer}}
 
   \code{\link[cholera]{streetNumberViewer}}
 
-  \code{vignette}("duplicate.missing.cases")
+  \code{vignette("duplicate.missing.cases")}
 
-  \code{vignette}("road.names")
+  \code{vignette("road.names")}
 
-  \code{vignette}("unstacking.fatalities")
+  \code{vignette("unstacking.fatalities")}
 }
 
 \keyword{datasets}
