@@ -67,7 +67,7 @@ To get a sense of an entire neighborhood, I extend the approach from "observed" 
 I do so in two ways. In the first (Figure 8), I identify neighborhoods by coloring roads.^[Shiode (2012) uses this approach.]
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE}
-plot(dat, observed = FALSE)
+# plot(dat, observed = FALSE)
 ```
 
 In the second, Figure 9, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach].
@@ -80,4 +80,4 @@ While the latter is easier to "read" due to its familiarity, it is potentially l
 
 ### Note on neighborhoodWalking()
 
-neighborhoodWalking() is computationally intensive. With default arguments and a single core, it takes about 4 minutes to run. This is due to two tasks. Frist, the the function computes the shortest walking path between a case (observed or simulated) and the pump nearest to that case. Additionally, to reduce overplotting the function also computes the minimal set of segments required to represent all the paths withiin a given neighborhood.
+neighborhoodWalking() is computationally intensive. With default arguments on a single core, it takes about 2-3 minutes to run. This is due to two tasks. Frist, the the function computes the shortest walking path between a case (observed or simulated) and the pump nearest to that case. Additionally, to reduce overplotting the function also computes the minimal set of segments required to represent all the paths withiin a given neighborhood.
