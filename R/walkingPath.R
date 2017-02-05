@@ -1,7 +1,7 @@
 #' Plot the walking path from a case to the nearest pump.
 #'
 #' Plot shortest walking path from an observed or "simulated" case to the nearest pump.
-#' @param x Numeric or Integer. Observed cases must be a whole number between 1 and 578. "Simulated" cases must be a whole number between 1 and 4993 with the following exceptions: 3334, 4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720. See "walking.neighborhoods" vignette for details.
+#' @param x Numeric or Integer. Observed cases must be a whole number between 1 and 578. With three exceptions, "Simulated" cases must be a whole number between 1 and 4993: 1) one case, 3334, does not have a valid orthogonal projector to any street; 2) the 20 cases that project onto Falconberg Court and Falconberg Mews (4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720) form an isolate that are "technically" disconnected from the road network and cannot reach any pump; 3) because Adam and Eve Court is also disconnected from the larger road network, the 27 cases that project onto that road can only reach pump 2, which lies on that road. This means that all other cases cannot reach pump 2.
 #' @param obs Logical. TRUE for observed cases; FALSE for "regular" simulated cases.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
@@ -17,8 +17,8 @@
 #' @examples
 #' walkingPath(1)
 #' walkingPath(1, obs = FALSE)
-#' walkingPath(1, selection = -7) # exclude pump 7
-#' walkingPath(1, selection = 6)  # only consider pump 6
+#' walkingPath(1, selection = -7) # exclude pump 7 from consideration.
+#' walkingPath(1, selection = 6)  # path from case 1 to pump 6.
 #' walkingPath(1, unit = "meter", selection = 3) # distance from case 1 to pump 3.
 
 walkingPath <- function(x, obs = TRUE, zoom = FALSE, radius = 0.5,
@@ -29,8 +29,11 @@ walkingPath <- function(x, obs = TRUE, zoom = FALSE, radius = 0.5,
      stop('With observed cases, x must be between 1 and 578.')
     }
   } else {
-    excluded <- c(3334, 4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573,
-      4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720)
+    edge.case <- 3334
+    falconberg <- c(4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574,
+      4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720)
+    excluded <- c(edge.case, falconberg)
+
     if (x %in% (1:4993)[-excluded] == FALSE) {
       msg1 <- "With simulated cases,"
       msg2 <- "x must be a valid number between 1 and 4993."
