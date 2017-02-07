@@ -521,8 +521,7 @@ caseSegments <- function(x, neighborhood.paths, pump.cases,
   }
 
   if (is.null(intermediate.segments[[n.name]]) == FALSE) {
-    obs.seg <- obs.seg[obs.seg %in% intermediate.segments[[n.name]] ==
-      FALSE]
+    obs.seg <- obs.seg[obs.seg %in% intermediate.segments[[n.name]]$id == FALSE]
   }
 
   if (vestry) {
@@ -797,10 +796,10 @@ roadLength <- function(dat) {
   }
 }
 
-plotSegment <- function(neighborhood, snow.color) {
+plotSegment <- function(neighborhood, color) {
   invisible(lapply(neighborhood$id, function(x) {
     lines(neighborhood[neighborhood$id == x, c("x1", "x2")],
           neighborhood[neighborhood$id == x, c("y1", "y2")],
-          col = snow.color, lwd = 2)
+          col = color, lwd = 2)
   }))
 }
