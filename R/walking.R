@@ -21,17 +21,17 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
   # walking.data <- list(address = address, address.not6 = address.not6)
   # devtools::use_data(walking.data, internal = TRUE, overwrite = TRUE)
 
-  # test1 <- (is.null(selection) & vestry == FALSE & statistic == "address" &
-  #   weighted)
-  #
-  # test2 <- ((length(selection) == 1 && selection == -6) & vestry == FALSE &
-  #   statistic == "address" & weighted)
-  #
-  # if (test1) {
-  #   output <- walking.data[["address"]]
-  # } else if (test2) {
-  #   output <- walking.data[["address.not6"]]
-  # } else {
+  test1 <- (is.null(selection) & vestry == FALSE & statistic == "address" &
+    weighted)
+
+  test2 <- ((length(selection) == 1 && selection == -6) & vestry == FALSE &
+    statistic == "address" & weighted)
+
+  if (test1) {
+    output <- walking.data[["address"]]
+  } else if (test2) {
+    output <- walking.data[["address.not6"]]
+  } else {
     if (vestry) {
       if (is.null(selection) == FALSE) {
         if (any(abs(selection) %in% 1:14 == FALSE)) {
@@ -234,7 +234,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
       vestry = vestry)
 
     class(output) <- "walking"
-  # }
+  }
   output
 }
 
