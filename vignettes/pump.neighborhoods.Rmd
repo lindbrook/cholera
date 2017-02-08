@@ -67,7 +67,7 @@ To get a sense of an entire neighborhood, I extend the approach from "observed" 
 I do so in two ways. In the figure below, I identify neighborhoods by coloring roads.^[Shiode (2012) uses this approach.]
 
 ```{r, fig.width = 6, fig.height = 6, message = FALSE}
-# plot(dat, observed = FALSE)
+plot(dat, observed = FALSE)
 ```
 
 In the next figure, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach].
