@@ -18,19 +18,24 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
 
   # address <- cholera::neighborhoodWalking(multi.core = TRUE)
   # address.not6 <- cholera::neighborhoodWalking(-6, multi.core = TRUE)
-  # walking.data <- list(address = address, address.not6 = address.not6)
+  # address67 <- cholera::neighborhoodWalking(6:7, multi.core = TRUE))
+  # walking.data <- list(address = address, address.not6 = address.not6,
+  #   address67 = address67)
   # devtools::use_data(walking.data, internal = TRUE, overwrite = TRUE)
 
   test1 <- (is.null(selection) & vestry == FALSE & statistic == "address" &
     weighted)
-
-  test2 <- ((length(selection) == 1 && selection == -6) & vestry == FALSE &
+  test2 <- (length(selection) == 1 & -6 %in% selection & vestry == FALSE &
+    statistic == "address" & weighted)
+  test3 <- (length(selection) == 2 & all(6:7 %in% selection) & vestry == FALSE &
     statistic == "address" & weighted)
 
   if (test1) {
     output <- walking.data[["address"]]
   } else if (test2) {
     output <- walking.data[["address.not6"]]
+  } else if (test3) {
+    output <- walking.data[["address67"]]
   } else {
     if (vestry) {
       if (is.null(selection) == FALSE) {
