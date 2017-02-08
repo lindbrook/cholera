@@ -22,7 +22,7 @@ John Snow's map of the 1854 cholera outbreak in London is a canonical example of
 
 In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. Those data are plotted below:
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 street.list <- split(Snow.streets[, c("x", "y")], Snow.streets$street)
 
@@ -62,7 +62,7 @@ This fixed data set is available as _fatalities_ in the \code{cholera} package a
 
 The three pairs of duplicates lie at two locations on opposite sides of Cambridge Street:
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 # Cambridge Street #
 street.name <- "Cambridge Street"
@@ -146,7 +146,7 @@ Snow's map shows four "bars" or cases:
 
 But Dodson and Tobler's data show only two, cases 32 and 122. Furthermore, the two cases also appear to be farther apart than what we see in neighboring stacks:
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 broad.40 <- c(32, 122)
 
@@ -192,7 +192,7 @@ Snow's map shows three cases at the end of Noel Street:
 
 But Dodson and Tobler's data shows only two, cases 282 and 422. They also appear to be farther apart than what we see in neighboring stacks:
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 # Noel Street #
 street.name <- "Noel Street"
@@ -315,7 +315,7 @@ interpolatedPoints <- function(case1, case2, multiplier = 0.5, segment = sel) {
 
 ```
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 sel <- "216"  # street list element, one with 2 endpoints
 
@@ -498,7 +498,7 @@ meterB <- function(x, y, radius = 0.025) {
 
 ```
 
-```{r, fig.width = 5, fig.height = 5, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 center <- Snow.deaths[32, c("x", "y")]
 delta <- 0.1
@@ -542,7 +542,7 @@ What makes the line complicated is that, essentially, none of the bars in any of
 
 As a consequence, the line drawn through the stack's axis will pass through the circle's center, which is also the reference point:
 
-```{r, fig.width = 5, fig.height = 5, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 plot(Snow.deaths[, c("x", "y")], xlim = c(center$x - delta, center$x + delta),
      ylim = c(center$y - delta, center$y + delta),
      pch = NA, col = "blue", asp = 1)
@@ -576,7 +576,7 @@ abline(ols)
 
 This means that there will always be two points of intersection (red squares):
 
-```{r, fig.width = 5, fig.height = 5, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 plot(Snow.deaths[, c("x", "y")], xlim = c(center$x - delta, center$x + delta),
      ylim = c(center$y - delta, center$y + delta),
      pch = NA, col = "blue", asp = 1)
@@ -668,7 +668,7 @@ interpolatedPoints <- function(case1, case2, multiplier = 0.5, segment) {
 
 Finding the coordinate means picking the appropriate solution:
 
-```{r, fig.width = 5, fig.height = 5, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 plot(Snow.deaths[, c("x", "y")], xlim = c(center$x - delta, center$x + delta),
      ylim = c(center$y - delta, center$y + delta),
@@ -714,7 +714,7 @@ Using this method of interpolation, I get the following results.
 
 For the two "missing" cases at 40 Broad Street, I move two duplicates, cases 91 and 93, from Cambridge Street:
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 sel <- "216"  # street list element, one with 2 endpoints
 
@@ -830,7 +830,7 @@ text(broad.x, broad.y, "Broad St", srt = broad.angle)
 ```
 For the missing case at 15 Noel Street, I move the remaining duplicate, case 209, from Cambridge Street:
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 noel.street <- c(282, 422)
 

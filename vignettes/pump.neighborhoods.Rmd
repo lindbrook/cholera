@@ -33,47 +33,52 @@ Cliff and Haggett (1988) appear to be the first to use Voronoi tessellation^[htt
 
 To allow users to explore the data with this approach, I wrote neighborhoodVoronoi(). It creates an R data object for one's desired neighborhood configuration. We can graph the result with plot(). The figure below plots the "addresses" and the Voronoi cells for the 13 pumps in the original map.
 
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
 plot(neighborhoodVoronoi())
 ```
 
 Snow wrote that some people who lived near the pump at Carnaby and Little Marlborough Street (#6) found its drinking water to be of low quality and actually preferred to go to the Broad Street pump. To explore this possibility, we can exclude that pump and re-plot the graph.
 
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodVoronoi(selection = -6))
+```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+plot(neighborhoodVoronoi(-6))
 ```
 
 ### Walking distance
 
 The most common criticism against applying Voronoi tessellation to Snow's map is that it assumes that people walk directly to pumps in "as-the-crow-flies" fashion (i.e., Euclidean distance) rather than in indirect fashion along a network of roads.
 
-Snow's annotation is an attempt to addresses this issue. He writes that the annotation outlines "the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps" (Snow 1855b, 109). In other words, the annotation appears to be based on a computation of walking distance. While the details of how Snow actually did this are lost to history, I replicate and extend his efforts by writing functions that compute and visualize the weighted shortest paths between a fatality and its nearest pump.^[Another approach is to use GIS. For application that do not need to consider the actual historic walking distances, a layers-based approach, which relies on current rather than historical maps, may be sufficient: e.g., https://www.theguardian.com/news/datablog/2013/mar/15/john-snow-cholera-map. To reconstruct the roads represented on Snow's map, consider the approach used by John Mackenzie (https://www1.udel.edu/johnmack/frec682/cholera/cholera2.html)l may be preferable.] While the approach is by no means new, see Shiode (2012), I offer a more transparent, user-friendly way to apply this technique to Snow's data.
+Snow's annotation is an attempt to addresses this issue. He writes that the annotation outlines "the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps" (Snow 1855b, 109). In other words, the annotation appears to be based on a computation of walking distance. While the details of how Snow actually did this are lost to history, I replicate and extend his efforts by writing functions that compute and visualize the weighted shortest paths between a fatality and its nearest pump.^[Another approach is to use GIS. For applications that do not need to consider the actual historic walking distances, a layers-based approach, which relies on current rather than historical maps, may be sufficient: e.g., https://www.theguardian.com/news/datablog/2013/mar/15/john-snow-cholera-map. To reconstruct the roads represented on Snow's map, consider the approach used by John Mackenzie (https://www1.udel.edu/johnmack/frec682/cholera/cholera2.html)l may be preferable.] This approach is by no means new, see Shiode (2012). However, I offer what I hope is a more transparent, user-friendly way to apply this technique.
 
 The figure below plots the path between the case 50 and its nearest pump, the Broad Street pump ("p7").
 
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
-walkingPath(150)
+```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+walkingPath(150, zoom = TRUE)
 ```
 
-By applying this function to all observed cases, we can begin to get a sense of the different pump neighborhoods.
+By drawing paths for all observed cases, we can begin to get a sense of the different pump neighborhoods.
 
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
-dat <- neighborhoodWalking()
-plot(dat)
+```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+plot(neighborhoodWalking())
+```
+
+The plot below excludes the pump, mentioned and illustrated above in the Voronoi neighborhood section, at Carnaby and Little Marlborough Street (#6).
+
+```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+plot(neighborhoodWalking(-6))
 ```
 
 To get a sense of an entire neighborhood, I extend the approach from "observed" data to "expected" data. Using sp::spsample() and sp::Polygon(), I place 5000 regularly spaced points on the map and compute their walking path to the nearest pump. This allows me to see the full extent and range of a pump's neighborhood.
 
 I do so in two ways. In the figure below, I identify neighborhoods by coloring roads.^[Shiode (2012) uses this approach.]
 
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
-plot(dat, observed = FALSE)
+```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+plot(neighborhoodWalking(), observed = FALSE)
 ```
 
-In the next figure, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach].
+And by identifying neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach.]
 
-```{r, fig.width = 6, fig.height = 6, message = FALSE}
-plot(dat, street = FALSE, observed = FALSE)
+```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+plot(neighborhoodWalking(), street = FALSE, observed = FALSE)
 ```
 
 While the latter is easier to "read" due to its familiarity, it is potentially less accurate and more misleading. Conceptually, the problem is that the latter takes the focus away from roads and walking distances, and puts it on regions, which do not necessarily have a relevant meaning because they include points or locations where there are no roads or residences. Computationally, the problem is that the shape of neighborhoods will be sensitive to the algorithm that determines the closest pump. Depending on our choices, this can produce different results.^[Cliff and Haggett also produce an adjusted Voronoi cells that reflect walking distances: "So far we have assumed that access to each pump was determined by 'crow-fly' distances. While the physical effort of carrying water mean that most people visited their nearest pump, recognition must be made of the complex street pattern in this area of London. Therefore in (D), the Thiessen polygons have been adjusted to take into account the patterns of access made possible by the street system shown in diagram (A) (Cliff and Haggett 1988, 53). However, details about how this was done do not appear to be available. Moreover, because the graphic only shows the outline of the polygon and not the streets, comparisons with other approaches is difficult.]

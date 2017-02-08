@@ -53,7 +53,7 @@ In his map of the 1854 cholera outbreak in London, John Snow used stacks of bars
 
 In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and water pump was given a unique x-y coordinate. Each road was translated into a set of straight line segments, defined by their endpoints. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are included in Michael Friendly's _HistData_ R package. The data are plotted below:
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 roads.list <- split(roads[, c("x", "y")], roads$street)
 
@@ -108,7 +108,7 @@ The first example applies applies bivariate kernel density contours, of varying 
 
 With the "stacked" data, _fatalities_, the contours and epicenter are further south than we might expect given that the Broad Street pump (blue triangle) is the recognized source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward, in a southerly direction.
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 ## Graph parameters ##
 bw <- 1:4
@@ -202,7 +202,7 @@ p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
 
 With _fatalities.unstacked_, the contours and epicenter are located further north, nearer to both the pump and Broad Street:
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 ## Data ##
 
@@ -253,7 +253,7 @@ p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
 
 The second example uses _unstacked.address_ to create an alternative to "stacked" bars based on proportionately sized points. Each address is represented by a square whose size is determined by the number of fatalities and whose location is represented by a point at its center.^[This example was built with base R graphics and uses the KernSmooth package rather than ggplot2, which was used in the first example. As a result, the water pump actually falls within the peak contour.]
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 plot(fatalities.address[, c("x", "y")], pch = 20, asp = 1, xlim = x.range,
   ylim = y.range, cex = 1/3)
@@ -328,7 +328,7 @@ To illustrate, consider the stylized example in the figure below. For case 12, t
 
 We consider them because at least one of their endpoints fall within 50 meters, or on the map's nominal scale a distance of 0.5, of case 12's position. Of the three, only _red_ and _green_ are viewed as candidates. The problem with _blue_ is that the orthogonal projection from case 12 (the blue arrow) does not intersect the solid blue segment. Of the two candidates, _red_ is chosen because it is closer to case 12 than _green_: the red arrow is shorter than the green one.
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 case.select <- 12
 case <- Snow.deaths[case.select, c("x", "y")]
@@ -389,7 +389,7 @@ text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 This procedure correctly classifies 515 of 578 of the cases, an error rate of 10.9%. Errors occur due to ambiguities surrounding a case's "home" segment. Unlike Snow's map where a bar's "horizontal" orientation indicates its "home" segment, Dodson and Tobler only record a case's x-y coordinates. This can lead to problems at street intersections, where a point may be closer to the "wrong" segment, and at addresses with many cases.^[This is further exacerbated by the fact that the width of roads does not always appear to taken into consideration. This creates instances where cases on one side of the street appear to be closer to the road than those on the other side.  One particular case of note is Portland Mews. In Snow's map, Portland Mews is a large yard or square. In Dodson and Tobler, Portland Mews simply a set of line segments, which possibly corresponds to the roadway through the location. As a result, given the orientation of the cases of Snow's map and location of the cases in Dodson and Tobler, these three cases will appear to belong to a single cluster instead of two different ones. I manually chose a more distant road segment on Portland Mews that better reflects the orientation of bars on Snow's map.] The problem with multiple cases is that stacking pushes cases away from the "home" segment. Consider the figure below. Even though visual inspection (the alignment of the stack) should lead us to choose _black_, the algorithm chooses _red_. The reason for the error is that stacking pushes the case so far from _black_ that it lies beyond consideration.^[It lies beyond the 50 meter criteria of _nearby_ road segments.] With stacks, this kind of misclassification is always a potential threat.
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 case.select <- 290
 case <- Snow.deaths[case.select, c("x", "y")]
@@ -455,7 +455,7 @@ To match a bar to a stack, I use hierarchical cluster analysis.^[Specifically, I
 
 The figure below illustrates this approach. Using a case's x-y coordinates, the graph plots the case's numeric ID and draws the corresponding orthogonal projector to Broad Street. Matching a bar to a stack, which is equivalent to identifying a stack, means identifying distinct clusters of points along the road segment. For the case at hand, visual inspection leads us to expect that we should find 8 different clusters along this segment of Broad Street (4 on the north side, 4 on the south side).^[What makes this approach feasible is that, by design, its "vertical" dispersion, the spread of x-y points along the orthogonal axis, is much greater than its "horizontal" dispersion, the spread of orthogonal points along the road's line segment. In an ideal world, the "horizontal" dispersion would be zero and all points in a stack would be perfectly aligned. In practice, this is not the case.]
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 broad.st.cases <- c(12, 21, 25, 32, 42, 72, 91, 93, 122, 190, 194, 212, 232,
                     239, 310, 321, 343, 373, 389, 396, 397, 398, 421, 496, 562,
@@ -631,7 +631,7 @@ This can be confirmed by examining Snow's map^[In Snow's map, one can see 5 addr
 
 The fly in the ointment is that addresses directly opposite one another will have "identical" orthogonal points and will appear to belong to the same "address". A simple solution to distinguish clusters on one side of the street from those on the other is to compute the _sign_ of the arithmetic difference between a case's x-y coordinate and its orthogonal coordinate. For example, consider cases 321 and 239. They lie on opposite sides of Broad Street. In the figure below, 321's coordinates are shown in blue while 239's are shown in red. When we take the signs of the differences, we get (-, +) for 321 and (+, -) for 239. This distinguishes cases on the north side from those on the south side.
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 sel <- c(321, 239)
 
@@ -706,7 +706,7 @@ In general, for roads with positive slopes (e.g., Broad Street), the differences
 
 With this information, I can use cluster analysis to identify stacks, or "addresses", on each side of a candidate road segment. Since we expect the distances between cases in a stack or "address" to be small, I use an arbitrarily low but reasonable cutoff "height" of 0.05. The two dendrograms below represent the North and South sides of Broad Street. We can see that this procedure correctly classifies the 8 different groups or stacks that can be seen in the figure above and that can be verified by looking at Snow's map.
 
-```{r, fig.width = 6, fig.height = 6, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
 cutpoint <- 0.05
 
