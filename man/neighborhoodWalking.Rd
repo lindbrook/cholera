@@ -25,7 +25,7 @@ A list of data and parameters of computed walking path neighborhoods.
 Data for walking neighbohoods for John Snow's 1854 London cholera data.
 }
 \section{Notes}{
- This function is computationally intensive (the default configuration takes about 1-2 minutes to run on a single core). However, two configurations will return pre-computed results: the default set of arguments, and the default set with pump 6 (Little Marlborough Street) excluded: neighborhoodWalking(selection = -6).
+ This function is computationally intensive (the default configuration takes about 1-2 minutes to run on a single core). However, three configurations will return pre-computed results: the default set of arguments, which uses all pumps, the default set excluding the pump on Little Marlborough Street (pump 6), and the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7 ).
 }
 
 \examples{
