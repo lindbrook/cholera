@@ -3,7 +3,8 @@ cholera 0.1.97
 
 remove trimPaths()
 replace fatalityLocator() with caseLocator()
-amend neighborhoodWalking()
+amend and update neighborhoodWalking() and plot.walking()
+
 
 cholera 0.1.96
 ----------------------------------------------------------------
@@ -12,6 +13,7 @@ add neighborhoodWalking()
 add plot.walking() and summary.walking() methods
 add plot.voronoi() and summary.voronoi() methods
 remove trimPlot()
+
 
 cholera 0.1.95
 ----------------------------------------------------------------
