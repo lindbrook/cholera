@@ -228,7 +228,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
       sim.pump.case = sim.neighborhoods$pump.cases,
       observed = observed,
       expected = expected,
-      snow.colors = snow.colors,
+      snow.colors = stats::setNames(snow.colors, pump.names),
       selection = selection,
       statistic = statistic,
       vestry = vestry)
@@ -249,8 +249,8 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
 #' @return A base R graphics plot.
 #' @export
 #' @examples
-#' # dat <- neighborhoodWalking()
-#' # plot(dat)
+#' dat <- neighborhoodWalking()
+#' plot(dat)
 
 plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
   if (class(x) != "walking") {
@@ -278,40 +278,70 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
       if (length(x$pump) == length(obs.pump)) {
         invisible(lapply(seq_along(obs.pump), function(i) {
           plotSegment(x$pump.seg[[i]], x$snow.colors[i])
+
           sel <- cholera::fatalities.address$anchor.case %in%
-            x$pump.case[[obs.pump[i]]]
+            x$pump.case[[names(obs.pump)[i]]]
+
           points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
             cex = 0.75, col = x$snow.colors[i])
-          points(cholera::pumps[obs.pump[i], c("x", "y")], pch = 17,
-            col = x$snow.colors[i])
         }))
 
-        text(cholera::pumps[obs.pump, c("x", "y")], cex = 1, pos = 1,
-          label = x$pump)
+        if (is.null(x$selection)) {
+          points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+          text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
+            label = x$pump)
+        } else {
+          points(cholera::pumps[x$selection, c("x", "y")], pch = 24,
+            col = x$snow.colors)
+          text(cholera::pumps[x$selection, c("x", "y")], cex = 0.9, pos = 1,
+            label = x$pump)
+        }
+
       } else {
         invisible(lapply(seq_along(obs.pump), function(i) {
-          plotSegment(x$pump.seg[[i]], x$snow.colors[obs.pump[i]])
+          plotSegment(x$pump.seg[[names(obs.pump)[i]]],
+                      x$snow.colors[names(obs.pump)[i]])
+
           sel <- cholera::fatalities.address$anchor.case %in%
-            x$pump.case[[obs.pump[i]]]
+            x$pump.case[[names(obs.pump)[i]]]
+
           points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-            cex = 0.75, col = x$snow.colors[obs.pump[i]])
-          points(cholera::pumps[obs.pump[i], c("x", "y")], pch = 17,
-            col = x$snow.colors[obs.pump[i]])
+            cex = 0.75, col = x$snow.colors[names(obs.pump)[i]])
         }))
 
-        text(cholera::pumps[obs.pump, c("x", "y")], cex = 1, pos = 1,
-          label = x$pump[obs.pump])
+        if (is.null(x$selection)) {
+          points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+          text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
+            label = x$pump)
+        } else if (all(x$selection < 0)) {
+          points(cholera::pumps[obs.pump, c("x", "y")], pch = 24,
+            col = x$snow.colors)
+          text(cholera::pumps[obs.pump, c("x", "y")], cex = 0.9, pos = 1,
+            label = names(obs.pump))
+        } else {
+          points(cholera::pumps[x$selection, c("x", "y")], pch = 24,
+            col = x$snow.colors)
+          text(cholera::pumps[x$selection, c("x", "y")], cex = 0.9, pos = 1,
+            label = x$pump)
+        }
       }
 
       title(main = "Observed Walking Paths")
+
     } else {
       invisible(lapply(seq_along(x$pump), function(i) {
         plotSegment(x$sim.pump.seg[[i]], x$snow.colors[i])
-        points(cholera::pumps[i, c("x", "y")], pch = 17,
-          col = x$snow.colors[i])
       }))
 
-      text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1, label = x$pump)
+      if (is.null(x$selection)) {
+        points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+        text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1, label = x$pump)
+      } else {
+        points(cholera::pumps[x$selection, c("x", "y")], pch = 24,
+          col = x$snow.colors)
+        text(cholera::pumps[x$selection, c("x", "y")], cex = 0.9, pos = 1,
+          label = x$pump)
+      }
       title(main = "Expected Walking Paths")
     }
   } else {
@@ -319,35 +349,55 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
       invisible(lapply(roads.list, lines, col = "gray"))
       invisible(lapply(border.list, lines))
 
-      invisible(lapply(seq_along(x$pump), function(i) {
+      invisible(lapply(seq_along(cholera::pumps$id), function(i) {
         points(cholera::regular.cases[x$sim.pump.case[[i]], ],
-          col = scales::alpha(x$snow.colors[i], 0.33), pch = 15)
-        points(cholera::pumps[i, c("x", "y")], pch = 24, bg = x$snow.colors[i])
+          col = scales::alpha(cholera::snowColors()[i], 0.33), pch = 15)
+        points(cholera::pumps[i, c("x", "y")], pch = 24,
+          bg = cholera::snowColors()[i])
       }))
 
       invisible(lapply(seq_along(obs.pump), function(i) {
-        plotSegment(x$pump.seg[[i]], x$snow.colors[obs.pump[i]])
+        plotSegment(x$pump.seg[[names(obs.pump)[i]]],
+                    x$snow.colors[names(obs.pump)[i]])
+
         sel <- cholera::fatalities.address$anchor.case %in%
-          x$pump.case[[obs.pump[i]]]
+          x$pump.case[[names(obs.pump)[i]]]
+
         points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-          cex = 0.75, col = x$snow.colors[obs.pump[i]])
+          cex = 0.75, col = x$snow.colors[names(obs.pump)[i]])
       }))
 
-      text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1,
-        label = x$pump)
+
+      if (is.null(x$selection)) {
+        points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+        text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1, label = x$pump)
+      } else {
+        points(cholera::pumps[x$selection, c("x", "y")], pch = 24,
+          col = x$snow.colors)
+        text(cholera::pumps[x$selection, c("x", "y")], cex = 0.9, pos = 1,
+          label = x$pump)
+      }
+
       title(main = "Observed Walking Neighborhoods and Paths")
     } else {
-      invisible(lapply(seq_along(x$pump), function(i) {
+      invisible(lapply(cholera::pumps$id, function(i) {
         points(cholera::regular.cases[x$sim.pump.case[[i]], ],
-          col = x$snow.colors[i], pch = 15)
-        points(cholera::pumps[i, c("x", "y")], pch = 24, col = "white",
-          bg = x$snow.colors[i])
+          col = cholera::snowColors()[i], pch = 15)
       }))
 
       invisible(lapply(roads.list, lines))
       invisible(lapply(border.list, lines))
-      text(cholera::pumps[, c("x", "y")], cex = 1, pos = 1, col = "white",
-        label = x$pump)
+
+      if (is.null(x$selection)) {
+        points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white") #, col = x$snow.colors)
+        text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1, col = "white",
+          label = x$pump)
+      } else {
+        points(cholera::pumps[x$selection, c("x", "y")], bg = "white", pch = 24)
+          # col = x$snow.colors)
+        text(cholera::pumps[x$selection, c("x", "y")], cex = 0.9, pos = 1,
+          col = "white", label = x$pump)
+      }
       title(main = "Expected Walking Neighborhoods")
     }
   }
