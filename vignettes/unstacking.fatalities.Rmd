@@ -51,7 +51,7 @@ In his map of the 1854 cholera outbreak in London, John Snow used stacks of bars
 
 ![](msu-snows-mapB.jpg)
 
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and water pump was given a unique x-y coordinate. Each road was translated into a set of straight line segments, defined by their endpoints. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are included in Michael Friendly's _HistData_ R package. The data are plotted below:
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and water pump was given a unique x-y coordinate. Each road was translated into a set of straight line segments, defined by their endpoints. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. The data are plotted below:
 
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
@@ -64,11 +64,11 @@ points(HistData::Snow.pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
 
 ```
 
-Despite their appeal, I would argue that stacks are visually and computationally problematic. The reason? Not all bars are created equal. Even though they are identical in terms of their appearance and the only thing that seems to distinguish them is their position on the map, bars actually play two different roles. Sometimes a bar represent the location of a fatality, sometimes it doesn't. Standalone bars (i.e., a stack with a one bar or an addresses with one fatality), or of the bar at the base of a stack do. Bars above the base case do not: their only purpose is to create the visual stacking effect.
+Despite their appeal, I would argue that these stacks are visually and computationally problematic. The reason is that not all bars are created equal. Even though they are identical in terms of their appearance and the only thing that seems to distinguish them is their position on the map, bars actually play two different roles. Sometimes a bar represent the location of a fatality, sometimes it doesn't. Standalone bars (i.e., a stack with a one bar or an addresses with one fatality), or the bar at the base of a stack do. Bars above the base case do not: their only purpose is to create the visual stacking effect and represent the number of fatalities at that address.
 
-While this duality is not inherently problematic, it becomes problematic in a map. Because a map is a visual device that illustrates spatial relationships, it's natural to assume that the positions of all elements (e.g., bars) represent actual physical locations. So when we violate this principle, we undermine our visual interpretation of the map and handicap our attempt to analyze the data in the map. This is particularly true when 44% (257/578) of bars in Snow's map fall into this geographically uninformative category.
+This duality can be problematic for a map. Because a map is a visual device that illustrates spatial relationships, it's natural to assume that the positions of all elements (e.g., bars) reflect actual physical locations. So when we violate this principle, we undermine the visual interpretation of the map and handicap our analysis. This is particularly true when 44% (257/578) of bars in Snow's map fall into this geographically uninformative category.
 
-To address these problems, I "unstack" Dodson and Tobler's data. I do so in two different data sets. The first, _fatalities.unstacked_, "unstacks" the data so that all cases in a stack (at the same "address") are given the same x-y coordinate. The second, _unstacked.address_, "unstacks" the data by changing the unit of observation from the case to the stack (or "address"). Each "address" is a single observation with a single x-y coordinate, and the number of cases at that location becomes an attribute of the "address".
+To address these problems, I "unstack" Dodson and Tobler's data. I do so in two different data sets. The first, _fatalities.unstacked_, "unstacks" the data so that all cases in a stack (at the same "address") are given the same x-y coordinate. The second, _unstacked.address_, "unstacks" the data by changing the unit of observation from the case to the stack (i.e., "address"). Each address is a single observation with a single x-y coordinate, and the number of cases at that location becomes an attribute of the address.
 
 ## Data details
 
@@ -316,7 +316,7 @@ text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 ## "Unstacking" via classification
 
-This section discusses the specifics of how I "unstacked" the data. The main roadblock that makes "unstacking" difficult is that there is no notion of an "address". Bars are merely points and streets are merely line segments.^[In Friendly's HistData package, these data are called "Snow.deaths" and "Snow.streets".] Nothing links the points to segments. And nothing connects one bar in a stack to another. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinates.
+The main roadblock that makes "unstacking" difficult is that there is no notion of an "address". Bars are merely points and streets are merely line segments.^[In Friendly's HistData package, these data are called "Snow.deaths" and "Snow.streets".] Nothing links the points to segments. And nothing connects one bar in a stack to another. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinates.
 
 Therefore, to "unstack" the data , we need match each bar to a specific road (segment) and to match each bar to a specific stack. To accomplish these tasks, I employ two different classifications methods.
 
