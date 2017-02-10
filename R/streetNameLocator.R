@@ -2,7 +2,7 @@
 #'
 #' Plots John Snow's map of the 1854 London cholera outbreak and highlights the
 #' selected road. See the list of road names in \code{vignette}("road.names").
-#' @param road.name Character vector. Note that \code{streetNameViewer}() tries to correct for case and removes extra spaces.
+#' @param road.name Character vector. Note that \code{streetNameLocator}() tries to correct for case and removes extra spaces.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. For "radius" <= 5, the anchor case number is plotted.
 #' @return A base R graphics plot.
@@ -10,16 +10,16 @@
 #'
 #' \code{vignette}("road.names")
 #'
-#' \code{\link[cholera]{streetNumberViewer}}
+#' \code{\link[cholera]{streetNumberLocator}}
 #' @import graphics
 #' @export
 #' @examples
-#' streetNameViewer("Oxford Street")
-#' streetNameViewer("oxford street")
-#' streetNameViewer("Cambridge Street", zoom = TRUE)
-#' streetNameViewer("Cambridge Street", zoom = TRUE, radius = 0)
+#' streetNameLocator("Oxford Street")
+#' streetNameLocator("oxford street")
+#' streetNameLocator("Cambridge Street", zoom = TRUE)
+#' streetNameLocator("Cambridge Street", zoom = TRUE, radius = 0)
 
-streetNameViewer <- function(road.name, zoom = FALSE, radius = 1) {
+streetNameLocator <- function(road.name, zoom = FALSE, radius = 1) {
   real.road.names <- unique(cholera::roads$name)
 
   if (is.character(road.name) == FALSE) {

@@ -8,15 +8,15 @@
 #' @return A base R graphics plot.
 #' @seealso \code{roads}
 #'
-#' \code{\link[cholera]{streetNameViewer}}
+#' \code{\link[cholera]{streetNameLocator}}
 #' @import graphics
 #' @export
 #' @examples
-#' streetNumberViewer(243)
-#' streetNumberViewer(243, zoom = TRUE)
-#' streetNumberViewer(243, zoom = TRUE, radius = 0)
+#' streetNumberLocator(243)
+#' streetNumberLocator(243, zoom = TRUE)
+#' streetNumberLocator(243, zoom = TRUE, radius = 0)
 
-streetNumberViewer <- function(road.number, zoom = FALSE, radius = 1) {
+streetNumberLocator <- function(road.number, zoom = FALSE, radius = 1) {
   if (is.numeric(road.number) == FALSE) {
     stop("road.number must be numeric.")
   }
