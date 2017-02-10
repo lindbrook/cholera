@@ -9,10 +9,10 @@
 #' @import graphics
 #' @export
 #' @examples
-#' segmentViewer("190-1")
-#' segmentViewer("216-1")
+#' segmentLocator("190-1")
+#' segmentLocator("216-1")
 
-segmentViewer <- function(id, zoom = TRUE, radius = 0.5) {
+segmentLocator <- function(id, zoom = TRUE, radius = 0.5) {
   if (is.character(id) == FALSE) {
     stop("id must be a character.")
   }
