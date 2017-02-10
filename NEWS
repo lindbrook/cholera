@@ -4,6 +4,8 @@ cholera 0.1.97
 remove trimPaths()
 replace fatalityLocator() with caseLocator()
 amend and update neighborhoodWalking() and plot.walking()
+remove neighborhoodSnow()
+add addSnow()
 
 
 cholera 0.1.96
