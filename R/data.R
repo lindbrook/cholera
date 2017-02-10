@@ -37,9 +37,9 @@
 #'
 #' \code{\link{caseLocator}}
 #'
-#' \code{\link[cholera]{streetNameViewer}}
+#' \code{\link[cholera]{streetNameLocator}}
 #'
-#' \code{\link[cholera]{streetNumberViewer}}
+#' \code{\link[cholera]{streetNumberLocator}}
 "fatalities"
 
 #' "Unstacked" Dodson and Tobler's cholera data: address as unit of observation.
@@ -60,9 +60,9 @@
 #'
 #' \code{\link{caseLocator}}
 #'
-#' \code{\link[cholera]{streetNameViewer}}
+#' \code{\link[cholera]{streetNameLocator}}
 #'
-#' \code{\link[cholera]{streetNumberViewer}}
+#' \code{\link[cholera]{streetNumberLocator}}
 "fatalities.address"
 
 #' "Unstacked" Dodson and Tobler's cholera fatalities data.
@@ -83,9 +83,9 @@
 #'
 #' \code{\link{caseLocator}}
 #'
-#' \code{\link[cholera]{streetNameViewer}}
+#' \code{\link[cholera]{streetNameLocator}}
 #'
-#' \code{\link[cholera]{streetNumberViewer}}
+#' \code{\link[cholera]{streetNumberLocator}}
 "fatalities.unstacked"
 
 #' List of data frames that specify the unique road segments needed to describe the 10 observed pump neighborhood.
@@ -273,9 +273,9 @@
 
 #' @seealso \code{vignette}("road.names")
 #'
-#' \code{\link[cholera]{streetNameViewer}}
+#' \code{\link[cholera]{streetNameLocator}}
 #'
-#' \code{\link[cholera]{streetNumberViewer}}
+#' \code{\link[cholera]{streetNumberLocator}}
 "roads"
 
 #' Snow neighborhood cases.

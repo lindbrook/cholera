@@ -65,9 +65,9 @@ Edward R. Tufte. 1997. \emph{Visual Explanations: Images and Quantities, Evidenc
 
   \code{\link[cholera]{caseLocator}}
 
-  \code{\link[cholera]{streetNameViewer}}
+  \code{\link[cholera]{streetNameLocator}}
 
-  \code{\link[cholera]{streetNumberViewer}}
+  \code{\link[cholera]{streetNumberLocator}}
 
   \code{vignette("duplicate.missing.cases")}
 

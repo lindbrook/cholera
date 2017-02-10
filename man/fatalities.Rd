@@ -22,8 +22,8 @@ An amended version of Dodson and Tobler's digitization of John Snow's map of the
 
 \code{\link{caseLocator}}
 
-\code{\link[cholera]{streetNameViewer}}
+\code{\link[cholera]{streetNameLocator}}
 
-\code{\link[cholera]{streetNumberViewer}}
+\code{\link[cholera]{streetNumberLocator}}
 }
 \keyword{datasets}
