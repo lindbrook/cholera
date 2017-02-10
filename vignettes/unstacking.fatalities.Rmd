@@ -47,11 +47,11 @@ road.segments <- do.call(rbind, road.segments)
 
 ## Overview
 
-In his map of the 1854 cholera outbreak in London, John Snow used stacks of bars to represent the number of fatalities at an address: for example, a location with one fatality is represented by a single, horizontal bar; a location with five is represented by five horizontally stacked bars:^[The map was originally published in Snow's 1855 book "On The Mode Of Communication Of Cholera". The book was reprinted as John Snow et. al., 1936. _Snow on Cholera: Being a Reprint of Two Papers_. New York: The Common Wealth Fund. You can also find the map online (a high resolution version is available at http://www.ph.ucla.edu/epi/snow/highressnowmap.html) and in many books, including Edward Tufte's 1997 "Visual Explanations: Images and Quantities, Evidence and Narrative".]
+In his map of the 1854 cholera outbreak in London, John Snow uses stacks of bars to represent the number of fatalities at a given address: a location with one fatality is represented by a single, horizontal bar parallel to road where the fatality occurred; a location with five is represented by five horizontally stacked bars:^[The map was originally published in Snow's 1855 book "On The Mode Of Communication Of Cholera", which was reprinted as John Snow et. al., 1936. _Snow on Cholera: Being a Reprint of Two Papers_. New York: The Common Wealth Fund. You can also find the map online (a high resolution version is available at http://www.ph.ucla.edu/epi/snow/highressnowmap.html) and in many books, including Edward Tufte's 1997 "Visual Explanations: Images and Quantities, Evidence and Narrative".]
 
 ![](msu-snows-mapB.jpg)
 
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and water pump was given a unique x-y coordinate. Each road was translated into a set of straight line segments, defined by their endpoints. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. The data are plotted below:
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and water pump was assigned a unique x-y coordinate. Each road was translated into series of straight line segments, defined by their endpoints. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. The data are plotted below:
 
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
@@ -64,15 +64,17 @@ points(HistData::Snow.pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
 
 ```
 
-Despite their appeal, I would argue that these stacks are visually and computationally problematic. The reason is that not all bars are created equal. Even though they are identical in terms of their appearance and the only thing that seems to distinguish them is their position on the map, bars actually play two different roles. Sometimes a bar represent the location of a fatality, sometimes it doesn't. Standalone bars (i.e., a stack with a one bar or an addresses with one fatality), or the bar at the base of a stack do. Bars above the base case do not: their only purpose is to create the visual stacking effect and represent the number of fatalities at that address.
+Despite the appeal of these stacked bars, I would argue that they are visually and computationally problematic. The reason, simply put, is that not all bars are created equal. Even though they are identical in terms of their appearance and the only thing that appears to distinguish them is their position on the map, bars can actually play different roles.
 
-This duality can be problematic for a map. Because a map is a visual device that illustrates spatial relationships, it's natural to assume that the positions of all elements (e.g., bars) reflect actual physical locations. So when we violate this principle, we undermine the visual interpretation of the map and handicap our analysis. This is particularly true when 44% (257/578) of bars in Snow's map fall into this geographically uninformative category.
+Sometimes a bar represent the location of a fatality, sometimes it doesn't. Standalone bars, a stack with a one single bar (i.e., an addresses with one fatality), or the bar at the base of a stack represent a location. However, bars above the base case do not. Their only purpose is to create the visual stacking effect as a way to represent the number of fatalities at an address.
 
-To address these problems, I "unstack" Dodson and Tobler's data. I do so in two different data sets. The first, _fatalities.unstacked_, "unstacks" the data so that all cases in a stack (at the same "address") are given the same x-y coordinate. The second, _unstacked.address_, "unstacks" the data by changing the unit of observation from the case to the stack (i.e., "address"). Each address is a single observation with a single x-y coordinate, and the number of cases at that location becomes an attribute of the address.
+Within a map, this duality can be problematic. Because a map is a visual device that illustrates spatial relationships, it's natural to assume that the positions of all elements (e.g., bars) reflect actual, physical locations. When we violate this assumption, we undermine our visual interpretation of the map and handicap our analysis. This is particularly true given than 44% (257/578) of bars in Snow's map fall into this second, geographically uninformative category.
+
+To address these problems, I "unstack" Dodson and Tobler's data. I do so in two ways. In the first, which is available in _fatalities.unstacked_, all cases in a stack (i.e., at the same "address") are given the same x-y coordinate. In the second, which is available in _fatalities.address_, the unit of observation is the address rather than the the case: each address is one observation with a single x-y coordinate, and the number of cases at that location is an attribute of the address.
 
 ## Data details
 
-To illustrate the differences between these datasets, consider how they treat the biggest outlier on Snow's map: the 18 cases at 38 Broad Street. The code below below compares Dodson and Tobler's data to _fatalities.unstacked_
+To illustrate the differences, first consider how datasets treat the largest outlier on Snow's map: the eighteen cases at 38 Broad Street.
 
 ```{r}
 ## The 18 cases at 38 Broad Street ##
@@ -90,7 +92,7 @@ fatalities.unstacked[fatalities.unstacked$case %in% broad38, ]
 
 ```
 
-The code below shows the structure of _unstacked.address_. Here, the 18 cases at 38 Broad Street are represented by a single observation, case 239, which serves as the nominal representative for the "address":
+With _fatalities.address_, the 18 cases at 38 Broad Street are represented by a single observation, case 239, which serves as the "address":
 
 ```{r}
 # The 18 cases at 38 Broad street are nominally represented by case 239
@@ -100,13 +102,13 @@ fatalities.address[136:140, ]
 
 ## Virtues of "unstacking"
 
-To illustrate the problems with "stacked" data and the virtues of "unstacked" data, consider two examples.
+To illustrate the virtues of "unstacked" data, consider the following.
 
 ### Kernel density contours
 
-The first example applies applies bivariate kernel density contours, of varying bandwidth, to "stacked" and "unstacked" data. The plots illustrate the spatial distribution or topography of fatalities, and provides a way to estimate the epicenter, if not the source, of the outbreak.
+The example below applies applies bivariate kernel density contours, of varying bandwidths, to "stacked" and "unstacked" data. The plots illustrate the spatial distribution or topography of fatalities, and provides a way to estimate the epicenter, if not the source, of the outbreak.
 
-With the "stacked" data, _fatalities_, the contours and epicenter are further south than we might expect given that the Broad Street pump (blue triangle) is the recognized source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward, in a southerly direction.
+With the "stacked" data, _fatalities_, the contours are more uncertain and the epicenter is further south than we might expect given that the Broad Street pump (blue triangle) is the recognized source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward, in a southerly direction.
 
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
@@ -200,7 +202,7 @@ p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
 
 ```
 
-With _fatalities.unstacked_, the contours and epicenter are located further north, nearer to both the pump and Broad Street:
+With _fatalities.unstacked_, the contours and epicenter are located further north, nearer to the roads, the pump and to Broad Street:
 
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
@@ -249,84 +251,17 @@ p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
 
 ```
 
-### An alternative approach to "stacks"
-
-The second example uses _unstacked.address_ to create an alternative to "stacked" bars based on proportionately sized points. Each address is represented by a square whose size is determined by the number of fatalities and whose location is represented by a point at its center.^[This example was built with base R graphics and uses the KernSmooth package rather than ggplot2, which was used in the first example. As a result, the water pump actually falls within the peak contour.]
-
-```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
-
-plot(fatalities.address[, c("x", "y")], pch = 20, asp = 1, xlim = x.range,
-  ylim = y.range, cex = 1/3)
-invisible(lapply(roads.list, lines, col = "gray"))
-points(Snow.pumps[, c("x", "y")], col = "blue", pch = 2, cex = 1.25, lwd = 1.5)
-points(fatalities.address[, c("x", "y")], cex = fatalities.address$case.count,
-  pch = 0)
-kde2d <- KernSmooth::bkde2D(fatalities.unstacked[, c("x", "y")],
-  bandwidth = rep(bandwidth, 2))
-contour(x = kde2d$x1, y = kde2d$x2, z = kde2d$fhat, col = "gray", add = TRUE)
-title(main = "'Unstacked' fatalities with proportionately-sized symbols")
-
-# Cambridge Street #
-street.name <- "Cambridge Street"
-cambridge.data <- roads[roads$name == street.name, ]
-cambridge.data <- cambridge.data[order(cambridge.data$x), ]
-d1 <- cambridge.data[-nrow(cambridge.data), c("x", "y")]
-d2 <- cambridge.data[-1, c("x", "y")]
-
-intercept.slope <-lapply(seq_len(nrow(cambridge.data) - 1), function(i) {
-  coef(lm(y ~ x, data = rbind(d1[i, ], d2[i, ])))
-})
-
-sel <- 3
-cambridge.angle <- atan(intercept.slope[[sel]][2]) * 180L / pi
-cambridge.x <- mean(cambridge.data[sel:(sel + 1), "x"])
-cambridge.y <- intercept.slope[[sel]][1] +
-               intercept.slope[[sel]][2] * cambridge.x
-cambridge.df <- data.frame(x = cambridge.x, y = cambridge.y)
-
-text(cambridge.df$x, cambridge.df$y, "Cambridge St", srt = cambridge.angle)
-
-# Broad Street #
-street.name <- "Broad Street"
-broad.data <- roads[roads$name == street.name, ]
-broad.list <- roads.list[paste(unique(broad.data$street))]
-broad.list <- lapply(broad.list, function(df) {
-  df[order(df$x, decreasing = TRUE), ]
-})
-
-broad.pts.data <- do.call(rbind, broad.list)
-broad.pts.data <- broad.pts.data[seq_len(nrow(broad.pts.data)) %% 2 != 0, ]
-
-segment.ols <- lapply(broad.list, function(x) {
-  coef(lm(y ~ x, data = x))
-})
-
-sel <- "193"
-seg.id <- do.call(rbind, strsplit(rownames(broad.pts.data), "[.]"))[, 1]
-i <- which(seg.id == sel)
-
-broad.angle <- atan(segment.ols[[sel]]["x"]) * 180 / pi
-broad.x <- median(broad.pts.data[i:(i + 1), "x"])
-broad.y <- segment.ols[[sel]][1] + segment.ols[[sel]][2] * broad.x
-broad.df <- data.frame(x = broad.x, y = broad.y)
-
-text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
-
-```
-
 ## "Unstacking" via classification
 
-The main roadblock that makes "unstacking" difficult is that there is no notion of an "address". Bars are merely points and streets are merely line segments.^[In Friendly's HistData package, these data are called "Snow.deaths" and "Snow.streets".] Nothing links the points to segments. And nothing connects one bar in a stack to another. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinates.
+The main roadblock to "unstacking" is that there is no notion of an "address" in the data. Bars are merely points and streets are merely line segments.^[In Friendly's HistData package, these data are called "Snow.deaths" and "Snow.streets".] Nothing links the points to segments. And nothing connects one bar in a stack to another. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinate.
 
-Therefore, to "unstack" the data , we need match each bar to a specific road (segment) and to match each bar to a specific stack. To accomplish these tasks, I employ two different classifications methods.
+To "unstack" the data , we need match each bar to a specific road (segment) and to match each bar to a specific stack. To accomplish these tasks, I employ two different classifications methods.
 
 ### Orthogonal projection
 
-The first method works by orthogonal projection. For each bar, the algorithm draws a series of lines that pass through that bar and that are orthogonal to each _nearby_ road segment.^[To reduce computation, I only consider road segments that have an endpoint within 50 meters of the bar under consideration (a distance of 0.5 on the map's scale).] If a projected line intersects or bisects a road segment, it becomes a candidate for the bar's home segment. If there's more than one candidate, the algorithm chooses the segment that is "closest" to the bar: this will be the segment with the shortest orthogonal projector.
+The first method works by orthogonal projection. For each bar, the algorithm draws a series of lines that pass through that bar and that are orthogonal to "nearby" road segment.^[To reduce computation, I only consider road segments with at least one endpoint within approximately 50 meters of the bar (i.e., a distance of 0.5 on the map's scale).] If the projected line intersects or bisects a road segment, it becomes a candidate for the bar's home segment. If there's more than one candidate, the algorithm chooses the segment that is "closest" to the bar: the segment with the shortest orthogonal projector.
 
-To illustrate, consider the stylized example in the figure below. For case 12, there are three possible "home" road segments: the solid blue, red and green segments.
-
-We consider them because at least one of their endpoints fall within 50 meters, or on the map's nominal scale a distance of 0.5, of case 12's position. Of the three, only _red_ and _green_ are viewed as candidates. The problem with _blue_ is that the orthogonal projection from case 12 (the blue arrow) does not intersect the solid blue segment. Of the two candidates, _red_ is chosen because it is closer to case 12 than _green_: the red arrow is shorter than the green one.
+To illustrate, consider the following stylized example. For case 12, there are three possible "home" road segments: the solid blue, red and green segments. Of the three, only _red_ and _green_ are viewed as candidates. The problem with _blue_ is that the orthogonal projection from case 12 (the blue arrow) does not intersect the solid blue segment. Of the two remaining candidates, _red_ is chosen because it is closer to case 12 than _green_: the red arrow is shorter than the green one.
 
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
@@ -387,7 +322,7 @@ text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 ```
 
-This procedure correctly classifies 515 of 578 of the cases, an error rate of 10.9%. Errors occur due to ambiguities surrounding a case's "home" segment. Unlike Snow's map where a bar's "horizontal" orientation indicates its "home" segment, Dodson and Tobler only record a case's x-y coordinates. This can lead to problems at street intersections, where a point may be closer to the "wrong" segment, and at addresses with many cases.^[This is further exacerbated by the fact that the width of roads does not always appear to taken into consideration. This creates instances where cases on one side of the street appear to be closer to the road than those on the other side.  One particular case of note is Portland Mews. In Snow's map, Portland Mews is a large yard or square. In Dodson and Tobler, Portland Mews simply a set of line segments, which possibly corresponds to the roadway through the location. As a result, given the orientation of the cases of Snow's map and location of the cases in Dodson and Tobler, these three cases will appear to belong to a single cluster instead of two different ones. I manually chose a more distant road segment on Portland Mews that better reflects the orientation of bars on Snow's map.] The problem with multiple cases is that stacking pushes cases away from the "home" segment. Consider the figure below. Even though visual inspection (the alignment of the stack) should lead us to choose _black_, the algorithm chooses _red_. The reason for the error is that stacking pushes the case so far from _black_ that it lies beyond consideration.^[It lies beyond the 50 meter criteria of _nearby_ road segments.] With stacks, this kind of misclassification is always a potential threat.
+This procedure correctly classifies 515 of 578 of the cases, an error rate of 10.9%. Errors occur due to ambiguities surrounding a case's "home" segment. Unlike Snow's map where a bar's "horizontal" orientation parallel to  its "home" road segment, Dodson and Tobler only record a case's x-y coordinate. This can lead to problems at street intersections, where a point may be closer to the "wrong" segment, and at addresses with many cases.^[This is further exacerbated by the fact that the width of roads is not always taken into consideration. This creates instances where cases on one side of the street appear to be closer to the road than those on the other side.  One particular case of note is Portland Mews. In Snow's map, Portland Mews is a large yard or square. In Dodson and Tobler, Portland Mews simply a set of line segments, which possibly corresponds to the roadway through the location. As a result, given the orientation of the cases of Snow's map and location of the cases in Dodson and Tobler, these three cases will appear to belong to a single cluster instead of two separate ones. I manually chose a more distant road segment on Portland Mews that better reflects the orientation of bars on Snow's map.] The problem with multiple cases is that stacking pushes cases away from its "home" segment. Consider the figure below. Even though visual inspection (the alignment of the stack) should lead us to choose _black_, the algorithm chooses _red_. The reason for the error is that stacking pushes the case so far from _black_ that it falls outside of the range of consideration. I corrected these errors by manually recoding cases.
 
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
@@ -447,13 +382,11 @@ text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 ```
 
-All errors were corrected by manually recoding cases.
-
 ### Cluster analysis
 
-To match a bar to a stack, I use hierarchical cluster analysis.^[Specifically, I use stats::hclust(), which is included in base R and which, by default, employs a "complete" method of agglomerative hierarchical clustering.] To make this task easier, instead of its x-y coordinates I use a bar's orthogonal coordinates. That is, I use the point where the the orthogonal projection from the bar intersects the road segment. Doing so reduces the dimensionality of the problem: the algorithm only needs to compare positions of points along a line.
+To link a bar to a stack, I use hierarchical cluster analysis.^[Specifically, I use stats::hclust(), which is included with base R and which, by default, employs a "complete" method of agglomerative hierarchical clustering.] To make this task easier, instead of its x-y coordinate I use a bar's orthogonal coordinates. That is, I use the point where the the orthogonal projection from the bar intersects its "home" road segment. Doing so reduces the dimensionality of the problem (the algorithm only needs to compare positions of points along a line) and virtually eliminates any classification error.^[What makes this possible is that, by design, its "vertical" dispersion, the spread of x-y points along the orthogonal axis, is much greater than its "horizontal" dispersion, the spread of orthogonal points along the road's line segment. In an ideal world, the "horizontal" dispersion would be zero and all points in a stack would be perfectly aligned. In practice, this is not the case.]
 
-The figure below illustrates this approach. Using a case's x-y coordinates, the graph plots the case's numeric ID and draws the corresponding orthogonal projector to Broad Street. Matching a bar to a stack, which is equivalent to identifying a stack, means identifying distinct clusters of points along the road segment. For the case at hand, visual inspection leads us to expect that we should find 8 different clusters along this segment of Broad Street (4 on the north side, 4 on the south side).^[What makes this approach feasible is that, by design, its "vertical" dispersion, the spread of x-y points along the orthogonal axis, is much greater than its "horizontal" dispersion, the spread of orthogonal points along the road's line segment. In an ideal world, the "horizontal" dispersion would be zero and all points in a stack would be perfectly aligned. In practice, this is not the case.]
+The figure below illustrates this approach. Using a case's x-y coordinate, the graph plots the case's numeric ID and draws the corresponding orthogonal projector to Broad Street. Matching a bar to a stack, which is equivalent to identifying a stack, means identifying distinct clusters of points along the road segment. For the case at hand, visual inspection leads us to expect that we should find 8 different clusters: 4 on the north side, 4 on the south side.
 
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
@@ -625,11 +558,13 @@ text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 ```
 
-This can be confirmed by examining Snow's map^[In Snow's map, one can see 5 addresses on the north side of the block of Broad Street between Dufours Place and Poland Street (the road running north-south just visible on the east or left side of the graph) but only 4 of those addresses fall on the street segment in Dodson and Tobler. The reason for the apparent discrepancy is that intersections with other streets, regardless of which side of the road they may fall, define the end points of road segments. This is why the south side of this segment of Broad Street only includes 4 addresses: the endpoints are defined by Dufours Place on the left (west) and Cambridge Street on the right (east).]:
+This result can be confirmed by examining Snow's map:^[In Snow's map, one can see 5 addresses on the north side of the block of Broad Street between Dufours Place and Poland Street (the road running north-south just visible on the east or left side of the graph) but only 4 of those addresses fall on the street segment in Dodson and Tobler. The reason for the apparent discrepancy is that intersections with other streets, regardless of which side of the road they may fall, define the end points of road segments. This is why the south side of this segment of Broad Street only includes 4 addresses: the endpoints are defined by Dufours Place on the left (west) and Cambridge Street on the right (east).]
 
 ![](broad.street.B.png)
 
-The fly in the ointment is that addresses directly opposite one another will have "identical" orthogonal points and will appear to belong to the same "address". A simple solution to distinguish clusters on one side of the street from those on the other is to compute the _sign_ of the arithmetic difference between a case's x-y coordinate and its orthogonal coordinate. For example, consider cases 321 and 239. They lie on opposite sides of Broad Street. In the figure below, 321's coordinates are shown in blue while 239's are shown in red. When we take the signs of the differences, we get (-, +) for 321 and (+, -) for 239. This distinguishes cases on the north side from those on the south side.
+The one fly in the ointment is that addresses directly opposite one another will have "identical" orthogonal points and will appear to belong to the same "address". A simple solution to distinguish clusters on opposite sides of the street is to compute the _sign_ of the arithmetic difference between a case's x-y coordinate and its orthogonal coordinate.
+
+For example, consider cases 321 and 239. They lie on opposite sides of Broad Street. In the figure below, 321's coordinates are shown in blue while 239's are shown in red. When we take the signs of the differences, we get (-, +) for 321 and (+, -) for 239. This distinguishes cases on the north side from those on the south side.
 
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
