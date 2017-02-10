@@ -251,8 +251,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
 #' @return A base R graphics plot.
 #' @export
 #' @examples
-#' dat <- neighborhoodWalking()
-#' plot(dat)
+#' plot(neighborhoodWalking())
 
 plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
   if (class(x) != "walking") {
@@ -421,7 +420,6 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
   }
 }
 
-
 #' Summary statistics for walking path neighborhoods.
 #'
 #' @param object An object of class "walking" created by neighborhoodWalking().
@@ -429,8 +427,7 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
 #' @return A data frame with observed and expected counts, observed percentage, and the Pearson residual, (observed - expected) / sqrt(expected).
 #' @export
 #' @examples
-#' dat <- neighborhoodWalking()
-#' summary(dat)
+#' summary(neighborhoodWalking())
 
 summary.walking <- function(object, ...) {
   if (class(object) != "walking") {
@@ -662,9 +659,7 @@ caseSegments <- function(x, neighborhood.paths, pump.cases,
 }
 
 pumpSegments <- function(x, neighborhood.paths, vestry) {
-  # n.name <- paste0("p", x)
   n.paths <- neighborhood.paths[[x]]
-  # n.cases <- pump.cases[[n.name]]
 
   last.segment <- lapply(n.paths, function(p) {
     p.coords <- names(unlist(p))
@@ -699,9 +694,6 @@ pumpSegments <- function(x, neighborhood.paths, vestry) {
     }
     st <- cholera::road.segments[cholera::road.segments$id == seg, ]
   }
-  # else {
-  #   stop("Error")
-  # }
 
   segment.audit <- lapply(last.segment, function(dat) {
     A <- signif(dat[1, "x"]) == signif(st$x1) &
