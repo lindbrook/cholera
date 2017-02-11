@@ -168,8 +168,8 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
 
     neighborhood.paths <- neighborhood.paths[idx]
 
-    intermediate.segments <- lapply(neighborhood.paths,
-      intermediateSegments)
+    intermediate.segments <- parallel::mclapply(neighborhood.paths,
+      intermediateSegments, mc.cores = cores)
 
     intermediate.segments <- lapply(intermediate.segments, function(x) {
       if (is.null(x)) {
@@ -195,12 +195,13 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
 
     neighborhood.id <- sort(pump.id)
 
-    case.segments <- lapply(neighborhood.id, caseSegments, neighborhood.paths,
-      pump.cases, intermediate.segments, vestry)
+    case.segments <- parallel::mclapply(neighborhood.id, caseSegments,
+      neighborhood.paths, pump.cases, intermediate.segments, vestry,
+      mc.cores = cores)
     names(case.segments) <- paste0("p", neighborhood.id)
 
-    pump.segments <- lapply(names(neighborhood.paths), pumpSegments,
-      neighborhood.paths, vestry)
+    pump.segments <- parallel::mclapply(names(neighborhood.paths), pumpSegments,
+      neighborhood.paths, vestry, mc.cores = cores)
     names(pump.segments) <- paste0("p", neighborhood.id)
 
     neighborhood.segments <- lapply(seq_along(neighborhood.id), function(i) {
