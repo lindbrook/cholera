@@ -12,9 +12,9 @@ addSnow(streets = TRUE, color = "dodgerblue", alpha.st = 0.75,
 
 \item{color}{Character. Color for neighborhood annotation.}
 
-\item{alpha.st}{Numeric. A value in [0,1] to set alpha level for street neighborhood annotation.}
+\item{alpha.st}{Numeric. A value in [0, 1] to set alpha level for street neighborhood annotation.}
 
-\item{alpha.area}{Numeric. A value in [0,1] to set alpha level for area neighborhood annotation.}
+\item{alpha.area}{Numeric. A value in [0, 1] to set alpha level for area neighborhood annotation.}
 
 \item{...}{Additional plotting parameters.}
 }
