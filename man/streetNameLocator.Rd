@@ -7,7 +7,7 @@
 streetNameLocator(road.name, zoom = FALSE, radius = 1)
 }
 \arguments{
-\item{road.name}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and removes extra spaces.}
+\item{road.name}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.}
 
 \item{zoom}{Logical.}
 

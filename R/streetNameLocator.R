@@ -2,7 +2,7 @@
 #'
 #' Plots John Snow's map of the 1854 London cholera outbreak and highlights the
 #' selected road. See the list of road names in \code{vignette}("road.names").
-#' @param road.name Character vector. Note that \code{streetNameLocator}() tries to correct for case and removes extra spaces.
+#' @param road.name Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. For "radius" <= 5, the anchor case number is plotted.
 #' @return A base R graphics plot.
@@ -52,7 +52,7 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 1) {
     invisible(lapply(roads.list[paste(selected.road)], lines, col = "red",
       lwd = 3))
     title(main = name)
-    
+
   } else if (zoom & radius <= 5) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = NA, asp = 1)
