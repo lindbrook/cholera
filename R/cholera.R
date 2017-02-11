@@ -1,0 +1,24 @@
+#' Introduction
+#'
+#' Amend, augment and aid the analysis of John Snow's cholera data.
+#'
+#' Features:
+#'
+#' \itemize{
+#' \item Fixes three apparent coding error in Dodson and Tobler's digitization of the data in Snow's map.
+#' \item "Unstacks" the data in two ways to improve analysis and visualization.
+#' \item Computes two types of pump neighborhoods: one based on Voronoi tesselation; one based on walking distance.
+#' \item Adds ability to overlay like kernel density, Voronoi tessellation, Snow and Whitehead's annotations of the Broad Street pump neighborhood.
+#' \item A variety of helper functions to find and locate cases, roads, pumps and paths.
+#' \item Appends names to roads.
+#' \item Add the revised pump data that was included in the Vestry report.
+#' \item Adds two aggregate time series data from Vestry report
+#' \item Add landmarks like the plague pit, Snow's residence, Lion Brewery, Marx residence.
+#' }
+#' To learn more, start with the vignettes:
+#' \code{browseVignettes(package = "cholera")}
+#'
+#' @docType package
+#' @name cholera
+# #' @useDynLib cholera
+NULL
