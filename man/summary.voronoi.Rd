@@ -2,7 +2,7 @@
 % Please edit documentation in R/voronoi.R
 \name{summary.voronoi}
 \alias{summary.voronoi}
-\title{Summary statistics for Voronoi neighborhoods.}
+\title{Compute summary statistics for Voronoi neighborhoods.}
 \usage{
 \method{summary}{voronoi}(object, ...)
 }
@@ -15,7 +15,7 @@
 A data frame with observed and expected counts, observed percentage, and the Pearson residual, (observed - expected) / sqrt(expected).
 }
 \description{
-Summary statistics for Voronoi neighborhoods.
+Compute summary statistics for Voronoi neighborhoods.
 }
 \examples{
 dat <- neighborhoodVoronoi()

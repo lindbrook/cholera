@@ -2,7 +2,7 @@
 % Please edit documentation in R/voronoi.R
 \name{neighborhoodVoronoi}
 \alias{neighborhoodVoronoi}
-\title{Voronoi neighborhoods.}
+\title{Compute Voronoi neighborhoods.}
 \usage{
 neighborhoodVoronoi(selection = NULL, vestry = FALSE, statistic = NULL,
   polygon.vertices = FALSE)

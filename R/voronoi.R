@@ -1,4 +1,4 @@
-#' Voronoi neighborhoods.
+#' Compute Voronoi neighborhoods.
 #'
 #' Data for Voronoi tessellation of John Snow's 1854 London cholera data.
 #' @param selection Numeric. Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
@@ -282,7 +282,7 @@ plot.voronoi <- function(x, ...) {
   }
 }
 
-#' Summary statistics for Voronoi neighborhoods.
+#' Compute summary statistics for Voronoi neighborhoods.
 #'
 #' @param object An object of class "voronoi" created by neighborhoodVoronoi().
 #' @param ... Additional arguments.
