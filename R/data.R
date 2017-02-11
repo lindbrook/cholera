@@ -88,42 +88,6 @@
 #' \code{\link[cholera]{streetNumberLocator}}
 "fatalities.unstacked"
 
-#' List of data frames that specify the unique road segments needed to describe the 10 observed pump neighborhood.
-#'
-#' To eliminate overplotting, these data describe the minimal set of road segments. This includes "trimming" the first and last segment to reflect the location of a case and its pump.
-#'
-#' @format Each data frame has 8 variables that describe a road's straight line segments.
-#' \describe{
-#'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
-#'   \item{\code{id}}{characger segement ID}
-#'   \item{\code{name}}{road name}
-#'   \item{\code{x1}}{x-coordinate of first endpoint}
-#'   \item{\code{y1}}{y-coordinate of first endpoint}
-#'   \item{\code{x2}}{x-coordinate of second endpoint}
-#'   \item{\code{y2}}{y-coordinate of second endpoint}
-#'   \item{\code{trimmed}}{logical indicates whether entire road segment is included or is trimmed}
-#' }
-#' @docType data
-"neighborhood.segments"
-
-#' List of data frames that specify the unique road segments needed to describe the 13 expected (simulated) pump Neighborhoods.
-#'
-#' To eliminate overplotting, these data describe the minimal set of road segments. This includes "trimming" the first and last segment to reflect the location of a case and its pump.
-#`
-#' @format Each data frame has 8 variables that describe a road's straight line segments.
-#' \describe{
-#'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
-#'   \item{\code{id}}{characger segement ID}
-#'   \item{\code{name}}{road name}
-#'   \item{\code{x1}}{x-coordinate of first endpoint}
-#'   \item{\code{y1}}{y-coordinate of first endpoint}
-#'   \item{\code{x2}}{x-coordinate of second endpoint}
-#'   \item{\code{y2}}{y-coordinate of second endpoint}
-#'   \item{\code{trimmed}}{logical indicates whether entire road segment is included or is trimmed}
-#' }
-#' @docType data
-"neighborhood.segments.sp"
-
 #' Orthogonal projection of observed cases onto road network.
 #'
 #' @format A data frame with 5 variable that records the position of the orthogonal projection of the 578 cases onto the network of roads.
