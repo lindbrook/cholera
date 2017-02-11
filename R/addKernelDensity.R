@@ -16,7 +16,7 @@ addKernelDensity <- function(bandwidth = 0.5, color = "black",
   line.type = "solid", data = NULL) {
 
   if (!is.null(data) & !all(data %in% c("address", "stacked"))) {
-    stop('If specified, "output" must either be "address" or "stacked".')
+    stop('If specified, "data" must either be "address" or "stacked".')
   }
 
   bw.value <- bandwidth
