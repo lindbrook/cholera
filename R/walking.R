@@ -24,11 +24,11 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
   # devtools::use_data(walking.data, internal = TRUE, overwrite = TRUE)
 
   test1 <- (is.null(selection) & vestry == FALSE & statistic == "address" &
-    weighted)
+    weighted & multi.core == FALSE)
   test2 <- (length(selection) == 1 & -6 %in% selection & vestry == FALSE &
-    statistic == "address" & weighted)
+    statistic == "address" & weighted & multi.core == FALSE)
   test3 <- (length(selection) == 2 & all(6:7 %in% selection) & vestry == FALSE &
-    statistic == "address" & weighted)
+    statistic == "address" & weighted & multi.core == FALSE)
 
   if (test1) {
     output <- walking.data[["address"]]
