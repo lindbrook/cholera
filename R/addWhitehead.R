@@ -6,6 +6,7 @@
 #' @param col Character. Color of circle.
 #' @param lty Character. Circle line type.
 #' @param vestry Logical. TRUE uses the 14 pumps and locations from Vestry report. FALSE uses original 13 pumps.
+#' @param ... Additional plotting parameters.
 #' @return Draws a circle, based on multiple line segments, to a graphics plot.
 #' @seealso \code{\link[cholera]{addLandmarks}}
 #' @import graphics
@@ -15,11 +16,11 @@
 #' addWhitehead()
 
 addWhitehead <- function(pump = "Broad Street", radius = 210, col = "black",
-  lty = "solid", vestry = FALSE) {
+  lty = "solid", vestry = FALSE, ...) {
   r <- radius / 59
   unit.base <- 100
   unit.radians <- 2 * pi / unit.base
- 
+
   if (vestry) {
     if (is.character(pump)) {
       if (pump %in% cholera::pumps.vestry$street == FALSE) {

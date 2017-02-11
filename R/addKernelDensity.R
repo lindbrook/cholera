@@ -5,6 +5,7 @@
 #' @param color Character. Color of cotour lines.
 #' @param line.type Character. Line type for contour lines.
 #' @param data Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "stacked" uses \code{fatalities}.
+#' @param ... Additional plotting parameters.
 #' @return Add contours to a graphics plot.
 #' @import graphics
 #' @export
@@ -13,7 +14,7 @@
 #' addKernelDensity()
 
 addKernelDensity <- function(bandwidth = 0.5, color = "black",
-  line.type = "solid", data = NULL) {
+  line.type = "solid", data = NULL, ...) {
 
   if (!is.null(data) & !all(data %in% c("address", "stacked"))) {
     stop('If specified, "data" must either be "address" or "stacked".')

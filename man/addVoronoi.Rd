@@ -4,7 +4,8 @@
 \alias{addVoronoi}
 \title{Add Voronoi cells.}
 \usage{
-addVoronoi(select = NULL, vestry = FALSE, col = "black", lty = "solid")
+addVoronoi(select = NULL, vestry = FALSE, col = "black", lty = "solid",
+  ...)
 }
 \arguments{
 \item{select}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
@@ -14,6 +15,8 @@ addVoronoi(select = NULL, vestry = FALSE, col = "black", lty = "solid")
 \item{col}{Character. Color of borders.}
 
 \item{lty}{Character. Type of line for borders.}
+
+\item{...}{Additional plotting parameters.}
 }
 \description{
 Computes and draws Voronoi cells using deldir::deldir().

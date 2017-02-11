@@ -3,13 +3,14 @@
 #' Reproduces Snow's graphic annotation in the Vestry Report.
 #' @param streets Logical. TRUE plots streets. FALSE plots orthogonal area.
 #' @param color Character. Color for neighborhood annotation.
+#' @param ... Additional plotting parameters.
 #' @import graphics
 #' @export
 #' @examples
 #' plot(neighborhoodVoronoi())
 #' addSnow()
 
-addSnow <- function(streets = TRUE, color = "dodgerblue") {
+addSnow <- function(streets = TRUE, color = "dodgerblue", ...) {
   if (streets) {
     for (i in seq_along(cholera::snow.trimmed.segments$road.segment)) {
       segments(cholera::snow.trimmed.segments[i, "x1"],

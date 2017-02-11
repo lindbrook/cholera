@@ -4,12 +4,14 @@
 \alias{addSnow}
 \title{Adds Snow's Annotation  of the Broad Street pump walking neighborhood.}
 \usage{
-addSnow(streets = TRUE, color = "dodgerblue")
+addSnow(streets = TRUE, color = "dodgerblue", ...)
 }
 \arguments{
 \item{streets}{Logical. TRUE plots streets. FALSE plots orthogonal area.}
 
 \item{color}{Character. Color for neighborhood annotation.}
+
+\item{...}{Additional plotting parameters.}
 }
 \description{
 Reproduces Snow's graphic annotation in the Vestry Report.

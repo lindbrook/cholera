@@ -5,7 +5,7 @@
 \title{Add Whitehead's Broad Street pump neighborhood.}
 \usage{
 addWhitehead(pump = "Broad Street", radius = 210, col = "black",
-  lty = "solid", vestry = FALSE)
+  lty = "solid", vestry = FALSE, ...)
 }
 \arguments{
 \item{pump}{Character. The name of the pump, the street name where it is located. See \code{pumps} or \code{pumps.vestry}.}
@@ -17,6 +17,8 @@ addWhitehead(pump = "Broad Street", radius = 210, col = "black",
 \item{lty}{Character. Circle line type.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps and locations from Vestry report. FALSE uses original 13 pumps.}
+
+\item{...}{Additional plotting parameters.}
 }
 \value{
 Draws a circle, based on multiple line segments, to a graphics plot.

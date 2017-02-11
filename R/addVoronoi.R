@@ -6,6 +6,7 @@
 #' @param vestry Logical. FALSE for original 13 pumps. TRUE for 14 pumps in Vestry Report.
 #' @param col Character. Color of borders.
 #' @param lty Character. Type of line for borders.
+#' @param ... Additional plotting parameters.
 #' @import graphics
 #' @export
 #' @examples
@@ -13,7 +14,7 @@
 #' addVoronoi()
 
 addVoronoi <- function(select = NULL, vestry = FALSE, col = "black",
-  lty = "solid") {
+  lty = "solid", ...) {
 
   if (is.null(select)) {
     if (vestry) {
