@@ -2,7 +2,7 @@
 % Please edit documentation in R/walking.R
 \name{summary.walking}
 \alias{summary.walking}
-\title{Summary statistics for walking path neighborhoods.}
+\title{Compute summary statistics for walking path neighborhoods.}
 \usage{
 \method{summary}{walking}(object, ...)
 }
@@ -15,7 +15,7 @@
 A data frame with observed and expected counts, observed percentage, and the Pearson residual, (observed - expected) / sqrt(expected).
 }
 \description{
-Summary statistics for walking path neighborhoods.
+Compute summary statistics for walking path neighborhoods.
 }
 \examples{
 summary(neighborhoodWalking())

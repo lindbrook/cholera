@@ -2,7 +2,7 @@
 % Please edit documentation in R/walking.R
 \name{neighborhoodWalking}
 \alias{neighborhoodWalking}
-\title{Walking path neighborhoods.}
+\title{Compute walking path neighborhoods.}
 \usage{
 neighborhoodWalking(selection = NULL, vestry = FALSE,
   statistic = "address", weighted = TRUE, multi.core = FALSE)

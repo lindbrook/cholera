@@ -1,4 +1,4 @@
-#' Walking path neighborhoods.
+#' Compute walking path neighborhoods.
 #'
 #' Data for walking neighbohoods for John Snow's 1854 London cholera data.
 #' @param selection Numeric. Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
@@ -421,7 +421,7 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
   }
 }
 
-#' Summary statistics for walking path neighborhoods.
+#' Compute summary statistics for walking path neighborhoods.
 #'
 #' @param object An object of class "walking" created by neighborhoodWalking().
 #' @param ... Additional arguments.
