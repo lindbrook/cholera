@@ -4,12 +4,17 @@
 \alias{addSnow}
 \title{Adds Snow's Annotation  of the Broad Street pump walking neighborhood.}
 \usage{
-addSnow(streets = TRUE, color = "dodgerblue", ...)
+addSnow(streets = TRUE, color = "dodgerblue", alpha.st = 0.75,
+  alpha.area = 1/3, ...)
 }
 \arguments{
 \item{streets}{Logical. TRUE plots streets. FALSE plots orthogonal area.}
 
 \item{color}{Character. Color for neighborhood annotation.}
+
+\item{alpha.st}{Numeric. A value in [0,1] to set alpha level for street neighborhood annotation.}
+
+\item{alpha.area}{Numeric. A value in [0,1] to set alpha level for area neighborhood annotation.}
 
 \item{...}{Additional plotting parameters.}
 }

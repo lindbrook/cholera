@@ -10,7 +10,7 @@
 #' snowMap(add.landmarks = FALSE)
 #' addLandmarks()
 
-addLandmarks <- function(text.size = 0.65) {
+addLandmarks <- function(text.size = 0.5) {
  # 28 Dean Street
   marx <- data.frame(x = 17.3855, y = 13.371 )
   text(marx$x, marx$y, labels = "Karl\nMarx", cex = text.size)
@@ -59,8 +59,9 @@ addLandmarks <- function(text.size = 0.65) {
 #' Add plague pit (Marshall Street).
 #'
 #' Draws a polygon that approximates the plague pit located around Marshall Street. From Vestry Report map.
-#' @param col Character. Color of circle.
-#' @param lty Character. Type of line for circle.
+#' @param color Character. Color of circle.
+#' @param line.type Character. Type of line for circle.
+#' @param ... Additional plotting parameters.
 #' @return Adds a polygon, based on multiple base R line segments, to a graphics plot.
 #' @seealso \code{\link[cholera]{addLandmarks}}, \code{\link[cholera]{addWhitehead}}
 #' @import graphics
@@ -68,6 +69,6 @@ addLandmarks <- function(text.size = 0.65) {
 #' @examples
 #' snowMap(add.landmarks = FALSE)
 #' addPlaguePit()
-addPlaguePit <- function(col = "black", lty = "solid") {
-  polygon(cholera::plague.pit, border = col, lty = lty)
+addPlaguePit <- function(color = "black", line.type = "solid", ...) {
+  polygon(cholera::plague.pit, border = color, lty = line.type)
 }

@@ -4,17 +4,17 @@
 \alias{addWhitehead}
 \title{Add Whitehead's Broad Street pump neighborhood.}
 \usage{
-addWhitehead(pump = "Broad Street", radius = 210, col = "black",
-  lty = "solid", vestry = FALSE, ...)
+addWhitehead(pump = "Broad Street", radius = 210, color = "black",
+  line.type = "solid", vestry = FALSE, ...)
 }
 \arguments{
 \item{pump}{Character. The name of the pump, the street name where it is located. See \code{pumps} or \code{pumps.vestry}.}
 
 \item{radius}{Numeric. Distance from a pump in yards}
 
-\item{col}{Character. Color of circle.}
+\item{color}{Character. Color of circle.}
 
-\item{lty}{Character. Circle line type.}
+\item{line.type}{Character. Circle line type.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps and locations from Vestry report. FALSE uses original 13 pumps.}
 

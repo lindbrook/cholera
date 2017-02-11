@@ -3,6 +3,8 @@
 #' Reproduces Snow's graphic annotation in the Vestry Report.
 #' @param streets Logical. TRUE plots streets. FALSE plots orthogonal area.
 #' @param color Character. Color for neighborhood annotation.
+#' @param alpha.st Numeric. A value in [0, 1] to set alpha level for street neighborhood annotation.
+#' @param alpha.area Numeric. A value in [0, 1] to set alpha level for area neighborhood annotation.
 #' @param ... Additional plotting parameters.
 #' @import graphics
 #' @export
@@ -10,14 +12,16 @@
 #' plot(neighborhoodVoronoi())
 #' addSnow()
 
-addSnow <- function(streets = TRUE, color = "dodgerblue", ...) {
+addSnow <- function(streets = TRUE, color = "dodgerblue", alpha.st = 0.75,
+  alpha.area = 1/3, ...) {
+
   if (streets) {
     for (i in seq_along(cholera::snow.trimmed.segments$road.segment)) {
       segments(cholera::snow.trimmed.segments[i, "x1"],
                cholera::snow.trimmed.segments[i, "y1"],
                cholera::snow.trimmed.segments[i, "x2"],
                cholera::snow.trimmed.segments[i, "y2"],
-               lwd = 6, col = scales::alpha(color, 0.75))
+               lwd = 6, col = scales::alpha(color, alpha.st))
     }
   } else {
     snow <- cholera::snow.trimmed.segments
@@ -40,10 +44,10 @@ addSnow <- function(streets = TRUE, color = "dodgerblue", ...) {
     })
 
     points(cholera::regular.cases[unlist(snow.trim), ], pch = 15, cex = 1,
-      col = scales::alpha(color, 1/3))
+      col = scales::alpha(color, alpha.area))
     sel <- cholera::ortho.proj.sp$road.segment %in% whole.seg
     snow.whole <- cholera::ortho.proj.sp[sel, "case"]
     points(cholera::regular.cases[snow.whole, ], pch = 15, cex = 1,
-      col = scales::alpha(color, 1/3))
+      col = scales::alpha(color, alpha.area))
   }
 }

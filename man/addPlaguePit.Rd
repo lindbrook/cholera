@@ -4,12 +4,14 @@
 \alias{addPlaguePit}
 \title{Add plague pit (Marshall Street).}
 \usage{
-addPlaguePit(col = "black", lty = "solid")
+addPlaguePit(color = "black", line.type = "solid", ...)
 }
 \arguments{
-\item{col}{Character. Color of circle.}
+\item{color}{Character. Color of circle.}
 
-\item{lty}{Character. Type of line for circle.}
+\item{line.type}{Character. Type of line for circle.}
+
+\item{...}{Additional plotting parameters.}
 }
 \value{
 Adds a polygon, based on multiple base R line segments, to a graphics plot.

@@ -2,7 +2,7 @@
 #'
 #' Plot shortest walking path from an observed or "simulated" case to the nearest pump.
 #' @param x Numeric or Integer. Observed cases must be a whole number between 1 and 578. With three exceptions, "Simulated" cases must be a whole number between 1 and 4993: 1) one case, 3334, does not have a valid orthogonal projector to any street; 2) the 20 cases that project onto Falconberg Court and Falconberg Mews (4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720) form an isolate that are "technically" disconnected from the road network and cannot reach any pump; 3) because Adam and Eve Court is also disconnected from the larger road network, the 27 cases that project onto that road can only reach pump 2, which lies on that road. This means that all other cases cannot reach pump 2.
-#' @param obs Logical. TRUE for observed cases; FALSE for "regular" simulated cases.
+#' @param observed Logical. TRUE for observed cases; FALSE for "regular" simulated cases.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param weighted Logical. Shortest path weighted by road distance.
@@ -16,15 +16,15 @@
 #' @export
 #' @examples
 #' walkingPath(1)
-#' walkingPath(1, obs = FALSE)
+#' walkingPath(1, observed = FALSE)
 #' walkingPath(1, selection = -7) # exclude pump 7 from consideration.
 #' walkingPath(1, selection = 6)  # path from case 1 to pump 6.
 #' walkingPath(1, unit = "meter", selection = 3) # distance from case 1 to pump 3.
 
-walkingPath <- function(x, obs = TRUE, zoom = FALSE, radius = 0.5,
+walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
   weighted = TRUE, vestry = FALSE, selection = NULL, unit = NULL) {
 
-  if (obs) {
+  if (observed) {
     if (x %in% 1:578 == FALSE) {
      stop('With observed cases, x must be between 1 and 578.')
     }
@@ -177,7 +177,7 @@ walkingPath <- function(x, obs = TRUE, zoom = FALSE, radius = 0.5,
 
   ## --------------- Case Data --------------- ##
 
-  if (obs == TRUE) {
+  if (observed == TRUE) {
     case <- caseSelector(x)
   } else {
     case <- caseSelector(x, FALSE)
@@ -274,7 +274,7 @@ walkingPath <- function(x, obs = TRUE, zoom = FALSE, radius = 0.5,
   nearest.pump.id <- as.numeric(substr(nearest.pump, 2, nchar(nearest.pump)))
   case.color <- colors[nearest.pump.id]
 
-  if (obs == TRUE) {
+  if (observed == TRUE) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "lightgray"))
@@ -407,8 +407,8 @@ snowColors <- function(vestry = FALSE) {
   }
 }
 
-caseSelector <- function(x, obs = TRUE) {
-  if (obs) {
+caseSelector <- function(x, observed = TRUE) {
+  if (observed) {
     case <- cholera::ortho.proj[cholera::ortho.proj$case == x, ]
   } else {
     case <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case == x, ]

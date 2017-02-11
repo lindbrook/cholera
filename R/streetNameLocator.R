@@ -28,7 +28,7 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 1) {
     case.name <- caseAndSpace(road.name)
     if (case.name %in% real.road.names == FALSE) {
       error.msg <- paste("Invalid road name.",
-        "Check spelling or see list of road names in vignette('road.names').")
+        'Check spelling or see list of road names in vignette("road.names").')
       stop(error.msg)
     } else name <- case.name
   } else name <- road.name
@@ -41,7 +41,7 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 1) {
   x.rng <- c(min(rng$x) - radius, max(rng$x) + radius)
   y.rng <- c(min(rng$y) - radius, max(rng$y) + radius)
 
-  if (!zoom) {
+  if (zoom == FALSE) {
     plot(cholera::fatalities[, c("x", "y")], xlim = range(cholera::roads$x),
       ylim = range(cholera::roads$y), pch = 15, cex = 0.5, col = "gray",
       asp = 1)
@@ -52,7 +52,7 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 1) {
     invisible(lapply(roads.list[paste(selected.road)], lines, col = "red",
       lwd = 3))
     title(main = name)
-
+    
   } else if (zoom & radius <= 5) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = NA, asp = 1)

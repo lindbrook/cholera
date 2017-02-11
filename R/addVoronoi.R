@@ -4,8 +4,8 @@
 
 #' @param select Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. FALSE for original 13 pumps. TRUE for 14 pumps in Vestry Report.
-#' @param col Character. Color of borders.
-#' @param lty Character. Type of line for borders.
+#' @param color Character. Color of borders.
+#' @param line.type Character. Type of line for borders.
 #' @param ... Additional plotting parameters.
 #' @import graphics
 #' @export
@@ -13,8 +13,8 @@
 #' snowMap(add.landmarks = FALSE)
 #' addVoronoi()
 
-addVoronoi <- function(select = NULL, vestry = FALSE, col = "black",
-  lty = "solid", ...) {
+addVoronoi <- function(select = NULL, vestry = FALSE, color = "black",
+  line.type = "solid", ...) {
 
   if (is.null(select)) {
     if (vestry) {
@@ -40,6 +40,6 @@ addVoronoi <- function(select = NULL, vestry = FALSE, col = "black",
 
   cells <- deldir::deldir(dat, rw = c(range(cholera::roads$x),
     range(cholera::roads$y)), suppressMsge = TRUE)
-  plot(cells, add = TRUE, wline = "tess", wpoints = "none", col = col,
-       lty = lty)
+  plot(cells, add = TRUE, wline = "tess", wpoints = "none", col = color,
+       lty = line.type)
 }

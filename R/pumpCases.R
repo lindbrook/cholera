@@ -1,11 +1,11 @@
-#' Numerical case IDs by Voronoi neighborhood.
+#' Extract numeric case IDs by neighborhood.
 #'
-#' @param obj An object of class "voronoi" created by neighborhoodVoronoi().
+#' @param obj An object created by neighborhoodVoronoi() or neighborhoodWalking().
 #' @return A list of pump neighborhoods with the numeric ID of observed cases.
 #' @export
 #' @examples
-#' dat <- neighborhoodVoronoi()
-#' pumpCases(dat)
+#' pumpCases(neighborhoodVoronoi())
+#' pumpCases(neighborhoodWalking())
 
 pumpCases <- function(obj) UseMethod("pumpCases", obj)
 
@@ -18,6 +18,7 @@ pumpCases.voronoi <- function(obj) {
   }
 
   output <- obj$statistic.data
+
   if (is.null(obj$selection)) {
     if (obj$vestry == TRUE) {
       stats::setNames(output, paste0("p", 1:14))
@@ -36,7 +37,7 @@ pumpCases.walking <- function(obj) {
   }
 
   output <- obj$pump.case
-
+  
   if (obj$vestry == TRUE) {
     stats::setNames(output, paste0("p", 1:14))
   } else {

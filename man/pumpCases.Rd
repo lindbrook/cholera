@@ -2,20 +2,20 @@
 % Please edit documentation in R/pumpCases.R
 \name{pumpCases}
 \alias{pumpCases}
-\title{Numerical case IDs by Voronoi neighborhood.}
+\title{Extract numeric case IDs by neighborhood.}
 \usage{
 pumpCases(obj)
 }
 \arguments{
-\item{obj}{An object of class "voronoi" created by neighborhoodVoronoi().}
+\item{obj}{An object created by neighborhoodVoronoi() or neighborhoodWalking().}
 }
 \value{
 A list of pump neighborhoods with the numeric ID of observed cases.
 }
 \description{
-Numerical case IDs by Voronoi neighborhood.
+Extract numeric case IDs by neighborhood.
 }
 \examples{
-dat <- neighborhoodVoronoi()
-pumpCases(dat)
+pumpCases(neighborhoodVoronoi())
+pumpCases(neighborhoodWalking())
 }

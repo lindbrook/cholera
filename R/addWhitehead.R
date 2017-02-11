@@ -3,8 +3,8 @@
 #' Adds a circle with a given radius from a specified water pump. By default, the function draws Whitehead's Broad Street pump neighborhood: a circle, centered on the Broad Street pump, with a radius of 210 yards.
 #' @param radius Numeric. Distance from a pump in yards
 #' @param pump Character. The name of the pump, the street name where it is located. See \code{pumps} or \code{pumps.vestry}.
-#' @param col Character. Color of circle.
-#' @param lty Character. Circle line type.
+#' @param color Character. Color of circle.
+#' @param line.type Character. Circle line type.
 #' @param vestry Logical. TRUE uses the 14 pumps and locations from Vestry report. FALSE uses original 13 pumps.
 #' @param ... Additional plotting parameters.
 #' @return Draws a circle, based on multiple line segments, to a graphics plot.
@@ -15,8 +15,8 @@
 #' snowMap(add.landmarks = FALSE)
 #' addWhitehead()
 
-addWhitehead <- function(pump = "Broad Street", radius = 210, col = "black",
-  lty = "solid", vestry = FALSE, ...) {
+addWhitehead <- function(pump = "Broad Street", radius = 210, color = "black",
+  line.type = "solid", vestry = FALSE, ...) {
   r <- radius / 59
   unit.base <- 100
   unit.radians <- 2 * pi / unit.base
@@ -66,5 +66,5 @@ addWhitehead <- function(pump = "Broad Street", radius = 210, col = "black",
       }
     }
   }
-  lines(circumference.x, circumference.y, col = col, lty = lty)
+  lines(circumference.x, circumference.y, col = color, lty = line.type)
 }

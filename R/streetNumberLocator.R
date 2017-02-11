@@ -31,7 +31,7 @@ streetNumberLocator <- function(road.number, zoom = FALSE, radius = 1) {
   x.rng <- c(min(rng$x) - radius, max(rng$x) + radius)
   y.rng <- c(min(rng$y) - radius, max(rng$y) + radius)
 
-  if (!zoom) {
+  if (zoom == FALSE) {
     plot(cholera::fatalities[, c("x", "y")], xlim = range(cholera::roads$x),
       ylim = range(cholera::roads$y), pch = 15, cex = 0.5, col = "gray",
       asp = 1)

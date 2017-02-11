@@ -4,17 +4,17 @@
 \alias{addVoronoi}
 \title{Add Voronoi cells.}
 \usage{
-addVoronoi(select = NULL, vestry = FALSE, col = "black", lty = "solid",
-  ...)
+addVoronoi(select = NULL, vestry = FALSE, color = "black",
+  line.type = "solid", ...)
 }
 \arguments{
 \item{select}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
 \item{vestry}{Logical. FALSE for original 13 pumps. TRUE for 14 pumps in Vestry Report.}
 
-\item{col}{Character. Color of borders.}
+\item{color}{Character. Color of borders.}
 
-\item{lty}{Character. Type of line for borders.}
+\item{line.type}{Character. Type of line for borders.}
 
 \item{...}{Additional plotting parameters.}
 }

@@ -4,14 +4,15 @@
 \alias{caseLocator}
 \title{Locate case by numerical ID.}
 \usage{
-caseLocator(case, zoom = FALSE, obs = TRUE, radius = 2, stacked = TRUE)
+caseLocator(case, zoom = FALSE, observed = TRUE, radius = 2,
+  stacked = TRUE)
 }
 \arguments{
 \item{case}{Numeric or Integer. Whole number between 1 and 578.}
 
 \item{zoom}{Logical.}
 
-\item{obs}{Logical. TRUE for observed. FALSE for simulated.}
+\item{observed}{Logical. TRUE for observed. FALSE for simulated.}
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
@@ -29,7 +30,7 @@ caseLocator(290)
 caseLocator(290, zoom = TRUE)
 caseLocator(290, stacked = FALSE)
 caseLocator(290, zoom = TRUE, stacked = FALSE)
-caseLocator(290, obs = FALSE)
+caseLocator(290, observed = FALSE)
 }
 \seealso{
 \code{fatalities}

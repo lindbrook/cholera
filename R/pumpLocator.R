@@ -16,7 +16,7 @@
 
 pumpLocator <- function(id, zoom = FALSE, radius = 2, vestry = FALSE) {
   if (is.numeric(id) == FALSE) {
-    stop("id must be numeric.")
+    stop('"id" must be numeric.')
   }
 
   if (!vestry & id %in% cholera::pumps$id == FALSE) {
@@ -24,7 +24,7 @@ pumpLocator <- function(id, zoom = FALSE, radius = 2, vestry = FALSE) {
   }
 
   if (vestry & id %in% cholera::pumps.vestry$id == FALSE) {
-      stop('For Vestry pumps, "id" must lie be a whole number 1 and 14.')
+      stop('For vestry pumps, "id" must lie be a whole number 1 and 14.')
   }
 
   if (vestry) {

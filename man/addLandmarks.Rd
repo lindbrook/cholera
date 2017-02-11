@@ -4,7 +4,7 @@
 \alias{addLandmarks}
 \title{Add landmarks.}
 \usage{
-addLandmarks(text.size = 0.65)
+addLandmarks(text.size = 0.5)
 }
 \arguments{
 \item{text.size}{Numeric. cex for text labels.}

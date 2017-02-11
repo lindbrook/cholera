@@ -14,11 +14,11 @@
 
 segmentLocator <- function(id, zoom = TRUE, radius = 0.5) {
   if (is.character(id) == FALSE) {
-    stop("id must be a character.")
+    stop('"id" must be a character.')
   }
 
   if (id %in% cholera::road.segments$id == FALSE) {
-    stop("invalid segment ID.")
+    stop("Invalid segment ID.")
   }
 
   st <- cholera::road.segments[cholera::road.segments$id == id, ]
