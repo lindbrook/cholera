@@ -186,7 +186,6 @@ caseAndSpace <- function(name) {
 
       # "/" in middle
       } else if (length(unlist(strsplit(lo.case[slash.position], "/"))) > 1) {
-        # vec.length <- seq_along(lo.case)
         pre <- lo.case[vec.length < slash.position]
         delimited <- lo.case[vec.length == slash.position]
         post <- lo.case[vec.length > slash.position]
