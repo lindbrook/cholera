@@ -2,6 +2,7 @@ cholera 0.1.98
 ----------------------------------------------------------------
 
 consolidate functions, data and documentation
+add fixFatalities() and unstackFatalities()
 
 
 cholera 0.1.97
