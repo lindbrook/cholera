@@ -98,18 +98,22 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
+#'  #' \code{\link{caseLocator}}
+#' @docType data
 "ortho.proj"
 
 #' Orthogonal projection of "expected" cases onto road network.
 #'
 #' @format A data frame with 5 variable that records the position of the orthogonal projection of the 4993 cases onto the network of roads. Excluding isolates (Pump 2 at  Adam and Eve Court; Falconberg Court and Falconberg Mews), there are 4972 cases.
-#'  \describe{
+#' \describe{
 #'     \item{\code{road.segment}}{"address" road segment}
 #'     \item{\code{x.proj}}{x-coordinate}
 #'     \item{\code{y.proj}}{y-coordinate}
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
+#' @seealso \code{\link{simulatedCases}}
+#' @docType data
 "ortho.proj.sp"
 
 #' Orthogonal projection of 13 original pumps.
@@ -122,6 +126,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{pump.id}}{numeric ID}
 #'  }
+#' @docType data
 "ortho.proj.pump"
 
 #' Orthogonal projection of the 14 pumps from the Vestry Report.
@@ -134,6 +139,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{pump.id}}{numeric ID}
 #'  }
+#' @docType data
 "ortho.proj.pump.vestry"
 
 #' Plague pit coordinates.
@@ -161,6 +167,7 @@
 #' \describe{
 #'  \item{\code{pump.cases.sp}}{numerical ID}
 #' }
+#' @docType data
 "pump.cases.sp"
 
 #' Dodson and Tobler's pump data with road location.
@@ -201,6 +208,7 @@
 #'     \item{\code{y}}{y-coordinate}
 #'  }
 #' @docType data
+#' @seealso \code{\link{simulatedCases}}
 "regular.cases"
 
 #' Dodson and Tobler's street data transformed into road segments.
@@ -234,7 +242,6 @@
 #'   \item{\code{name}}{road name}
 #' }
 #' @docType data
-
 #' @seealso \code{vignette}("road.names")
 #'
 #' \code{\link[cholera]{streetNameLocator}}
