@@ -35,11 +35,13 @@
 #' @docType data
 #' @seealso \code{vignette}("duplicate.missing.cases")
 #'
-#' \code{\link{caseLocator}}
+#' \code{\link[cholera]{caseLocator}}
 #'
 #' \code{\link[cholera]{streetNameLocator}}
 #'
 #' \code{\link[cholera]{streetNumberLocator}}
+#'
+#' \code{\link[cholera]{fixFatalities}}
 "fatalities"
 
 #' "Unstacked" Dodson and Tobler's cholera data: address as unit of observation.
@@ -58,11 +60,13 @@
 #'
 #' \code{vignette}("unstacking.fatalities")
 #'
-#' \code{\link{caseLocator}}
+#' \code{\link[cholera]{caseLocator}}
 #'
 #' \code{\link[cholera]{streetNameLocator}}
 #'
 #' \code{\link[cholera]{streetNumberLocator}}
+#'
+#' \code{\link[cholera]{unstackFatalities}}
 "fatalities.address"
 
 #' "Unstacked" Dodson and Tobler's cholera fatalities data.
@@ -76,7 +80,7 @@
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
 #' }
-#' @docType data
+
 #' @seealso \code{vignette}("duplicate.missing.cases")
 #'
 #' \code{vignette}("unstacking.fatalities")
@@ -86,6 +90,9 @@
 #' \code{\link[cholera]{streetNameLocator}}
 #'
 #' \code{\link[cholera]{streetNumberLocator}}
+#'
+#' \code{\link[cholera]{unstackFatalities}}
+#' @docType data
 "fatalities.unstacked"
 
 #' Orthogonal projection of observed cases onto road network.
@@ -98,7 +105,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#'  #' \code{\link{caseLocator}}
+#' @seealso \code{\link{unstackFatalities}}
 #' @docType data
 "ortho.proj"
 
@@ -112,7 +119,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @seealso \code{\link{simulatedCases}}
+#' @seealso \code{\link[cholera]{simulatedCases}}
 #' @docType data
 "ortho.proj.sp"
 
@@ -208,7 +215,7 @@
 #'     \item{\code{y}}{y-coordinate}
 #'  }
 #' @docType data
-#' @seealso \code{\link{simulatedCases}}
+#' @seealso \code{\link[cholera]{simulatedCases}}
 "regular.cases"
 
 #' Dodson and Tobler's street data transformed into road segments.
