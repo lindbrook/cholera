@@ -20,10 +20,12 @@ An amended version of Dodson and Tobler's digitization of John Snow's map of the
 \seealso{
 \code{vignette}("duplicate.missing.cases")
 
-\code{\link{caseLocator}}
+\code{\link[cholera]{caseLocator}}
 
 \code{\link[cholera]{streetNameLocator}}
 
 \code{\link[cholera]{streetNumberLocator}}
+
+\code{\link[cholera]{fixFatalities}}
 }
 \keyword{datasets}

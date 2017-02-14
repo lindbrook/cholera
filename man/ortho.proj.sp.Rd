@@ -5,7 +5,7 @@
 \alias{ortho.proj.sp}
 \title{Orthogonal projection of "expected" cases onto road network.}
 \format{A data frame with 5 variable that records the position of the orthogonal projection of the 4993 cases onto the network of roads. Excluding isolates (Pump 2 at  Adam and Eve Court; Falconberg Court and Falconberg Mews), there are 4972 cases.
- \describe{
+\describe{
     \item{\code{road.segment}}{"address" road segment}
     \item{\code{x.proj}}{x-coordinate}
     \item{\code{y.proj}}{y-coordinate}
@@ -17,5 +17,8 @@ ortho.proj.sp
 }
 \description{
 Orthogonal projection of "expected" cases onto road network.
+}
+\seealso{
+\code{\link[cholera]{simulatedCases}}
 }
 \keyword{datasets}

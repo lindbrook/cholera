@@ -27,5 +27,7 @@ An "unstacked" version of the \code{fatalities} dataset. It changes the unit of 
 \code{\link[cholera]{streetNameLocator}}
 
 \code{\link[cholera]{streetNumberLocator}}
+
+\code{\link[cholera]{unstackFatalities}}
 }
 \keyword{datasets}
