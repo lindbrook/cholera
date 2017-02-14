@@ -4,7 +4,8 @@
 \alias{unstackFatalities}
 \title{Unstack "stacks" in John Snow's cholera map.}
 \usage{
-unstackFatalities(multi.core = FALSE, fatalities = cholera::fixFatalities())
+unstackFatalities(multi.core = FALSE, compute = FALSE,
+  fatalities = cholera::fixFatalities())
 }
 \arguments{
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
