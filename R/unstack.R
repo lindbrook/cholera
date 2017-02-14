@@ -1,6 +1,6 @@
-#' Fix apparent coding error in Dodson and Tobler's digitization of John Snow's cholera map.
+#' Fix apparent coding error in digitization of Snow's cholera data.
 #'
-#' Fixes two apparent coding errors using 3 misplaced cases
+#' Fixes two apparent coding errors using 3 misplaced cases in Dodson and Tobler's data.
 #' @return An R dataframe.
 #' @export
 
@@ -12,7 +12,7 @@ fixFatalities <- function() {
   fatalities
 }
 
-#' Unstack "stacks" in John Snow's cholera map.
+#' Unstack "stacks" in Snow's cholera map.
 #'
 #' Unstacks fatalities data by 1) assigning the coordinates of the base case to all cases in a stack and 2) setting the base case as an "address" and making the number of fatalities an attribute.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
@@ -50,7 +50,6 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
     map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-
     roads.list <- split(rd[, c("x", "y")], rd$street)
     border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
