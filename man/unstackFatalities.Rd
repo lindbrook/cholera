@@ -12,7 +12,7 @@ unstackFatalities(multi.core = FALSE, fatalities = cholera::fixFatalities())
 \item{fatalities}{Corrected fatalies data from cholera::fixFatalities(). For original data, use HistData::Snow.deaths.}
 }
 \value{
-An R list that includes anchor.case, fatalities.address, fatalities.unstacked, ortho.proj
+An R list that includes anchor.case, fatalities.address, fatalities.unstacked and ortho.proj.
 }
 \description{
 Unstacks fatalities data by 1) assigning the coordinates of the base case to all cases in a stack and 2) setting the base case as an "address" and making the number of fatalities an attribute.
