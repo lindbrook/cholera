@@ -11,7 +11,7 @@ simulatedCases(compute = FALSE, multi.core = FALSE, simulated.obs = 5000L)
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 
-\item{simulated.obs}{Numeric. Number of sample cases.}
+\item{simulated.obs}{Numeric. Number of sample cases. Default is 5000.}
 }
 \value{
 An R list with ortho.proj.sp and regular.cases
