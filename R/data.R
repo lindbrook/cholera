@@ -119,7 +119,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @seealso \code{\link[cholera]{simulatedCases}}
+#' @seealso \code{\link[cholera]{simulateFatalities}}
 #' @docType data
 "ortho.proj.sp"
 
@@ -215,7 +215,7 @@
 #'     \item{\code{y}}{y-coordinate}
 #'  }
 #' @docType data
-#' @seealso \code{\link[cholera]{simulatedCases}}
+#' @seealso \code{\link[cholera]{simulateFatalities}}
 "regular.cases"
 
 #' Dodson and Tobler's street data transformed into road segments.
