@@ -3,7 +3,8 @@ cholera 0.1.98
 
 consolidate functions, data and documentation
 add fixFatalities() and unstackFatalities()
-add simulatedCases()
+add simulateFatalities()
+add pumpData()
 
 
 cholera 0.1.97
