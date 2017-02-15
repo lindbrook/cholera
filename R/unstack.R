@@ -19,7 +19,7 @@ fixFatalities <- function() {
 #' @param fatalities Corrected fatalies data from cholera::fixFatalities(). For original data, use HistData::Snow.deaths.
 #' @param compute Logical. TRUE computes data. FALSE uses pre-computed data.
 #' @return An R list that includes anchor.case, fatalities.address, fatalities.unstacked and ortho.proj.
-#' @section Notes: This function is computationally intensive. Documents code used to generate the pre-computed data in the package.
+#' @section Notes: This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 5 minutes on one core and approximately 70 seconds with eight logical (four physical) cores. This function documents the code that generates the pre-computed data included in this package.
 #' @export
 
 unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
