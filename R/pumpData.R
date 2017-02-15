@@ -5,7 +5,7 @@
 #' @param orthogonal Logical. TRUE returns pump "addresses": the coordinates of the orthogonal projection from a pump's location onto the network of roads. FALSE returns pump location coordinates.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @return An R dataframe.
-#' @section Notes: This function documents the code that generates the pre-computed data included in this package: \code{\link[cholera]{pumps}}, \code{\link[cholera]{pumps.vestry}},  \code{\link[cholera]{ortho.proj.pump}} and \code{\link[cholera]{ortho.proj.pump.vestry}}
+#' @section Notes: This function documents the code that generates \code{\link[cholera]{pumps}}, \code{\link[cholera]{pumps.vestry}}, \code{\link[cholera]{ortho.proj.pump}} and \code{\link[cholera]{ortho.proj.pump.vestry}}.
 #' @export
 
 pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
@@ -21,7 +21,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
   if (vestry == FALSE) {
     pumps
   } else {
-    # approx location of 14th pump
+    # approximate location of 14th pump
     p14 <- data.frame(id = 14,
                       street = "Hanover Street",
                       x = 3.707649,
@@ -29,7 +29,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
 
     pumps <- rbind(pumps, p14)
 
-    # approximate "correct" location of Broad Street pump
+    # approximate "corrected" location of the Broad Street pump
     pumps[pumps$id == 7, c("x", "y")] <- c(12.47044, 11.67793)
     pumps
   }
