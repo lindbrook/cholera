@@ -21,6 +21,6 @@ An R list with two elements: \code{\link[cholera]{ortho.proj.sp}} and \code{\lin
 Places regularly spaced "simulated" cases across the face of the map. These cases are then orthogonally projected onto the road network, which are used to generate "expected" cases, paths and neighborhoods. The function relies on sp::spsample() and sp::Polygon().
 }
 \section{Notes}{
- This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 31 minutes on one core and approximately 7 minutes with eight logical (four physical) cores. This function documents the code that generates \code{\link[cholera]{ortho.proj.sp}} and \code{\link[cholera]{regular.cases}}.
+ This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 31 minutes to run on one core and approximately 7 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link[cholera]{ortho.proj.sp}} and \code{\link[cholera]{regular.cases}}.
 }
 
