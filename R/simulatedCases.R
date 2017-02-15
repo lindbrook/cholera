@@ -6,7 +6,8 @@
 #' @param simulated.obs Numeric. Number of sample cases.
 #' @return An R list with ortho.proj.sp and regular.cases
 #' @seealso \code{ortho.proj.sp} and \code{regular.cases}
-#' @section Notes: This function is computationally intensive. Documents code used to generate the pre-computed data in the package.
+#' @section Notes: This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 31 minutes on one core and approximately 7 minutes with eight logical (four physical) cores. This function documents the code that generates the pre-computed data included in this package.
+#' @export
 
 ## from ortho.proj.sp.R
 
@@ -17,7 +18,6 @@ simulatedCases <- function(compute = FALSE, multi.core = FALSE,
     ortho.proj.sp <- cholera::ortho.proj.sp
     regular.cases <- cholera::regular.cases
     list(ortho.proj.sp = ortho.proj.sp, regular.cases = regular.cases)
-
   } else {
     if (is.logical(multi.core)) {
       if (multi.core == TRUE) {
@@ -66,6 +66,7 @@ simulatedCases <- function(compute = FALSE, multi.core = FALSE,
       n = simulated.obs, type = "regular")
     regular.cases <- data.frame(sp.frame@coords)
     names(regular.cases) <- c("x", "y")
+    regular.cases <- split(regular.cases, rownames(regular.cases))
 
     orthogonal.projection <- parallel::mclapply(regular.cases, function(case) {
       within.radius <- lapply(road.segments$id, function(x) {
@@ -133,8 +134,9 @@ simulatedCases <- function(compute = FALSE, multi.core = FALSE,
     if (any(is.na(ortho.proj.sp))) {
       ortho.proj.sp <- stats::na.omit(ortho.proj.sp)
     }
-    
-    list(ortho.proj.sp = ortho.proj.sp, regular.cases = regular.cases)
+
+    list(ortho.proj.sp = ortho.proj.sp,
+         regular.cases = do.call(rbind, regular.cases))
   }
 }
 

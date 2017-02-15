@@ -20,7 +20,7 @@ An R list with ortho.proj.sp and regular.cases
 Places regularly spaced "simulated" cases across the face of the map. These cases are then orthogonally projected onto the road network, which are used to generate "expected" cases, paths and neighborhoods. The function relies on sp::spsample() and sp::Polygon().
 }
 \section{Notes}{
- This function is computationally intensive. Documents code used to generate the pre-computed data in the package.
+ This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 31 minutes on one core and approximately 7 minutes with eight logical (four physical) cores. This function documents the code that generates the pre-computed data included in this package.
 }
 
 \seealso{
