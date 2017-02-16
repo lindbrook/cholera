@@ -14,4 +14,7 @@ pump.cases.sp
 \description{
 List of 4972 regular "simulated" cases grouped by pump neighborhood.
 }
+\seealso{
+\code{\link[cholera]{neighborhoodWalking}}
+}
 \keyword{datasets}

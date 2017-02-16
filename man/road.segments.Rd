@@ -20,4 +20,7 @@ road.segments
 \description{
 This data set transforms Dodson and Tobler's street data to give each straight line segment of a "road" a unique ID.
 }
+\seealso{
+\code{\link[cholera]{neighborhoodWalking}}
+}
 \keyword{datasets}

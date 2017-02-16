@@ -42,7 +42,7 @@
 #'
 #' \code{\link[cholera]{streetNumberLocator}}
 #'
-#' \code{\link[cholera]{fixFatalities}}
+#' @section Notes: \code{\link[cholera]{fixFatalities}} documents code for these data.
 "fatalities"
 
 #' "Unstacked" Dodson and Tobler's cholera data: address as unit of observation.
@@ -86,7 +86,7 @@
 #'
 #' \code{vignette}("unstacking.fatalities")
 #'
-#' \code{\link{caseLocator}}
+#' \code{\link[cholera]{caseLocator}}
 #'
 #' \code{\link[cholera]{streetNameLocator}}
 #'
@@ -134,6 +134,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{pump.id}}{numeric ID}
 #'  }
+#' @seealso \code{\link[cholera]{pumpData}}
 #' @docType data
 "ortho.proj.pump"
 
@@ -147,6 +148,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{pump.id}}{numeric ID}
 #'  }
+#' @seealso \code{\link[cholera]{pumpData}}
 #' @docType data
 "ortho.proj.pump.vestry"
 
@@ -167,6 +169,8 @@
 #' \describe{
 #'  \item{\code{pump.cases}}{numerical ID}
 #' }
+#' @seealso \code{\link[cholera]{neighborhoodWalking}}
+#' @docType data
 "pump.cases"
 
 #' List of 4972 regular "simulated" cases grouped by pump neighborhood.
@@ -175,6 +179,7 @@
 #' \describe{
 #'  \item{\code{pump.cases.sp}}{numerical ID}
 #' }
+#' @seealso \code{\link[cholera]{neighborhoodWalking}}
 #' @docType data
 "pump.cases.sp"
 
@@ -192,7 +197,6 @@
 #' @docType data
 #' @section Notes: \code{\link[cholera]{pumpData}} documents code for these data.
 "pumps"
-
 #' Vestry report pump data.
 #'
 #' From the map Snow includes in the Vestry Report, this data set adds the pump at Hanover Square and relocates the Broad Street pump.
@@ -205,6 +209,7 @@
 #'   \item{\code{y}}{y-coordinate}
 #' }
 #' @docType data
+#' @section Notes: \code{\link[cholera]{pumpData}} documents code for these data.
 "pumps.vestry"
 
 #' "Expected" cases.
@@ -235,6 +240,7 @@
 #'   \item{\code{y2}}{y-coordinate of second endpoint}
 #' }
 #' @docType data
+#' @seealso \code{\link[cholera]{neighborhoodWalking}}
 "road.segments"
 
 #' Dodson and Tobler's street data with appended road names.

@@ -14,4 +14,7 @@ pump.cases
 \description{
 List of the 578 observed cholera cases grouped by pump neighborhood.
 }
+\seealso{
+\code{\link[cholera]{neighborhoodWalking}}
+}
 \keyword{datasets}

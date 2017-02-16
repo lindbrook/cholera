@@ -17,4 +17,8 @@ pumps.vestry
 \description{
 From the map Snow includes in the Vestry Report, this data set adds the pump at Hanover Square and relocates the Broad Street pump.
 }
+\section{Notes}{
+ \code{\link[cholera]{pumpData}} documents code for these data.
+}
+
 \keyword{datasets}

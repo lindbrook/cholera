@@ -18,4 +18,7 @@ ortho.proj.pump.vestry
 \description{
 Orthogonal projection of the 14 pumps from the Vestry Report.
 }
+\seealso{
+\code{\link[cholera]{pumpData}}
+}
 \keyword{datasets}

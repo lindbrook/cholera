@@ -18,4 +18,7 @@ ortho.proj.pump
 \description{
 Orthogonal projection of 13 original pumps.
 }
+\seealso{
+\code{\link[cholera]{pumpData}}
+}
 \keyword{datasets}
