@@ -79,8 +79,8 @@ To illustrate the differences, first consider how datasets treat the largest out
 ```{r}
 ## The 18 cases at 38 Broad Street ##
 
-broad38 <- c(239, 12, 310, 398, 562, 397, 421, 190, 290, 61, 174, 547, 523, 521,
-             138, 59, 340, 508)
+broad38 <- c(239, 12, 310, 398, 562, 397, 421, 190, 290, 61, 174, 547, 523,
+             521, 138, 59, 340, 508)
 
 # With fatalities, all members of the stack have different coordinates
 
@@ -183,7 +183,8 @@ p <- ggplot(data = Snow.deathsB, aes(x = x, y = y)) +
   coord_fixed(xlim = x.range, ylim = y.range) +
   theme_bw() +
   theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) +
+        panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
   facet_wrap(~ facet, nrow = 2) +
   ggtitle('"Stacked" Fatalities')
 
@@ -234,7 +235,8 @@ p <- ggplot(data = fatalities.addressB, aes(x = x, y = y)) +
   coord_fixed(xlim = x.range, ylim = y.range) +
   theme_bw() +
   theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) +
+        panel.grid.minor = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
   facet_wrap(~ facet, nrow = 2) +
   ggtitle('"Unstacked" Fatalities')
 
