@@ -5,7 +5,7 @@ consolidate functions, data and documentation
 add fixFatalities() and unstackFatalities()
 add simulateFatalities()
 add pumpData()
-
+amend "Unstacking" Bars vignette
 
 cholera 0.1.97
 ----------------------------------------------------------------

@@ -1,10 +1,10 @@
 ---
-title: "'Unstacking' Bars"
+title: '"Unstacking" Bars'
 author: "lindbrook"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{'Unstacking' Bars}
+  %\VignetteIndexEntry{"Unstacking" Bars}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -108,7 +108,7 @@ To illustrate the virtues of "unstacked" data, consider the following.
 
 The example below applies applies bivariate kernel density contours, of varying bandwidths, to "stacked" and "unstacked" data. The plots illustrate the spatial distribution or topography of fatalities, and provides a way to estimate the epicenter, if not the source, of the outbreak.
 
-With the "stacked" data, _fatalities_, the contours are more uncertain and the epicenter is further south than we might expect given that the Broad Street pump (blue triangle) is the recognized source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward, in a southerly direction.
+With the "stacked" data, _fatalities_, the contours are more uncertain and the epicenter is further south than we might expect given that the Broad Street pump (blue triangle)^[The pump is located at its correct location, which Snow amended in the second version of his map, which was included in the Vestry report.] is the recognized source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward, in a southerly direction.
 
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 
@@ -176,14 +176,16 @@ broad.df <- data.frame(x = broad.x, y = broad.y)
 
 p <- ggplot(data = Snow.deathsB, aes(x = x, y = y)) +
   geom_point(color = "gray") +
-  geom_point(data = Snow.pumps, aes(x = x, y = y), color = "blue", pch = 2,
+  # geom_point(data = Snow.pumps, aes(x = x, y = y), color = "blue", pch = 2,
+  #            size = 2.5, stroke = 0.75) +
+  geom_point(data = pumps.vestry, aes(x = x, y = y), color = "blue", pch = 2,
              size = 2.5, stroke = 0.75) +
   coord_fixed(xlim = x.range, ylim = y.range) +
   theme_bw() +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +
   facet_wrap(~ facet, nrow = 2) +
-  ggtitle("'Stacked' Fatalities")
+  ggtitle('"Stacked" Fatalities')
 
 for (i in seq_along(roads.list)) {
   p <- p + geom_path(data = roads.list[[i]], aes(x = x, y = y),
@@ -225,14 +227,16 @@ fatalities.addressB <- do.call(rbind, fatalities.addressB)
 
 p <- ggplot(data = fatalities.addressB, aes(x = x, y = y)) +
   geom_point(color = "gray") +
-  geom_point(data = Snow.pumps, aes(x = x, y = y), color = "blue", pch = 2,
+  # geom_point(data = Snow.pumps, aes(x = x, y = y), color = "blue", pch = 2,
+  #            size = 2.5, stroke = 0.75) +
+  geom_point(data = pumps.vestry, aes(x = x, y = y), color = "blue", pch = 2,
              size = 2.5, stroke = 0.75) +
   coord_fixed(xlim = x.range, ylim = y.range) +
   theme_bw() +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) +
   facet_wrap(~ facet, nrow = 2) +
-  ggtitle("'Unstacked' Fatalities")
+  ggtitle('"Unstacked" Fatalities')
 
 for (i in seq_along(roads.list)) {
   p <- p + geom_path(data = roads.list[[i]], aes(x = x, y = y),
