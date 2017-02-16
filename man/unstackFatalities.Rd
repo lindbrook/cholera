@@ -21,6 +21,6 @@ An R list that includes anchor.case, fatalities.address, fatalities.unstacked an
 Unstacks fatalities data by 1) assigning the coordinates of the base case to all cases in a stack and 2) setting the base case as an "address" and making the number of fatalities an attribute.
 }
 \section{Notes}{
- This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 5 minutes on one core and approximately 70 seconds with eight logical (four physical) cores. This function documents the code that generates the pre-computed data included in this package.
+ This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 5 minutes to run on one core and approximately 70 seconds to run on eight logical (four physical) cores. This function documents the code that generates \code{\link[cholera]{anchor.case}}, \code{\link[cholera]{fatalities.address}}, \code{\link[cholera]{fatalities.unstacked}} and \code{\link[cholera]{ortho.proj}}.
 }
 
