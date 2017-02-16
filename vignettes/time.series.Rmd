@@ -32,7 +32,7 @@ plot(time.series.vestry$date, time.series.vestry$fatalities, type = "o",
 abline(v = as.Date("1854-09-08"), col = "red", lty = "dotted")
 text(time.series.vestry[time.series.vestry$date == "1854-09-08",
   c("date", "fatalities")], label = "Sep 08", cex = 0.75, col = "red", pos = 4)
-title(main = "Vestry Report: Removal of the Broad Street Pump Handle")
+title(main = "Vestry Report: Removal of the Broad Street\nPump Handle")
 
 ```
 
