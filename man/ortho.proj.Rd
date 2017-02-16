@@ -18,7 +18,8 @@ ortho.proj
 \description{
 Orthogonal projection of observed cases onto road network.
 }
-\seealso{
-\code{\link{unstackFatalities}}
+\section{Notes}{
+ \code{\link[cholera]{unstackFatalities}} documents code for these data.
 }
+
 \keyword{datasets}

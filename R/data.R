@@ -7,6 +7,7 @@
 #'     \item{\code{case}}{numerical case ID}
 #'     \item{\code{anchor.case}}{numerical case ID of anchor.case}
 #' }
+#' @section Notes: \code{\link[cholera]{unstackFatalities}} documents code for these data.
 #' @docType data
 "anchor.case"
 
@@ -66,7 +67,7 @@
 #'
 #' \code{\link[cholera]{streetNumberLocator}}
 #'
-#' \code{\link[cholera]{unstackFatalities}}
+#' @section Notes: \code{\link[cholera]{unstackFatalities}} documents code for these data.
 "fatalities.address"
 
 #' "Unstacked" Dodson and Tobler's cholera fatalities data.
@@ -91,7 +92,7 @@
 #'
 #' \code{\link[cholera]{streetNumberLocator}}
 #'
-#' \code{\link[cholera]{unstackFatalities}}
+#' @section Notes: \code{\link[cholera]{unstackFatalities}} documents code for these data.
 #' @docType data
 "fatalities.unstacked"
 
@@ -105,7 +106,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @seealso \code{\link{unstackFatalities}}
+#' @section Notes: \code{\link[cholera]{unstackFatalities}} documents code for these data.
 #' @docType data
 "ortho.proj"
 
@@ -189,6 +190,7 @@
 #'   \item{\code{y}}{y-coordinate}
 #' }
 #' @docType data
+#' @section Notes: \code{\link[cholera]{pumpData}} documents code for these data.
 "pumps"
 
 #' Vestry report pump data.
