@@ -341,8 +341,8 @@ seg.data <- unlist(street.list[[sel]])
 segments(seg.data["x1"], seg.data["y1"], seg.data["x2"], seg.data["y2"],
          col = "#009E73")
 
-title(main = paste0("Geometric Interpolation: Candidate Locations for the",
-                    "\n", " Two Missing Cases at 40 Broad Street"))
+title(main = paste0("Geometric Interpolation: Candidate Locations for",
+                    "\n", "the Two Missing Cases at 40 Broad Street"))
 
 ols <- segmentOLS(sel)
 segment.slope <- coef(ols)[2]
