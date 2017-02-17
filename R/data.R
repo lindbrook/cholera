@@ -258,6 +258,7 @@
 #' \code{\link{streetNameLocator}}
 #'
 #' \code{\link{streetNumberLocator}}
+#' @section Notes: \code{\link{roadSegments}} documents the code for these data.
 #' @docType data
 "road.segments"
 
