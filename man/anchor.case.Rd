@@ -12,7 +12,7 @@
 anchor.case
 }
 \description{
-Data frame that links a case to its stack. which is the case at the base of a stack. For use with \code{\link{caseLocator}}.
+Data frame that links a fatality to its stack, a stack's base case. For use with \code{\link{caseLocator}}.
 }
 \section{Notes}{
  \code{\link{unstackFatalities}} documents the code for these data.

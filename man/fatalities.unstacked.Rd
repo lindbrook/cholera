@@ -3,7 +3,7 @@
 \docType{data}
 \name{fatalities.unstacked}
 \alias{fatalities.unstacked}
-\title{"Unstacked" Dodson and Tobler's cholera fatalities data.}
+\title{"Unstacked" amended cholera fatalities data with fataltiy as unit of observation.}
 \format{A data frame with 3 variable that records the position of the 578 bars on Snow's map.
 
  \describe{

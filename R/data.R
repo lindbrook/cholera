@@ -1,6 +1,6 @@
 #' Anchor or base case of each stack of fatalities.
 #'
-#' Data frame that links a case to its stack. which is the case at the base of a stack. For use with \code{\link{caseLocator}}.
+#' Data frame that links a fatality to its stack, a stack's base case. For use with \code{\link{caseLocator}}.
 #'
 #' @format
 #'  \describe{
@@ -11,7 +11,7 @@
 #' @docType data
 "anchor.case"
 
-#' Map border line segments IDs.
+#' Numeric IDs of line segments that create the map's border frame.
 #'
 #' Vector of ordered numbers that identify the line segments that make up the frame of the map. For use with sp::Polygon().
 #'
@@ -50,7 +50,7 @@
 #' @docType data
 "fatalities"
 
-#' "Unstacked" Dodson and Tobler's cholera data: address as unit of observation.
+#' "Unstacked" amended cholera data with address as unit of observation.
 #'
 #' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinate of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
 #'
@@ -74,7 +74,7 @@
 #' @docType data
 "fatalities.address"
 
-#' "Unstacked" Dodson and Tobler's cholera fatalities data.
+#' "Unstacked" amended cholera fatalities data with fataltiy as unit of observation.
 #'
 #' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinate of the case at the base of a stack, and assigns the base case's coordinates to all cases in the stack.
 #'
@@ -111,7 +111,7 @@
 #' @docType data
 "ortho.proj"
 
-#' Orthogonal projection of "expected" cases onto road network.
+#' Orthogonal projection of simulated "expected" cases onto road network.
 #'
 #' @format A data frame with 5 variable that records the position of the orthogonal projection of the 4993 cases onto the network of roads. Excluding isolates (Pump 2 at  Adam and Eve Court; Falconberg Court and Falconberg Mews), there are 4972 cases.
 #' \describe{
@@ -192,7 +192,7 @@
 #' @docType data
 "pump.cases.sp"
 
-#' Dodson and Tobler's pump data with road location.
+#' Dodson and Tobler's pump data with street name.
 #'
 #' Adds and amends road locations for water pumps from John Snow's map to Dodson and Tobler's street data. The latter are available at Michael Friendly's HistData::Snow.streets.
 #'

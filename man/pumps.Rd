@@ -3,7 +3,7 @@
 \docType{data}
 \name{pumps}
 \alias{pumps}
-\title{Dodson and Tobler's pump data with road location.}
+\title{Dodson and Tobler's pump data with street name.}
 \format{A data frame with 13 observations and 4 variables that describe the pumps on Snow's map.
 \describe{
   \item{\code{id}}{pump number between 1 and 13}

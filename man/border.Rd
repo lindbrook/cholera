@@ -3,7 +3,7 @@
 \docType{data}
 \name{border}
 \alias{border}
-\title{Map border line segments IDs.}
+\title{Numeric IDs of line segments that create the map's border frame.}
 \format{\describe{
     \item{\code{border}}{numerical ID}
 }}
