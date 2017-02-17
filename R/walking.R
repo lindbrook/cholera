@@ -7,7 +7,7 @@
 #' @param weighted Logical. TRUE uses distance weighted by edge length (i.e., road length). FALSE uses unweighted distance.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @return A list of data and parameters of computed walking path neighborhoods.
-#' @section Notes: This function is computationally intensive (the default configuration takes about 1-2 minutes to run on a single core). However, three configurations will return pre-computed results: the default set of arguments, which uses all pumps, the default set excluding the pump on Little Marlborough Street (pump 6), and the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7 ).
+#' @section Notes: This function is computationally intensive (the default configuration takes about 1-2 minutes to run on a single core). However, six configurations will return pre-computed results. The first three use the 13 pumps in the original map: 1) the default set of arguments, which uses all pumps; 2) the default set excluding the pump on Little Marlborough Street (pump 6), and 3) the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7). The last three use the same set of arguments as above but uses the 14 pumps in the second version from the Vestry report. This includes a repositioned Broad Street pump.
 #' @export
 #' @examples
 #' neighborhoodWalking()
@@ -22,6 +22,12 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     statistic == "address" & weighted & multi.core == FALSE)
   test3 <- (length(selection) == 2 & all(6:7 %in% selection) & vestry == FALSE &
     statistic == "address" & weighted & multi.core == FALSE)
+  test4 <- (is.null(selection) & vestry & statistic == "address" &
+    weighted & multi.core == FALSE)
+  test5 <- (length(selection) == 1 & -6 %in% selection & vestry &
+    statistic == "address" & weighted & multi.core == FALSE)
+  test6 <- (length(selection) == 2 & all(6:7 %in% selection) & vestry &
+    statistic == "address" & weighted & multi.core == FALSE)
 
   if (test1) {
     output <- sysdata[["address"]]
@@ -29,6 +35,12 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     output <- sysdata[["address.not6"]]
   } else if (test3) {
     output <- sysdata[["address67"]]
+  } else if (test4) {
+    output <- sysdata[["vestry"]]
+  } else if (test5) {
+    output <- sysdata[["vestry67"]]
+  } else if (test6) {
+    output <- sysdata[["vestry.not6"]]
   } else {
     if (vestry) {
       if (is.null(selection) == FALSE) {
@@ -300,15 +312,28 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
         }))
 
         if (is.null(x$selection)) {
-          points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
-          text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
-            label = x$pump)
+          if (x$vestry) {
+            points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
+              col = x$snow.colors)
+            text(cholera::pumps.vestry[, c("x", "y")], cex = 0.9, pos = 1,
+              label = x$pump)
+          } else {
+            points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+            text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
+              label = x$pump)
+          }
           title(main = "Observed Walking Paths")
         } else {
-          points(cholera::pumps[selection, c("x", "y")], pch = 24,
-            col = x$snow.colors)
-          text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
-            label = x$pump)
+          if (x$vestry) {
+            points(cholera::pumps.vestry[selection, c("x", "y")], pch = 24,
+              col = x$snow.colors)
+            text(cholera::pumps.vestry[selection, c("x", "y")], cex = 0.9,
+              pos = 1, label = x$pump)
+          } else {
+            points(cholera::pumps[selection, c("x", "y")], pch = 24, col = x$snow.colors)
+            text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
+              label = x$pump)
+          }
           title(main = paste0("Observed Walking Paths", "\n", "Pumps ",
             paste(sort(x$selection), collapse = ", ")))
         }
@@ -325,15 +350,29 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
         }))
 
         if (is.null(x$selection)) {
-          points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
-          text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
-            label = x$pump)
+          if (x$vestry) {
+            points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
+              col = x$snow.colors)
+            text(cholera::pumps.vestry[, c("x", "y")], cex = 0.9, pos = 1,
+              label = x$pump)
+          } else {
+            points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+            text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
+              label = x$pump)
+          }
           title(main = "Observed Walking Paths")
         } else {
-          points(cholera::pumps[selection, c("x", "y")], pch = 24,
-            col = x$snow.colors)
-          text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
-            label = x$pump)
+          if (x$vestry) {
+            points(cholera::pumps.vestry[selection, c("x", "y")], pch = 24,
+              col = x$snow.colors)
+            text(cholera::pumps.vestry[selection, c("x", "y")], cex = 0.9,
+              pos = 1, label = x$pump)
+          } else {
+            points(cholera::pumps[selection, c("x", "y")], pch = 24,
+              col = x$snow.colors)
+            text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
+              label = x$pump)
+          }
           title(main = paste0("Observed Walking Paths", "\n", "Pumps ",
             paste(sort(x$selection), collapse = ", ")))
         }
@@ -344,14 +383,29 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
       }))
 
       if (is.null(x$selection)) {
-        points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
-        text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1, label = x$pump)
+        if (x$vestry) {
+          points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
+            col = x$snow.colors)
+          text(cholera::pumps.vestry[, c("x", "y")], cex = 0.9, pos = 1,
+            label = x$pump)
+        } else {
+          points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+          text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
+            label = x$pump)
+        }
         title(main = "Expected Walking Paths")
       } else {
-        points(cholera::pumps[selection, c("x", "y")], pch = 24,
-          col = x$snow.colors)
-        text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
-          label = x$pump)
+        if (x$vestry) {
+          points(cholera::pumps.vestry[selection, c("x", "y")], pch = 24,
+            col = x$snow.colors)
+          text(cholera::pumps.vestry[selection, c("x", "y")], cex = 0.9,
+            pos = 1, label = x$pump)
+        } else {
+          points(cholera::pumps[selection, c("x", "y")], pch = 24,
+            col = x$snow.colors)
+          text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
+            label = x$pump)
+        }
         title(main = paste0("Expected Walking Paths", "\n", "Pumps ",
           paste(sort(x$selection), collapse = ", ")))
       }
@@ -361,10 +415,17 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
       invisible(lapply(roads.list, lines, col = "gray"))
       invisible(lapply(border.list, lines))
 
-      invisible(lapply(seq_along(cholera::pumps$id), function(i) {
-        points(cholera::regular.cases[x$sim.pump.case[[i]], ],
-          col = scales::alpha(cholera::snowColors()[i], 0.33), pch = 15)
-      }))
+      if (x$vestry) {
+        invisible(lapply(seq_along(cholera::pumps.vestry$id), function(i) {
+          points(cholera::regular.cases[x$sim.pump.case[[i]], ],
+            col = scales::alpha(x$snow.colors[i], 0.33), pch = 15)
+        }))
+      } else {
+        invisible(lapply(seq_along(cholera::pumps$id), function(i) {
+          points(cholera::regular.cases[x$sim.pump.case[[i]], ],
+            col = scales::alpha(x$snow.colors[i], 0.33), pch = 15)
+        }))
+      }
 
       invisible(lapply(seq_along(obs.pump), function(i) {
         plotSegment(x$pump.seg[[names(obs.pump)[i]]],
@@ -378,35 +439,70 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
       }))
 
       if (is.null(x$selection)) {
-        points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
-        text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1, label = x$pump)
+        if (x$vestry) {
+          points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
+            col = x$snow.colors)
+          text(cholera::pumps.vestry[, c("x", "y")], cex = 0.9, pos = 1,
+            label = x$pump)
+        } else {
+          points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+          text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
+            label = x$pump)
+        }
         title(main = "Observed Walking Neighborhoods and Paths")
       } else {
-        points(cholera::pumps[selection, c("x", "y")], pch = 24,
-          bg = x$snow.colors)
-        text(cholera::pumps[selection, c("x", "y")], cex = 1, pos = 1,
-          label = selection)
+        if (x$vestry) {
+          points(cholera::pumps.vestry[selection, c("x", "y")], pch = 24,
+            col = x$snow.colors)
+          text(cholera::pumps.vestry[selection, c("x", "y")], cex = 0.9,
+            pos = 1, label = x$pump)
+        } else {
+          points(cholera::pumps[selection, c("x", "y")], pch = 24,
+            col = x$snow.colors)
+          text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
+            label = x$pump)
+        }
         title(main = paste0("Observed Walking Neighborhoods and Paths", "\n",
           "Pumps ", paste(sort(x$selection), collapse = ", ")))
       }
     } else {
-      invisible(lapply(cholera::pumps$id, function(i) {
-        points(cholera::regular.cases[x$sim.pump.case[[i]], ],
-          col = cholera::snowColors()[i], pch = 15)
-      }))
+      if (x$vestry) {
+        invisible(lapply(seq_along(cholera::pumps.vestry$id), function(i) {
+          points(cholera::regular.cases[x$sim.pump.case[[i]], ],
+            col = x$snow.color[i], pch = 15)
+        }))
+      } else {
+        invisible(lapply(seq_along(cholera::pumps$id), function(i) {
+          points(cholera::regular.cases[x$sim.pump.case[[i]], ],
+            col = x$snow.colors[i], pch = 15)
+        }))
+      }
 
       invisible(lapply(roads.list, lines))
       invisible(lapply(border.list, lines))
 
       if (is.null(x$selection)) {
-        points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white")
-        text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1, col = "white",
-          label = x$pump)
+        if (x$vestry) {
+          points(cholera::pumps.vestry[, c("x", "y")], pch = 24, bg = "white")
+          text(cholera::pumps.vestry[, c("x", "y")], cex = 0.9, pos = 1,
+            col = "white", label = x$pump)
+        } else {
+          points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white")
+          text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1, col = "white",
+            label = x$pump)
+        }
         title(main = "Expected Walking Neighborhoods")
       } else {
-        points(cholera::pumps[selection, c("x", "y")], bg = "white", pch = 24)
-        text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
-          col = "white", label = x$pump)
+        if (x$vestry) {
+          points(cholera::pumps.vestry[selection, c("x", "y")], pch = 24,
+            bg = "white")
+          text(cholera::pumps.vestry[selection, c("x", "y")], cex = 0.9,
+            pos = 1, col = "white", label = x$pump)
+        } else {
+          points(cholera::pumps[selection, c("x", "y")], bg = "white", pch = 24)
+          text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
+            col = "white", label = x$pump)
+        }
         title(main = paste0("Observed Walking Neighborhoods", "\n", "Pumps ",
           paste(sort(x$selection), collapse = ", ")))
       }
