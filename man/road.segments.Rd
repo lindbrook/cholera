@@ -32,5 +32,7 @@ This data set transforms Dodson and Tobler's street data to give each straight l
 \code{\link{streetNameLocator}}
 
 \code{\link{streetNumberLocator}}
+
+\code{\link{segmentLocator}}
 }
 \keyword{datasets}

@@ -27,5 +27,7 @@ This data set adds road names from John Snow's map to Dodson and Tobler's street
 \code{\link{streetNameLocator}}
 
 \code{\link{streetNumberLocator}}
+
+\code{\link{segmentLocator}}
 }
 \keyword{datasets}

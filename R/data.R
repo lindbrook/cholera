@@ -258,6 +258,8 @@
 #' \code{\link{streetNameLocator}}
 #'
 #' \code{\link{streetNumberLocator}}
+#'
+#' \code{\link{segmentLocator}}
 #' @section Notes: \code{\link{roadSegments}} documents the code for these data.
 #' @docType data
 "road.segments"
@@ -283,6 +285,8 @@
 #' \code{\link{streetNameLocator}}
 #'
 #' \code{\link{streetNumberLocator}}
+#'
+#' \code{\link{segmentLocator}}
 "roads"
 
 #' Snow neighborhood cases.
