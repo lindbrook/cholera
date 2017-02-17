@@ -18,7 +18,8 @@ ortho.proj.sp
 \description{
 Orthogonal projection of "expected" cases onto road network.
 }
-\seealso{
-\code{\link{simulateFatalities}}
+\section{Notes}{
+ \code{\link{simulateFatalities}} documents the code for these data.
 }
+
 \keyword{datasets}

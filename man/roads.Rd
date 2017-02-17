@@ -20,6 +20,8 @@ roads
 This data set adds road names from John Snow's map to Dodson and Tobler's street data. The latter are also available from HistData::Snow.streets.
 }
 \seealso{
+\code{\link{road.segments}}
+
 \code{vignette}("road.names")
 
 \code{\link{streetNameLocator}}

@@ -7,7 +7,7 @@
 #'     \item{\code{case}}{numerical case ID}
 #'     \item{\code{anchor.case}}{numerical case ID of anchor.case}
 #' }
-#' @section Notes: \code{\link{unstackFatalities}} documents code for these data.
+#' @section Notes: \code{\link{unstackFatalities}} documents the code for these data.
 #' @docType data
 "anchor.case"
 
@@ -33,16 +33,21 @@
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
 #' }
-#' @docType data
-#' @seealso \code{vignette}("duplicate.missing.cases")
-#'
-#' \code{\link{caseLocator}}
+#' @seealso \code{\link{caseLocator}}
 #'
 #' \code{\link{streetNameLocator}}
 #'
 #' \code{\link{streetNumberLocator}}
 #'
-#' @section Notes: \code{\link{fixFatalities}} documents code for these data.
+#' @section Notes: \code{\link{fixFatalities}} documents the code for these data.
+#'
+#' For details, see \code{vignette}("duplicate.missing.cases").
+#' @seealso  \code{\link{caseLocator}}
+#'
+#' \code{\link{streetNameLocator}}
+#'
+#' \code{\link{streetNumberLocator}}
+#' @docType data
 "fatalities"
 
 #' "Unstacked" Dodson and Tobler's cholera data: address as unit of observation.
@@ -56,18 +61,17 @@
 #'     \item{\code{y}}{y-coordinate}
 #'     \item{\code{case.count}}{number of fatalities at address}
 #' }
-#' @docType data
-#' @seealso \code{vignette}("duplicate.missing.cases")
-#'
-#' \code{vignette}("unstacking.fatalities")
-#'
+#' @seealso
 #' \code{\link{caseLocator}}
 #'
 #' \code{\link{streetNameLocator}}
 #'
 #' \code{\link{streetNumberLocator}}
 #'
-#' @section Notes: \code{\link{unstackFatalities}} documents code for these data.
+#' @section Notes: \code{\link{unstackFatalities}} documents the code for these data.
+#'
+#' For details, see \code{vignette}("unstacking.fatalities").
+#' @docType data
 "fatalities.address"
 
 #' "Unstacked" Dodson and Tobler's cholera fatalities data.
@@ -81,18 +85,15 @@
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
 #' }
-
-#' @seealso \code{vignette}("duplicate.missing.cases")
-#'
-#' \code{vignette}("unstacking.fatalities")
-#'
-#' \code{\link{caseLocator}}
+#' @seealso \code{\link{caseLocator}}
 #'
 #' \code{\link{streetNameLocator}}
 #'
 #' \code{\link{streetNumberLocator}}
 #'
-#' @section Notes: \code{\link{unstackFatalities}} documents code for these data.
+#' @section Notes: \code{\link{unstackFatalities}} documents the code for these data.
+#'
+#' For details, see \code{vignette}("unstacking.fatalities").
 #' @docType data
 "fatalities.unstacked"
 
@@ -106,7 +107,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @section Notes: \code{\link{unstackFatalities}} documents code for these data.
+#' @section Notes: \code{\link{unstackFatalities}} documents the code for these data.
 #' @docType data
 "ortho.proj"
 
@@ -120,7 +121,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @seealso \code{\link{simulateFatalities}}
+#' @section Notes: \code{\link{simulateFatalities}} documents the code for these data.
 #' @docType data
 "ortho.proj.sp"
 
@@ -134,7 +135,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{pump.id}}{numeric ID}
 #'  }
-#' @seealso \code{\link{pumpData}}
+#' @section Notes: \code{\link{pumpData}} documents the code for these data.
 #' @docType data
 "ortho.proj.pump"
 
@@ -148,7 +149,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{pump.id}}{numeric ID}
 #'  }
-#' @seealso \code{\link{pumpData}}
+#' @section Notes: \code{\link{pumpData}} documents the code for these data.
 #' @docType data
 "ortho.proj.pump.vestry"
 
@@ -163,13 +164,17 @@
 #' @docType data
 "plague.pit"
 
-#' List of the 578 observed cholera cases grouped by pump neighborhood.
+#' List of the 321 observed "addresses" of cholera fatalities grouped by pump neighborhood.
 #'
 #' @format A list with 13 vectors.
 #' \describe{
 #'  \item{\code{pump.cases}}{numerical ID}
 #' }
-#' @seealso \code{\link{neighborhoodWalking}}
+#' @section Notes: \code{\link{neighborhoodWalking}} documents the code for these data.
+#'
+#' For details, see \code{vignette}("pump.neighborhoods").
+#' @examples
+#' neighborhoodWalking()$pump.case
 #' @docType data
 "pump.cases"
 
@@ -179,7 +184,11 @@
 #' \describe{
 #'  \item{\code{pump.cases.sp}}{numerical ID}
 #' }
-#' @seealso \code{\link{neighborhoodWalking}}
+#' @section Notes: \code{\link{neighborhoodWalking}} documents the code for these data.
+#'
+#' For details, see \code{vignette}("pump.neighborhoods").
+#' @examples
+#' neighborhoodWalking()$sim.pump.case
 #' @docType data
 "pump.cases.sp"
 
@@ -194,9 +203,11 @@
 #'   \item{\code{x}}{x-coordinate}
 #'   \item{\code{y}}{y-coordinate}
 #' }
+#' @seealso \code{\link{pumpLocator}}
+#' @section Notes: \code{\link{pumpData}} documents the code for these data.
 #' @docType data
-#' @section Notes: \code{\link{pumpData}} documents code for these data.
 "pumps"
+
 #' Vestry report pump data.
 #'
 #' From the map Snow includes in the Vestry Report, this data set adds the pump at Hanover Square and relocates the Broad Street pump.
@@ -208,8 +219,9 @@
 #'   \item{\code{x}}{x-coordinate}
 #'   \item{\code{y}}{y-coordinate}
 #' }
+#' @seealso \code{\link{pumpLocator}}
+#' @section Notes: \code{\link{pumpData}} documents the code for these data.
 #' @docType data
-#' @section Notes: \code{\link{pumpData}} documents code for these data.
 "pumps.vestry"
 
 #' "Expected" cases.
@@ -221,8 +233,8 @@
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
 #'  }
+#' @section Notes: \code{\link{simulateFatalities}} documents the code for these data.
 #' @docType data
-#' @seealso \code{\link{simulateFatalities}}
 "regular.cases"
 
 #' Dodson and Tobler's street data transformed into road segments.
@@ -239,8 +251,14 @@
 #'   \item{\code{x2}}{x-coordinate of second endpoint}
 #'   \item{\code{y2}}{y-coordinate of second endpoint}
 #' }
+#' @seealso \code{\link{roads}}
+#'
+#'\code{vignette}("road.names")
+#'
+#' \code{\link{streetNameLocator}}
+#'
+#' \code{\link{streetNumberLocator}}
 #' @docType data
-#' @seealso \code{\link{neighborhoodWalking}}
 "road.segments"
 
 #' Dodson and Tobler's street data with appended road names.
@@ -257,7 +275,9 @@
 #'   \item{\code{name}}{road name}
 #' }
 #' @docType data
-#' @seealso \code{vignette}("road.names")
+#' @seealso \code{\link{road.segments}}
+#'
+#'\code{vignette}("road.names")
 #'
 #' \code{\link{streetNameLocator}}
 #'
@@ -277,7 +297,7 @@
 
 #' "Trimmed" Snow neighborhood road segments.
 #'
-#' The road segments (i.e., endpoints) that describe Snow's Broad Street pump neighborhood (Vestry Report 1855b). Note that "outer" segments are trimmed: only the portion of the segment transversed by the walking path of the most "distant" case on that segment is included.
+#' The "trimmed" road segments (i.e., endpoints) that describe Snow's Broad Street pump neighborhood (Vestry Report 1855b). "Outer" segments are trimmed: to eliminate overlplotting, only the portion of the segment transversed by the walking path of the most "distant" case on that segment is included.
 #'
 #' @format A data frame with 6 variables and 384 observations.
 #' \describe{
@@ -293,7 +313,7 @@
 
 #' Vestry Report Time Series Data.
 #'
-#' Time series of recorded fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle on the Broad Street pump on 08 September 1854.
+#' Time series of recorded fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle from the Broad Street pump on 08 September 1854.
 #'
 #' @format A data frame with 61 observations and 3 variables.
 #' \describe{
@@ -301,12 +321,15 @@
 #'   \item{\code{fatalities}}{fatal attacks}
 #'   \item{\code{deaths}}{deaths}
 #' }
+#' @seealso \code{\link{time.series.snow}}
+#'
+#' '\code{vignette}("time.series")
 #' @docType data
 "time.series.vestry"
 
 #' Snow time series data.
 #'
-#' Time series of recorded fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of the removal of the handle on the Broad Street pump on 08 September 1854.
+#' Time series of recorded fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of removing the handle from the Broad Street pump on 08 September 1854.
 #'
 #' @format A data frame with 43 observations and 3 variables.
 #' \describe{
@@ -314,5 +337,8 @@
 #'   \item{\code{fatalities}}{fatal attacks}
 #'   \item{\code{deaths}}{daily deaths}
 #' }
+#' @seealso \code{\link{time.series.vestry}}
+#'
+#' '\code{vignette}("time.series")
 #' @docType data
 "time.series.snow"

@@ -3,7 +3,7 @@
 \docType{data}
 \name{pump.cases}
 \alias{pump.cases}
-\title{List of the 578 observed cholera cases grouped by pump neighborhood.}
+\title{List of the 321 observed "addresses" of cholera fatalities grouped by pump neighborhood.}
 \format{A list with 13 vectors.
 \describe{
  \item{\code{pump.cases}}{numerical ID}
@@ -12,9 +12,15 @@
 pump.cases
 }
 \description{
-List of the 578 observed cholera cases grouped by pump neighborhood.
+List of the 321 observed "addresses" of cholera fatalities grouped by pump neighborhood.
 }
-\seealso{
-\code{\link{neighborhoodWalking}}
+\section{Notes}{
+ \code{\link{neighborhoodWalking}} documents the code for these data.
+
+For details, see \code{vignette}("pump.neighborhoods").
+}
+
+\examples{
+neighborhoodWalking()$pump.case
 }
 \keyword{datasets}

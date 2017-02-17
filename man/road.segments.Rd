@@ -21,6 +21,12 @@ road.segments
 This data set transforms Dodson and Tobler's street data to give each straight line segment of a "road" a unique ID.
 }
 \seealso{
-\code{\link{neighborhoodWalking}}
+\code{\link{roads}}
+
+\code{vignette}("road.names")
+
+\code{\link{streetNameLocator}}
+
+\code{\link{streetNumberLocator}}
 }
 \keyword{datasets}

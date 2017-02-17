@@ -14,7 +14,13 @@ pump.cases.sp
 \description{
 List of 4972 regular "simulated" cases grouped by pump neighborhood.
 }
-\seealso{
-\code{\link{neighborhoodWalking}}
+\section{Notes}{
+ \code{\link{neighborhoodWalking}} documents the code for these data.
+
+For details, see \code{vignette}("pump.neighborhoods").
+}
+
+\examples{
+neighborhoodWalking()$sim.pump.case
 }
 \keyword{datasets}
