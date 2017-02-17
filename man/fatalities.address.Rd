@@ -18,7 +18,7 @@ fatalities.address
 An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinate of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
 }
 \section{Notes}{
- \code{\link[cholera]{unstackFatalities}} documents code for these data.
+ \code{\link{unstackFatalities}} documents code for these data.
 }
 
 \seealso{
@@ -26,10 +26,10 @@ An "unstacked" version of the \code{fatalities} dataset. It changes the unit of 
 
 \code{vignette}("unstacking.fatalities")
 
-\code{\link[cholera]{caseLocator}}
+\code{\link{caseLocator}}
 
-\code{\link[cholera]{streetNameLocator}}
+\code{\link{streetNameLocator}}
 
-\code{\link[cholera]{streetNumberLocator}}
+\code{\link{streetNumberLocator}}
 }
 \keyword{datasets}

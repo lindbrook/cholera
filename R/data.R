@@ -7,7 +7,7 @@
 #'     \item{\code{case}}{numerical case ID}
 #'     \item{\code{anchor.case}}{numerical case ID of anchor.case}
 #' }
-#' @section Notes: \code{\link[cholera]{unstackFatalities}} documents code for these data.
+#' @section Notes: \code{\link{unstackFatalities}} documents code for these data.
 #' @docType data
 "anchor.case"
 
@@ -36,13 +36,13 @@
 #' @docType data
 #' @seealso \code{vignette}("duplicate.missing.cases")
 #'
-#' \code{\link[cholera]{caseLocator}}
+#' \code{\link{caseLocator}}
 #'
-#' \code{\link[cholera]{streetNameLocator}}
+#' \code{\link{streetNameLocator}}
 #'
-#' \code{\link[cholera]{streetNumberLocator}}
+#' \code{\link{streetNumberLocator}}
 #'
-#' @section Notes: \code{\link[cholera]{fixFatalities}} documents code for these data.
+#' @section Notes: \code{\link{fixFatalities}} documents code for these data.
 "fatalities"
 
 #' "Unstacked" Dodson and Tobler's cholera data: address as unit of observation.
@@ -61,13 +61,13 @@
 #'
 #' \code{vignette}("unstacking.fatalities")
 #'
-#' \code{\link[cholera]{caseLocator}}
+#' \code{\link{caseLocator}}
 #'
-#' \code{\link[cholera]{streetNameLocator}}
+#' \code{\link{streetNameLocator}}
 #'
-#' \code{\link[cholera]{streetNumberLocator}}
+#' \code{\link{streetNumberLocator}}
 #'
-#' @section Notes: \code{\link[cholera]{unstackFatalities}} documents code for these data.
+#' @section Notes: \code{\link{unstackFatalities}} documents code for these data.
 "fatalities.address"
 
 #' "Unstacked" Dodson and Tobler's cholera fatalities data.
@@ -86,13 +86,13 @@
 #'
 #' \code{vignette}("unstacking.fatalities")
 #'
-#' \code{\link[cholera]{caseLocator}}
+#' \code{\link{caseLocator}}
 #'
-#' \code{\link[cholera]{streetNameLocator}}
+#' \code{\link{streetNameLocator}}
 #'
-#' \code{\link[cholera]{streetNumberLocator}}
+#' \code{\link{streetNumberLocator}}
 #'
-#' @section Notes: \code{\link[cholera]{unstackFatalities}} documents code for these data.
+#' @section Notes: \code{\link{unstackFatalities}} documents code for these data.
 #' @docType data
 "fatalities.unstacked"
 
@@ -106,7 +106,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @section Notes: \code{\link[cholera]{unstackFatalities}} documents code for these data.
+#' @section Notes: \code{\link{unstackFatalities}} documents code for these data.
 #' @docType data
 "ortho.proj"
 
@@ -120,7 +120,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @seealso \code{\link[cholera]{simulateFatalities}}
+#' @seealso \code{\link{simulateFatalities}}
 #' @docType data
 "ortho.proj.sp"
 
@@ -134,7 +134,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{pump.id}}{numeric ID}
 #'  }
-#' @seealso \code{\link[cholera]{pumpData}}
+#' @seealso \code{\link{pumpData}}
 #' @docType data
 "ortho.proj.pump"
 
@@ -148,7 +148,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{pump.id}}{numeric ID}
 #'  }
-#' @seealso \code{\link[cholera]{pumpData}}
+#' @seealso \code{\link{pumpData}}
 #' @docType data
 "ortho.proj.pump.vestry"
 
@@ -169,7 +169,7 @@
 #' \describe{
 #'  \item{\code{pump.cases}}{numerical ID}
 #' }
-#' @seealso \code{\link[cholera]{neighborhoodWalking}}
+#' @seealso \code{\link{neighborhoodWalking}}
 #' @docType data
 "pump.cases"
 
@@ -179,7 +179,7 @@
 #' \describe{
 #'  \item{\code{pump.cases.sp}}{numerical ID}
 #' }
-#' @seealso \code{\link[cholera]{neighborhoodWalking}}
+#' @seealso \code{\link{neighborhoodWalking}}
 #' @docType data
 "pump.cases.sp"
 
@@ -195,7 +195,7 @@
 #'   \item{\code{y}}{y-coordinate}
 #' }
 #' @docType data
-#' @section Notes: \code{\link[cholera]{pumpData}} documents code for these data.
+#' @section Notes: \code{\link{pumpData}} documents code for these data.
 "pumps"
 #' Vestry report pump data.
 #'
@@ -209,7 +209,7 @@
 #'   \item{\code{y}}{y-coordinate}
 #' }
 #' @docType data
-#' @section Notes: \code{\link[cholera]{pumpData}} documents code for these data.
+#' @section Notes: \code{\link{pumpData}} documents code for these data.
 "pumps.vestry"
 
 #' "Expected" cases.
@@ -222,7 +222,7 @@
 #'     \item{\code{y}}{y-coordinate}
 #'  }
 #' @docType data
-#' @seealso \code{\link[cholera]{simulateFatalities}}
+#' @seealso \code{\link{simulateFatalities}}
 "regular.cases"
 
 #' Dodson and Tobler's street data transformed into road segments.
@@ -240,7 +240,7 @@
 #'   \item{\code{y2}}{y-coordinate of second endpoint}
 #' }
 #' @docType data
-#' @seealso \code{\link[cholera]{neighborhoodWalking}}
+#' @seealso \code{\link{neighborhoodWalking}}
 "road.segments"
 
 #' Dodson and Tobler's street data with appended road names.
@@ -259,9 +259,9 @@
 #' @docType data
 #' @seealso \code{vignette}("road.names")
 #'
-#' \code{\link[cholera]{streetNameLocator}}
+#' \code{\link{streetNameLocator}}
 #'
-#' \code{\link[cholera]{streetNumberLocator}}
+#' \code{\link{streetNumberLocator}}
 "roads"
 
 #' Snow neighborhood cases.

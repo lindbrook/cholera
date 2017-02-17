@@ -18,16 +18,16 @@ fatalities
 An amended version of Dodson and Tobler's digitization of John Snow's map of the 1854 London cholera outbreak. It removes 3 duplicate observations and imputes the location for 3 "missing" observation. This information is also available in HistData::Snow.deaths2 (>= ver. 0.7-8).
 }
 \section{Notes}{
- \code{\link[cholera]{fixFatalities}} documents code for these data.
+ \code{\link{fixFatalities}} documents code for these data.
 }
 
 \seealso{
 \code{vignette}("duplicate.missing.cases")
 
-\code{\link[cholera]{caseLocator}}
+\code{\link{caseLocator}}
 
-\code{\link[cholera]{streetNameLocator}}
+\code{\link{streetNameLocator}}
 
-\code{\link[cholera]{streetNumberLocator}}
+\code{\link{streetNumberLocator}}
 }
 \keyword{datasets}

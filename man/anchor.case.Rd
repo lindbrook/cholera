@@ -15,7 +15,7 @@ anchor.case
 Data frame that links a case to its stack. which is the case at the base of a stack. For use with \code{\link{caseLocator}}.
 }
 \section{Notes}{
- \code{\link[cholera]{unstackFatalities}} documents code for these data.
+ \code{\link{unstackFatalities}} documents code for these data.
 }
 
 \keyword{datasets}

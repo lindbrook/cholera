@@ -19,6 +19,6 @@ ortho.proj.sp
 Orthogonal projection of "expected" cases onto road network.
 }
 \seealso{
-\code{\link[cholera]{simulateFatalities}}
+\code{\link{simulateFatalities}}
 }
 \keyword{datasets}
