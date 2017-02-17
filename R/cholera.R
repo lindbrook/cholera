@@ -1,4 +1,4 @@
-#' Introduction
+#' cholera: introduction
 #'
 #' Amend, augment and aid the analysis of John Snow's cholera data.
 #'

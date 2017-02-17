@@ -4,7 +4,7 @@
 \name{cholera}
 \alias{cholera}
 \alias{cholera-package}
-\title{Introduction}
+\title{cholera: introduction}
 \description{
 Amend, augment and aid the analysis of John Snow's cholera data.
 }
