@@ -6,6 +6,8 @@ add fixFatalities() and unstackFatalities()
 add simulateFatalities()
 add pumpData()
 amend "Unstacking" Bars vignette
+add roadSegments()
+
 
 cholera 0.1.97
 ----------------------------------------------------------------
