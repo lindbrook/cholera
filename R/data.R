@@ -123,7 +123,7 @@
 #'  }
 #' @section Notes: \code{\link{simulateFatalities}} documents the code for these data.
 #' @docType data
-"ortho.proj.sp"
+"sim.ortho.proj"
 
 #' Orthogonal projection of 13 original pumps.
 #'
@@ -182,7 +182,7 @@
 #'
 #' @format A list with 13 vectors.
 #' \describe{
-#'  \item{\code{pump.cases.sp}}{numerical ID}
+#'  \item{\code{sim.pump.cases}}{numerical ID}
 #' }
 #' @section Notes: \code{\link{neighborhoodWalking}} documents the code for these data.
 #'
@@ -190,7 +190,7 @@
 #' @examples
 #' neighborhoodWalking()$sim.pump.case
 #' @docType data
-"pump.cases.sp"
+"sim.pump.cases"
 
 #' Dodson and Tobler's pump data with street name.
 #'
