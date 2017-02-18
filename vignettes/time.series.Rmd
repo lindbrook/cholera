@@ -24,23 +24,26 @@ As part of the Vestry Report, both he and the committee included separate tables
 
 The data are plotted below. With both sets of data, we can see that the removal of the handle comes after the a significant decline in the fatality level.
 
-## Figures
+## Vestry Report: Official Data
 
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 plot(time.series.vestry$date, time.series.vestry$fatalities, type = "o",
   xlab = "Date", ylab = "fatalities")
 abline(v = as.Date("1854-09-08"), col = "red", lty = "dotted")
-text(time.series.vestry[time.series.vestry$date == "1854-09-08",
-  c("date", "fatalities")], label = "Sep 08", cex = 0.75, col = "red", pos = 4)
-title(main = "Vestry Report: Removal of the Broad Street\nPump Handle")
+axis(3, at = as.Date("1854-09-08"), label = "Sep 08", cex.axis = 0.8, 
+  line = -0.5, col.axis = "red", col.tick = "red")
+title(main = "Removing the Broad Street Pump Handle")
 
 ```
 
+## Vestry Report: Snow Data
+
 ```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
 plot(time.series.snow$date, time.series.snow$deaths, type = "o", xlab = "Date",
-  ylab = "fatalities", xlim = range(time.series.vestry$date), ylim = range(time.series.vestry$fatalities))
+  ylab = "fatalities", xlim = range(time.series.vestry$date), 
+  ylim = range(time.series.vestry$fatalities))
 abline(v = as.Date("1854-09-08"), col = "red", lty = "dotted")
-text(time.series.snow[time.series.snow$date == "1854-09-08",
-  c("date", "deaths")], label = "Sep 08", cex = 0.75, col = "red", pos = 4)
-title(main = "Snow: Removal of the Broad Street Pump Handle")
+axis(3, at = as.Date("1854-09-08"), label = "Sep 08", cex.axis = 0.8, 
+  line = -0.5, col.axis = "red", col.tick = "red")
+title(main = "Removing the Broad Street Pump Handle")
 ```
