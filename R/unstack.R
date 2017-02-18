@@ -1,4 +1,4 @@
-#' Fix apparent coding error in Dodson and Tobler's digitization of Snow's cholera data.
+#' Fix apparent coding error in Dodson and Tobler's digitization of Snow's map.
 #'
 #' Fixes two apparent coding errors using 3 misplaced cases in Dodson and Tobler's data.
 #' @return An R dataframe.

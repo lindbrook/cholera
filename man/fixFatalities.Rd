@@ -2,7 +2,7 @@
 % Please edit documentation in R/unstack.R
 \name{fixFatalities}
 \alias{fixFatalities}
-\title{Fix apparent coding error in Dodson and Tobler's digitization of Snow's cholera data.}
+\title{Fix apparent coding error in Dodson and Tobler's digitization of Snow's map.}
 \usage{
 fixFatalities()
 }
