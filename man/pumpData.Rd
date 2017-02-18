@@ -20,6 +20,6 @@ An R dataframe.
 Returns the Dodson and Tobler coordinates for the original thirteen pumps, appended with name of nearest road. Adds "approximate" locations for the fourteenth pump and the relocated Broad Street pump  that areincluded in Snow's second version of the pump in the Vestry report.
 }
 \section{Notes}{
- This function documents the code that generates \code{\link[cholera]{pumps}}, \code{\link[cholera]{pumps.vestry}}, \code{\link[cholera]{ortho.proj.pump}} and \code{\link[cholera]{ortho.proj.pump.vestry}}.
+ This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
 }
 
