@@ -190,7 +190,7 @@ plot.voronoi <- function(x, ...) {
       }
     }
 
-    voronoi.case.id <- cholera::pumpCases(x)
+    voronoi.case.id <- cholera::pumpCase(x)
 
     elements <- length(unlist(voronoi.case.id))
     voronoi.colors <- vector(length = elements)
