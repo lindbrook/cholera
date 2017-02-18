@@ -178,7 +178,7 @@
 #' @docType data
 "pump.case"
 
-#' #' List of 4972 regular "simulated" cases grouped by pump neighborhood.
+#' List of 4972 regular "simulated" cases grouped by pump neighborhood.
 #'
 #' @format A list with 13 vectors.
 #' \describe{
