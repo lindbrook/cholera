@@ -164,9 +164,9 @@
 #' @docType data
 "plague.pit"
 
-#' List of the 321 observed "addresses" of cholera fatalities grouped by pump neighborhood.
+#' List of the observed fatality "addresses" grouped by pump neighborhood.
 #'
-#' @format A list with 13 vectors.
+#' @format A list 321 IDs spread over 13 vectors.
 #' \describe{
 #'  \item{\code{pump.case}}{numerical ID}
 #' }
@@ -178,9 +178,9 @@
 #' @docType data
 "pump.case"
 
-#' List of 4972 regular "simulated" cases grouped by pump neighborhood.
+#' List of "simulated" fatalities grouped by pump neighborhood.
 #'
-#' @format A list with 13 vectors.
+#' @format A list 4972 IDs spread over 13 vectors.
 #' \describe{
 #'  \item{\code{sim.pump.case}}{numerical ID}
 #' }
