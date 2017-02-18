@@ -168,7 +168,7 @@
 #'
 #' @format A list with 13 vectors.
 #' \describe{
-#'  \item{\code{pump.cases}}{numerical ID}
+#'  \item{\code{pump.case}}{numerical ID}
 #' }
 #' @section Notes: \code{\link{neighborhoodWalking}} documents the code for these data.
 #'
@@ -176,13 +176,13 @@
 #' @examples
 #' neighborhoodWalking()$pump.case
 #' @docType data
-"pump.cases"
+"pump.case"
 
-#' List of 4972 regular "simulated" cases grouped by pump neighborhood.
+#' #' List of 4972 regular "simulated" cases grouped by pump neighborhood.
 #'
 #' @format A list with 13 vectors.
 #' \describe{
-#'  \item{\code{sim.pump.cases}}{numerical ID}
+#'  \item{\code{sim.pump.case}}{numerical ID}
 #' }
 #' @section Notes: \code{\link{neighborhoodWalking}} documents the code for these data.
 #'
@@ -190,7 +190,7 @@
 #' @examples
 #' neighborhoodWalking()$sim.pump.case
 #' @docType data
-"sim.pump.cases"
+"sim.pump.case"
 
 #' Dodson and Tobler's pump data with street name.
 #'
