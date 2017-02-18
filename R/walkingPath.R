@@ -321,7 +321,7 @@ walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
     }
 
   } else {
-    plot(cholera::ortho.proj.sp[, c("x.proj", "y.proj")], xlim = x.rng,
+    plot(cholera::sim.ortho.proj[, c("x.proj", "y.proj")], xlim = x.rng,
       ylim = y.rng, xlab = "x", ylab = "y", pch = NA, asp = 1)
     invisible(lapply(roads.list, lines, col = "lightgray"))
     invisible(lapply(border.list, lines))
@@ -411,7 +411,7 @@ caseSelector <- function(x, observed = TRUE) {
   if (observed) {
     case <- cholera::ortho.proj[cholera::ortho.proj$case == x, ]
   } else {
-    case <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case == x, ]
+    case <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == x, ]
   }
   case
 }

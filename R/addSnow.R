@@ -29,8 +29,8 @@ addSnow <- function(streets = TRUE, color = "dodgerblue", alpha.st = 0.75,
     trim.seg <- trimmed$road.segment
     whole.seg <- snow[snow$trimmed == FALSE, "road.segment"]
 
-    sel <- cholera::ortho.proj.sp$road.segment %in% trim.seg
-    trim.reg.proj <- cholera::ortho.proj.sp[sel, ]
+    sel <- cholera::sim.ortho.proj$road.segment %in% trim.seg
+    trim.reg.proj <- cholera::sim.ortho.proj[sel, ]
 
     snow.trim <- lapply(trimmed$road.segment, function(x) {
       a <- trim.reg.proj[trim.reg.proj$road.segment == x, ]
@@ -45,8 +45,8 @@ addSnow <- function(streets = TRUE, color = "dodgerblue", alpha.st = 0.75,
 
     points(cholera::regular.cases[unlist(snow.trim), ], pch = 15, cex = 1,
       col = scales::alpha(color, alpha.area))
-    sel <- cholera::ortho.proj.sp$road.segment %in% whole.seg
-    snow.whole <- cholera::ortho.proj.sp[sel, "case"]
+    sel <- cholera::sim.ortho.proj$road.segment %in% whole.seg
+    snow.whole <- cholera::sim.ortho.proj[sel, "case"]
     points(cholera::regular.cases[snow.whole, ], pch = 15, cex = 1,
       col = scales::alpha(color, alpha.area))
   }

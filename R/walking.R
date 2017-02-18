@@ -672,7 +672,7 @@ caseSegments <- function(x, neighborhood.paths, pump.cases,
     obs.seg <- unique(cholera::ortho.proj[cholera::ortho.proj$case %in%
       n.cases, "road.segment"])
   } else {
-    obs.seg <- unique(cholera::ortho.proj.sp[cholera::ortho.proj.sp$case %in%
+    obs.seg <- unique(cholera::sim.ortho.proj[cholera::sim.ortho.proj$case %in%
       n.cases, "road.segment"])
   }
 
@@ -700,9 +700,9 @@ caseSegments <- function(x, neighborhood.paths, pump.cases,
       st.cases <- cholera::ortho.proj[sel, ]
 
     } else {
-      sel <- cholera::ortho.proj.sp$road.segment %in% st$id &
-        cholera::ortho.proj.sp$case %in% n.cases
-      st.cases <- cholera::ortho.proj.sp[sel, ]
+      sel <- cholera::sim.ortho.proj$road.segment %in% st$id &
+        cholera::sim.ortho.proj$case %in% n.cases
+      st.cases <- cholera::sim.ortho.proj[sel, ]
     }
 
     entry.node <- lapply(st.cases$case, function(x) {
@@ -815,11 +815,11 @@ pumpSegments <- function(x, neighborhood.paths, vestry) {
 trimExpPaths <- function(pump.road.segments, select.pumps, pump.names, vestry,
   weighted, cores) {
 
-  edge.case <- cholera::ortho.proj.sp[is.na(cholera::ortho.proj.sp$x.proj),
+  edge.case <- cholera::sim.ortho.proj[is.na(cholera::sim.ortho.proj$x.proj),
     "case"]
   falconberg.id <- pump.road.segments[pump.road.segments$name ==
     "Falconberg Court" | pump.road.segments$name == "Falconberg Mews", "id"]
-  falconberg <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$road.segment
+  falconberg <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment
     %in% falconberg.id, "case"]
 
   if (all(pump.names %in% "p2" == FALSE)) {
@@ -830,11 +830,11 @@ trimExpPaths <- function(pump.road.segments, select.pumps, pump.names, vestry,
       4682, 4683, 4684, 4753, 4754, 4755, 4756, 4757, 4827, 4828, 4829, 4830,
       4900, 4901, 4902, 4955, 4956)
 
-    ortho <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case
+    ortho <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case
       %in% c(edge.case, falconberg, adam.eve) == FALSE, ]
 
   } else {
-    ortho <- cholera::ortho.proj.sp[cholera::ortho.proj.sp$case
+    ortho <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case
       %in% c(edge.case, falconberg) == FALSE, ]
   }
 

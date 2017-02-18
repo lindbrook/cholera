@@ -4,17 +4,17 @@
 #' @param compute Logical. TRUE computes data. FALSE uses pre-computed data. For replication of data used in the package, FALSE is the default.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @param simulated.obs Numeric. Number of sample cases. Default is 5000.
-#' @return An R list with two elements: \code{\link[cholera]{ortho.proj.sp}} and \code{\link[cholera]{regular.cases}}
-#' @section Notes: This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 31 minutes to run on one core and approximately 7 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link[cholera]{ortho.proj.sp}} and \code{\link[cholera]{regular.cases}}.
+#' @return An R list with two elements: \code{\link[cholera]{sim.ortho.proj}} and \code{\link[cholera]{regular.cases}}
+#' @section Notes: This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 31 minutes to run on one core and approximately 7 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link[cholera]{sim.ortho.proj}} and \code{\link[cholera]{regular.cases}}.
 #' @export
 
 simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
   simulated.obs = 5000L) {
 
   if (compute == FALSE) {
-    ortho.proj.sp <- cholera::ortho.proj.sp
+    sim.ortho.proj <- cholera::sim.ortho.proj
     regular.cases <- cholera::regular.cases
-    list(ortho.proj.sp = ortho.proj.sp, regular.cases = regular.cases)
+    list(sim.ortho.proj = sim.ortho.proj, regular.cases = regular.cases)
   } else {
     if (is.logical(multi.core)) {
       if (multi.core == TRUE) {
@@ -123,16 +123,16 @@ simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
       }
     }, mc.cores = cores)
 
-    ortho.proj.sp <- do.call(rbind, orthogonal.projection)
-    ortho.proj.sp$case <- 1:nrow(ortho.proj.sp)
-    row.names(ortho.proj.sp) <- NULL
+    sim.ortho.proj <- do.call(rbind, orthogonal.projection)
+    sim.ortho.proj$case <- 1:nrow(sim.ortho.proj)
+    row.names(sim.ortho.proj) <- NULL
 
     # removes cases that don't find a road
-    if (any(is.na(ortho.proj.sp))) {
-      ortho.proj.sp <- stats::na.omit(ortho.proj.sp)
+    if (any(is.na(sim.ortho.proj))) {
+      sim.ortho.proj <- stats::na.omit(sim.ortho.proj)
     }
 
-    list(ortho.proj.sp = ortho.proj.sp,
+    list(sim.ortho.proj = sim.ortho.proj,
          regular.cases = do.call(rbind, regular.cases))
   }
 }
