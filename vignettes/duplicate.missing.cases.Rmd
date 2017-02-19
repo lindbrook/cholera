@@ -57,7 +57,7 @@ fix <- data.frame(x = c(12.56974, 12.53617, 12.33145), y = c(11.51226, 11.58107,
 fatalities[c(91, 93, 209), c("x", "y")] <- fix
 ```
 
-This fixed data set is available as _fatalities_ in this package and as _Snow.deaths2_ in Michael Friendly's \code{HistData} package (>= ver. 0.7-8). For those interested, an explanation of how I arrived at those values follows.
+This fixed data set is available as _fatalities_ in this package and as _Snow.deaths2_ in \code{HistData} (>= ver. 0.7-8). For those interested, an explanation of how I arrived at those values follows.
 
 ## Duplicate Cases: Cambridge Street
 
