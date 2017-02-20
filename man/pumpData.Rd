@@ -23,3 +23,6 @@ Returns the Dodson and Tobler coordinates for the original thirteen pumps, appen
  This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
 }
 
+\seealso{
+\code{\link{pumpLocator}}
+}

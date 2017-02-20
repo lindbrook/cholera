@@ -20,5 +20,5 @@ pumpCase(neighborhoodVoronoi())
 pumpCase(neighborhoodWalking())
 }
 \seealso{
-#' \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodWalking}},
+\code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodWalking}},
 }
