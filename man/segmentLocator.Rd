@@ -24,3 +24,6 @@ selected road segment. With Dodson and Tobler's data, a street (e.g., Broad Stre
 segmentLocator("190-1")
 segmentLocator("216-1")
 }
+\seealso{
+\code{\link{road.segments}}
+}

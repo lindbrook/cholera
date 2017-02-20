@@ -24,5 +24,11 @@ snowMap()
 snowMap(vestry = TRUE, stacked = FALSE)
 }
 \seealso{
-\code{\link[cholera]{addLandmarks}}
+\code{\link{addLandmarks}},
+\code{\link{addKernelDensity}},
+\code{\link{addLandmarks}},
+\code{\link{addPlaguePit}},
+\code{\link{addSnow}},
+\code{\link{addVoronoi}}.
+\code{\link{addWhitehead}}
 }

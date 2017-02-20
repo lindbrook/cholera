@@ -7,11 +7,10 @@
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param weighted Logical. Shortest path weighted by road distance.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param selection Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
+#' @param selection Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.
 #' @param unit Character. Default is NULL, which returns the graph's unit scale. "yard" returns distance in yards. "meter" returns distance in meters. Either implies "weighted" is TRUE.
 #' @return A base R graphics plot.
-#' @seealso \code{fatalities}
-#' \code{fatalities.address}
+#' @seealso \code{\link{fatalities}}, \code{\link{simulateFatalities}}, \code{vignette("pump.neighborhoods")}
 #' @import graphics
 #' @export
 #' @examples

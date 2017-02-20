@@ -12,3 +12,6 @@ An R dataframe.
 \description{
 Fixes two apparent coding errors using 3 misplaced cases in Dodson and Tobler's data.
 }
+\seealso{
+\code{vignette("duplicate.missing.cases")}
+}

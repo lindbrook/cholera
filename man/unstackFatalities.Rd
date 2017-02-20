@@ -24,3 +24,6 @@ Unstacks fatalities data by 1) assigning the coordinates of the base case to all
  This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 5 minutes to run on one core and approximately 70 seconds to run on eight logical (four physical) cores. This function documents the code that generates \code{\link{anchor.case}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
 }
 
+\seealso{
+\code{vignette("unstacking.fatalities")}
+}

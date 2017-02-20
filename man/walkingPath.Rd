@@ -20,7 +20,7 @@ walkingPath(x, observed = TRUE, zoom = FALSE, radius = 0.5,
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
-\item{selection}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
+\item{selection}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.}
 
 \item{unit}{Character. Default is NULL, which returns the graph's unit scale. "yard" returns distance in yards. "meter" returns distance in meters. Either implies "weighted" is TRUE.}
 }
@@ -38,6 +38,5 @@ walkingPath(1, selection = 6)  # path from case 1 to pump 6.
 walkingPath(1, unit = "meter", selection = 3) # distance from case 1 to pump 3.
 }
 \seealso{
-\code{fatalities}
-\code{fatalities.address}
+\code{\link{fatalities}}, \code{\link{simulateFatalities}}, \code{vignette("pump.neighborhoods")}
 }

@@ -5,6 +5,7 @@
 #' @param id Character. A concatenation of a street's numberic ID, a whole number between 1 and 528, and a second number to identify the segment.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. For values <= 5, the anchor case number is plotted.
+#' @seealso \code{\link{road.segments}}
 #' @return A base R graphics plot.
 #' @import graphics
 #' @export

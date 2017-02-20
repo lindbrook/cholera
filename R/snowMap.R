@@ -5,7 +5,13 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param stacked Logical. Use stacked fatalities.
 #' @return A base R graphics plot.
-#' @seealso \code{\link[cholera]{addLandmarks}}
+#' @seealso \code{\link{addLandmarks}},
+#' \code{\link{addKernelDensity}},
+#' \code{\link{addLandmarks}},
+#' \code{\link{addPlaguePit}},
+#' \code{\link{addSnow}},
+#' \code{\link{addVoronoi}}.
+#' \code{\link{addWhitehead}}
 #' @export
 #' @examples
 #' snowMap()

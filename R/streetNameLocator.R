@@ -6,11 +6,7 @@
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. For "radius" <= 5, the anchor case number is plotted.
 #' @return A base R graphics plot.
-#' @seealso \code{roads}
-#'
-#' \code{vignette}("road.names")
-#'
-#' \code{\link[cholera]{streetNumberLocator}}
+#' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
 #' @import graphics
 #' @export
 #' @examples

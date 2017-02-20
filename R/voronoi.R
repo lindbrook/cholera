@@ -20,11 +20,7 @@
 #'   \item{\code{statistic}: "statistic" from neighborhoodVoronoi().}
 #'   \item{\code{vestry}: "vestry" from neighborhoodVoronoi().}
 #' }
-#' @seealso \code{addVoronoi()}
-#'
-#' \code{summary.voronoi()}
-#'
-#' \code{plot.voronoi()}
+#' @seealso \code{\link{addVoronoi}}, \code{\link{plot.voronoi}}, \code{\link{summary.voronoi}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
 #' neighborhoodVoronoi()

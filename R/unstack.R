@@ -1,6 +1,7 @@
 #' Fix apparent coding error in Dodson and Tobler's digitization of Snow's map.
 #'
 #' Fixes two apparent coding errors using 3 misplaced cases in Dodson and Tobler's data.
+#' @seealso \code{vignette("duplicate.missing.cases")}
 #' @return An R dataframe.
 #' @export
 
@@ -18,6 +19,7 @@ fixFatalities <- function() {
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @param fatalities Corrected fatalies data from cholera::fixFatalities(). For original data, use HistData::Snow.deaths.
 #' @param compute Logical. TRUE computes data. FALSE uses pre-computed data.
+#' @seealso \code{vignette("unstacking.fatalities")}
 #' @return An R list that includes anchor.case, fatalities.address, fatalities.unstacked and ortho.proj.
 #' @section Notes: This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 5 minutes to run on one core and approximately 70 seconds to run on eight logical (four physical) cores. This function documents the code that generates \code{\link{anchor.case}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
 #' @export
