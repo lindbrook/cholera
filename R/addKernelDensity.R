@@ -7,12 +7,12 @@
 #' @param data Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "stacked" uses \code{fatalities}.
 #' @param ... Additional plotting parameters.
 #' @return Add contours to a graphics plot.
-#' @seealso \code{\link[cholera]{snowMap}},
-#' \code{\link[cholera]{addLandmarks}},
-#' \code{\link[cholera]{addPlaguePit}},
-#' \code{\link[cholera]{addSnow}},
-#' \code{\link[cholera]{addVoronoi}}.
-#' \code{\link[cholera]{addWhitehead}}
+#' @seealso \code{\link{snowMap}},
+#' \code{\link{addLandmarks}},
+#' \code{\link{addPlaguePit}},
+#' \code{\link{addSnow}},
+#' \code{\link{addVoronoi}}.
+#' \code{\link{addWhitehead}}
 #' @import graphics
 #' @export
 #' @examples

@@ -7,12 +7,12 @@
 #' @param color Character. Color of borders.
 #' @param line.type Character. Type of line for borders.
 #' @param ... Additional plotting parameters.
-#' @seealso \code{\link[cholera]{snowMap}},
-#' \code{\link[cholera]{addKernelDensity}},
-#' \code{\link[cholera]{addLandmarks}},
-#' \code{\link[cholera]{addPlaguePit}},
-#' \code{\link[cholera]{addSnow}},
-#' \code{\link[cholera]{addWhitehead}}
+#' @seealso \code{\link{snowMap}},
+#' \code{\link{addKernelDensity}},
+#' \code{\link{addLandmarks}},
+#' \code{\link{addPlaguePit}},
+#' \code{\link{addSnow}},
+#' \code{\link{addWhitehead}}
 #' @import graphics
 #' @export
 #' @examples

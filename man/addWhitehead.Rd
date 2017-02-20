@@ -31,12 +31,12 @@ snowMap(add.landmarks = FALSE)
 addWhitehead()
 }
 \seealso{
-\code{\link[cholera]{snowMap}},
-\code{\link[cholera]{addKernelDensity}},
-\code{\link[cholera]{addLandmarks}},
-\code{\link[cholera]{addPlaguePit}},
-\code{\link[cholera]{addSnow}},
-\code{\link[cholera]{addVoronoi}}
+\code{\link{snowMap}},
+\code{\link{addKernelDensity}},
+\code{\link{addLandmarks}},
+\code{\link{addPlaguePit}},
+\code{\link{addSnow}},
+\code{\link{addVoronoi}}
 
-\code{\link[cholera]{addLandmarks}}
+\code{\link{addLandmarks}}
 }

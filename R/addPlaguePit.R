@@ -5,12 +5,12 @@
 #' @param line.type Character. Type of line for circle.
 #' @param ... Additional plotting parameters.
 #' @return Adds a polygon, based on multiple base R line segments, to a graphics plot.
-#' @seealso \code{\link[cholera]{snowMap}},
-#' \code{\link[cholera]{addKernelDensity}},
-#' \code{\link[cholera]{addLandmarks}},
-#' \code{\link[cholera]{addSnow}},
-#' \code{\link[cholera]{addVoronoi}}.
-#' \code{\link[cholera]{addWhitehead}}
+#' @seealso \code{\link{snowMap}},
+#' \code{\link{addKernelDensity}},
+#' \code{\link{addLandmarks}},
+#' \code{\link{addSnow}},
+#' \code{\link{addVoronoi}}.
+#' \code{\link{addWhitehead}}
 #' @import graphics
 #' @export
 #' @examples

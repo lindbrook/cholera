@@ -20,10 +20,10 @@ snowMap(add.landmarks = FALSE)
 addLandmarks()
 }
 \seealso{
-\code{\link[cholera]{snowMap}},
-\code{\link[cholera]{addKernelDensity}},
-\code{\link[cholera]{addPlaguePit}},
-\code{\link[cholera]{addSnow}},
-\code{\link[cholera]{addVoronoi}}.
-\code{\link[cholera]{addWhitehead}}
+\code{\link{snowMap}},
+\code{\link{addKernelDensity}},
+\code{\link{addPlaguePit}},
+\code{\link{addSnow}},
+\code{\link{addVoronoi}}.
+\code{\link{addWhitehead}}
 }

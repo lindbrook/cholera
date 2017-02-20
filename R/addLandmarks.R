@@ -3,12 +3,12 @@
 #' Adds Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews, 18 Sackville (John Snow residence) and 28 Dean Street (Karl Marx residence) to an existing plot. Falconberg Court & Mews are technically an isolate that is not part of the network of roads and is, consequently, technically unreachable. Adam and Eve Court and its pump also form an isolate.
 #' @return Add base R points and text to a graphics plot.
 #' @param text.size Numeric. cex for text labels.
-#' @seealso \code{\link[cholera]{snowMap}},
-#' \code{\link[cholera]{addKernelDensity}},
-#' \code{\link[cholera]{addPlaguePit}},
-#' \code{\link[cholera]{addSnow}},
-#' \code{\link[cholera]{addVoronoi}}.
-#' \code{\link[cholera]{addWhitehead}}
+#' @seealso \code{\link{snowMap}},
+#' \code{\link{addKernelDensity}},
+#' \code{\link{addPlaguePit}},
+#' \code{\link{addSnow}},
+#' \code{\link{addVoronoi}}.
+#' \code{\link{addWhitehead}}
 #' @import graphics
 #' @export
 #' @examples
