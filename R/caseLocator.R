@@ -8,9 +8,7 @@
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param stacked Logical. TRUE uses \code{fatalities} ("stacked" data); FALSE uses \code{fatalities.address} ("unstacked" data).
 #' @return A base R graphics plot.
-#' @seealso \code{fatalities}
-#'
-#' \code{fatalities.address}
+#' @seealso \code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}
 #' @import graphics
 #' @export
 #' @examples
