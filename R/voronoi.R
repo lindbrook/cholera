@@ -33,7 +33,7 @@
 #' neighborhoodVoronoi(selection = -6)
 #' neighborhoodVoronoi(selection = -6, polygon.vertices = TRUE)
 #'
-#' # coordinate for vertices also available in returned object.
+#' # coordinates for vertices also available in returned object.
 #' dat <- neighborhoodVoronoi(selection = -6)
 #' dat$coordinates
 
