@@ -8,7 +8,7 @@ neighborhoodWalking(selection = NULL, vestry = FALSE,
   statistic = "address", weighted = TRUE, multi.core = FALSE)
 }
 \arguments{
-\item{selection}{Numeric. Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
+\item{selection}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -19,10 +19,25 @@ neighborhoodWalking(selection = NULL, vestry = FALSE,
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 }
 \value{
-A list of data and parameters of computed walking path neighborhoods.
+An R list with 13 objects:
+\itemize{
+  \item{\code{distances}: walking distances to selected pumps.}
+  \item{\code{pump}: vector of selected pumps.}
+  \item{\code{nearest.pump}: an observed fatality's nearest pump.}
+  \item{\code{pump.seg}: "trimmed" neighborhood road segments based on observed fatalities.}
+  \item{\code{pump.case}: observed fatality IDs by pump neighborhood.}
+  \item{\code{sim.pump.seg}:  "trimmed" neighborhood road segments based on simulated fatalities.}
+  \item{\code{sim.pump.case}: simulated fatality ID by pump neighborhood.}
+  \item{\code{observed}: observed neighborhood fatality counts.}
+  \item{\code{expected}: expected neighborhood fatality counts, based on road length.}
+  \item{\code{snow.colors}: neighborhood color based on snowColors().}
+  \item{\code{selection}: "selection" from neighborhoodWalking().}
+  \item{\code{statistic}: "statistic" from neighborhoodWalking().}
+  \item{\code{vestry}: "vestry" from neighborhoodWalking().}
+}
 }
 \description{
-Data for walking neighbohoods for John Snow's 1854 London cholera data.
+Data for walking neighborhoods for John Snow's 1854 London cholera data.
 }
 \section{Notes}{
  This function is computationally intensive (the default configuration takes about 1-2 minutes to run on a single core). However, six configurations will return pre-computed results. The first three use the 13 pumps in the original map: 1) the default set of arguments, which uses all pumps; 2) the default set excluding the pump on Little Marlborough Street (pump 6), and 3) the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7). The last three use the same set of arguments as above but uses the 14 pumps in the second version from the Vestry report. This includes a repositioned Broad Street pump.

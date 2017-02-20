@@ -8,7 +8,7 @@ neighborhoodVoronoi(selection = NULL, vestry = FALSE, statistic = NULL,
   polygon.vertices = FALSE)
 }
 \arguments{
-\item{selection}{Numeric. Default is NULL: all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
+\item{selection}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -17,7 +17,21 @@ neighborhoodVoronoi(selection = NULL, vestry = FALSE, statistic = NULL,
 \item{polygon.vertices}{Logical. TRUE returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for sp::point.in.polygon() as used in summary.voronoi() method.}
 }
 \value{
-A list of data and parameters of computed Voronoi neighborhoods.
+An R list with 12 objects.
+\itemize{
+  \item{\code{pump.id}: vector of selected pumps}
+  \item{\code{voronoi}: output from deldir::deldir().}
+  \item{\code{snow.colors}: neighborhood color based on snowColors().}
+  \item{\code{x.rng}: range of x for plot.}
+  \item{\code{y.rng}: range of y for plot.}
+  \item{\code{select.string}: description of "selection" for plot title.}
+  \item{\code{expected.data}:  expected neighborhood fatality counts, based on Voronoi cell area.}
+  \item{\code{coordinates}: polygon vertices of Voronoi cells.}
+  \item{\code{statistic.data}: observed neighborhood fatality counts.}
+  \item{\code{selection}: "selection" from neighborhoodVoronoi().}
+  \item{\code{statistic}: "statistic" from neighborhoodVoronoi().}
+  \item{\code{vestry}: "vestry" from neighborhoodVoronoi().}
+}
 }
 \description{
 Data for Voronoi tessellation of John Snow's 1854 London cholera data.
