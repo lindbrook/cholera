@@ -35,13 +35,13 @@ To allow for replication, I use deldir::deldir(). I find that, with the exceptio
 
 To allow users to explore the data with this approach, I wrote neighborhoodVoronoi(). It creates an R object that describes one's desired neighborhood configuration. The results can be visualized with plot(). The figure below plots the "addresses" and the Voronoi cells for the 13 pumps in the original map.
 
-```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", message = FALSE}
 plot(neighborhoodVoronoi())
 ```
 
 The figure below excludes the Carnaby and Little Marlborough Street pump (#6).
 
-```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", message = FALSE}
 plot(neighborhoodVoronoi(-6))
 ```
 
@@ -53,19 +53,19 @@ I see Snow's annotation as an attempt to addresses this issue. He writes that th
 
 The walking distance approach is based on computing the shortest path between a given fatality and its nearest pump along the network of roads. For example, the figure below plots the path between the case 50 and its nearest pump, the Broad Street pump ("p7").
 
-```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", message = FALSE}
 walkingPath(150, zoom = TRUE)
 ```
 
 By drawing paths for all observed cases, we can begin to get a sense of the different pump neighborhoods.
 
-```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", message = FALSE}
 plot(neighborhoodWalking())
 ```
 
 The plot below excludes the pump at Carnaby and Little Marlborough Street (#6) and recomputes the paths.
 
-```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", message = FALSE}
 plot(neighborhoodWalking(-6))
 ```
 
@@ -73,13 +73,13 @@ To get a sense of entire neighborhoods, I extend the approach from observed data
 
 I do this in two ways. In the first, I identify neighborhoods by coloring roads.^[Shiode (2012) uses this approach.]
 
-```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", message = FALSE}
 plot(neighborhoodWalking(), observed = FALSE)
 ```
 
 In the second, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach.]
 
-```{r, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", message = FALSE}
 plot(neighborhoodWalking(), street = FALSE, observed = FALSE)
 ```
 
@@ -89,4 +89,4 @@ While the latter is easier to "read" due to its familiarity, it is potentially l
 
 neighborhoodWalking() is computationally intensive. With default arguments and a single core, it takes about 1-2 minutes to run on a 2.3 GHz Intel Core i7.^[With 4 physical cores and 8 logical ones, it takes about 45 seconds.] The reason is that function performs three significant tasks: 1) it computes the shortest walking path between each observed fatality and all selected pumps; 2) it computes the shortest walking path between each simulated fatality and all selected pumps; and 3) to reduce overplotting it computes the minimal set of segments needed to represent all walking paths within a given neighborhood.
 
-If you want to explore many different scenarios, it may be better to pre-compute the data or to run in batch mode. For convenience, however, two sets of three configurations will return pre-computed results. The first set uses the original 13 pumps. The second uses the revised 14 pumps. The three configurations are: 1) the default set of arguments, which uses all pumps; 2) the default set excluding the pump on Little Marlborough Street (pump 6); and 3) the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7). 
+If you want to explore many different scenarios, it may be better to pre-compute the data or to run in batch mode. For convenience, however, two sets of three configurations will return pre-computed results. The first set uses the original 13 pumps. The second uses the revised 14 pumps. The three configurations are: 1) the default set of arguments, which uses all pumps; 2) the default set excluding the pump on Little Marlborough Street (pump 6); and 3) the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7).

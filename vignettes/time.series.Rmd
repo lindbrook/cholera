@@ -26,11 +26,11 @@ The data are plotted below. Regardless of the source, we can see that the remova
 
 ## Vestry Report: Official Data
 
-```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
 plot(time.series.vestry$date, time.series.vestry$fatalities, type = "o",
   xlab = "Date", ylab = "fatalities")
 abline(v = as.Date("1854-09-08"), col = "red", lty = "dotted")
-axis(3, at = as.Date("1854-09-08"), label = "Sep 08", cex.axis = 0.8, 
+axis(3, at = as.Date("1854-09-08"), label = "Sep 08", cex.axis = 0.8,
   line = -0.5, col.axis = "red", col.tick = "red")
 title(main = "Removing the Broad Street Pump Handle")
 
@@ -38,12 +38,12 @@ title(main = "Removing the Broad Street Pump Handle")
 
 ## Vestry Report: Snow Data
 
-```{r, fig.width = 5.25, fig.height = 5.25, echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
 plot(time.series.snow$date, time.series.snow$deaths, type = "o", xlab = "Date",
-  ylab = "fatalities", xlim = range(time.series.vestry$date), 
+  ylab = "fatalities", xlim = range(time.series.vestry$date),
   ylim = range(time.series.vestry$fatalities))
 abline(v = as.Date("1854-09-08"), col = "red", lty = "dotted")
-axis(3, at = as.Date("1854-09-08"), label = "Sep 08", cex.axis = 0.8, 
+axis(3, at = as.Date("1854-09-08"), label = "Sep 08", cex.axis = 0.8,
   line = -0.5, col.axis = "red", col.tick = "red")
 title(main = "Removing the Broad Street Pump Handle")
 ```
