@@ -5,7 +5,7 @@ consolidate functions, data and documentation
 add fixFatalities() and unstackFatalities()
 add simulateFatalities()
 add pumpData()
-amend "Unstacking" Bars vignette
+amend and update vignettes
 add roadSegments()
 
 
