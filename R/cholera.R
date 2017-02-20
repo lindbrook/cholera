@@ -14,9 +14,17 @@
 #' \item Includes the revised pump data that was used to create the second version of Snow's map included in the Vestry report.
 #' \item Adds two different aggregate time series fatalities data from the Vestry report
 #' }
-# #' To learn more, start with the vignettes:
-# #' \code{browseVignettes(package = "cholera")}
+#' To learn more, start with the vignettes:
 #'
+#' \code{vignette("duplicate.missing.cases")}
+#'
+#' \code{vignette("unstacking.fatalities")}
+#'
+#' \code{vignette("pump.neighborhoods")}
+#'
+#' \code{vignette("roads")}
+#'
+#' \code{vignette("time.series")}
 #' @docType package
 #' @name cholera
 NULL
