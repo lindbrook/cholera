@@ -3,7 +3,12 @@
 #' Adds Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews, 18 Sackville (John Snow residence) and 28 Dean Street (Karl Marx residence) to an existing plot. Falconberg Court & Mews are technically an isolate that is not part of the network of roads and is, consequently, technically unreachable. Adam and Eve Court and its pump also form an isolate.
 #' @return Add base R points and text to a graphics plot.
 #' @param text.size Numeric. cex for text labels.
-#' @seealso \code{\link[cholera]{snowMap}}, \code{\link[cholera]{addWhitehead}}
+#' @seealso \code{\link[cholera]{snowMap}},
+#' \code{\link[cholera]{addKernelDensity}},
+#' \code{\link[cholera]{addPlaguePit}},
+#' \code{\link[cholera]{addSnow}},
+#' \code{\link[cholera]{addVoronoi}}.
+#' \code{\link[cholera]{addWhitehead}}
 #' @import graphics
 #' @export
 #' @examples
@@ -54,21 +59,4 @@ addLandmarks <- function(text.size = 0.5) {
   text(stats::quantile(adam.eve[, "x"], 0.25),
        stats::quantile(adam.eve[, "y"], 0.25),
        labels = "Adam & Eve\nCourt", cex = text.size)
-}
-
-#' Add plague pit (Marshall Street).
-#'
-#' Draws a polygon that approximates the plague pit located around Marshall Street. From Vestry Report map.
-#' @param color Character. Color of circle.
-#' @param line.type Character. Type of line for circle.
-#' @param ... Additional plotting parameters.
-#' @return Adds a polygon, based on multiple base R line segments, to a graphics plot.
-#' @seealso \code{\link[cholera]{addLandmarks}}, \code{\link[cholera]{addWhitehead}}
-#' @import graphics
-#' @export
-#' @examples
-#' snowMap(add.landmarks = FALSE)
-#' addPlaguePit()
-addPlaguePit <- function(color = "black", line.type = "solid", ...) {
-  polygon(cholera::plague.pit, border = color, lty = line.type)
 }

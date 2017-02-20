@@ -25,3 +25,11 @@ Reproduces Snow's graphic annotation in the Vestry Report.
 plot(neighborhoodVoronoi())
 addSnow()
 }
+\seealso{
+\code{\link[cholera]{snowMap}},
+\code{\link[cholera]{addKernelDensity}},
+\code{\link[cholera]{addLandmarks}},
+\code{\link[cholera]{addPlaguePit}},
+\code{\link[cholera]{addVoronoi}}.
+\code{\link[cholera]{addWhitehead}}
+}

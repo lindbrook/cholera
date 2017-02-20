@@ -7,6 +7,12 @@
 #' @param line.type Character. Circle line type.
 #' @param vestry Logical. TRUE uses the 14 pumps and locations from Vestry report. FALSE uses original 13 pumps.
 #' @param ... Additional plotting parameters.
+#' @seealso \code{\link[cholera]{snowMap}},
+#' \code{\link[cholera]{addKernelDensity}},
+#' \code{\link[cholera]{addLandmarks}},
+#' \code{\link[cholera]{addPlaguePit}},
+#' \code{\link[cholera]{addSnow}},
+#' \code{\link[cholera]{addVoronoi}}
 #' @return Draws a circle, based on multiple line segments, to a graphics plot.
 #' @seealso \code{\link[cholera]{addLandmarks}}
 #' @import graphics

@@ -2,7 +2,7 @@
 % Please edit documentation in R/addKernelDensity.R
 \name{addKernelDensity}
 \alias{addKernelDensity}
-\title{Add 2D kernel density contours.}
+\title{Add 2D kernel density contours to a plot.}
 \usage{
 addKernelDensity(bandwidth = 0.5, color = "black", line.type = "solid",
   data = NULL, ...)
@@ -22,9 +22,17 @@ addKernelDensity(bandwidth = 0.5, color = "black", line.type = "solid",
 Add contours to a graphics plot.
 }
 \description{
-Uses KernSmooth::bkde2D() to add density contours to a plot.
+Uses KernSmooth::bkde2D().
 }
 \examples{
 snowMap(add.landmarks = FALSE)
 addKernelDensity()
+}
+\seealso{
+\code{\link[cholera]{snowMap}},
+\code{\link[cholera]{addLandmarks}},
+\code{\link[cholera]{addPlaguePit}},
+\code{\link[cholera]{addSnow}},
+\code{\link[cholera]{addVoronoi}}.
+\code{\link[cholera]{addWhitehead}}
 }

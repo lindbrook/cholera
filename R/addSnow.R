@@ -6,6 +6,12 @@
 #' @param alpha.st Numeric. A value in [0, 1] to set alpha level for street neighborhood annotation.
 #' @param alpha.area Numeric. A value in [0, 1] to set alpha level for area neighborhood annotation.
 #' @param ... Additional plotting parameters.
+#' @seealso \code{\link[cholera]{snowMap}},
+#' \code{\link[cholera]{addKernelDensity}},
+#' \code{\link[cholera]{addLandmarks}},
+#' \code{\link[cholera]{addPlaguePit}},
+#' \code{\link[cholera]{addVoronoi}}.
+#' \code{\link[cholera]{addWhitehead}}
 #' @import graphics
 #' @export
 #' @examples
