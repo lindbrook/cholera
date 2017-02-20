@@ -20,7 +20,7 @@ John Snow's map of the 1854 cholera outbreak in London is a canonical example of
 
 ![](msu-snows-mapB.jpg)
 
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. The amended data from that package are plotted below:
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. The amended version of those data, which this package calls _fatalities_, are plotted below:
 
 ```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
 
@@ -34,13 +34,13 @@ text(HistData::Snow.pumps[, c("x", "y")], labels = HistData::Snow.pumps$pump,
   pos = 1)
 ```
 
-Unfortunately, Dodson and Tobler did not include the names of roads (e.g., Broad Street) in their effort. While not strictly necessary to the task of visualization, having the names is useful. To that end, I append the actual street names to the data. This appended data set is called _roads_.
+Unfortunately, Dodson and Tobler did not include the names of roads (e.g., Broad Street) in their effort. While not strictly necessary to for analysis or visualization, having the names is useful. To that end, I append the actual street names, taken from the map itself, to the data. This appended data set is called _roads_.
 
 While great effort was made to get the names right, there may still be errors. Error reports and suggestions for amendments are welcome.
 
 ## Road data
 
-Before discussing road names, some discussion of the structure of _roads_ is warranted. The data contain 1241 x-y coordinates that are used to define the endpoints for 528 "streets", which are defined by one or more straight line segments.
+Before discussing road names, some discussion of the structure of _roads_ is warranted. The data contain 1241 pairs of x-y coordinates. These coordinates define the endpoints of the straight line segments used to describe 528 numerically identified "streets". 
 
 ```{r}
 head(roads)
@@ -48,7 +48,7 @@ nrow(roads)
 length(unique(roads$street))
 ```
 
-This complexity reflects three things about the structure of the road data. First, a "street" does not necessarily correspond to a real-world street. For example, 50 of the 528 "street" segments are used to draw the rectangular frame around Snow's map. Second, the remaining 478 "street" segments actually describe 206 "real-world" roads (e.g., Oxford Street, Regent Street). Third, 40% of "real-world" roads are composed of multiple "street" segments. For example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
+Unfortunately, these 528 "streets" do not correspond to real-world streets. Excluding the 50 "streets" used to describe the frame around the map, the remaining 478 "streets" actually describe 206 "real-world" roads (e.g., Oxford Street, Regent Street). This is because 40% of "real-world" roads are composed of multiple "street" segments. For example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
 
 ```{r}
 # Map Border "Streets" ##
@@ -65,9 +65,9 @@ length(border)
 
 ## Road names
 
-The primary source for names was Snow's map. A high resolution version is available [here](http://www.ph.ucla.edu/epi/snow/highressnowmap.html).
+The primary source for raod names was Snow's map. A high resolution version is available [here](http://www.ph.ucla.edu/epi/snow/highressnowmap.html).
 
-While great effort was made to read and cross-reference names, there may still be errors. Some roads on the map do not have a name. So I attached unique labels like "Unknown-D". Some names appear multiple times even though they lie at different locations. For these, I use Roman numerals to distinguish them (e.g., "King Street (I)" and "King Street (II)").
+While great effort was made to read and cross-reference names, there may still be some errors. Some roads on the map do not have a name. So I attached unique labels like "Unknown-D". Some names appear multiple times even though they lie at different locations. For these, I use Roman numerals to distinguish them (e.g., "King Street (I)" and "King Street (II)").
 
 ## Queen Street (I) and Marlborough Mews
 
@@ -94,11 +94,11 @@ roads[roads$name == "Marlborough Mews", "n"] <- 3
 roads <- roads[order(roads$id), ]
 ```
 
-This amended _roads_ data frame is included in the _cholera_ package.
+This amended _roads_ data frame is included in this package.
 
-## Finding streets by name or road segment number
+## Finding roads by name or "street" number
 
-To help locate and visualize streets and road segments (including map frame segments), you can use the _streetNameLocator_() and _streetNumberLocator_() functions. Note that _streetNameLocator() uses the names in the _roads_ data set. However, the fuctions tries to corrects for case and removes extraneous spaces: streetNameLocator("Oxford Street") and streetNameLocator("oxford street")
+To help locate and visualize streets and road segments (including map frame segments), you can use the _streetNameLocator_() and _streetNumberLocator_() functions. Note that _streetNameLocator() uses the names in the _roads_ data set. However, the function tries to corrects for case and removes extraneous spaces: streetNameLocator("Oxford Street") and streetNameLocator("oxford street"). 
 
 ### Examples
 
@@ -184,6 +184,20 @@ Great Crown Court | Panton Street | Winsley Street
 Great Marlborough Street | Perrys Place |
 Great Pulteney Street | Peter Street |
 Great Windmill Street | Pews Place |
+
+## Locating and visualizing individual road segments
+
+For those interested in more granular analysis, there is the _road.segments_ dataframe that uses individual road segments as the unit of observation. 
+
+```{r}
+head(road.segments)
+```
+
+These segeents can be located and visualized using _segmentLocator()_.
+
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = TRUE}
+segmentLocator("178-1")
+```
 
 ## Coordinate unit
 
