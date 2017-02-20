@@ -19,3 +19,6 @@ Extract numeric case IDs by neighborhood.
 pumpCase(neighborhoodVoronoi())
 pumpCase(neighborhoodWalking())
 }
+\seealso{
+#' \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodWalking}},
+}

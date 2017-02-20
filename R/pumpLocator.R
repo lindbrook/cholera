@@ -6,6 +6,7 @@
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param vestry Logigcal. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.
+#' @seealso\code{link{pumpData})
 #' @return A base R graphics plot.
 #' @export
 #' @examples

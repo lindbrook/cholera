@@ -4,6 +4,7 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry report. FALSE uses the 13 in the original map.
 #' @param orthogonal Logical. TRUE returns pump "addresses": the coordinates of the orthogonal projection from a pump's location onto the network of roads. FALSE returns pump location coordinates.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
+#' @seealso\code{link{pumpLocator})
 #' @return An R dataframe.
 #' @section Notes: This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
 #' @export
