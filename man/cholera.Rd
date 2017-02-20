@@ -12,7 +12,7 @@ Amend, augment and aid the analysis of John Snow's cholera data.
 Features:
 
 \itemize{
-\item Fixes three apparent coding error in Dodson and Tobler's digitization of the data in Snow's map.
+\item Fixes three apparent coding errors in Dodson and Tobler's digitization of the data in Snow's map.
 \item "Unstacks" the data in two ways to improve analysis and visualization.
 \item Computes two types of pump neighborhoods: one based on Voronoi tesselation; one based on walking distance.
 \item Adds the ability to overlay graphical features including kernel density, Voronoi diagrams, Snow's annotations of the Broad Street pump neighborhood, and notable landmarks (the plague pit, John Snow's residence, the Lion Brewery, etc.) onto your plot.
