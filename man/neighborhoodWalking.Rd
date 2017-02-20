@@ -47,3 +47,8 @@ Data for walking neighborhoods for John Snow's 1854 London cholera data.
 neighborhoodWalking()
 neighborhoodWalking(selection = -6)
 }
+\seealso{
+\code{summary.walking()}
+
+\code{plot.walking()}
+}
