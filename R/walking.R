@@ -537,15 +537,17 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
 
 summary.walking <- function(object, ...) {
   if (class(object) != "walking") {
-    stop('Input objectect\'s class needs to be "walking".')
+    stop('Input object\'s class needs to be "walking".')
   }
 
   obs <- object$observed
   exp <- object$expected
   output <- merge(obs, exp, by = "pump.id", all.y = TRUE)
-  names(output)[-1] <- c("Observed", "Expected")
+  names(output)[-1] <- c("Count", "Expected")
   output[is.na(output)] <- 0
-  output$Pearson <- (output$Observed - output$Expected) / sqrt(output$Expected)
+  output$Percent <- round(100 * output$Count / sum(output$Count), 2)
+  output <- output[, c("pump.id", "Count", "Percent", "Expected")]
+  output$Pearson <- (output$Count - output$Expected) / sqrt(output$Expected)
   output
 }
 
