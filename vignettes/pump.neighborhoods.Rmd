@@ -33,17 +33,33 @@ Cliff and Haggett (1988) appear to be the first to use Voronoi tessellation^[htt
 
 To allow for replication, I use deldir::deldir(). I find that, with the exception of the border between the neighborhoods of the Market Place and the Adam and Eve Court pumps (pumps #1 and #2), Dodson and Tobler's computation are otherwise identical.
 
-To allow users to explore the data with this approach, I wrote neighborhoodVoronoi(). It creates an R object that describes one's desired neighborhood configuration. The results can be visualized with plot(). The figure below plots the "addresses" and the Voronoi cells for the 13 pumps in the original map.
+To allow users to explore the data with this approach, I wrote neighborhoodVoronoi(). It creates an R object that describes one's desired neighborhood configuration. The results can be visualized with plot() and summarized with summary(). 
+
+The figure below plots the "addresses" and Voronoi cells for the 13 pumps in the original map.
 
 ```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", message = FALSE}
 plot(neighborhoodVoronoi())
 ```
 
-The figure below excludes the Carnaby and Little Marlborough Street pump (#6).
+The dataframe below summarizes the results in the map. Pearson is (Count - Expected) / sqrt(Expected):
+
+```{r}
+summary(neighborhoodVoronoi())
+```
+
+The next figure excludes the Carnaby and Little Marlborough Street pump (#6).
 
 ```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", message = FALSE}
 plot(neighborhoodVoronoi(-6))
 ```
+
+The dataframe with summary results for this configuration lie below:
+
+```{r}
+summary(neighborhoodVoronoi(-6))
+```
+
+The share of addresses that fall within the Broad Street Voronoi pump neighborhood increases from 57% to 66%.
 
 ### Walking distance
 
@@ -63,11 +79,25 @@ By drawing paths for all observed cases, we can begin to get a sense of the diff
 plot(neighborhoodWalking())
 ```
 
+Summary results are:
+
+```{r}
+summary(neighborhoodWalking())
+```
+
 The plot below excludes the pump at Carnaby and Little Marlborough Street (#6) and recomputes the paths.
 
 ```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", message = FALSE}
 plot(neighborhoodWalking(-6))
 ```
+
+Summary results are:
+
+```{r}
+summary(neighborhoodWalking(-6))
+```
+
+The share of addresses that fall within the Broad Street pump walking neighborhood increases from 59% to 70%.
 
 To get a sense of entire neighborhoods, I extend the approach from observed data to "expected" or simulated data. Using sp::spsample() and sp::Polygon(), I place 5000 regularly spaced points across the map and compute their walking path to the nearest pump. This allows me to see the full extent and range of the different pump neighborhoods.
 
