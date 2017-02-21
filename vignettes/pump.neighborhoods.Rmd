@@ -91,7 +91,7 @@ The plot below excludes the pump at Carnaby and Little Marlborough Street (#6) a
 plot(neighborhoodWalking(-6))
 ```
 
-Summary results are:
+Summary results are below:
 
 ```{r}
 summary(neighborhoodWalking(-6))
