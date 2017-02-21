@@ -53,7 +53,7 @@ The next figure excludes the Carnaby and Little Marlborough Street pump (#6).
 plot(neighborhoodVoronoi(-6))
 ```
 
-The dataframe with summary results for this configuration lie below:
+The dataframe with summary results for this configuration lies below:
 
 ```{r}
 summary(neighborhoodVoronoi(-6))
@@ -79,7 +79,7 @@ By drawing paths for all observed cases, we can begin to get a sense of the diff
 plot(neighborhoodWalking())
 ```
 
-Summary results are:
+The summary results are:
 
 ```{r}
 summary(neighborhoodWalking())
