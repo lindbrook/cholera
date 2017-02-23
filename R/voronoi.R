@@ -267,8 +267,8 @@ plot.voronoi <- function(x, ...) {
         if (x$vestry) {
           text(cholera::pumps.vestry[x$selection, c("x", "y")],
             label = stat.data$Count)
-          text(cholera::pumps.vestry[x$selection, c("x", "y")], pos = 1, cex = 0.8,
-            col = "blue", label = round(stat.data$Pearson, 2))
+          text(cholera::pumps.vestry[x$selection, c("x", "y")], pos = 1,
+            cex = 0.8, col = "blue", label = round(stat.data$Pearson, 2))
         } else {
           text(cholera::pumps[x$selection, c("x", "y")],
             label = stat.data$Count)
