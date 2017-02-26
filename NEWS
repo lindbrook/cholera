@@ -2,6 +2,7 @@ cholera 0.1.99
 ----------------------------------------------------------------
 
 detail description of output of neighborhoodVoronoi() and neighborhoodWalking()
+amend plot.voronoi and plot.walking methods
 
 
 cholera 0.1.98
