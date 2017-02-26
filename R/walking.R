@@ -320,11 +320,16 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
         invisible(lapply(seq_along(obs.pump), function(i) {
           plotSegment(x$pump.seg[[i]], x$snow.colors[i])
 
-          sel <- cholera::fatalities.address$anchor.case %in%
-            x$pump.case[[names(obs.pump)[i]]]
-
-          points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-            cex = 0.75, col = x$snow.colors[i])
+          if (is.null(x$statistic) | x$statistic == "address") {
+            sel <- cholera::fatalities.address$anchor.case %in%
+              x$pump.case[[names(obs.pump)[i]]]
+            points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
+              cex = 0.75, col = x$snow.colors[[names(obs.pump)[i]]])
+          } else if (x$statistic == "fatality") {
+            sel <- x$pump.case[[names(obs.pump)[i]]]
+            points(cholera::fatalities[sel, c("x", "y")], pch = 20,
+              cex = 0.75, col = x$snow.colors[[names(obs.pump)[i]]])
+          }
         }))
 
         if (is.null(x$selection)) {
@@ -346,7 +351,8 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
             text(cholera::pumps.vestry[selection, c("x", "y")], cex = 0.9,
               pos = 1, label = x$pump)
           } else {
-            points(cholera::pumps[selection, c("x", "y")], pch = 24, col = x$snow.colors)
+            points(cholera::pumps[selection, c("x", "y")], pch = 24,
+              col = x$snow.colors)
             text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
               label = x$pump)
           }
@@ -358,11 +364,16 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
           plotSegment(x$pump.seg[[names(obs.pump)[i]]],
                       x$snow.colors[names(obs.pump)[i]])
 
-          sel <- cholera::fatalities.address$anchor.case %in%
-            x$pump.case[[names(obs.pump)[i]]]
-
-          points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-            cex = 0.75, col = x$snow.colors[names(obs.pump)[i]])
+          if (is.null(x$statistic) | x$statistic == "address") {
+            sel <- cholera::fatalities.address$anchor.case %in%
+              x$pump.case[[names(obs.pump)[i]]]
+            points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
+              cex = 0.75, col = x$snow.colors[[names(obs.pump)[i]]])
+          } else if (x$statistic == "fatality") {
+            sel <- x$pump.case[[names(obs.pump)[i]]]
+            points(cholera::fatalities[sel, c("x", "y")], pch = 20,
+              cex = 0.75, col = x$snow.colors[[names(obs.pump)[i]]])
+          }
         }))
 
         if (is.null(x$selection)) {
