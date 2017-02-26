@@ -33,7 +33,7 @@ Cliff and Haggett (1988) appear to be the first to use Voronoi tessellation^[htt
 
 To allow for replication, I use deldir::deldir(). I find that, with the exception of the border between the neighborhoods of the Market Place and the Adam and Eve Court pumps (pumps #1 and #2), Dodson and Tobler's computation are otherwise identical.
 
-To allow users to explore the data with this approach, I wrote neighborhoodVoronoi(). It creates an R object that describes one's desired neighborhood configuration. The results can be visualized with plot() and summarized with summary(). 
+To allow users to explore the data with this approach, neighborhoodVoronoi() creates an R object that describes the desired neighborhood configuration. The results can be visualized with plot() and summarized with summary().
 
 The figure below plots the "addresses" and Voronoi cells for the 13 pumps in the original map.
 
