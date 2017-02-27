@@ -30,6 +30,6 @@ addSnow()
 \code{\link{addKernelDensity}},
 \code{\link{addLandmarks}},
 \code{\link{addPlaguePit}},
-\code{\link{addVoronoi}}.
+\code{\link{addVoronoi}},
 \code{\link{addWhitehead}}
 }

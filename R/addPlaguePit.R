@@ -9,7 +9,7 @@
 #' \code{\link{addKernelDensity}},
 #' \code{\link{addLandmarks}},
 #' \code{\link{addSnow}},
-#' \code{\link{addVoronoi}}.
+#' \code{\link{addVoronoi}},
 #' \code{\link{addWhitehead}}
 #' @import graphics
 #' @export
