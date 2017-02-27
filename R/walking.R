@@ -129,9 +129,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     if (statistic == "address") {
       sel <- cholera::fatalities.address$anchor.case
       ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
-    }
-
-    if (statistic == "fatality") {
+    } else if (statistic == "fatality") {
       sel <- cholera::fatalities.unstacked$case
       ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
     }
