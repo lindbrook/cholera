@@ -14,7 +14,7 @@ addKernelDensity(bandwidth = 0.5, color = "black", line.type = "solid",
 
 \item{line.type}{Character. Line type for contour lines.}
 
-\item{data}{Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "stacked" uses \code{fatalities}.}
+\item{data}{Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "fatality" uses \code{fatalities}.}
 
 \item{...}{Additional plotting parameters.}
 }

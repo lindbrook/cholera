@@ -4,7 +4,7 @@
 #' @param bandwidth Numeric. Bandwidth for kernel density esitmation.
 #' @param color Character. Color of cotour lines.
 #' @param line.type Character. Line type for contour lines.
-#' @param data Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "stacked" uses \code{fatalities}.
+#' @param data Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "fatality" uses \code{fatalities}.
 #' @param ... Additional plotting parameters.
 #' @return Add contours to a graphics plot.
 #' @seealso \code{\link{snowMap}},
@@ -23,7 +23,7 @@ addKernelDensity <- function(bandwidth = 0.5, color = "black",
   line.type = "solid", data = NULL, ...) {
 
   if (!is.null(data) & !all(data %in% c("address", "stacked"))) {
-    stop('If specified, "data" must either be "address" or "stacked".')
+    stop('If specified, "data" must either be "address" or "fatality".')
   }
 
   bw.value <- bandwidth
@@ -35,7 +35,7 @@ addKernelDensity <- function(bandwidth = 0.5, color = "black",
   } else if (data == "address") {
     kde2d <- KernSmooth::bkde2D(cholera::fatalities.address[, c("x", "y")],
       bandwidth = bw)
-  } else if (data == "stacked") {
+  } else if (data == "fatality") {
     kde2d <- KernSmooth::bkde2D(cholera::fatalities[, c("x", "y")],
       bandwidth = bw)
   }
