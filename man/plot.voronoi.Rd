@@ -18,8 +18,7 @@ A base R graph.
 Plot Voronoi neighborhoods.
 }
 \examples{
-dat <- neighborhoodVoronoi()
-plot(dat)
+plot(neighborhoodVoronoi())
 }
 \seealso{
 \code{neighborhoodVornoi()}

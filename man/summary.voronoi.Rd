@@ -18,8 +18,7 @@ A data frame with observed and expected counts, observed percentage, and the Pea
 Compute summary statistics for Voronoi neighborhoods.
 }
 \examples{
-dat <- neighborhoodVoronoi()
-summary(dat)
+summary(neighborhoodVoronoi())
 }
 \seealso{
 \code{addVoronoi()}

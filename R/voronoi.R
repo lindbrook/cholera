@@ -158,8 +158,7 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
 #'
 #' @export
 #' @examples
-#' dat <- neighborhoodVoronoi()
-#' plot(dat)
+#' plot(neighborhoodVoronoi())
 
 plot.voronoi <- function(x, ...) {
   if (class(x) != "voronoi") {
@@ -299,8 +298,7 @@ plot.voronoi <- function(x, ...) {
 #' \code{plot.voronoi()}
 #' @export
 #' @examples
-#' dat <- neighborhoodVoronoi()
-#' summary(dat)
+#' summary(neighborhoodVoronoi())
 
 summary.voronoi <- function(object, ...) {
   if (class(object) != "voronoi") {
