@@ -18,7 +18,6 @@
 #' walkingPath(1, observed = FALSE)
 #' walkingPath(1, selection = -7) # exclude pump 7 from consideration.
 #' walkingPath(1, selection = 6)  # path from case 1 to pump 6.
-#' walkingPath(1, unit = "meter", selection = 3) # distance from case 1 to pump 3.
 
 walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
   weighted = TRUE, vestry = FALSE, selection = NULL, unit = NULL) {

@@ -35,7 +35,6 @@ walkingPath(1)
 walkingPath(1, observed = FALSE)
 walkingPath(1, selection = -7) # exclude pump 7 from consideration.
 walkingPath(1, selection = 6)  # path from case 1 to pump 6.
-walkingPath(1, unit = "meter", selection = 3) # distance from case 1 to pump 3.
 }
 \seealso{
 \code{\link{fatalities}}, \code{\link{simulateFatalities}}, \code{vignette("pump.neighborhoods")}
