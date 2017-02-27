@@ -56,6 +56,13 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
     }
   }
 
+  if (is.null(statistic) == FALSE) {
+    if (all(statistic %in% c("address", "fatality")) == FALSE) {
+      msg <- 'If specified, "statistic" must either be "address" or "fatality".'
+      stop(msg)
+    }
+  }
+
   x.rng <- range(cholera::roads$x)
   y.rng <- range(cholera::roads$y)
 
