@@ -32,6 +32,10 @@
 neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
   statistic = "address", weighted = TRUE, multi.core = FALSE) {
 
+  if (all(statistic %in% c("address", "fatality")) == FALSE) {
+    stop('"statistic" must either be "address" or "fatality".')
+  }
+
   test1 <- (is.null(selection) & vestry == FALSE & statistic == "address" &
     weighted & multi.core == FALSE)
   test2 <- (length(selection) == 1 & -6 %in% selection & vestry == FALSE &
