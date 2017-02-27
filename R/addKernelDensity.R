@@ -22,7 +22,7 @@
 addKernelDensity <- function(bandwidth = 0.5, color = "black",
   line.type = "solid", data = NULL, ...) {
 
-  if (!is.null(data) & !all(data %in% c("address", "stacked"))) {
+  if (!is.null(data) & !all(data %in% c("address", "fatality"))) {
     stop('If specified, "data" must either be "address" or "fatality".')
   }
 
