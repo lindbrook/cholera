@@ -300,22 +300,6 @@
 #' @docType data
 "snow.neighborhood"
 
-#' "Trimmed" Snow neighborhood road segments.
-#'
-#' The "trimmed" road segments (i.e., endpoints) that describe Snow's Broad Street pump neighborhood (Vestry Report 1855b). "Outer" segments are trimmed: to eliminate overlplotting, only the portion of the segment transversed by the walking path of the most "distant" case on that segment is included.
-#'
-#' @format A data frame with 6 variables and 384 observations.
-#' \describe{
-#'   \item{\code{road.segment}}{road segment ID}
-#'   \item{\code{x1}}{first x-coordinate}
-#'   \item{\code{y1}}{first y-coordinate}
-#'   \item{\code{x2}}{second x-coordinate}
-#'   \item{\code{y2}}{second y-coordinate}
-#'   \item{\code{trimmed}}{trimmed road segment}
-#' }
-#' @docType data
-"snow.trimmed.segments"
-
 #' Vestry Report Time Series Data.
 #'
 #' Time series of recorded fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle from the Broad Street pump on 08 September 1854.
