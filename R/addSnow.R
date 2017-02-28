@@ -22,25 +22,23 @@ addSnow <- function(streets = TRUE, color = "dodgerblue", alpha.st = 0.75,
   alpha.area = 1/3, ...) {
 
   if (streets) {
-    for (i in seq_along(cholera::snow.trimmed.segments$road.segment)) {
-      segments(cholera::snow.trimmed.segments[i, "x1"],
-               cholera::snow.trimmed.segments[i, "y1"],
-               cholera::snow.trimmed.segments[i, "x2"],
-               cholera::snow.trimmed.segments[i, "y2"],
-               lwd = 6, col = scales::alpha(color, alpha.st))
+    snow <- sysdata[["snow"]]$pump.seg$p7
+    for (i in seq_along(snow$id)) {
+      segments(snow[i, "x1"], snow[i, "y1"], snow[i, "x2"], snow[i, "y2"],
+        lwd = 6, col = scales::alpha(color, alpha.st))
     }
   } else {
-    snow <- cholera::snow.trimmed.segments
+    snow <- sysdata[["snow"]]$pump.seg$p7
     trimmed <- snow[snow$trimmed == TRUE, ]
-    trim.seg <- trimmed$road.segment
-    whole.seg <- snow[snow$trimmed == FALSE, "road.segment"]
+    trim.seg <- trimmed$id
+    whole.seg <- snow[snow$trimmed == FALSE, "id"]
 
     sel <- cholera::sim.ortho.proj$road.segment %in% trim.seg
     trim.reg.proj <- cholera::sim.ortho.proj[sel, ]
 
-    snow.trim <- lapply(trimmed$road.segment, function(x) {
+    snow.trim <- lapply(trimmed$id, function(x) {
       a <- trim.reg.proj[trim.reg.proj$road.segment == x, ]
-      b <- trimmed[trimmed$road.segment == x, ]
+      b <- trimmed[trimmed$id == x, ]
       xs <- unlist(sort(b[, c("x1", "x2")]))
       ys <- unlist(sort(b[, c("y1", "y2")]))
       x.test <- a$x.proj >= xs[1] & a$x.proj <= xs[2]
