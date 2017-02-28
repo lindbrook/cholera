@@ -5,7 +5,8 @@
 \title{Compute walking path neighborhoods.}
 \usage{
 neighborhoodWalking(selection = NULL, vestry = FALSE,
-  statistic = "address", weighted = TRUE, multi.core = FALSE)
+  statistic = "address", weighted = TRUE, snow.neighborhood = FALSE,
+  multi.core = FALSE)
 }
 \arguments{
 \item{selection}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
@@ -15,6 +16,8 @@ neighborhoodWalking(selection = NULL, vestry = FALSE,
 \item{statistic}{Character. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.}
 
 \item{weighted}{Logical. TRUE uses distance weighted by edge length (i.e., road length). FALSE uses unweighted distance.}
+
+\item{snow.neighborhood}{Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this will set "selection" to 7 and "vestry" to NULL.}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 }

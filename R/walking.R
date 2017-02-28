@@ -5,6 +5,7 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param statistic Character. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.
 #' @param weighted Logical. TRUE uses distance weighted by edge length (i.e., road length). FALSE uses unweighted distance.
+#' @param snow.neighborhood Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this will set "selection" to 7 and "vestry" to NULL.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @return An R list with 13 objects:
 #' \itemize{
@@ -30,11 +31,18 @@
 #' neighborhoodWalking(selection = -6)
 
 neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
-  statistic = "address", weighted = TRUE, multi.core = FALSE) {
+  statistic = "address", weighted = TRUE, snow.neighborhood = FALSE,
+    multi.core = FALSE) {
 
   if (all(statistic %in% c("address", "fatality")) == FALSE) {
     stop('"statistic" must either be "address" or "fatality".')
   }
+
+  ## Ignore b/c pre-computed
+  # if (snow.neighborhood) {
+  #   selection <- 7
+  #   vestry <- FALSE
+  # }
 
   test1 <- (is.null(selection) & vestry == FALSE & statistic == "address" &
     weighted & multi.core == FALSE)
@@ -48,6 +56,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     statistic == "address" & weighted & multi.core == FALSE)
   test6 <- (length(selection) == 2 & all(6:7 %in% selection) & vestry &
     statistic == "address" & weighted & multi.core == FALSE)
+  test7 <- (snow.neighborhood == TRUE & multi.core == FALSE)
 
   if (test1) {
     output <- sysdata[["address"]]
@@ -61,6 +70,8 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     output <- sysdata[["vestry67"]]
   } else if (test6) {
     output <- sysdata[["vestry.not6"]]
+  } else if (test7) {
+    output <- sysdata[["snow"]]
   } else {
     if (vestry) {
       if (is.null(selection) == FALSE) {
@@ -130,12 +141,23 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
 
     # cases #
 
-    if (statistic == "address") {
-      sel <- cholera::fatalities.address$anchor.case
-      ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
-    } else if (statistic == "fatality") {
-      sel <- cholera::fatalities.unstacked$case
-      ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+    if (snow.neighborhood) {
+      if (statistic == "address") {
+        sel <- cholera::snow.neighborhood[cholera::snow.neighborhood %in%
+          cholera::fatalities.address$anchor.case]
+        ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+      } else if (statistic == "fatality") {
+        sel <- cholera::snow.neighborhood
+        ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+      }
+    } else {
+      if (statistic == "address") {
+        sel <- cholera::fatalities.address$anchor.case
+        ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+      } else if (statistic == "fatality") {
+        sel <- cholera::fatalities.unstacked$case
+        ortho <- cholera::ortho.proj[cholera::ortho.proj$case %in% sel, ]
+      }
     }
 
     case <- split(ortho, ortho$case)
@@ -174,7 +196,14 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     nearest.pump <- names(select.pumps)[idx]
 
     obs.pumps <- table(nearest.pump)
-    pump.id <- as.numeric(substr(names(obs.pumps), 2, length(names(obs.pumps))))
+
+    if (length(obs.pumps) > 1) {
+      pump.id <- substr(names(obs.pumps), 2, length(names(obs.pumps)))
+      pump.id <- as.numeric(pump.id)
+    } else {
+      pump.id <- as.numeric(unlist(strsplit(names(obs.pumps), "p"))[2])
+    }
+
     observed <- data.frame(pump.id = pump.id, count = unname(c(obs.pumps)))
 
     paths <- parallel::mclapply(seq_along(g), function(i) {
@@ -241,7 +270,13 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     sim.road.length <- roadLength(sim.neighborhoods$trimmed.segments)
 
     expected <- sum(observed$count) * sim.road.length / sum(sim.road.length)
-    pid <- as.numeric(substr(names(expected), 2, length(names(expected))))
+
+    if (length(expected) > 1) {
+      pid <- as.numeric(substr(names(expected), 2, length(names(expected))))
+    } else {
+      pid <- as.numeric(unlist(strsplit(names(expected), "p"))[2])
+    }
+
     expected <- data.frame(pump.id = pid, count = expected)
 
     output <- list(
@@ -904,7 +939,14 @@ trimExpPaths <- function(pump.road.segments, select.pumps, pump.names, vestry,
   nearest.pump <- names(select.pumps)[idx]
 
   obs.pumps <- table(nearest.pump)
-  pump.id <- as.numeric(substr(names(obs.pumps), 2, length(names(obs.pumps))))
+
+  if (length(obs.pumps) > 1) {
+    pump.id <- substr(names(obs.pumps), 2, length(names(obs.pumps)))
+    pump.id <- as.numeric(pump.id)
+  } else {
+    pump.id <- as.numeric(unlist(strsplit(names(obs.pumps), "p"))[2])
+  }
+
   observed <- data.frame(pump.id = pump.id, count = unname(c(obs.pumps)))
 
   paths <- parallel::mclapply(seq_along(g), function(i) {
