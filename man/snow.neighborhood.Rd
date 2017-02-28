@@ -3,7 +3,7 @@
 \docType{data}
 \name{snow.neighborhood}
 \alias{snow.neighborhood}
-\title{Snow neighborhood cases.}
+\title{Snow neighborhood fatalities.}
 \format{A vector with 384 observations.
 \describe{
   \item{\code{snow.neighborhood}}{numeric case ID}
@@ -12,6 +12,6 @@
 snow.neighborhood
 }
 \description{
-Data frame of the numeric IDs of cases, taken from from Dodson and Tobler, that fall within Snow's Broad Street pump neighborhood.
+Numeric IDs of fatalities from Dodson and Tobler that fall within Snow's Broad Street pump neighborhood.
 }
 \keyword{datasets}

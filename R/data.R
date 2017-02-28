@@ -289,9 +289,9 @@
 #' \code{\link{segmentLocator}}
 "roads"
 
-#' Snow neighborhood cases.
+#' Snow neighborhood fatalities.
 #'
-#' Data frame of the numeric IDs of cases, taken from from Dodson and Tobler, that fall within Snow's Broad Street pump neighborhood.
+#' Numeric IDs of fatalities from Dodson and Tobler that fall within Snow's Broad Street pump neighborhood.
 #'
 #' @format A vector with 384 observations.
 #' \describe{
