@@ -1,8 +1,10 @@
 cholera 0.1.99
 ----------------------------------------------------------------
 
-detail description of output of neighborhoodVoronoi() and neighborhoodWalking()
+detail descriptions of output for neighborhoodVoronoi() and neighborhoodWalking()
 amend plot.voronoi and plot.walking methods
+implement "snow.neighborhood" argument in neighborhoodWalking()
+remove snow.trimmed.segments
 
 
 cholera 0.1.98
