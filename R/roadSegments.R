@@ -3,6 +3,7 @@
 #' For use in integrating pumps and cases into road network needed to compute walking neighbohoods.
 #' @return An R dataframe.
 #' @section Notes: This function documents the code that generates \code{\link[cholera]{road.segments}}.
+#' @export
 
 roadSegments <- function() {
   dat <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
