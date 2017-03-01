@@ -38,25 +38,19 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     stop('"statistic" must either be "address" or "fatality".')
   }
 
-  ## Ignore b/c pre-computed
-  # if (snow.neighborhood) {
-  #   selection <- 7
-  #   vestry <- FALSE
-  # }
-
-  test1 <- (is.null(selection) & vestry == FALSE & statistic == "address" &
-    weighted & multi.core == FALSE)
-  test2 <- (length(selection) == 1 & -6 %in% selection & vestry == FALSE &
-    statistic == "address" & weighted & multi.core == FALSE)
-  test3 <- (length(selection) == 2 & all(6:7 %in% selection) & vestry == FALSE &
-    statistic == "address" & weighted & multi.core == FALSE)
-  test4 <- (is.null(selection) & vestry & statistic == "address" &
-    weighted & multi.core == FALSE)
-  test5 <- (length(selection) == 1 & -6 %in% selection & vestry &
-    statistic == "address" & weighted & multi.core == FALSE)
-  test6 <- (length(selection) == 2 & all(6:7 %in% selection) & vestry &
-    statistic == "address" & weighted & multi.core == FALSE)
-  test7 <- (snow.neighborhood == TRUE & multi.core == FALSE)
+  test1 <- is.null(selection) & vestry == FALSE & statistic == "address" &
+    weighted & multi.core == FALSE
+  test2 <- length(selection) == 1 & -6 %in% selection & vestry == FALSE &
+    statistic == "address" & weighted & multi.core == FALSE
+  test3 <- length(selection) == 2 & all(6:7 %in% selection) & vestry == FALSE &
+    statistic == "address" & weighted & multi.core == FALSE
+  test4 <- is.null(selection) & vestry & statistic == "address" &
+    weighted & multi.core == FALSE
+  test5 <- length(selection) == 1 & -6 %in% selection & vestry &
+    statistic == "address" & weighted & multi.core == FALSE
+  test6 <- length(selection) == 2 & all(6:7 %in% selection) & vestry &
+    statistic == "address" & weighted & multi.core == FALSE
+  test7 <- snow.neighborhood == TRUE & multi.core == FALSE
 
   if (test1) {
     output <- sysdata[["address"]]
@@ -85,6 +79,11 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
           stop('With "vestry = FALSE", 1 >= |"selection"| <= 13.')
         }
       }
+    }
+
+    if (snow.neighborhood) {
+      selection <- 7
+      vestry <- FALSE
     }
 
     if (is.logical(multi.core)) {
