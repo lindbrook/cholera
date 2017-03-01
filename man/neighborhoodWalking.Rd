@@ -17,7 +17,7 @@ neighborhoodWalking(selection = NULL, vestry = FALSE,
 
 \item{weighted}{Logical. TRUE uses distance weighted by edge length (i.e., road length). FALSE uses unweighted distance.}
 
-\item{snow.neighborhood}{Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this will set "selection" to 7 and "vestry" to NULL.}
+\item{snow.neighborhood}{Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this sets "selection" to 7 and "vestry" to NULL.}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 }
