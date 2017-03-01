@@ -5,7 +5,7 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param statistic Character. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.
 #' @param weighted Logical. TRUE uses distance weighted by edge length (i.e., road length). FALSE uses unweighted distance.
-#' @param snow.neighborhood Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this will set "selection" to 7 and "vestry" to NULL.
+#' @param snow.neighborhood Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this sets "selection" to 7 and "vestry" to NULL.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @return An R list with 13 objects:
 #' \itemize{
