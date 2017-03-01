@@ -23,7 +23,7 @@
 #'   \item{\code{statistic}: "statistic" from neighborhoodWalking().}
 #'   \item{\code{vestry}: "vestry" from neighborhoodWalking().}
 #' }
-#' @section Notes: This function is computationally intensive (the default configuration takes about 1-2 minutes to run on a single core). However, six configurations will return pre-computed results. The first three use the 13 pumps in the original map: 1) the default set of arguments, which uses all pumps; 2) the default set excluding the pump on Little Marlborough Street (pump 6), and 3) the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7). The last three use the same set of arguments as above but uses the 14 pumps in the second version from the Vestry report. This includes a repositioned Broad Street pump.
+#' @section Notes: This function is computationally intensive (the default configuration takes about 1-2 minutes to run on a single core). However, seven configurations will return pre-computed results. The first three use the 13 pumps in the original map: 1) the default set of arguments, which uses all pumps; 2) the default set excluding the pump on Little Marlborough Street (pump 6), and 3) the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7). The next three use the same set of arguments as above but uses the 14 pumps in the second version from the Vestry report. This includes a repositioned Broad Street pump. The seventh and final is Snow's Broad Street pump neighborhood, which represents his graphical annotation of the version of the map that appeared in the Vestry report.
 #' @seealso \code{\link{plot.walking}}, \code{\link{summary.walking}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
@@ -32,7 +32,7 @@
 
 neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
   statistic = "address", weighted = TRUE, snow.neighborhood = FALSE,
-    multi.core = FALSE) {
+  multi.core = FALSE) {
 
   if (all(statistic %in% c("address", "fatality")) == FALSE) {
     stop('"statistic" must either be "address" or "fatality".')
