@@ -4,10 +4,6 @@ output:
     variant: markdown_github
 ---
 
-# ---
-# output: github_document
-# ---
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
@@ -18,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
+# cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
 John Snow's map of the 1854 London cholera outbreak is one of the best known examples of data visualization:
 
@@ -30,7 +26,7 @@ To help assess such criticisms and to allow users to analyze Snow's data for the
 
 ![](vignettes/walking.paths.graph8.all.png)
 
-## Installation
+# Installation
 
 ```R
 # install.packages("devtools")
