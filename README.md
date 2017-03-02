@@ -18,7 +18,7 @@ The function below computes and plots the 10 walking distance *pump neighborhood
 plot(neighborhoodWalking())
 ```
 
-![](README-unnamed-chunk-3-1.png)
+![](README-walk-1.png)
 
 ### installation
 

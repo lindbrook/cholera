@@ -25,11 +25,11 @@ To help assess such criticism and to allow people to analyze Snow's data for the
 ### example
 
 The function below computes and plots the 10 walking distance _pump neighborhoods_ for the 578 recorded fatalities in Snow's map.
- 
+
 ```{r, echo = FALSE}
 library(cholera)
 ```
-```{r, fig.width = 6, fig.height = 6}
+```{r walk, fig.width = 6, fig.height = 6}
 plot(neighborhoodWalking())
 ```
 
