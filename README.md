@@ -1,18 +1,7 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
-```
-
-## cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
+cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
+-------------------------------------------------------------------------
 
 John Snow's map of the 1854 London cholera outbreak is one of the best known examples of data visualization:
 
@@ -22,17 +11,17 @@ However, as evidence of Snow's claims that cholera is a waterborne illness or th
 
 To help assess such criticisms and to allow people to analyze Snow's data for themselves, this package offers the following. First, it amends and augments [Dodson and Tobler](http://www.ncgia.ucsb.edu/pubs/snow/snow.html)'s 1992 digitization of Snow's map. Second, it allows users to compute and visualize pump neighborhoods, based on either Voronoi tessellation and walking distances, for any desired set of pumps (e.g., all but the Broad Street pump). Third, it allows users to locate and visualize individual cases, pumps, roads and walking paths.
 
-```{r, echo = FALSE}
-library(cholera)
-```
-```{r, fig.width = 6, fig.height = 6}
+``` r
 plot(neighborhoodWalking())
 addLandmarks()
 ```
 
-## Installation
+![](README-unnamed-chunk-3-1.png)
 
-```{r, eval = FALSE}
+Installation
+------------
+
+``` r
 # install.packages("devtools")
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
