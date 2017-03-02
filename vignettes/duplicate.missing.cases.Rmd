@@ -304,7 +304,7 @@ quadratic <- function(a, b, c) {
 }
 
 # Geometric interpolation
-interpolatedPoints <- function(case1, case2, multiplier = 0.5, segment = sel) {
+interpolatedPoints <- function(case1, case2, segment = sel, multiplier = 0.5) {
   p <- Snow.deaths[case1, "x"]
   q <- Snow.deaths[case1, "y"]
   radius <- multiplier * unitDistance(case1, case2)
@@ -696,7 +696,7 @@ quadratic <- function(a, b, c) {
 
 # Geometric interpolation
 # "multiplier" scales and defines the unit distance
-interpolatedPoints <- function(case1, case2, multiplier = 0.5, segment) {
+interpolatedPoints <- function(case1, case2, segment, multiplier = 0.5) {
   p <- Snow.deaths[case1, "x"]
   q <- Snow.deaths[case1, "y"]
   radius <- multiplier * unitDistance(case1, case2)
