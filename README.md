@@ -15,6 +15,7 @@ To help assess such criticism and to allow people to analyze Snow's data for the
 The function below computes and plots the 10 walking distance *pump neighborhoods* for the 578 recorded fatalities in Snow's map.
 
 ``` r
+library(cholera)
 plot(neighborhoodWalking())
 ```
 
