@@ -6,9 +6,9 @@ John Snow's map of the 1854 Soho, London cholera outbreak is one of the best kno
 
 ![](vignettes/msu-snows-mapB.jpg)
 
-The "textbook" account is that Snow used the map to show that cholera was a waterborne not airborne disease, to identify the water pump on Broad Street as the source of the disease, and to convince officials to remove pump's handle thereby stemming the tide of the outbreak. Little of this stands up to careful scrutiny. The greater puzzle is why despite the evidence (and the map), Snow failed to convince both local officials and his peers in the scientific community of the validity of his claims, and why we hold the map such high regard today.
+The "textbook" account is that Snow used the map to show that cholera was a waterborne not airborne disease, to identify the water pump on Broad Street as the source of the disease, and to convince officials to remove pump's handle thereby stemming the tide of the outbreak. Little of this stands up to careful scrutiny. The greater puzzle is why despite the evidence (and the map), Snow failed to convince both local officials and his peers in the scientific community of the validity of his claims, and why we hold the map in such high regard today.
 
-To address these questions, this package is designed to help users assess and explore the map and the data behind it. The starting point is the second and lesser-known version of the map, which appeared in the official report on the outbreak. While the first map (above) is more important, the second (below) is more important:
+To address these questions, this package help users assess and explore the map and its data. The starting point is the second and lesser-known version of the map, which appeared in the official report on the outbreak. While the first map (above) is more famous, the second (below) is more important:
 
 ![](vignettes/fig12-6.png)
 
