@@ -32,7 +32,7 @@ While the details and the actual method Snow used to annotate the map are lost t
 
 I do so by providing for two different approaches to computing pump neighborhoods. The first is Voronoi tessellation, which is based on the Euclidean distance between pumps:
 
-```{r voronoi, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r voronoi, fig.width = 6, fig.height = 6, message = FALSE}
 library(cholera)
 plot(neighborhoodVoronoi())
 ```
@@ -41,19 +41,19 @@ While a popular and easy to compute choice, the drawback is that it assumes that
 
 First, I transform the street data, which records roads as line segments, into a "social" graph or network. With this, computing walking distance becomes a graph theory problem: it is the shortest path between a given case (observed or simulated) and its nearest pump:
 
-```{r path, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r path, fig.width = 6, fig.height = 6, message = FALSE}
 walkingPath(150)
 ```
 
 Next, to compute the different walking distance-based neighborhoods, I efficiently apply the "rinse and repeat" principle to all cases:
 
-```{r walk, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r walk, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodWalking())
 ```
 
 We can further explore the data by including or excluding certain pumps. This is important because factors other than time or distance may play a role. For example, Snow argues that water from the pump on Little Marlborough Street pump (#6) was of low quality and that people in that neighborhood preferred the water from the Broad Street pump (#7). To investigate this possibility, we simply exclude the pump on Little Marlborough Street from our computation:
 
-```{r walk6, fig.width = 5.25, fig.height = 5.25, message = FALSE}
+```{r walk6, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodWalking(-6))
 ```
 
