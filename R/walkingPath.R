@@ -281,23 +281,23 @@ walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
 
     if (is.null(selection)) {
       if (vestry) {
-        points(cholera::pumps.vestry[, c("x", "y")], pch = 17, cex = 1,
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
           col = colors)
         text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
       } else {
-        points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = colors)
+        points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
         text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
       }
     } else {
       if (vestry) {
         sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-        points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+        points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 24, cex = 1,
           col = colors[sel.pumps])
         text(cholera::pumps.vestry[sel.pumps, c("x", "y")], label = pump.names,
           pos = 1)
       } else {
         sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-        points(cholera::pumps[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+        points(cholera::pumps[sel.pumps, c("x", "y")], pch = 24, cex = 1,
           col = colors[sel.pumps])
         text(cholera::pumps[sel.pumps, c("x", "y")], label = pump.names,
           pos = 1)
@@ -327,23 +327,23 @@ walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
 
     if (is.null(selection)) {
       if (vestry) {
-        points(cholera::pumps.vestry[, c("x", "y")], pch = 17, cex = 1,
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
           col = colors)
         text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
       } else {
-        points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = colors)
+        points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
         text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
       }
     } else {
       if (vestry) {
         sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-        points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+        points(cholera::pumps.vestry[sel.pumps, c("x", "y")], pch = 24, cex = 1,
           col = colors[sel.pumps])
         text(cholera::pumps.vestry[sel.pumps, c("x", "y")], label = pump.names,
           pos = 1)
       } else {
         sel.pumps <- as.numeric(substr(pump.names, 2, nchar(pump.names)))
-        points(cholera::pumps[sel.pumps, c("x", "y")], pch = 17, cex = 1,
+        points(cholera::pumps[sel.pumps, c("x", "y")], pch = 24, cex = 1,
           col = colors[sel.pumps])
         text(cholera::pumps[sel.pumps, c("x", "y")], label = pump.names,
           pos = 1)
