@@ -32,7 +32,7 @@ While a popular and easy to compute choice, the drawback is that it assumes that
 First, I transform the street data, which records roads as line segments, into a "social" graph or network. With this, computing walking distance becomes a graph theory problem: it is the shortest path between a given case (observed or simulated) and its nearest pump:
 
 ``` r
-walkingPath(150, zoom = TRUE)
+walkingPath(150)
 ```
 
 ![](README-path-1.png)

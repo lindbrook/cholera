@@ -42,7 +42,7 @@ While a popular and easy to compute choice, the drawback is that it assumes that
 First, I transform the street data, which records roads as line segments, into a "social" graph or network. With this, computing walking distance becomes a graph theory problem: it is the shortest path between a given case (observed or simulated) and its nearest pump:
 
 ```{r path, fig.width = 5.25, fig.height = 5.25, message = FALSE}
-walkingPath(150, zoom = TRUE)
+walkingPath(150)
 ```
 
 Next, to compute the different walking distance-based neighborhoods, I efficiently apply the "rinse and repeat" principle to all cases:
