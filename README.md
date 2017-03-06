@@ -10,15 +10,13 @@ The "textbook" account is that Snow used the map to show that cholera was a wate
 
 ### pump neighborhoods
 
-The starting point to understanding what Snow hoped to achieve with his map lies with the second and lesser-known version of the map, which appeared in the official report on the outbreak:
+The key to understanding what Snow hoped to achieve with his map lies with the second, lesser-known version that appeared in the official report on the outbreak:
 
 ![](vignettes/fig12-6.png)
 
-What makes this second version important is the addition of a graphical annotation that describes the Broad Street pump "neighborhood": the residences that were most likely to use the pump that Snow suspected as being the source of the outbreak. Because getting drinking water in 1854 London meant physically fetching it from a public pump, the notion of a "neighborhood" is pivotal to Snow's claim that cholera is a waterborne disease. If he was right, the outbreak should literally stop at the neighborhood's borders.
+What makes this version important is the addition of a graphical annotation that describes the Broad Street pump "neighborhood": the residences that were most likely to use the pump that Snow suspected as being the source of the outbreak. Because getting drinking water in 1854 London meant physically fetching it from a public pump, the notion of a "neighborhood" is pivotal to Snow's claim that cholera is a waterborne disease. If he was right, the outbreak should literally stop at the neighborhood's borders.
 
-While the details of how Snow "computed" his annotation are lost to history, this package offers a variety of ways, besides Snow's effort, to compute pump neighborhoods.
-
-The two more systematic methods compute the neighborhoods for all selected pumps. The first uses Voronoi tessellation. It is based on the Euclidean distance between pumps:
+While the details of how Snow "computed" his annotation are lost to history, this package offers a variety of ways, including Snow's, to compute pump neighborhoods. The two more systematic methods compute the neighborhoods for all selected pumps. The first uses Voronoi tessellation. It is based on the Euclidean distance between pumps:
 
 ``` r
 library(cholera)
@@ -27,9 +25,11 @@ plot(neighborhoodVoronoi())
 
 ![](README-voronoi-1.png)
 
-While a popular and easy to compute choice, the drawback is that it assumes that people can walk through walls: Euclidean distance is distance "as-the-crow-flies". The more accurate but hard to compute choice is to compute the actual walking distances along the streets of Soho.
+While popular and easy-to-compute, the drawback is by using the Euclidean distance or the distance "as-the-crow-flies", it assumes that people can walk through walls.
 
-This appears, in fact, to be the method that Snow used. He writes that the annotation includes "the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps". To reconstruct and extend his efforts, I transform the roads into a "social" network. By doing this, computing walking distances becomes a graph theory problem. I compute the shortest path between a given case (observed or simulated) and its nearest pump:
+The more accurate but hard-to-compute approach would be to use the "actual" walking distances along the streets of Soho. This, in fact, appears to be what Snow himself claims to to do. He writes that his annotation includes "the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps".
+
+To replicate and extend his efforts, I wrote functions that compute walking distance pump neighborhoods. They work by transforming the roads on the map into a "social" graph and by turning the computation of walking distances into a graph theory problem. Essentially, I compute the shortest path between a case (observed or simulated) and its nearest pump:
 
 ``` r
 walkingPath(150)
@@ -37,7 +37,7 @@ walkingPath(150)
 
 ![](README-path-1.png)
 
-Then, to identify the different neighborhoods, I simply (but efficiently) "rinse and repeat":
+"Rinse and repeat" and the different pump neighborhoods will emerge:
 
 ``` r
 plot(neighborhoodWalking())
@@ -45,7 +45,7 @@ plot(neighborhoodWalking())
 
 ![](README-walk-1.png)
 
-You can further explore the data by including or excluding certain pumps. This can be important because factors other than distance may play a role in the choice of pump. For example, Snow argues that water from the pump on Little Marlborough Street pump (\#6) was of low quality and that people in that neighborhood actually preferred the water from the Broad Street pump (\#7). To investigate this possibility, you can simply exclude the pump on Little Marlborough Street:
+One nice feature of these functions is that you can explore the data by including or excluding pumps. This can be important if factors other than distance play a role in the choice of pump. For example, Snow argued that water from the pump on Little Marlborough Street pump (\#6) was of low quality and that people in that neighborhood actually preferred the water from the Broad Street pump (\#7). To investigate this scenario, you simply exclude the pump on Little Marlborough Street (\#6):
 
 ``` r
 plot(neighborhoodWalking(-6))
@@ -62,7 +62,7 @@ To install "cholera", use the expression below. Note that you need to have alrea
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 
-Besides the help pages, the vignettes include detailed discussion about the data and functions included in this package.
+Besides the help pages, the vignettes include detailed discussion about the data and functions included in this package:
 
 ``` r
 vignette("duplicate.missing.cases")
