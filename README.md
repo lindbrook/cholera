@@ -25,11 +25,11 @@ plot(neighborhoodVoronoi())
 
 ![](README-voronoi-1.png)
 
-While popular and easy-to-compute, the drawback is by using the Euclidean distance or the distance "as-the-crow-flies", it assumes that people can walk through walls.
+While popular and easy to compute, the drawback is by using the Euclidean distance or the distance "as-the-crow-flies", it assumes that people can walk through walls.
 
-The more accurate but hard-to-compute approach would be to use the "actual" walking distances along the streets of Soho. This, in fact, appears to be what Snow himself claims to to do. He writes that his annotation includes "the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps".
+The second method uses walking distances along the streets of Soho. While more accurate, it is harder to compute. To his credit, it also appears to be what Snow claims his annotation does: it includes "the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps".
 
-To replicate and extend his efforts, I wrote functions that compute walking distance pump neighborhoods. They work by transforming the roads on the map into a "social" graph and by turning the computation of walking distances into a graph theory problem. Essentially, I compute the shortest path between a case (observed or simulated) and its nearest pump:
+To replicate and extend his efforts, I wrote functions that compute walking distance pump neighborhoods. They work by transforming the roads on the map into a "social" graph and then turning the computation of walking distances into a graph theory problem. Essentially, I am computing the shortest path between a case (observed or simulated) and its nearest pump:
 
 ``` r
 walkingPath(150)
@@ -37,7 +37,7 @@ walkingPath(150)
 
 ![](README-path-1.png)
 
-"Rinse and repeat" and the different pump neighborhoods will emerge:
+"Rinse and repeat" for all observations and the different pump neighborhoods emerge:
 
 ``` r
 plot(neighborhoodWalking())
