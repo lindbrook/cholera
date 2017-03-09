@@ -2,23 +2,21 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
-John Snow's map of the 1854 Soho, London cholera outbreak is one of the best known examples of data visualization and information design:
+John Snow's map of the 1854 cholera outbreak in London's Soho is one of the best known examples of data visualization and information design. As evidence of his claim that cholera is a waterborne rather than airborne disease, Snow plots the water pumps, the primary source of drinking water in 1854, and the location and count of cholera fatalities as stacks of horizontal bars:
 
 ![](vignettes/msu-snows-mapB.jpg)
 
-The "textbook" account is that the map helped Snow to identify the water pump that was the source of the disease, to stem the tide of the outbreak by convincing officials to remove that pump's handle, and, most importantly, to show that cholera is a waterborne not airborne disease. In fact, despite the quality of his evidence including the map, Snow actually failed to convince both local officials and his peers in the scientific community of the validity of his claims.
-
-While their skepticism may seem wrong to our eyes (cholera is after all a waterborne disease), I would argue that a reassessment of the evidence would lead to a new, healthy skepticism: little of the "textbook" account stands up to scrutiny. That said, Snow's map is still relevant and important. It stands as a lesson about the challenges and difficulties of data visualization. To evaluate the evidence for yourself, this package provides tools to analyze, explore and visualize the map and its data.
-
-### pump neighborhoods
-
-The key to understanding what Snow hoped to achieve with his map lies with the second, lesser-known version that appeared in the official report on the outbreak:
+While the map shows a concentration of fatalities around the Broad Street pump, which Snow suspected was the source of the cholera, it actually doesn't do the best job of excluding rival explanation. The pattern we see is not clearly different from what airborne transmission might look like. To address this problem, Snow added a graphical annotation to a second, lesser-known version of the map that was published in the official report on the outbreak:
 
 ![](vignettes/fig12-6.png)
 
-What makes this version important is the addition of a graphical annotation that describes the Broad Street pump "neighborhood": the residences that were most likely to use the pump that Snow suspected as being the source of the outbreak. Because getting drinking water in 1854 London meant physically fetching it from a public pump, the notion of a "neighborhood" is pivotal to Snow's claim that cholera is a waterborne disease. If he was right, the outbreak should literally stop at the neighborhood's borders.
+### pump neighborhoods
 
-While the details of how Snow "computed" his annotation are lost to history, this package offers a variety of ways, including Snow's, to compute pump neighborhoods. The two more systematic methods compute the neighborhoods for all selected pumps. The first uses Voronoi tessellation, which is based on the Euclidean distance between pumps:
+This annotation outlines the Broad Street *pump neighborhood*, the residences Snow claims are within "close" walking distance to the pump. What makes this and other pump neighborhoods so important is that they provide a very specific (testable) prediction about the spatial distribution of cases. The line of thinking is this: if water is cholera's mode of transmission and and if water pumps located on the street are the primary source of drinking water, then most, if not all fatalities should be found *within* the neighborhood. To put it simply, fatalities should stop at the neighborhood's borders. In this way, pump neighborhoods can help distinguish waterborne from airborne patterns of disease transmission.
+
+To that end, this package builds on Snow's work by offering two systematic ways to compute pump neighborhoods. Doing so not only provides a way to replicate and validate Snow's efforts, it also allows greater exploration of the data by allowing you to compute all or any selection of pump neighborhoods. The can help you to determine which case belongs to which neighborhood, and to explore scenarios, like the possibility that the choice of pump is affected by water quality.
+
+The first uses Voronoi tessellation. It is based on the Euclidean distance between pumps. While popular and easy to compute, its only drawback is that roads and walking distance play no role in people's choice of pump. The method assumes that people can walk through walls to get to their preferred pump:
 
 ``` r
 library(cholera)
@@ -27,11 +25,7 @@ plot(neighborhoodVoronoi())
 
 ![](README-voronoi-1.png)
 
-While popular and easy to compute, the drawback is that with the Euclidean distance, or the distance "as-the-crow-flies", we assume that people can walk through walls.
-
-The second method uses walking distances along the streets of Soho. While more accurate, this is harder to compute. To his credit, this appears to be Snow's method. He writes that the annotation includes "the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps".
-
-To replicate and extend his efforts, I wrote functions that compute walking distance pump neighborhoods. They work by transforming the roads on the map into a "social" graph and turning the computation of walking distances into a graph theory problem: the functions compute the shortest path between a case (observed or simulated) and its nearest pump:
+The second method, which builds on Snow's example, computes neighborhoods based on walking distance. While more accurate, it is harder to compute. I wrote functions that transform the roads on the map into a "social" graph and turn the computation of walking distance into a graph theory problem. For a given case (observed or simulated), I compute the shortest weighted path to the nearest pump:
 
 ``` r
 walkingPath(150)
@@ -39,7 +33,7 @@ walkingPath(150)
 
 ![](README-path-1.png)
 
-"Rinse and repeat" for all observations and the different pump neighborhoods emerge:
+Then, by applying the "rinse and repeat" principle, the different pump neighborhoods will begin to emerge:
 
 ``` r
 plot(neighborhoodWalking())
@@ -47,7 +41,7 @@ plot(neighborhoodWalking())
 
 ![](README-walk-1.png)
 
-One nice feature of these functions is that you can explore the data by including or excluding pumps. This can be important if factors other than distance play a role in the choice of pump. For example, Snow argued that water from the pump on Little Marlborough Street pump (\#6) was of low quality and that people in that neighborhood actually preferred the water from the Broad Street pump (\#7). To investigate this scenario, you simply exclude the pump on Little Marlborough Street (\#6):
+To exploring scenarios like the water quality problem mentioned above, you simply exclude the pump with low quality and see how it affect the spatial distribution of cases:
 
 ``` r
 plot(neighborhoodWalking(-6))
@@ -73,3 +67,13 @@ vignette("pump.neighborhoods")
 vignette("roads")
 vignette("time.series")
 ```
+
+### other package features
+
+-   Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
+-   "Unstacks" the data in two ways to improve analysis and visualization.
+-   Adds the ability to overlay graphical features like kernel density, Voronoi diagrams, and notable landmarks (the plague pit, the Lion Brewery, etc.).
+-   Includes a variety of helper functions to find and locate cases, roads, pumps and walking paths.
+-   Appends street names to roads data.
+-   Includes the revised pump data used in the second version of Snow's map.
+-   Adds two different aggregate time series fatalities data from the Vestry report.
