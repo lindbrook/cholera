@@ -49,25 +49,6 @@ plot(neighborhoodWalking(-6))
 
 ![](README-walk6-1.png)
 
-### getting started
-
-To install "cholera", use the expression below. Note that you need to have already installed the "devtools" R package.
-
-``` r
-# install.packages("devtools")
-devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
-```
-
-Besides the help pages, the vignettes include detailed discussion about the data and functions included in this package:
-
-``` r
-vignette("duplicate.missing.cases")
-vignette("unstacking.fatalities")
-vignette("pump.neighborhoods")
-vignette("roads")
-vignette("time.series")
-```
-
 ### other package features
 
 -   Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
@@ -77,3 +58,22 @@ vignette("time.series")
 -   Appends street names to roads data.
 -   Includes the revised pump data used in the second version of Snow's map.
 -   Adds two different aggregate time series fatalities data from the Vestry report.
+
+### getting started
+
+To install "cholera", use the expression below. Note that you need to have already installed the "devtools" R package.
+
+``` r
+# install.packages("devtools")
+devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
+```
+
+Besides the help pages, the vignettes include detailed discussion about the data and functions:
+
+``` r
+vignette("duplicate.missing.cases")
+vignette("unstacking.fatalities")
+vignette("pump.neighborhoods")
+vignette("roads")
+vignette("time.series")
+```
