@@ -28,7 +28,7 @@ This annotation outlines the Broad Street _pump neighborhood_, the residences Sn
 
 To that end, this package builds on Snow's work by offering two systematic ways to compute pump neighborhoods. Doing so not only provides a way to replicate and validate Snow's efforts, it also allows greater exploration of the data by allowing you to compute all or any selection of pump neighborhoods. The can help you to determine which case belongs to which neighborhood, and to explore scenarios, like the possibility that the choice of pump is affected by water quality.
 
-The first uses Voronoi tessellation. It is based on the Euclidean distance between pumps. While popular and easy to compute, its only drawback is that roads and walking distance play no role in people's choice of pump. The method assumes that people can walk through walls to get to their preferred pump:
+The first uses Voronoi tessellation. It is based on the Euclidean distance between pumps. While popular and easy to compute, its only drawback is that roads and walking distance play no role in people's choice of pump. The method assumes that people can walk through walls to get to their preferred pump.
 
 ```{r voronoi, fig.width = 6, fig.height = 6, message = FALSE}
 library(cholera)
@@ -81,4 +81,3 @@ vignette("time.series")
 * Appends street names to roads data.
 * Includes the revised pump data used in the second version of Snow's map.
 * Adds two different aggregate time series fatalities data from the Vestry report.
-
