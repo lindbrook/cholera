@@ -41,7 +41,7 @@ plot(neighborhoodWalking())
 
 ![](README-walk-1.png)
 
-To exploring scenarios like the water quality problem mentioned above, you simply exclude the pump with low quality and see how it affect the spatial distribution of cases:
+To explore scenarios like the water quality problem mentioned above, you simply exclude the pump with low quality and see how it affect the spatial distribution of cases:
 
 ``` r
 plot(neighborhoodWalking(-6))
