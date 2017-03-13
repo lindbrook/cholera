@@ -61,7 +61,7 @@ plot(neighborhoodWalking(-6))
 
 ### getting started
 
-To install "cholera", use the expression below. Note that you need to have already installed the "devtools" R package.
+To install "cholera", use the expression below. Note that you may need to install the "devtools" package.
 
 ``` r
 # install.packages("devtools")
