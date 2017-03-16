@@ -392,8 +392,14 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
             text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
               label = x$pump)
           }
-          title(main = paste0("Observed Walking Paths", "\n", "Pumps ",
-            paste(sort(x$selection), collapse = ", ")))
+
+          if (length(x$pump) > 1) {
+            title(main = paste0("Observed Walking Paths", "\n", "Pumps ",
+              paste(sort(x$selection), collapse = ", ")))
+          } else {
+            title(main = paste0("Observed Walking Paths", "\n", "Pump ",
+              paste(sort(x$selection), collapse = ", ")))
+          }
         }
       } else {
         invisible(lapply(seq_along(obs.pump), function(i) {
@@ -436,8 +442,14 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
             text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
               label = x$pump)
           }
-          title(main = paste0("Observed Walking Paths", "\n", "Pumps ",
-            paste(sort(x$selection), collapse = ", ")))
+
+          if (length(x$pump) > 1) {
+            title(main = paste0("Observed Walking Paths", "\n", "Pumps ",
+              paste(sort(x$selection), collapse = ", ")))
+          } else {
+            title(main = paste0("Observed Walking Paths", "\n", "Pump ",
+              paste(sort(x$selection), collapse = ", ")))
+          }
         }
       }
     } else {
@@ -469,8 +481,14 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
           text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
             label = x$pump)
         }
-        title(main = paste0("Expected Walking Paths", "\n", "Pumps ",
-          paste(sort(x$selection), collapse = ", ")))
+
+        if (length(x$pump) > 1) {
+          title(main = paste0("Expected Walking Paths", "\n", "Pumps ",
+            paste(sort(x$selection), collapse = ", ")))
+        } else {
+          title(main = paste0("Expected Walking Paths", "\n", "Pump ",
+            paste(sort(x$selection), collapse = ", ")))
+        }
       }
     }
   } else {
@@ -525,8 +543,14 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
           text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
             label = x$pump)
         }
-        title(main = paste0("Observed Walking Neighborhoods and Paths", "\n",
-          "Pumps ", paste(sort(x$selection), collapse = ", ")))
+
+        if (length(x$pump) > 1) {
+          title(main = paste0("Observed Walking Neighborhoods and Paths", "\n",
+            "Pumps ", paste(sort(x$selection), collapse = ", ")))
+        } else {
+          title(main = paste0("Observed Walking Neighborhoods and Paths", "\n",
+            "Pump ", paste(sort(x$selection), collapse = ", ")))
+        }
       }
     } else {
       if (x$vestry) {
@@ -566,8 +590,14 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
           text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
             col = "white", label = x$pump)
         }
-        title(main = paste0("Observed Walking Neighborhoods", "\n", "Pumps ",
-          paste(sort(x$selection), collapse = ", ")))
+
+        if (length(x$pump) > 1) {
+          title(main = paste0("Observed Walking Neighborhoods", "\n",
+            "Pumps ", paste(sort(x$selection), collapse = ", ")))
+        } else {
+          title(main = paste0("Observed Walking Neighborhoods", "\n", "Pump ",
+            paste(sort(x$selection), collapse = ", ")))
+        }
       }
     }
   }

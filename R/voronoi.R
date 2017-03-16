@@ -192,6 +192,8 @@ plot.voronoi <- function(x, ...) {
         text(cholera::pumps[, c("x", "y")], label = paste0("p", x$pump.id),
           pos = 1)
       }
+      title(main = "Snow Addresses by Neighborhood")
+
     } else {
       if (x$vestry) {
         points(cholera::pumps.vestry[x$selection, c("x", "y")], pch = 2,
@@ -204,6 +206,8 @@ plot.voronoi <- function(x, ...) {
         text(cholera::pumps[x$selection, c("x", "y")],
           label = paste0("p", x$pump.id), pos = 1)
       }
+      title(main = paste0("Snow Addresses by Neighborhood", "\n",
+        "Pumps ", paste(sort(x$selection), collapse = ", ")))
     }
 
     voronoi.case.id <- cholera::pumpCase(x)
@@ -222,7 +226,6 @@ plot.voronoi <- function(x, ...) {
       lty = "solid")
     points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
       pch = 20, cex = 0.75)
-    title(main = "Snow Addresses by Neighborhood")
 
   } else {
     invisible(lapply(roads.list, lines, col = "gray"))
@@ -257,7 +260,6 @@ plot.voronoi <- function(x, ...) {
       }
 
       title(main = caption)
-
     } else {
       if (x$vestry) {
         text(cholera::pumps.vestry[x$selection, c("x", "y")],
