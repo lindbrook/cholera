@@ -5,7 +5,7 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param statistic Character. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.
 #' @param weighted Logical. TRUE uses distance weighted by edge length (i.e., road length). FALSE uses unweighted distance.
-#' @param snow.neighborhood Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this sets "selection" to 7 and "vestry" to NULL.
+#' @param snow Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this sets "selection" to 7 and "vestry" to NULL.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @return An R list with 13 objects:
 #' \itemize{
@@ -31,26 +31,54 @@
 #' neighborhoodWalking(selection = -6)
 
 neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
-  statistic = "address", weighted = TRUE, snow.neighborhood = FALSE,
-  multi.core = FALSE) {
+  statistic = "address", weighted = TRUE, snow = FALSE, multi.core = FALSE) {
 
   if (all(statistic %in% c("address", "fatality")) == FALSE) {
     stop('"statistic" must either be "address" or "fatality".')
   }
 
-  test1 <- is.null(selection) & vestry == FALSE & statistic == "address" &
-    weighted & multi.core == FALSE
-  test2 <- length(selection) == 1 & -6 %in% selection & vestry == FALSE &
-    statistic == "address" & weighted & multi.core == FALSE
-  test3 <- length(selection) == 2 & all(6:7 %in% selection) & vestry == FALSE &
-    statistic == "address" & weighted & multi.core == FALSE
-  test4 <- is.null(selection) & vestry & statistic == "address" &
-    weighted & multi.core == FALSE
-  test5 <- length(selection) == 1 & -6 %in% selection & vestry &
-    statistic == "address" & weighted & multi.core == FALSE
-  test6 <- length(selection) == 2 & all(6:7 %in% selection) & vestry &
-    statistic == "address" & weighted & multi.core == FALSE
-  test7 <- snow.neighborhood == TRUE & multi.core == FALSE
+  test1 <- is.null(selection) &
+           vestry == FALSE &
+           statistic == "address" &
+           weighted &
+           snow == FALSE &
+           multi.core == FALSE
+  test2 <- length(selection) == 1 & -6 %in% selection &
+           vestry == FALSE &
+           statistic == "address" &
+           weighted &
+           snow == FALSE &
+           multi.core == FALSE
+  test3 <- length(selection) == 2 & all(6:7 %in% selection) &
+           vestry == FALSE &
+           statistic == "address" &
+           weighted &
+           snow == FALSE &
+           multi.core == FALSE
+  test4 <- is.null(selection) &
+           vestry &
+           statistic == "address" &
+           weighted &
+           snow == FALSE &
+           multi.core == FALSE
+  test5 <- length(selection) == 1 & -6 %in% selection &
+           vestry &
+           statistic == "address" &
+           weighted &
+           snow == FALSE &
+           multi.core == FALSE
+  test6 <- length(selection) == 2 & all(6:7 %in% selection) &
+           vestry &
+           statistic == "address" &
+           weighted &
+           snow == FALSE &
+           multi.core == FALSE
+  test7 <- is.null(selection) &
+           vestry == FALSE &
+           statistic == "address" &
+           weighted &
+           snow == TRUE &
+           multi.core == FALSE
 
   if (test1) {
     output <- sysdata[["address"]]
@@ -81,7 +109,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
       }
     }
 
-    if (snow.neighborhood) {
+    if (snow) {
       selection <- 7
       vestry <- FALSE
     }
@@ -140,7 +168,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
 
     # cases #
 
-    if (snow.neighborhood) {
+    if (snow) {
       if (statistic == "address") {
         sel <- cholera::snow.neighborhood[cholera::snow.neighborhood %in%
           cholera::fatalities.address$anchor.case]

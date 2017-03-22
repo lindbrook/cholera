@@ -1,6 +1,7 @@
 cholera 0.1.99.9003
 ----------------------------------------------------------------
 amend plot titles
+amend neighborhoodWalking() for Snow neighborhood
 
 
 cholera 0.1.99.9002
