@@ -2,6 +2,7 @@ cholera 0.1.99.9003
 ----------------------------------------------------------------
 amend plot titles
 amend neighborhoodWalking() for Snow neighborhood
+add warning for Adam and Eve Court pump (#2)
 
 
 cholera 0.1.99.9002
