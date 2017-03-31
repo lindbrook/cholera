@@ -235,7 +235,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     obs.pumps <- table(nearest.pump)
 
     if (length(obs.pumps) > 1) {
-      pump.id <- substr(names(obs.pumps), 2, length(names(obs.pumps)))
+      pump.id <- substr(names(obs.pumps), 2, nchar(names(obs.pumps)))
       pump.id <- as.numeric(pump.id)
     } else {
       pump.id <- as.numeric(unlist(strsplit(names(obs.pumps), "p"))[2])
@@ -253,7 +253,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     neighborhood.paths <- split(paths, nearest.pump)
 
     idx <- order(as.numeric(substr(names(neighborhood.paths), 2,
-      length(names(neighborhood.paths)))))
+      nchar(names(neighborhood.paths)))))
 
     neighborhood.paths <- neighborhood.paths[idx]
 
@@ -282,7 +282,8 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
       names(pump.cases) <- paste0("p", 1:13)
     }
 
-    neighborhood.id <- sort(pump.id)
+    # neighborhood.id <- sort(pump.id)
+    neighborhood.id <- pump.id
 
     case.segments <- parallel::mclapply(neighborhood.id, caseSegments,
       neighborhood.paths, pump.cases, intermediate.segments, vestry,
@@ -309,7 +310,7 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     expected <- sum(observed$count) * sim.road.length / sum(sim.road.length)
 
     if (length(expected) > 1) {
-      pid <- as.numeric(substr(names(expected), 2, length(names(expected))))
+      pid <- as.numeric(substr(names(expected), 2, nchar(names(expected))))
     } else {
       pid <- as.numeric(unlist(strsplit(names(expected), "p"))[2])
     }
@@ -1008,7 +1009,7 @@ trimExpPaths <- function(pump.road.segments, select.pumps, pump.names, vestry,
   obs.pumps <- table(nearest.pump)
 
   if (length(obs.pumps) > 1) {
-    pump.id <- substr(names(obs.pumps), 2, length(names(obs.pumps)))
+    pump.id <- substr(names(obs.pumps), 2, nchar(names(obs.pumps)))
     pump.id <- as.numeric(pump.id)
   } else {
     pump.id <- as.numeric(unlist(strsplit(names(obs.pumps), "p"))[2])
@@ -1026,7 +1027,7 @@ trimExpPaths <- function(pump.road.segments, select.pumps, pump.names, vestry,
   neighborhood.paths <- split(paths, nearest.pump)
 
   idx <- order(as.numeric(substr(names(neighborhood.paths), 2,
-    length(names(neighborhood.paths)))))
+    nchar(names(neighborhood.paths)))))
 
   neighborhood.paths <- neighborhood.paths[idx]
 
