@@ -38,10 +38,12 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
   }
 
   if (is.null(selection) == FALSE) {
-    if (length(selection) == 1 & selection == 2) {
-      msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
-      msg2 <- " It's an isolate, unreachable for observed fatalities."
-      stop(paste(msg1, msg2))
+    if (length(selection) == 1) {
+      if (selection == 2) {
+        msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
+        msg2 <- " It's an isolate, unreachable for observed fatalities."
+        stop(paste(msg1, msg2))
+      }
     }
   }
 
