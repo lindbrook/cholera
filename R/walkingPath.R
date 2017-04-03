@@ -393,18 +393,6 @@ walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
   }
 }
 
-snowColors <- function(vestry = FALSE) {
-  colors.pair <- RColorBrewer::brewer.pal(10, "Paired")
-  colors.dark <- RColorBrewer::brewer.pal(8, "Dark2")
-  if (!vestry) {
-    c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
-      "red", colors.pair[1])
-  } else {
-    c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
-      "red", colors.pair[1], "darkorange")
-  }
-}
-
 caseSelector <- function(x, observed = TRUE) {
   if (observed) {
     case <- cholera::ortho.proj[cholera::ortho.proj$case == x, ]
