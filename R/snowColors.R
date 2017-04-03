@@ -8,10 +8,13 @@ snowColors <- function(vestry = FALSE) {
   colors.pair <- RColorBrewer::brewer.pal(10, "Paired")
   colors.dark <- RColorBrewer::brewer.pal(8, "Dark2")
   if (vestry) {
-    c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
-      "red", colors.pair[1], "darkorange")
+    out <- c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2],
+      colors.dark[5:8], "red", colors.pair[1], "darkorange")
+    names(out) <- paste0("p", 1:14)
   } else {
-    c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2], colors.dark[5:8],
-      "red", colors.pair[1])
+    out <- c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2],
+      colors.dark[5:8], "red", colors.pair[1])
+    names(out) <- paste0("p", 1:13)  
   }
+  out
 }
