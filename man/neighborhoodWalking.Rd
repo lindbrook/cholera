@@ -22,7 +22,7 @@ neighborhoodWalking(selection = NULL, vestry = FALSE,
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 }
 \value{
-An R list with 13 objects:
+An R list with 12 objects:
 \itemize{
   \item{\code{distances}: walking distances to selected pumps.}
   \item{\code{pump}: vector of selected pumps.}
@@ -33,7 +33,6 @@ An R list with 13 objects:
   \item{\code{sim.pump.case}: simulated fatality ID by pump neighborhood.}
   \item{\code{observed}: observed neighborhood fatality counts.}
   \item{\code{expected}: expected neighborhood fatality counts, based on road length.}
-  \item{\code{snow.colors}: neighborhood color based on snowColors().}
   \item{\code{selection}: "selection" from neighborhoodWalking().}
   \item{\code{statistic}: "statistic" from neighborhoodWalking().}
   \item{\code{vestry}: "vestry" from neighborhoodWalking().}
