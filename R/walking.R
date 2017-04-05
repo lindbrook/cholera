@@ -678,12 +678,14 @@ summary.walking <- function(object, ...) {
 
   obs <- object$observed
   exp <- object$expected
-  output <- merge(obs, exp, by = "pump.id", all.y = TRUE)
+  output <- merge(obs, exp, by = "pump", all.y = TRUE)
   names(output)[-1] <- c("Count", "Expected")
   output[is.na(output)] <- 0
   output$Percent <- round(100 * output$Count / sum(output$Count), 2)
-  output <- output[, c("pump.id", "Count", "Percent", "Expected")]
+  output <- output[, c("pump", "Count", "Percent", "Expected")]
   output$Pearson <- (output$Count - output$Expected) / sqrt(output$Expected)
+  output <- output[order(pumpNumber(output$pump)), ]
+  rownames(output) <- NULL
   output
 }
 
