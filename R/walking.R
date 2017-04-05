@@ -275,22 +275,54 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
       names(pump.cases) <- paste0("p", 1:13)
     }
 
-    # neighborhood.id <- sort(pump.id)
-    neighborhood.id <- pump.id
+    case.segments <- parallel::mclapply(pump.nm, caseSegments,
+      neighborhood.paths, pump.cases, vestry, mc.cores = cores)
+    names(case.segments) <- pump.nm
 
-    case.segments <- parallel::mclapply(neighborhood.id, caseSegments,
-      neighborhood.paths, pump.cases, intermediate.segments, vestry,
-      mc.cores = cores)
-    names(case.segments) <- paste0("p", neighborhood.id)
-
-    pump.segments <- parallel::mclapply(names(neighborhood.paths), pumpSegments,
+    pump.segments <- parallel::mclapply(pump.nm, pumpSegments,
       neighborhood.paths, vestry, mc.cores = cores)
-    names(pump.segments) <- paste0("p", neighborhood.id)
+    names(pump.segments) <- pump.nm
 
-    neighborhood.segments <- lapply(seq_along(neighborhood.id), function(i) {
-      rbind(case.segments[[i]], intermediate.segments[[i]], pump.segments[[i]])
+    neighborhood.segments <- lapply(pump.nm, function(nm) {
+      case.seg <- case.segments[[nm]]
+      intermediate.seg <- intermediate.segments[[nm]]
+      pump.seg <- pump.segments[[nm]]
+
+      # prioritize intermediate segments over case segments
+      case.seg <- case.seg[case.seg$id %in% intermediate.seg$id == FALSE, ]
+
+      # case on pump segment test
+      if (any(case.seg$id %in% pump.seg$id)) {
+        id <- intersect(case.seg$id, pump.seg$id)
+        actual.seg <- cholera::road.segments[cholera::road.segments$id == id, ]
+
+        # identify and select *.seg that includes an endpoint of actual.seg
+        p.test <- pump.seg[, c("x1", "y1")] == actual.seg[, c("x1", "y1")] |
+                  pump.seg[, c("x1", "y1")] == actual.seg[, c("x2", "y2")] |
+                  pump.seg[, c("x2", "y2")] == actual.seg[, c("x1", "y1")] |
+                  pump.seg[, c("x2", "y2")] == actual.seg[, c("x2", "y2")]
+
+        c.test <- case.seg[case.seg$id == id, c("x1", "y1")] ==
+                           actual.seg[, c("x1", "y1")] |
+                  case.seg[case.seg$id == id, c("x1", "y1")] ==
+                           actual.seg[, c("x2", "y2")] |
+                  case.seg[case.seg$id == id, c("x2", "y2")] ==
+                           actual.seg[, c("x1", "y1")] |
+                  case.seg[case.seg$id == id, c("x2", "y2")] ==
+                           actual.seg[, c("x2", "y2")]
+
+        if (all(p.test)) {
+          case.seg <- case.seg[-which(case.seg$id == id), ]
+        } else if (all(c.test)) {
+          pump.seg <- pump.seg[-which(pump.seg$id == id), ]
+        }
+      }
+
+      # unique handles identical case and pump segments
+      unique(rbind(case.seg, intermediate.seg, pump.seg))
     })
-    names(neighborhood.segments) <- paste0("p", neighborhood.id)
+
+    names(neighborhood.segments) <- pump.nm
 
     neighborhoods <- list(trimmed.segments = neighborhood.segments,
                           pump.cases = pump.cases)
@@ -301,14 +333,9 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
     sim.road.length <- roadLength(sim.neighborhoods$trimmed.segments)
 
     expected <- sum(observed$count) * sim.road.length / sum(sim.road.length)
-
-    if (length(expected) > 1) {
-      pid <- as.numeric(substr(names(expected), 2, nchar(names(expected))))
-    } else {
-      pid <- as.numeric(unlist(strsplit(names(expected), "p"))[2])
-    }
-
-    expected <- data.frame(pump.id = pid, count = expected)
+    expected <- data.frame(pump = names(expected), count = expected,
+      stringsAsFactors = FALSE)
+    rownames(expected) <- NULL
 
     output <- list(
       distances = nearest.pump.data,
@@ -747,53 +774,29 @@ intermediateSegments <- function(x) {
     node.data <- data.frame(x = as.numeric(node.data[, 1]),
                             y = as.numeric(node.data[, 2]))
 
-    # directional test of whether both endpoints are included
-    testAB <- lapply(seq_along(node.data$x[-1]), function(i) {
-      A <- node.data[i, "x"] == cholera::road.segments$x1 &
-        node.data[i, "y"] == cholera::road.segments$y1
-      B <- node.data[i + 1, "x"] == cholera::road.segments$x2 &
-        node.data[i + 1, "y"] == cholera::road.segments$y2
-      A & B
+    lapply(seq_along(node.data$x[-1]), function(i) {
+      t1 <- cholera::road.segments[which(cholera::road.segments[, "x1"] %in%
+        node.data[i, "x"]), "id"]
+      t2 <- cholera::road.segments[which(cholera::road.segments[, "x2"] %in%
+        node.data[i, "x"]), "id"]
+      t3 <- cholera::road.segments[which(cholera::road.segments[, "x1"] %in%
+        node.data[i + 1, "x"]), "id"]
+      t4 <- cholera::road.segments[which(cholera::road.segments[, "x2"] %in%
+        node.data[i + 1, "x"]), "id"]
+      tab <- table(c(t1, t2, t3, t4))
+      names(tab[tab > 1])
     })
-
-    testBA <- lapply(seq_along(node.data$x[-1]), function(i) {
-      B <- node.data[i, "x"] == cholera::road.segments$x2 &
-        node.data[i, "y"] == cholera::road.segments$y2
-      A <- node.data[i + 1, "x"] == cholera::road.segments$x1 &
-        node.data[i + 1, "y"] == cholera::road.segments$y1
-      B & A
-    })
-
-    AB <- vapply(testAB, any, logical(1L))
-    BA <- vapply(testBA, any, logical(1L))
-
-    if (any(AB)) {
-      dataAB <- cholera::road.segments[vapply(testAB[AB], which, integer(1L)), ]
-    }
-    if (any(BA)) {
-      dataBA <- cholera::road.segments[vapply(testBA[BA], which, integer(1L)), ]
-    }
-    if (exists("dataAB") & !exists("dataBA")) {
-      road.data <- dataAB
-    }
-    if (!exists("dataAB") & exists("dataBA")) {
-      road.data <- dataBA
-    }
-    if (exists("dataAB") & exists("dataBA")) {
-      road.data <- rbind(dataAB, dataBA)
-    }
-    if (exists("road.data")) road.data$id else NULL
   })
 
-  unique(unlist(path.roads))
+  cholera::road.segments[cholera::road.segments$id %in%
+    unique(unlist(path.roads)), ]
 }
 
-caseSegments <- function(x, neighborhood.paths, pump.cases,
-  intermediate.segments, vestry, obs = TRUE) {
+caseSegments <- function(x, neighborhood.paths, pump.cases, vestry,
+  obs = TRUE) {
 
-  n.name <- paste0("p", x)
-  n.paths <- neighborhood.paths[[n.name]]
-  n.cases <- pump.cases[[n.name]]
+  n.paths <- neighborhood.paths[[x]]
+  n.cases <- pump.cases[[x]]
 
   if (obs) {
     obs.seg <- unique(cholera::ortho.proj[cholera::ortho.proj$case %in%
@@ -803,19 +806,13 @@ caseSegments <- function(x, neighborhood.paths, pump.cases,
       n.cases, "road.segment"])
   }
 
-  if (is.null(intermediate.segments[[n.name]]) == FALSE) {
-    obs.seg <- obs.seg[obs.seg %in% intermediate.segments[[n.name]]$id == FALSE]
-  }
-
   if (vestry) {
     pump.seg <- cholera::ortho.proj.pump.vestry[
-      cholera::ortho.proj.pump.vestry$pump.id == x, "road.segment" ]
+      cholera::ortho.proj.pump.vestry$pump.id == pumpNumber(x), "road.segment"]
   } else {
-    pump.seg <- cholera::ortho.proj.pump[cholera::ortho.proj.pump$pump.id == x,
-      "road.segment" ]
+    pump.seg <- cholera::ortho.proj.pump[cholera::ortho.proj.pump$pump.id ==
+      pumpNumber(x), "road.segment"]
   }
-
-  obs.seg <- obs.seg[obs.seg %in% pump.seg == FALSE]
 
   new.segs <- lapply(obs.seg, function(seg) {
     st <- cholera::road.segments[cholera::road.segments$id == seg, ]
@@ -825,7 +822,6 @@ caseSegments <- function(x, neighborhood.paths, pump.cases,
       sel <- cholera::ortho.proj$road.segment %in% st$id &
         cholera::ortho.proj$case %in% n.cases
       st.cases <- cholera::ortho.proj[sel, ]
-
     } else {
       sel <- cholera::sim.ortho.proj$road.segment %in% st$id &
         cholera::sim.ortho.proj$case %in% n.cases
@@ -844,31 +840,40 @@ caseSegments <- function(x, neighborhood.paths, pump.cases,
     entry2 <- entry.data$x == st$x2 & entry.data$y == st$y2
 
     if (all(entry1)) {
-      d <- vapply(seq_along(st.cases$case), function(i) {
+      idx <- which(entry1)
+      d <- vapply(idx, function(i) {
         a <- st.cases[i, c("x.proj", "y.proj")]
         names(a) <- c("x", "y")
         b <- data.frame(x = st$x2, y = st$y2)
         stats::dist(rbind(a, b))
       }, numeric(1L))
-      st[, c("x2", "y2")] <- st.cases[which.min(d), c("x.proj", "y.proj")]
-      st$trimmed <- TRUE
-    }
 
-    if (all(entry2)) {
-      d <- vapply(seq_along(st.cases$case), function(i) {
+      st[, c("x2", "y2")] <- st.cases[idx[which.min(d)], c("x.proj", "y.proj")]
+      st$trimmed <- TRUE
+
+    } else if (all(entry2)) {
+      idx <- which(entry2)
+      d <- vapply(idx, function(i) {
         a <- st.cases[i, c("x.proj", "y.proj")]
         names(a) <- c("x", "y")
         b <- data.frame(x = st$x1, y = st$y1)
         stats::dist(rbind(a, b))
       }, numeric(1L))
-      st[, c("x1", "y1")] <- st.cases[which.min(d), c("x.proj", "y.proj")]
+
+      st[, c("x1", "y1")] <- st.cases[idx[which.min(d)], c("x.proj", "y.proj")]
       st$trimmed <- TRUE
-    }
 
-    if (all(entry1 + entry2 == 1)) {
+    } else if (any(entry1) & any(entry2)) {
       st
-    }
 
+    } else if (length(entry1) == 1 & length(entry2) == 1) {
+      if (entry1 == FALSE & entry2 == FALSE) {
+        st <- cbind(st[, c("street", "id", "name")],
+          st.cases[, c("x.proj", "y.proj")], entry.data)
+        names(st)[4:7] <- c("x1", "y1", "x2", "y2")
+        st$trimmed <- TRUE
+      }
+    }
     st
   })
 
@@ -952,14 +957,11 @@ trimExpPaths <- function(pump.road.segments, select.pumps, pump.names, vestry,
   if (all(pump.names %in% "p2" == FALSE)) {
     # if pump 2, on Adam and Eve Court, is not included, siumuated cases located
     # on that street cannot reach any other pump.
-
     adam.eve <- c(4536, 4537, 4538, 4539, 4608, 4609, 4610, 4611, 4612, 4681,
       4682, 4683, 4684, 4753, 4754, 4755, 4756, 4757, 4827, 4828, 4829, 4830,
       4900, 4901, 4902, 4955, 4956)
-
     ortho <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case
       %in% c(edge.case, falconberg, adam.eve) == FALSE, ]
-
   } else {
     ortho <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case
       %in% c(edge.case, falconberg) == FALSE, ]
@@ -1041,24 +1043,54 @@ trimExpPaths <- function(pump.road.segments, select.pumps, pump.names, vestry,
     names(pump.cases) <- paste0("p", 1:13)
   }
 
-  neighborhood.id <- sort(pump.id)
+  # set obs = FALSE
+  case.segments <- parallel::mclapply(pump.nm, caseSegments,
+    neighborhood.paths, pump.cases, vestry, obs = FALSE, mc.cores = cores)
+  names(case.segments) <- pump.nm
 
-  case.segments <- lapply(neighborhood.id, caseSegments, neighborhood.paths,
-    pump.cases, intermediate.segments, vestry, obs = FALSE)
+  pump.segments <- parallel::mclapply(pump.nm, pumpSegments,
+    neighborhood.paths, vestry, mc.cores = cores)
+  names(pump.segments) <- pump.nm
 
-  names(case.segments) <- paste0("p", neighborhood.id)
+  neighborhood.segments <- lapply(pump.nm, function(nm) {
+    case.seg <- case.segments[[nm]]
+    intermediate.seg <- intermediate.segments[[nm]]
+    pump.seg <- pump.segments[[nm]]
 
-  pump.segments <- lapply(names(neighborhood.paths), pumpSegments,
-    neighborhood.paths, vestry)
+    # prioritize "intermediate" segments over "case" segments
+    case.seg <- case.seg[case.seg$id %in% intermediate.seg$id == FALSE, ]
 
-  names(pump.segments) <- paste0("p", neighborhood.id)
+    # case on pump segment test
+    if (any(case.seg$id %in% pump.seg$id)) {
+      id <- intersect(case.seg$id, pump.seg$id)
+      actual.seg <- cholera::road.segments[cholera::road.segments$id == id, ]
 
-  neighborhood.segments <- lapply(seq_along(neighborhood.id), function(i) {
-    rbind(case.segments[[i]], intermediate.segments[[i]], pump.segments[[i]])
+      # identify and select *.seg that includes an endpoint of actual.seg
+      p.test <- pump.seg[, c("x1", "y1")] == actual.seg[, c("x1", "y1")] |
+                pump.seg[, c("x1", "y1")] == actual.seg[, c("x2", "y2")] |
+                pump.seg[, c("x2", "y2")] == actual.seg[, c("x1", "y1")] |
+                pump.seg[, c("x2", "y2")] == actual.seg[, c("x2", "y2")]
+
+      c.test <- case.seg[case.seg$id == id, c("x1", "y1")] ==
+                         actual.seg[, c("x1", "y1")] |
+                case.seg[case.seg$id == id, c("x1", "y1")] ==
+                         actual.seg[, c("x2", "y2")] |
+                case.seg[case.seg$id == id, c("x2", "y2")] ==
+                         actual.seg[, c("x1", "y1")] |
+                case.seg[case.seg$id == id, c("x2", "y2")] ==
+                         actual.seg[, c("x2", "y2")]
+
+      if (all(p.test)) {
+        case.seg <- case.seg[-which(case.seg$id == id), ]
+      } else if (all(c.test)) {
+        pump.seg <- pump.seg[-which(pump.seg$id == id), ]
+      }
+    }
+
+    rbind(case.seg, intermediate.seg, pump.seg)
   })
 
-  names(neighborhood.segments) <- paste0("p", neighborhood.id)
-
+  names(neighborhood.segments) <- pump.nm
   list(trimmed.segments = neighborhood.segments, pump.cases = pump.cases)
 }
 
