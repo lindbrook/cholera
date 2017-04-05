@@ -148,33 +148,35 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
 
     # pumps #
 
+    if (vestry) {
+      pump.coordinates <- pumpCoordinates(vestry = TRUE)
+    } else {
+      pump.coordinates <- pumpCoordinates()
+    }
+
     if (is.null(selection)) {
       if (vestry) {
         pump.road.segments <- pumpIntegrator(cholera::ortho.proj.pump.vestry)
-        pump.coordinates <- pumpCoordinates(vestry = TRUE)
-        snow.colors <- cholera::snowColors(vestry = TRUE)
       } else {
         pump.road.segments <- pumpIntegrator()
-        pump.coordinates <- pumpCoordinates()
-        snow.colors <- cholera::snowColors()
       }
-      select.pumps <- pump.coordinates
-      pump.names <- names(pump.coordinates)
     } else {
       if (vestry) {
         pump.road.segments <-
           pumpIntegrator(cholera::ortho.proj.pump.vestry[selection, ])
-        pump.coordinates <- pumpCoordinates(vestry = TRUE)[selection]
-        snow.colors <- cholera::snowColors(vestry = TRUE)[selection]
       } else {
         pump.road.segments <-
           pumpIntegrator(cholera::ortho.proj.pump[selection, ])
-        pump.coordinates <- pumpCoordinates()[selection]
-        snow.colors <- cholera::snowColors()[selection]
       }
-      select.pumps <- pump.coordinates
-      pump.names <- names(pump.coordinates)
     }
+
+    if (is.null(selection)) {
+      select.pumps <- pump.coordinates
+    } else {
+      select.pumps <- pump.coordinates[selection]
+    }
+
+    pump.names <- names(select.pumps)
 
     # cases #
 
@@ -207,9 +209,10 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
       igraph::graph_from_data_frame(edge.list, directed = FALSE)
     }, mc.cores = cores)
 
-    case.node <- vapply(seq_along(case), function(i) {
-      case.coord <- paste0(ortho[i, "x.proj"], "-", ortho[i, "y.proj"])
-      which(igraph::V(g[[i]])$name == case.coord)
+    case.node <- vapply(names(case), function(nm) {
+      case.coord <- paste0(ortho[ortho$case == as.numeric(nm), "x.proj"], "-",
+        ortho[ortho$case == as.numeric(nm), "y.proj"])
+      which(igraph::V(g[[nm]])$name == case.coord)
     }, numeric(1L))
 
     pump.nodes <- parallel::mclapply(g, function(graph) {
@@ -218,56 +221,47 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
       }, numeric(1L))
     }, mc.cores = cores)
 
-    nearest.pump.data <- parallel::mclapply(seq_along(case), function(i) {
+    nearest.pump.data <- parallel::mclapply(names(case), function(nm) {
       if (weighted) {
-        wts <- case.pump.road.segments[[i]]$d
-        d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]],
-          weights = wts))
+        wts <- case.pump.road.segments[[nm]]$d
+        d <- unname(igraph::distances(g[[nm]], case.node[[nm]],
+          pump.nodes[[nm]], weights = wts))
       } else {
-        d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]]))
+        d <- unname(igraph::distances(g[[nm]], case.node[[nm]],
+          pump.nodes[[nm]]))
       }
     }, mc.cores = cores)
 
     nearest.pump.data <- do.call(rbind, nearest.pump.data)
     idx <- apply(nearest.pump.data, 1, which.min)
     nearest.pump <- names(select.pumps)[idx]
+    names(nearest.pump) <- names(g)
 
     obs.pumps <- table(nearest.pump)
+    pump.nm <- names(obs.pumps)
+    observed <- data.frame(pump = pump.nm, count = unname(c(obs.pumps)),
+      stringsAsFactors = FALSE)
 
-    if (length(obs.pumps) > 1) {
-      pump.id <- substr(names(obs.pumps), 2, nchar(names(obs.pumps)))
-      pump.id <- as.numeric(pump.id)
-    } else {
-      pump.id <- as.numeric(unlist(strsplit(names(obs.pumps), "p"))[2])
-    }
-
-    observed <- data.frame(pump.id = pump.id, count = unname(c(obs.pumps)))
-
-    paths <- parallel::mclapply(seq_along(g), function(i) {
-      sel <- names(pump.nodes[[i]]) == nearest.pump[i]
-      p.node <- pump.nodes[[i]][sel]
-      igraph::shortest_paths(g[[i]], case.node[i], p.node,
-        weights = case.pump.road.segments[[i]]$d)$vpath
+    paths <- parallel::mclapply(names(g), function(nm) {
+      sel <- names(pump.nodes[[nm]]) == nearest.pump[nm]
+      p.node <- pump.nodes[[nm]][sel]
+      igraph::shortest_paths(g[[nm]], case.node[nm], p.node,
+        weights = case.pump.road.segments[[nm]]$d)$vpath
     }, mc.cores = cores)
 
     neighborhood.paths <- split(paths, nearest.pump)
-
-    idx <- order(as.numeric(substr(names(neighborhood.paths), 2,
-      nchar(names(neighborhood.paths)))))
-
-    neighborhood.paths <- neighborhood.paths[idx]
 
     intermediate.segments <- parallel::mclapply(neighborhood.paths,
       intermediateSegments, mc.cores = cores)
 
     intermediate.segments <- lapply(intermediate.segments, function(x) {
-      if (is.null(x)) {
-        dat <- NULL
+      if (nrow(x) == 0) {
+       dat <- NULL
       } else {
-        dat <- cholera::road.segments[cholera::road.segments$id %in% x, ]
-        dat$trimmed <- FALSE
+       dat <- x
+       dat$trimmed <- FALSE
+       dat
       }
-      dat
     })
 
     if (vestry) {
@@ -373,6 +367,12 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
     }
   }
 
+  if (x$vestry == TRUE) {
+    snow.colors <- cholera::snowColors(vestry = TRUE)
+  } else {
+    snow.colors <- cholera::snowColors()
+  }
+
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
   roads.list <- split(rd[, c("x", "y")], rd$street)
@@ -380,8 +380,8 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
   x.range <- range(cholera::roads$x)
   y.range <- range(cholera::roads$y)
 
-  obs.pump <- vapply(x$pump.case, function(p) length(p) != 0, logical(1L))
-  obs.pump <- which(obs.pump)
+  observed.pump <- vapply(x$pump.case, function(p) length(p) != 0, logical(1L))
+  observed.pump <- names(observed.pump[observed.pump])
 
   plot(cholera::fatalities[, c("x", "y")], xlim = x.range, ylim =  y.range,
     pch = NA, asp = 1)
@@ -391,30 +391,30 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
     invisible(lapply(border.list, lines))
 
     if (observed) {
-      if (length(x$pump) == length(obs.pump)) {
-        invisible(lapply(seq_along(obs.pump), function(i) {
-          plotSegment(x$pump.seg[[i]], x$snow.colors[i])
+      if (length(x$pump) == length(observed.pump)) {
+        invisible(lapply(observed.pump, function(nm) {
+          plotSegment(x$pump.seg[[nm]], snow.colors[nm])
 
           if (is.null(x$statistic) | x$statistic == "address") {
             sel <- cholera::fatalities.address$anchor.case %in%
-              x$pump.case[[names(obs.pump)[i]]]
+              x$pump.case[[nm]]
             points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-              cex = 0.75, col = x$snow.colors[[names(obs.pump)[i]]])
+              cex = 0.75, col = snow.colors[nm])
           } else if (x$statistic == "fatality") {
-            sel <- x$pump.case[[names(obs.pump)[i]]]
-            points(cholera::fatalities[sel, c("x", "y")], pch = 20,
-              cex = 0.75, col = x$snow.colors[[names(obs.pump)[i]]])
+            sel <- x$pump.case[[nm]]
+            points(cholera::fatalities[sel, c("x", "y")], pch = 20, cex = 0.75,
+              col = snow.colors[nm])
           }
         }))
 
         if (is.null(x$selection)) {
           if (x$vestry) {
             points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
-              col = x$snow.colors)
+              col = snow.colors)
             text(cholera::pumps.vestry[, c("x", "y")], cex = 0.9, pos = 1,
               label = x$pump)
           } else {
-            points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+            points(cholera::pumps[, c("x", "y")], pch = 24, col = snow.colors)
             text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
               label = x$pump)
           }
@@ -422,12 +422,12 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
         } else {
           if (x$vestry) {
             points(cholera::pumps.vestry[selection, c("x", "y")], pch = 24,
-              col = x$snow.colors)
+              col = snow.colors[selection])
             text(cholera::pumps.vestry[selection, c("x", "y")], cex = 0.9,
               pos = 1, label = x$pump)
           } else {
             points(cholera::pumps[selection, c("x", "y")], pch = 24,
-              col = x$snow.colors)
+              col = snow.colors[selection])
             text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
               label = x$pump)
           }
@@ -441,30 +441,29 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
           }
         }
       } else {
-        invisible(lapply(seq_along(obs.pump), function(i) {
-          plotSegment(x$pump.seg[[names(obs.pump)[i]]],
-                      x$snow.colors[names(obs.pump)[i]])
+        invisible(lapply(observed.pump, function(nm) {
+          plotSegment(x$pump.seg[[nm]], snow.colors[nm])
 
           if (is.null(x$statistic) | x$statistic == "address") {
             sel <- cholera::fatalities.address$anchor.case %in%
-              x$pump.case[[names(obs.pump)[i]]]
+              x$pump.case[[nm]]
             points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-              cex = 0.75, col = x$snow.colors[[names(obs.pump)[i]]])
+              cex = 0.75, col = snow.colors[nm])
           } else if (x$statistic == "fatality") {
-            sel <- x$pump.case[[names(obs.pump)[i]]]
-            points(cholera::fatalities[sel, c("x", "y")], pch = 20,
-              cex = 0.75, col = x$snow.colors[[names(obs.pump)[i]]])
+            sel <- x$pump.case[[nm]]
+            points(cholera::fatalities[sel, c("x", "y")], pch = 20, cex = 0.75,
+              col = snow.colors[nm])
           }
         }))
 
         if (is.null(x$selection)) {
           if (x$vestry) {
             points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
-              col = x$snow.colors)
+              col = snow.colors)
             text(cholera::pumps.vestry[, c("x", "y")], cex = 0.9, pos = 1,
               label = x$pump)
           } else {
-            points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+            points(cholera::pumps[, c("x", "y")], pch = 24, col = snow.colors)
             text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
               label = x$pump)
           }
@@ -472,12 +471,12 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
         } else {
           if (x$vestry) {
             points(cholera::pumps.vestry[selection, c("x", "y")], pch = 24,
-              col = x$snow.colors)
+              col = snow.colors[selection])
             text(cholera::pumps.vestry[selection, c("x", "y")], cex = 0.9,
               pos = 1, label = x$pump)
           } else {
             points(cholera::pumps[selection, c("x", "y")], pch = 24,
-              col = x$snow.colors)
+              col = snow.colors[selection])
             text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
               label = x$pump)
           }
@@ -492,18 +491,18 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
         }
       }
     } else {
-      invisible(lapply(seq_along(x$pump), function(i) {
-        plotSegment(x$sim.pump.seg[[i]], x$snow.colors[i])
+      invisible(lapply(x$pump, function(nm) {
+        plotSegment(x$sim.pump.seg[[nm]], snow.colors[nm])
       }))
 
       if (is.null(x$selection)) {
         if (x$vestry) {
           points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
-            col = x$snow.colors)
+            col = snow.colors)
           text(cholera::pumps.vestry[, c("x", "y")], cex = 0.9, pos = 1,
             label = x$pump)
         } else {
-          points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+          points(cholera::pumps[, c("x", "y")], pch = 24, col = snow.colors)
           text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
             label = x$pump)
         }
@@ -511,12 +510,12 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
       } else {
         if (x$vestry) {
           points(cholera::pumps.vestry[selection, c("x", "y")], pch = 24,
-            col = x$snow.colors)
+            col = snow.colors[selection])
           text(cholera::pumps.vestry[selection, c("x", "y")], cex = 0.9,
             pos = 1, label = x$pump)
         } else {
           points(cholera::pumps[selection, c("x", "y")], pch = 24,
-            col = x$snow.colors)
+            col = snow.colors[selection])
           text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
             label = x$pump)
         }
@@ -982,9 +981,10 @@ trimExpPaths <- function(pump.road.segments, select.pumps, pump.names, vestry,
     igraph::graph_from_data_frame(edge.list, directed = FALSE)
   }, mc.cores = cores)
 
-  case.node <- vapply(seq_along(case), function(i) {
-    case.coord <- paste0(ortho[i, "x.proj"], "-", ortho[i, "y.proj"])
-    which(igraph::V(g[[i]])$name == case.coord)
+  case.node <- vapply(names(case), function(nm) {
+    case.coord <- paste0(ortho[ortho$case == as.numeric(nm), "x.proj"], "-",
+      ortho[ortho$case == as.numeric(nm), "y.proj"])
+    which(igraph::V(g[[nm]])$name == case.coord)
   }, numeric(1L))
 
   pump.nodes <- parallel::mclapply(g, function(graph) {
@@ -993,55 +993,46 @@ trimExpPaths <- function(pump.road.segments, select.pumps, pump.names, vestry,
     }, numeric(1L))
   }, mc.cores = cores)
 
-  nearest.pump.data <- parallel::mclapply(seq_along(case), function(i) {
+  nearest.pump.data <- parallel::mclapply(names(case), function(nm) {
     if (weighted) {
-      d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]],
-        weights = case.pump.road.segments[[i]]$d))
+      wts <- case.pump.road.segments[[nm]]$d
+      d <- unname(igraph::distances(g[[nm]], case.node[[nm]], pump.nodes[[nm]],
+        weights = wts))
     } else {
-      d <- unname(igraph::distances(g[[i]], case.node[[i]], pump.nodes[[i]]))
+      d <- unname(igraph::distances(g[[nm]], case.node[[nm]], pump.nodes[[nm]]))
     }
   }, mc.cores = cores)
 
   nearest.pump.data <- do.call(rbind, nearest.pump.data)
   idx <- apply(nearest.pump.data, 1, which.min)
   nearest.pump <- names(select.pumps)[idx]
+  names(nearest.pump) <- names(g)
 
   obs.pumps <- table(nearest.pump)
+  pump.nm <- names(obs.pumps)
+  observed <- data.frame(pump = pump.nm, count = unname(c(obs.pumps)),
+    stringsAsFactors = FALSE)
 
-  if (length(obs.pumps) > 1) {
-    pump.id <- substr(names(obs.pumps), 2, nchar(names(obs.pumps)))
-    pump.id <- as.numeric(pump.id)
-  } else {
-    pump.id <- as.numeric(unlist(strsplit(names(obs.pumps), "p"))[2])
-  }
-
-  observed <- data.frame(pump.id = pump.id, count = unname(c(obs.pumps)))
-
-  paths <- parallel::mclapply(seq_along(g), function(i) {
-    sel <- names(pump.nodes[[i]]) == nearest.pump[i]
-    p.node <- pump.nodes[[i]][sel]
-    igraph::shortest_paths(g[[i]], case.node[i], p.node,
-      weights = case.pump.road.segments[[i]]$d)$vpath
+  paths <- parallel::mclapply(names(g), function(nm) {
+    sel <- names(pump.nodes[[nm]]) == nearest.pump[nm]
+    p.node <- pump.nodes[[nm]][sel]
+    igraph::shortest_paths(g[[nm]], case.node[nm], p.node,
+      weights = case.pump.road.segments[[nm]]$d)$vpath
   }, mc.cores = cores)
 
   neighborhood.paths <- split(paths, nearest.pump)
 
-  idx <- order(as.numeric(substr(names(neighborhood.paths), 2,
-    nchar(names(neighborhood.paths)))))
-
-  neighborhood.paths <- neighborhood.paths[idx]
-
-  intermediate.segments <- lapply(neighborhood.paths,
-    intermediateSegments)
+  intermediate.segments <- parallel::mclapply(neighborhood.paths,
+    intermediateSegments, mc.cores = cores)
 
   intermediate.segments <- lapply(intermediate.segments, function(x) {
-    if (is.null(x)) {
-      dat <- NULL
+    if (nrow(x) == 0) {
+     dat <- NULL
     } else {
-      dat <- cholera::road.segments[cholera::road.segments$id %in% x, ]
-      dat$trimmed <- FALSE
+     dat <- x
+     dat$trimmed <- FALSE
+     dat
     }
-    dat
   })
 
   if (vestry) {
