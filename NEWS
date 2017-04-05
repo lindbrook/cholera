@@ -1,3 +1,18 @@
+cholera 0.1.99.9005
+----------------------------------------------------------------
+
+index neighborhoods by name rather than number
+amend neighborhoodWalking()
+amend plot.walking()
+amend caseSegments()
+amend intermediateSegments()
+amend pumpSegments()
+amend trimExpPaths()
+add pumpNumber()
+amend snowColors()
+rebuild sysata.rds
+
+
 cholera 0.1.99.9004
 ----------------------------------------------------------------
 fix pump.id/neighborhood issue
