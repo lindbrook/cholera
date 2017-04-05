@@ -1114,3 +1114,4 @@ plotSegment <- function(neighborhood, color) {
   }))
 }
 
+pumpNumber <- function (x) as.numeric(substr(x, 2, nchar(x)))
