@@ -7,7 +7,7 @@
 #' @param weighted Logical. TRUE uses distance weighted by edge length (i.e., road length). FALSE uses unweighted distance.
 #' @param snow Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this sets "selection" to 7 and "vestry" to NULL.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
-#' @return An R list with 13 objects:
+#' @return An R list with 12 objects:
 #' \itemize{
 #'   \item{\code{distances}: walking distances to selected pumps.}
 #'   \item{\code{pump}: vector of selected pumps.}
@@ -18,7 +18,6 @@
 #'   \item{\code{sim.pump.case}: simulated fatality ID by pump neighborhood.}
 #'   \item{\code{observed}: observed neighborhood fatality counts.}
 #'   \item{\code{expected}: expected neighborhood fatality counts, based on road length.}
-#'   \item{\code{snow.colors}: neighborhood color based on snowColors().}
 #'   \item{\code{selection}: "selection" from neighborhoodWalking().}
 #'   \item{\code{statistic}: "statistic" from neighborhoodWalking().}
 #'   \item{\code{vestry}: "vestry" from neighborhoodWalking().}
@@ -321,7 +320,6 @@ neighborhoodWalking <- function(selection = NULL, vestry = FALSE,
       sim.pump.case = sim.neighborhoods$pump.cases,
       observed = observed,
       expected = expected,
-      snow.colors = stats::setNames(snow.colors, pump.names),
       selection = selection,
       statistic = statistic,
       vestry = vestry)
@@ -537,34 +535,30 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
       if (x$vestry) {
         invisible(lapply(seq_along(cholera::pumps.vestry$id), function(i) {
           points(cholera::regular.cases[x$sim.pump.case[[i]], ],
-            col = scales::alpha(x$snow.colors[i], 0.33), pch = 15)
+            col = scales::alpha(snow.colors[i], 0.33), pch = 15)
         }))
       } else {
         invisible(lapply(seq_along(cholera::pumps$id), function(i) {
           points(cholera::regular.cases[x$sim.pump.case[[i]], ],
-            col = scales::alpha(x$snow.colors[i], 0.33), pch = 15)
+            col = scales::alpha(snow.colors[i], 0.33), pch = 15)
         }))
       }
 
-      invisible(lapply(seq_along(obs.pump), function(i) {
-        plotSegment(x$pump.seg[[names(obs.pump)[i]]],
-                    x$snow.colors[names(obs.pump)[i]])
-
-        sel <- cholera::fatalities.address$anchor.case %in%
-          x$pump.case[[names(obs.pump)[i]]]
-
+      invisible(lapply(observed.pump, function(nm) {
+        plotSegment(x$pump.seg[[nm]], snow.colors[nm])
+        sel <- cholera::fatalities.address$anchor.case %in% x$pump.case[[nm]]
         points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-          cex = 0.75, col = x$snow.colors[names(obs.pump)[i]])
+          cex = 0.75, col = snow.colors[nm])
       }))
 
       if (is.null(x$selection)) {
         if (x$vestry) {
           points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
-            col = x$snow.colors)
+            col = snow.colors)
           text(cholera::pumps.vestry[, c("x", "y")], cex = 0.9, pos = 1,
             label = x$pump)
         } else {
-          points(cholera::pumps[, c("x", "y")], pch = 24, col = x$snow.colors)
+          points(cholera::pumps[, c("x", "y")], pch = 24, col = snow.colors)
           text(cholera::pumps[, c("x", "y")], cex = 0.9, pos = 1,
             label = x$pump)
         }
@@ -572,12 +566,12 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
       } else {
         if (x$vestry) {
           points(cholera::pumps.vestry[selection, c("x", "y")], pch = 24,
-            col = x$snow.colors)
+            col = snow.colors[selection])
           text(cholera::pumps.vestry[selection, c("x", "y")], cex = 0.9,
             pos = 1, label = x$pump)
         } else {
           points(cholera::pumps[selection, c("x", "y")], pch = 24,
-            col = x$snow.colors)
+            col = snow.colors[selection])
           text(cholera::pumps[selection, c("x", "y")], cex = 0.9, pos = 1,
             label = x$pump)
         }
@@ -594,12 +588,12 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
       if (x$vestry) {
         invisible(lapply(seq_along(cholera::pumps.vestry$id), function(i) {
           points(cholera::regular.cases[x$sim.pump.case[[i]], ],
-            col = x$snow.color[i], pch = 15)
+            col = snow.colors[i], pch = 15)
         }))
       } else {
         invisible(lapply(seq_along(cholera::pumps$id), function(i) {
           points(cholera::regular.cases[x$sim.pump.case[[i]], ],
-            col = x$snow.colors[i], pch = 15)
+            col = snow.colors[i], pch = 15)
         }))
       }
 
