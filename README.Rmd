@@ -8,7 +8,7 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "man/figures/README-"
 )
 ```
 
@@ -30,26 +30,26 @@ To that end, this package builds on Snow's work by offering two systematic ways 
 
 The first approach uses Voronoi tessellation. It works by computing the Euclidean distances between pumps. While popular and easy to compute, its only drawback is that roads and walking distance play no role in the choice of pump. The method assumes that people can walk through walls to get to their preferred pump.
 
-```{r voronoi, fig.width = 6, fig.height = 6, message = FALSE}
+```{r voronoi, fig.width = 5.25, fig.height = 5.25, message = FALSE}
 library(cholera)
 plot(neighborhoodVoronoi())
 ```
 
 The second approach, which follows Snow's lead, computes neighborhoods based on the "actual" walking distance along the streets of Soho. While more accurate, it is harder to compute than Voronoi tessellation. To do the computations, I wrote functions that transform the roads on the map into a "social" graph. This turns the computation of walking distance into a graph theory problem: for a given case (observed or simulated), I compute the shortest weighted path to the nearest pump:
 
-```{r path, fig.width = 6, fig.height = 6, message = FALSE}
+```{r path, fig.width = 5.25, fig.height = 5.25, message = FALSE}
 walkingPath(150)
 ```
 
 Then, by applying the "rinse and repeat" principle, the different pump neighborhoods emerge:
 
-```{r walk, fig.width = 6, fig.height = 6, message = FALSE}
+```{r walk, fig.width = 5.25, fig.height = 5.25, message = FALSE}
 plot(neighborhoodWalking())
 ```
 
 To explore scenarios like the effect of water quality mentioned above, you can simply exclude the pump with low quality to see how the spatial distribution of cases is affected:
 
-```{r walk6, fig.width = 6, fig.height = 6, message = FALSE}
+```{r walk6, fig.width = 5.25, fig.height = 5.25, message = FALSE}
 plot(neighborhoodWalking(-6))
 ```
 
