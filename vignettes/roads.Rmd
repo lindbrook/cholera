@@ -28,7 +28,7 @@ snowMap()
 
 Unfortunately, Dodson and Tobler did not include the names of roads (e.g., Broad Street) in their effort. While not strictly necessary for analysis or visualization, having the names will be useful to some. To that end, I append the actual street names, taken from the map itself, to the data. This appended data set is called _roads_.
 
-## roads data
+## Roads data
 
 Before discussing names, some discussion of the structure of _roads_ is warranted. The data contain 1241 pairs of x-y coordinates. These coordinates define the endpoints of the straight line segments used to describe 528 numerically identified "streets".
 
@@ -53,7 +53,7 @@ length(border)
 
 ```
 
-## road names
+## Road names
 
 The primary source for road names is Snow's map. A high resolution version is available [here](http://www.ph.ucla.edu/epi/snow/highressnowmap.html). While great effort was made to correctly record and cross-reference names, there may still be errors. Error reports and suggestions for amendments are welcome.
 
