@@ -20,9 +20,9 @@ John Snow's map of the 1854 cholera outbreak in London is a canonical example of
 
 ![](msu-snows-mapB.jpg)
 
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. The amended version of those data, which this package calls _fatalities_, are plotted below:
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. The amended version of those data are included as the _fatalities_ data frame.
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE, eval = FALSE}
 
 roads.list <- split(roads[, c("x", "y")], roads$street)
 
@@ -96,17 +96,14 @@ roads <- roads[order(roads$id), ]
 
 This amended _roads_ data frame is included in this package.
 
-## Finding roads by name or "street" number
+## Finding roads by name, "street" number, or segment ID.
 
-To help locate and visualize streets and road segments (including map frame segments), you can use the _streetNameLocator_() and _streetNumberLocator_() functions. Note that _streetNameLocator() uses the names in the _roads_ data set. However, the function tries to corrects for case and removes extraneous spaces: streetNameLocator("Oxford Street") and streetNameLocator("oxford street"). 
+To help locate and visualize streets and road segments (including map frame segments), you can use the _streetNameLocator_(),  _streetNumberLocator_(), or  _segmentLocator_(). 
 
-### Examples
+Note that _streetNameLocator_() uses the names in the _roads_ data set. However, the function tries to corrects for case and removes extraneous spaces: streetNameLocator("Oxford Street") and streetNameLocator("oxford street"). 
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = TRUE}
-streetNameLocator("Oxford Street")
-streetNameLocator("Cambridge Street", zoom = TRUE, radius = 0.5)
-streetNumberLocator(50)
-```
+_segmentLocator_() is for those interested in more granular analysis. It uses individual road segments as the unit of observation. 
+
 
 ## List of road names
 
@@ -184,20 +181,6 @@ Great Crown Court | Panton Street | Winsley Street
 Great Marlborough Street | Perrys Place |
 Great Pulteney Street | Peter Street |
 Great Windmill Street | Pews Place |
-
-## Locating and visualizing individual road segments
-
-For those interested in more granular analysis, there is the _road.segments_ dataframe that uses individual road segments as the unit of observation. 
-
-```{r}
-head(road.segments)
-```
-
-These segeents can be located and visualized using _segmentLocator()_.
-
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = TRUE}
-segmentLocator("178-1")
-```
 
 ## Coordinate unit
 

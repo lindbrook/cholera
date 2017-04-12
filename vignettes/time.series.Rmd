@@ -22,11 +22,11 @@ While Snow likely believed that this action could have mitigated the outbreak, h
 
 As part of the Vestry Report, both he and the committee included separate tables that appear to reflect separate data on the number of fatalities. I have included both as separate data sets, "time.series.snow" and "time.series.vestry", in this package.
 
-The data are plotted below. Regardless of the source, we can see that the removal of the pump handle comes after a significant decline in the number of fatalities.
+If we plot the data, we would see that, regardless of the source, the removal of the pump handle occurs after a significant decline in the number of fatalities.
 
-## Vestry Report: Official Data
+## Sample code
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = TRUE, eval = FALSE}
 plot(time.series.vestry$date, time.series.vestry$fatalities, type = "o",
   xlab = "Date", ylab = "fatalities")
 abline(v = as.Date("1854-09-08"), col = "red", lty = "dotted")
@@ -36,9 +36,7 @@ title(main = "Removing the Broad Street Pump Handle")
 
 ```
 
-## Vestry Report: Snow Data
-
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = TRUE, eval = FALSE}
 plot(time.series.snow$date, time.series.snow$deaths, type = "o", xlab = "Date",
   ylab = "fatalities", xlim = range(time.series.vestry$date),
   ylim = range(time.series.vestry$fatalities))
