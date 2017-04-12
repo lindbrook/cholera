@@ -280,7 +280,7 @@
 #' @docType data
 #' @seealso \code{\link{road.segments}}
 #'
-#'\code{vignette}("road.names")
+#' \code{vignette}("road.names")
 #'
 #' \code{\link{streetNameLocator}}
 #'
@@ -310,9 +310,9 @@
 #'   \item{\code{fatal.attacks}}{fatal attacks}
 #'   \item{\code{deaths}}{deaths}
 #' }
-#' @seealso \code{
+#' @seealso
 #' \code{\link{plotTimeSeries}},
-#' \link{time.series.snow}},
+#' \link{time.series.snow},
 #' \code{vignette}("time.series")
 #'
 #' @docType data
@@ -328,9 +328,9 @@
 #'   \item{\code{fatal.attacks}}{fatal attacks}
 #'   \item{\code{deaths}}{daily deaths}
 #' }
-#' @seealso \code{
+#' @seealso
 #' \code{\link{plotTimeSeries}},
-#' \link{time.series.vestry}},
+#' \link{time.series.vestry},
 #' \code{vignette}("time.series")
 #'
 #' @docType data
