@@ -1,16 +1,10 @@
 cholera 0.1.99.9006
 ----------------------------------------------------------------
 
-pass unit tests
-
-R CMD check R 3.3.3 (2017-03-06): x86_64-apple-darwin13.4.0 (64-bit)
-  0 errors | 0 warnings | 0 notes
-
-win-builder R-devel 3.4.0 alpha (2017-04-04 r72482)
-  0 errors | 0 warnings | 1 note (New submission)
-
-win-builder R-release 3.3.3 (2017-03-06)
-  0 errors | 0 warnings | 1 note (New submission)
+pass unit tests (v. 6)
+more compact vignettes
+amend time series data
+add plotTimeSeries()
 
 
 cholera 0.1.99.9005
