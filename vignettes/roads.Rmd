@@ -20,27 +20,17 @@ John Snow's map of the 1854 cholera outbreak in London is a canonical example of
 
 ![](msu-snows-mapB.jpg)
 
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. The amended version of those data are included as the _fatalities_ data frame.
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available.^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] Those data are preserved in Michael Friendly's _HistData_ R package. An amended version of the data, _fatalities_ in this package, is plotted below.
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE, eval = FALSE}
-
-roads.list <- split(roads[, c("x", "y")], roads$street)
-
-plot(fatalities[, c("x", "y")], xlim = range(roads$x), ylim = range(roads$y),
-  pch = 15, cex = 0.5, col = "gray", asp = 1)
-invisible(lapply(roads.list, lines, col = "gray"))
-points(HistData::Snow.pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-text(HistData::Snow.pumps[, c("x", "y")], labels = HistData::Snow.pumps$pump,
-  pos = 1)
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+snowMap()
 ```
 
-Unfortunately, Dodson and Tobler did not include the names of roads (e.g., Broad Street) in their effort. While not strictly necessary to for analysis or visualization, having the names is useful. To that end, I append the actual street names, taken from the map itself, to the data. This appended data set is called _roads_.
+Unfortunately, Dodson and Tobler did not include the names of roads (e.g., Broad Street) in their effort. While not strictly necessary for analysis or visualization, having the names will be useful to some. To that end, I append the actual street names, taken from the map itself, to the data. This appended data set is called _roads_.
 
-While great effort was made to get the names right, there may still be errors. Error reports and suggestions for amendments are welcome.
+## roads data
 
-## Road data
-
-Before discussing road names, some discussion of the structure of _roads_ is warranted. The data contain 1241 pairs of x-y coordinates. These coordinates define the endpoints of the straight line segments used to describe 528 numerically identified "streets". 
+Before discussing names, some discussion of the structure of _roads_ is warranted. The data contain 1241 pairs of x-y coordinates. These coordinates define the endpoints of the straight line segments used to describe 528 numerically identified "streets".
 
 ```{r}
 head(roads)
@@ -48,10 +38,10 @@ nrow(roads)
 length(unique(roads$street))
 ```
 
-Unfortunately, these 528 "streets" do not correspond to real-world streets. Excluding the 50 "streets" used to describe the frame around the map, the remaining 478 "streets" actually describe 206 "real-world" roads (e.g., Oxford Street, Regent Street). This is because 40% of "real-world" roads are composed of multiple "street" segments. For example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
+These 528 "streets" do not correspond to real-world streets. Excluding the 50 "streets" used to describe the frame around the map, the remaining 478 "streets" actually describe 206 "real-world" roads (e.g., Oxford Street, Regent Street). This is because 40% of "real-world" roads are composed of multiple "street" segments. For example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
 
 ```{r}
-# Map Border "Streets" ##
+# Map Border "Streets" #
 
 top <- c(1:12, 14)
 right <- c(37, 62, 74, 142, 147, 205, 240, 248, 280, 360, 405, 419, 465)
@@ -63,17 +53,19 @@ length(border)
 
 ```
 
-## Road names
+## road names
 
-The primary source for raod names was Snow's map. A high resolution version is available [here](http://www.ph.ucla.edu/epi/snow/highressnowmap.html).
+The primary source for road names is Snow's map. A high resolution version is available [here](http://www.ph.ucla.edu/epi/snow/highressnowmap.html). While great effort was made to correctly record and cross-reference names, there may still be errors. Error reports and suggestions for amendments are welcome.
 
-While great effort was made to read and cross-reference names, there may still be some errors. Some roads on the map do not have a name. So I attached unique labels like "Unknown-D". Some names appear multiple times even though they lie at different locations. For these, I use Roman numerals to distinguish them (e.g., "King Street (I)" and "King Street (II)").
+Some roads on the map do not have a name. In those cases, I attached unique labels like "Unknown-D".
+
+Some names appear multiple times even though they lie at different locations. For these, I use Roman numerals to distinguish them (e.g., "King Street (I)" and "King Street (II)").
 
 ## Queen Street (I) and Marlborough Mews
 
-There is one apparent coding error in Dodson and Tobler's road data. Queen Street (I) extends too far: the water pump (#7) that is clearly located on Marlborough Mews (see [map](http://www.ph.ucla.edu/epi/snow/highressnowmap.html), cited above), ends up on Queen Street (I).
+There is one apparent coding error in Dodson and Tobler's road data. Queen Street (I) extends too far: the water pump (#5) that is clearly located on Marlborough Mews (see [map](http://www.ph.ucla.edu/epi/snow/highressnowmap.html), cited above), ends up on Queen Street (I).
 
-I amend this by moving the end point of Queen Street (I) westward so that the street only runs north-south. I do so by reassigning the segment that runs east-west so that it is now part of Marlborough Mews.
+I amend this by moving the end point of Queen Street (I) westward so that the street only runs north-south. I do so by reassigning the segment that runs east-west to be part of Marlborough Mews.
 
 ```{r, eval = FALSE}
 snow.streets <- HistData::Snow.streets
@@ -94,15 +86,13 @@ roads[roads$name == "Marlborough Mews", "n"] <- 3
 roads <- roads[order(roads$id), ]
 ```
 
-This amended _roads_ data frame is included in this package.
-
 ## Finding roads by name, "street" number, or segment ID.
 
-To help locate and visualize streets and road segments (including map frame segments), you can use the _streetNameLocator_(),  _streetNumberLocator_(), or  _segmentLocator_(). 
+To help locate and visualize streets and road segments (including map frame segments), you can use the _streetNameLocator_(),  _streetNumberLocator_(), or  _segmentLocator_().
 
-Note that _streetNameLocator_() uses the names in the _roads_ data set. However, the function tries to corrects for case and removes extraneous spaces: streetNameLocator("Oxford Street") and streetNameLocator("oxford street"). 
+Note that _streetNameLocator_() uses the names in the _roads_ data set. However, the function tries to corrects for case and removes extraneous spaces: streetNameLocator("Oxford Street") and streetNameLocator("oxford street").
 
-_segmentLocator_() is for those interested in more granular analysis. It uses individual road segments as the unit of observation. 
+_segmentLocator_() is for those interested in more granular analysis. It uses individual road segments as the unit of observation.
 
 
 ## List of road names
@@ -184,8 +174,8 @@ Great Windmill Street | Pews Place |
 
 ## Coordinate unit
 
-The original map is 14.5 x 15.5 inches with a nominal scale of 30 inches per mile.
+The original map is 14.5 x 15.5 inches with a stated nominal scale of 30 inches per mile.
 
-Dodson and Tobler write that "The scale of the source map is approx. 1:2000. Coordinate units are meters." By my calculation one unit on the map is approximately 177 feet or 54 meters per unit.^[According to Dodson and Tobler's street data, the length of Carnaby Street from its intersection with Great Marlborough to its intersection with Silver Street is 2.61 units. According to Google Maps, the approximate analog of that segment is the distance along parts of Great Marlborough Street and Carnaby Street between 19-21 Great Marlborough Street and 43 Carnaby Street (@ Ganton Street): 463 ft. This translates into approximately 177 feet/unit or 54 meters/unit.]
+Dodson and Tobler write that "The scale of the source map is approx. 1:2000. Coordinate units are meters." By my calculation one unit on the map is approximately 177 feet or 54 meters per unit.^[According to Dodson and Tobler's street data, the length of Carnaby Street from its intersection with Great Marlborough to its intersection with Silver Street is 2.61 units. According to Google Maps, the approximate analog of that segment is the distance along parts of Great Marlborough Street and Carnaby Street between 19-21 Great Marlborough Street and 43 Carnaby Street (at Ganton Street): 463 ft. This translates into approximately 177 feet/unit or 54 meters/unit.]
 
 ## Notes
