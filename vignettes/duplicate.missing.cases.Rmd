@@ -378,6 +378,7 @@ legend(x = "bottomleft",
        col = c("blue", "#009E73", "red", "gray"),
        pch = c(2, 1, 4, 1),
        bg = "white",
+       cex = 0.8,
        title = "Key")
 
 ```
@@ -822,6 +823,7 @@ legend(x = "bottomleft",
        col = c("blue", "red", "black", "#009E73"),
        pch = c(2, 0, 1, 1),
        bg = "white",
+       cex = 0.8, 
        title = "Key")
 
 text(cam.x, cam.y, "Cambridge St", srt = cam.angle)
@@ -897,6 +899,7 @@ legend(x = "bottomleft",
        col = c("red", "black", "#009E73"),
        pch = c(0, 1, 1),
        bg = "white",
+       cex = 0.8,
        title = "Key")
 
 text(noel.x, noel.y, "Noel St", srt = noel.angle)
