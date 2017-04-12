@@ -7,7 +7,7 @@
 \format{A data frame with 61 observations and 3 variables.
 \describe{
   \item{\code{date}}{calendar date}
-  \item{\code{fatalities}}{fatal attacks}
+  \item{\code{fatal.attacks}}{fatal attacks}
   \item{\code{deaths}}{deaths}
 }}
 \usage{
@@ -18,7 +18,5 @@ Time series of recorded fatalities from Vestry Report Appendix B. Useful for stu
 }
 \seealso{
 \code{\link{time.series.snow}}
-
-'\code{vignette}("time.series")
 }
 \keyword{datasets}

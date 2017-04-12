@@ -307,12 +307,10 @@
 #' @format A data frame with 61 observations and 3 variables.
 #' \describe{
 #'   \item{\code{date}}{calendar date}
-#'   \item{\code{fatalities}}{fatal attacks}
+#'   \item{\code{fatal.attacks}}{fatal attacks}
 #'   \item{\code{deaths}}{deaths}
 #' }
 #' @seealso \code{\link{time.series.snow}}
-#'
-#' '\code{vignette}("time.series")
 #' @docType data
 "time.series.vestry"
 
@@ -323,11 +321,9 @@
 #' @format A data frame with 43 observations and 3 variables.
 #' \describe{
 #'   \item{\code{date}}{calendar date}
-#'   \item{\code{fatalities}}{fatal attacks}
+#'   \item{\code{fatal.attacks}}{fatal attacks}
 #'   \item{\code{deaths}}{daily deaths}
 #' }
 #' @seealso \code{\link{time.series.vestry}}
-#'
-#' '\code{vignette}("time.series")
 #' @docType data
 "time.series.snow"
