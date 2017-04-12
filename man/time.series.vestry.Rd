@@ -17,10 +17,9 @@ time.series.vestry
 Time series of recorded fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle from the Broad Street pump on 08 September 1854.
 }
 \seealso{
-\code{\link{time.series.snow}}
-
-'\code{vignette}("time.series")
-
-\code{\link{plotTimeSeries}}
+\code{
+\code{\link{plotTimeSeries}},
+\link{time.series.snow}},
+\code{vignette}("time.series")
 }
 \keyword{datasets}

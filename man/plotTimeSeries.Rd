@@ -26,7 +26,8 @@ Vestry report data.
 plotTimeSeries()
 }
 \seealso{
-\code{\link{time.series.snow}},
-\code{\link{time.series.vestry}}
-'\code{vignette}("time.series")
+\code{
+\link{time.series.snow}},
+\code{\link{time.series.vestry}},
+\code{vignette}("time.series")
 }

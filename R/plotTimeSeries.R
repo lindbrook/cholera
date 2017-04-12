@@ -6,9 +6,10 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param ... Additional plotting parameters.
 #' @return A base R graphics plot.
-#' @seealso \code{\link{time.series.snow}},
-#' \code{\link{time.series.vestry}}
-#' '\code{vignette}("time.series")
+#' @seealso \code{
+#' \link{time.series.snow}},
+#' \code{\link{time.series.vestry}},
+#' \code{vignette}("time.series")
 #' @export
 #' @examples
 #' plotTimeSeries()

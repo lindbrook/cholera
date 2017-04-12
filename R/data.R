@@ -310,11 +310,11 @@
 #'   \item{\code{fatal.attacks}}{fatal attacks}
 #'   \item{\code{deaths}}{deaths}
 #' }
-#' @seealso \code{\link{time.series.snow}}
+#' @seealso \code{
+#' \code{\link{plotTimeSeries}},
+#' \link{time.series.snow}},
+#' \code{vignette}("time.series")
 #'
-#' '\code{vignette}("time.series")
-#'
-#' \code{\link{plotTimeSeries}}
 #' @docType data
 "time.series.vestry"
 
@@ -328,10 +328,10 @@
 #'   \item{\code{fatal.attacks}}{fatal attacks}
 #'   \item{\code{deaths}}{daily deaths}
 #' }
-#' @seealso \code{\link{time.series.vestry}}
+#' @seealso \code{
+#' \code{\link{plotTimeSeries}},
+#' \link{time.series.vestry}},
+#' \code{vignette}("time.series")
 #'
-#' '\code{vignette}("time.series")
-#'
-#' \code{\link{plotTimeSeries}}
 #' @docType data
 "time.series.snow"
