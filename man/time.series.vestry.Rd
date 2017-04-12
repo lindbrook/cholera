@@ -18,5 +18,9 @@ Time series of recorded fatalities from Vestry Report Appendix B. Useful for stu
 }
 \seealso{
 \code{\link{time.series.snow}}
+
+'\code{vignette}("time.series")
+
+\code{\link{plotTimeSeries}}
 }
 \keyword{datasets}

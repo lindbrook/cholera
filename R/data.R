@@ -311,6 +311,10 @@
 #'   \item{\code{deaths}}{deaths}
 #' }
 #' @seealso \code{\link{time.series.snow}}
+#'
+#' '\code{vignette}("time.series")
+#'
+#' \code{\link{plotTimeSeries}}
 #' @docType data
 "time.series.vestry"
 
@@ -325,5 +329,9 @@
 #'   \item{\code{deaths}}{daily deaths}
 #' }
 #' @seealso \code{\link{time.series.vestry}}
+#'
+#' '\code{vignette}("time.series")
+#'
+#' \code{\link{plotTimeSeries}}
 #' @docType data
 "time.series.snow"

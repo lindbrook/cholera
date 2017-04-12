@@ -18,5 +18,9 @@ Time series of recorded fatalities from Snow's contribution to the Vestry Report
 }
 \seealso{
 \code{\link{time.series.vestry}}
+
+'\code{vignette}("time.series")
+
+\code{\link{plotTimeSeries}}
 }
 \keyword{datasets}
