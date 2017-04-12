@@ -25,29 +25,13 @@ plot(neighborhoodVoronoi())
 
 ![](man/figures/README-voronoi-1.png)
 
-The second approach, which follows Snow's lead, computes neighborhoods based on the "actual" walking distance along the streets of Soho. While more accurate, it is harder to compute than Voronoi tessellation. To do the computations, I wrote functions that transform the roads on the map into a "social" graph. This turns the computation of walking distance into a graph theory problem: for a given case (observed or simulated), I compute the shortest weighted path to the nearest pump:
-
-``` r
-walkingPath(150)
-```
-
-![](man/figures/README-path-1.png)
-
-Then, by applying the "rinse and repeat" principle, the different pump neighborhoods emerge:
+The second approach, which follows Snow's lead, computes neighborhoods based on the "actual" walking distance along the streets of Soho. While more accurate, it is harder to compute than Voronoi tessellation. To do so, I wrote functions that transform the roads on the map into a "social" graph. This turns the computation of walking distance into a graph theory problem. For each case (observed or simulated), I compute the shortest weighted path to the nearest pump. Then by applying the "rinse and repeat" principle, the different pump neighborhoods emerge:
 
 ``` r
 plot(neighborhoodWalking())
 ```
 
 ![](man/figures/README-walk-1.png)
-
-To explore scenarios like the effect of water quality mentioned above, you can simply exclude the pump with low quality to see how the spatial distribution of cases is affected:
-
-``` r
-plot(neighborhoodWalking(-6))
-```
-
-![](man/figures/README-walk6-1.png)
 
 ### other package features
 
