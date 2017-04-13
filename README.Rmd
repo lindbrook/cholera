@@ -30,8 +30,12 @@ To that end, this package builds on Snow's work by offering two systematic ways 
 
 The first approach uses Voronoi tessellation. It works by computing the Euclidean distances between pumps. While popular and easy to compute, its only drawback is that roads and walking distance play no role in the choice of pump. The method assumes that people can walk through walls to get to their preferred pump.
 
-```{r voronoi, fig.width = 6, fig.height = 6, message = FALSE}
+
+```{r, echo = FALSE}
 library(cholera)
+```
+
+```{r voronoi, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodVoronoi())
 ```
 
