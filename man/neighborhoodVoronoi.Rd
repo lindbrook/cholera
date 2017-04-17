@@ -4,11 +4,11 @@
 \alias{neighborhoodVoronoi}
 \title{Compute Voronoi neighborhoods.}
 \usage{
-neighborhoodVoronoi(selection = NULL, vestry = FALSE, statistic = NULL,
+neighborhoodVoronoi(pump.select = NULL, vestry = FALSE, statistic = NULL,
   polygon.vertices = FALSE)
 }
 \arguments{
-\item{selection}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
+\item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -24,11 +24,11 @@ An R list with 12 objects.
   \item{\code{snow.colors}: neighborhood color based on snowColors().}
   \item{\code{x.rng}: range of x for plot.}
   \item{\code{y.rng}: range of y for plot.}
-  \item{\code{select.string}: description of "selection" for plot title.}
+  \item{\code{select.string}: description of "pump.select" for plot title.}
   \item{\code{expected.data}:  expected neighborhood fatality counts, based on Voronoi cell area.}
   \item{\code{coordinates}: polygon vertices of Voronoi cells.}
   \item{\code{statistic.data}: observed neighborhood fatality counts.}
-  \item{\code{selection}: "selection" from neighborhoodVoronoi().}
+  \item{\code{pump.select}: "pump.select" from neighborhoodVoronoi().}
   \item{\code{statistic}: "statistic" from neighborhoodVoronoi().}
   \item{\code{vestry}: "vestry" from neighborhoodVoronoi().}
 }
@@ -39,12 +39,12 @@ Data for Voronoi tessellation of John Snow's 1854 London cholera data.
 \examples{
 neighborhoodVoronoi()
 neighborhoodVoronoi(vestry = TRUE)
-neighborhoodVoronoi(selection = 6:7)
-neighborhoodVoronoi(selection = -6)
-neighborhoodVoronoi(selection = -6, polygon.vertices = TRUE)
+neighborhoodVoronoi(pump.select = 6:7)
+neighborhoodVoronoi(pump.select = -6)
+neighborhoodVoronoi(pump.select = -6, polygon.vertices = TRUE)
 
 # coordinates for vertices also available in returned object.
-dat <- neighborhoodVoronoi(selection = -6)
+dat <- neighborhoodVoronoi(pump.select = -6)
 dat$coordinates
 }
 \seealso{

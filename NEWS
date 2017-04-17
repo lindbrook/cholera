@@ -1,3 +1,9 @@
+cholera 0.1.99.9008
+----------------------------------------------------------------
+amend function argument: "selection" to "pump.select"
+rebuild sysata.rds
+
+
 cholera 0.1.99.9007
 ----------------------------------------------------------------
 pass R CMD check

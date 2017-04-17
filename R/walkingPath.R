@@ -7,7 +7,7 @@
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param weighted Logical. Shortest path weighted by road distance.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param selection Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.
+#' @param pump.select Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.
 #' @param unit Character. Default is NULL, which returns the graph's unit scale. "yard" returns distance in yards. "meter" returns distance in meters. Either implies "weighted" is TRUE.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{fatalities}}, \code{\link{simulateFatalities}}, \code{vignette("pump.neighborhoods")}
@@ -16,11 +16,11 @@
 #' @examples
 #' walkingPath(1)
 #' walkingPath(1, observed = FALSE)
-#' walkingPath(1, selection = -7) # exclude pump 7 from consideration.
-#' walkingPath(1, selection = 6)  # path from case 1 to pump 6.
+#' walkingPath(1, pump.select = -7) # exclude pump 7 from consideration.
+#' walkingPath(1, pump.select = 6)  # path from case 1 to pump 6.
 
 walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
-  weighted = TRUE, vestry = FALSE, selection = NULL, unit = NULL) {
+  weighted = TRUE, vestry = FALSE, pump.select = NULL, unit = NULL) {
 
   if (observed) {
     if (x %in% 1:578 == FALSE) {
@@ -40,15 +40,15 @@ walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
   }
 
   if (vestry) {
-    if (is.null(selection) == FALSE) {
-      if (any(abs(selection) %in% 1:14 == FALSE)) {
-        stop('With "vestry = TRUE", "selection" must be between 1 and 14.')
+    if (is.null(pump.select) == FALSE) {
+      if (any(abs(pump.select) %in% 1:14 == FALSE)) {
+        stop('With "vestry = TRUE", "pump.select" must be between 1 and 14.')
       }
     }
   } else {
-    if (is.null(selection) == FALSE ) {
-      if (any(abs(selection) %in% 1:13 == FALSE)) {
-        stop('With "vestry = FALSE", "selection" must be between 1 and 13.')
+    if (is.null(pump.select) == FALSE ) {
+      if (any(abs(pump.select) %in% 1:13 == FALSE)) {
+        stop('With "vestry = FALSE", "pump.select" must be between 1 and 13.')
       }
     }
   }
@@ -165,12 +165,12 @@ walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
                             (road.segments$y1 - road.segments$y2)^2)
   }
 
-  if (is.null(selection)) {
+  if (is.null(pump.select)) {
     select.pumps <- pump.coordinates
     pump.names <- names(pump.coordinates)
   } else {
-    select.pumps <- pump.coordinates[selection]
-    pump.names <- names(pump.coordinates[selection])
+    select.pumps <- pump.coordinates[pump.select]
+    pump.names <- names(pump.coordinates[pump.select])
   }
 
   ## --------------- Case Data --------------- ##
@@ -279,7 +279,7 @@ walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
     invisible(lapply(border.list, lines))
     title(main = paste("Observed Case #", case$case))
 
-    if (is.null(selection)) {
+    if (is.null(pump.select)) {
       if (vestry) {
         points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
           col = colors)
@@ -325,7 +325,7 @@ walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
     invisible(lapply(border.list, lines))
     title(main = paste('"Simulated" Case #', case$case))
 
-    if (is.null(selection)) {
+    if (is.null(pump.select)) {
       if (vestry) {
         points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
           col = colors)

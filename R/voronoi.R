@@ -1,7 +1,7 @@
 #' Compute Voronoi neighborhoods.
 #'
 #' Data for Voronoi tessellation of John Snow's 1854 London cholera data.
-#' @param selection Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
+#' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param statistic NULL or Character. NULL, the default, makes no summary computation. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.
 #' @param polygon.vertices Logical. TRUE returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for sp::point.in.polygon() as used in summary.voronoi() method.
@@ -12,11 +12,11 @@
 #'   \item{\code{snow.colors}: neighborhood color based on snowColors().}
 #'   \item{\code{x.rng}: range of x for plot.}
 #'   \item{\code{y.rng}: range of y for plot.}
-#'   \item{\code{select.string}: description of "selection" for plot title.}
+#'   \item{\code{select.string}: description of "pump.select" for plot title.}
 #'   \item{\code{expected.data}:  expected neighborhood fatality counts, based on Voronoi cell area.}
 #'   \item{\code{coordinates}: polygon vertices of Voronoi cells.}
 #'   \item{\code{statistic.data}: observed neighborhood fatality counts.}
-#'   \item{\code{selection}: "selection" from neighborhoodVoronoi().}
+#'   \item{\code{pump.select}: "pump.select" from neighborhoodVoronoi().}
 #'   \item{\code{statistic}: "statistic" from neighborhoodVoronoi().}
 #'   \item{\code{vestry}: "vestry" from neighborhoodVoronoi().}
 #' }
@@ -25,33 +25,33 @@
 #' @examples
 #' neighborhoodVoronoi()
 #' neighborhoodVoronoi(vestry = TRUE)
-#' neighborhoodVoronoi(selection = 6:7)
-#' neighborhoodVoronoi(selection = -6)
-#' neighborhoodVoronoi(selection = -6, polygon.vertices = TRUE)
+#' neighborhoodVoronoi(pump.select = 6:7)
+#' neighborhoodVoronoi(pump.select = -6)
+#' neighborhoodVoronoi(pump.select = -6, polygon.vertices = TRUE)
 #'
 #' # coordinates for vertices also available in returned object.
-#' dat <- neighborhoodVoronoi(selection = -6)
+#' dat <- neighborhoodVoronoi(pump.select = -6)
 #' dat$coordinates
 
-neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
+neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   statistic = NULL, polygon.vertices = FALSE) {
 
-  if (is.null(selection) == FALSE) {
-    msg1 <- 'If specified, "selection" must include at least 2 different pumps'
+  if (is.null(pump.select) == FALSE) {
+    msg1 <- 'If specified, "pump.select" must include at least 2 different pumps'
 
     if (vestry) {
-      if (length(unique((1:14)[selection])) < 2) {
+      if (length(unique((1:14)[pump.select])) < 2) {
         stop(msg1)
       }
-      if (any(abs(selection) %in% 1:14 == FALSE)) {
-        stop('With "vestry = TRUE", 1 >= |"selection"| <= 14')
+      if (any(abs(pump.select) %in% 1:14 == FALSE)) {
+        stop('With "vestry = TRUE", 1 >= |"pump.select"| <= 14')
       }
     } else {
-      if (length(unique((1:13)[selection])) < 2) {
+      if (length(unique((1:13)[pump.select])) < 2) {
         stop(msg1)
       }
-      if (any(abs(selection) %in% 1:13 == FALSE)) {
-        stop('With "vestry = FALSE", 1 >= |"selection"| <= 13')
+      if (any(abs(pump.select) %in% 1:13 == FALSE)) {
+        stop('With "vestry = FALSE", 1 >= |"pump.select"| <= 13')
       }
     }
   }
@@ -66,7 +66,7 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
   x.rng <- range(cholera::roads$x)
   y.rng <- range(cholera::roads$y)
 
-  if (is.null(selection)) {
+  if (is.null(pump.select)) {
     if (vestry) {
       pump.id <- cholera::pumps.vestry$id
       voronoi <- deldir::deldir(cholera::pumps.vestry[, c("x", "y")],
@@ -82,17 +82,17 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
     }
   } else {
     if (vestry) {
-      pump.id <- cholera::pumps.vestry$id[selection]
-      voronoi <- deldir::deldir(cholera::pumps.vestry[selection, c("x", "y")],
+      pump.id <- cholera::pumps.vestry$id[pump.select]
+      voronoi <- deldir::deldir(cholera::pumps.vestry[pump.select, c("x", "y")],
         rw = c(x.rng, y.rng), suppressMsge = TRUE)
-      snow.colors <- cholera::snowColors(vestry = TRUE)[selection]
-      select.string <- paste(sort(selection), collapse = ", ")
+      snow.colors <- cholera::snowColors(vestry = TRUE)[pump.select]
+      select.string <- paste(sort(pump.select), collapse = ", ")
     } else {
-      pump.id <- cholera::pumps$id[selection]
-      voronoi <- deldir::deldir(cholera::pumps[selection, c("x", "y")],
+      pump.id <- cholera::pumps$id[pump.select]
+      voronoi <- deldir::deldir(cholera::pumps[pump.select, c("x", "y")],
         rw = c(x.rng, y.rng), suppressMsge = TRUE)
-      snow.colors <- cholera::snowColors()[selection]
-      select.string <- paste(sort(selection), collapse = ", ")
+      snow.colors <- cholera::snowColors()[pump.select]
+      select.string <- paste(sort(pump.select), collapse = ", ")
     }
   }
 
@@ -105,11 +105,11 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
     pump.sel <- cholera::pumps$id
   }
 
-  if (is.null(selection)) {
+  if (is.null(pump.select)) {
     expected.data <- data.frame(pump = pump.sel[voronoi.order],
                                 area = voronoi$summary$dir.area)
   } else {
-    expected.data <- data.frame(pump = pump.sel[selection][voronoi.order],
+    expected.data <- data.frame(pump = pump.sel[pump.select][voronoi.order],
                                 area = voronoi$summary$dir.area)
   }
 
@@ -141,7 +141,7 @@ neighborhoodVoronoi <- function(selection = NULL, vestry = FALSE,
      x.rng = x.rng, y.rng = y.rng, select.string = select.string,
      expected.data = expected.data, coordinates = coordinates,
      statistic.data = statistic.data,
-     selection = selection, vestry = vestry, statistic = statistic)
+     pump.select = pump.select, vestry = vestry, statistic = statistic)
 
   class(output) <- "voronoi"
 
@@ -181,7 +181,7 @@ plot.voronoi <- function(x, ...) {
     ylim = x$y.rng, pch = NA, asp = 1)
 
   if (is.null(x$statistic)) {
-    if (is.null(x$selection)) {
+    if (is.null(x$pump.select)) {
       if (x$vestry) {
         points(cholera::pumps.vestry[, c("x", "y")], pch = 2,
           col = x$snow.colors)
@@ -196,18 +196,18 @@ plot.voronoi <- function(x, ...) {
 
     } else {
       if (x$vestry) {
-        points(cholera::pumps.vestry[x$selection, c("x", "y")], pch = 2,
+        points(cholera::pumps.vestry[x$pump.select, c("x", "y")], pch = 2,
           col = x$snow.colors)
-        text(cholera::pumps.vestry[x$selection, c("x", "y")],
+        text(cholera::pumps.vestry[x$pump.select, c("x", "y")],
           label = paste0("p", x$pump.id), pos = 1)
       } else {
-        points(cholera::pumps[x$selection, c("x", "y")], pch = 2,
+        points(cholera::pumps[x$pump.select, c("x", "y")], pch = 2,
           col = x$snow.colors)
-        text(cholera::pumps[x$selection, c("x", "y")],
+        text(cholera::pumps[x$pump.select, c("x", "y")],
           label = paste0("p", x$pump.id), pos = 1)
       }
       title(main = paste0("Snow Addresses by Neighborhood", "\n",
-        "Pumps ", paste(sort(x$selection), collapse = ", ")))
+        "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
     }
 
     voronoi.case.id <- cholera::pumpCase(x)
@@ -248,7 +248,7 @@ plot.voronoi <- function(x, ...) {
       caption <- "Snow Fatality Count by Pump Neighborhood"
     }
 
-    if (is.null(x$selection)) {
+    if (is.null(x$pump.select)) {
       if (x$vestry) {
         text(cholera::pumps.vestry[, c("x", "y")], label = stat.data$Count)
         text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.8,
@@ -262,14 +262,14 @@ plot.voronoi <- function(x, ...) {
       title(main = caption)
     } else {
       if (x$vestry) {
-        text(cholera::pumps.vestry[x$selection, c("x", "y")],
+        text(cholera::pumps.vestry[x$pump.select, c("x", "y")],
           label = stat.data$Count)
-        text(cholera::pumps.vestry[x$selection, c("x", "y")], pos = 1,
+        text(cholera::pumps.vestry[x$pump.select, c("x", "y")], pos = 1,
           cex = 0.8, col = "blue", label = round(stat.data$Pearson, 2))
       } else {
-        text(cholera::pumps[x$selection, c("x", "y")],
+        text(cholera::pumps[x$pump.select, c("x", "y")],
           label = stat.data$Count)
-        text(cholera::pumps[x$selection, c("x", "y")], pos = 1, cex = 0.8,
+        text(cholera::pumps[x$pump.select, c("x", "y")], pos = 1, cex = 0.8,
           col = "blue", label = round(stat.data$Pearson, 2))
       }
 

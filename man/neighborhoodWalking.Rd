@@ -4,12 +4,12 @@
 \alias{neighborhoodWalking}
 \title{Compute walking path neighborhoods.}
 \usage{
-neighborhoodWalking(selection = NULL, vestry = FALSE,
+neighborhoodWalking(pump.select = NULL, vestry = FALSE,
   statistic = "address", weighted = TRUE, snow = FALSE,
   multi.core = FALSE)
 }
 \arguments{
-\item{selection}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
+\item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -17,7 +17,7 @@ neighborhoodWalking(selection = NULL, vestry = FALSE,
 
 \item{weighted}{Logical. TRUE uses distance weighted by edge length (i.e., road length). FALSE uses unweighted distance.}
 
-\item{snow}{Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this sets "selection" to 7 and "vestry" to NULL.}
+\item{snow}{Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this sets "pump.select" to 7 and "vestry" to NULL.}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 }
@@ -33,7 +33,7 @@ An R list with 12 objects:
   \item{\code{sim.pump.case}: simulated fatality ID by pump neighborhood.}
   \item{\code{observed}: observed neighborhood fatality counts.}
   \item{\code{expected}: expected neighborhood fatality counts, based on road length.}
-  \item{\code{selection}: "selection" from neighborhoodWalking().}
+  \item{\code{pump.select}: "pump.select" from neighborhoodWalking().}
   \item{\code{statistic}: "statistic" from neighborhoodWalking().}
   \item{\code{vestry}: "vestry" from neighborhoodWalking().}
 }
@@ -47,7 +47,7 @@ Data for walking neighborhoods for John Snow's 1854 London cholera data.
 
 \examples{
 neighborhoodWalking()
-neighborhoodWalking(selection = -6)
+neighborhoodWalking(pump.select = -6)
 }
 \seealso{
 \code{\link{plot.walking}}, \code{\link{summary.walking}}, \code{vignette("pump.neighborhoods")}
