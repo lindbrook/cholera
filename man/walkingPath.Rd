@@ -2,7 +2,7 @@
 % Please edit documentation in R/walkingPath.R
 \name{walkingPath}
 \alias{walkingPath}
-\title{Plot the walking path from a case to the nearest pump.}
+\title{Plot the walking path from a case to the nearest selected pump(s).}
 \usage{
 walkingPath(x, observed = TRUE, zoom = FALSE, radius = 0.5,
   weighted = TRUE, vestry = FALSE, pump.select = NULL, unit = NULL)
@@ -20,7 +20,7 @@ walkingPath(x, observed = TRUE, zoom = FALSE, radius = 0.5,
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
-\item{pump.select}{Numeric. Default is NULL and all pumps are used. Ortherwise, selection by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.}
+\item{pump.select}{Numeric. Default is NULL and all pumps are considred. Ortherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.}
 
 \item{unit}{Character. Default is NULL, which returns the graph's unit scale. "yard" returns distance in yards. "meter" returns distance in meters. Either implies "weighted" is TRUE.}
 }
@@ -28,7 +28,7 @@ walkingPath(x, observed = TRUE, zoom = FALSE, radius = 0.5,
 A base R graphics plot.
 }
 \description{
-Plot shortest walking path from an observed or "simulated" case to the nearest pump.
+Plot shortest walking path from an observed or "simulated" case to the nearest selected pump(s).
 }
 \examples{
 walkingPath(1)
