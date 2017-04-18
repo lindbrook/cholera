@@ -9,7 +9,7 @@ R 3.3.3 (2017-03-06); x86_64-apple-darwin13.4.0 (64-bit):
 
 * 0 errors | 0 warnings | 0 notes
 
-R-devel 3.4.0 beta (2017-04-10 r72503):
+R-devel 3.4.0 RC (2017-04-16 r72514):
 
 * 0 errors | 0 warnings | 1 note
 * This is a new release.
