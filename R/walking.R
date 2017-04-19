@@ -645,7 +645,8 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
           text(cholera::pumps.vestry[pump.select, c("x", "y")], cex = 0.9,
             pos = 1, col = "white", label = x$pump)
         } else {
-          points(cholera::pumps[pump.select, c("x", "y")], bg = "white", pch = 24)
+          points(cholera::pumps[pump.select, c("x", "y")], bg = "white",
+            pch = 24)
           text(cholera::pumps[pump.select, c("x", "y")], cex = 0.9, pos = 1,
             col = "white", label = x$pump)
         }

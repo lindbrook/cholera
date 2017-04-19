@@ -37,18 +37,20 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   statistic = NULL, polygon.vertices = FALSE) {
 
   if (is.null(pump.select) == FALSE) {
-    msg1 <- 'If specified, "pump.select" must include at least 2 different pumps'
+    msg1 <- 'If specified,'
+    msg2 <- '"pump.select" must include at least 2 different pumps.'
+    msg <- paste(msg1, msg2)
 
     if (vestry) {
       if (length(unique((1:14)[pump.select])) < 2) {
-        stop(msg1)
+        stop(msg)
       }
       if (any(abs(pump.select) %in% 1:14 == FALSE)) {
         stop('With "vestry = TRUE", 1 >= |"pump.select"| <= 14')
       }
     } else {
       if (length(unique((1:13)[pump.select])) < 2) {
-        stop(msg1)
+        stop(msg)
       }
       if (any(abs(pump.select) %in% 1:13 == FALSE)) {
         stop('With "vestry = FALSE", 1 >= |"pump.select"| <= 13')
@@ -137,11 +139,11 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
     }
   }
 
-  output <- list(pump.id = pump.id, voronoi = voronoi, snow.colors = snow.colors,
-     x.rng = x.rng, y.rng = y.rng, select.string = select.string,
-     expected.data = expected.data, coordinates = coordinates,
-     statistic.data = statistic.data,
-     pump.select = pump.select, vestry = vestry, statistic = statistic)
+  output <- list(pump.id = pump.id, voronoi = voronoi,
+    snow.colors = snow.colors, x.rng = x.rng, y.rng = y.rng,
+    select.string = select.string, expected.data = expected.data,
+    coordinates = coordinates, statistic.data = statistic.data,
+    pump.select = pump.select, vestry = vestry, statistic = statistic)
 
   class(output) <- "voronoi"
 
