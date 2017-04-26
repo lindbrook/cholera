@@ -20,14 +20,14 @@ pumpCase.voronoi <- function(obj) {
 
   output <- obj$statistic.data
 
-  if (is.null(obj$selection)) {
+  if (is.null(obj$pump.select)) {
     if (obj$vestry == TRUE) {
       stats::setNames(output, paste0("p", 1:14))
     } else {
       stats::setNames(output, paste0("p", 1:13))
     }
   } else {
-    stats::setNames(output, paste0("p", obj$selection))
+    stats::setNames(output, paste0("p", obj$pump.select))
   }
 }
 
