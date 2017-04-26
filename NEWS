@@ -3,6 +3,8 @@ cholera 0.1.99.9009
 
 use trimPaths()
 remove trimExpPaths()
+rebuild sysata.rda
+pass unit tests (v. 6)
 
 
 cholera 0.1.99.9008
@@ -38,7 +40,7 @@ amend pumpSegments()
 amend trimExpPaths()
 add pumpNumber()
 amend snowColors()
-rebuild sysata.rds
+rebuild sysata.rda
 
 
 cholera 0.1.99.9004
