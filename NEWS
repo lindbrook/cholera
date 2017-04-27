@@ -10,7 +10,7 @@ pass unit tests (v. 6)
 cholera 0.1.99.9008
 ----------------------------------------------------------------
 amend function argument: "selection" to "pump.select"
-rebuild sysata.rds
+rebuild sysata.rda
 
 
 cholera 0.1.99.9007
