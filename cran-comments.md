@@ -1,20 +1,20 @@
 ### Test environments
 
-* local OS X install, R 3.3.3
+* local OS X install, R 3.4.0
 * win-builder (devel and release)
 
 ### R CMD check results
 
-R 3.3.3 (2017-03-06); x86_64-apple-darwin13.4.0 (64-bit):
+3.4.0 (2017-04-21), x86_64-apple-darwin13.4.0 (64-bit):
 
 * 0 errors | 0 warnings | 0 notes
 
-R-devel 3.4.0 RC (2017-04-16 r72514):
+R-devel 3.5.0 (2017/04/27, r72634): x86_64-w64-mingw32 (64-bit)
 
 * 0 errors | 0 warnings | 1 note
 * This is a new release.
 
-R-release 3.3.3 (2017-03-06):
+R-release 3.4.0 (2017-04-21): x86_64-w64-mingw32 (64-bit)
 
 * 0 errors | 0 warnings | 1 note
 * This is a new release.
