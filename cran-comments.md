@@ -9,7 +9,7 @@
 
 * 0 errors | 0 warnings | 0 notes
 
-R-devel 3.5.0 (2017/04/27, r72634): x86_64-w64-mingw32 (64-bit)
+R-devel 3.5.0 (2017/05/04, r72652): x86_64-w64-mingw32 (64-bit)
 
 * 0 errors | 0 warnings | 1 note
 * This is a new release.
