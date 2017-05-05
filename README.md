@@ -4,9 +4,9 @@
 
 John Snow's map of the 1854 cholera outbreak in London's Soho is one of the best known examples of data visualization and information design.
 
-The reasons are two-fold. First, as evidence of his claim that cholera is transmitted by water rather than air, Snow used a map to plot the spatial relationship between the location of water pumps, the primary source of drinking water, and that of cholera fatalities. Second, as a way to illustrate both the count and location of cases, Snow used "stacks" of horizontal bars (the orientation reflects the location's street).
-
 ![](vignettes/msu-snows-mapB.jpg)
+
+The reasons are two-fold. First, as evidence of his claim that cholera is transmitted by water rather than air, Snow used a map to plot the spatial relationship between the location of water pumps, the primary source of drinking water, and that of cholera fatalities. Second, as a way to illustrate both the count and location of cases, Snow used "stacks" of horizontal bars (the orientation reflects the location's street).
 
 However, while the map shows a concentration of fatalities around the Broad Street pump, it actually doesn't do the best job of excluding rival explanation. The pattern we see is not clearly different from what airborne transmission might look like. To address this problem, Snow added a graphical annotation to a second, lesser-known version of the map published in the official report on the outbreak:
 
