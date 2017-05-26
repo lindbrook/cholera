@@ -78,144 +78,134 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 1) {
 }
 
 wordCase <- function(x) {
+  # faster than tools::toTitleCase(), bytecode?
   paste0(toupper(substr(x, 1, 1)), tolower(substr(x, 2, nchar(x))))
 }
 
-wordCaseB <- function(x) {
-  paste0(toupper(substr(x, 2, 2)), tolower(substr(x, 3, nchar(x))))
-}
-
 caseAndSpace <- function(name) {
-  road.name.string <- unlist(strsplit(name, " "))
-  extra.spaces <- vapply(road.name.string, nchar, integer(1L))
+  valid.names <- unique(cholera::roads$name)
+  name.parts <- unlist(strsplit(name, " "))
+  extra.spaces <- vapply(name.parts, nchar, integer(1L))
 
   if (any(extra.spaces == 0)) {
-    road.name.string <- road.name.string[extra.spaces != 0]
+    name.parts <- name.parts[extra.spaces != 0]
+    road.name.string <- paste(name.parts, collapse = " ")
+  } else {
+    road.name.string <- paste(name.parts, collapse = " ")
   }
 
-  spaced.name <- paste(road.name.string, collapse = " ")
-
-  if (spaced.name %in% unique(cholera::roads$name)) {
-    string.out <- spaced.name
+  if (road.name.string %in% valid.names) {
+    string.out <- road.name.string
   } else {
     lo.case <- tolower(road.name.string)
-    vec.length <- seq_along(lo.case)
 
-    # e.g., "George Court (I)"
-    multi.name <- vapply(lo.case, function(x) {
-      substr(x, 1, 1) == "("
+    road.name.string <- unlist(strsplit(lo.case, " "))
+    vec.length <- seq_along(road.name.string)
+    word.case <- wordCase(road.name.string)
+    string.out <- paste0(word.case, collapse = " ")
+  }
+
+  if (string.out %in% valid.names) {
+    return(string.out)
+  } else {
+
+    # ------- tests ------- #
+
+    # George Court (I) #
+    test.multiple.name <- vapply(road.name.string, function(x) {
+      grepl("(", x, fixed = TRUE)
     }, logical(1L))
 
-    # e.g., "Macclesfield Street/Gerrard Street"
-    two.roads <- vapply(lo.case, function(x) {
-      grepl("/", x)
+    # Macclesfield Street/Gerrard Street #
+    test.two.roads <- vapply(road.name.string, function(x) {
+      grepl("/", x, fixed = TRUE)
     }, logical(1L))
 
-    # e.g., "Unknown-A1"
-    unknown.road <- unlist(strsplit(lo.case, "-"))
+    # Adam and Eve Court" #
+    test.and <- "and" %in% road.name.string
 
-    # e.g., "Adam and Eve Court"
-    if ("and" %in% lo.case) {
-      others.position <- which(lo.case %in% "and" == FALSE)
-      and.position <- which(lo.case == "and")
-      word.case <- lapply(road.name.string[others.position], wordCase)
+    # Unknown-A1 #
+    test.unknown <- grepl("unknown", road.name.string)
 
-      string.out <- paste0(c(word.case[others.position < and.position],
-                             tolower(lo.case[and.position]),
-                             word.case[others.position > and.position]),
-                           collapse = " ")
+    # ------- road strings ------- #
 
-    # e.g., "George Court (I)"
-    } else if (any(multi.name)) {
+    if (any(test.multiple.name)) {
+      multi.name <- vapply(road.name.string, function(x) {
+        grepl("(", x, fixed = TRUE)
+      }, logical(1L))
+
       others.position <- which(multi.name == FALSE)
       multi.position <- which(multi.name)
-      word.case <- lapply(lo.case[vec.length < multi.position], wordCase)
-      multi.case <- lapply(lo.case[vec.length >= multi.position], toupper)
+      word.case <- wordCase(road.name.string[others.position])
+      multi.case <- toupper(road.name.string[multi.position])
+      string.out <- paste(c(word.case, multi.case), collapse = " ")
 
-      string.out <- paste(c(paste(word.case, collapse = " "),
-                            paste(multi.case, collapse = "")),
-                          collapse = " ")
+    } else if (any(test.two.roads)) {
+      slash.position <- grep("/", road.name.string)
 
-    # e.g., "Macclesfield Street/Gerrard Street", "Smiths Court/Yard"
-    } else if (any(two.roads)) {
-      slash.position <- grep("/", lo.case)
+      if (road.name.string[test.two.roads] == "/") {
+        # isolated "/": "Princes Street / Hanover Square"
+        slash.names <- c(slash.position - 1, slash.position, slash.position + 1)
+        word.case <- wordCase(road.name.string)
+        pre <- word.case[vec.length < min(slash.names)]
+        delimited <- paste(word.case[slash.names], collapse = "")
+        post.select <- vec.length > max(slash.names)
 
-      # isolated "/"
-      if (lo.case[slash.position] == "/") {
-        pre <- lo.case[vec.length < slash.position]
-        post <- lo.case[vec.length > slash.position]
-        pre <- lapply(pre, wordCase)
-        post <- lapply(post, wordCase)
-
-        string.out <- paste0(paste(pre, collapse = " "), "/",
-                             paste(post, collapse = " "))
-
-      # leading "/"
-      } else if (substr(lo.case[slash.position], 1, 1) == "/") {
-        pre <- lo.case[vec.length < slash.position]
-        delimited <- lo.case[vec.length == slash.position]
-        post <- lo.case[vec.length > slash.position]
-        pre <- lapply(pre, wordCase)
-        delimited <- lapply(delimited, wordCaseB)
-        post <- lapply(post, wordCase)
-
-        if (length(post) == 0) {
-          string.out <- paste0(paste(pre, collapse = " "),
-                               paste(paste0("/", delimited)))
-
+        if (any(post.select)) {
+          # "Princes Street/Hanover Square"
+          post <- word.case[post.select]
+          string.out <- paste(pre, delimited, post, collapse = " ")
         } else {
-          string.out <- paste0(paste(pre, collapse = " "),
-                               paste(paste0("/", delimited),
-                                     paste(post, collapse = " ")))
+          # "Richmond Buildings/Mews"
+          string.out <- paste(pre, delimited, collapse = " ")
         }
 
-      # trailing "/"
-      } else if (substr(lo.case[slash.position],
-                        nchar(lo.case[slash.position]),
-                        nchar(lo.case[slash.position])) == "/") {
-
-        word.case <- lapply(lo.case, wordCase)
-        first <- paste(word.case[vec.length < slash.position],
-                       word.case[slash.position], collapse = " ")
-        last <- paste(word.case[vec.length > slash.position], collapse = " ")
-        string.out <- paste0(first, last)
-
-      # "/" in middle
-      } else if (length(unlist(strsplit(lo.case[slash.position], "/"))) > 1) {
-        pre <- lo.case[vec.length < slash.position]
-        delimited <- lo.case[vec.length == slash.position]
-        post <- lo.case[vec.length > slash.position]
-
-        if (length(post) == 0) {
-          word.case.delimited <- wordCase(unlist(strsplit(delimited, "/")))
-          string.out <- paste(wordCase(pre),
-                              paste(word.case.delimited, collapse = "/"))
-
-        } else {
-          word.case.delimited <- wordCase(unlist(strsplit(delimited, "/")))
-          string.out <- paste(wordCase(pre),
-                              paste(word.case.delimited, collapse = "/"),
-                              wordCase(post))
-        }
-      }
-
-    # e.g., "Unknown-A1"
-    } else if ("unknown" %in% unknown.road) {
-      if (any(vapply(unknown.road, nchar, integer(1L)) == 0)) {
-        not.empty <- vapply(unknown.road, nchar, integer(1L))
-        unknown.road <- unknown.road[not.empty > 0]
-        word.case <- lapply(unknown.road, wordCase)
-        string.out <- paste0(word.case, collapse = "-")
       } else {
-        word.case <- lapply(unknown.road, wordCase)
-        string.out <- paste0(word.case, collapse = "-")
+        # "Princes Street /Hanover Square", "Princes Street/ Hanover Square"
+        word.case <- wordCase(road.name.string)
+        pre <- word.case[vec.length < slash.position]
+        delimited <- tools::toTitleCase(word.case[slash.position])
+        post.select <- vec.length > slash.position
+
+        if (any(post.select)) {
+          post <- word.case[post.select]
+
+          if (length(pre) == 1 & sum(post.select) == 2) {
+            string.out <- paste(pre, paste0(delimited, post[1]), post[2],
+              collapse = " ")
+          } else if (length(pre) == 2 & sum(post.select) == 1) {
+            string.out <- paste(pre[1], paste0(pre[2], delimited), post,
+              collapse = " ")
+          } else if (length(pre) == 1 & sum(post.select) == 1) {
+            string.out <- paste(pre, paste0(delimited, post), collapse = " ")
+          }
+        } else {
+          string.out <- paste(pre[1], paste0(pre[2], delimited), collapse = " ")
+        }
       }
 
-    } else {
-      word.case <- lapply(road.name.string, wordCase)
-      string.out <- paste0(word.case, collapse = " ")
+    } else if (test.and) {
+      others.position <- which(road.name.string %in% "and" == FALSE)
+      and.position <- which(road.name.string == "and")
+      word.case <- wordCase(road.name.string[others.position])
+      string.out <- paste0(c(word.case[others.position < and.position],
+        tolower(road.name.string[and.position]),
+        word.case[others.position > and.position]), collapse = " ")
+
+    } else if (any(test.unknown)) {
+      dash.position <- grep("-", road.name.string)
+
+      if (road.name.string[dash.position] == "-") {
+        # isolated "-": "Unknown - C"
+        name.parts <- unlist(strsplit(road.name.string, "-"))
+        word.case <- wordCase(name.parts)
+        string.out <- paste0(word.case[1], "-", word.case[3])
+      } else {
+        # "Unknown- C", "Unknown -C"
+        word.case <- tools::toTitleCase(road.name.string)
+        string.out <- paste(word.case, collapse = "")
+      }
     }
-    string.out
   }
   string.out
 }
