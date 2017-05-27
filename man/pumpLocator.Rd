@@ -7,7 +7,7 @@
 pumpLocator(id, zoom = FALSE, radius = 2, vestry = FALSE)
 }
 \arguments{
-\item{id}{Numeric or Integer. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 qnd 13.}
+\item{id}{Numeric or Integer. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 qnd 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps.}
 
 \item{zoom}{Logical.}
 
