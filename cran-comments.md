@@ -9,12 +9,12 @@
 
 * 0 errors | 0 warnings | 0 notes
 
-R-devel Under development (2017-05-25, r72739): x86_64-w64-mingw32 (64-bit)
+R-devel: R Under development (2017-05-25, r72739): x86_64-w64-mingw32 (64-bit)
 
 * 0 errors | 0 warnings | 1 note
 * This is a new release.
 
-R-release 3.4.0 (2017-04-21): x86_64-w64-mingw32 (64-bit)
+R-release: 3.4.0 (2017-04-21): x86_64-w64-mingw32 (64-bit)
 
 * 0 errors | 0 warnings | 1 note
 * This is a new release.
