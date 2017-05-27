@@ -1,7 +1,7 @@
 #' Locate road by its numerical ID.
 #'
 #' Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-#' selected road. See \code{vignette}("road.names") for details.
+#' selected road. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
 #' @param road.number Numeric or integer. A whole number between 1 and 528.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. For values <= 5, the anchor case number is plotted.
