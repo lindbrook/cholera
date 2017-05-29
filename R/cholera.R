@@ -1,4 +1,4 @@
-#' cholera: introduction
+#' cholera: amend, augment and aid analysis of John Snow's cholera data
 #'
 #' Amend, augment and aid the analysis of John Snow's cholera data.
 #'
@@ -26,5 +26,5 @@
 #'
 #' \code{vignette("time.series")}
 #' @docType package
-#' @name cholera
+#' @name cholera-package
 NULL
