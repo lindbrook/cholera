@@ -6,6 +6,7 @@
 #' @param weighted Logical. Shortest path weighted by road distance.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param pump.select Numeric. Default is NULL and all pumps are considred. Ortherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.
+#' @param unit Character. Default is NULL, which returns the graph's unit scale. "yard" returns the approximate distance in yards. "meter" returns the approximate distance in meters. Either implies "weighted" is TRUE.
 #' @return A base R data frame.
 #' @seealso \code{\link{fatalities}}, \code{\link{simulateFatalities}}, \code{vignette("pump.neighborhoods")}
 #' @import graphics
@@ -17,7 +18,7 @@
 #' walkingDistance(1, pump.select = 6)  # path from case 1 to pump 6.
 
 walkingDistance <- function(x, observed = TRUE, weighted = TRUE,
-  vestry = FALSE, pump.select = NULL) {
+  vestry = FALSE, pump.select = NULL, unit = NULL) {
 
   if (observed) {
     if (x %in% 1:578 == FALSE) {
@@ -51,10 +52,10 @@ walkingDistance <- function(x, observed = TRUE, weighted = TRUE,
     }
   }
 
-  # if (is.null(unit) == FALSE) {
-  #   if (unit %in% c("meter", "yard") == FALSE)
-  #     stop('If specified, "unit" must either be "meter" or "yard".')
-  # }
+  if (is.null(unit) == FALSE) {
+    if (unit %in% c("meter", "yard") == FALSE)
+      stop('If specified, "unit" must either be "meter" or "yard".')
+  }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
@@ -148,9 +149,22 @@ walkingDistance <- function(x, observed = TRUE, weighted = TRUE,
   }
 
   id <- which.min(d)
-  out <- data.frame(case = x, pump = pump.names[id], distance = d[id])
-  rownames(out) <- NULL
-  out
+
+  if (is.null(unit)) {
+    out <- data.frame(case = x, pump = pump.names[id], distance = d[id])
+    rownames(out) <- NULL
+    out
+  } else if (unit == "yard") {
+    out <- data.frame(case = x, pump = pump.names[id],
+      distance = round(d[id] * 177 / 3, 1))
+    rownames(out) <- NULL
+    out
+  } else if (unit == "meter") {
+    out <- data.frame(case = x, pump = pump.names[id],
+      distance = round(d[id] * 54, 1))
+    rownames(out) <- NULL
+    out
+  }
 }
 
 caseSelector <- function(x, observed = TRUE) {

@@ -5,7 +5,7 @@
 \title{Compute the walking distance between a case and the nearest (selected) pump.}
 \usage{
 walkingDistance(x, observed = TRUE, weighted = TRUE, vestry = FALSE,
-  pump.select = NULL)
+  pump.select = NULL, unit = NULL)
 }
 \arguments{
 \item{x}{Numeric or Integer. Observed cases must be a whole number between 1 and 578. With three exceptions, "Simulated" cases must be a whole number between 1 and 4993: 1) one case, 3334, does not have a valid orthogonal projector to any street; 2) the 20 cases that project onto Falconberg Court and Falconberg Mews (4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720) form an isolate that are "technically" disconnected from the road network and cannot reach any pump; 3) because Adam and Eve Court is also disconnected from the larger road network, the 27 cases that project onto that road can only reach pump 2, which lies on that road. This means that all other cases cannot reach pump 2.}
@@ -17,6 +17,8 @@ walkingDistance(x, observed = TRUE, weighted = TRUE, vestry = FALSE,
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
 \item{pump.select}{Numeric. Default is NULL and all pumps are considred. Ortherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.}
+
+\item{unit}{Character. Default is NULL, which returns the graph's unit scale. "yard" returns the approximate distance in yards. "meter" returns the approximate distance in meters. Either implies "weighted" is TRUE.}
 }
 \value{
 A base R data frame.
