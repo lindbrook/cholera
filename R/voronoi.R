@@ -213,12 +213,12 @@ plot.voronoi <- function(x, ...) {
     }
 
     voronoi.case.id <- cholera::pumpCase(x)
-    elements <- length(unlist(voronoi.case.id))
-    voronoi.colors <- vector(length = elements)
+    voronoi.colors <- vector(length = length(unlist(voronoi.case.id)))
+    names(voronoi.colors) <- cholera::fatalities.address$anchor.case
 
     for (i in seq_along(voronoi.case.id)) {
-      id <- voronoi.case.id[[i]] == 1
-      voronoi.colors[id] <- x$snow.colors[i]
+      id <- voronoi.case.id[[i]]
+      voronoi.colors[names(voronoi.colors) %in% id] <- x$snow.colors[i]
     }
 
     invisible(lapply(roads.list, lines, col = "lightgray"))
@@ -226,8 +226,17 @@ plot.voronoi <- function(x, ...) {
 
     plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none",
       lty = "solid")
-    points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
-      pch = 20, cex = 0.75)
+
+    if (is.null(x$statistic)) {
+       points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
+         pch = 20, cex = 0.75)
+    } else if (x$statistic == "address") {
+      points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
+         pch = 20, cex = 0.75)
+    } else if (x$statistic == "fatality") {
+      points(cholera::fatalities[, c("x", "y")], col = voronoi.colors, pch = 20,
+        cex = 0.75)
+    }
 
   } else {
     invisible(lapply(roads.list, lines, col = "gray"))

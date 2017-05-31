@@ -19,15 +19,18 @@ pumpCase.voronoi <- function(obj) {
   }
 
   output <- obj$statistic.data
+  out <- lapply(output, function(x) {
+    cholera::fatalities.address$anchor.case[x == 1]
+  })
 
   if (is.null(obj$pump.select)) {
     if (obj$vestry == TRUE) {
-      stats::setNames(output, paste0("p", 1:14))
+      stats::setNames(out, paste0("p", 1:14))
     } else {
-      stats::setNames(output, paste0("p", 1:13))
+      stats::setNames(out, paste0("p", 1:13))
     }
   } else {
-    stats::setNames(output, paste0("p", obj$pump.select))
+    stats::setNames(out, paste0("p", obj$pump.select))
   }
 }
 
