@@ -8,7 +8,7 @@
 #' @param weighted Logical. Shortest path weighted by road distance.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param pump.select Numeric. Default is NULL and all pumps are considred. Ortherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.
-#' @param unit Character. Default is NULL, which returns the graph's unit scale. "yard" returns distance in yards. "meter" returns distance in meters. Either implies "weighted" is TRUE.
+#' @param unit Character. Default is NULL, which returns the graph's unit scale. "yard" returns the approximate distance in yards. "meter" returns the approximate distance in meters. Either implies "weighted" is TRUE.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{fatalities}}, \code{\link{simulateFatalities}}, \code{vignette("pump.neighborhoods")}
 #' @import graphics
@@ -77,92 +77,14 @@ walkingPath <- function(x, observed = TRUE, zoom = FALSE, radius = 0.5,
 
   if (vestry) {
     colors <- snowColors(vestry = TRUE)
-
-    pump.coordinates <- paste0(cholera::ortho.proj.pump.vestry$x.proj, "-",
-                               cholera::ortho.proj.pump.vestry$y.proj)
-    names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
-
-    pump.data <- cholera::ortho.proj.pump.vestry
-    pump.segments <- pump.data$road.segment
-
-    mat <- matrix(0, ncol = ncol(road.segments), nrow = 2 *
-      length(pump.segments))
-    road.pump.data <- data.frame(mat)
-    start.pt <- seq(1, nrow(road.pump.data), 2)
-    end.pt <- seq(2, nrow(road.pump.data), 2)
-
-    for (i in seq_along(pump.segments)) {
-      road.data <- road.segments[road.segments$id == pump.segments[i], ]
-      pump.coords <- pump.data[pump.data$road.segment == pump.segments[i],
-        c("x.proj", "y.proj")]
-
-      temp <- road.data[, names(road.data) %in% c("x1", "y1") == FALSE]
-      temp <- cbind(temp[, c("street", "n")],
-                    pump.coords,
-                    temp[, c("id", "name", "x2", "y2")])
-
-      names(temp)[names(temp) %in% c("x.proj", "y.proj")] <- c("x1", "y1")
-      road.data[, c("x2", "y2")] <- pump.coords
-      temp <- rbind(road.data, temp)
-      temp$id <- paste0(road.data$id, letters[seq_len(nrow(temp))])
-      road.pump.data[start.pt[i]:end.pt[i], ] <- temp
-    }
-
-    names(road.pump.data) <- names(road.segments)
-
-    road.segments <- road.segments[road.segments$id %in%
-      pump.segments == FALSE, ]
-    road.segments <- rbind(road.segments, road.pump.data)
-    order.id <- order(road.segments$street, road.segments$id)
-    road.segments <- road.segments[order.id, ]
-    road.segments$node1 <- paste0(road.segments$x1, "-", road.segments$y1)
-    road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
-    road.segments$d <- sqrt((road.segments$x1 - road.segments$x2)^2 +
-                            (road.segments$y1 - road.segments$y2)^2)
+    pump.data <- pumpDataSelect(vestry = TRUE)
+    road.segments <- addSegmentLength(road.segments, pump.data)
+    pump.coordinates <- extractPumpCoordinates(pump.data)
   } else {
     colors <- snowColors()
-
-    pump.coordinates <- paste0(cholera::ortho.proj.pump$x.proj, "-",
-                               cholera::ortho.proj.pump$y.proj)
-    names(pump.coordinates) <- paste0("p", seq_along(pump.coordinates))
-
-    pump.data <- cholera::ortho.proj.pump
-    pump.segments <- pump.data$road.segment
-
-    mat <- matrix(0, ncol = ncol(road.segments), nrow = 2 *
-      length(pump.segments))
-    road.pump.data <- data.frame(mat)
-    start.pt <- seq(1, nrow(road.pump.data), 2)
-    end.pt <- seq(2, nrow(road.pump.data), 2)
-
-    for (i in seq_along(pump.segments)) {
-      road.data <- road.segments[road.segments$id == pump.segments[i], ]
-      pump.coords <- pump.data[pump.data$road.segment == pump.segments[i],
-        c("x.proj", "y.proj")]
-
-      temp <- road.data[, names(road.data) %in% c("x1", "y1") == FALSE]
-      temp <- cbind(temp[, c("street", "n")],
-                    pump.coords,
-                    temp[, c("id", "name", "x2", "y2")])
-
-      names(temp)[names(temp) %in% c("x.proj", "y.proj")] <- c("x1", "y1")
-      road.data[, c("x2", "y2")] <- pump.coords
-      temp <- rbind(road.data, temp)
-      temp$id <- paste0(road.data$id, letters[seq_len(nrow(temp))])
-      road.pump.data[start.pt[i]:end.pt[i], ] <- temp
-    }
-
-    names(road.pump.data) <- names(road.segments)
-
-    road.segments <- road.segments[road.segments$id %in%
-      pump.segments == FALSE, ]
-    road.segments <- rbind(road.segments, road.pump.data)
-    order.id <- order(road.segments$street, road.segments$id)
-    road.segments <- road.segments[order.id, ]
-    road.segments$node1 <- paste0(road.segments$x1, "-", road.segments$y1)
-    road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
-    road.segments$d <- sqrt((road.segments$x1 - road.segments$x2)^2 +
-                            (road.segments$y1 - road.segments$y2)^2)
+    pump.data <- pumpDataSelect()
+    road.segments <- addSegmentLength(road.segments, pump.data)
+    pump.coordinates <- extractPumpCoordinates(pump.data)
   }
 
   if (is.null(pump.select)) {
@@ -410,4 +332,51 @@ caseNetwork <- function(x) {
 numericNodeCoordinates <- function(x) {
   nodes <- do.call(rbind, (strsplit(x, "-")))
   data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
+}
+
+addSegmentLength <- function(road.segments, pump.data) {
+  pump.segments <- pump.data$road.segment
+
+  mat <- matrix(0, ncol = ncol(road.segments), nrow = 2 * length(pump.segments))
+  road.pump.data <- data.frame(mat)
+  start.pt <- seq(1, nrow(road.pump.data), 2)
+  end.pt <- seq(2, nrow(road.pump.data), 2)
+
+  for (i in seq_along(pump.segments)) {
+    road.data <- road.segments[road.segments$id == pump.segments[i], ]
+    pump.coords <- pump.data[pump.data$road.segment == pump.segments[i],
+      c("x.proj", "y.proj")]
+    temp <- road.data[, names(road.data) %in% c("x1", "y1") == FALSE]
+    temp <- cbind(temp[, c("street", "n")], pump.coords,
+      temp[, c("id", "name", "x2", "y2")])
+    names(temp)[names(temp) %in% c("x.proj", "y.proj")] <- c("x1", "y1")
+    road.data[, c("x2", "y2")] <- pump.coords
+    temp <- rbind(road.data, temp)
+    temp$id <- paste0(road.data$id, letters[seq_len(nrow(temp))])
+    road.pump.data[start.pt[i]:end.pt[i], ] <- temp
+  }
+
+  names(road.pump.data) <- names(road.segments)
+
+  out <- road.segments[road.segments$id %in% pump.segments == FALSE, ]
+  out <- rbind(out, road.pump.data)
+  order.id <- order(out$street, out$id)
+  out <- out[order.id, ]
+  out$node1 <- paste0(out$x1, "-", out$y1)
+  out$node2 <- paste0(out$x2, "-", out$y2)
+  out$d <- sqrt((out$x1 - out$x2)^2 + (out$y1 - out$y2)^2)
+  out
+}
+
+pumpDataSelect <- function(vestry = FALSE) {
+  if (vestry) {
+    cholera::ortho.proj.pump.vestry
+  } else {
+    cholera::ortho.proj.pump
+  }
+}
+
+extractPumpCoordinates <- function(pump.data) {
+  pump.coordinates <- paste0(pump.data$x.proj, "-", pump.data$y.proj)
+  stats::setNames(pump.coordinates, paste0("p", seq_along(pump.coordinates)))
 }
