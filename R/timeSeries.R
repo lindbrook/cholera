@@ -68,8 +68,10 @@ timeSeries <- function(vestry = FALSE) {
 #' @param pump.handle Logical. Indicate date of removal of Broad Street pump handle.
 #' @param ... Additional plotting parameters.
 #' @seealso \code{\link{timeSeries}}
+#' @export
 #' @examples
-#' # plot(time.series.snow)
+#' plot(time.series.snow)
+
 
 plot.time.series <- function(x, statistic = "fatal.attacks",
   pump.handle = TRUE, ...) {

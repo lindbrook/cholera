@@ -20,7 +20,7 @@
 Plot aggregate fatality data and indicates the date of the removal of the handle of the Broad Street pump.
 }
 \examples{
-# plot(time.series.snow)
+plot(time.series.snow)
 }
 \seealso{
 \code{\link{timeSeries}}
