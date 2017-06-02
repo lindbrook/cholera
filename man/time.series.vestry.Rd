@@ -4,7 +4,7 @@
 \name{time.series.vestry}
 \alias{time.series.vestry}
 \title{Vestry Report Time Series Data.}
-\format{A data frame with 61 observations and 3 variables.
+\format{An R list of class "time.series" with two elements: "source", which is "vestry", and "data", a data frame with 61 observations and 3 variables.
 \describe{
   \item{\code{date}}{calendar date}
   \item{\code{fatal.attacks}}{fatal attacks}
@@ -17,7 +17,7 @@ time.series.vestry
 Time series of recorded fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle from the Broad Street pump on 08 September 1854.
 }
 \seealso{
-\code{\link{plotTimeSeries}},
+\code{\link{plot.time.series}},
 \link{time.series.snow},
 \code{vignette}("time.series")
 }

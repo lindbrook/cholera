@@ -304,14 +304,14 @@
 #'
 #' Time series of recorded fatalities from Vestry Report Appendix B. Useful for studying the effect of removing the handle from the Broad Street pump on 08 September 1854.
 #'
-#' @format A data frame with 61 observations and 3 variables.
+#' @format An R list of class "time.series" with two elements: "source", which is "vestry", and "data", a data frame with 61 observations and 3 variables.
 #' \describe{
 #'   \item{\code{date}}{calendar date}
 #'   \item{\code{fatal.attacks}}{fatal attacks}
 #'   \item{\code{deaths}}{deaths}
 #' }
 #' @seealso
-#' \code{\link{plotTimeSeries}},
+#' \code{\link{plot.time.series}},
 #' \link{time.series.snow},
 #' \code{vignette}("time.series")
 #'
@@ -322,14 +322,14 @@
 #'
 #' Time series of recorded fatalities from Snow's contribution to the Vestry Report (p. 117). Useful for studying the effect of removing the handle from the Broad Street pump on 08 September 1854.
 #'
-#' @format A data frame with 43 observations and 3 variables.
+#' @format An R list of class "time.series" with two elements: "source", which is "snow", and "data", data frame with 43 observations and 3 variables.
 #' \describe{
 #'   \item{\code{date}}{calendar date}
 #'   \item{\code{fatal.attacks}}{fatal attacks}
 #'   \item{\code{deaths}}{daily deaths}
 #' }
 #' @seealso
-#' \code{\link{plotTimeSeries}},
+#' \code{\link{plot.time.series}},
 #' \link{time.series.vestry},
 #' \code{vignette}("time.series")
 #'
