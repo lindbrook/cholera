@@ -8,9 +8,9 @@
   pump.handle = TRUE, ...)
 }
 \arguments{
-\item{x}{An object of class "time.series": \code{\link[cholera]{time.series.snow}} or \code{\link[cholera]{time.series.vestry}}.}
+\item{x}{An object of class "time.series" from timeSeries().}
 
-\item{statistic}{Character. Fatality measure: either "fatal.attacks" (default) or "deaths".}
+\item{statistic}{Character. Fatality measure: either "fatal.attacks", which is the default, or "deaths".}
 
 \item{pump.handle}{Logical. Indicate date of removal of Broad Street pump handle.}
 
@@ -20,7 +20,8 @@
 Plot aggregate fatality data and indicates the date of the removal of the handle of the Broad Street pump.
 }
 \examples{
-plot(time.series.snow)
+plot(timeSeries())
+plot(timeSeries(), statistic = "deaths")
 }
 \seealso{
 \code{\link{timeSeries}}

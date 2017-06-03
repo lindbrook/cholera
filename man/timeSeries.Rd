@@ -7,20 +7,20 @@
 timeSeries(vestry = FALSE)
 }
 \arguments{
-\item{vestry}{Logical. TRUE returns the data from the Vestry committee (Appendix B). FALSE (default) returns John Snow's contribution to the report (p.117).}
+\item{vestry}{Logical. TRUE returns the data from the Vestry committee (Appendix B, p. 175). FALSE (default) returns John Snow's contribution to the report (p.117).}
 }
 \value{
 A R list with two objects: "data" and "source" ("snow" or "vestry").
 \itemize{
   \item{\code{date}: Calendar date.}
-  \item{\code{fatal.attacks}: measure of fatality.}
   \item{\code{deaths}: measure of fatality.}
+  \item{\code{fatal.attacks}: measure of fatality.}
 }
 }
 \description{
 For use in integrating pumps and cases into road network needed to compute walking neighbohoods.
 }
 \section{Note}{
- This function documents the code that generates \code{\link[cholera]{time.series.snow}} and \code{\link[cholera]{time.series.vestry}}.
+ the "snow" data appears on p. 117 of the report; the "vestry" data appear in Appendix B on p.175.
 }
 
