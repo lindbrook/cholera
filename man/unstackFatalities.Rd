@@ -12,7 +12,7 @@ unstackFatalities(multi.core = FALSE, compute = FALSE,
 
 \item{compute}{Logical. TRUE computes data. FALSE uses pre-computed data.}
 
-\item{fatalities}{Corrected fatalies data from cholera::fixFatalities(). For original data, use HistData::Snow.deaths.}
+\item{fatalities}{Corrected fatalities data from cholera::fixFatalities(). For original data, use HistData::Snow.deaths.}
 }
 \value{
 An R list that includes anchor.case, fatalities.address, fatalities.unstacked and ortho.proj.

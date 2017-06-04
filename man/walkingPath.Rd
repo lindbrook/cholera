@@ -20,7 +20,7 @@ walkingPath(x, observed = TRUE, zoom = FALSE, radius = 0.5,
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
-\item{pump.select}{Numeric. Default is NULL and all pumps are considred. Ortherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.}
+\item{pump.select}{Numeric. Default is NULL and all pumps are considered. Otherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.}
 
 \item{unit}{Character. Default is NULL, which returns the graph's unit scale. "yard" returns the approximate distance in yards. "meter" returns the approximate distance in meters. Either implies "weighted" is TRUE.}
 }

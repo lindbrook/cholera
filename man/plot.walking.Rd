@@ -7,7 +7,7 @@
 \method{plot}{walking}(x, streets = TRUE, observed = TRUE, ...)
 }
 \arguments{
-\item{x}{An objectect of class "walking" created by neighborhoodWalking().}
+\item{x}{An object of class "walking" created by neighborhoodWalking().}
 
 \item{streets}{Logical. TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods (area).}
 

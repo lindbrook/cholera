@@ -7,7 +7,7 @@
 #' \itemize{
 #' \item Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
 #' \item "Unstacks" the data in two ways to improve analysis and visualization.
-#' \item Computes pump neighborhoods based on Voronoi tesselation and walking distance.
+#' \item Computes pump neighborhoods based on Voronoi tessellation and walking distance.
 #' \item Adds the ability to overlay graphical features like kernel density, Voronoi diagrams, and notable landmarks (the plague pit, the Lion Brewery, etc.).
 #' \item Includes a variety of helper functions to find and locate cases, roads, pumps and walking paths.
 #' \item Appends street names to roads data.

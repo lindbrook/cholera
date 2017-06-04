@@ -236,7 +236,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 #'
-#' @param x An objectect of class "walking" created by neighborhoodWalking().
+#' @param x An object of class "walking" created by neighborhoodWalking().
 #' @param streets Logical. TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods (area).
 #' @param observed Logical. TRUE uses observed cases. FALSE uses "regular" simulated cases.
 #' @param ... Additional plotting parameters.

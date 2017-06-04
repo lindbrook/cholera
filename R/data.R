@@ -74,7 +74,7 @@
 #' @docType data
 "fatalities.address"
 
-#' "Unstacked" amended cholera fatalities data with fataltiy as unit of observation.
+#' "Unstacked" amended cholera fatalities data with fatality as unit of observation.
 #'
 #' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinate of the case at the base of a stack, and assigns the base case's coordinates to all cases in the stack.
 #'
@@ -244,7 +244,7 @@
 #' @format A data frame with 657 observations and 7 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
 #' \describe{
 #'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
-#'   \item{\code{id}}{character segement ID}
+#'   \item{\code{id}}{character segment ID}
 #'   \item{\code{name}}{road name}
 #'   \item{\code{x1}}{x-coordinate of first endpoint}
 #'   \item{\code{y1}}{y-coordinate of first endpoint}

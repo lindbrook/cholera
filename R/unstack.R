@@ -2,7 +2,7 @@
 #'
 #' Fixes two apparent coding errors using three misplaced cases in Dodson and Tobler's data.
 #' @seealso \code{vignette("duplicate.missing.cases")}
-#' @return An R dataframe.
+#' @return An R data frame.
 #' @export
 
 fixFatalities <- function() {
@@ -17,7 +17,7 @@ fixFatalities <- function() {
 #'
 #' Unstacks fatalities data by 1) assigning the coordinates of the base case to all cases in a stack and 2) setting the base case as an "address" and making the number of fatalities an attribute.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
-#' @param fatalities Corrected fatalies data from cholera::fixFatalities(). For original data, use HistData::Snow.deaths.
+#' @param fatalities Corrected fatalities data from cholera::fixFatalities(). For original data, use HistData::Snow.deaths.
 #' @param compute Logical. TRUE computes data. FALSE uses pre-computed data.
 #' @seealso \code{vignette("unstacking.fatalities")}
 #' @return An R list that includes anchor.case, fatalities.address, fatalities.unstacked and ortho.proj.
@@ -122,7 +122,7 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
         sel <- which.min(out$ortho.dist)
         out[sel, ]
       } else {
-        out[1, ] # all candidate roads are NA so arbitrarily choose the first obs.
+        out[1, ] # all candidate roads are NA; arbitrarily choose first obs.
       }
     }, mc.cores = cores)
 
@@ -261,7 +261,8 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     single.obs <- road.incidence[road.incidence$count == 1, ]
     single.address <- lapply(single.obs$id, function(i) {
-      data.frame(id = i, case = ortho.proj[ortho.proj$road.segment == i, "case"])
+      data.frame(id = i, 
+                 case = ortho.proj[ortho.proj$road.segment == i, "case"])
     })
 
     cutpoint <- 0.05
@@ -351,7 +352,8 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
     single.unstacked$multiple.obs.seg <- "No"
 
     unstacked <- rbind(multiple.unstacked, single.unstacked)
-    unstacked <- merge(unstacked, fatalities, by.x = "anchor.case", by.y = "case")
+    unstacked <- merge(unstacked, fatalities, by.x = "anchor.case", 
+      by.y = "case")
 
     fatalities.unstacked <- unstacked[, c("case", "x", "y")]
     fatalities.unstacked <-

@@ -7,7 +7,7 @@
 \method{plot}{voronoi}(x, ...)
 }
 \arguments{
-\item{x}{An objectect of class "voronoi" created by neighborhoodVoronoi().}
+\item{x}{An object of class "voronoi" created by neighborhoodVoronoi().}
 
 \item{...}{Additional plotting parameters.}
 }

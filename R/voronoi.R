@@ -156,7 +156,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 
 #' Plot Voronoi neighborhoods.
 #'
-#' @param x An objectect of class "voronoi" created by neighborhoodVoronoi().
+#' @param x An object of class "voronoi" created by neighborhoodVoronoi().
 #' @param ... Additional plotting parameters.
 #' @return A base R graph.
 #' @seealso

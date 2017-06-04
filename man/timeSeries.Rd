@@ -18,7 +18,7 @@ A R list with two objects: "data" and "source" ("snow" or "vestry").
 }
 }
 \description{
-For use in integrating pumps and cases into road network needed to compute walking neighbohoods.
+For use in integrating pumps and cases into road network needed to compute walking neighborhoods.
 }
 \section{Note}{
  the "snow" data appears on p. 117 of the report; the "vestry" data appear in Appendix B on p.175.
