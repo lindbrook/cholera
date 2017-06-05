@@ -17,7 +17,7 @@ pumpData(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE)
 An R dataframe.
 }
 \description{
-Returns the Dodson and Tobler coordinates for the original thirteen pumps, appended with name of nearest road. Adds "approximate" locations for the fourteenth pump and the relocated Broad Street pump  that areincluded in Snow's second version of the pump in the Vestry report.
+Returns the Dodson and Tobler coordinates for the original thirteen pumps, appended with name of nearest road. Adds "approximate" locations for the fourteenth pump and the relocated Broad Street pump that are included in Snow's second version of the pump in the Vestry report.
 }
 \section{Notes}{
  This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.

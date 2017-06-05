@@ -7,7 +7,7 @@
 segmentLocator(id, zoom = TRUE, radius = 0.5)
 }
 \arguments{
-\item{id}{Character. A concatenation of a street's numberic ID, a whole number between 1 and 528, and a second number to identify the segment.}
+\item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
 
 \item{zoom}{Logical.}
 
