@@ -2,7 +2,7 @@
 #'
 #' Uses KernSmooth::bkde2D().
 #' @param bandwidth Numeric. Bandwidth for kernel density estimation.
-#' @param color Character. Color of cotour lines.
+#' @param color Character. Color of contour lines.
 #' @param line.type Character. Line type for contour lines.
 #' @param data Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "fatality" uses \code{fatalities}.
 #' @param ... Additional plotting parameters.
