@@ -51,7 +51,7 @@ In his map of the 1854 cholera outbreak in London, John Snow uses stacks of bars
 
 ![](msu-snows-mapB.jpg)
 
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and pump was assigned a unique x-y coordinate. Each road was translated into series of straight line segments, defined by their endpoints. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. The data are plotted below:
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and pump was assigned a unique x-y coordinate. Each road was translated into series of straight line segments, defined by their endpoints. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's 'HistData' package. The data are plotted below:
 
 ```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
 roads.list <- split(roads[, c("x", "y")], roads$street)

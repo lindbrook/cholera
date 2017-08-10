@@ -20,7 +20,7 @@ John Snow's map of the 1854 cholera outbreak in London is a canonical example of
 
 ![](msu-snows-mapB.jpg)
 
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's _HistData_ R package. Those data are plotted below:
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's 'HistData' package. Those data are plotted below:
 
 ```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
 street.list <- split(Snow.streets[, c("x", "y")], Snow.streets$street)
