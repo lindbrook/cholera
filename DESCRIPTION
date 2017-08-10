@@ -8,9 +8,9 @@ Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
 Description: Amends errors, augments data and aids analysis of John Snow's map
     of the 1854 London cholera outbreak. The original data come from
     Rusty Dodson and Waldo Tobler's 1992 digitization of Snow's map. Those
-    data, http://www.ncgia.ucsb.edu/pubs/snow/snow.html, are no longer
+    data, <http://www.ncgia.ucsb.edu/pubs/snow/snow.html>, are no longer
     available. However, they have been preserved in the HistData R package,
-    https://CRAN.R-project.org/package=HistData.
+    <https://CRAN.R-project.org/package=HistData>.
 URL: https://github.com/lindbrook/cholera
 License: GPL-3
 LazyData: true
