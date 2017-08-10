@@ -8,9 +8,9 @@ addKernelDensity(bandwidth = 0.5, color = "black", line.type = "solid",
   data = NULL, ...)
 }
 \arguments{
-\item{bandwidth}{Numeric. Bandwidth for kernel density esimation.}
+\item{bandwidth}{Numeric. Bandwidth for kernel density estimation.}
 
-\item{color}{Character. Color of cotour lines.}
+\item{color}{Character. Color of contour lines.}
 
 \item{line.type}{Character. Line type for contour lines.}
 
