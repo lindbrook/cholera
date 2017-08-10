@@ -48,7 +48,7 @@ To explore the data, you can consider a variety of scenarios by computing neighb
 
 ### getting started
 
-To install "cholera", use the expression below (you may need to install the "devtools" package).
+To install 'cholera', use the expression below (you may need to install the 'devtools' package).
 
 ``` r
 # install.packages("devtools")
