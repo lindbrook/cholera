@@ -48,9 +48,16 @@ To explore the data, you can consider a variety of scenarios by computing neighb
 
 ### getting started
 
-To install 'cholera', use the expression below (you may need to install the 'devtools' package).
+To install 'cholera', use the expression below:
 
 ``` r
+install.packages("cholera")
+```
+
+To install the current/development version from GitHub:
+
+``` r
+# Note that you may need to install the 'devtools' package
 # install.packages("devtools")
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
