@@ -61,7 +61,7 @@ To explore the data, you can consider a variety of scenarios by computing neighb
 
 ### getting started
 
-To install 'cholera', use the expression below:
+To install 'cholera' from CRAN:
 
 ```{r, eval = FALSE}
 install.packages("cholera")
@@ -75,7 +75,17 @@ To install the current/development version from GitHub:
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 
-Besides the help pages, the vignettes include detailed discussion about the data and functions:
+Read the package's vignettes. They include detailed discussions about the data, the functions and the methods used to "fix" the data and to compute walking distances and neighborhoods.
+
+They are available online:
+
+[Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)  
+["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.fatalities.html)  
+[Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)  
+[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)  
+[Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)
+
+And within the package itself:
 
 ```{r, eval = FALSE}
 vignette("duplicate.missing.cases")
