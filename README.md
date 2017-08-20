@@ -14,7 +14,7 @@ However, while the map shows a concentration of fatalities around the Broad Stre
 
 ### pump neighborhoods
 
-This annotation outlines the Broad Street *pump neighborhood*, the residences Snow claims are within "close" walking distance to the pump. The notion of a pump neighborhood is important because it provides a specific (testable) prediction about where we should expect to find cases: if water is cholera's mode of transmission and and if the water pumps located on the street are the primary source of drinking water, then most, if not all, fatalities should be found *within* the neighborhood. To put it simply, the disease should stop at the neighborhood's borders. In this way, pump neighborhoods can help distinguish waterborne from airborne patterns of disease transmission.
+This annotation outlines the Broad Street *pump neighborhood*, the residences Snow claims are within "close" walking distance to the pump. The notion of a pump neighborhood is important because it provides a specific (testable) prediction about where we should expect to find cases: if water is cholera's mode of transmission and if water pumps located on the street are the primary source of drinking water, then most, if not all, fatalities should be found *within* a neighborhood. To put it simply, the disease should stop at the neighborhood's borders. In this way, pump neighborhoods can help distinguish waterborne from airborne patterns of disease transmission.
 
 To that end, this package builds on Snow's work by offering systematic ways to compute pump neighborhoods. Doing so not only provides a way to replicate and validate Snow's efforts, it also allows people to explore and investigate the data for themselves.
 
@@ -44,7 +44,7 @@ To explore the data, you can consider a variety of scenarios by computing neighb
 -   Includes a variety of functions to find and locate cases, roads, pumps and walking paths.
 -   Appends actual street names to the roads data.
 -   Includes the revised pump data used in the second version of Snow's map from the Vestry report. This includes the corrected location of the Broad Street pump.
--   Adds two different aggregate time series fatalities data from the Vestry report.
+-   Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
 
 ### getting started
 
