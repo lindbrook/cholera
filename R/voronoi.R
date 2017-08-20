@@ -13,7 +13,7 @@
 #'   \item{\code{x.rng}: range of x for plot.}
 #'   \item{\code{y.rng}: range of y for plot.}
 #'   \item{\code{select.string}: description of "pump.select" for plot title.}
-#'   \item{\code{expected.data}:  expected neighborhood fatality counts, based on Voronoi cell area.}
+#'   \item{\code{expected.data}: expected neighborhood fatality counts, based on Voronoi cell area.}
 #'   \item{\code{coordinates}: polygon vertices of Voronoi cells.}
 #'   \item{\code{statistic.data}: observed neighborhood fatality counts.}
 #'   \item{\code{pump.select}: "pump.select" from neighborhoodVoronoi().}

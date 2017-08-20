@@ -12,7 +12,7 @@
 #' \item Includes a variety of helper functions to find and locate cases, roads, pumps and walking paths.
 #' \item Appends street names to roads data.
 #' \item Includes the revised pump data used in the second version of Snow's map.
-#' \item Adds two different aggregate time series fatalities data from the Vestry report.
+#' \item Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
 #' }
 #' To learn more, start with the vignettes:
 #'
