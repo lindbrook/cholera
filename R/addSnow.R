@@ -25,7 +25,7 @@ addSnow <- function(streets = TRUE, color = "dodgerblue", alpha.st = 0.75,
     snow <- sysdata[["snow"]]$pump.seg$p7
     for (i in seq_along(snow$id)) {
       segments(snow[i, "x1"], snow[i, "y1"], snow[i, "x2"], snow[i, "y2"],
-        lwd = 6, col = scales::alpha(color, alpha.st))
+        lwd = 6, col = grDevices::adjustcolor(color, alpha.st))
     }
   } else {
     snow <- sysdata[["snow"]]$pump.seg$p7
@@ -48,10 +48,10 @@ addSnow <- function(streets = TRUE, color = "dodgerblue", alpha.st = 0.75,
     })
 
     points(cholera::regular.cases[unlist(snow.trim), ], pch = 15, cex = 1,
-      col = scales::alpha(color, alpha.area))
+      col = grDevices::adjustcolor(color, alpha.area))
     sel <- cholera::sim.ortho.proj$road.segment %in% whole.seg
     snow.whole <- cholera::sim.ortho.proj[sel, "case"]
     points(cholera::regular.cases[snow.whole, ], pch = 15, cex = 1,
-      col = scales::alpha(color, alpha.area))
+      col = grDevices::adjustcolor(color, alpha.area))
   }
 }

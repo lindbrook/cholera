@@ -284,7 +284,7 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
   observed.pump <- vapply(x$pump.case, function(p) length(p) != 0, logical(1L))
   observed.pump <- names(observed.pump[observed.pump])
 
-  plot(cholera::fatalities[, c("x", "y")], xlim = x.range, ylim =  y.range,
+  plot(cholera::fatalities[, c("x", "y")], xlim = x.range, ylim = y.range,
     pch = NA, asp = 1)
 
   if (streets) {
@@ -438,12 +438,12 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
       if (x$vestry) {
         invisible(lapply(seq_along(cholera::pumps.vestry$id), function(i) {
           points(cholera::regular.cases[x$sim.pump.case[[i]], ],
-            col = scales::alpha(snow.colors[i], 0.33), pch = 15)
+            col = grDevices::adjustcolor(snow.colors[i], 1/3), pch = 15)
         }))
       } else {
         invisible(lapply(seq_along(cholera::pumps$id), function(i) {
           points(cholera::regular.cases[x$sim.pump.case[[i]], ],
-            col = scales::alpha(snow.colors[i], 0.33), pch = 15)
+            col = grDevices::adjustcolor(snow.colors[i], 1/3), pch = 15)
         }))
       }
 
