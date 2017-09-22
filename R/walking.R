@@ -835,8 +835,8 @@ trimPaths <- function(expected = FALSE, pump.road.segments,
       %in% falconberg.id, "case"]
 
     if (all(pump.names %in% "p2" == FALSE)) {
-      # if pump 2, on Adam and Eve Court, is not included, siumuated cases
-      # located on that street cannot reach any other pump.
+      # if pump 2, on Adam and Eve Court, is not included, the simulated cases
+      # on that street cannot reach any other pump.
       adam.eve <- c(4536, 4537, 4538, 4539, 4608, 4609, 4610, 4611, 4612, 4681,
         4682, 4683, 4684, 4753, 4754, 4755, 4756, 4757, 4827, 4828, 4829, 4830,
         4900, 4901, 4902, 4955, 4956)
