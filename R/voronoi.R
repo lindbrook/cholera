@@ -171,7 +171,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 
 plot.voronoi <- function(x, ...) {
   if (class(x) != "voronoi") {
-    stop('Input objectect\'s class needs to be "voronoi".')
+    stop('Input object\'s class needs to be "voronoi".')
   }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
