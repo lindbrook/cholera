@@ -247,7 +247,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 
 plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
   if (class(x) != "walking") {
-    stop('Input object\'s class needs to be "walking".')
+    stop('"x"\'s class needs to be "walking".')
   }
 
   if (is.null(x$pump.select)) {
