@@ -18,7 +18,7 @@ walkingDistance(x, observed = TRUE, weighted = TRUE, vestry = FALSE,
 
 \item{pump.select}{Numeric. Default is NULL and all pumps are considered. Otherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.}
 
-\item{unit}{Character. Default is NULL, which returns the graph's unit scale. "yard" returns the approximate distance in yards. "meter" returns the approximate distance in meters. Either implies "weighted" is TRUE.}
+\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE.}
 }
 \value{
 A base R data frame.
