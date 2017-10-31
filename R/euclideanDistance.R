@@ -21,14 +21,14 @@ euclideanDistance <- function(case, pump.select, vestry = FALSE, unit = NULL) {
   }
 
   if (vestry) {
-    if (case %in% 1:14 == FALSE) {
-     stop('If "vestry = TRUE", "case" must be between 1 and 14.')
+    if (pump.select %in% 1:14 == FALSE) {
+     stop('If "vestry = TRUE", "pump.select" must be between 1 and 14.')
    } else {
      p.data <- cholera::pumps.vestry
    }
   } else {
-    if (case %in% 1:13 == FALSE) {
-     stop('If "vestry = FALSE", "case" must be between 1 and 13.')
+    if (pump.select %in% 1:13 == FALSE) {
+     stop('If "vestry = FALSE", "pump.select" must be between 1 and 13.')
    } else {
      p.data <- cholera::pumps
    }
