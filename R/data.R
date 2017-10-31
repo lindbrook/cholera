@@ -210,7 +210,7 @@
 
 #' Vestry report pump data.
 #'
-#' From the map Snow includes in the Vestry Report, this data set adds the pump at Hanover Square and relocates the Broad Street pump.
+#' These data include the fourteenth pump, at Hanover Square, and the "corrected" location of the Broad Street pump that Snow includes in the second version of his map in the Vestry report.
 #'
 #' @format A data frame with 14 observations and 4 variables.
 #' \describe{
