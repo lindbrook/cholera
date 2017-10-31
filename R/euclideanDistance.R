@@ -45,13 +45,19 @@ euclideanDistance <- function(case, pump.select, vestry = FALSE, unit = NULL) {
   d <- c(stats::dist(rbind(p.data[pump.select, c("x", "y")], c.data)))
 
   if (is.null(unit)) {
-    data.frame(case = case, pump = pump.select,
-               pump.name = p.data[pump.select, "street"], distance = d)
+    data.frame(case = case,
+               pump = pump.select,
+               pump.name = p.data[pump.select, "street"],
+               distance = d)
   } else if (unit == "yard") {
-    data.frame(case = case, pump = pump.select,
-               pump.name = p.data[pump.select, "street"],distance = d * 177 / 3)
+    data.frame(case = case,
+               pump = pump.select,
+               pump.name = p.data[pump.select, "street"],
+               distance = d * 177 / 3)
   } else if (unit == "meter") {
-    data.frame(case = case, pump = pump.select,
-               pump.name = p.data[pump.select, "street"],distance = d * 54)
+    data.frame(case = case,
+               pump = pump.select,
+               pump.name = p.data[pump.select, "street"],
+               distance = d * 54)
   }
 }
