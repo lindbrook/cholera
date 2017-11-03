@@ -152,18 +152,19 @@ walkingDistance <- function(x, observed = TRUE, weighted = TRUE,
   if (is.null(unit)) {
     out <- data.frame(case = x, pump = pump.names[id], distance = d[id])
     rownames(out) <- NULL
-    out
   } else if (unit == "yard") {
     out <- data.frame(case = x, pump = pump.names[id],
       distance = round(d[id] * 177 / 3, 1))
     rownames(out) <- NULL
-    out
   } else if (unit == "meter") {
     out <- data.frame(case = x, pump = pump.names[id],
       distance = round(d[id] * 54, 1))
     rownames(out) <- NULL
-    out
   }
+
+  out$pump <- as.numeric(unlist(strsplit(as.character(out$pump), "p"))[2])
+  out$pump.name <- cholera::pumps.vestry[out$pump, "street"]
+  out[, c("case", "distance", "pump", "pump.name")]
 }
 
 caseSelector <- function(x, observed = TRUE) {
