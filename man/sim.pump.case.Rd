@@ -3,7 +3,7 @@
 \docType{data}
 \name{sim.pump.case}
 \alias{sim.pump.case}
-\title{List of "simulated" fatalities grouped by pump neighborhood.}
+\title{List of "simulated" fatalities grouped by walking-distance pump neighborhood.}
 \format{A list 4972 IDs spread over 13 vectors.
 \describe{
  \item{\code{sim.pump.case}}{numerical ID}
@@ -12,7 +12,7 @@
 sim.pump.case
 }
 \description{
-List of "simulated" fatalities grouped by pump neighborhood.
+List of "simulated" fatalities grouped by walking-distance pump neighborhood.
 }
 \section{Notes}{
  \code{\link{neighborhoodWalking}} documents the code for these data.

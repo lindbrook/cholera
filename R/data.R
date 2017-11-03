@@ -164,7 +164,7 @@
 #' @docType data
 "plague.pit"
 
-#' List of the observed fatality "addresses" grouped by pump neighborhood.
+#' List of the observed fatality "addresses" grouped by walking-distance pump neighborhood.
 #'
 #' @format A list 321 IDs spread over 13 vectors.
 #' \describe{
@@ -178,7 +178,7 @@
 #' @docType data
 "pump.case"
 
-#' List of "simulated" fatalities grouped by pump neighborhood.
+#' List of "simulated" fatalities grouped by walking-distance pump neighborhood.
 #'
 #' @format A list 4972 IDs spread over 13 vectors.
 #' \describe{
