@@ -2,14 +2,14 @@
 % Please edit documentation in R/euclideanDistance.R
 \name{euclideanDistance}
 \alias{euclideanDistance}
-\title{Compute Euclidean distance between a case and a pump.}
+\title{Compute Euclidean distance to nearest pump or selected pump.}
 \usage{
-euclideanDistance(case, pump.select, vestry = FALSE, unit = NULL)
+euclideanDistance(case, pump.select = NULL, vestry = FALSE, unit = NULL)
 }
 \arguments{
-\item{case}{Numeric or Integer. Case must be a whole number between 1 and 578. To compute distance, the function uses the coordinates of the case's "address" (i.e., the "anchor case").}
+\item{case}{Numeric or Integer. Case must be a whole number between 1 and 578. To compute distance, the function uses the coordinates of the case's "address" (i.e., its "anchor case").}
 
-\item{pump.select}{Numeric or Integer. 1 to 13 for "vestry = FALSE"; 1 to 14 for "vestry = TRUE".}
+\item{pump.select}{Numeric or Integer. 1 to 13 for "vestry = FALSE"; 1 to 14 for "vestry = TRUE". Defult is NULL: finds closest pump.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -19,10 +19,11 @@ euclideanDistance(case, pump.select, vestry = FALSE, unit = NULL)
 A base R data frame.
 }
 \description{
-Compute Euclidean distance between a case and a pump.
+Compute Euclidean distance to nearest pump or selected pump.
 }
 \examples{
-euclideanDistance(1, 7)
+euclideanDistance(1)
+euclideanDistance(1, 2)
 }
 \seealso{
 \code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}, \code{vignette("pump.neighborhoods")}
