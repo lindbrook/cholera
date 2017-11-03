@@ -24,3 +24,6 @@ Compute Euclidean distance between a case and a pump.
 \examples{
 euclideanDistance(1, 7)
 }
+\seealso{
+\code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}, \code{vignette("pump.neighborhoods")}
+}
