@@ -113,7 +113,7 @@
 
 #' Orthogonal projection of simulated "expected" cases onto road network.
 #'
-#' @format A data frame with 5 variable that records the position of the orthogonal projection of the 4993 cases onto the network of roads. Excluding isolates (Pump 2 at  Adam and Eve Court; Falconberg Court and Falconberg Mews), there are 4972 cases.
+#' @format A data frame with 5 variables that records the position of the orthogonal projection of the 4993 cases onto the network of roads. Excluding isolates (Pump 2 at  Adam and Eve Court; Falconberg Court and Falconberg Mews), there are 4972 cases.
 #' \describe{
 #'     \item{\code{road.segment}}{"address" road segment}
 #'     \item{\code{x.proj}}{x-coordinate}
@@ -127,7 +127,7 @@
 
 #' Orthogonal projection of 13 original pumps.
 #'
-#' @format A data frame with 5 variable that records the position of the orthogonal projection of the 13 original pumps onto the network of roads.
+#' @format A data frame with 5 variables that records the position of the orthogonal projection of the 13 original pumps onto the network of roads.
 #'  \describe{
 #'     \item{\code{road.segment}}{"address" road segment}
 #'     \item{\code{x.proj}}{x-coordinate}
@@ -141,7 +141,7 @@
 
 #' Orthogonal projection of the 14 pumps from the Vestry Report.
 #'
-#' @format A data frame with 5 variable that records the position of the orthogonal projection of the 14 pumps onto the network of roads.
+#' @format A data frame with 5 variables that records the position of the orthogonal projection of the 14 pumps onto the network of roads.
 #'  \describe{
 #'     \item{\code{road.segment}}{"address" road segment}
 #'     \item{\code{x.proj}}{x-coordinate}
