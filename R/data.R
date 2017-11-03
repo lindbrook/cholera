@@ -97,9 +97,22 @@
 #' @docType data
 "fatalities.unstacked"
 
+#' Walking distance for cases in pump neighborhoods.
+#'
+#' @format A data frame with 4 variables that records the walking distance between each of the 578 cases and its nearest pump.
+#'  \describe{
+#'     \item{\code{case}}{observed case: 1 through 578.}
+#'     \item{\code{distance}}{distance to pump in native map units.}
+#'     \item{\code{pump}}{numerical pump ID}
+#'     \item{\code{pump.name}}{pump name (street)}
+#'  }
+#' @section Notes: \code{\link{neighborhoodDistances}} documents the code for these data.
+#' @docType data
+"neighborhood.distances"
+
 #' Orthogonal projection of observed cases onto road network.
 #'
-#' @format A data frame with 5 variable that records the position of the orthogonal projection of the 578 cases onto the network of roads.
+#' @format A data frame with 5 variables that records the position of the orthogonal projection of the 578 cases onto the network of roads.
 #'  \describe{
 #'     \item{\code{road.segment}}{"address" road segment}
 #'     \item{\code{x.proj}}{x-coordinate}
