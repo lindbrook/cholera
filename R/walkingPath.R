@@ -2,13 +2,13 @@
 #'
 #' Plot shortest walking path from an observed or "simulated" case to the nearest selected pump(s).
 #' @param x Numeric or Integer. Observed cases must be a whole number between 1 and 578. With three exceptions, "Simulated" cases must be a whole number between 1 and 4993: 1) one case, 3334, does not have a valid orthogonal projector to any street; 2) the 20 cases that project onto Falconberg Court and Falconberg Mews (4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720) form an isolate that are "technically" disconnected from the road network and cannot reach any pump; 3) because Adam and Eve Court is also disconnected from the larger road network, the 27 cases that project onto that road can only reach pump 2, which lies on that road. This means that all other cases cannot reach pump 2.
-#' @param unit Character. Default is NULL, which returns the graph's unit scale. "yard" returns the approximate distance in yards. "meter" returns the approximate distance in meters. Either implies "weighted" is TRUE.
+#' @param pump.select Numeric. Default is NULL and all pumps are considered. Otherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.
 #' @param observed Logical. TRUE for observed cases; FALSE for "regular" simulated cases.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param weighted Logical. Shortest path weighted by road distance.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param pump.select Numeric. Default is NULL and all pumps are considered. Otherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.
+#' @param unit Character. Default is NULL, which returns the graph's unit scale. "yard" returns the approximate distance in yards. "meter" returns the approximate distance in meters. Either implies "weighted" is TRUE.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{fatalities}}, \code{\link{simulateFatalities}}, \code{vignette("pump.neighborhoods")}
 #' @import graphics
@@ -19,8 +19,8 @@
 #' walkingPath(1, pump.select = -7) # exclude pump 7 from consideration.
 #' walkingPath(1, pump.select = 6)  # path from case 1 to pump 6.
 
-walkingPath <- function(x, unit = NULL, observed = TRUE, zoom = FALSE,
-  radius = 0.5, weighted = TRUE, vestry = FALSE, pump.select = NULL) {
+walkingPath <- function(x, pump.select = NULL, observed = TRUE, zoom = FALSE,
+  radius = 0.5, weighted = TRUE, vestry = FALSE, unit = NULL) {
 
   if (observed) {
     if (x %in% 1:578 == FALSE) {
