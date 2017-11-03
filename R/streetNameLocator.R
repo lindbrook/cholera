@@ -5,6 +5,7 @@
 #' @param road.name Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. For "radius" <= 5, the anchor case number is plotted.
+#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
 #' @import graphics
@@ -15,8 +16,15 @@
 #' streetNameLocator("Cambridge Street", zoom = TRUE)
 #' streetNameLocator("Cambridge Street", zoom = TRUE, radius = 0)
 
-streetNameLocator <- function(road.name, zoom = FALSE, radius = 1) {
+streetNameLocator <- function(road.name, zoom = FALSE, radius = 1,
+  unit = NULL) {
+
   real.road.names <- unique(cholera::roads$name)
+
+  if (is.null(unit) == FALSE) {
+    if (unit %in% c("meter", "yard") == FALSE)
+      stop('If specified, "unit" must either be "meter" or "yard".')
+  }
 
   if (is.character(road.name) == FALSE) {
     stop("Road name must be a character string.")
@@ -47,7 +55,6 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 1) {
       col = "blue", pos = 1)
     invisible(lapply(roads.list[paste(selected.road)], lines, col = "red",
       lwd = 3))
-    title(main = name)
 
   } else if (zoom & radius <= 5) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
@@ -61,7 +68,6 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 1) {
     selected.road <- cholera::roads[cholera::roads$name == name, "street"]
     invisible(lapply(roads.list[paste(selected.road)], lines, col = "red",
       lwd = 3))
-    title(main = name)
 
   } else {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
@@ -73,8 +79,19 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 1) {
     selected.road <- cholera::roads[cholera::roads$name == name, "street"]
     invisible(lapply(roads.list[paste(selected.road)], lines, col = "red",
       lwd = 3))
-    title(main = name)
   }
+
+  street.length <- cholera::streetLength(name, unit)
+
+  if (is.null(unit)) {
+    subtitle <- paste(round(street.length, 2), "units")
+  } else if (unit == "meter") {
+    subtitle <- paste(round(street.length, 2), "meters")
+  } else if (unit == "yard") {
+    subtitle <- paste(round(street.length, 2), "yards")
+  }
+
+  title(main = name, sub = subtitle)
 }
 
 wordCase <- function(x) {
