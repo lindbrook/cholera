@@ -9,7 +9,7 @@ euclideanDistance(case, pump.select = NULL, vestry = FALSE, unit = NULL)
 \arguments{
 \item{case}{Numeric or Integer. Case must be a whole number between 1 and 578. To compute distance, the function uses the coordinates of the case's "address" (i.e., its "anchor case").}
 
-\item{pump.select}{Numeric or Integer. 1 to 13 for "vestry = FALSE"; 1 to 14 for "vestry = TRUE". Defult is NULL: finds closest pump.}
+\item{pump.select}{Numeric or Integer vector. For "vestry = FALSE", 1 >= |pump.select| <= 13. For "vestry = TRUE", 1 >= |pump.select| <= 14. Negative values are excluded from consideration. Default is NULL, which returns the closest pump.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -24,6 +24,7 @@ Compute Euclidean distance to nearest pump or selected pump.
 \examples{
 euclideanDistance(1)
 euclideanDistance(1, 2)
+euclideanDistance(1, -7)
 }
 \seealso{
 \code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}, \code{vignette("pump.neighborhoods")}
