@@ -1,8 +1,8 @@
 #' Compute the walking distance between a case and the nearest (selected) pump.
 #'
 #' Compute the shortest walking distance between an observed or "simulated" case and the nearest (selected) pump.
-#' @param x Numeric or Integer. Observed cases must be a whole number between 1 and 578. With three exceptions, "Simulated" cases must be a whole number between 1 and 4993: 1) one case, 3334, does not have a valid orthogonal projector to any street; 2) the 20 cases that project onto Falconberg Court and Falconberg Mews (4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720) form an isolate that are "technically" disconnected from the road network and cannot reach any pump; 3) because Adam and Eve Court is also disconnected from the larger road network, the 27 cases that project onto that road can only reach pump 2, which lies on that road. This means that all other cases cannot reach pump 2.
-#' @param pump.select Numeric. Default is NULL and all pumps are considered. Otherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.
+#' @param case Numeric or Integer. Observed cases must be a whole number between 1 and 578. With three exceptions, "Simulated" cases must be a whole number between 1 and 4993: 1) one case, 3334, does not have a valid orthogonal projector to any street; 2) the 20 cases that project onto Falconberg Court and Falconberg Mews (4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720) form an isolate that are "technically" disconnected from the road network and cannot reach any pump; 3) because Adam and Eve Court is also disconnected from the larger road network, the 27 cases that project onto that road can only reach pump 2, which lies on that road. This means that all other cases cannot reach pump 2.
+#' @param pump.select Numeric or Integer vector. For "vestry = FALSE", 1 >= |pump.select| <= 13. For "vestry = TRUE", 1 >= |pump.select| <= 14. Negative values are excluded from consideration. Default is NULL, which returns the closest pump.
 #' @param observed Logical. TRUE for observed cases; FALSE for "regular" simulated cases.
 #' @param weighted Logical. Shortest path weighted by road distance.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
@@ -16,12 +16,12 @@
 #' walkingDistance(1, pump.select = -7) # exclude pump 7 from consideration.
 #' walkingDistance(1, pump.select = 6)  # path from case 1 to pump 6.
 
-walkingDistance <- function(x, pump.select = NULL, observed = TRUE,
+walkingDistance <- function(case, pump.select = NULL, observed = TRUE,
   weighted = TRUE, vestry = FALSE, unit = NULL) {
 
   if (observed) {
-    if (x %in% 1:578 == FALSE) {
-     stop('With observed cases, x must be between 1 and 578.')
+    if (case %in% 1:578 == FALSE) {
+     stop('When observed = TRUE, "case" must be between 1 and 578.')
     }
   } else {
     # isolates
@@ -30,9 +30,9 @@ walkingDistance <- function(x, pump.select = NULL, observed = TRUE,
       4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720)
     excluded <- c(edge.case, falconberg)
 
-    if (x %in% (1:4993)[-excluded] == FALSE) {
-      msg1 <- "With simulated cases,"
-      msg2 <- "x must be a valid number between 1 and 4993."
+    if (case %in% (1:4993)[-excluded] == FALSE) {
+      msg1 <- "When observed = TRUE,"
+      msg2 <- '"case" must be a valid number between 1 and 4993.'
       stop(paste(msg1, msg2))
     }
   }
@@ -40,13 +40,13 @@ walkingDistance <- function(x, pump.select = NULL, observed = TRUE,
   if (vestry) {
     if (is.null(pump.select) == FALSE) {
       if (any(abs(pump.select) %in% 1:14 == FALSE)) {
-        stop('With "vestry = TRUE", "pump.select" must be between 1 and 14.')
+        stop('With "vestry = TRUE", 1 >= |pump.select| <= 14.')
       }
     }
   } else {
     if (is.null(pump.select) == FALSE ) {
       if (any(abs(pump.select) %in% 1:13 == FALSE)) {
-        stop('With "vestry = FALSE", "pump.select" must be between 1 and 13.')
+        stop('With "vestry = FALSE", 1 >= |pump.select| <= 13.')
       }
     }
   }
@@ -94,9 +94,9 @@ walkingDistance <- function(x, pump.select = NULL, observed = TRUE,
   ## --------------- Case Data --------------- ##
 
   if (observed == TRUE) {
-    case <- caseSelector(x)
+    case <- caseSelector(case)
   } else {
-    case <- caseSelector(x, FALSE)
+    case <- caseSelector(case, FALSE)
   }
 
   seg <- unlist(strsplit(road.segments$id, "a"))
@@ -150,14 +150,14 @@ walkingDistance <- function(x, pump.select = NULL, observed = TRUE,
   id <- which.min(d)
 
   if (is.null(unit)) {
-    out <- data.frame(case = x, pump = pump.names[id], distance = d[id])
+    out <- data.frame(case, pump = pump.names[id], distance = d[id])
     rownames(out) <- NULL
   } else if (unit == "yard") {
-    out <- data.frame(case = x, pump = pump.names[id],
+    out <- data.frame(case, pump = pump.names[id],
       distance = round(d[id] * 177 / 3, 1))
     rownames(out) <- NULL
   } else if (unit == "meter") {
-    out <- data.frame(case = x, pump = pump.names[id],
+    out <- data.frame(case, pump = pump.names[id],
       distance = round(d[id] * 54, 1))
     rownames(out) <- NULL
   }

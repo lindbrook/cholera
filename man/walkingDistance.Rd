@@ -4,13 +4,13 @@
 \alias{walkingDistance}
 \title{Compute the walking distance between a case and the nearest (selected) pump.}
 \usage{
-walkingDistance(x, pump.select = NULL, observed = TRUE, weighted = TRUE,
-  vestry = FALSE, unit = NULL)
+walkingDistance(case, pump.select = NULL, observed = TRUE,
+  weighted = TRUE, vestry = FALSE, unit = NULL)
 }
 \arguments{
-\item{x}{Numeric or Integer. Observed cases must be a whole number between 1 and 578. With three exceptions, "Simulated" cases must be a whole number between 1 and 4993: 1) one case, 3334, does not have a valid orthogonal projector to any street; 2) the 20 cases that project onto Falconberg Court and Falconberg Mews (4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720) form an isolate that are "technically" disconnected from the road network and cannot reach any pump; 3) because Adam and Eve Court is also disconnected from the larger road network, the 27 cases that project onto that road can only reach pump 2, which lies on that road. This means that all other cases cannot reach pump 2.}
+\item{case}{Numeric or Integer. Observed cases must be a whole number between 1 and 578. With three exceptions, "Simulated" cases must be a whole number between 1 and 4993: 1) one case, 3334, does not have a valid orthogonal projector to any street; 2) the 20 cases that project onto Falconberg Court and Falconberg Mews (4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720) form an isolate that are "technically" disconnected from the road network and cannot reach any pump; 3) because Adam and Eve Court is also disconnected from the larger road network, the 27 cases that project onto that road can only reach pump 2, which lies on that road. This means that all other cases cannot reach pump 2.}
 
-\item{pump.select}{Numeric. Default is NULL and all pumps are considered. Otherwise, selection is done by a vector of numeric IDs: 1 to 13 for \code{link{pumps}}; 1 to 14 for \code{\link{pumps.vestry}}.}
+\item{pump.select}{Numeric or Integer vector. For "vestry = FALSE", 1 >= |pump.select| <= 13. For "vestry = TRUE", 1 >= |pump.select| <= 14. Negative values are excluded from consideration. Default is NULL, which returns the closest pump.}
 
 \item{observed}{Logical. TRUE for observed cases; FALSE for "regular" simulated cases.}
 
