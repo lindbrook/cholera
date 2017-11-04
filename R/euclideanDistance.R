@@ -3,7 +3,7 @@
 #' @param case Numeric or Integer. Case must be a whole number between 1 and 578. To compute distance, the function uses the coordinates of the case's "address" (i.e., its "anchor case").
 #' @param pump.select Numeric or Integer vector. For "vestry = FALSE", 1 >= |pump.select| <= 13. For "vestry = TRUE", 1 >= |pump.select| <= 14. Negative values are excluded from consideration. Default is NULL, which returns the closest pump.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
+#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @return A base R data frame.
 #' @seealso \code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}, \code{vignette("pump.neighborhoods")}
 #' @export
