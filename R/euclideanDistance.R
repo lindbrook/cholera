@@ -1,4 +1,4 @@
-#' Compute Euclidean distance to nearest pump or selected pump.
+#' Compute Euclidean distance from selected case to nearest or selected pump.
 #'
 #' @param case Numeric or Integer. Case must be a whole number between 1 and 578. To compute distance, the function uses the coordinates of the case's "address" (i.e., its "anchor case").
 #' @param pump.select Numeric or Integer vector. For "vestry = FALSE", 1 >= |pump.select| <= 13. For "vestry = TRUE", 1 >= |pump.select| <= 14. Negative values are excluded from consideration. Default is NULL, which returns the closest pump.
@@ -33,7 +33,7 @@ euclideanDistance <- function(case, pump.select = NULL, vestry = FALSE,
       }
     } else {
       if (abs(pump.select) %in% 1:13 == FALSE) {
-        stop('If "vestry = FALSE",  1 >= |pump.select| <= 13.')
+        stop('If "vestry = FALSE", 1 >= |pump.select| <= 13.')
       } else {
         p.data <- cholera::pumps[pump.select, ]
       }

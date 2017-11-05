@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclideanDistance.R
 \name{euclideanDistance}
 \alias{euclideanDistance}
-\title{Compute Euclidean distance to nearest pump or selected pump.}
+\title{Compute Euclidean distance from selected case to nearest or selected pump.}
 \usage{
 euclideanDistance(case, pump.select = NULL, vestry = FALSE, unit = NULL)
 }
@@ -19,7 +19,7 @@ euclideanDistance(case, pump.select = NULL, vestry = FALSE, unit = NULL)
 A base R data frame.
 }
 \description{
-Compute Euclidean distance to nearest pump or selected pump.
+Compute Euclidean distance from selected case to nearest or selected pump.
 }
 \examples{
 euclideanDistance(1)
