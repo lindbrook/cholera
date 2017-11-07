@@ -1,7 +1,7 @@
 #' Compute Euclidean distance between cases and/or pumps.
 #'
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID of case or pump. Default is NULL: for type = "case-pump", this returns the closes pump. Negative selection (exlusion) is possible with negative values.
+#' @param destination Numeric or Integer. Numeric ID of case or pump. Negative selection (exlusion) is possible with negative values. Default is NULL: this returns closest case or pump.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param type Character "case-pump", "cases" or "pumps"
@@ -26,6 +26,10 @@ euclideanDistance <- function(origin, destination = NULL, vestry = FALSE,
   if (is.null(unit) == FALSE) {
     if (unit %in% c("meter", "yard") == FALSE)
       stop('If specified, "unit" must either be "meter" or "yard".')
+  }
+
+  if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
+    stop('"type" must either be "case-pump", "cases" or "pumps".')
   }
 
   if (type == "pumps") {
@@ -76,7 +80,9 @@ euclideanDistance <- function(origin, destination = NULL, vestry = FALSE,
 
   } else if (type == "cases") {
     if (any(c(origin, destination) %in% 1:578 == FALSE)) {
-       stop('With type = "cases", both "origin" and "destination" must be between 1 and 578.')
+      txt1 <- 'With type = "cases",'
+      txt2 <- 'both "origin" and "destination" must be between 1 and 578.'
+       stop(paste(txt1, txt2))
     }
 
     ego.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
@@ -96,8 +102,8 @@ euclideanDistance <- function(origin, destination = NULL, vestry = FALSE,
       } else if (any(destination > 0) & any(destination < 0)) {
         pos <- destination[destination > 0]
         neg <- destination[destination < 0]
-        pos.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in% pos,
-          "anchor.case"])
+        pos.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
+          pos, "anchor.case"])
         neg.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
           abs(neg) == FALSE, "anchor.case"])
         alters.id <- unique(c(pos.id, neg.id))

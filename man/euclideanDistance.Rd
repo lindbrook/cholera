@@ -10,7 +10,7 @@ euclideanDistance(origin, destination = NULL, vestry = FALSE, unit = NULL,
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
 
-\item{destination}{Numeric or Integer. Numeric ID of case or pump. Default is NULL: for type = "case-pump", this returns the closes pump. Negative selection (exlusion) is possible with negative values.}
+\item{destination}{Numeric or Integer. Numeric ID of case or pump. Negative selection (exlusion) is possible with negative values. Default is NULL: this returns closest case or pump.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.}
 
