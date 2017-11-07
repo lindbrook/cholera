@@ -1,63 +1,165 @@
-#' Compute Euclidean distance from selected case to nearest or selected pump.
+#' Compute Euclidean distance between cases and/or pumps.
 #'
-#' @param case Numeric or Integer. Case must be a whole number between 1 and 578. To compute distance, the function uses the coordinates of the case's "address" (i.e., its "anchor case").
-#' @param pump.select Numeric or Integer vector. For "vestry = FALSE", 1 >= |pump.select| <= 13. For "vestry = TRUE", 1 >= |pump.select| <= 14. Negative values are excluded from consideration. Default is NULL, which returns the closest pump.
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
+#' @param origin Numeric or Integer. Numeric ID of case or pump.
+#' @param destination Numeric or Integer. Numeric ID of case or pump. Default is NULL: for type = "case-pump", this returns the closes pump. Negative selection (exlusion) is possible with negative values.
+#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
-#' @return A base R data frame.
-#' @seealso \code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}, \code{vignette("pump.neighborhoods")}
+#' @param type Character "case-pump", "cases" or "pumps"
+#' @note For "cases", "origin" and "destination" need to be a number between 1 and 578. To compute distance, the function uses a case's "address" (i.e., its "anchor case"). For "pumps", "origin" and "destination" must be numbers between 1 and 14 for vestry = TRUE, and 1 and 13 for vestry = FALSE.
+#' @return An R vector.
 #' @export
 #' @examples
-#' euclideanDistance(1)
 #' euclideanDistance(1, 2)
-#' euclideanDistance(1, -7)
+#' euclideanDistance(1, 2, type = "pumps")
+#' euclideanDistance(1, 2, type = "cases")
+#'
+#' ## Pairwise Euclidean distance between pumps. ##
+#' # pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)
+#' #
+#' # vapply(pairs, function(x) {
+#' #   euclideanDistance(x[1], x[2])$distance
+#' # }, numeric(1L))
 
-euclideanDistance <- function(case, pump.select = NULL, vestry = FALSE,
-  unit = NULL) {
-
-  if (case %in% 1:578 == FALSE) {
-   stop('"case" must be between 1 and 578.')
-  }
+euclideanDistance <- function(origin, destination = NULL, vestry = FALSE,
+  unit = NULL, type = "case-pump") {
 
   if (is.null(unit) == FALSE) {
     if (unit %in% c("meter", "yard") == FALSE)
       stop('If specified, "unit" must either be "meter" or "yard".')
   }
 
-  if (!is.null(pump.select)) {
-    if (vestry) {
-      if (abs(pump.select) %in% 1:14 == FALSE) {
-        stop('If "vestry = TRUE", 1 >= |pump.select| <= 14.')
+  if (type == "pumps") {
+    if (!is.null(destination)) {
+      if (vestry) {
+        if (any(abs(c(origin, destination)) %in% 1:14 == FALSE)) {
+          txt1 <- 'If "vestry = TRUE",'
+          txt2 <- 'origin and destination must be 1 >= |x| <= 14.'
+          stop(paste(txt1, txt2))
+        } else {
+          ego <- cholera::pumps.vestry[cholera::pumps.vestry$id == origin, ]
+          alters <- cholera::pumps.vestry[destination, ]
+          alters <- alters[alters$id != origin, ]
+        }
       } else {
-        p.data <- cholera::pumps.vestry[pump.select, ]
+        if (any(abs(c(origin, destination)) %in% 1:13 == FALSE)) {
+          txt1 <- 'If "vestry = FALSE",'
+          txt2 <- 'origin and destination must be 1 >= |x| <= 13.'
+          stop(paste(txt1, txt2))
+        } else {
+          ego <- cholera::pumps[cholera::pumps$id == origin, ]
+          alters  <- cholera::pumps[destination, ]
+          alters <- alters[alters$id != origin, ]
+        }
       }
     } else {
-      if (abs(pump.select) %in% 1:13 == FALSE) {
-        stop('If "vestry = FALSE", 1 >= |pump.select| <= 13.')
+      if (vestry) {
+        ego <- cholera::pumps.vestry[cholera::pumps.vestry$id == origin, ]
+        alters <- cholera::pumps.vestry[cholera::pumps.vestry$id != origin, ]
       } else {
-        p.data <- cholera::pumps[pump.select, ]
+        ego <- cholera::pumps[cholera::pumps$id == origin, ]
+        alters <- cholera::pumps[cholera::pumps$id != origin, ]
       }
     }
-  } else {
-    if (vestry) {
-      p.data <- cholera::pumps.vestry
-    } else {
-      p.data <- cholera::pumps
+
+    d <- vapply(alters$id, function(i) {
+      dat <- rbind(ego[, c("x", "y")], alters[alters$id == i, c("x", "y")])
+      c(stats::dist(dat))
+    }, numeric(1L))
+
+    sel <- which.min(d)
+    out <- data.frame(pumpA = ego$id,
+                      pumpB = alters$id[sel],
+                      nameA = ego$street,
+                      nameB = alters$street[sel],
+                      distance = d[which.min(d)],
+                      stringsAsFactors = FALSE)
+
+  } else if (type == "cases") {
+    if (any(c(origin, destination) %in% 1:578 == FALSE)) {
+       stop('With type = "cases", both "origin" and "destination" must be between 1 and 578.')
     }
+
+    ego.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
+      origin, "anchor.case"])
+    ego <- cholera::fatalities[cholera::fatalities$case == ego.id, ]
+
+    if (is.null(destination)) {
+      alters <- cholera::fatalities[cholera::fatalities$case, ]
+      alters <- alters[alters$case != ego.id, ]
+    } else {
+      if (all(destination > 0)) {
+        alters.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
+          destination, "anchor.case"])
+      } else if (all(destination < 0)) {
+        alters.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
+          abs(destination) == FALSE, "anchor.case"])
+      } else if (any(destination > 0) & any(destination < 0)) {
+        pos <- destination[destination > 0]
+        neg <- destination[destination < 0]
+        pos.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in% pos,
+          "anchor.case"])
+        neg.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
+          abs(neg) == FALSE, "anchor.case"])
+        alters.id <- unique(c(pos.id, neg.id))
+      }
+
+      alters <- cholera::fatalities[cholera::fatalities$case %in% alters.id, ]
+      alters <- alters[alters$case != ego.id, ]
+
+      d <- vapply(alters$case, function(i) {
+        dat <- rbind(ego[, c("x", "y")], alters[alters$case == i, c("x", "y")])
+        c(stats::dist(dat))
+      }, numeric(1L))
+
+      sel <- which.min(d)
+      out <- data.frame(caseA = ego$case,
+                        caseB = alters$case[sel],
+                        distance = d[which.min(d)],
+                        stringsAsFactors = FALSE)
+    }
+
+  } else if (type == "case-pump") {
+    if (origin %in% 1:578 == FALSE) {
+     stop('"origin" must be between 1 and 578.')
+    }
+
+    if (!is.null(destination)) {
+      if (vestry) {
+        if (any(abs(destination) %in% 1:14 == FALSE)) {
+          stop('If "vestry = TRUE", 1 >= |destination| <= 14.')
+        } else {
+          alters <- cholera::pumps.vestry[destination, ]
+        }
+      } else {
+        if (any(abs(destination) %in% 1:13 == FALSE)) {
+          stop('If "vestry = FALSE", 1 >= |destination| <= 13.')
+        } else {
+          alters <- cholera::pumps[destination, ]
+        }
+      }
+    } else {
+      if (vestry) {
+        alters <- cholera::pumps.vestry
+      } else {
+        alters <- cholera::pumps
+      }
+    }
+
+    id <- cholera::anchor.case[cholera::anchor.case$case == origin,
+      "anchor.case"]
+    c.data <- cholera::fatalities[cholera::fatalities$case == id, c("x", "y")]
+
+    d <- vapply(alters$id, function(i) {
+      c(stats::dist(rbind(alters[alters$id == i, c("x", "y")], c.data)))
+    }, numeric(1L))
+
+    sel <- which.min(d)
+    out <- data.frame(case = origin,
+                      distance = d[sel],
+                      pump = alters[sel, "id"],
+                      pump.name = alters[sel, "street"],
+                      stringsAsFactors = FALSE)
   }
-
-  id <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor.case"]
-  c.data <- cholera::fatalities[cholera::fatalities$case == id, c("x", "y")]
-
-  d <- vapply(p.data$id, function(i) {
-    c(stats::dist(rbind(p.data[p.data$id == i, c("x", "y")], c.data)))
-  }, numeric(1L))
-
-  out <- data.frame(case,
-                    distance = d[which.min(d)],
-                    pump = p.data[which.min(d), "id"],
-                    pump.name = p.data[which.min(d), "street"],
-                    stringsAsFactors = FALSE)
 
   if (!is.null(unit)) {
     if (unit == "yard") {

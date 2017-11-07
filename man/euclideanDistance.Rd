@@ -2,30 +2,40 @@
 % Please edit documentation in R/euclideanDistance.R
 \name{euclideanDistance}
 \alias{euclideanDistance}
-\title{Compute Euclidean distance from selected case to nearest or selected pump.}
+\title{Compute Euclidean distance between cases and/or pumps.}
 \usage{
-euclideanDistance(case, pump.select = NULL, vestry = FALSE, unit = NULL)
+euclideanDistance(origin, destination = NULL, vestry = FALSE, unit = NULL,
+  type = "case-pump")
 }
 \arguments{
-\item{case}{Numeric or Integer. Case must be a whole number between 1 and 578. To compute distance, the function uses the coordinates of the case's "address" (i.e., its "anchor case").}
+\item{origin}{Numeric or Integer. Numeric ID of case or pump.}
 
-\item{pump.select}{Numeric or Integer vector. For "vestry = FALSE", 1 >= |pump.select| <= 13. For "vestry = TRUE", 1 >= |pump.select| <= 14. Negative values are excluded from consideration. Default is NULL, which returns the closest pump.}
+\item{destination}{Numeric or Integer. Numeric ID of case or pump. Default is NULL: for type = "case-pump", this returns the closes pump. Negative selection (exlusion) is possible with negative values.}
 
-\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
+\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.}
 
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
+
+\item{type}{Character "case-pump", "cases" or "pumps"}
 }
 \value{
-A base R data frame.
+An R vector.
 }
 \description{
-Compute Euclidean distance from selected case to nearest or selected pump.
+Compute Euclidean distance between cases and/or pumps.
+}
+\note{
+For "cases", "origin" and "destination" need to be a number between 1 and 578. To compute distance, the function uses a case's "address" (i.e., its "anchor case"). For "pumps", "origin" and "destination" must be numbers between 1 and 14 for vestry = TRUE, and 1 and 13 for vestry = FALSE.
 }
 \examples{
-euclideanDistance(1)
 euclideanDistance(1, 2)
-euclideanDistance(1, -7)
-}
-\seealso{
-\code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}, \code{vignette("pump.neighborhoods")}
+euclideanDistance(1, 2, type = "pumps")
+euclideanDistance(1, 2, type = "cases")
+
+## Pairwise Euclidean distance between pumps. ##
+# pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)
+#
+# vapply(pairs, function(x) {
+#   euclideanDistance(x[1], x[2])$distance
+# }, numeric(1L))
 }
