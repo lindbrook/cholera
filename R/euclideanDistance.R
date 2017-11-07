@@ -36,7 +36,7 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
     if (!is.null(destination)) {
       if (vestry) {
         if (any(abs(c(origin, destination)) %in% 1:14 == FALSE)) {
-          txt1 <- 'If "vestry = TRUE",'
+          txt1 <- 'With type = "pumps" and "vestry = TRUE",'
           txt2 <- 'origin and destination must be 1 >= |x| <= 14.'
           stop(paste(txt1, txt2))
         } else {
@@ -46,7 +46,7 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
         }
       } else {
         if (any(abs(c(origin, destination)) %in% 1:13 == FALSE)) {
-          txt1 <- 'If "vestry = FALSE",'
+          txt1 <- 'With type = "pumps" and "vestry = FALSE",'
           txt2 <- 'origin and destination must be 1 >= |x| <= 13.'
           stop(paste(txt1, txt2))
         } else {
@@ -126,19 +126,23 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
 
   } else if (type == "case-pump") {
     if (origin %in% 1:578 == FALSE) {
-     stop('"origin" must be between 1 and 578.')
+     stop('With type = "case-pump", "origin" must be between 1 and 578.')
     }
 
     if (!is.null(destination)) {
       if (vestry) {
         if (any(abs(destination) %in% 1:14 == FALSE)) {
-          stop('If "vestry = TRUE", 1 >= |destination| <= 14.')
+          txt1 <- 'With type = "case-pump" and "vestry = TRUE",'
+          txt2 <- '1 >= |destination| <= 14.'
+          stop(paste(txt1, txt2))
         } else {
           alters <- cholera::pumps.vestry[destination, ]
         }
       } else {
         if (any(abs(destination) %in% 1:13 == FALSE)) {
-          stop('If "vestry = FALSE", 1 >= |destination| <= 13.')
+          txt1 <- 'With type = "case-pump" and "vestry = FALSE",'
+          txt2 <- '1 >= |destination| <= 13.'
+          stop(paste(txt1, txt2))
         } else {
           alters <- cholera::pumps[destination, ]
         }
