@@ -2,9 +2,9 @@
 #'
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
 #' @param destination Numeric or Integer. Numeric ID of case or pump. Negative selection (exlusion) is possible with negative values. Default is NULL: this returns closest case or pump.
+#' @param type Character "case-pump", "cases" or "pumps".
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
-#' @param type Character "case-pump", "cases" or "pumps"
 #' @note For "cases", "origin" and "destination" need to be a number between 1 and 578. To compute distance, the function uses a case's "address" (i.e., its "anchor case"). For "pumps", "origin" and "destination" must be numbers between 1 and 14 for vestry = TRUE, and 1 and 13 for vestry = FALSE.
 #' @return An R vector.
 #' @export
@@ -20,8 +20,8 @@
 #' #   euclideanDistance(x[1], x[2])$distance
 #' # }, numeric(1L))
 
-euclideanDistance <- function(origin, destination = NULL, vestry = FALSE,
-  unit = NULL, type = "case-pump") {
+euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
+  vestry = FALSE, unit = NULL) {
 
   if (is.null(unit) == FALSE) {
     if (unit %in% c("meter", "yard") == FALSE)
@@ -29,7 +29,7 @@ euclideanDistance <- function(origin, destination = NULL, vestry = FALSE,
   }
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
-    stop('"type" must either be "case-pump", "cases" or "pumps".')
+    stop('"type" must be "case-pump", "cases" or "pumps".')
   }
 
   if (type == "pumps") {

@@ -4,19 +4,19 @@
 \alias{euclideanDistance}
 \title{Compute Euclidean distance between cases and/or pumps.}
 \usage{
-euclideanDistance(origin, destination = NULL, vestry = FALSE, unit = NULL,
-  type = "case-pump")
+euclideanDistance(origin, destination = NULL, type = "case-pump",
+  vestry = FALSE, unit = NULL)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
 
 \item{destination}{Numeric or Integer. Numeric ID of case or pump. Negative selection (exlusion) is possible with negative values. Default is NULL: this returns closest case or pump.}
 
+\item{type}{Character "case-pump", "cases" or "pumps".}
+
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.}
 
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
-
-\item{type}{Character "case-pump", "cases" or "pumps"}
 }
 \value{
 An R vector.
