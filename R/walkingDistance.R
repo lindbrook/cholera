@@ -31,8 +31,8 @@ walkingDistance <- function(case, pump.select = NULL, observed = TRUE,
     excluded <- c(edge.case, falconberg)
 
     if (case %in% (1:4993)[-excluded] == FALSE) {
-      msg1 <- "When observed = TRUE,"
-      msg2 <- '"case" must be a valid number between 1 and 4993.'
+      msg1 <- 'When observed = FALSE, "case" must be a number'
+      msg2 <- 'between 1 and 4993, and not be an isolate.'
       stop(paste(msg1, msg2))
     }
   }
