@@ -73,9 +73,9 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
 
     sel <- which.min(d)
     out <- data.frame(case = origin,
-                      distance = d[sel],
                       pump = alters[sel, "id"],
                       pump.name = alters[sel, "street"],
+                      distance = d[sel],
                       stringsAsFactors = FALSE)
 
   } else if (type == "cases") {
@@ -122,7 +122,7 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
                       caseB = alters$case[sel],
                       distance = d[which.min(d)],
                       stringsAsFactors = FALSE)
-  
+
   } else if (type == "pumps") {
     if (!is.null(destination)) {
       if (vestry) {
@@ -164,8 +164,8 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
     sel <- which.min(d)
     out <- data.frame(pumpA = ego$id,
                       pumpB = alters$id[sel],
-                      nameA = ego$street,
-                      nameB = alters$street[sel],
+                      pump.nameA = ego$street,
+                      pump.nameB = alters$street[sel],
                       distance = d[which.min(d)],
                       stringsAsFactors = FALSE)
   }
