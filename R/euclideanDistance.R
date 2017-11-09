@@ -10,6 +10,7 @@
 #' @export
 #' @examples
 #' euclideanDistance(1, 2)
+#' euclideanDistance(1, -7)
 #' euclideanDistance(1, 2, type = "pumps")
 #' euclideanDistance(1, 2, type = "cases")
 #'

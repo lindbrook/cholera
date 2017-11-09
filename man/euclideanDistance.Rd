@@ -29,6 +29,7 @@ For "cases", "origin" and "destination" need to be a number between 1 and 578. T
 }
 \examples{
 euclideanDistance(1, 2)
+euclideanDistance(1, -7)
 euclideanDistance(1, 2, type = "pumps")
 euclideanDistance(1, 2, type = "cases")
 
