@@ -81,9 +81,8 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
 
   } else if (type == "cases") {
     if (any(c(origin, destination) %in% 1:578 == FALSE)) {
-      txt1 <- 'With type = "cases",'
-      txt2 <- 'both "origin" and "destination" must be between 1 and 578.'
-       stop(paste(txt1, txt2))
+      stop('With type = "cases", "origin" and "destination" must be a number
+  between 1 and 578.')
     }
 
     ego.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
