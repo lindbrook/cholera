@@ -1,7 +1,7 @@
 #' Compute Euclidean distance between cases and/or pumps.
 #'
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID of case or pump. Negative selection (exlusion) is possible with negative values. Default is NULL: this returns closest case or pump.
+#' @param destination Numeric or Integer. Numeric ID of case or pump. Negative selection (exlusion) is possible with negative values. Default is NULL: this returns closest pump or case (in a different stack).
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
@@ -81,8 +81,7 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
 
   } else if (type == "cases") {
     if (any(c(origin, destination) %in% 1:578 == FALSE)) {
-      stop('With type = "cases", "origin" and "destination" must be a number
-  between 1 and 578.')
+      stop('With type = "cases", "origin" and "destination" must be between 1 and 578.')
     }
 
     ego.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
@@ -109,19 +108,26 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
       }
     }
 
-    alters <- cholera::fatalities[cholera::fatalities$case %in% alters.id, ]
-    alters <- alters[alters$case != ego.id, ]
+    if (identical(all.equal(ego.id, alters.id), TRUE)) {
+      out <- data.frame(caseA = origin,
+                        caseB = destination,
+                        distance = 0,
+                        stringsAsFactors = FALSE)
+    } else {
+      alters <- cholera::fatalities[cholera::fatalities$case %in% alters.id, ]
+      alters <- alters[alters$case != ego.id, ]
 
-    d <- vapply(alters$case, function(i) {
-      dat <- rbind(ego[, c("x", "y")], alters[alters$case == i, c("x", "y")])
-      c(stats::dist(dat))
-    }, numeric(1L))
+      d <- vapply(alters$case, function(i) {
+        dat <- rbind(ego[, c("x", "y")], alters[alters$case == i, c("x", "y")])
+        c(stats::dist(dat))
+      }, numeric(1L))
 
-    sel <- which.min(d)
-    out <- data.frame(caseA = ego$case,
-                      caseB = alters$case[sel],
-                      distance = d[which.min(d)],
-                      stringsAsFactors = FALSE)
+      sel <- which.min(d)
+      out <- data.frame(caseA = ego$case,
+                        caseB = alters$case[sel],
+                        distance = d[which.min(d)],
+                        stringsAsFactors = FALSE)
+    }
 
   } else if (type == "pumps") {
     if (!is.null(destination)) {

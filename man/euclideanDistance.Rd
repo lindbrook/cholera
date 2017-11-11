@@ -10,7 +10,7 @@ euclideanDistance(origin, destination = NULL, type = "case-pump",
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
 
-\item{destination}{Numeric or Integer. Numeric ID of case or pump. Negative selection (exlusion) is possible with negative values. Default is NULL: this returns closest case or pump.}
+\item{destination}{Numeric or Integer. Numeric ID of case or pump. Negative selection (exlusion) is possible with negative values. Default is NULL: this returns closest pump or case (in a different stack).}
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
