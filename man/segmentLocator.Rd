@@ -4,14 +4,16 @@
 \alias{segmentLocator}
 \title{Locate road segment by its character ID.}
 \usage{
-segmentLocator(id, zoom = TRUE, radius = 0.5)
+segmentLocator(id, zoom = TRUE, radius = 0.5, all.cases = FALSE)
 }
 \arguments{
 \item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
 
 \item{zoom}{Logical.}
 
-\item{radius}{Numeric. Controls the degree of zoom. For values <= 5, the anchor case number is plotted.}
+\item{radius}{Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.}
+
+\item{all.cases}{Logical. When zoom = TRUE and radius <= 5, all.cases = TRUE plots the numeric ID of all cases; when all.cases = FALSE only the numeric ID of the anchor case is shown.}
 }
 \value{
 A base R graphics plot.

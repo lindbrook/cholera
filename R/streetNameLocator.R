@@ -4,8 +4,9 @@
 #' selected road. See the list of road names in \code{vignette}("road.names").
 #' @param road.name Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.
 #' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom. For "radius" <= 5, the anchor case number is plotted.
+#' @param radius Numeric. Controls the degree of zoom. For "radius" <= 5, the numeric ID of all cases or just the anchor case is plotted.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
+#' @param all.cases Logical. When zoom = TRUE and radius <= 5, all.cases = TRUE plots the numeric ID of all cases; when all.cases = FALSE only the numeric ID of the anchor case is shown.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
 #' @import graphics
@@ -17,7 +18,7 @@
 #' streetNameLocator("Cambridge Street", zoom = TRUE, radius = 0)
 
 streetNameLocator <- function(road.name, zoom = FALSE, radius = 1,
-  unit = NULL) {
+  unit = NULL, all.cases = FALSE) {
 
   real.road.names <- unique(cholera::roads$name)
 
@@ -60,8 +61,15 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 1,
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = NA, asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
-    text(cholera::fatalities.address[, c("x", "y")], labels =
-      cholera::fatalities.address$anchor.case, cex = 0.5)
+
+    if (all.cases) {
+      text(cholera::fatalities[, c("x", "y")],
+        labels = cholera::fatalities$case, cex = 0.5)
+    } else {
+      text(cholera::fatalities.address[, c("x", "y")],
+        labels = cholera::fatalities.address$anchor.case, cex = 0.5)
+    }
+
     points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
     text(cholera::pumps[, c("x", "y")], label = paste0("p", cholera::pumps$id),
       pos = 1)
