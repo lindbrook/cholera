@@ -160,7 +160,8 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
       "178-1" = 85,
       "231-1" = 341,
       "160-3" = 558,
-      "269-1" = 462)
+      "269-1" = 462,
+      "326-2" = 483)
 
     # Recompute orthogonal distances
 
