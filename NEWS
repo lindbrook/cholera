@@ -1,7 +1,13 @@
+cholera 0.2.1.9007
+----------------------------------------------------------------
+
+* amend ortho.proj: move case 483 from segment "242-1" to segment "326-2".
+* add classifierAudit() and classifierAuditPlot().
+
 cholera 0.2.1.9006
 ----------------------------------------------------------------
 
-add option to plot all case IDs with segmentLocator(), streetNameLocator(), streetNumberLocator()
+* add option to plot all case IDs with segmentLocator(), streetNameLocator(), streetNumberLocator().
 
 
 cholera 0.2.1.9005
