@@ -5,8 +5,8 @@
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
-#' @note For "cases", "origin" and "destination" need to be a number between 1 and 578. To compute distance, the function uses a case's "address" (i.e., its "anchor case"). For "pumps", "origin" and "destination" must be numbers between 1 and 14 for vestry = TRUE, and 1 and 13 for vestry = FALSE.
-#' @return An R vector.
+#' @note For "type = cases", the function uses a case's "address" (i.e., its "anchor case") to compute distance. The function returns both the nominal origin and destination cases, along with their anchor cases.
+#' @return An R data frame.
 #' @export
 #' @examples
 #' euclideanDistance(1, 2)
@@ -81,7 +81,9 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
 
   } else if (type == "cases") {
     if (any(c(origin, destination) %in% 1:578 == FALSE)) {
-      stop('With type = "cases", "origin" and "destination" must be between 1 and 578.')
+      txt1 <- 'With type = "cases", "origin" and "destination"'
+      txt2 <- "must be between 1 and 578."
+      stop(paste(txt1, txt2))
     }
 
     ego.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%

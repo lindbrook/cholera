@@ -19,13 +19,13 @@ euclideanDistance(origin, destination = NULL, type = "case-pump",
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
 }
 \value{
-An R vector.
+An R data frame.
 }
 \description{
 Compute Euclidean distance between cases and/or pumps.
 }
 \note{
-For "cases", "origin" and "destination" need to be a number between 1 and 578. To compute distance, the function uses a case's "address" (i.e., its "anchor case"). For "pumps", "origin" and "destination" must be numbers between 1 and 14 for vestry = TRUE, and 1 and 13 for vestry = FALSE.
+For "type = cases", the function uses a case's "address" (i.e., its "anchor case") to compute distance. The function returns both the nominal origin and destination cases, along with their anchor cases.
 }
 \examples{
 euclideanDistance(1, 2)
