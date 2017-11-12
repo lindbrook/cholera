@@ -113,6 +113,8 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
     if (identical(all.equal(ego.id, alters.id), TRUE)) {
       out <- data.frame(caseA = origin,
                         caseB = destination,
+                        anchorA = ego.id,
+                        anchorB = alters.id,
                         distance = 0,
                         stringsAsFactors = FALSE)
     } else {
@@ -125,8 +127,10 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
       }, numeric(1L))
 
       sel <- which.min(d)
-      out <- data.frame(caseA = ego$case,
-                        caseB = alters$case[sel],
+      out <- data.frame(caseA = origin,
+                        caseB = destination,
+                        anchorA = ego$case,
+                        anchorB = alters$case[sel],
                         distance = d[which.min(d)],
                         stringsAsFactors = FALSE)
     }
