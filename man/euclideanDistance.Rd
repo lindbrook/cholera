@@ -37,6 +37,6 @@ euclideanDistance(1, 2, type = "cases")
 # pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)
 #
 # vapply(pairs, function(x) {
-#   euclideanDistance(x[1], x[2])$distance
+#   euclideanDistance(x[1], x[2], type = "pumps")$distance
 # }, numeric(1L))
 }
