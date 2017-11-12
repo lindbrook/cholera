@@ -1,6 +1,7 @@
-#' Add landmarks.
+#' Add landmarks to a plot.
 #'
-#' Adds Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews, 18 Sackville (John Snow residence) and 28 Dean Street (Karl Marx residence) to an existing plot. Falconberg Court & Mews are technically an isolate that is not part of the network of roads and is, consequently, technically unreachable. Adam and Eve Court and its pump also form an isolate.
+#' Adam and Eve Court (isolate), Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews (isolate), 18 Sackville Street (John Snow residence) and 28 Dean Street (Karl Marx residence).
+#' @note 18 Sackville Street and 28 Dean Street are approximate. Falconberg Court & Mews technically forms an isolate: it is not part of the network of roads and is technically unreachable. Adam and Eve Court and its pump also form an isolate.
 #' @return Add base R points and text to a graphics plot.
 #' @param text.size Numeric. cex for text labels.
 #' @seealso \code{\link{snowMap}},
@@ -16,7 +17,7 @@
 #' addLandmarks()
 
 addLandmarks <- function(text.size = 0.5) {
- # 28 Dean Street
+  # 28 Dean Street
   marx <- data.frame(x = 17.3855, y = 13.371 )
   text(marx$x, marx$y, labels = "Karl\nMarx", cex = text.size)
   points(marx$x, marx$y, pch = 15, cex = 1/3)
