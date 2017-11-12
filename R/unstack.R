@@ -262,8 +262,8 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     single.obs <- road.incidence[road.incidence$count == 1, ]
     single.address <- lapply(single.obs$id, function(i) {
-      data.frame(id = i, 
-                 case = ortho.proj[ortho.proj$road.segment == i, "case"])
+      data.frame(id = i, case = ortho.proj[ortho.proj$road.segment == i,
+        "case"])
     })
 
     cutpoint <- 0.05
@@ -353,7 +353,7 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
     single.unstacked$multiple.obs.seg <- "No"
 
     unstacked <- rbind(multiple.unstacked, single.unstacked)
-    unstacked <- merge(unstacked, fatalities, by.x = "anchor.case", 
+    unstacked <- merge(unstacked, fatalities, by.x = "anchor.case",
       by.y = "case")
 
     fatalities.unstacked <- unstacked[, c("case", "x", "y")]
@@ -373,7 +373,7 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
          ortho.proj = ortho.proj)
 
   } else {
-   list(anchor.case = cholera::anchor.case,
+    list(anchor.case = cholera::anchor.case,
         fatalities.address = cholera::fatalities.address,
         fatalities.unstacked = cholera::fatalities.unstacked,
         ortho.proj = cholera::ortho.proj)
@@ -382,4 +382,86 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
 withinRadius <- function(a, b, radius = 2) {
   (a$x - b$x)^2 + (a$y - b$y)^2 <= radius^2
+}
+
+#' Test classification of case.
+#'
+#' Test assignment of case to segment using orthogonal bisection of segment as criterion.
+#' @param case Numeric or Integer. Numeric ID of (anchor) case.
+#' @param segment Character. Segment ID from cholera::road.segments
+#' @note segment "326-2 is part of Little Windmill Street.
+#' @return Logical TRUE or FALSE
+#' @export
+
+classifierAudit <- function(case = 483, segment = "326-2") {
+  obs <- cholera::fatalities[cholera::fatalities$case == case, c("x", "y")]
+  seg.data <- cholera::road.segments[cholera::road.segments$id == segment,
+    c("x1", "y1", "x2", "y2")]
+
+  seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                       y = c(seg.data$y1, seg.data$y2))
+
+  ols <- stats::lm(y ~ x, data = seg.df)
+  segment.slope <- stats::coef(ols)[2]
+  segment.intercept <- stats::coef(ols)[1]
+  orthogonal.slope <- -1 / segment.slope
+  orthogonal.intercept <- obs$y - orthogonal.slope * obs$x
+
+  x.proj <- (orthogonal.intercept - segment.intercept) /
+            (segment.slope - orthogonal.slope)
+
+  y.proj <- segment.slope * x.proj + segment.intercept
+
+  # Bisection / Intersection test
+  distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
+           stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
+
+  stats::dist(seg.df) == distB
+}
+
+#' Plot test classification of case.
+#'
+#' Test assignment of case to segment using orthogonal bisection of segment as criterion.
+#' @param case Numeric or Integer. Numeric ID of (anchor) case.
+#' @param segment Character. Segment ID from cholera::road.segments
+#' @param radius Numeric. Controls the degree of zoom.
+#' @note segment "326-2 is part of Little Windmill Street.
+#' @return A base R graphic.
+#' @export
+
+classifierAuditPlot <- function(case = 483, segment = "326-2", radius = 0.1) {
+  obs <- cholera::fatalities[cholera::fatalities$case == case, c("x", "y")]
+  seg.data <- cholera::road.segments[cholera::road.segments$id == segment,
+    c("x1", "y1", "x2", "y2")]
+
+  seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                       y = c(seg.data$y1, seg.data$y2))
+
+  ols <- stats::lm(y ~ x, data = seg.df)
+  segment.slope <- stats::coef(ols)[2]
+  segment.intercept <- stats::coef(ols)[1]
+  orthogonal.slope <- -1 / segment.slope
+  orthogonal.intercept <- obs$y - orthogonal.slope * obs$x
+
+  x.proj <- (orthogonal.intercept - segment.intercept) /
+            (segment.slope - orthogonal.slope)
+
+  y.proj <- segment.slope * x.proj + segment.intercept
+
+  cholera::segmentLocator(segment, radius = radius)
+  points(x.proj, y.proj, pch = 0)
+
+  # Bisection / Intersection test
+  distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
+           stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
+
+  test <- signif(stats::dist(seg.df)) == signif(distB)
+
+  if (test) {
+    arrows(obs$x, obs$y, x.proj, y.proj, length = 0.1, col = "green")
+  } else {
+    arrows(obs$x, obs$y, x.proj, y.proj, length = 0.1)
+  }
+
+  title(sub = test)
 }
