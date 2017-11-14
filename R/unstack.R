@@ -384,12 +384,11 @@ withinRadius <- function(a, b, radius = 2) {
   (a$x - b$x)^2 + (a$y - b$y)^2 <= radius^2
 }
 
-#' Test classification of case.
+#' Test whether case is orthogonal to segment.
 #'
-#' Test assignment of case to segment using orthogonal bisection of segment as criterion.
 #' @param case Numeric or Integer. Numeric ID of (anchor) case.
 #' @param segment Character. Segment ID from cholera::road.segments
-#' @note segment "326-2 is part of Little Windmill Street.
+#' @note segment "326-2 is part of Little Windmill Street. A diagnostics; not a guarantee of correct classification.
 #' @return Logical TRUE or FALSE
 #' @export
 
@@ -419,13 +418,12 @@ classifierAudit <- function(case = 483, segment = "326-2") {
   stats::dist(seg.df) == distB
 }
 
-#' Plot test classification of case.
+#' Plot whether case is orthogonal to segment.
 #'
-#' Test assignment of case to segment using orthogonal bisection of segment as criterion.
 #' @param case Numeric or Integer. Numeric ID of (anchor) case.
 #' @param segment Character. Segment ID from cholera::road.segments
 #' @param radius Numeric. Controls the degree of zoom.
-#' @note segment "326-2 is part of Little Windmill Street.
+#' @note segment "326-2 is part of Little Windmill Street. A diagnostics; not a guarantee of correct classification.
 #' @return A base R graphic.
 #' @export
 

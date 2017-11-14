@@ -2,7 +2,7 @@
 % Please edit documentation in R/unstack.R
 \name{classifierAudit}
 \alias{classifierAudit}
-\title{Test classification of case.}
+\title{Test whether case is orthogonal to segment.}
 \usage{
 classifierAudit(case = 483, segment = "326-2")
 }
@@ -15,8 +15,8 @@ classifierAudit(case = 483, segment = "326-2")
 Logical TRUE or FALSE
 }
 \description{
-Test assignment of case to segment using orthogonal bisection of segment as criterion.
+Test whether case is orthogonal to segment.
 }
 \note{
-segment "326-2 is part of Little Windmill Street.
+segment "326-2 is part of Little Windmill Street. A diagnostics; not a guarantee of correct classification.
 }

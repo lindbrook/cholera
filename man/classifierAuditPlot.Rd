@@ -2,7 +2,7 @@
 % Please edit documentation in R/unstack.R
 \name{classifierAuditPlot}
 \alias{classifierAuditPlot}
-\title{Plot test classification of case.}
+\title{Plot whether case is orthogonal to segment.}
 \usage{
 classifierAuditPlot(case = 483, segment = "326-2", radius = 0.1)
 }
@@ -17,8 +17,8 @@ classifierAuditPlot(case = 483, segment = "326-2", radius = 0.1)
 A base R graphic.
 }
 \description{
-Test assignment of case to segment using orthogonal bisection of segment as criterion.
+Plot whether case is orthogonal to segment.
 }
 \note{
-segment "326-2 is part of Little Windmill Street.
+segment "326-2 is part of Little Windmill Street. A diagnostics; not a guarantee of correct classification.
 }
