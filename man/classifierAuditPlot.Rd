@@ -20,5 +20,5 @@ A base R graphic.
 Plot whether case is orthogonal to segment.
 }
 \note{
-segment "326-2 is part of Little Windmill Street. A diagnostics; not a guarantee of correct classification.
+segment "326-2" is part of Little Windmill Street. A diagnostics; not a guarantee of correct classification.
 }
