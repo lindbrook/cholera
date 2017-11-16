@@ -1,7 +1,7 @@
 #' Embed cases ("addresses") and pumps into road network.
 #'
 #' @param id Character. Road segment ID.
-#' @param output Character. Type of output: nodes or edge list.
+#' @param type Character. Type of output: nodes or edge list.
 #' @param vestry Logical. Use Vestry Report pump data
 #' @return An R data frame.
 #' @export
@@ -10,7 +10,7 @@
 #' nodeData("216-1", "edges")
 #' nodeData()
 
-nodeData <- function(id = "242-1", output = "nodes", vestry = FALSE) {
+nodeData <- function(id = "242-1", type = "nodes", vestry = FALSE) {
   if (id %in% cholera::road.segments$id == FALSE) {
       stop('Valid "id" are listed in cholera::road.segments$id.')
   }
@@ -79,9 +79,9 @@ nodeData <- function(id = "242-1", output = "nodes", vestry = FALSE) {
 
   edges$id <- paste0(edges$id, letters[seq_len(nrow(edges))])
 
-  if (output == "nodes") {
+  if (type == "nodes") {
     nodes
-  } else if (output == "edges") {
+  } else if (type == "edges") {
     edges
   }
 }

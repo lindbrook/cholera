@@ -4,12 +4,12 @@
 \alias{nodeData}
 \title{Embed cases ("addresses") and pumps into road network.}
 \usage{
-nodeData(id = "242-1", output = "nodes", vestry = FALSE)
+nodeData(id = "242-1", type = "nodes", vestry = FALSE)
 }
 \arguments{
 \item{id}{Character. Road segment ID.}
 
-\item{output}{Character. Type of output: nodes or edge list.}
+\item{type}{Character. Type of output: nodes or edge list.}
 
 \item{vestry}{Logical. Use Vestry Report pump data}
 }
