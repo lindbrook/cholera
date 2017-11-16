@@ -1,8 +1,8 @@
-#' Embed cases ("addresses") and pumps into road network.
+#' Embed cases ("addresses") and pumps into road segment.
 #'
 #' @param id Character. Road segment ID.
 #' @param type Character. Type of output: nodes or edge list.
-#' @param vestry Logical. Use Vestry Report pump data
+#' @param vestry Logical. Use Vestry Report pump data.
 #' @return An R data frame.
 #' @export
 #' @examples

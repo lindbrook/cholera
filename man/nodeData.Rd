@@ -2,7 +2,7 @@
 % Please edit documentation in R/nodeData.R
 \name{nodeData}
 \alias{nodeData}
-\title{Embed cases ("addresses") and pumps into road network.}
+\title{Embed cases ("addresses") and pumps into road segment.}
 \usage{
 nodeData(id = "242-1", type = "nodes", vestry = FALSE)
 }
@@ -11,13 +11,13 @@ nodeData(id = "242-1", type = "nodes", vestry = FALSE)
 
 \item{type}{Character. Type of output: nodes or edge list.}
 
-\item{vestry}{Logical. Use Vestry Report pump data}
+\item{vestry}{Logical. Use Vestry Report pump data.}
 }
 \value{
 An R data frame.
 }
 \description{
-Embed cases ("addresses") and pumps into road network.
+Embed cases ("addresses") and pumps into road segment.
 }
 \examples{
 nodeData("216-1")
