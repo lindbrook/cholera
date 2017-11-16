@@ -19,3 +19,8 @@ An R data frame.
 \description{
 Embed cases ("addresses") and pumps into road network.
 }
+\examples{
+nodeData("216-1")
+nodeData("216-1", "edges")
+nodeData()
+}

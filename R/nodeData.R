@@ -6,8 +6,8 @@
 #' @return An R data frame.
 #' @export
 #' @examples
-#' nodeData("216-1)
-#' nodeData("216-1, "edges)
+#' nodeData("216-1")
+#' nodeData("216-1", "edges")
 #' nodeData()
 
 nodeData <- function(id = "242-1", output = "nodes", vestry = FALSE) {
