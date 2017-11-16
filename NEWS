@@ -4,6 +4,8 @@ cholera 0.2.1.9007
 * amend ortho.proj: move case 483 from segment "242-1" to segment "326-2".
 * update default neighborhoodWalking() configurations (sysdata).
 * add classifierAudit() and classifierAuditPlot().
+* add nodeData()
+
 
 cholera 0.2.1.9006
 ----------------------------------------------------------------
