@@ -50,17 +50,21 @@ nodeData <- function(id = "242-1", type = "nodes", vestry = FALSE) {
   pump.seg <- id %in% pumps$road.segment
 
   if (pump.seg) {
-    pump.data <- pumps[pumps$road.segment == id, ]
-    ps <- data.frame(pump.data[, c("x.proj", "y.proj")], anchor = 0,
-      pump = pump.data$pump.id)
-
-    if (case.seg) {
-      dat <- rbind(rds, ps)
-      nodes <- rbind(endptA, dat[order(dat$x.proj), ], endptB)
-    } else {
-      nodes <- rbind(endptA, ps, endptB)
-    }
-  } else nodes <- rbind(endptA, endptB)
+     pump.data <- pumps[pumps$road.segment == id, ]
+     ps <- data.frame(pump.data[, c("x.proj", "y.proj")], anchor = 0,
+       pump = pump.data$pump.id)
+  }
+  
+  if (case.seg & pump.seg) {
+    dat <- rbind(rds, ps)
+    nodes <- rbind(endptA, dat[order(dat$x.proj), ], endptB)
+  } else if (case.seg & !pump.seg) {
+    nodes <- rbind(endptA, rds[order(rds$x.proj), ], endptB)
+  } else if (!case.seg & pump.seg) {
+    nodes <- rbind(endptA, ps, endptB)
+  } else {
+    nodes <- rbind(endptA, endptB)
+  }
 
   row.names(nodes) <- NULL
   nodes$node <- paste0(nodes$x.proj, "-", nodes$y.proj)
