@@ -60,7 +60,7 @@ nodeData <- function(id = "242-1", type = "nodes", vestry = FALSE) {
     } else {
       nodes <- rbind(endptA, ps, endptB)
     }
-  } else nodes <- rbind(endptA, rds[order(rds$x.proj), ], endptB)
+  } else nodes <- rbind(endptA, endptB)
 
   row.names(nodes) <- NULL
   nodes$node <- paste0(nodes$x.proj, "-", nodes$y.proj)
