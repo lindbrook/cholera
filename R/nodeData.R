@@ -85,7 +85,12 @@ nodeData <- function(id = "242-1", type = "nodes", vestry = FALSE) {
   edges <- cbind(road.data[1, c("street", "id", "name")], edges,
     row.names = NULL)
 
-  edges$id <- paste0(edges$id, letters[seq_len(nrow(edges))])
+  id.list <- strsplit(edges$id, "-")
+
+  edges$id2 <- vapply(seq_along(id.list), function(i) {
+    v <- as.numeric(id.list[[i]])
+    v[1] + (v[2] / 10) + (i - 1) / 100
+  }, numeric(1L))
 
   if (type == "nodes") {
     nodes
