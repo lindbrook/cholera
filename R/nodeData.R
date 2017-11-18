@@ -54,16 +54,20 @@ nodeData <- function(id = "242-1", type = "nodes", vestry = FALSE) {
      ps <- data.frame(pump.data[, c("x.proj", "y.proj")], anchor = 0,
        pump = pump.data$pump.id)
   }
-  
+
   if (case.seg & pump.seg) {
     dat <- rbind(rds, ps)
-    nodes <- rbind(endptA, dat[order(dat$x.proj), ], endptB)
+    nodes <- rbind(endptA, dat, endptB)
+    nodes <- nodes[order(nodes$x.proj), ]
   } else if (case.seg & !pump.seg) {
-    nodes <- rbind(endptA, rds[order(rds$x.proj), ], endptB)
+    nodes <- rbind(endptA, rds, endptB)
+    nodes <- nodes[order(nodes$x.proj), ]
   } else if (!case.seg & pump.seg) {
     nodes <- rbind(endptA, ps, endptB)
+    nodes <- nodes[order(nodes$x.proj), ]
   } else {
     nodes <- rbind(endptA, endptB)
+    nodes <- nodes[order(nodes$x.proj), ]
   }
 
   row.names(nodes) <- NULL
