@@ -64,12 +64,12 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
       }
     }
 
-    id <- cholera::anchor.case[cholera::anchor.case$case == origin,
+    ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
       "anchor.case"]
-    c.data <- cholera::fatalities[cholera::fatalities$case == id, c("x", "y")]
+    ego <- cholera::fatalities[cholera::fatalities$case == ego.id, c("x", "y")]
 
     d <- vapply(alters$id, function(i) {
-      c(stats::dist(rbind(alters[alters$id == i, c("x", "y")], c.data)))
+      c(stats::dist(rbind(alters[alters$id == i, c("x", "y")], ego)))
     }, numeric(1L))
 
     sel <- which.min(d)
