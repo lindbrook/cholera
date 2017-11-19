@@ -1,16 +1,56 @@
-#' Embed cases ("addresses") and pumps into road segment.
-#'
-#' @param id Character. Road segment ID.
-#' @param type Character. Type of output: nodes or edge list.
+#' Embed cases and pumps into road network graph.
 #' @param vestry Logical. Use Vestry Report pump data.
-#' @return An R data frame.
 #' @export
-#' @examples
-#' nodeData("216-1")
-#' nodeData("216-1", "edges")
-#' nodeData()
+#' @return An R list of nodes, edges and graph.
 
-nodeData <- function(id = "242-1", type = "nodes", vestry = FALSE) {
+nodeData <- function(vestry = FALSE) {
+  case.segments <- unique(cholera::ortho.proj[cholera::ortho.proj$case %in%
+    cholera::fatalities.address$anchor.case, "road.segment"])
+
+  rd.segs <- cholera::road.segments
+
+  if (vestry) {
+    ortho.pump <- cholera::ortho.proj.pump.vestry
+  } else {
+    ortho.pump <- cholera::ortho.proj.pump
+  }
+
+  case.pump <- intersect(ortho.pump$road.segment, case.segments)
+  case.no_pump <- setdiff(case.segments, ortho.pump$road.segment)
+  no_case.pump <- setdiff(ortho.pump$road.segment, case.segments)
+
+  edits <- c(case.pump, case.no_pump, no_case.pump)
+
+  if (vestry) {
+    nodes <- lapply(edits, embedSites, vestry = TRUE)
+    edges <- lapply(edits, embedSites, type = "edges",
+      vestry = TRUE)
+  } else {
+    nodes <- lapply(edits, embedSites)
+    edges <- lapply(edits, embedSites, type = "edges")
+  }
+
+  nodes <- do.call(rbind, nodes)
+  edges <- do.call(rbind, edges)
+
+  null.segments <- rd.segs[rd.segs$id %in% edits == FALSE, ]
+  null.segments$node1 <- paste0(null.segments$x1, "-", null.segments$y1)
+  null.segments$node2 <- paste0(null.segments$x2, "-", null.segments$y2)
+  null.segments$id2 <- paste0(null.segments$id, "a")
+
+  no_case.no_pump <- null.segments$id
+
+  road.segmentsB <- rbind(edges, null.segments)
+  road.segmentsB$d <- sqrt((road.segmentsB$x1 - road.segmentsB$x2)^2 +
+                           (road.segmentsB$y1 - road.segmentsB$y2)^2)
+
+  edge.list <- road.segmentsB[, c("node1", "node2")]
+  g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
+
+  list(nodes = nodes, edges = road.segmentsB, g = g)
+}
+
+embedSites <- function(id = "242-1", type = "nodes", vestry = FALSE) {
   if (id %in% cholera::road.segments$id == FALSE) {
       stop('Valid "id" are listed in cholera::road.segments$id.')
   }

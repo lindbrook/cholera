@@ -2,25 +2,16 @@
 % Please edit documentation in R/nodeData.R
 \name{nodeData}
 \alias{nodeData}
-\title{Embed cases ("addresses") and pumps into road segment.}
+\title{Embed cases and pumps into road network graph.}
 \usage{
-nodeData(id = "242-1", type = "nodes", vestry = FALSE)
+nodeData(vestry = FALSE)
 }
 \arguments{
-\item{id}{Character. Road segment ID.}
-
-\item{type}{Character. Type of output: nodes or edge list.}
-
 \item{vestry}{Logical. Use Vestry Report pump data.}
 }
 \value{
-An R data frame.
+An R list of nodes, edges and graph.
 }
 \description{
-Embed cases ("addresses") and pumps into road segment.
-}
-\examples{
-nodeData("216-1")
-nodeData("216-1", "edges")
-nodeData()
+Embed cases and pumps into road network graph.
 }
