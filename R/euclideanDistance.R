@@ -100,14 +100,6 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
       } else if (all(destination < 0)) {
         alters.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
           abs(destination) == FALSE, "anchor.case"])
-      } else if (any(destination > 0) & any(destination < 0)) {
-        pos <- destination[destination > 0]
-        neg <- destination[destination < 0]
-        pos.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
-          pos, "anchor.case"])
-        neg.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
-          abs(neg) == FALSE, "anchor.case"])
-        alters.id <- unique(c(pos.id, neg.id))
       }
     }
 
