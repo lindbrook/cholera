@@ -50,7 +50,7 @@ nodeData <- function(vestry = FALSE) {
   list(nodes = nodes, edges = road.segmentsB, g = g)
 }
 
-embedSites <- function(id = "242-1", type = "nodes", vestry = FALSE) {
+embedSites <- function(id, type = "nodes", vestry = FALSE) {
   if (id %in% cholera::road.segments$id == FALSE) {
       stop('Valid "id" are listed in cholera::road.segments$id.')
   }
