@@ -74,6 +74,7 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
 
     sel <- which.min(d)
     out <- data.frame(case = origin,
+                      anchor = id,
                       pump = alters[sel, "id"],
                       pump.name = alters[sel, "street"],
                       distance = d[sel],
