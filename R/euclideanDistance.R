@@ -81,9 +81,9 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
                       stringsAsFactors = FALSE)
 
   } else if (type == "cases") {
-    if (any(c(origin, destination) %in% 1:578 == FALSE)) {
-      txt1 <- 'With type = "cases", "origin" and "destination"'
-      txt2 <- "must be between 1 and 578."
+    if (any(abs(c(origin, destination)) %in% 1:578 == FALSE)) {
+      txt1 <- 'With type = "cases", the absolute value of both "origin"'
+      txt2 <- 'and "destination" must be between 1 and 578.'
       stop(paste(txt1, txt2))
     }
 
@@ -121,20 +121,29 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
 
       sel <- which.min(d)
 
-      if (is.null(destination)) {
+      if (is.null(destination) | all(destination < 0)) {
         out <- data.frame(caseA = origin,
                           caseB = alters$case[sel],
                           anchorA = ego$case,
                           anchorB = alters$case[sel],
                           distance = d[which.min(d)],
                           stringsAsFactors = FALSE)
-      } else {
-        out <- data.frame(caseA = origin,
-                          caseB = destination,
-                          anchorA = ego$case,
-                          anchorB = alters$case[sel],
-                          distance = d[which.min(d)],
-                          stringsAsFactors = FALSE)
+      } else if (all(destination > 0)) {
+        if (length(destination) == 1) {
+          out <- data.frame(caseA = origin,
+                            caseB = destination,
+                            anchorA = ego$case,
+                            anchorB = alters$case[sel],
+                            distance = d[which.min(d)],
+                            stringsAsFactors = FALSE)
+        } else if (length(destination) > 1) {
+          out <- data.frame(caseA = origin,
+                            caseB = destination[sel],
+                            anchorA = ego$case,
+                            anchorB = alters$case[sel],
+                            distance = d[which.min(d)],
+                            stringsAsFactors = FALSE)
+        }
       }
     }
 
