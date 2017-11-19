@@ -120,12 +120,22 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
       }, numeric(1L))
 
       sel <- which.min(d)
-      out <- data.frame(caseA = origin,
-                        caseB = destination,
-                        anchorA = ego$case,
-                        anchorB = alters$case[sel],
-                        distance = d[which.min(d)],
-                        stringsAsFactors = FALSE)
+
+      if (is.null(destination)) {
+        out <- data.frame(caseA = origin,
+                          caseB = alters$case[sel],
+                          anchorA = ego$case,
+                          anchorB = alters$case[sel],
+                          distance = d[which.min(d)],
+                          stringsAsFactors = FALSE)
+      } else {
+        out <- data.frame(caseA = origin,
+                          caseB = destination,
+                          anchorA = ego$case,
+                          anchorB = alters$case[sel],
+                          distance = d[which.min(d)],
+                          stringsAsFactors = FALSE)
+      }
     }
 
   } else if (type == "pumps") {
