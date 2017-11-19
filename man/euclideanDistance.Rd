@@ -10,7 +10,7 @@ euclideanDistance(origin, destination = NULL, type = "case-pump",
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
 
-\item{destination}{Numeric or Integer. Numeric ID of case or pump. Negative selection (exlusion) is possible with negative values. Default is NULL: this returns closest pump or case (in a different stack).}
+\item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Negative selection (exclusion) is possible with negative values. Default is NULL: this returns closest pump or case (in a different stack).}
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
@@ -28,7 +28,7 @@ Compute Euclidean distance between cases and/or pumps.
 For "type = cases", the function uses a case's "address" (i.e., its "anchor case") to compute distance. The function returns both the nominal origin and destination cases, along with their anchor cases.
 }
 \examples{
-euclideanDistance(1, 2)
+euclideanDistance(1)
 euclideanDistance(1, -7)
 euclideanDistance(1, 2, type = "pumps")
 euclideanDistance(1, 2, type = "cases")
