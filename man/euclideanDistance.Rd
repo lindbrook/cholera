@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclideanDistance.R
 \name{euclideanDistance}
 \alias{euclideanDistance}
-\title{Compute Euclidean distance between cases and/or pumps.}
+\title{Compute the Euclidean distance between cases and/or pumps.}
 \usage{
 euclideanDistance(origin, destination = NULL, type = "case-pump",
   vestry = FALSE, unit = NULL)
@@ -10,7 +10,7 @@ euclideanDistance(origin, destination = NULL, type = "case-pump",
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
 
-\item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Negative selection (exclusion) is possible with negative values. Default is NULL: this returns closest pump or case (in a different stack).}
+\item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.}
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
@@ -22,21 +22,22 @@ euclideanDistance(origin, destination = NULL, type = "case-pump",
 An R data frame.
 }
 \description{
-Compute Euclidean distance between cases and/or pumps.
+Compute the Euclidean distance between cases and/or pumps.
 }
 \note{
-For "type = cases", the function uses a case's "address" (i.e., its "anchor case") to compute distance. The function returns both the nominal origin and destination cases, along with their anchor cases.
+The function uses a case's "address" or "anchor" case to compute distance.
 }
 \examples{
 euclideanDistance(1)
-euclideanDistance(1, -7)
-euclideanDistance(1, 2, type = "pumps")
-euclideanDistance(1, 2, type = "cases")
+euclideanDistance(1, 6) # distance from case 1 to pump 6.
+euclideanDistance(1, -7) # exclude pump 7 from consideration.
+euclideanDistance(1, 2, type = "pumps") # distance from pump 1 to pump 2.
+euclideanDistance(1, 2, type = "cases") # distance from case 1 to case 2.
 
-## Pairwise Euclidean distance between pumps. ##
+## Pairwise Euclidean distance (meters) between pumps. ##
 # pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)
 #
 # vapply(pairs, function(x) {
-#   euclideanDistance(x[1], x[2], type = "pumps")$distance
+#   euclideanDistance(x[1], x[2], type = "pumps", unit = "meter")$distance
 # }, numeric(1L))
 }

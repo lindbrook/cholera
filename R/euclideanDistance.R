@@ -1,25 +1,26 @@
-#' Compute Euclidean distance between cases and/or pumps.
+#' Compute the Euclidean distance between cases and/or pumps.
 #'
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Negative selection (exclusion) is possible with negative values. Default is NULL: this returns closest pump or case (in a different stack).
+#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
-#' @note For "type = cases", the function uses a case's "address" (i.e., its "anchor case") to compute distance. The function returns both the nominal origin and destination cases, along with their anchor cases.
+#' @note The function uses a case's "address" or "anchor" case to compute distance.
 #' @return An R data frame.
 #' @export
 #' @examples
 #' euclideanDistance(1)
-#' euclideanDistance(1, -7)
-#' euclideanDistance(1, 2, type = "pumps")
-#' euclideanDistance(1, 2, type = "cases")
+#' euclideanDistance(1, 6) # distance from case 1 to pump 6.
+#' euclideanDistance(1, -7) # exclude pump 7 from consideration.
+#' euclideanDistance(1, 2, type = "pumps") # distance from pump 1 to pump 2.
+#' euclideanDistance(1, 2, type = "cases") # distance from case 1 to case 2.
 #'
-#' ## Pairwise Euclidean distance between pumps. ##
+#' ## Pairwise Euclidean distance (meters) between pumps. ##
 #' # pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)
 #' #
 #' # vapply(pairs, function(x) {
-#' #   euclideanDistance(x[1], x[2], type = "pumps")$distance
-#' # }, numeric(1L))
+#' #   euclideanDistance(x[1], x[2], type = "pumps", unit = "meter")$distance
+#'# }, numeric(1L))
 
 euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
   vestry = FALSE, unit = NULL) {
