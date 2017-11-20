@@ -26,6 +26,9 @@ A base R data frame.
 \description{
 (beta v.1)
 }
+\note{
+The function uses a case's "address" or "anchor" case to compute distance. Because Adam and Eve Court is disconnected from the larger road network (an isolate), only cases on that road can reach pump 2. All others will return Inf.
+}
 \examples{
 walkingDistance2(1)
 walkingDistance2(1, 6) # distance from case 1 to pump 6.
