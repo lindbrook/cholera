@@ -12,8 +12,8 @@
 #' euclideanDistance(1)
 #' euclideanDistance(1, 6) # distance from case 1 to pump 6.
 #' euclideanDistance(1, -7) # exclude pump 7 from consideration.
-#' euclideanDistance(1, 2, type = "pumps") # distance from pump 1 to pump 2.
-#' euclideanDistance(1, 2, type = "cases") # distance from case 1 to case 2.
+#' euclideanDistance(1, 6, type = "pumps") # distance from pump 1 to pump 2.
+#' euclideanDistance(1, 6, type = "cases") # distance from case 1 to case 2.
 #'
 #' ## Pairwise Euclidean distance (meters) between pumps. ##
 #' # pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)

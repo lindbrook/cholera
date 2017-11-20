@@ -33,8 +33,8 @@ The function uses a case's "address" or "anchor" case to compute distance. Becau
 walkingDistance2(1)
 walkingDistance2(1, 6) # distance from case 1 to pump 6.
 walkingDistance2(1, -7) # exclude pump 7 from consideration.
-walkingDistance2(1, 2, type = "pumps") # distance from pump 1 to pump 2.
-walkingDistance2(1, 2, type = "cases") # distance from case 1 to case 2.
+walkingDistance2(1, 6, type = "pumps") # distance from pump 1 to pump 2.
+walkingDistance2(1, 6, type = "cases") # distance from case 1 to case 2.
 
 ## Pairwise Euclidean distance (meters) between pumps. ##
 # pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)
