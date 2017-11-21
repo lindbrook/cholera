@@ -2,7 +2,7 @@
 % Please edit documentation in R/walkingDistance2.R
 \name{walkingDistance2}
 \alias{walkingDistance2}
-\title{Compute the walking distance between cases and/or pumps.}
+\title{Compute the shortest walking distance between cases and/or pumps.}
 \usage{
 walkingDistance2(origin, destination = NULL, type = "case-pump",
   weighted = TRUE, vestry = FALSE, unit = NULL)
@@ -24,17 +24,18 @@ walkingDistance2(origin, destination = NULL, type = "case-pump",
 A base R data frame.
 }
 \description{
-(beta v.1)
+Beta v.1
 }
 \note{
 The function uses a case's "address" or "anchor" case to compute distance. Because Adam and Eve Court is disconnected from the larger road network (an isolate), only cases on that road can reach pump 2. All others will return Inf.
 }
 \examples{
-walkingDistance2(1)
+walkingDistance2(1) # nearest pump to case 1.
+walkingDistance2(1, unit = "meter")
 walkingDistance2(1, 6) # distance from case 1 to pump 6.
 walkingDistance2(1, -7) # exclude pump 7 from consideration.
-walkingDistance2(1, 6, type = "pumps") # distance from pump 1 to pump 2.
-walkingDistance2(1, 6, type = "cases") # distance from case 1 to case 2.
+walkingDistance2(1, 6, type = "pumps") # distance from pump 1 to pump 6.
+walkingDistance2(1, 6, type = "cases") # distance from case 1 to case 6.
 
 ## Pairwise Euclidean distance (meters) between pumps. ##
 # pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)
