@@ -228,7 +228,7 @@ walkingPath <- function(x, pump.select = NULL, observed = TRUE, zoom = FALSE,
 
     if (zoom) {
       points(cholera::fatalities[cholera::fatalities$case == case$case,
-        c("x", "y")],col = "red")
+        c("x", "y")], col = "red")
       text(cholera::fatalities[cholera::fatalities$case == case$case,
         c("x", "y")], labels = case$case, pos = 1, col = "red")
       points(dat[1, c("x", "y")], col = case.color, pch = 0)
