@@ -99,9 +99,9 @@ walkingPath2 <- function(origin, destination = NULL, type = "case-pump",
       }, numeric(1L))
     }
 
-    sel <- which.min(d)
-    alter.id <- nodes[nodes$node %in% names(sel), "pump"]
-    alter.node <- nodes[nodes$node %in% names(sel), "node"]
+    nearest <- which.min(d)
+    alter.id <- nodes[nodes$node %in% names(nearest), "pump"]
+    alter.node <- nodes[nodes$node %in% names(nearest), "node"]
 
     if (weighted) {
       path <- names(unlist(igraph::shortest_paths(g, ego, alter.node,
@@ -212,9 +212,8 @@ walkingPath2 <- function(origin, destination = NULL, type = "case-pump",
       }, numeric(1L))
     }
 
-    sel <- which.min(d)
-
-    nearest.node <- nodes[nodes$node == names(sel), "node"]
+    nearest <- which.min(d)
+    nearest.node <- nodes[nodes$node == names(nearest), "node"]
     nearest.id <- nodes[nodes$node == nearest.node, "anchor"]
 
     if (weighted) {
@@ -295,13 +294,9 @@ walkingPath2 <- function(origin, destination = NULL, type = "case-pump",
       }, numeric(1L))
     }
 
-    sel <- which.min(d)
-
-    # A <- p.nodes[p.nodes$node == ego, "pump"]
-    # B <- p.nodes[p.nodes$node == names(sel), "pump"]
-
-    alter.id <- p.nodes[p.nodes$node %in% names(sel), "pump"]
-    alter.node <- p.nodes[p.nodes$node %in% names(sel), "node"]
+    nearest <- which.min(d)
+    alter.id <- p.nodes[p.nodes$node %in% names(nearest), "pump"]
+    alter.node <- p.nodes[p.nodes$node %in% names(nearest), "node"]
 
     if (weighted) {
       path <- names(unlist(igraph::shortest_paths(g, ego, alter.node,
@@ -357,11 +352,11 @@ walkingPath2 <- function(origin, destination = NULL, type = "case-pump",
   }
 
   if (is.null(unit)) {
-    title(sub = paste(round(d[sel], 2), "units"))
+    title(sub = paste(round(d[nearest], 2), "units"))
   } else if (unit == "meter") {
-    title(sub = paste(round(54 * d[sel], 2), "meters"))
+    title(sub = paste(round(54 * d[nearest], 2), "meters"))
   } else if (unit == "yard") {
-    title(sub = paste(round(177/3 * d[sel], 2), "yards"))
+    title(sub = paste(round(177/3 * d[nearest], 2), "yards"))
   }
 }
 
