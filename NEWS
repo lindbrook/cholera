@@ -2,6 +2,7 @@ cholera 0.2.1.9009
 ----------------------------------------------------------------
 
 * add walkingDistance2() beta.
+* add walkingPath2() beta.
 
 
 cholera 0.2.1.9008
