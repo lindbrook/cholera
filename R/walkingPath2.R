@@ -128,7 +128,7 @@ walkingPath2 <- function(origin, destination = NULL, type = "case-pump",
       xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "lightgray"))
     invisible(lapply(border.list, lines))
-    title(main = paste("Case #", ego.id))
+    title(main = paste("Case", ego.id, "to Pump", alter.id))
 
     if (vestry) {
       pump.names <- paste0("p", cholera::pumps.vestry$id)
@@ -240,7 +240,7 @@ walkingPath2 <- function(origin, destination = NULL, type = "case-pump",
       xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "lightgray"))
     invisible(lapply(border.list, lines, col = "gray"))
-    title(main = paste("Case", origin, ": Case", nearest.id))
+    title(main = paste("Case", origin, "to Case", nearest.id))
 
     points(cholera::fatalities[cholera::fatalities$case == ego.id,
       c("x", "y")], col = "red")
@@ -322,12 +322,11 @@ walkingPath2 <- function(origin, destination = NULL, type = "case-pump",
       y.rng <- range(cholera::roads$y)
     }
 
-    # case.color <- colors[alter.id]
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "lightgray"))
     invisible(lapply(border.list, lines, col = "gray"))
-    title(main = paste("Pump", origin, "to", alter.id))
+    title(main = paste("Pump", origin, "to Pump", alter.id))
 
     if (vestry) {
       pump.names <- paste0("p", cholera::pumps.vestry$id)
