@@ -2,19 +2,19 @@
 % Please edit documentation in R/walkingDistance.R
 \name{walkingDistance}
 \alias{walkingDistance}
-\title{Compute the walking distance between a case and the nearest (selected) pump.}
+\title{Compute the shortest walking distance between cases and/or pumps.}
 \usage{
-walkingDistance(case, pump.select = NULL, observed = TRUE,
+walkingDistance(origin, destination = NULL, type = "case-pump",
   weighted = TRUE, vestry = FALSE, unit = NULL)
 }
 \arguments{
-\item{case}{Numeric or Integer. Observed cases must be a whole number between 1 and 578. With three exceptions, "Simulated" cases must be a whole number between 1 and 4993: 1) one case, 3334, does not have a valid orthogonal projector to any street; 2) the 20 cases that project onto Falconberg Court and Falconberg Mews (4427, 4428, 4499, 4500, 4501, 4570, 4571, 4572, 4573, 4574, 4643, 4644, 4645, 4646, 4647, 4716, 4717, 4718, 4719, 4720) form an isolate that are "technically" disconnected from the road network and cannot reach any pump; 3) because Adam and Eve Court is also disconnected from the larger road network, the 27 cases that project onto that road can only reach pump 2, which lies on that road. This means that all other cases cannot reach pump 2.}
+\item{origin}{Numeric or Integer. Numeric ID of case or pump.}
 
-\item{pump.select}{Numeric or Integer vector. For "vestry = FALSE", 1 >= |pump.select| <= 13. For "vestry = TRUE", 1 >= |pump.select| <= 14. Negative values are excluded from consideration. Default is NULL, which returns the closest pump.}
+\item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.}
 
-\item{observed}{Logical. TRUE for observed cases; FALSE for "regular" simulated cases.}
+\item{type}{Character "case-pump", "cases" or "pumps".}
 
-\item{weighted}{Logical. Shortest path weighted by road distance.}
+\item{weighted}{Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of nodes.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -24,14 +24,37 @@ walkingDistance(case, pump.select = NULL, observed = TRUE,
 A base R data frame.
 }
 \description{
-Compute the shortest walking distance between an observed or "simulated" case and the nearest (selected) pump.
+Beta v.1
+}
+\note{
+The function uses a case's "address" or "anchor" case to compute distance. Because Adam and Eve Court is disconnected from the larger road network (an isolate), only cases on that road can reach pump 2. All others will return Inf.
 }
 \examples{
+# path from case 1 to nearest pump.
 walkingDistance(1)
-walkingDistance(1, observed = FALSE)
-walkingDistance(1, pump.select = -7) # exclude pump 7 from consideration.
-walkingDistance(1, pump.select = 6)  # path from case 1 to pump 6.
+
+# path from case 1 to nearest pump in meters (appox).
+walkingDistance(1, unit = "meter")
+
+# path from case 1 to pump 6.
+walkingDistance(1, 6)
+
+# exclude pump 7 from consideration.
+walkingDistance(1, -7)
+
+# path from case 1 to case 6.
+walkingDistance(1, 6, type = "cases")
+
+# path from pump 1 to pump 6.
+walkingDistance(1, 6, type = "pumps")
+
+## Pairwise Euclidean distance (meters) between pumps. ##
+# pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)
+#
+# vapply(pairs, function(x) {
+#   walkingDistance(x[1], x[2], type = "pumps", unit = "meter")$distance
+# }, numeric(1L))
 }
 \seealso{
-\code{\link{fatalities}}, \code{\link{simulateFatalities}}, \code{vignette("pump.neighborhoods")}
+\code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 }
