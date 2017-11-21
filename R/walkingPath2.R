@@ -2,24 +2,35 @@
 #'
 #' Beta v.1
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
-#' @param type Character "case-pump", "cases" or "pumps".
+#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL, which returns closest pump or "anchor" case.
+#' @param type Character. "case-pump", "cases" or "pumps".
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param weighted Logical. Shortest path weighted by road distance.
+#' @param weighted Logical. TRUE computes shortest path weighted by road distance. FASLE computes shortes path by number of nodes.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
+#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" = TRUE. See \code{vignette("roads")} for information on unit distances.
 #' @return A base R graphics plot.
-#' @seealso \code{\link{fatalities}}, \code{\link{simulateFatalities}}, \code{vignette("pump.neighborhoods")}
+#' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @import graphics
 #' @export
 #' @examples
-#' walkingPath2(1) # path from case 1 to nearest pump.
-#' walkingPath2(1, unit = "meter") # path from case 1 to nearest pump.
-#' walkingPath2(1, 6) # path from case 1 to pump 6.
-#' walkingPath2(1, -7) # exclude pump 7 from consideration.
-#' walkingPath2(1, 6, type = "pumps") # path from pump 1 to pump 6.
-#' walkingPath2(1, 6, type = "cases") # path from case 1 to case 6.
+#' # path from case 1 to nearest pump.
+#' walkingPath2(1)
+#'
+#' # path from case 1 to nearest pump in meters (appox).
+#' walkingPath2(1, unit = "meter")
+#'
+#' # path from case 1 to pump 6.
+#' walkingPath2(1, 6)
+#'
+#' # exclude pump 7 from consideration.
+#' walkingPath2(1, -7)
+#'
+#' # path from pump 1 to pump 6.
+#' walkingPath2(1, 6, type = "pumps")
+#'
+#' # path from case 1 to case 6.
+#' walkingPath2(1, 6, type = "cases")
 
 walkingPath2 <- function(origin, destination = NULL, type = "case-pump",
   zoom = TRUE, radius = 0.5, weighted = TRUE, vestry = FALSE, unit = NULL) {
