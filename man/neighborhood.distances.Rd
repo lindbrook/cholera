@@ -7,9 +7,10 @@
 \format{A data frame with 4 variables that records the walking distance between each of the 578 cases and its nearest pump.
  \describe{
     \item{\code{case}}{observed case: 1 through 578.}
-    \item{\code{distance}}{distance to pump in native map units.}
+    \item{\code{anchor}}{anchor case or "address".}
     \item{\code{pump}}{numerical pump ID}
     \item{\code{pump.name}}{pump name (street)}
+    \item{\code{distance}}{distance to pump in native map units.}
  }}
 \usage{
 neighborhood.distances
