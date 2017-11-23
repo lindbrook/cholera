@@ -87,7 +87,7 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
 
     ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
       "anchor.case"]
-    ego <- nodes[nodes$anchor == ego.id, "node"]
+    ego.node <- nodes[nodes$anchor == ego.id, "node"]
 
     if (!is.null(destination)) {
       if (all(destination < 0)) {
@@ -102,11 +102,11 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
 
     if (weighted) {
       d <- vapply(alters, function(x) {
-        igraph::distances(g, ego, x, weights = edges$d)
+        igraph::distances(g, ego.node, x, weights = edges$d)
       }, numeric(1L))
     } else {
       d <- vapply(alters, function(x) {
-        igraph::distances(g, ego, x)
+        igraph::distances(g, ego.node, x)
       }, numeric(1L))
     }
 
@@ -115,10 +115,11 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
     alter.node <- nodes[nodes$node %in% names(nearest), "node"]
 
     if (weighted) {
-      path <- names(unlist(igraph::shortest_paths(g, ego, alter.node,
+      path <- names(unlist(igraph::shortest_paths(g, ego.node, alter.node,
         weights = edges$d)$vpath))
     } else {
-      path <- names(unlist(igraph::shortest_paths(g, ego, alter.node)$vpath))
+      path <- names(unlist(igraph::shortest_paths(g, ego.node,
+        alter.node)$vpath))
     }
 
     dat <- numericNodeCoordinates(path)
@@ -231,7 +232,8 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       path <- names(unlist(igraph::shortest_paths(g, ego.node, nearest.node,
         weights = edges$d)$vpath))
     } else {
-      path <- names(unlist(igraph::shortest_paths(g, ego.node, alter.node)$vpath))
+      path <- names(unlist(igraph::shortest_paths(g, ego.node,
+        alter.node)$vpath))
     }
 
     dat <- numericNodeCoordinates(path)
@@ -280,7 +282,7 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
 
   } else if (type == "pumps") {
     p.nodes <- nodes[nodes$pump > 0, ]
-    ego <- p.nodes[p.nodes$pump == origin, "node"]
+    ego.node <- p.nodes[p.nodes$pump == origin, "node"]
 
 
     if (is.null(destination)) {
@@ -297,11 +299,11 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
 
     if (weighted) {
       d <- vapply(alters, function(x) {
-        igraph::distances(g, ego, x, weights = edges$d)
+        igraph::distances(g, ego.node, x, weights = edges$d)
       }, numeric(1L))
     } else {
       d <- vapply(alters, function(x) {
-        igraph::distances(g, ego, x)
+        igraph::distances(g, ego.node, x)
       }, numeric(1L))
     }
 
@@ -310,10 +312,11 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
     alter.node <- p.nodes[p.nodes$node %in% names(nearest), "node"]
 
     if (weighted) {
-      path <- names(unlist(igraph::shortest_paths(g, ego, alter.node,
+      path <- names(unlist(igraph::shortest_paths(g, ego.node, alter.node,
         weights = edges$d)$vpath))
     } else {
-      path <- names(unlist(igraph::shortest_paths(g, ego, alter.node)$vpath))
+      path <- names(unlist(igraph::shortest_paths(g, ego.node,
+        alter.node)$vpath))
     }
 
     dat <- numericNodeCoordinates(path)
