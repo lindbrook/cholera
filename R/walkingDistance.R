@@ -92,7 +92,7 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 
     ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
       "anchor.case"]
-    ego <- nodes[nodes$anchor == ego.id, "node"]
+    ego.node <- nodes[nodes$anchor == ego.id, "node"]
 
     if (!is.null(destination)) {
       if (all(destination < 0)) {
@@ -107,11 +107,11 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 
     if (weighted) {
       d <- vapply(alters, function(x) {
-        igraph::distances(g, ego, x, weights = edges$d)
+        igraph::distances(g, ego.node, x, weights = edges$d)
       }, numeric(1L))
     } else {
       d <- vapply(alters, function(x) {
-        igraph::distances(g, ego, x)
+        igraph::distances(g, ego.node, x)
       }, numeric(1L))
     }
 
@@ -135,10 +135,10 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 
     ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
       "anchor.case"]
-    ego <- nodes[nodes$anchor == ego.id, "node"]
+    ego.node <- nodes[nodes$anchor == ego.id, "node"]
 
     if (is.null(destination)) {
-      alters <- nodes[nodes$anchor != 0 & nodes$node != ego, "node"]
+      alters <- nodes[nodes$anchor != 0 & nodes$node != ego.node, "node"]
     } else {
       if (all(destination > 0)) {
         alter.case <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
@@ -147,16 +147,17 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
         alter.case <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
           abs(destination) == FALSE, "anchor.case"])
       }
-      alters <- nodes$node[nodes$anchor %in% alter.case & nodes$node != ego]
+      alters <- nodes$node[nodes$anchor %in% alter.case &
+                           nodes$node != ego.node]
     }
 
     if (weighted) {
       d <- vapply(alters, function(x) {
-        igraph::distances(g, ego, x, weights = edges$d)
+        igraph::distances(g, ego.node, x, weights = edges$d)
       }, numeric(1L))
     } else {
       d <- vapply(alters, function(x) {
-        igraph::distances(g, ego, x)
+        igraph::distances(g, ego.node, x)
       }, numeric(1L))
     }
 
@@ -206,7 +207,7 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
       }
     }
 
-    ego <- nodes[nodes$pump == origin, "node"]
+    ego.node <- nodes[nodes$pump == origin, "node"]
     p.nodes <- nodes[nodes$pump > 0, ]
 
     if (is.null(destination)) {
@@ -223,16 +224,16 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 
     if (weighted) {
       d <- vapply(alters, function(x) {
-        igraph::distances(g, ego, x, weights = edges$d)
+        igraph::distances(g, ego.node, x, weights = edges$d)
       }, numeric(1L))
     } else {
       d <- vapply(alters, function(x) {
-        igraph::distances(g, ego, x)
+        igraph::distances(g, ego.node, x)
       }, numeric(1L))
     }
 
     sel <- which.min(d)
-    A <- p.nodes[p.nodes$node == ego, "pump"]
+    A <- p.nodes[p.nodes$node == ego.node, "pump"]
     B <- p.nodes[p.nodes$node == names(sel), "pump"]
 
     out <- data.frame(pumpA = A,
