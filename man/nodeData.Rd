@@ -4,13 +4,15 @@
 \alias{nodeData}
 \title{Embed cases and pumps into road network graph.}
 \usage{
-nodeData(vestry = FALSE)
+nodeData(embed = TRUE, vestry = FALSE)
 }
 \arguments{
+\item{embed}{Logical. TRUE embeds sites into road network. FALSE returns just the road network.}
+
 \item{vestry}{Logical. Use Vestry Report pump data.}
 }
 \value{
-An R list of nodes, edges and graph.
+An R list of nodes, edges and network graph.
 }
 \description{
 Embed cases and pumps into road network graph.
