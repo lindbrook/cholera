@@ -2,7 +2,7 @@
 % Please edit documentation in R/nodeData.R
 \name{nodeData}
 \alias{nodeData}
-\title{Embed cases and pumps into road network graph.}
+\title{Compute graph netowrk of roads, cases and pumps.}
 \usage{
 nodeData(embed = TRUE, vestry = FALSE)
 }

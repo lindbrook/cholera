@@ -1,3 +1,5 @@
+#' Compute graph netowrk of roads, cases and pumps.
+#'
 #' Embed cases and pumps into road network graph.
 #' @param embed Logical. TRUE embeds sites into road network. FALSE returns just the road network.
 #' @param vestry Logical. Use Vestry Report pump data.
@@ -8,7 +10,7 @@ nodeData <- function(embed = TRUE, vestry = FALSE) {
   case.segments <- unique(cholera::ortho.proj[cholera::ortho.proj$case %in%
     cholera::fatalities.address$anchor.case, "road.segment"])
 
-  rd.segs <- cholera::road.segments
+  road.segments <- cholera::road.segments
 
   if (embed) {
     if (vestry) {
@@ -32,42 +34,72 @@ nodeData <- function(embed = TRUE, vestry = FALSE) {
       edges <- lapply(edits, embedSites, type = "edges")
     }
 
-    nodes <- do.call(rbind, nodes)
+    # Edges #
+
     edges <- do.call(rbind, edges)
 
-    rd.segs <- rd.segs[rd.segs$id %in% edits == FALSE, ]
-    rd.segs$node1 <- paste0(rd.segs$x1, "-", rd.segs$y1)
-    rd.segs$node2 <- paste0(rd.segs$x2, "-", rd.segs$y2)
-    rd.segs$id2 <- paste0(rd.segs$id, "a")
+    road.segments <- road.segments[road.segments$id %in% edits == FALSE, ]
+    road.segments$node1 <- paste0(road.segments$x1, "-", road.segments$y1)
+    road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
+    road.segments$id2 <- paste0(road.segments$id, "a")
 
-    no_case.no_pump <- rd.segs$id
+    edges <- rbind(edges, road.segments)
+    edges$d <- sqrt((edges$x1 - edges$x2)^2 + (edges$y1 - edges$y2)^2)
 
-    road.segmentsB <- rbind(edges, rd.segs)
-    road.segmentsB$d <- sqrt((road.segmentsB$x1 - road.segmentsB$x2)^2 +
-                             (road.segmentsB$y1 - road.segmentsB$y2)^2)
+    # Nodes #
 
-    edge.list <- road.segmentsB[, c("node1", "node2")]
+    nodes <- do.call(rbind, nodes)
+
+    rd.endpts1 <- road.segments[road.segments$node1 %in%
+                                nodes$node == FALSE, "node1"]
+    rd.endpts2 <- road.segments[road.segments$node2 %in%
+                                nodes$node == FALSE, "node2"]
+
+    rd.nodes1 <- lapply(setdiff(rd.endpts1, rd.endpts2), function(x) {
+      dat <- stats::setNames(road.segments[road.segments$node1 == x,
+        c("x1", "y1")], c("x.proj", "y.proj"))
+      unique(data.frame(dat, anchor = 0, pump = 0, node = x))
+    })
+
+    rd.nodes2 <- lapply(setdiff(rd.endpts2, rd.endpts1), function(x) {
+      dat <- stats::setNames(road.segments[road.segments$node2 == x,
+        c("x2", "y2")], c("x.proj", "y.proj"))
+      unique(data.frame(dat, anchor = 0, pump = 0, node = x))
+    })
+
+    rd.nodes <- rbind(do.call(rbind, rd.nodes1), do.call(rbind, rd.nodes2))
+    nodes <- rbind(nodes, rd.nodes)
+
+    # Network Graph #
+
+    edge.list <- edges[, c("node1", "node2")]
     g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
 
-    list(nodes = nodes, edges = road.segmentsB, g = g)
+    list(nodes = nodes, edges = edges, g = g)
 
   } else {
-    rd.segs$node1 <- paste0(rd.segs$x1, "-", rd.segs$y1)
-    rd.segs$node2 <- paste0(rd.segs$x2, "-", rd.segs$y2)
-    rd.segs$d <- sqrt((rd.segs$x1 - rd.segs$x2)^2 + (rd.segs$y1 - rd.segs$y2)^2)
+    road.segments$node1 <- paste0(road.segments$x1, "-", road.segments$y1)
+    road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
+    road.segments$id2 <- paste0(road.segments$id, "a")
+    road.segments$d <- sqrt((road.segments$x1 - road.segments$x2)^2 +
+                            (road.segments$y1 - road.segments$y2)^2)
 
-    edges <- lapply(rd.segs$id, embedSites, type = "edges")
-    edges <- do.call(rbind, edges)
+    a <- stats::setNames(road.segments[, c("x1", "y1", "node1")],
+      c("x.proj", "y.proj", "node"))
+    b <- stats::setNames(road.segments[, c("x2", "y2", "node2")],
+      c("x.proj", "y.proj", "node"))
 
-    nodes <- lapply(rd.segs$id, embedSites)
-    nodes <- do.call(rbind, nodes)
-    nodes$anchor <- NULL
-    nodes$pump <- NULL
+    nodes <- unique(rbind(a, b))
+    nodes <- data.frame(nodes[, c("x.proj", "y.proj")],
+                        anchor = 0,
+                        pump = 0,
+                        node = nodes$node,
+                        stringsAsFactors = FALSE)
 
-    edge.list <- rd.segs[, c("node1", "node2")]
+    edge.list <- road.segments[, c("node1", "node2")]
     g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
 
-    list(nodes = nodes, edges = rd.segs, g = g)
+    list(nodes = nodes, edges = road.segments, g = g)
   }
 }
 
