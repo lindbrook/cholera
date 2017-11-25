@@ -50,25 +50,31 @@ nodeData <- function(embed = TRUE, vestry = FALSE) {
 
     nodes <- do.call(rbind, nodes)
 
-    rd.endpts1 <- road.segments[road.segments$node1 %in%
+    endpt.node1 <- road.segments[road.segments$node1 %in%
                                 nodes$node == FALSE, "node1"]
-    rd.endpts2 <- road.segments[road.segments$node2 %in%
+    endpt.node2 <- road.segments[road.segments$node2 %in%
                                 nodes$node == FALSE, "node2"]
 
-    rd.nodes1 <- lapply(setdiff(rd.endpts1, rd.endpts2), function(x) {
-      dat <- stats::setNames(road.segments[road.segments$node1 == x,
-        c("x1", "y1")], c("x.proj", "y.proj"))
-      unique(data.frame(dat, anchor = 0, pump = 0, node = x))
+    null.nodes <- lapply(union(endpt.node1, endpt.node2), function(x) {
+      dat <- road.segments[road.segments$node1 == x |
+                           road.segments$node2 == x, ]
+
+      endpt1 <- dat$node1 == x & dat$node2 != x
+      endpt2 <- dat$node1 != x & dat$node2 == x
+
+      if (any(endpt1)) {
+        data.sel <- unique(dat[endpt1, c("x1", "y1")])
+      } else if (any(endpt2)) {
+        data.sel <- unique(dat[endpt2, c("x2", "y2")])
+      }
+
+      data.sel <- stats::setNames(data.sel, c("x.proj", "y.proj"))
+      data.frame(data.sel, anchor = 0, pump = 0, node = x)
     })
 
-    rd.nodes2 <- lapply(setdiff(rd.endpts2, rd.endpts1), function(x) {
-      dat <- stats::setNames(road.segments[road.segments$node2 == x,
-        c("x2", "y2")], c("x.proj", "y.proj"))
-      unique(data.frame(dat, anchor = 0, pump = 0, node = x))
-    })
+    null.nodes <- do.call(rbind, null.nodes)
 
-    rd.nodes <- rbind(do.call(rbind, rd.nodes1), do.call(rbind, rd.nodes2))
-    nodes <- rbind(nodes, rd.nodes)
+    nodes <- rbind(nodes, null.nodes)
 
     # Network Graph #
 
