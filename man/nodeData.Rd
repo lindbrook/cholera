@@ -2,7 +2,7 @@
 % Please edit documentation in R/nodeData.R
 \name{nodeData}
 \alias{nodeData}
-\title{Compute graph netowrk of roads, cases and pumps.}
+\title{Compute network graph of roads, cases and pumps.}
 \usage{
 nodeData(embed = TRUE, vestry = FALSE)
 }
@@ -12,8 +12,8 @@ nodeData(embed = TRUE, vestry = FALSE)
 \item{vestry}{Logical. Use Vestry Report pump data.}
 }
 \value{
-An R list of nodes, edges and network graph.
+An R list of nodes, edges and an "igraph" package network graph.
 }
 \description{
-Embed cases and pumps into road network graph.
+By default, embeds "anchor" cases and pumps into road network graph.
 }
