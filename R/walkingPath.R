@@ -93,7 +93,7 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       if (all(destination < 0)) {
         p.nodes <- nodes[nodes$pump != 0, ]
         alters <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE, "node"]
-      } else {
+      } else if (all(destination > 0)) {
         alters <- nodes[nodes$pump %in% destination, "node"]
       }
     } else {
