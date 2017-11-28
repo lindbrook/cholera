@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclideanDistance.R
 \name{plot.euclidean_distance}
 \alias{plot.euclidean_distance}
-\title{Plot observed and simulated walking neighborhoods.}
+\title{Plot the Euclidean distance between cases and/or pumps.}
 \usage{
 \method{plot}{euclidean_distance}(x, zoom = TRUE, radius = 0.5, ...)
 }
@@ -19,7 +19,7 @@
 A base R graphics plot.
 }
 \description{
-Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
+Plot the Euclidean distance between cases and/or pumps.
 }
 \examples{
 plot(euclideanDistance(1))

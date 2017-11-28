@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclideanDistance.R
 \name{summary.euclidean_distance}
 \alias{summary.euclidean_distance}
-\title{Plot observed and simulated walking neighborhoods.}
+\title{Summary method for euclideanDistance().}
 \usage{
 \method{summary}{euclidean_distance}(object, ...)
 }
@@ -11,6 +11,12 @@
 
 \item{...}{Additional parameters.}
 }
+\value{
+An R data frame.
+}
 \description{
-Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
+Summary method for euclideanDistance().
+}
+\examples{
+summary(euclideanDistance(1))
 }

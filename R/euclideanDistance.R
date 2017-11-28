@@ -210,12 +210,15 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
   output
 }
 
-#' Plot observed and simulated walking neighborhoods.
+#' Summary method for euclideanDistance().
 #'
-#' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
 #' @param object An object of class "euclidean_distance" created by euclideanDistance().
 #' @param ... Additional parameters.
+#' @return An R data frame.
 #' @export
+#' @examples
+#' summary(euclideanDistance(1))
+
 summary.euclidean_distance <- function(object, ...) {
   if (class(object) != "euclidean_distance") {
     stop('"object"\'s class needs to be "euclidean_distance".')
@@ -224,9 +227,7 @@ summary.euclidean_distance <- function(object, ...) {
   object$summary
 }
 
-#' Plot observed and simulated walking neighborhoods.
-#'
-#' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
+#' Plot the Euclidean distance between cases and/or pumps.
 #'
 #' @param x An object of class "euclidean_distance" created by euclideanDistance().
 #' @param zoom Logical.
@@ -238,7 +239,6 @@ summary.euclidean_distance <- function(object, ...) {
 #' plot(euclideanDistance(1))
 
 plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
-
   if (class(x) != "euclidean_distance") {
     stop('"x"\'s class needs to be "euclidean_distance".')
   }
