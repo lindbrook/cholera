@@ -19,7 +19,7 @@ euclideanDistance(origin, destination = NULL, type = "case-pump",
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
 }
 \value{
-An R data frame.
+An R list.
 }
 \description{
 Compute the Euclidean distance between cases and/or pumps.

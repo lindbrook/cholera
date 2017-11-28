@@ -6,7 +6,7 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @note The function uses a case's "address" or "anchor" case to compute distance.
-#' @return An R data frame.
+#' @return An R list.
 #' @export
 #' @examples
 #' euclideanDistance(1)
@@ -203,5 +203,112 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
     }
   }
 
-  out
+  output <- list(origin = origin, destination = destination, alters = alters,
+    sel = sel, vestry = vestry, unit = unit, summary = out)
+
+  class(output) <- "euclidean_distance"
+  output
+}
+
+#' Plot observed and simulated walking neighborhoods.
+#'
+#' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
+#' @param object An object of class "euclidean_distance" created by euclideanDistance().
+#' @param ... Additional parameters.
+#' @export
+summary.euclidean_distance <- function(object, ...) {
+  if (class(object) != "euclidean_distance") {
+    stop('"object"\'s class needs to be "euclidean_distance".')
+  }
+
+  object$summary
+}
+
+#' Plot observed and simulated walking neighborhoods.
+#'
+#' Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
+#'
+#' @param x An object of class "euclidean_distance" created by euclideanDistance().
+#' @param zoom Logical.
+#' @param radius Numeric. Controls the degree of zoom.
+#' @param ... Additional plotting parameters.
+#' @return A base R graphics plot.
+#' @export
+#' @examples
+#' plot(euclideanDistance(1))
+
+plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
+
+  if (class(x) != "euclidean_distance") {
+    stop('"x"\'s class needs to be "euclidean_distance".')
+  }
+
+  rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
+  map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
+  roads.list <- split(rd[, c("x", "y")], rd$street)
+  border.list <- split(map.frame[, c("x", "y")], map.frame$street)
+
+  origin <- x$origin
+  destination <- x$destination
+
+  origin.xy <- cholera::fatalities[cholera::fatalities$case == origin,
+    c("x", "y")]
+  anchor <- cholera::anchor.case[cholera::anchor.case$case == origin,
+    "anchor.case"]
+
+  pump <- x$alters[x$sel, "id"]
+
+  if (x$vestry) {
+    colors <- cholera::snowColors(vestry = TRUE)
+    pump.xy <- cholera::pumps.vestry[cholera::pumps.vestry$id == pump,
+      c("x", "y")]
+  } else {
+    colors <- cholera::snowColors()
+    pump.xy <- cholera::pumps[cholera::pumps$id == pump, c("x", "y")]
+  }
+
+  dat <- rbind(origin.xy, pump.xy)
+
+  if (zoom) {
+    x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
+    y.rng <- c(min(dat$y) - radius, max(dat$y) + radius)
+  } else {
+    x.rng <- range(cholera::roads$x)
+    y.rng <- range(cholera::roads$y)
+  }
+
+  case.color <- colors[x$alters[x$sel, "id"]]
+
+  plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
+    xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
+  invisible(lapply(roads.list, lines, col = "lightgray"))
+  invisible(lapply(border.list, lines))
+  title(main = paste("Case", origin, "to Pump", x$alters[x$sel, "id"]))
+
+  if (x$vestry) {
+    pump.names <- paste0("p", cholera::pumps.vestry$id)
+    points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
+      col = colors)
+    text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
+  } else {
+    pump.names <- paste0("p", cholera::pumps$id)
+    points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
+    text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+  }
+
+  points(origin.xy, col = "red")
+  text(origin.xy, labels = origin, pos = 1, col = "red")
+
+  arrows(origin.xy$x, origin.xy$y, pump.xy$x, pump.xy$y, length = 0.1,
+    col = case.color)
+
+  distance <- stats::dist(dat)
+
+  if (is.null(x$unit)) {
+    title(sub = paste(round(distance, 2), "units"))
+  } else if (x$unit == "meter") {
+    title(sub = paste(round(54 * distance, 2), "meters"))
+  } else if (x$unit == "yard") {
+    title(sub = paste(round(177/3 * distance, 2), "yards"))
+  }
 }
