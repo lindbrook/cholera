@@ -416,12 +416,22 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
     }
   }
 
-  if (is.null(unit)) {
-    title(sub = paste(round(d[alter.node], 2), "units"))
-  } else if (unit == "meter") {
-    title(sub = paste(round(54 * d[alter.node], 2), "meters"))
-  } else if (unit == "yard") {
-    title(sub = paste(round(177/3 * d[alter.node], 2), "yards"))
+  if (is.null(destination)) {
+    if (is.null(unit)) {
+      title(sub = paste(round(d, 2), "units"))
+    } else if (unit == "meter") {
+      title(sub = paste(round(54 * d, 2), "meters"))
+    } else if (unit == "yard") {
+      title(sub = paste(round(177 / 3 * d, 2), "yards"))
+    }
+  } else {
+    if (is.null(unit)) {
+      title(sub = paste(round(d[alter.node], 2), "units"))
+    } else if (unit == "meter") {
+      title(sub = paste(round(54 * d[alter.node], 2), "meters"))
+    } else if (unit == "yard") {
+      title(sub = paste(round(177 / 3 * d[alter.node], 2), "yards"))
+    }
   }
 }
 
