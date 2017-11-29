@@ -207,7 +207,7 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
     sel = sel, vestry = vestry, unit = unit, summary = out)
 
   class(output) <- "euclidean_distance"
-  output
+  invisible(output)
 }
 
 #' Summary method for euclideanDistance().
