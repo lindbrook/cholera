@@ -28,7 +28,7 @@ walkingPath(origin, destination = NULL, type = "case-pump", zoom = TRUE,
 A base R graphics plot.
 }
 \description{
-Beta v.1
+Plot the shortest walking path between cases and/or pumps.
 }
 \examples{
 # path from case 1 to nearest pump.

@@ -1,6 +1,5 @@
 #' Plot the shortest walking path between cases and/or pumps.
 #'
-#' Beta v.1
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL, which returns closest pump or "anchor" case.
 #' @param type Character. "case-pump", "cases" or "pumps".
@@ -48,17 +47,17 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
   if (vestry) {
     colors <- cholera::snowColors(vestry = TRUE)
     node.data <- cholera::nodeData(vestry = TRUE)
-    pumps <- cholera::pumps.vestry
   } else {
     colors <- cholera::snowColors()
     node.data <- cholera::nodeData()
-    pumps <- cholera::pumps
   }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
   roads.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
+
+  p.neighborhood <- cholera::neighborhood.distances
 
   nodes <- node.data$nodes
   edges <- node.data$edges
@@ -70,6 +69,12 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
     }
 
     if (!is.null(destination)) {
+      if (any(abs(destination) == 2)) {
+        txt1 <- 'Pump 2, on Adam and Eve Court, is an isolate and is'
+        txt2 <- 'technically unreachable and not used.'
+        warning(paste(txt1, txt2))
+      }
+
       if (vestry) {
         if (any(abs(destination) %in% 1:14 == FALSE)) {
           txt1 <- 'With type = "case-pump" and "vestry = TRUE",'
@@ -85,34 +90,38 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       }
     }
 
-    ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
+    nodes <- nodes[nodes$pump != 2, ]
+
+    ego <- cholera::anchor.case[cholera::anchor.case$case == origin,
       "anchor.case"]
-    ego.node <- nodes[nodes$anchor == ego.id, "node"]
 
-    if (!is.null(destination)) {
-      if (all(destination < 0)) {
-        p.nodes <- nodes[nodes$pump != 0, ]
-        alters <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE, "node"]
-      } else if (all(destination > 0)) {
-        alters <- nodes[nodes$pump %in% destination, "node"]
+    ego.node <- nodes[nodes$anchor == ego, "node"]
+
+    if (is.null(destination)) {
+      alter <- p.neighborhood[p.neighborhood$case == ego, "pump"]
+      alter.node <- nodes[nodes$pump == alter, "node"]
+      d <- p.neighborhood[p.neighborhood$case == ego, "distance"]
+    } else {
+      if (all(destination > 0)) {
+        pump.node <- nodes[nodes$pump %in% destination, "node"]
+      } else if (all(destination < 0)) {
+        pump.node <- nodes[nodes$pump != 0 & nodes$pump %in%
+          abs(destination) == FALSE, "node"]
       }
-    } else {
-      alters <- nodes[nodes$pump != 0, "node"]
-    }
 
-    if (weighted) {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x, weights = edges$d)
-      }, numeric(1L))
-    } else {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x)
-      }, numeric(1L))
-    }
+      if (weighted) {
+        d <- vapply(pump.node, function(x) {
+          igraph::distances(g, ego.node, x, weights = edges$d)
+        }, numeric(1L))
+      } else {
+        d <- vapply(pump.node, function(x) {
+          igraph::distances(g, ego.node, x)
+        }, numeric(1L))
+      }
 
-    nearest <- which.min(d)
-    alter.id <- nodes[nodes$node %in% names(nearest), "pump"]
-    alter.node <- nodes[nodes$node %in% names(nearest), "node"]
+      alter.node <- names(which.min(d))
+      alter <- nodes[nodes$node == alter.node, "pump"]
+    }
 
     if (weighted) {
       path <- names(unlist(igraph::shortest_paths(g, ego.node, alter.node,
@@ -122,9 +131,18 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
         alter.node)$vpath))
     }
 
+    null.nodes <- nodes[nodes$anchor == 0 & nodes$pump == 0, ]
+    intermediate.roads <- path %in% null.nodes$node
+    road.path <- path[intermediate.roads]
+
+    first <- c(1, which(path %in% road.path[1]))
+    last <- c(which(path %in% road.path[length(road.path)]), length(path))
+
+    road.path <- path[intermediate.roads]
+    first.mile <- path[first]
+    last.mile <- path[last]
+
     dat <- numericNodeCoordinates(path)
-    n1 <- dat[1:(nrow(dat) - 1), ]
-    n2 <- dat[2:nrow(dat), ]
 
     if (zoom) {
       x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
@@ -134,13 +152,13 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       y.rng <- range(cholera::roads$y)
     }
 
-    case.color <- colors[alter.id]
+    case.color <- colors[alter]
 
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "lightgray"))
     invisible(lapply(border.list, lines))
-    title(main = paste("Case", ego.id, "to Pump", alter.id))
+    title(main = paste("Case", origin, "to Pump", alter))
 
     if (vestry) {
       pump.names <- paste0("p", cholera::pumps.vestry$id)
@@ -154,30 +172,28 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
     }
 
     if (zoom) {
-      points(cholera::fatalities[cholera::fatalities$case == ego.id,
+      points(cholera::fatalities[cholera::fatalities$case == ego,
         c("x", "y")],col = "red")
-      text(cholera::fatalities[cholera::fatalities$case == ego.id,
-        c("x", "y")], labels = ego.id, pos = 1, col = "red")
+      text(cholera::fatalities[cholera::fatalities$case == ego,
+        c("x", "y")], labels = ego, pos = 1, col = "red")
       points(dat[1, c("x", "y")], col = case.color, pch = 0)
       points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
     } else {
-      points(cholera::fatalities[cholera::fatalities$case == ego.id,
+      points(cholera::fatalities[cholera::fatalities$case == ego,
         c("x", "y")], col = "red")
       points(dat[1, c("x", "y")], col = case.color, pch = 0)
       points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
     }
 
-    if (zoom) {
-      arrows(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2, length = 0.05)
-    } else {
-      sel <- seq_len(nrow(dat))
-      med <- round(stats::median(sel))
-      selA <- sel[-med]
-      selB <- sel[med]
-      segments(n1$x[selA], n1$y[selA], n2$x[selA], n2$y[selA],
-        col = case.color, lwd = 2)
-      arrows(n1$x[selB], n1$y[selB], n2$x[selB], n2$y[selB],
-        col = case.color, lwd = 2, length = 0.075)
+    if (sum(intermediate.roads) >= 2) {
+      drawPath(first.mile, case.color)
+      drawPath(road.path, case.color)
+      drawPath(last.mile, case.color)
+    } else if (sum(intermediate.roads) == 1) {
+      drawPath(first.mile, case.color)
+      drawPath(last.mile, case.color)
+    } else if (all(intermediate.roads == FALSE)) {
+      drawPath(c(first.mile, last.mile), case.color)
     }
 
   } else if (type == "cases") {
@@ -187,31 +203,29 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       stop(paste(txt1, txt2))
     }
 
-    ego.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
+    ego <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
       origin, "anchor.case"])
-    ego.anchor <- cholera::anchor.case[cholera::anchor.case$case == ego.id,
-      "anchor.case"]
+    ego.node <- nodes[nodes$anchor == ego, "node"]
 
     if (is.null(destination)) {
       alters.id <- cholera::fatalities.address$anchor.case
-      alters.id <- alters.id[alters.id != ego.anchor]
+      alters.id <- alters.id[alters.id != ego]
     } else {
       if (all(destination > 0)) {
         alters.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
           destination, "anchor.case"])
-        alters.id <- alters.id[alters.id != ego.anchor]
+        alters.id <- alters.id[alters.id != ego]
       } else if (all(destination < 0)) {
         alters.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
           abs(destination) == FALSE, "anchor.case"])
-        alters.id <- alters.id[alters.id != ego.anchor]
+        alters.id <- alters.id[alters.id != ego]
       }
     }
 
-    if (identical(all.equal(ego.id, alters.id), TRUE)) {
-      warning('Origin and destination case at same "address".')
+    if (identical(all.equal(ego, alters.id), TRUE)) {
+      warning('Origin and destination case share the same "address".')
     }
 
-    ego.node <- nodes[nodes$anchor == ego.id, "node"]
     alter.nodes <- nodes[nodes$anchor %in% alters.id, "node"]
 
     if (weighted) {
@@ -224,21 +238,29 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       }, numeric(1L))
     }
 
-    nearest <- which.min(d)
-    nearest.node <- nodes[nodes$node == names(nearest), "node"]
-    nearest.id <- nodes[nodes$node == nearest.node, "anchor"]
+    alter.node <- names(which.min(d))
+    alter <- nodes[nodes$node == alter.node, "anchor"]
 
     if (weighted) {
-      path <- names(unlist(igraph::shortest_paths(g, ego.node, nearest.node,
+      path <- names(unlist(igraph::shortest_paths(g, ego.node, alter.node,
         weights = edges$d)$vpath))
     } else {
       path <- names(unlist(igraph::shortest_paths(g, ego.node,
         alter.node)$vpath))
     }
 
+    null.nodes <- nodes[nodes$anchor == 0 & nodes$pump == 0, ]
+    intermediate.roads <- path %in% null.nodes$node
+    road.path <- path[intermediate.roads]
+
+    first <- c(1, which(path %in% road.path[1]))
+    last <- c(which(path %in% road.path[length(road.path)]), length(path))
+
+    road.path <- path[intermediate.roads]
+    first.mile <- path[first]
+    last.mile <- path[last]
+
     dat <- numericNodeCoordinates(path)
-    n1 <- dat[1:(nrow(dat) - 1), ]
-    n2 <- dat[2:nrow(dat), ]
 
     if (zoom) {
       x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
@@ -248,42 +270,63 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       y.rng <- range(cholera::roads$y)
     }
 
+    case.color <- "blue"
+
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "lightgray"))
     invisible(lapply(border.list, lines, col = "gray"))
-    title(main = paste("Case", origin, "to Case", nearest.id))
+    title(main = paste("Case", origin, "to Case", alter))
 
-    points(cholera::fatalities[cholera::fatalities$case == ego.id,
+    points(cholera::fatalities[cholera::fatalities$case == ego,
       c("x", "y")], col = "red")
-    text(cholera::fatalities[cholera::fatalities$case == ego.id,
-      c("x", "y")], labels = ego.id, pos = 1, col = "red")
+    text(cholera::fatalities[cholera::fatalities$case == ego,
+      c("x", "y")], labels = ego, pos = 1, col = "red")
 
-    points(cholera::fatalities[cholera::fatalities$case == nearest.id,
+    points(cholera::fatalities[cholera::fatalities$case == alter,
       c("x", "y")], col = "red")
-    text(cholera::fatalities[cholera::fatalities$case == nearest.id,
-      c("x", "y")], labels = nearest.id, pos = 1, col = "red")
+    text(cholera::fatalities[cholera::fatalities$case == alter,
+      c("x", "y")], labels = alter, pos = 1, col = "red")
 
     points(dat[1, c("x", "y")], col = "blue", pch = 0)
     points(dat[nrow(dat), c("x", "y")], col = "blue", pch = 0)
 
-    if (zoom) {
-      arrows(n1$x, n1$y, n2$x, n2$y, col = "blue", lwd = 2, length = 0.05)
-    } else {
-      sel <- seq_len(nrow(dat))
-      med <- round(stats::median(sel))
-      selA <- sel[-med]
-      selB <- sel[med]
-      segments(n1$x[selA], n1$y[selA], n2$x[selA], n2$y[selA],
-        col = "blue", lwd = 2)
-      arrows(n1$x[selB], n1$y[selB], n2$x[selB], n2$y[selB],
-        col = "blue", lwd = 2, length = 0.075)
+    if (sum(intermediate.roads) >= 2) {
+      drawPath(first.mile, case.color)
+      drawPath(road.path, case.color)
+      drawPath(last.mile, case.color)
+    } else if (sum(intermediate.roads) == 1) {
+      drawPath(first.mile, case.color)
+      drawPath(last.mile, case.color)
+    } else if (all(intermediate.roads == FALSE)) {
+      drawPath(c(first.mile, last.mile), case.color)
     }
 
   } else if (type == "pumps") {
-    p.nodes <- nodes[nodes$pump > 0, ]
-    ego.node <- p.nodes[p.nodes$pump == origin, "node"]
+    if (!is.null(destination)) {
+      if (any(abs(destination) == 2)) {
+        txt1 <- 'Pump 2, on Adam and Eve Court, is an isolate and is'
+        txt2 <- 'technically unreachable and not used.'
+        warning(paste(txt1, txt2))
+      }
 
+      if (vestry) {
+        if (any(abs(destination) %in% 1:14 == FALSE)) {
+          txt1 <- 'With type = "pumps" and "vestry = TRUE",'
+          txt2 <- '1 >= |destination| <= 14.'
+          stop(paste(txt1, txt2))
+        }
+      } else {
+        if (any(abs(destination) %in% 1:13 == FALSE)) {
+          txt1 <- 'With type = "pumps" and "vestry = FALSE",'
+          txt2 <- '1 >= |destination| <= 13.'
+          stop(paste(txt1, txt2))
+        }
+      }
+    }
+
+    p.nodes <- nodes[nodes$pump > 0 & nodes$pump != 2, ]
+    ego.node <- p.nodes[p.nodes$pump == origin, "node"]
 
     if (is.null(destination)) {
       alters  <- p.nodes[p.nodes$pump != origin, "node"]
@@ -307,9 +350,8 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       }, numeric(1L))
     }
 
-    nearest <- which.min(d)
-    alter.id <- p.nodes[p.nodes$node %in% names(nearest), "pump"]
-    alter.node <- p.nodes[p.nodes$node %in% names(nearest), "node"]
+    alter.node <- names(which.min(d))
+    alter <- nodes[nodes$node == alter.node, "pump"]
 
     if (weighted) {
       path <- names(unlist(igraph::shortest_paths(g, ego.node, alter.node,
@@ -319,9 +361,18 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
         alter.node)$vpath))
     }
 
+    null.nodes <- nodes[nodes$anchor == 0 & nodes$pump == 0, ]
+    intermediate.roads <- path %in% null.nodes$node
+    road.path <- path[intermediate.roads]
+
+    first <- c(1, which(path %in% road.path[1]))
+    last <- c(which(path %in% road.path[length(road.path)]), length(path))
+
+    road.path <- path[intermediate.roads]
+    first.mile <- path[first]
+    last.mile <- path[last]
+
     dat <- numericNodeCoordinates(path)
-    n1 <- dat[1:(nrow(dat) - 1), ]
-    n2 <- dat[2:nrow(dat), ]
 
     if (zoom) {
       x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
@@ -331,11 +382,13 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       y.rng <- range(cholera::roads$y)
     }
 
+    case.color <- "blue"
+
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "lightgray"))
     invisible(lapply(border.list, lines, col = "gray"))
-    title(main = paste("Pump", origin, "to Pump", alter.id))
+    title(main = paste("Pump", origin, "to Pump", alter))
 
     if (vestry) {
       pump.names <- paste0("p", cholera::pumps.vestry$id)
@@ -351,30 +404,35 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
     points(dat[1, c("x", "y")], col = "blue", pch = 0)
     points(dat[nrow(dat), c("x", "y")], col = "blue", pch = 0)
 
-    if (zoom) {
-      arrows(n1$x, n1$y, n2$x, n2$y, col = "blue", lwd = 2, length = 0.05)
-    } else {
-      sel <- seq_len(nrow(dat))
-      med <- round(stats::median(sel))
-      selA <- sel[-med]
-      selB <- sel[med]
-      segments(n1$x[selA], n1$y[selA], n2$x[selA], n2$y[selA],
-        col = "blue", lwd = 2)
-      arrows(n1$x[selB], n1$y[selB], n2$x[selB], n2$y[selB],
-        col = "blue", lwd = 2, length = 0.075)
+    if (sum(intermediate.roads) >= 2) {
+      drawPath(first.mile, case.color)
+      drawPath(road.path, case.color)
+      drawPath(last.mile, case.color)
+    } else if (sum(intermediate.roads) == 1) {
+      drawPath(first.mile, case.color)
+      drawPath(last.mile, case.color)
+    } else if (all(intermediate.roads == FALSE)) {
+      drawPath(c(first.mile, last.mile), case.color)
     }
   }
 
   if (is.null(unit)) {
-    title(sub = paste(round(d[nearest], 2), "units"))
+    title(sub = paste(round(d[alter.node], 2), "units"))
   } else if (unit == "meter") {
-    title(sub = paste(round(54 * d[nearest], 2), "meters"))
+    title(sub = paste(round(54 * d[alter.node], 2), "meters"))
   } else if (unit == "yard") {
-    title(sub = paste(round(177/3 * d[nearest], 2), "yards"))
+    title(sub = paste(round(177/3 * d[alter.node], 2), "yards"))
   }
 }
 
 numericNodeCoordinates <- function(x) {
   nodes <- do.call(rbind, (strsplit(x, "-")))
   data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
+}
+
+drawPath <- function(x, case.color) {
+  dat <- numericNodeCoordinates(x)
+  n1 <- dat[1:(nrow(dat) - 1), ]
+  n2 <- dat[2:nrow(dat), ]
+  arrows(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2, length = 0.05)
 }
