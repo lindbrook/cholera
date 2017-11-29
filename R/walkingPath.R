@@ -70,8 +70,8 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
 
     if (!is.null(destination)) {
       if (any(abs(destination) == 2)) {
-        txt1 <- 'Pump 2, on Adam and Eve Court, is an isolate and is'
-        txt2 <- 'technically unreachable and not used.'
+        txt1 <- 'Pump 2, on Adam and Eve Court, is an isolate.'
+        txt2 <- 'It is technically unreachable and not considered.'
         warning(paste(txt1, txt2))
       }
 
