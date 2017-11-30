@@ -207,24 +207,27 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
     alters = alters, sel = sel, vestry = vestry, unit = unit, summary = out)
 
   class(output) <- "euclidean_distance"
-  invisible(output)
+  # invisible(output)
+  output
 }
 
-#' Summary method for euclideanDistance().
+#' Print method for euclideanDistance().
 #'
-#' @param object An object of class "euclidean_distance" created by euclideanDistance().
+#' Returns summary results.
+#' @param x An object of class "euclidean_distance" created by euclideanDistance().
 #' @param ... Additional parameters.
 #' @return An R data frame.
 #' @export
 #' @examples
-#' summary(euclideanDistance(1))
+#' euclideanDistance(1)
+#' print(euclideanDistance(1))
 
-summary.euclidean_distance <- function(object, ...) {
-  if (class(object) != "euclidean_distance") {
-    stop('"object"\'s class needs to be "euclidean_distance".')
+print.euclidean_distance <- function(x, ...) {
+  if (class(x) != "euclidean_distance") {
+    stop('"x"\'s class needs to be "euclidean_distance".')
   }
 
-  object$summary
+  print(x$summary)
 }
 
 #' Plot the Euclidean distance between cases and/or pumps.
