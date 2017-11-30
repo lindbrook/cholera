@@ -54,7 +54,7 @@ I see Snow's annotation as an attempt to addresses this issue. He writes that th
 The walking distance approach is based on computing the shortest path between a given fatality and its nearest pump along the network of roads. For example, the figure below plots the path between the case 150 and its nearest pump, the Broad Street pump ("p7").
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
-walkingPath(150)
+plot(walkingDistance(150))
 ```
 
 By drawing paths for all observed cases, we can begin to get a sense of the different pump neighborhoods.
