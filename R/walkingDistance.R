@@ -1,6 +1,5 @@
 #' Compute the shortest walking distance between cases and/or pumps.
 #'
-#' Beta v.1
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
@@ -8,7 +7,7 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
 #' @note The function uses a case's "address" or "anchor" case to compute distance. Because Adam and Eve Court is disconnected from the larger road network (an isolate), only cases on that road can reach pump 2. All others will return Inf.
-#' @return A base R data frame.
+#' @return An R list.
 #' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
@@ -29,13 +28,6 @@
 #'
 #' # path from pump 1 to pump 6.
 #' walkingDistance(1, 6, type = "pumps")
-#'
-#' ## Pairwise Euclidean distance (meters) between pumps. ##
-#' # pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)
-#' #
-#' # vapply(pairs, function(x) {
-#' #   walkingDistance(x[1], x[2], type = "pumps", unit = "meter")$distance
-#'# }, numeric(1L))
 
 walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   weighted = TRUE, vestry = FALSE, unit = NULL) {
@@ -194,12 +186,16 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 
   } else if (type == "pumps") {
     if (vestry) {
+      pumps <- cholera::pumps.vestry
+
       if (any(abs(c(origin, destination)) %in% 1:14 == FALSE)) {
         txt1 <- 'With type = "pumps" and "vestry = TRUE",'
         txt2 <- 'origin and destination must be 1 >= |x| <= 14.'
         stop(paste(txt1, txt2))
       }
     } else {
+      pumps <- cholera::pumps
+
       if (any(abs(c(origin, destination)) %in% 1:13 == FALSE)) {
         txt1 <- 'With type = "pumps" and "vestry = FALSE",'
         txt2 <- 'origin and destination must be 1 >= |x| <= 13.'
@@ -253,5 +249,188 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
     }
   }
 
-  out
+  output <- list(origin = origin, destination = destination, type = type,
+    weighted = weighted, vestry = vestry, unit = unit, nodes = nodes,
+    edges = edges, g = g, ego.node = ego.node, alter.node = names(sel),
+    d = out$distance,summary = out)
+
+  class(output) <- "walking_distance"
+  output
+}
+
+#' Print method for walkingDistance().
+#'
+#' Return summary results.
+#' @param x An object of class "walking_distance" created by walkingDistance().
+#' @param ... Additional parameters.
+#' @return An R data frame.
+#' @export
+#' @examples
+#' walkingDistance(1)
+#' print(walkingDistance(1))
+
+print.walking_distance <- function(x, ...) {
+  if (class(x) != "walking_distance") {
+    stop('"x"\'s class needs to be "walking_distance".')
+  }
+
+  print(x$summary)
+}
+
+#' Plot the walking distance between cases and/or pumps.
+#'
+#' @param x An object of class "walking_distance" created by walkingDistance().
+#' @param zoom Logical.
+#' @param radius Numeric. Controls the degree of zoom.
+#' @param ... Additional plotting parameters.
+#' @return A base R plot.
+#' @export
+#' @examples
+#' plot(walkingDistance(1))
+
+plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
+  if (class(x) != "walking_distance") {
+    stop('"x"\'s class needs to be "walking_distance".')
+  }
+
+  rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
+  map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
+  roads.list <- split(rd[, c("x", "y")], rd$street)
+  border.list <- split(map.frame[, c("x", "y")], map.frame$street)
+
+  if (x$vestry) {
+    colors <- cholera::snowColors(vestry = TRUE)
+  } else {
+    colors <- cholera::snowColors()
+  }
+
+  nodes <- x$nodes
+  edges <- x$edges
+  g <- x$g
+  ego.node <- x$ego.node
+  alter.node <- x$alter.node
+
+  if (x$weighted) {
+    path <- names(unlist(igraph::shortest_paths(g, ego.node, alter.node,
+      weights = edges$d)$vpath))
+  } else {
+    path <- names(unlist(igraph::shortest_paths(g, ego.node,
+      alter.node)$vpath))
+  }
+
+  null.nodes <- nodes[nodes$anchor == 0 & nodes$pump == 0, ]
+  intermediate.roads <- path %in% null.nodes$node
+  road.path <- path[intermediate.roads]
+
+  first <- c(1, which(path %in% road.path[1]))
+  last <- c(which(path %in% road.path[length(road.path)]), length(path))
+
+  road.path <- path[intermediate.roads]
+  first.mile <- path[first]
+  last.mile <- path[last]
+
+  dat <- numericNodeCoordinates(path)
+
+  if (zoom) {
+    x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
+    y.rng <- c(min(dat$y) - radius, max(dat$y) + radius)
+  } else {
+    x.rng <- range(cholera::roads$x)
+    y.rng <- range(cholera::roads$y)
+  }
+
+  if (x$type == "case-pump") {
+    alter <- nodes[nodes$node == alter.node, "pump"]
+    case.color <- colors[alter]
+    origin.obs <- cholera::fatalities[cholera::fatalities$case == x$origin,
+      c("x", "y")]
+  } else if (x$type == "cases") {
+    alter <- nodes[nodes$node == alter.node, "anchor"]
+    case.color <- "blue"
+
+    origin.obs <- cholera::fatalities[cholera::fatalities$case == x$origin,
+      c("x", "y")]
+
+    if (is.null(x$destination)) {
+      destination.obs <- cholera::fatalities[cholera::fatalities$case == alter,
+        c("x", "y")]
+    } else {
+      id <- x$destination[x$sel]
+      destination.obs <- cholera::fatalities[cholera::fatalities$case == id,
+        c("x", "y")]
+    }
+  } else if (x$type == "pumps") {
+    alter <- nodes[nodes$node == alter.node, "pump"]
+    case.color <- "blue"
+  }
+
+  plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
+    xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
+  invisible(lapply(roads.list, lines, col = "lightgray"))
+  invisible(lapply(border.list, lines))
+
+  if (x$vestry) {
+    pump.names <- paste0("p", cholera::pumps.vestry$id)
+    points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
+      col = colors)
+    text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
+  } else {
+    pump.names <- paste0("p", cholera::pumps$id)
+    points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
+    text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+  }
+
+  if (x$type == "case-pump" | x$type == "cases") {
+    points(origin.obs, col = "red")
+  }
+
+  if (x$type == "case-pump") {
+    title(main = paste("Case", x$origin, "to Pump", alter))
+  } else if (x$type == "cases") {
+    points(destination.obs, col = "red")
+    title(main = paste("Case", x$origin, "to Case", alter))
+  } else if (x$type == "pumps") {
+    title(main = paste("Pump", x$origin, "to Pump", alter))
+  }
+
+  points(dat[1, c("x", "y")], col = case.color, pch = 0)
+  points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
+
+  if (zoom) {
+    text(cholera::fatalities[cholera::fatalities$case == x$origin,
+      c("x", "y")], labels = x$origin, pos = 1, col = "red")
+  }
+
+  if (sum(intermediate.roads) >= 2) {
+    drawPath(first.mile, case.color)
+    drawPath(road.path, case.color)
+    drawPath(last.mile, case.color)
+  } else if (sum(intermediate.roads) == 1) {
+    drawPath(first.mile, case.color)
+    drawPath(last.mile, case.color)
+  } else if (all(intermediate.roads == FALSE)) {
+    drawPath(c(first.mile, last.mile), case.color)
+  }
+
+  nominal.distance <- round(x$d, 1)
+
+  if (is.null(x$unit)) {
+    title(sub = paste(nominal.distance, "units"))
+  } else if (x$unit == "meter") {
+    title(sub = paste(nominal.distance, "meters"))
+  } else if (x$unit == "yard") {
+    title(sub = paste(nominal.distance, "yards"))
+  }
+}
+
+numericNodeCoordinates <- function(x) {
+  nodes <- do.call(rbind, (strsplit(x, "-")))
+  data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
+}
+
+drawPath <- function(x, case.color) {
+  dat <- numericNodeCoordinates(x)
+  n1 <- dat[1:(nrow(dat) - 1), ]
+  n2 <- dat[2:nrow(dat), ]
+  arrows(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2, length = 0.05)
 }

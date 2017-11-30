@@ -1,7 +1,13 @@
+cholera 0.2.1.9011
+----------------------------------------------------------------
+
+* add S3 implementation of walkingDistance() w/ plot and print methods.
+
+
 cholera 0.2.1.9010
 ----------------------------------------------------------------
 
-* S3 implementation of euclideanDistance() w/ plot and print methods.
+* add S3 implementation of euclideanDistance() w/ plot and print methods.
 
 
 cholera 0.2.1.9009

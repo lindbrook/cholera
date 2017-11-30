@@ -21,10 +21,10 @@ walkingDistance(origin, destination = NULL, type = "case-pump",
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.}
 }
 \value{
-A base R data frame.
+An R list.
 }
 \description{
-Beta v.1
+Compute the shortest walking distance between cases and/or pumps.
 }
 \note{
 The function uses a case's "address" or "anchor" case to compute distance. Because Adam and Eve Court is disconnected from the larger road network (an isolate), only cases on that road can reach pump 2. All others will return Inf.
@@ -47,13 +47,6 @@ walkingDistance(1, 6, type = "cases")
 
 # path from pump 1 to pump 6.
 walkingDistance(1, 6, type = "pumps")
-
-## Pairwise Euclidean distance (meters) between pumps. ##
-# pairs <- combn(cholera::pumps$id, 2, simplify = FALSE)
-#
-# vapply(pairs, function(x) {
-#   walkingDistance(x[1], x[2], type = "pumps", unit = "meter")$distance
-# }, numeric(1L))
 }
 \seealso{
 \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
