@@ -9,11 +9,23 @@
 #' @return An R list.
 #' @export
 #' @examples
-#' euclideanDistance(1) # distance from case 1 to closest pump.
-#' euclideanDistance(1, 6) # distance from case 1 to pump 6.
-#' euclideanDistance(1, -7) # exclude pump 7 from consideration.
-#' euclideanDistance(1, 6, type = "cases") # distance from case 1 to case 6.
-#' euclideanDistance(1, 6, type = "pumps") # distance from pump 1 to pump 6.
+#' # path from case 1 to nearest pump.
+#' euclideanDistance(1)
+#'
+#' # path from case 1 to nearest pump in meters (appox).
+#' euclideanDistance(1, unit = "meter")
+#'
+#' # path from case 1 to pump 6.
+#' euclideanDistance(1, 6)
+#'
+#' # exclude pump 7 from consideration.
+#' euclideanDistance(1, -7)
+#'
+#' # path from case 1 to case 6.
+#' euclideanDistance(1, 6, type = "cases")
+#'
+#' # path from pump 1 to pump 6.
+#' euclideanDistance(1, 6, type = "pumps")
 
 euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
   vestry = FALSE, unit = NULL) {
@@ -205,7 +217,7 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
 
 #' Print method for euclideanDistance().
 #'
-#' Returns summary results.
+#' Return summary results.
 #' @param x An object of class "euclidean_distance" created by euclideanDistance().
 #' @param ... Additional parameters.
 #' @return An R data frame.
@@ -228,7 +240,7 @@ print.euclidean_distance <- function(x, ...) {
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param ... Additional plotting parameters.
-#' @return A base R graphics plot.
+#' @return A base R plot.
 #' @export
 #' @examples
 #' plot(euclideanDistance(1))

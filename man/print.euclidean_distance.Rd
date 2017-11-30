@@ -15,7 +15,7 @@
 An R data frame.
 }
 \description{
-Returns summary results.
+Return summary results.
 }
 \examples{
 euclideanDistance(1)

@@ -28,9 +28,21 @@ Compute the Euclidean distance between cases and/or pumps.
 The function uses a case's "address" or "anchor" case to compute distance.
 }
 \examples{
-euclideanDistance(1) # distance from case 1 to closest pump.
-euclideanDistance(1, 6) # distance from case 1 to pump 6.
-euclideanDistance(1, -7) # exclude pump 7 from consideration.
-euclideanDistance(1, 6, type = "cases") # distance from case 1 to case 6.
-euclideanDistance(1, 6, type = "pumps") # distance from pump 1 to pump 6.
+# path from case 1 to nearest pump.
+euclideanDistance(1)
+
+# path from case 1 to nearest pump in meters (appox).
+euclideanDistance(1, unit = "meter")
+
+# path from case 1 to pump 6.
+euclideanDistance(1, 6)
+
+# exclude pump 7 from consideration.
+euclideanDistance(1, -7)
+
+# path from case 1 to case 6.
+euclideanDistance(1, 6, type = "cases")
+
+# path from pump 1 to pump 6.
+euclideanDistance(1, 6, type = "pumps")
 }

@@ -16,7 +16,7 @@
 \item{...}{Additional plotting parameters.}
 }
 \value{
-A base R graphics plot.
+A base R plot.
 }
 \description{
 Plot the Euclidean distance between cases and/or pumps.
