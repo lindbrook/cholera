@@ -27,8 +27,7 @@ nodeData <- function(embed = TRUE, vestry = FALSE) {
 
     if (vestry) {
       nodes <- lapply(edits, embedSites, vestry = TRUE)
-      edges <- lapply(edits, embedSites, type = "edges",
-        vestry = TRUE)
+      edges <- lapply(edits, embedSites, type = "edges", vestry = TRUE)
     } else {
       nodes <- lapply(edits, embedSites)
       edges <- lapply(edits, embedSites, type = "edges")
@@ -73,14 +72,12 @@ nodeData <- function(embed = TRUE, vestry = FALSE) {
     })
 
     null.nodes <- do.call(rbind, null.nodes)
-
     nodes <- rbind(nodes, null.nodes)
 
     # Network Graph #
 
     edge.list <- edges[, c("node1", "node2")]
     g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
-
     list(nodes = nodes, edges = edges, g = g)
 
   } else {
@@ -104,14 +101,13 @@ nodeData <- function(embed = TRUE, vestry = FALSE) {
 
     edge.list <- road.segments[, c("node1", "node2")]
     g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
-
     list(nodes = nodes, edges = road.segments, g = g)
   }
 }
 
 embedSites <- function(id, type = "nodes", vestry = FALSE) {
   if (id %in% cholera::road.segments$id == FALSE) {
-      stop('Valid "id" are listed in cholera::road.segments$id.')
+      stop('Valid "id" values are listed in cholera::road.segments$id.')
   }
 
   road.data <- cholera::road.segments[cholera::road.segments$id == id, ]
@@ -150,8 +146,9 @@ embedSites <- function(id, type = "nodes", vestry = FALSE) {
 
   if (pump.seg) {
      pump.data <- pumps[pumps$road.segment == id, ]
-     ps <- data.frame(pump.data[, c("x.proj", "y.proj")], anchor = 0,
-       pump = pump.data$pump.id)
+     ps <- data.frame(pump.data[, c("x.proj", "y.proj")],
+                      anchor = 0,
+                      pump = pump.data$pump.id)
   }
 
   if (case.seg & pump.seg) {
