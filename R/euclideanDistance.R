@@ -255,155 +255,82 @@ plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
   roads.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
-  origin <- x$origin
-  destination <- x$destination
+  if (x$vestry) {
+    colors <- cholera::snowColors(vestry = TRUE)
+    pmp <- cholera::pumps.vestry
+  } else {
+    colors <- cholera::snowColors()
+    pmp <- cholera::pumps
+  }
+
+  # destination <- x$destination # NULL nominal destination
+  end.sel <- x$sel
+
+  if (x$type == "case-pump" | x$type == "pumps") {
+    end.pump <- x$alters$id[end.sel]
+    alter.xy <- pmp[pmp$id == end.pump, c("x", "y")]
+  } else if (x$type == "cases") {
+    end.case <- x$alters$case[end.sel]
+    alter.xy <- cholera::fatalities[cholera::fatalities$case == end.case,
+      c("x", "y")]
+  }
+
+  if (x$type == "case-pump" | x$type == "cases") {
+    origin.xy <- cholera::fatalities[cholera::fatalities$case == x$origin,
+      c("x", "y")]
+    ego.id <- cholera::anchor.case[cholera::anchor.case$case == x$origin,
+      "anchor.case"]
+    addr <- cholera::fatalities.address
+    ego.xy <- addr[addr$anchor.case == ego.id,  c("x", "y")]
+  } else if (x$type == "pumps") {
+    origin.xy <- pmp[pmp$id == x$origin, c("x", "y")]
+    ego.xy <- origin.xy
+  }
+
+  dat <- rbind(origin.xy, alter.xy)
+
+  if (zoom) {
+    x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
+    y.rng <- c(min(dat$y) - radius, max(dat$y) + radius)
+  } else {
+    x.rng <- range(cholera::roads$x)
+    y.rng <- range(cholera::roads$y)
+  }
+
+  plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
+    xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
+  invisible(lapply(roads.list, lines, col = "lightgray"))
+  invisible(lapply(border.list, lines))
 
   if (x$type == "case-pump") {
-    origin.xy <- cholera::fatalities[cholera::fatalities$case == origin,
-      c("x", "y")]
-    anchor <- cholera::anchor.case[cholera::anchor.case$case == origin,
-      "anchor.case"]
-
-    pump <- x$alters[x$sel, "id"]
-
-    if (x$vestry) {
-      colors <- cholera::snowColors(vestry = TRUE)
-      pump.xy <- cholera::pumps.vestry[cholera::pumps.vestry$id == pump,
-        c("x", "y")]
-    } else {
-      colors <- cholera::snowColors()
-      pump.xy <- cholera::pumps[cholera::pumps$id == pump, c("x", "y")]
-    }
-
-    dat <- rbind(origin.xy, pump.xy)
-
-    if (zoom) {
-      x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
-      y.rng <- c(min(dat$y) - radius, max(dat$y) + radius)
-    } else {
-      x.rng <- range(cholera::roads$x)
-      y.rng <- range(cholera::roads$y)
-    }
-
-    case.color <- colors[x$alters[x$sel, "id"]]
-
-    plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
-      xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
-    invisible(lapply(roads.list, lines, col = "lightgray"))
-    invisible(lapply(border.list, lines))
-    title(main = paste("Pump", origin, "to Pump", x$alters[x$sel, "id"]))
-
-    if (x$vestry) {
-      pump.names <- paste0("p", cholera::pumps.vestry$id)
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
-        col = colors)
-      text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
-    } else {
-      pump.names <- paste0("p", cholera::pumps$id)
-      points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
-      text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
-    }
-
+    case.color <- colors[end.pump]
     points(origin.xy, col = "red")
-    text(origin.xy, labels = origin, pos = 1, col = "red")
-    arrows(origin.xy$x, origin.xy$y, pump.xy$x, pump.xy$y, length = 0.1,
-      col = case.color, code = 3)
-
+    title(main = paste("Case", x$origin, "to Pump", end.sel))
   } else if (x$type == "cases") {
-    origin.xy <- cholera::fatalities[cholera::fatalities$case == origin,
-      c("x", "y")]
-    anchor <- cholera::anchor.case[cholera::anchor.case$case == origin,
-      "anchor.case"]
-
-    destination.case <- x$alters[x$sel, ]
-    destination.xy <- destination.case[, c("x", "y")]
-
-    dat <- rbind(origin.xy, destination.xy)
-
-    if (zoom) {
-      x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
-      y.rng <- c(min(dat$y) - radius, max(dat$y) + radius)
-    } else {
-      x.rng <- range(cholera::roads$x)
-      y.rng <- range(cholera::roads$y)
-    }
-
     case.color <- "blue"
-
-    plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
-      xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
-    invisible(lapply(roads.list, lines, col = "lightgray"))
-    invisible(lapply(border.list, lines))
-    title(main = paste("Case", origin, "to Case", x$alters[x$sel, "id"]))
-
-    if (x$vestry) {
-      colors <- cholera::snowColors(vestry = TRUE)
-      pump.names <- paste0("p", cholera::pumps.vestry$id)
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
-        col = colors)
-      text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
-    } else {
-      colors <- cholera::snowColors()
-      pump.names <- paste0("p", cholera::pumps$id)
-      points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
-      text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
-    }
-
-    points(origin.xy, col = "red")
-    text(origin.xy, labels = origin, pos = 1, col = "red")
-    points(destination.xy, col = "red")
-    text(destination.xy, labels = destination.case[, "case"], pos = 1,
-      col = "red")
-    arrows(origin.xy$x, origin.xy$y, destination.xy$x, destination.xy$y,
-      length = 0.1, col = case.color, code = 3)
-
+    points(origin.xy, col = case.color)
+    points(alter.xy, col = case.color)
+    text(origin.xy, labels = x$origin, pos = 1, col = case.color)
+    text(alter.xy, labels = end.case, pos = 1, col = case.color)
+    title(main = paste("Case", x$origin, "to Case", end.case))
   } else if (x$type == "pumps") {
-    pump <- x$alters[x$sel, "id"]
-
-    if (x$vestry) {
-      origin.xy <- cholera::pumps.vestry[cholera::pumps.vestry$id == origin,
-        c("x", "y")]
-      colors <- cholera::snowColors(vestry = TRUE)
-      pump.xy <- cholera::pumps.vestry[cholera::pumps.vestry$id == pump,
-        c("x", "y")]
-    } else {
-      origin.xy <- cholera::pumps[cholera::pumps$id == origin, c("x", "y")]
-      colors <- cholera::snowColors()
-      pump.xy <- cholera::pumps[cholera::pumps$id == pump, c("x", "y")]
-    }
-
-    dat <- rbind(origin.xy, pump.xy)
-
-    if (zoom) {
-      x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
-      y.rng <- c(min(dat$y) - radius, max(dat$y) + radius)
-    } else {
-      x.rng <- range(cholera::roads$x)
-      y.rng <- range(cholera::roads$y)
-    }
-
     case.color <- "blue"
-
-    plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
-      xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
-    invisible(lapply(roads.list, lines, col = "lightgray"))
-    invisible(lapply(border.list, lines))
-    title(main = paste("Case", origin, "to Pump", x$alters[x$sel, "id"]))
-
-    if (x$vestry) {
-      pump.names <- paste0("p", cholera::pumps.vestry$id)
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
-        col = colors)
-      text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
-    } else {
-      pump.names <- paste0("p", cholera::pumps$id)
-      points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
-      text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
-    }
-
-    arrows(origin.xy$x, origin.xy$y, pump.xy$x, pump.xy$y, length = 0.1,
-      col = case.color, code = 3)
+    title(main = paste("Pump", x$origin, "to Pump", end.sel))
   }
+
+  if (x$vestry) {
+    pump.names <- paste0("p", cholera::pumps.vestry$id)
+    points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
+      col = colors)
+    text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
+  } else {
+    pump.names <- paste0("p", cholera::pumps$id)
+    points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
+    text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+  }
+
+  arrows(ego.xy$x, ego.xy$y, alter.xy$x, alter.xy$y, length = 0.1,
+    col = case.color, code = 3)
 
   distance <- stats::dist(dat)
 
