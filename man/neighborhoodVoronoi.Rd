@@ -14,7 +14,7 @@ neighborhoodVoronoi(pump.select = NULL, vestry = FALSE, statistic = NULL,
 
 \item{statistic}{NULL or Character. NULL, the default, makes no summary computation. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.}
 
-\item{polygon.vertices}{Logical. TRUE returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for sp::point.in.polygon() as used in summary.voronoi() method.}
+\item{polygon.vertices}{Logical. TRUE returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for sp::point.in.polygon() as used in print.voronoi() method.}
 }
 \value{
 An R list with 12 objects.
@@ -48,5 +48,5 @@ dat <- neighborhoodVoronoi(pump.select = -6)
 dat$coordinates
 }
 \seealso{
-\code{\link{addVoronoi}}, \code{\link{plot.voronoi}}, \code{\link{summary.voronoi}}, \code{vignette("pump.neighborhoods")}
+\code{\link{addVoronoi}}, \code{\link{plot.voronoi}}, \code{\link{print.voronoi}}, \code{vignette("pump.neighborhoods")}
 }

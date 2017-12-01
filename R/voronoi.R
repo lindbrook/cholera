@@ -4,7 +4,7 @@
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param statistic NULL or Character. NULL, the default, makes no summary computation. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.
-#' @param polygon.vertices Logical. TRUE returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for sp::point.in.polygon() as used in summary.voronoi() method.
+#' @param polygon.vertices Logical. TRUE returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for sp::point.in.polygon() as used in print.voronoi() method.
 #' @return An R list with 12 objects.
 #' \itemize{
 #'   \item{\code{pump.id}: vector of selected pumps}
@@ -20,7 +20,7 @@
 #'   \item{\code{statistic}: "statistic" from neighborhoodVoronoi().}
 #'   \item{\code{vestry}: "vestry" from neighborhoodVoronoi().}
 #' }
-#' @seealso \code{\link{addVoronoi}}, \code{\link{plot.voronoi}}, \code{\link{summary.voronoi}}, \code{vignette("pump.neighborhoods")}
+#' @seealso \code{\link{addVoronoi}}, \code{\link{plot.voronoi}}, \code{\link{print.voronoi}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
 #' neighborhoodVoronoi()
@@ -228,8 +228,8 @@ plot.voronoi <- function(x, ...) {
       lty = "solid")
 
     if (is.null(x$statistic)) {
-       points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
-         pch = 20, cex = 0.75)
+      points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
+        pch = 20, cex = 0.75)
     } else if (x$statistic == "address") {
       points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
          pch = 20, cex = 0.75)
@@ -289,36 +289,38 @@ plot.voronoi <- function(x, ...) {
   }
 }
 
-#' Compute summary statistics for Voronoi neighborhoods.
+#' Print method for neighborhoodVoronoi().
 #'
-#' @param object An object of class "voronoi" created by neighborhoodVoronoi().
+#' Return summary statistics for Voronoi neighborhoods.
+#' @param x An object of class "voronoi" created by neighborhoodVoronoi().
 #' @param ... Additional arguments.
 #' @return A data frame with observed and expected counts, observed percentage, and the Pearson residual, (observed - expected) / sqrt(expected).
 #' @seealso \code{addVoronoi()}
 #' \code{plot.voronoi()}
 #' @export
 #' @examples
-#' summary(neighborhoodVoronoi())
+#' neighborhoodVoronoi()
+#' print(neighborhoodVoronoi())
 
-summary.voronoi <- function(object, ...) {
-  if (class(object) != "voronoi") {
-    stop('Input objectect\'s class needs to be "voronoi".')
+print.voronoi <- function(x, ...) {
+  if (class(x) != "voronoi") {
+    stop('x\'s class needs to be "voronoi".')
   }
 
-  census <- object$statistic.data
+  census <- x$statistic.data
   count <- vapply(census, sum, numeric(1L))
 
   output <- data.frame(pump.id = as.numeric(names(count)),
                        Count = count,
                        Percent = round(100 * count / sum(count), 2))
 
-  output <- merge(output, object$expected.data[, c("pump", "pct")],
+  output <- merge(output, x$expected.data[, c("pump", "pct")],
     by.x = "pump.id", by.y = "pump")
 
   output$Expected <- output$pct * sum(output$Count)
   output$pct <- NULL
   output$Pearson <- (output$Count - output$Expected) / sqrt(output$Expected)
-  output
+  print(output)
 }
 
 fourCorners <- function() {

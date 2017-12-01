@@ -42,7 +42,7 @@ plot(neighborhoodVoronoi())
 The data frame below summarizes the results in the map. Pearson is (Count - Expected) / sqrt(Expected):
 
 ```{r}
-summary(neighborhoodVoronoi())
+neighborhoodVoronoi()
 ```
 
 ### Walking distance
