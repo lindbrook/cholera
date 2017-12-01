@@ -19,7 +19,7 @@
 A base R plot.
 }
 \description{
-Plot the Euclidean distance between cases and/or pumps.
+Plot method for euclideanDistance().
 }
 \examples{
 plot(euclideanDistance(1))

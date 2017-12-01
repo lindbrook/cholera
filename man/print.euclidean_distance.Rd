@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclideanDistance.R
 \name{print.euclidean_distance}
 \alias{print.euclidean_distance}
-\title{Print method for euclideanDistance().}
+\title{Summary of euclideanDistance().}
 \usage{
 \method{print}{euclidean_distance}(x, ...)
 }
@@ -15,7 +15,7 @@
 An R data frame.
 }
 \description{
-Return summary results.
+Print method for euclideanDistance()
 }
 \examples{
 euclideanDistance(1)

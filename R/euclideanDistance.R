@@ -215,9 +215,10 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
   output
 }
 
-#' Print method for euclideanDistance().
+
+#' Summary of euclideanDistance().
 #'
-#' Return summary results.
+#' Print method for euclideanDistance()
 #' @param x An object of class "euclidean_distance" created by euclideanDistance().
 #' @param ... Additional parameters.
 #' @return An R data frame.
@@ -236,6 +237,7 @@ print.euclidean_distance <- function(x, ...) {
 
 #' Plot the Euclidean distance between cases and/or pumps.
 #'
+#' Plot method for euclideanDistance().
 #' @param x An object of class "euclidean_distance" created by euclideanDistance().
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
@@ -263,7 +265,6 @@ plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
     pmp <- cholera::pumps
   }
 
-  # destination <- x$destination # NULL nominal destination
   end.sel <- x$sel
 
   if (x$type == "case-pump" | x$type == "pumps") {
