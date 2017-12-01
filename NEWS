@@ -1,7 +1,7 @@
 cholera 0.2.1.9012
 ----------------------------------------------------------------
 
-* update S3 implementation of neighborhoodVoronoi().
+* amend S3 implementation of neighborhoodVoronoi() and neighborhoodWalking().
 
 
 cholera 0.2.1.9011

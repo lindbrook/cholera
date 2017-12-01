@@ -50,5 +50,5 @@ neighborhoodWalking()
 neighborhoodWalking(pump.select = -6)
 }
 \seealso{
-\code{\link{plot.walking}}, \code{\link{summary.walking}}, \code{vignette("pump.neighborhoods")}
+\code{\link{plot.walking}}, \code{\link{print.walking}}, \code{vignette("pump.neighborhoods")}
 }

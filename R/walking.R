@@ -23,7 +23,7 @@
 #'   \item{\code{vestry}: "vestry" from neighborhoodWalking().}
 #' }
 #' @section Notes: This function is computationally intensive (the default configuration takes about 1-2 minutes to run on a single core). However, seven configurations will return pre-computed results. The first three use the 13 pumps in the original map: 1) the default set of arguments, which uses all pumps; 2) the default set excluding the pump on Little Marlborough Street (pump 6), and 3) the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7). The next three use the same set of arguments as above but uses the 14 pumps in the second version from the Vestry report. This includes a repositioned Broad Street pump. The seventh and final is Snow's Broad Street pump neighborhood, which represents his graphical annotation of the version of the map that appeared in the Vestry report.
-#' @seealso \code{\link{plot.walking}}, \code{\link{summary.walking}}, \code{vignette("pump.neighborhoods")}
+#' @seealso \code{\link{plot.walking}}, \code{\link{print.walking}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
 #' neighborhoodWalking()
@@ -539,22 +539,23 @@ plot.walking <- function(x, streets = TRUE, observed = TRUE, ...) {
   }
 }
 
-#' Compute summary statistics for walking path neighborhoods.
+#' Print method for neighborhoodWalking().
 #'
-#' @param object An object of class "walking" created by neighborhoodWalking().
+#' Summary statistics for walking path neighborhoods.
+#' @param x An object of class "walking" created by neighborhoodWalking().
 #' @param ... Additional arguments.
 #' @return A data frame with observed and expected counts, observed percentage, and the Pearson residual, (observed - expected) / sqrt(expected).
 #' @export
 #' @examples
 #' summary(neighborhoodWalking())
 
-summary.walking <- function(object, ...) {
-  if (class(object) != "walking") {
-    stop('Input object\'s class needs to be "walking".')
+print.walking <- function(x, ...) {
+  if (class(x) != "walking") {
+    stop('Input x\'s class needs to be "walking".')
   }
 
-  obs <- object$observed
-  exp <- object$expected
+  obs <- x$observed
+  exp <- x$expected
   output <- merge(obs, exp, by = "pump", all.y = TRUE)
   names(output)[-1] <- c("Count", "Expected")
   output[is.na(output)] <- 0
@@ -563,7 +564,7 @@ summary.walking <- function(object, ...) {
   output$Pearson <- (output$Count - output$Expected) / sqrt(output$Expected)
   output <- output[order(pumpNumber(output$pump)), ]
   rownames(output) <- NULL
-  output
+  print(output)
 }
 
 pumpCoordinates <- function(vestry = FALSE) {

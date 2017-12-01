@@ -31,17 +31,18 @@ Cliff and Haggett (1988) appear to be the first to use Voronoi tessellation^[htt
 
 To allow for replication, I use deldir::deldir(). I find that, with the exception of the border between the neighborhoods of the Market Place and the Adam and Eve Court pumps (pumps #1 and #2), Dodson and Tobler's computation are otherwise identical.
 
-To allow users to explore the data with this approach, neighborhoodVoronoi() creates an R object that describes the desired neighborhood configuration. The results can be visualized with plot() and summarized with summary().
+To allow users to explore the data using this approach, neighborhoodVoronoi() can create a range of neighborhood configurations.
 
-The figure below plots the "addresses" and Voronoi cells for the 13 pumps in the original map.
+The results can be visualized using the plot() method: the figure below plots the 321 fatality "addresses" and the Voronoi cells for the 13 pumps in the original map.
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
 plot(neighborhoodVoronoi())
 ```
 
-The data frame below summarizes the results in the map. Pearson is (Count - Expected) / sqrt(Expected):
+The results can be summarized using the print() method. Note that "Pearson" is "Count" minus "Expected" divided by the square root of "Expected":
 
 ```{r}
+# print(neighborhoodVoronoi()) or
 neighborhoodVoronoi()
 ```
 
@@ -66,7 +67,8 @@ plot(neighborhoodWalking())
 The summary results are:
 
 ```{r}
-summary(neighborhoodWalking())
+# print(neighborhoodWalking()) or
+neighborhoodWalking()
 ```
 
 To get a sense of entire neighborhoods, I extend the approach from observed data to "expected" or simulated data. Using sp::spsample() and sp::Polygon(), I place 5000 regularly spaced points across the map and compute their walking path to the nearest pump. This allows me to see the full extent and range of the different pump neighborhoods.
