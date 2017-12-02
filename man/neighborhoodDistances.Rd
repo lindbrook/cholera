@@ -2,19 +2,29 @@
 % Please edit documentation in R/neighborhoodDistances.R
 \name{neighborhoodDistances}
 \alias{neighborhoodDistances}
-\title{Compute distances within pump neighborhoods.}
+\title{Compute walking or Eucldean distances within pump neighborhoods.}
 \usage{
-neighborhoodDistances(metric = "walking", unit = NULL, multi.core = FALSE)
+neighborhoodDistances(pump.select = NULL, statistic = "address",
+  vestry = FALSE, metric = "walking", weighted = TRUE, unit = NULL,
+  multi.core = FALSE)
 }
 \arguments{
+\item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
+
+\item{statistic}{Character. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.}
+
+\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
+
 \item{metric}{Character. Type of distance: "walking" or "Euclidean".}
+
+\item{weighted}{Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of nodes.}
 
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE.}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 }
 \description{
-Compute walking or Eucldean distances between the 578 observed cases and their nearest pump.
+Compute walking or Eucldean distances within pump neighborhoods.
 }
 \note{
 Documents "neighborhood.distances".
