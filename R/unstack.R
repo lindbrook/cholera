@@ -479,4 +479,6 @@ plot.classifier_audit <- function(x, radius = 0.1, ...) {
   } else {
     arrows(obs$x, obs$y, x.proj, y.proj, length = 0.1)
   }
+
+  title(sub = x$test)
 }
