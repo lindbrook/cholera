@@ -3,6 +3,7 @@ cholera 0.2.1.9013
 
 * update neighborhoodDistances().
 * add print method to timeSeries().
+* add S3 implementation of classifierAudit().
 
 
 cholera 0.2.1.9012
