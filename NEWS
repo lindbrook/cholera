@@ -1,7 +1,8 @@
 cholera 0.2.1.9013
 ----------------------------------------------------------------
 
-update neighborhoodDistances().
+* update neighborhoodDistances().
+* add print method to timeSeries().
 
 
 cholera 0.2.1.9012

@@ -21,6 +21,9 @@ A R list with two objects: "data" and "source" ("snow" or "vestry").
 For use in integrating pumps and cases into road network needed to compute walking neighborhoods.
 }
 \section{Note}{
- the "snow" data appears on p. 117 of the report; the "vestry" data appear in Appendix B on p.175.
+ The "snow" data appears on p. 117 of the report; the "vestry" data appear in Appendix B on p.175.
 }
 
+\seealso{
+\code{\link{plot.time_series}}, \code{\link{print.time_series}}, \code{vignette("time.series")}
+}
