@@ -386,9 +386,9 @@ withinRadius <- function(a, b, radius = 2) {
 
 #' Test whether case is orthogonal to segment.
 #'
-#' @param case Numeric or Integer. Numeric ID of (anchor) case.
-#' @param segment Character. Segment ID from cholera::road.segments
-#' @note segment "326-2" is part of Little Windmill Street. A diagnostics; not a guarantee of correct classification.
+#' @param case Numeric or Integer. Numeric ID of case.
+#' @param segment Character. Segment ID. See cholera::road.segments
+#' @note segment "326-2" is part of Little Windmill Street. This is a diagnostics; it is not a guarantee of correct classification.
 #' @return Logical TRUE or FALSE
 #' @export
 
@@ -425,9 +425,8 @@ classifierAudit <- function(case = 483, segment = "326-2") {
   out
 }
 
-#' Print method for classifierAudit().
+#' Return test result for classifierAudit().
 #'
-#' Return summary results.
 #' @param x An object of class "classifier_audit" created by classifierAudit().
 #' @param ... Additional parameters.
 #' @return An R data frame.
@@ -444,16 +443,15 @@ print.classifier_audit <- function(x, ...) {
   print(x$test)
 }
 
-#' Plot whether case is orthogonal to segment.
+#' Plot test result for classifierAudit().
 #'
-#' Plot method for classifierAudit().
 #' @param x An object of class "classifier_audit" created by classifierAudit().
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param ... Additional plotting parameters.
+#' @param ... Additional parameters.
 #' @return A base R graphic.
 #' @export
 #' @examples
-#' print(classifierAudit(case = 483, segment = "326-2"))
+#' plot(classifierAudit(case = 483, segment = "326-2"))
 
 plot.classifier_audit <- function(x, radius = 0.1, ...) {
   obs <- x$obs

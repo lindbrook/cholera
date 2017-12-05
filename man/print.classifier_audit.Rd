@@ -2,7 +2,7 @@
 % Please edit documentation in R/unstack.R
 \name{print.classifier_audit}
 \alias{print.classifier_audit}
-\title{Print method for classifierAudit().}
+\title{Return test result for classifierAudit().}
 \usage{
 \method{print}{classifier_audit}(x, ...)
 }
@@ -15,7 +15,7 @@
 An R data frame.
 }
 \description{
-Return summary results.
+Return test result for classifierAudit().
 }
 \examples{
 classifierAudit(case = 483, segment = "326-2")

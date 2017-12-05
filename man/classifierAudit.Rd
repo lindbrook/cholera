@@ -7,9 +7,9 @@
 classifierAudit(case = 483, segment = "326-2")
 }
 \arguments{
-\item{case}{Numeric or Integer. Numeric ID of (anchor) case.}
+\item{case}{Numeric or Integer. Numeric ID of case.}
 
-\item{segment}{Character. Segment ID from cholera::road.segments}
+\item{segment}{Character. Segment ID. See cholera::road.segments}
 }
 \value{
 Logical TRUE or FALSE
@@ -18,5 +18,5 @@ Logical TRUE or FALSE
 Test whether case is orthogonal to segment.
 }
 \note{
-segment "326-2" is part of Little Windmill Street. A diagnostics; not a guarantee of correct classification.
+segment "326-2" is part of Little Windmill Street. This is a diagnostics; it is not a guarantee of correct classification.
 }

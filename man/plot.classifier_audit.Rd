@@ -2,7 +2,7 @@
 % Please edit documentation in R/unstack.R
 \name{plot.classifier_audit}
 \alias{plot.classifier_audit}
-\title{Plot whether case is orthogonal to segment.}
+\title{Plot test result for classifierAudit().}
 \usage{
 \method{plot}{classifier_audit}(x, radius = 0.1, ...)
 }
@@ -11,14 +11,14 @@
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
-\item{...}{Additional plotting parameters.}
+\item{...}{Additional parameters.}
 }
 \value{
 A base R graphic.
 }
 \description{
-Plot method for classifierAudit().
+Plot test result for classifierAudit().
 }
 \examples{
-print(classifierAudit(case = 483, segment = "326-2"))
+plot(classifierAudit(case = 483, segment = "326-2"))
 }
