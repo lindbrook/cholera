@@ -1,5 +1,5 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![developmentversion](https://img.shields.io/badge/Dev%20Version-0.2.1.9013-orange.svg?style=flat-square)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![developmentversion](https://img.shields.io/badge/Development%20Version-0.2.1.9013-orange.svg?style=flat-square)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
