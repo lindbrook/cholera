@@ -123,7 +123,7 @@ nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE) {
   }
 
   lapply(seq_along(paths), function(i) {
-    out <- names(unlist(paths[[i]][[nearest[i]]]))
+    out <- names(paths[[i]][[nearest[i]]])
   })
 }
 
