@@ -4,12 +4,14 @@
 \alias{nearestPump}
 \title{Compute walking distance from anchor to nearest pump (or among selected pumps).}
 \usage{
-nearestPump(pump.select = NULL, vestry = FALSE)
+nearestPump(pump.select = NULL, vestry = FALSE, weighted = TRUE)
 }
 \arguments{
 \item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
+
+\item{weighted}{Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.}
 }
 \value{
 An R data frame.

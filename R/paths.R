@@ -2,16 +2,27 @@
 #'
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
+#' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
 #' @export
 #' @return An R data frame.
 
-nearestPump <- function(pump.select = NULL, vestry = FALSE) {
-  if (vestry) {
-    dat <- neighborhoodData(vestry = TRUE)
-    distances <- distanceData(vestry = TRUE)
+nearestPump <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE) {
+  if (weighted) {
+    if (vestry) {
+      dat <- neighborhoodData(vestry = TRUE)
+      distances <- distanceData(vestry = TRUE)
+    } else {
+      dat <- neighborhoodData()
+      distances <- distanceData()
+    }
   } else {
-    dat <- neighborhoodData()
-    distances <- distanceData()
+    if (vestry) {
+      dat <- neighborhoodData(vestry = TRUE)
+      distances <- distanceData(vestry = TRUE, weighted = FALSE)
+    } else {
+      dat <- neighborhoodData()
+      distances <- distanceData( weighted = FALSE)
+    }
   }
 
   pumps <- dat$pumps
@@ -64,18 +75,31 @@ nearestPump <- function(pump.select = NULL, vestry = FALSE) {
 #'
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
+#' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
 #' @export
-#' @return A R list of vectors of "igraph" nodes.
+#' @return A R list of vectors of nodes.
 
-nearestPath <- function(pump.select = NULL, vestry = FALSE) {
-  if (vestry) {
-    dat <- neighborhoodData(vestry = TRUE)
-    distances <- distanceData(vestry = TRUE)
-    paths <- pathData(vestry = TRUE)
+nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE) {
+  if (weighted) {
+    if (vestry) {
+      dat <- neighborhoodData(vestry = TRUE)
+      distances <- distanceData(vestry = TRUE)
+      paths <- pathData(vestry = TRUE)
+    } else {
+      dat <- neighborhoodData()
+      distances <- distanceData()
+      paths <- pathData()
+    }
   } else {
-    dat <- neighborhoodData()
-    distances <- distanceData()
-    paths <- pathData()
+    if (vestry) {
+      dat <- neighborhoodData(vestry = TRUE)
+      distances <- distanceData(vestry = TRUE, weighted = FALSE)
+      paths <- pathData(vestry = TRUE, weighted = FALSE)
+    } else {
+      dat <- neighborhoodData()
+      distances <- distanceData(weighted = FALSE)
+      paths <- pathData(weighted = FALSE)
+    }
   }
 
   pumps <- dat$pumps
@@ -99,7 +123,7 @@ nearestPath <- function(pump.select = NULL, vestry = FALSE) {
   }
 
   lapply(seq_along(paths), function(i) {
-    paths[[i]][[nearest[i]]]
+    out <- names(unlist(paths[[i]][[nearest[i]]]))
   })
 }
 
@@ -113,11 +137,9 @@ neighborhoodData <- function(vestry = FALSE) {
   nodes <- node.data$nodes
   edges <- node.data$edges
   g <- node.data$g
-
   pumps <- nodes[nodes$pump != 0, ]
   pumps <- pumps[order(pumps$pump), c("pump", "node")]
   pumps <- pumps[pumps$pump != 2, ] # P2 is a technical isolate
-
   list(g = g, nodes = nodes, edges = edges, pumps = pumps)
 }
 
