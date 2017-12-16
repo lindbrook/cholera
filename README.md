@@ -67,14 +67,10 @@ Read the package's vignettes. They include detailed discussions about the data, 
 
 They are also available online:
 
-[Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)
-
-["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.fatalities.html)
-
-[Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)
-
-[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)
-
+[Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)     
+["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.fatalities.html)   
+[Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)   
+[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)   
 [Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)
 
 And within the package itself:
