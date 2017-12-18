@@ -311,7 +311,7 @@ plot.walkingB <- function(x, ...) {
 
   invisible(lapply(seq_along(n.sel), function(i) {
     points(cholera::fatalities.address[x$cases[[i]], c("x", "y")],
-      pch = 20, cex = 0.5, col = snow.colors[i])
+      pch = 20, cex = 0.75, col = snow.colors[i])
   }))
 
 if (is.null(x$pump.select)) {
