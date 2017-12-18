@@ -1,7 +1,13 @@
+cholera 0.2.9.9000
+----------------------------------------------------------------
+
+* add beta version of neighborhoodPaths() w/ S3 plot and print methods.
+
+
 cholera 0.2.1.9014
 ----------------------------------------------------------------
 
-* add betas of nearestPump() and nearestPath().
+* add nearestPump() and nearestPath().
 
 
 cholera 0.2.1.9013

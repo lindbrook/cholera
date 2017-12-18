@@ -1,5 +1,5 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub_Status_Badge](https://img.shields.io/badge/GitHub-0.2.1.9014-red.svg?style=flat-square)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub_Status_Badge](https://img.shields.io/badge/GitHub-0.2.9.9000-red.svg?style=flat-square)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
@@ -67,10 +67,10 @@ Read the package's vignettes. They include detailed discussions about the data, 
 
 They are also available online:
 
-[Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)     
-["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.fatalities.html)   
-[Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)   
-[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)   
+[Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)
+["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.fatalities.html)
+[Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)
+[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)
 [Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)
 
 And within the package itself:
