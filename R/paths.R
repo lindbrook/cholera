@@ -298,7 +298,7 @@ plot.walkingB <- function(x, ...) {
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-  roads.list <- split(rd[, c("x", "y")], rd$street)
+  road.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
   x.range <- range(cholera::roads$x)
   y.range <- range(cholera::roads$y)
@@ -306,7 +306,7 @@ plot.walkingB <- function(x, ...) {
   plot(cholera::fatalities[, c("x", "y")], xlim = x.range, ylim = y.range,
     pch = NA, asp = 1)
 
-  invisible(lapply(roads.list, lines, col = "gray"))
+  invisible(lapply(road.list, lines, col = "gray"))
   invisible(lapply(border.list, lines))
 
   invisible(lapply(seq_along(n.sel), function(i) {
