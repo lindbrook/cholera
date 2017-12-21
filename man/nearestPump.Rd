@@ -2,7 +2,7 @@
 % Please edit documentation in R/paths.R
 \name{nearestPump}
 \alias{nearestPump}
-\title{Compute walking distance from anchor to nearest pump (or among selected pumps).}
+\title{Compute walking distance from anchor cases to nearest pump (or from among selected pumps).}
 \usage{
 nearestPump(pump.select = NULL, vestry = FALSE, weighted = TRUE)
 }
@@ -17,5 +17,5 @@ nearestPump(pump.select = NULL, vestry = FALSE, weighted = TRUE)
 An R data frame.
 }
 \description{
-Compute walking distance from anchor to nearest pump (or among selected pumps).
+Compute walking distance from anchor cases to nearest pump (or from among selected pumps).
 }

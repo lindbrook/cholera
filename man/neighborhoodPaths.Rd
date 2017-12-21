@@ -2,7 +2,7 @@
 % Please edit documentation in R/paths.R
 \name{neighborhoodPaths}
 \alias{neighborhoodPaths}
-\title{Compute shortest walking paths by pump neighborhood.}
+\title{Compute walking path pump neighborhoods.}
 \usage{
 neighborhoodPaths(pump.select = NULL, vestry = FALSE, weighted = TRUE)
 }
