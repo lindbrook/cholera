@@ -187,7 +187,7 @@ nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE) {
     }
   }
 
-  pumps <- dat$pumps
+  nodes.pump <- dat$nodes.pump
 
   if (is.null(pump.select)) {
     nearest <- vapply(distances, function(x) names(which.min(x)), character(1L))
@@ -239,7 +239,7 @@ nearestPump <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE) {
     }
   }
 
-  pumps <- dat$pumps
+  nodes.pump <- dat$nodes.pump
 
   if (is.null(pump.select)) {
     dat <- lapply(distances, function(x) {
@@ -295,10 +295,10 @@ neighborhoodData <- function(vestry = FALSE) {
   nodes <- node.data$nodes
   edges <- node.data$edges
   g <- node.data$g
-  pumps <- nodes[nodes$pump != 0, ]
-  pumps <- pumps[order(pumps$pump), c("pump", "node")]
-  pumps <- pumps[pumps$pump != 2, ] # P2 is a technical isolate
-  list(g = g, nodes = nodes, edges = edges, pumps = pumps)
+  nodes.pump <- nodes[nodes$pump != 0, ]
+  nodes.pump <- nodes.pump[order(nodes.pump$pump), c("pump", "node")]
+  nodes.pump <- nodes.pump[nodes.pump$pump != 2, ] # P2 is a technical isolate
+  list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
 }
 
 pathData <- function(weighted = TRUE, vestry = FALSE) {
@@ -311,27 +311,27 @@ pathData <- function(weighted = TRUE, vestry = FALSE) {
   g <- dat$g
   nodes <- dat$nodes
   edges <- dat$edges
-  pumps <- dat$pumps
+  nodes.pump <- dat$nodes.pump
 
   paths <- lapply(cholera::fatalities.address$anchor.case, function(x) {
     case.node <- nodes[nodes$anchor == x, "node"]
     if (weighted) {
-      stats::setNames(igraph::shortest_paths(g, case.node, pumps$node,
-        weights = edges$d)$vpath, pumps$pump)
+      stats::setNames(igraph::shortest_paths(g, case.node, nodes.pump$node,
+        weights = edges$d)$vpath, nodes.pump$pump)
     } else {
       stats::setNames(igraph::shortest_paths(g, case.node,
-        pumps$node)$vpath, pumps$pump)
+        nodes.pump$node)$vpath, nodes.pump$pump)
     }
   })
 
   distances <- lapply(cholera::fatalities.address$anchor.case, function(x) {
     case.node <- nodes[nodes$anchor == x, "node"]
     if (weighted) {
-      stats::setNames(c(igraph::distances(g, case.node, pumps$node,
-        weights = edges$d)), pumps$pump)
+      stats::setNames(c(igraph::distances(g, case.node, nodes.pump$node,
+        weights = edges$d)), nodes.pump$pump)
     } else {
-      stats::setNames(c(igraph::distances(g, case.node, pumps$node)),
-        pumps$pump)
+      stats::setNames(c(igraph::distances(g, case.node, nodes.pump$node)),
+        nodes.pump$pump)
     }
   })
 
