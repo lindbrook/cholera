@@ -6,6 +6,7 @@
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.
 #' @param all.cases Logical. When zoom = TRUE and radius <= 5, all.cases = TRUE plots the numeric ID of all cases; when all.cases = FALSE only the numeric ID of the anchor case is shown.
+#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
 #' @seealso \code{\link{road.segments}}
 #' @return A base R graphics plot.
 #' @import graphics
@@ -13,8 +14,10 @@
 #' @examples
 #' segmentLocator("190-1")
 #' segmentLocator("216-1")
+#' segmentLocator("216-1", unit = "meter")
 
-segmentLocator <- function(id, zoom = TRUE, radius = 0.5, all.cases = FALSE) {
+segmentLocator <- function(id, zoom = TRUE, radius = 0.5, all.cases = FALSE,
+  unit = NULL) {
   if (is.character(id) == FALSE) {
     stop('"id" must be a character.')
   }
@@ -42,7 +45,6 @@ segmentLocator <- function(id, zoom = TRUE, radius = 0.5, all.cases = FALSE) {
     text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1,
       col = "blue")
     segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
-    title(main = paste0(st$name, ": Segment # ", id))
 
    } else if (zoom & radius <= 5) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
@@ -61,7 +63,7 @@ segmentLocator <- function(id, zoom = TRUE, radius = 0.5, all.cases = FALSE) {
     text(cholera::pumps[, c("x", "y")], label = paste0("p", cholera::pumps$id),
       pos = 1, col = "blue")
     segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
-    title(main = paste0(st$name, ": Segment # ", id))
+    # title(main = paste0(st$name, ": Segment # ", id))
 
   } else {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
@@ -71,6 +73,16 @@ segmentLocator <- function(id, zoom = TRUE, radius = 0.5, all.cases = FALSE) {
     text(cholera::pumps[, c("x", "y")], label = paste0("p", cholera::pumps$id),
       pos = 1, col = "blue")
     segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
-    title(main = paste0(st$name, ": Segment # ", id))
+    # title(main = paste0(st$name, ": Segment # ", id))
+  }
+
+  title(main = paste0(st$name, ": Segment # ", id))
+
+  if (is.null(unit)) {
+    title(sub = paste(round(segmentLength(id, unit = unit), 2), "units"))
+  } else if (unit == "meter") {
+    title(sub = paste(round(segmentLength(id, unit = unit), 2), "meters"))
+  } else if (unit == "yard") {
+    title(sub = paste(round(segmentLength(id, unit = unit), 2), "yards"))
   }
 }
