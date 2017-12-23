@@ -41,10 +41,6 @@ segmentLocator <- function(id, zoom = TRUE, radius = 0.5, all.cases = FALSE,
       ylim = range(cholera::roads$y), pch = 15, cex = 0.5, col = "gray",
       asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
-    points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1,
-      col = "blue")
-    segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
 
    } else if (zoom & radius <= 5) {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
@@ -59,23 +55,16 @@ segmentLocator <- function(id, zoom = TRUE, radius = 0.5, all.cases = FALSE,
         labels = cholera::fatalities.address$anchor.case, cex = 0.5)
     }
 
-    points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(cholera::pumps[, c("x", "y")], label = paste0("p", cholera::pumps$id),
-      pos = 1, col = "blue")
-    segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
-    # title(main = paste0(st$name, ": Segment # ", id))
-
   } else {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = 15, cex = 0.5, col = "gray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
-    points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(cholera::pumps[, c("x", "y")], label = paste0("p", cholera::pumps$id),
-      pos = 1, col = "blue")
-    segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
-    # title(main = paste0(st$name, ": Segment # ", id))
   }
 
+  points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
+  text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1,
+    col = "blue")
+  segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
   title(main = paste0(st$name, ": Segment # ", id))
 
   if (is.null(unit)) {
