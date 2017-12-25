@@ -4,14 +4,39 @@
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
+#' @param observed Logical. Observed or expected walking path pump neighborhoods.
 #' @export
 
 neighborhoodPaths <- function(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE) {
+  weighted = TRUE, observed = TRUE, multi.core = TRUE) {
+
+  if (is.logical(multi.core)) {
+    if (multi.core == TRUE) {
+      cores <- parallel::detectCores()
+    } else {
+      if (is.numeric(multi.core)) {
+        if (is.integer(multi.core)) {
+          cores <- multi.core
+        } else {
+          cores <- as.integer(multi.core)
+        }
+      } else {
+        cores <- 1L
+      }
+    }
+  } else if (is.numeric(multi.core)) {
+    if (is.integer(multi.core)) {
+      cores <- multi.core
+    } else {
+      cores <- as.integer(multi.core)
+    }
+  }
 
   args <- list(pump.select = pump.select,
                vestry = vestry,
-               weighted = weighted)
+               weighted = weighted,
+               observed = observed)
 
   nearest.path <- do.call("nearestPath", args)
   nearest.pump <- do.call("nearestPump", args)
