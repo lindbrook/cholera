@@ -1,7 +1,15 @@
+cholera 0.2.9.9002
+----------------------------------------------------------------
+
+* update yard distance factor in addWhitehead().
+* fix pump labels in caseLocator().
+
+
 cholera 0.2.9.9001
 ----------------------------------------------------------------
-* add segmentLength()
-* add segmentLength() to segmentLocator()
+
+* add segmentLength().
+* add segmentLength() to segmentLocator().
 
 
 cholera 0.2.9.9000
