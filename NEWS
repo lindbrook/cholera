@@ -3,6 +3,7 @@ cholera 0.2.9.9002
 
 * update yard distance factor in addWhitehead().
 * fix pump labels in caseLocator().
+* add unitMeter().
 
 
 cholera 0.2.9.9001
