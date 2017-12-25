@@ -23,7 +23,7 @@
 
 addWhitehead <- function(pump = "Broad Street", radius = 210, color = "black",
   line.type = "solid", vestry = FALSE, ...) {
-  r <- radius / 59
+  r <- radius / 54
   unit.base <- 100
   unit.radians <- 2 * pi / unit.base
 
