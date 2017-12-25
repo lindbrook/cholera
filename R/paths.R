@@ -33,7 +33,10 @@ neighborhoodPaths <- function(pump.select = NULL, vestry = FALSE,
   out <- list(paths = neighborhood.paths,
               cases = neighborhood.cases,
               vestry = vestry,
-              pump.select = pump.select)
+              observed = observed,
+              pump.select = pump.select,
+              metric = cholera::segmentLength("242-1") /
+                       cholera::segmentLength("242-1", unit = "meter"))
 
   class(out) <- "walkingB"
   out
@@ -96,6 +99,149 @@ plot.walkingB <- function(x, ...) {
 
   edge.data <- lapply(n.paths, function(x) unique(unlist(x)))
 
+  if (x$observed == FALSE) {
+    p.data <- dat$nodes.pump
+
+    if (is.null(x$pump.select)) {
+      p.node <- p.data$node
+      p.name <- p.data$pump
+    } else {
+      if (all(x$pump.select > 0)) {
+        p.data <- p.data[p.data$pump %in% x$pump.select, ]
+      } else if (all(x$pump.select < 0)) {
+        p.data <- p.data[p.data$pump %in% abs(x$pump.select) == FALSE, ]
+      }
+      p.node <- p.data$node
+      p.name <- p.data$pump
+    }
+
+    edgesID <- seq_len(nrow(edges))
+    isolates <- which(edges$name %in%
+      c("Adam and Eve Court", "Falconberg Court", "Falconberg Mews"))
+
+    drawn.segments <- sort(unname(unlist(edge.data)))
+    missing.segments <- setdiff(edgesID[-isolates], drawn.segments)
+    missing.segments <- unique(edges[missing.segments, "id"])
+
+    nearest.pump <- parallel::mclapply(missing.segments, function(s) {
+      seg.data <- cholera::road.segments[cholera::road.segments$id == s,
+        c("x1", "y1", "x2", "y2")]
+
+      seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                           y = c(seg.data$y1, seg.data$y2))
+
+      ols <- stats::lm(y ~ x, data = seg.df)
+      parameters <- stats::coef(ols)
+      segment.slope <- parameters[2]
+      segment.intercept <- parameters[1]
+
+      theta <- atan(segment.slope)
+      hypotenuse <- c(stats::dist(seg.df))
+      hypotenuse.breaks <- seq(0, hypotenuse, x$metric)[-1]
+
+      distances <- lapply(hypotenuse.breaks, function(h) {
+        delta.x <- h * cos(theta)
+        delta.y <- h * sin(theta)
+
+        EW <- which.min(seg.data[, c("x1", "x2")])
+        if (EW == 1) {
+          test.x <- seg.data$x1 + delta.x
+          test.y <- seg.data$y1 + delta.y
+        } else {
+          test.x <- seg.data$x2 + delta.x
+          test.y <- seg.data$y2 + delta.y
+        }
+
+        case.node <- paste0(test.x, "-", test.y)
+        seg.edge <- edges[edges$id == s, ]
+        seg.edge <- seg.edge[c(1, nrow(seg.edge)), ]
+        seg.edge[1, c("x2", "y2")] <- c(test.x, test.y)
+        seg.edge[2, c("x1", "y1")] <- c(test.x, test.y)
+        seg.edge[1, "node2"] <- case.node
+        seg.edge[2, "node1"] <- case.node
+        seg.edge[2, "id2"] <- paste0(s, "b")
+        seg.edge$d <- sqrt((seg.edge$x1 - seg.edge$x2)^2 +
+                           (seg.edge$y1 - seg.edge$y2)^2)
+
+        edges2 <- rbind(seg.edge, edges[edges$id != s, ])
+        edge.list <- edges2[, c("node1", "node2")]
+        g2 <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
+        stats::setNames(c(igraph::distances(g2, case.node, p.node,
+          weights = edges2$d)), p.name)
+      })
+
+      p <- vapply(distances, function(x) {
+        as.numeric(names(which.min((x))))
+      }, numeric(1L))
+
+      data.frame(pump = p, cutpoint = hypotenuse.breaks)
+    }, mc.cores = 1L)
+
+    rle.audit <- lapply(nearest.pump, function(x) rle(x$pump))
+    rle.ct <- vapply(rle.audit, function(x) length(x$values), numeric(1L))
+
+    singles.seg <- missing.segments[rle.ct == 1]
+
+    singles.pump <- vapply(rle.audit[rle.ct == 1], function(x) {
+      x$values
+    }, numeric(1L))
+
+    multiples.seg <- missing.segments[rle.ct != 1]
+
+    multiples.id <- vapply(rle.audit[rle.ct != 1], function(x) {
+      x$lengths[1]
+    }, numeric(1L))
+
+    multiples.data <- lapply(seq_along(multiples.id), function(i) {
+      dat <- nearest.pump[rle.ct != 1][[i]]
+      dat[c(multiples.id[i], multiples.id[i] + 1), ]
+    })
+
+    split.segments <- lapply(seq_along(multiples.seg), function(i) {
+      seg.data <- cholera::road.segments[cholera::road.segments$id ==
+        multiples.seg[i], ]
+
+      seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                           y = c(seg.data$y1, seg.data$y2))
+
+      ols <- stats::lm(y ~ x, data = seg.df)
+      segment.slope <- stats::coef(ols)[2]
+      theta <- atan(segment.slope)
+
+      multi.data <- multiples.data[[i]]
+
+      h <- multi.data$cutpoint
+      delta.x <- h * cos(theta)
+      delta.y <- h * sin(theta)
+
+      EW <- which.min(seg.data[, c("x1", "x2")])
+
+      if (EW == 1) {
+        seg1 <- data.frame(seg.data[, c("x1", "y1")],
+                           x2 = seg.data$x1 + delta.x[1],
+                           y2 = seg.data$y1 + delta.y[1],
+                           row.names = NULL)
+
+        seg2 <- data.frame(x1 = seg.data$x1 + delta.x[2],
+                           y1 = seg.data$y1 + delta.y[2],
+                           seg.data[, c("x2", "y2")],
+                           row.names = NULL)
+     } else if (EW == 2) {
+       seg1 <- data.frame(seg.data[, c("x2", "y2")],
+                          x1 = seg.data$x2 + delta.x[1],
+                          y1 = seg.data$y2 + delta.y[1],
+                          row.names = NULL)
+
+       seg2 <- data.frame(x2 = seg.data$x2 + delta.x[2],
+                          y2 = seg.data$y2 + delta.y[2],
+                          seg.data[, c("x1", "y1")],
+                          row.names = NULL)
+      }
+
+    data.frame(rbind(seg1, seg2), pump = multi.data$pump)
+    })
+  }
+
   # Plot #
 
   n.sel <- as.numeric(names(x$paths))
@@ -112,10 +258,13 @@ plot.walkingB <- function(x, ...) {
     pch = NA, asp = 1)
   invisible(lapply(road.list, lines, col = "gray"))
   invisible(lapply(border.list, lines))
-  invisible(lapply(seq_along(n.sel), function(i) {
-    points(cholera::fatalities.address[x$cases[[i]], c("x", "y")],
-      pch = 20, cex = 0.75, col = snow.colors[i])
-  }))
+
+  if (x$observed) {
+    invisible(lapply(seq_along(n.sel), function(i) {
+      points(cholera::fatalities.address[x$cases[[i]], c("x", "y")],
+             pch = 20, cex = 0.75, col = snow.colors[i])
+    }))
+  }
 
   if (is.null(x$pump.select)) {
     if (x$vestry) {
@@ -144,12 +293,29 @@ plot.walkingB <- function(x, ...) {
   }
 
   invisible(lapply(seq_along(edge.data), function(i) {
-   n.edges <- edges[edge.data[[i]], ]
-   segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
+    n.edges <- edges[edge.data[[i]], ]
+    segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
      col = snow.colors[i])
   }))
 
-  title(main = "Walking Path Pump Neighborhoods")
+  if (x$observed == FALSE) {
+    invisible(lapply(seq_along(singles.seg), function(i) {
+      dat <- cholera::road.segments[cholera::road.segments$id ==
+        singles.seg[i], ]
+      color <- snow.colors[names(snow.colors) %in% paste0("p", singles.pump[i])]
+      segments(dat$x1, dat$y1, dat$x2, dat$y2, lwd = 2, col = color)
+    }))
+
+    invisible(lapply(split.segments, function(dat) {
+      colors <- snow.colors[names(snow.colors) %in% paste0("p", dat$pump)]
+      segments(dat$x1[1], dat$y1[1], dat$x2[1], dat$y2[1], lwd = 2,
+         col = colors[1])
+      segments(dat$x1[2], dat$y1[2], dat$x2[2], dat$y2[2], lwd = 2,
+        col = colors[2])
+    }))
+  }
+
+  title(main = "Pump Neighborhoods: Walking")
 }
 
 #' Compute walking path from anchor cases to nearest pump (or from among selected pumps).
@@ -157,36 +323,17 @@ plot.walkingB <- function(x, ...) {
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
+#' @param observed Logical. Observed or expected walking path pump neighborhoods.
 #' @export
 #' @return A R list of vectors of nodes.
 
-nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE) {
-  if (weighted) {
-    if (vestry) {
-      dat <- neighborhoodData(vestry = TRUE)
-      path.data <- pathData(vestry = TRUE)
-      distances <- path.data$distances
-      paths <- path.data$paths
-    } else {
-      dat <- neighborhoodData()
-      path.data <- pathData()
-      distances <- path.data$distances
-      paths <- path.data$paths
-    }
-  } else {
-    if (vestry) {
-      dat <- neighborhoodData(vestry = TRUE)
-      path.data <- pathData(vestry = TRUE, weighted = FALSE)
-      distances <- path.data$distances
-      paths <- path.data$paths
-    } else {
-      dat <- neighborhoodData()
-      path.data <- pathData(weighted = FALSE)
-      distances <- path.data$distances
-      paths <- path.data$paths
-    }
-  }
+nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
+  observed = TRUE) {
 
+  dat <- neighborhoodData(vestry)
+  path.data <- pathData(vestry, weighted, observed)
+  distances <- path.data$distances
+  paths <- path.data$paths
   nodes.pump <- dat$nodes.pump
 
   if (is.null(pump.select)) {
@@ -217,28 +364,16 @@ nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE) {
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
+#' @param observed Logical. Observed or expected walking path pump neighborhoods.
 #' @export
 #' @return An R data frame.
 
-nearestPump <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE) {
-  if (weighted) {
-    if (vestry) {
-      dat <- neighborhoodData(vestry = TRUE)
-      distances <- pathData(vestry = TRUE)$distances
-    } else {
-      dat <- neighborhoodData()
-      distances <- pathData()$distances
-    }
-  } else {
-    if (vestry) {
-      dat <- neighborhoodData(vestry = TRUE)
-      distances <- pathData(vestry = TRUE, weighted = FALSE)$distances
-    } else {
-      dat <- neighborhoodData()
-      distances <- pathData(weighted = FALSE)$distances
-    }
-  }
+nearestPump <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
+  observed = TRUE) {
 
+  dat <- neighborhoodData(vestry)
+  path.data <- pathData(vestry, weighted, observed)
+  distances <- path.data$distances
   nodes.pump <- dat$nodes.pump
 
   if (is.null(pump.select)) {
@@ -265,8 +400,13 @@ nearestPump <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE) {
     }
   }
 
-  out <- data.frame(anchor = cholera::fatalities.address$anchor.case,
-    do.call(rbind, dat), row.names = NULL)
+  if (observed) {
+    out <- data.frame(anchor = cholera::fatalities.address$anchor.case,
+      do.call(rbind, dat), row.names = NULL)
+  } else {
+    out <- data.frame(anchor = seq_along(dat), do.call(rbind, dat),
+      row.names = NULL)
+  }
 
   out$pump.name <- NA
 
@@ -301,7 +441,7 @@ neighborhoodData <- function(vestry = FALSE) {
   list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
 }
 
-pathData <- function(weighted = TRUE, vestry = FALSE) {
+pathData <- function(vestry = FALSE, weighted = TRUE, observed = TRUE) {
   if (vestry) {
     dat <- neighborhoodData(vestry = TRUE)
   } else {
@@ -313,27 +453,78 @@ pathData <- function(weighted = TRUE, vestry = FALSE) {
   edges <- dat$edges
   nodes.pump <- dat$nodes.pump
 
-  paths <- lapply(cholera::fatalities.address$anchor.case, function(x) {
-    case.node <- nodes[nodes$anchor == x, "node"]
-    if (weighted) {
-      stats::setNames(igraph::shortest_paths(g, case.node, nodes.pump$node,
-        weights = edges$d)$vpath, nodes.pump$pump)
-    } else {
-      stats::setNames(igraph::shortest_paths(g, case.node,
-        nodes.pump$node)$vpath, nodes.pump$pump)
-    }
-  })
+  if (observed) {
+    anchor <- cholera::fatalities.address$anchor.case
 
-  distances <- lapply(cholera::fatalities.address$anchor.case, function(x) {
-    case.node <- nodes[nodes$anchor == x, "node"]
-    if (weighted) {
-      stats::setNames(c(igraph::distances(g, case.node, nodes.pump$node,
-        weights = edges$d)), nodes.pump$pump)
-    } else {
-      stats::setNames(c(igraph::distances(g, case.node, nodes.pump$node)),
-        nodes.pump$pump)
-    }
-  })
+    paths <- parallel::mclapply(anchor, function(x) {
+      case.node <- nodes[nodes$anchor == x, "node"]
+      if (weighted) {
+        stats::setNames(igraph::shortest_paths(g, case.node, nodes.pump$node,
+          weights = edges$d)$vpath, nodes.pump$pump)
+      } else {
+        stats::setNames(igraph::shortest_paths(g, case.node,
+          nodes.pump$node)$vpath, nodes.pump$pump)
+      }
+    }, mc.cores = 1L)
 
-  list(distances = distances, paths = paths)
+    distances <- parallel::mclapply(anchor, function(x) {
+      case.node <- nodes[nodes$anchor == x, "node"]
+      if (weighted) {
+        stats::setNames(c(igraph::distances(g, case.node, nodes.pump$node,
+          weights = edges$d)), nodes.pump$pump)
+      } else {
+        stats::setNames(c(igraph::distances(g, case.node, nodes.pump$node)),
+          nodes.pump$pump)
+      }
+    }, mc.cores = 1L)
+
+    list(distances = distances, paths = paths)
+  } else {
+    road.nodes <- nodes[nodes$anchor == 0 & nodes$pump == 0, ]
+
+    AE <- cholera::road.segments[cholera::road.segments$name ==
+      "Adam and Eve Court", ]
+    FC <- cholera::road.segments[cholera::road.segments$name ==
+      "Falconberg Court", ]
+    FM <- cholera::road.segments[cholera::road.segments$name ==
+      "Falconberg Mews", ]
+
+    ep1 <- which(road.nodes$x.proj == AE$x1 & road.nodes$y.proj == AE$y1)
+    ep2 <- which(road.nodes$x.proj == AE$x2 & road.nodes$y.proj == AE$y2)
+    ep3 <- which(road.nodes$x.proj == FC$x1 & road.nodes$y.proj == FC$y1)
+    ep4 <- which(road.nodes$x.proj == FC$x2 & road.nodes$y.proj == FC$y2)
+
+    ep5 <- vapply(seq_len(nrow(FM)), function(i) {
+      which(road.nodes$x.proj == FM$x1[i] & road.nodes$y.proj == FM$y1[i])
+    }, numeric(1L))
+
+    ep6 <- vapply(seq_len(nrow(FM)), function(i) {
+      which(road.nodes$x.proj == FM$x2[i] & road.nodes$y.proj == FM$y2[i])
+    }, numeric(1L))
+
+    exclude <- unique(c(ep1, ep2, ep3, ep4, ep5, ep6))
+    road.nodes <- road.nodes[-exclude, "node"]
+
+    distances <- parallel::mclapply(road.nodes, function(x) {
+      if (weighted) {
+        stats::setNames(c(igraph::distances(g, x, nodes.pump$node,
+          weights = edges$d)), nodes.pump$pump)
+      } else {
+        stats::setNames(c(igraph::distances(g, x, nodes.pump$node)),
+          nodes.pump$pump)
+      }
+    }, mc.cores = 1L)
+
+    paths <- parallel::mclapply(seq_along(road.nodes), function(i) {
+      if (weighted) {
+        stats::setNames(igraph::shortest_paths(g, road.nodes[i],
+          nodes.pump$node, weights = edges$d)$vpath, nodes.pump$pump)
+      } else {
+        stats::setNames(igraph::shortest_paths(g, road.nodes[i],
+          nodes.pump$node)$vpath, nodes.pump$pump)
+      }
+    }, mc.cores = 1L)
+
+    list(distances = distances, paths = paths)
+  }
 }
