@@ -60,7 +60,7 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 2,
         pch = 15, cex = 0.5, col = "gray", asp = 1)
       invisible(lapply(roads.list, lines, col = "gray"))
       points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-      text(cholera::pumps[, c("x", "y")], label = cholera::pumps$pump.id,
+      text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id,
         pos = 1)
       points(cholera::fatalities[cholera::fatalities$case == case, c("x", "y")],
         col = "red", lwd = 2)
@@ -73,7 +73,7 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 2,
         xlim = x.rng, ylim = y.rng, col = "gray", asp = 1)
       invisible(lapply(roads.list, lines, col = "gray"))
       points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-      text(cholera::pumps[, c("x", "y")], label = cholera::pumps$pump.id,
+      text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id,
         pos = 1)
       points(cholera::fatalities.address[cholera::fatalities.address$anchor.case
         == case.b, c("x", "y")], col = "red", lwd = 2)
@@ -84,7 +84,7 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 2,
       pch = 15, cex = 0.5, col = "gray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
     points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$pump.id,
+    text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id,
       pos = 1)
     points(cholera::regular.cases[case, c("x", "y")],
       col = "red", lwd = 2)
