@@ -157,9 +157,7 @@ plot.walkingB <- function(x, ...) {
                            y = c(seg.data$y1, seg.data$y2))
 
       ols <- stats::lm(y ~ x, data = seg.df)
-      parameters <- stats::coef(ols)
-      segment.slope <- parameters[2]
-      segment.intercept <- parameters[1]
+      segment.slope <- stats::coef(ols)[2]
 
       theta <- atan(segment.slope)
       hypotenuse <- c(stats::dist(seg.df))
