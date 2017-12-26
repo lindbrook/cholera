@@ -5,7 +5,7 @@
 \title{Compute walking path pump neighborhoods.}
 \usage{
 neighborhoodPaths(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  observed = TRUE, multi.core = TRUE)
+  observed = TRUE, multi.core = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
@@ -16,7 +16,7 @@ neighborhoodPaths(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
 \item{observed}{Logical. Observed or expected walking path pump neighborhoods.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you can specify the number logical cores (truncates with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 }
 \description{
 Group walking paths by neighborhood.

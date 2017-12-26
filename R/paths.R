@@ -4,12 +4,12 @@
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
-#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @param observed Logical. Observed or expected walking path pump neighborhoods.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you can specify the number logical cores (truncates with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @export
 
 neighborhoodPaths <- function(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, observed = TRUE, multi.core = TRUE) {
+  weighted = TRUE, observed = TRUE, multi.core = FALSE) {
 
   if (is.logical(multi.core)) {
     if (multi.core == TRUE) {
@@ -36,7 +36,8 @@ neighborhoodPaths <- function(pump.select = NULL, vestry = FALSE,
   args <- list(pump.select = pump.select,
                vestry = vestry,
                weighted = weighted,
-               observed = observed)
+               observed = observed,
+               cores = cores)
 
   nearest.path <- do.call("nearestPath", args)
   nearest.pump <- do.call("nearestPump", args)
@@ -200,7 +201,7 @@ plot.walkingB <- function(x, ...) {
       }, numeric(1L))
 
       data.frame(pump = p, cutpoint = hypotenuse.breaks)
-    }, mc.cores = 1L)
+    }, mc.cores = x$cores)
 
     rle.audit <- lapply(nearest.pump, function(x) rle(x$pump))
     rle.ct <- vapply(rle.audit, function(x) length(x$values), numeric(1L))
@@ -222,7 +223,7 @@ plot.walkingB <- function(x, ...) {
       dat[c(multiples.id[i], multiples.id[i] + 1), ]
     })
 
-    split.segments <- lapply(seq_along(multiples.seg), function(i) {
+    split.segments <- parallel::mclapply(seq_along(multiples.seg), function(i) {
       seg.data <- cholera::road.segments[cholera::road.segments$id ==
         multiples.seg[i], ]
 
@@ -263,8 +264,8 @@ plot.walkingB <- function(x, ...) {
                           row.names = NULL)
       }
 
-    data.frame(rbind(seg1, seg2), pump = multi.data$pump)
-    })
+      data.frame(rbind(seg1, seg2), pump = multi.data$pump)
+    }, mc.cores = x$cores)
   }
 
   # Plot #
@@ -352,14 +353,15 @@ plot.walkingB <- function(x, ...) {
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
 #' @param observed Logical. Observed or expected walking path pump neighborhoods.
+#' @param cores  Numeric. The number logical cores (truncates with as.integer()). Default is 1, which is the only possible value for Windows.
 #' @export
 #' @return A R list of vectors of nodes.
 
 nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  observed = TRUE) {
+  observed = TRUE, cores = 1L) {
 
   dat <- neighborhoodData(vestry)
-  path.data <- pathData(vestry, weighted, observed)
+  path.data <- pathData(dat, weighted, observed, cores)
   distances <- path.data$distances
   paths <- path.data$paths
   nodes.pump <- dat$nodes.pump
@@ -393,14 +395,15 @@ nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
 #' @param observed Logical. Observed or expected walking path pump neighborhoods.
+#' @param cores  Numeric. The number logical cores (truncates with as.integer()). Default is 1, which is the only possible value for Windows.
 #' @export
 #' @return An R data frame.
 
 nearestPump <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  observed = TRUE) {
+  observed = TRUE, cores = 1L) {
 
   dat <- neighborhoodData(vestry)
-  path.data <- pathData(vestry, weighted, observed)
+  path.data <- pathData(dat, weighted, observed, cores)
   distances <- path.data$distances
   nodes.pump <- dat$nodes.pump
 
@@ -469,13 +472,7 @@ neighborhoodData <- function(vestry = FALSE) {
   list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
 }
 
-pathData <- function(vestry = FALSE, weighted = TRUE, observed = TRUE) {
-  if (vestry) {
-    dat <- neighborhoodData(vestry = TRUE)
-  } else {
-    dat <- neighborhoodData()
-  }
-
+pathData <- function(dat, weighted, observed, cores) {
   g <- dat$g
   nodes <- dat$nodes
   edges <- dat$edges
@@ -493,7 +490,7 @@ pathData <- function(vestry = FALSE, weighted = TRUE, observed = TRUE) {
         stats::setNames(igraph::shortest_paths(g, case.node,
           nodes.pump$node)$vpath, nodes.pump$pump)
       }
-    }, mc.cores = 1L)
+    }, mc.cores = cores)
 
     distances <- parallel::mclapply(anchor, function(x) {
       case.node <- nodes[nodes$anchor == x, "node"]
@@ -504,7 +501,7 @@ pathData <- function(vestry = FALSE, weighted = TRUE, observed = TRUE) {
         stats::setNames(c(igraph::distances(g, case.node, nodes.pump$node)),
           nodes.pump$pump)
       }
-    }, mc.cores = 1L)
+    }, mc.cores = cores)
 
     list(distances = distances, paths = paths)
   } else {
@@ -541,7 +538,7 @@ pathData <- function(vestry = FALSE, weighted = TRUE, observed = TRUE) {
         stats::setNames(c(igraph::distances(g, x, nodes.pump$node)),
           nodes.pump$pump)
       }
-    }, mc.cores = 1L)
+    }, mc.cores = cores)
 
     paths <- parallel::mclapply(seq_along(road.nodes), function(i) {
       if (weighted) {
@@ -551,7 +548,7 @@ pathData <- function(vestry = FALSE, weighted = TRUE, observed = TRUE) {
         stats::setNames(igraph::shortest_paths(g, road.nodes[i],
           nodes.pump$node)$vpath, nodes.pump$pump)
       }
-    }, mc.cores = 1L)
+    }, mc.cores = cores)
 
     list(distances = distances, paths = paths)
   }
