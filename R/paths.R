@@ -332,7 +332,10 @@ plot.walkingB <- function(x, ...) {
     }))
 
     invisible(lapply(split.segments, function(dat) {
-      colors <- snow.colors[names(snow.colors) %in% paste0("p", dat$pump)]
+      colors <- vapply(dat$pump, function(x) {
+        snow.colors[names(snow.colors) == paste0("p", x)]
+      }, character(1L))
+
       segments(dat$x1[1], dat$y1[1], dat$x2[1], dat$y2[1], lwd = 2,
          col = colors[1])
       segments(dat$x1[2], dat$y1[2], dat$x2[2], dat$y2[2], lwd = 2,
