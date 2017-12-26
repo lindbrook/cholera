@@ -60,8 +60,8 @@ neighborhoodPaths <- function(pump.select = NULL, vestry = FALSE,
               vestry = vestry,
               observed = observed,
               pump.select = pump.select,
-              metric = cholera::segmentLength("242-1") /
-                       cholera::segmentLength("242-1", unit = "meter"))
+              cores = cores,
+              metric = 1 / cholera::unitMeter(1, "meter"))
 
   class(out) <- "walkingB"
   out
