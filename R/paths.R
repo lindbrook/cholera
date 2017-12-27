@@ -204,26 +204,28 @@ plot.walkingB <- function(x, ...) {
     rle.audit <- lapply(nearest.pump, function(x) rle(x$pump))
     rle.ct <- vapply(rle.audit, function(x) length(x$values), numeric(1L))
 
-    singles.seg <- missing.segments[rle.ct == 1]
+    whole.missing.segments <- missing.segments[rle.ct == 1]
 
-    singles.pump <- vapply(rle.audit[rle.ct == 1], function(x) {
+    whole.missing.pumps <- vapply(rle.audit[rle.ct == 1], function(x) {
       x$values
     }, numeric(1L))
 
-    multiples.seg <- missing.segments[rle.ct != 1]
+    split.missing.segs <- missing.segments[rle.ct != 1]
 
-    multiples.id <- vapply(rle.audit[rle.ct != 1], function(x) {
+    split.missing.id <- vapply(rle.audit[rle.ct != 1], function(x) {
       x$lengths[1]
     }, numeric(1L))
 
-    multiples.data <- lapply(seq_along(multiples.id), function(i) {
+    split.missing.data <- lapply(seq_along(split.missing.id), function(i) {
       dat <- nearest.pump[rle.ct != 1][[i]]
-      dat[c(multiples.id[i], multiples.id[i] + 1), ]
+      dat[c(split.missing.id[i], split.missing.id[i] + 1), ]
     })
 
-    split.segments <- parallel::mclapply(seq_along(multiples.seg), function(i) {
+    split.missing.segments <- parallel::mclapply(seq_along(split.missing.segs),
+      function(i) {
+
       seg.data <- cholera::road.segments[cholera::road.segments$id ==
-        multiples.seg[i], ]
+        split.missing.segs[i], ]
 
       seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
                            y = c(seg.data$y1, seg.data$y2))
@@ -232,9 +234,9 @@ plot.walkingB <- function(x, ...) {
       segment.slope <- stats::coef(ols)[2]
       theta <- atan(segment.slope)
 
-      multi.data <- multiples.data[[i]]
+      split.data <- split.missing.data[[i]]
 
-      h <- multi.data$cutpoint
+      h <- split.data$cutpoint
       delta.x <- h * cos(theta)
       delta.y <- h * sin(theta)
 
@@ -262,7 +264,7 @@ plot.walkingB <- function(x, ...) {
                           row.names = NULL)
       }
 
-      data.frame(rbind(seg1, seg2), pump = multi.data$pump)
+      data.frame(rbind(seg1, seg2), pump = split.data$pump)
     }, mc.cores = x$cores)
   }
 
@@ -323,14 +325,15 @@ plot.walkingB <- function(x, ...) {
   }))
 
   if (x$observed == FALSE) {
-    invisible(lapply(seq_along(singles.seg), function(i) {
+    invisible(lapply(seq_along(whole.missing.segments), function(i) {
       dat <- cholera::road.segments[cholera::road.segments$id ==
-        singles.seg[i], ]
-      color <- snow.colors[names(snow.colors) %in% paste0("p", singles.pump[i])]
+        whole.missing.segments[i], ]
+      color <- snow.colors[names(snow.colors) %in%
+        paste0("p", whole.missing.pumps[i])]
       segments(dat$x1, dat$y1, dat$x2, dat$y2, lwd = 2, col = color)
     }))
 
-    invisible(lapply(split.segments, function(dat) {
+    invisible(lapply(split.missing.segments, function(dat) {
       colors <- vapply(dat$pump, function(x) {
         snow.colors[names(snow.colors) == paste0("p", x)]
       }, character(1L))
