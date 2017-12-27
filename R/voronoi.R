@@ -182,6 +182,9 @@ plot.voronoi <- function(x, ...) {
   plot(cholera::fatalities.address[, c("x", "y")], xlim = x$x.rng,
     ylim = x$y.rng, pch = NA, asp = 1)
 
+  invisible(lapply(roads.list, lines, col = "lightgray"))
+  invisible(lapply(border.list, lines))
+
   if (is.null(x$statistic)) {
     if (is.null(x$pump.select)) {
       if (x$vestry) {
@@ -194,7 +197,7 @@ plot.voronoi <- function(x, ...) {
         text(cholera::pumps[, c("x", "y")], label = paste0("p", x$pump.id),
           pos = 1)
       }
-      title(main = "Snow Addresses by Neighborhood")
+      title(main = "Pump Neighborhoods: Voronoi (address)")
 
     } else {
       if (x$vestry) {
@@ -208,9 +211,12 @@ plot.voronoi <- function(x, ...) {
         text(cholera::pumps[x$pump.select, c("x", "y")],
           label = paste0("p", x$pump.id), pos = 1)
       }
-      title(main = paste0("Snow Addresses by Neighborhood", "\n",
+      title(main = paste0("Pump Neighborhoods: Voronoi (address)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
     }
+
+    plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none",
+      lty = "solid")
 
     voronoi.case.id <- cholera::pumpCase(x)
     voronoi.colors <- vector(length = length(unlist(voronoi.case.id)))
@@ -221,27 +227,10 @@ plot.voronoi <- function(x, ...) {
       voronoi.colors[names(voronoi.colors) %in% id] <- x$snow.colors[i]
     }
 
-    invisible(lapply(roads.list, lines, col = "lightgray"))
-    invisible(lapply(border.list, lines))
-
-    plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none",
-      lty = "solid")
-
-    if (is.null(x$statistic)) {
-      points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
-        pch = 20, cex = 0.75)
-    } else if (x$statistic == "address") {
-      points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
-         pch = 20, cex = 0.75)
-    } else if (x$statistic == "fatality") {
-      points(cholera::fatalities[, c("x", "y")], col = voronoi.colors, pch = 20,
-        cex = 0.75)
-    }
+    points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
+      pch = 20, cex = 0.75)
 
   } else {
-    invisible(lapply(roads.list, lines, col = "gray"))
-    invisible(lapply(border.list, lines))
-
     stat.data <- summary(x)
     polygon.cols <- polygonColors(stat.data$Pearson)
 
@@ -254,9 +243,9 @@ plot.voronoi <- function(x, ...) {
       lty = "solid")
 
     if (x$statistic == "address") {
-      caption <- "Snow Address Count by Pump Neighborhood"
+      caption <- "Pump Neighborhoods: Voronoi (address count)"
     } else if (x$statistic == "fatality") {
-      caption <- "Snow Fatality Count by Pump Neighborhood"
+      caption <- "Pump Neighborhoods: Voronoi (fatality count)"
     }
 
     if (is.null(x$pump.select)) {
