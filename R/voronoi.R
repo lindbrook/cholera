@@ -323,6 +323,27 @@ print.voronoi <- function(x, ...) {
   print(output)
 }
 
+summary.voronoi <- function(x, ...) {
+  if (class(x) != "voronoi") {
+    stop('x\'s class needs to be "voronoi".')
+  }
+
+  census <- x$statistic.data
+  count <- vapply(census, sum, numeric(1L))
+
+  output <- data.frame(pump.id = as.numeric(names(count)),
+                       Count = count,
+                       Percent = round(100 * count / sum(count), 2))
+
+  output <- merge(output, x$expected.data[, c("pump", "pct")],
+    by.x = "pump.id", by.y = "pump")
+
+  output$Expected <- output$pct * sum(output$Count)
+  output$pct <- NULL
+  output$Pearson <- (output$Count - output$Expected) / sqrt(output$Expected)
+  output
+}
+
 fourCorners <- function() {
   nw <- cholera::roads[cholera::roads$id == 69, c("x", "y")]
   ne <- cholera::roads[cholera::roads$id == 28, c("x", "y")]
