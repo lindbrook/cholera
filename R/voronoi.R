@@ -1,7 +1,7 @@
 #' Compute Voronoi neighborhoods.
 #'
-#' Data for Voronoi tessellation of John Snow's 1854 London cholera data.
-#' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
+#' Voronoi tessellation of John Snow's 1854 London cholera data.
+#' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion is possible with negative selection (e.g., -6).
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param statistic NULL or Character. NULL, the default, makes no summary computation. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.
 #' @param polygon.vertices Logical. TRUE returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for sp::point.in.polygon() as used in print.voronoi() method.
@@ -296,19 +296,7 @@ print.voronoi <- function(x, ...) {
     stop('x\'s class needs to be "voronoi".')
   }
 
-  census <- x$statistic.data
-  count <- vapply(census, sum, numeric(1L))
-
-  output <- data.frame(pump.id = as.numeric(names(count)),
-                       Count = count,
-                       Percent = round(100 * count / sum(count), 2))
-
-  output <- merge(output, x$expected.data[, c("pump", "pct")],
-    by.x = "pump.id", by.y = "pump")
-
-  output$Expected <- output$pct * sum(output$Count)
-  output$pct <- NULL
-  output$Pearson <- (output$Count - output$Expected) / sqrt(output$Expected)
+  output <- summary(x)
   print(output)
 }
 
