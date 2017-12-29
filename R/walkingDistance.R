@@ -242,10 +242,10 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   }
 
   if (!is.null(unit)) {
-    if (unit == "yard") {
-      out$distance <- out$distance * 177 / 3
-    } else if (unit == "meter") {
-      out$distance <- out$distance * 54
+    if (unit == "meter") {
+      out$distance <- cholera::unitMeter(out$distance, "meter")
+    } else if (unit == "yard") {
+      out$distance <- cholera::unitMeter(out$distance, "yard")
     }
   }
 
