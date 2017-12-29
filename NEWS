@@ -28,7 +28,7 @@ cholera 0.2.9.9001
 cholera 0.2.9.9000
 ----------------------------------------------------------------
 
-* add beta version of neighborhoodPaths() w/ S3 plot and print methods.
+* add neighborhoodPaths() w/ S3 plot and print methods.
 
 
 cholera 0.2.1.9014
