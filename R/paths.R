@@ -149,6 +149,9 @@ plot.walkingB <- function(x, ...) {
     missing.segments <- setdiff(edgesID[-isolates], drawn.segments)
     missing.segments <- unique(edges[missing.segments, "id"])
 
+    # Exclude Portland Mews last segment (zero length).
+    missing.segments <- missing.segments[missing.segments != "160-3"]
+
     nearest.pump <- parallel::mclapply(missing.segments, function(s) {
       seg.data <- cholera::road.segments[cholera::road.segments$id == s,
         c("x1", "y1", "x2", "y2")]
