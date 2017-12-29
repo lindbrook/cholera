@@ -1,11 +1,11 @@
 #' Compute walking path pump neighborhoods.
 #'
-#' Group walking paths by neighborhood.
+#' Compute and group walking paths by neighborhood.
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
 #' @param observed Logical. Observed or expected walking path pump neighborhoods.
-#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you can specify the number logical cores (truncates with as.integer()). On Windows, only "multi.core = FALSE" is available.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you can specify the number logical cores. On Windows, only "multi.core = FALSE" is available.
 #' @export
 
 neighborhoodPaths <- function(pump.select = NULL, vestry = FALSE,
