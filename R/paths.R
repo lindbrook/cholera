@@ -288,6 +288,33 @@ plot.walkingB <- function(x, ...) {
   invisible(lapply(road.list, lines, col = "gray"))
   invisible(lapply(border.list, lines))
 
+  invisible(lapply(seq_along(edge.data), function(i) {
+    n.edges <- edges[edge.data[[i]], ]
+    segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
+     col = snow.colors[i])
+  }))
+
+  if (x$observed == FALSE) {
+    invisible(lapply(seq_along(whole.missing.segments), function(i) {
+      dat <- cholera::road.segments[cholera::road.segments$id ==
+        whole.missing.segments[i], ]
+      color <- snow.colors[names(snow.colors) %in%
+        paste0("p", whole.missing.pumps[i])]
+      segments(dat$x1, dat$y1, dat$x2, dat$y2, lwd = 2, col = color)
+    }))
+
+    invisible(lapply(split.missing.segments, function(dat) {
+      colors <- vapply(dat$pump, function(x) {
+        snow.colors[names(snow.colors) == paste0("p", x)]
+      }, character(1L))
+
+      segments(dat$x1[1], dat$y1[1], dat$x2[1], dat$y2[1], lwd = 2,
+         col = colors[1])
+      segments(dat$x1[2], dat$y1[2], dat$x2[2], dat$y2[2], lwd = 2,
+        col = colors[2])
+    }))
+  }
+
   if (x$observed) {
     invisible(lapply(seq_along(n.sel), function(i) {
       points(cholera::fatalities.address[x$cases[[i]], c("x", "y")],
@@ -319,33 +346,6 @@ plot.walkingB <- function(x, ...) {
       text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
         labels = paste0("p", cholera::pumps$id[n.sel]))
     }
-  }
-
-  invisible(lapply(seq_along(edge.data), function(i) {
-    n.edges <- edges[edge.data[[i]], ]
-    segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
-     col = snow.colors[i])
-  }))
-
-  if (x$observed == FALSE) {
-    invisible(lapply(seq_along(whole.missing.segments), function(i) {
-      dat <- cholera::road.segments[cholera::road.segments$id ==
-        whole.missing.segments[i], ]
-      color <- snow.colors[names(snow.colors) %in%
-        paste0("p", whole.missing.pumps[i])]
-      segments(dat$x1, dat$y1, dat$x2, dat$y2, lwd = 2, col = color)
-    }))
-
-    invisible(lapply(split.missing.segments, function(dat) {
-      colors <- vapply(dat$pump, function(x) {
-        snow.colors[names(snow.colors) == paste0("p", x)]
-      }, character(1L))
-
-      segments(dat$x1[1], dat$y1[1], dat$x2[1], dat$y2[1], lwd = 2,
-         col = colors[1])
-      segments(dat$x1[2], dat$y1[2], dat$x2[2], dat$y2[2], lwd = 2,
-        col = colors[2])
-    }))
   }
 
   title(main = "Pump Neighborhoods: Walking")
