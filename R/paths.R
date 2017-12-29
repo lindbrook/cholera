@@ -126,6 +126,9 @@ plot.walkingB <- function(x, ...) {
   edge.data <- lapply(n.paths, function(x) unique(unlist(x)))
 
   if (x$observed == FALSE) {
+    # edge.data only capture segments where paths cross both endpoints.
+    # To capture the remaining segments, find the missing whole segments and
+    # the missing split segments (sub-segments which lead to different pumps.)
     p.data <- dat$nodes.pump
 
     if (is.null(x$pump.select)) {
@@ -171,6 +174,7 @@ plot.walkingB <- function(x, ...) {
         delta.y <- h * sin(theta)
 
         EW <- which.min(seg.data[, c("x1", "x2")])
+
         if (EW == 1) {
           test.x <- seg.data$x1 + delta.x
           test.y <- seg.data$y1 + delta.y
