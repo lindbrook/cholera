@@ -90,15 +90,22 @@ print.walkingB <- function(x, ...) {
 #' Plot method for neighborhoodPaths().
 #'
 #' @param x An object of class "walkingB" created by neighborhoodPaths().
+#' @param area Logical. TRUE returns expedted area plot. FALSE returns expected walking paths.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 #' @examples
 #' # plot(neighborhoodPaths())
+#' # plot(neighborhoodPaths(observed = FALSE))
+#' # plot(neighborhoodPaths(observed = FALSE), area = TRUE)
 
-plot.walkingB <- function(x, ...) {
+plot.walkingB <- function(x, area = FALSE, ...) {
   if (class(x) != "walkingB") {
     stop('"x"\'s class needs to be "walkingB".')
+  }
+
+  if (x$observed & area) {
+      stop('"area = TRUE" valid only when neighborhoodPaths(observed = FALSE).')
   }
 
   if (x$vestry) {
@@ -228,7 +235,7 @@ plot.walkingB <- function(x, ...) {
       dat[c(split.missing.id[i], split.missing.id[i] + 1), ]
     })
 
-    split.missing.segments <- parallel::mclapply(seq_along(split.missing.segs),
+    split.missing.segments <- lapply(seq_along(split.missing.segs),
       function(i) {
 
       seg.data <- cholera::road.segments[cholera::road.segments$id ==
@@ -272,7 +279,170 @@ plot.walkingB <- function(x, ...) {
       }
 
       data.frame(rbind(seg1, seg2), pump = split.data$pump)
-    }, mc.cores = x$cores)
+    })
+
+
+    if (area == TRUE) {
+
+      ## drawn segments ##
+
+      sel <- is.na(cholera::sim.ortho.proj$road.segment) == FALSE
+      sim.proj <- cholera::sim.ortho.proj[sel, ]
+
+      edge.data.id <- lapply(edge.data, function(i) {
+        unique(edges[i, "id"]  )
+      })
+
+      case.neighborhood <- lapply(unique(sim.proj$road.segment), function(rd) {
+        vapply(edge.data.id, function(x) rd %in% x, logical(1L))
+      })
+
+      select <- vapply(case.neighborhood, any, logical(1L))
+
+      p1 <- vapply(case.neighborhood[select], function(x) {
+        as.numeric(names(which(x)))
+      }, numeric(1L))
+
+      segments1 <- data.frame(id = unique(sim.proj$road.segment)[select],
+                              pump = p1,
+                              stringsAsFactors = FALSE)
+
+      sim.proj$pump <- NA
+
+      for (id in segments1$id) {
+        sim.proj[sim.proj$road.segment %in% id, "pump"] <-
+          segments1[segments1$id == id, "pump"]
+      }
+
+      ## whole missing segments ##
+
+      whole.missing.id <- split(whole.missing.segments, whole.missing.pumps)
+
+      case.neighborhood2 <- lapply(unique(sim.proj$road.segment), function(rd) {
+        vapply(whole.missing.id, function(x) rd %in% x, logical(1L))
+      })
+
+      select2 <- vapply(case.neighborhood2, any, logical(1L))
+
+      p2 <- vapply(case.neighborhood2[select2], function(x) {
+        as.numeric(names(which(x)))
+      }, numeric(1L))
+
+      segments2 <- data.frame(id = unique(sim.proj$road.segment)[select2],
+                              pump = p2,
+                              stringsAsFactors = FALSE)
+
+      for (id in segments2$id) {
+        sim.proj[sim.proj$road.segment %in% id, "pump"] <-
+          segments2[segments2$id == id, "pump"]
+      }
+
+      ## split missing segments ##
+
+      sim.proj3 <- sim.proj[is.na(sim.proj$pump), ]
+
+      falconberg <- cholera::road.segments[cholera::road.segments$name %in%
+        c("Falconberg Court", "Falconberg Mews"), "id"]
+
+      sim.proj3 <- sim.proj3[sim.proj3$road.segment %in% falconberg == FALSE, ]
+
+      ##
+
+      split.missing <- lapply(seq_along(split.missing.segs), function(i) {
+        seg.data <- cholera::road.segments[cholera::road.segments$id ==
+          split.missing.segs[i], ]
+
+        seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                             y = c(seg.data$y1, seg.data$y2))
+
+        ols <- stats::lm(y ~ x, data = seg.df)
+        segment.slope <- stats::coef(ols)[2]
+        theta <- atan(segment.slope)
+
+        split.data <- split.missing.data[[i]]
+
+        h <- split.data$cutpoint
+        delta.x <- h * cos(theta)
+        delta.y <- h * sin(theta)
+
+        EW <- which.min(seg.data[, c("x1", "x2")])
+
+        if (EW == 1) {
+          seg1 <- data.frame(seg.data[, c("x1", "y1")],
+                             x2 = seg.data$x1 + delta.x[1],
+                             y2 = seg.data$y1 + delta.y[1],
+                             row.names = NULL)
+
+          seg2 <- data.frame(x1 = seg.data$x1 + delta.x[2],
+                             y1 = seg.data$y1 + delta.y[2],
+                             seg.data[, c("x2", "y2")],
+                             row.names = NULL)
+       } else if (EW == 2) {
+         seg1 <- data.frame(seg.data[, c("x2", "y2")],
+                            x1 = seg.data$x2 + delta.x[1],
+                            y1 = seg.data$y2 + delta.y[1],
+                            row.names = NULL)
+
+         seg2 <- data.frame(x2 = seg.data$x2 + delta.x[2],
+                            y2 = seg.data$y2 + delta.y[2],
+                            seg.data[, c("x1", "y1")],
+                            row.names = NULL)
+        }
+
+        out <- data.frame(id = split.missing.segs[i],
+                          rbind(seg1, seg2),
+                          pump = split.data$pump,
+                          stringsAsFactors = FALSE)
+
+        out$id2 <- paste0(out$id, letters[25:26])
+        out
+      })
+
+      split.missing <- do.call(rbind, split.missing)
+
+      classify <- function(case, segment = segment.data$id2[1]) {
+        obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
+        seg.data <- segment.data[segment.data$id2 == segment,
+          c("x1", "y1", "x2", "y2")]
+
+        seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                             y = c(seg.data$y1, seg.data$y2))
+
+        distB <- stats::dist(rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))) +
+                 stats::dist(rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj)))
+
+        signif(stats::dist(seg.df)) == signif(distB)
+      }
+
+      s3 <- unique(sim.proj3$road.segment)
+      s3 <- s3[s3 %in% "44-1" == FALSE]
+
+      for (s in s3) {
+        case.data <- sim.proj3[sim.proj3$road.segment == s, ]
+        segment.data <- split.missing[split.missing$id == s, ]
+
+        classify.first <- vapply(case.data$case, function(x) classify(x), logical(1L))
+
+        classify.last <- vapply(case.data$case, function(x) {
+          classify(x, segment.data$id2[2])
+        }, logical(1L))
+
+        case.data[classify.first, "pump"] <- segment.data[1, "pump"]
+        case.data[classify.last, "pump"] <- segment.data[2, "pump"]
+        sim.proj[sim.proj$case %in% case.data$case, "pump"] <- case.data$pump
+      }
+
+      sim.proj <- sim.proj[sim.proj$road.segment %in% falconberg == FALSE, ]
+      sim.proj[sim.proj$road.segment == "44-1", "pump"] <- 2
+      sim.proj <- sim.proj[!is.na(sim.proj$pump), ]
+
+      color <- cholera::snowColors()
+      sim.proj$color <- paste0("p", sim.proj$pump)
+
+      for (nm in names(color)) {
+        sim.proj[sim.proj$color == nm, "color"] <- color[names(color) == nm]
+      }
+    }
   }
 
   # Plot #
@@ -289,66 +459,101 @@ plot.walkingB <- function(x, ...) {
 
   plot(cholera::fatalities[, c("x", "y")], xlim = x.range, ylim = y.range,
     pch = NA, asp = 1)
-  invisible(lapply(road.list, lines, col = "gray"))
-  invisible(lapply(border.list, lines))
 
-  invisible(lapply(seq_along(edge.data), function(i) {
-    n.edges <- edges[edge.data[[i]], ]
-    segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
-     col = snow.colors[i])
-  }))
+  if (area) {
+    sel <- as.numeric(row.names(cholera::regular.cases)) %in% sim.proj$case
+    points(cholera::regular.cases[sel, ], col = sim.proj$color, pch = 15,
+      cex = 1.25)
+    invisible(lapply(road.list, lines))
+    invisible(lapply(border.list, lines))
 
-  if (x$observed == FALSE) {
-    invisible(lapply(seq_along(whole.missing.segments), function(i) {
-      dat <- cholera::road.segments[cholera::road.segments$id ==
-        whole.missing.segments[i], ]
-      color <- snow.colors[names(snow.colors) %in%
-        paste0("p", whole.missing.pumps[i])]
-      segments(dat$x1, dat$y1, dat$x2, dat$y2, lwd = 2, col = color)
-    }))
-
-    invisible(lapply(split.missing.segments, function(dat) {
-      colors <- vapply(dat$pump, function(x) {
-        snow.colors[names(snow.colors) == paste0("p", x)]
-      }, character(1L))
-
-      segments(dat$x1[1], dat$y1[1], dat$x2[1], dat$y2[1], lwd = 2,
-         col = colors[1])
-      segments(dat$x1[2], dat$y1[2], dat$x2[2], dat$y2[2], lwd = 2,
-        col = colors[2])
-    }))
-  }
-
-  if (x$observed) {
-    invisible(lapply(seq_along(n.sel), function(i) {
-      points(cholera::fatalities.address[x$cases[[i]], c("x", "y")],
-             pch = 20, cex = 0.75, col = snow.colors[i])
-    }))
-  }
-
-  if (is.null(x$pump.select)) {
-    if (x$vestry) {
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
-        col = cholera::snowColors(vestry = TRUE))
-      text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps.vestry$id))
+    if (is.null(x$pump.select)) {
+      if (x$vestry) {
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 24, bg = "white",
+          col = cholera::snowColors(vestry = TRUE))
+        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
+          col = "white", labels = paste0("p", cholera::pumps.vestry$id))
+      } else {
+        points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white",
+          col = cholera::snowColors())
+        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
+          col = "white", labels = paste0("p", cholera::pumps$id))
+      }
     } else {
-      points(cholera::pumps[, c("x", "y")], pch = 24,
-        col = cholera::snowColors())
-      text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps$id))
+      if (x$vestry) {
+        points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
+          bg = "white", col = snow.colors)
+        text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+          col = "white", labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
+      } else {
+        points(cholera::pumps[n.sel, c("x", "y")], pch = 24, bg = "white",
+          col = snow.colors)
+        text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+          col = "white", labels = paste0("p", cholera::pumps$id[n.sel]))
+      }
     }
   } else {
-    if (x$vestry) {
-      points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
-        col = snow.colors)
-      text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
+    invisible(lapply(road.list, lines, col = "gray"))
+    invisible(lapply(border.list, lines))
+
+    invisible(lapply(seq_along(edge.data), function(i) {
+      n.edges <- edges[edge.data[[i]], ]
+      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
+       col = snow.colors[i])
+    }))
+
+    if (x$observed == FALSE) {
+      invisible(lapply(seq_along(whole.missing.segments), function(i) {
+        dat <- cholera::road.segments[cholera::road.segments$id ==
+          whole.missing.segments[i], ]
+        color <- snow.colors[names(snow.colors) %in%
+          paste0("p", whole.missing.pumps[i])]
+        segments(dat$x1, dat$y1, dat$x2, dat$y2, lwd = 2, col = color)
+      }))
+
+      invisible(lapply(split.missing.segments, function(dat) {
+        colors <- vapply(dat$pump, function(x) {
+          snow.colors[names(snow.colors) == paste0("p", x)]
+        }, character(1L))
+
+        segments(dat$x1[1], dat$y1[1], dat$x2[1], dat$y2[1], lwd = 2,
+           col = colors[1])
+        segments(dat$x1[2], dat$y1[2], dat$x2[2], dat$y2[2], lwd = 2,
+          col = colors[2])
+      }))
+    }
+
+    if (x$observed) {
+      invisible(lapply(seq_along(n.sel), function(i) {
+        points(cholera::fatalities.address[x$cases[[i]], c("x", "y")],
+               pch = 20, cex = 0.75, col = snow.colors[i])
+      }))
+    }
+
+    if (is.null(x$pump.select)) {
+      if (x$vestry) {
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
+          col = cholera::snowColors(vestry = TRUE))
+        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps.vestry$id))
+      } else {
+        points(cholera::pumps[, c("x", "y")], pch = 24,
+          col = cholera::snowColors())
+        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps$id))
+      }
     } else {
-      points(cholera::pumps[n.sel, c("x", "y")], pch = 24,
-        col = snow.colors)
-      text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps$id[n.sel]))
+      if (x$vestry) {
+        points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
+          col = snow.colors)
+        text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
+      } else {
+        points(cholera::pumps[n.sel, c("x", "y")], pch = 24,
+          col = snow.colors)
+        text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps$id[n.sel]))
+      }
     }
   }
 
