@@ -40,11 +40,6 @@ pumpCase.walking <- function(obj) {
     stop('Input object\'s class needs to be "walking".')
   }
 
-  output <- obj$pump.case
-
-  if (obj$vestry == TRUE) {
-    stats::setNames(output, paste0("p", 1:14))
-  } else {
-    stats::setNames(output, paste0("p", 1:13))
-  }
+  output <- obj$cases
+  stats::setNames(output, names(output))
 }
