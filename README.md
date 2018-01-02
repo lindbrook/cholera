@@ -85,4 +85,4 @@ vignette("time.series")
 
 ### note
 
-neighborhoodWalking() is computationally intensive (between 5 and 40 seconds on a single core depending on configuration). To improve performance, a parallel, multi-core implementation is available on Linux and Mac.
+neighborhoodWalking() is computationally intensive. Plotting the grapths with the current development version takes between 5 and 40 seconds on a single core depending on configuration. To improve performance, a parallel, multi-core implementation is available on Linux and Mac.
