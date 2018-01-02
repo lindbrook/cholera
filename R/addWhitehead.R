@@ -11,7 +11,7 @@
 #' \code{\link{addKernelDensity}},
 #' \code{\link{addLandmarks}},
 #' \code{\link{addPlaguePit}},
-#' \code{\link{addSnow}},
+# #' \code{\link{addSnow}},
 #' \code{\link{addVoronoi}}
 #' @return Draws a circle, based on multiple line segments, to a graphics plot.
 #' @seealso \code{\link{addLandmarks}}

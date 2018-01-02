@@ -28,7 +28,6 @@ snowMap(vestry = TRUE, stacked = FALSE)
 \code{\link{addKernelDensity}},
 \code{\link{addLandmarks}},
 \code{\link{addPlaguePit}},
-\code{\link{addSnow}},
 \code{\link{addVoronoi}}.
 \code{\link{addWhitehead}}
 }

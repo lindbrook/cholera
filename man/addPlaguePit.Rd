@@ -27,7 +27,6 @@ addPlaguePit()
 \code{\link{snowMap}},
 \code{\link{addKernelDensity}},
 \code{\link{addLandmarks}},
-\code{\link{addSnow}},
 \code{\link{addVoronoi}},
 \code{\link{addWhitehead}}
 }
