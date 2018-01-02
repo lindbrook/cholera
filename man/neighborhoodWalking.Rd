@@ -2,53 +2,42 @@
 % Please edit documentation in R/walking.R
 \name{neighborhoodWalking}
 \alias{neighborhoodWalking}
-\title{Compute walking path neighborhoods.}
+\title{Compute walking path pump neighborhoods.}
 \usage{
-neighborhoodWalking(pump.select = NULL, vestry = FALSE,
-  statistic = "address", weighted = TRUE, snow = FALSE,
-  multi.core = FALSE)
+neighborhoodWalking(pump.select = NULL, vestry = FALSE, weighted = TRUE,
+  observed = TRUE, multi.core = FALSE)
 }
 \arguments{
-\item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
+\item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Note that you can't just select the pump on Adam and Eve Court (#2): it is a technical isolate.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
-\item{statistic}{Character. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.}
+\item{weighted}{Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.}
 
-\item{weighted}{Logical. TRUE uses distance weighted by edge length (i.e., road length). FALSE uses unweighted distance.}
+\item{observed}{Logical. Observed or expected walking path pump neighborhoods.}
 
-\item{snow}{Logical. TRUE computes Snow's Broad Street pump neighborhood. Note: this sets "pump.select" to 7 and "vestry" to NULL.}
-
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. Currently, only "multi.core = FALSE" is available on Windows.}
 }
 \value{
-An R list with 12 objects:
+An R list with 7 objects:
 \itemize{
-  \item{\code{distances}: walking distances to selected pumps.}
-  \item{\code{pump}: vector of selected pumps.}
-  \item{\code{nearest.pump}: an observed fatality's nearest pump.}
-  \item{\code{pump.seg}: "trimmed" neighborhood road segments based on observed fatalities.}
-  \item{\code{pump.case}: observed fatality IDs by pump neighborhood.}
-  \item{\code{sim.pump.seg}:  "trimmed" neighborhood road segments based on simulated fatalities.}
-  \item{\code{sim.pump.case}: simulated fatality ID by pump neighborhood.}
-  \item{\code{observed}: observed neighborhood fatality counts.}
-  \item{\code{expected}: expected neighborhood fatality counts, based on road length.}
-  \item{\code{pump.select}: "pump.select" from neighborhoodWalking().}
-  \item{\code{statistic}: "statistic" from neighborhoodWalking().}
+  \item{\code{paths}: list of paths to nearest or selected pump(s).}
+  \item{\code{cases}: list of cases by pump.}
   \item{\code{vestry}: "vestry" from neighborhoodWalking().}
+  \item{\code{observed}: "observed" from neighborhoodWalking().}
+  \item{\code{pump.select}: "pump.select" from neighborhoodWalking().}
+  \item{\code{cores}: number of cores to use for parallel implementation.}
+  \item{\code{metric}: incremental metric used to find cut point on split road segments.}
 }
 }
 \description{
-Data for walking neighborhoods for John Snow's 1854 London cholera data.
+Compute and group walking paths by neighborhood using John Snow's 1854 London cholera data.
 }
 \section{Notes}{
- This function is computationally intensive (the default configuration takes about 1-2 minutes to run on a single core). However, seven configurations will return pre-computed results. The first three use the 13 pumps in the original map: 1) the default set of arguments, which uses all pumps; 2) the default set excluding the pump on Little Marlborough Street (pump 6), and 3) the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7). The next three use the same set of arguments as above but uses the 14 pumps in the second version from the Vestry report. This includes a repositioned Broad Street pump. The seventh and final is Snow's Broad Street pump neighborhood, which represents his graphical annotation of the version of the map that appeared in the Vestry report.
+ This function is computationally intensive: the default configuration takes about 5 seconds; expected configurations (observed == FALSE) take about 30 seconds.
 }
 
 \examples{
-neighborhoodWalking()
-neighborhoodWalking(pump.select = -6)
-}
-\seealso{
-\code{\link{plot.walking}}, \code{\link{print.walking}}, \code{vignette("pump.neighborhoods")}
+# neighborhoodWalking()
+# neighborhoodWalking(pump.select = -6)
 }

@@ -9,14 +9,15 @@
 \arguments{
 \item{x}{An object of class "walking" created by neighborhoodWalking().}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional parameters.}
 }
 \value{
-A data frame with observed and expected counts, observed percentage, and the Pearson residual, (observed - expected) / sqrt(expected).
+An R vector.
 }
 \description{
-Summary statistics for walking path neighborhoods.
+Return count of paths (anchor cases) by pump neighborhood.
 }
 \examples{
-summary(neighborhoodWalking())
+# neighborhoodWalking()
+# print(neighborhoodWalking())
 }

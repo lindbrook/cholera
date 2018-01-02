@@ -2,25 +2,25 @@
 % Please edit documentation in R/walking.R
 \name{plot.walking}
 \alias{plot.walking}
-\title{Plot observed and simulated walking neighborhoods.}
+\title{Plot method for neighborhoodWalking().}
 \usage{
-\method{plot}{walking}(x, streets = TRUE, observed = TRUE, ...)
+\method{plot}{walking}(x, area = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "walking" created by neighborhoodWalking().}
 
-\item{streets}{Logical. TRUE plots neighborhoods by street. FALSE plots orthogonal neighborhoods (area).}
-
-\item{observed}{Logical. TRUE uses observed cases. FALSE uses "regular" simulated cases.}
+\item{area}{Logical. TRUE returns expected area plot. FALSE returns expected walking paths. Works only with neighborhoodWalking(observed = FALSE).}
 
 \item{...}{Additional plotting parameters.}
 }
 \value{
-A base R graphics plot.
+A base R plot.
 }
 \description{
-Neighborhoods are based on the shortest paths between a fatality's address and its nearest pump.
+Plot method for neighborhoodWalking().
 }
 \examples{
-plot(neighborhoodWalking())
+# plot(neighborhoodWalking())
+# plot(neighborhoodWalking(observed = FALSE))
+# plot(neighborhoodWalking(observed = FALSE), area = TRUE)
 }
