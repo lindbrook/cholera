@@ -76,19 +76,18 @@ To get a sense of entire neighborhoods, I extend the approach from observed data
 I do this in two ways. In the first, I identify neighborhoods by coloring roads.^[Shiode (2012) uses this approach.]
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
-plot(neighborhoodWalking(), observed = FALSE)
+plot(neighborhoodWalking(observed = FALSE))
 ```
 
 In the second, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach.]
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
-plot(neighborhoodWalking(), street = FALSE, observed = FALSE)
+plot(neighborhoodWalking(observed = FALSE), area = TRUE)
 ```
 
 While the latter is easier to "read" due to its familiarity, it is potentially less accurate and more misleading. Conceptually, the problem is that the latter takes the focus away from roads and walking distances, and puts it on regions, which may not have a relevant meaning because they include points or locations where there are no roads or residences. Computationally, the problem is that the shape of neighborhoods will be sensitive to the algorithm that determines the closest pump. Depending on our choices, this can produce different results.^[Cliff and Haggett also produce an adjusted Voronoi cells that reflect walking distances: "So far we have assumed that access to each pump was determined by 'crow-fly' distances. While the physical effort of carrying water mean that most people visited their nearest pump, recognition must be made of the complex street pattern in this area of London. Therefore in (D), the Thiessen polygons have been adjusted to take into account the patterns of access made possible by the street system shown in diagram (A) (Cliff and Haggett 1988, 53). However, details about how this was done do not appear to be available. Moreover, because the graphic only shows the outline of the polygon and not the streets, comparisons with other approaches is difficult.]
 
 ### Note on neighborhoodWalking()
 
-neighborhoodWalking() is computationally intensive. With default arguments and a single core, it takes about 1-2 minutes to run on a 2.3 GHz Intel Core i7.^[With 4 physical cores and 8 logical ones, it takes about 45 seconds.] The reason is that function performs three significant tasks: 1) it computes the shortest walking path between each observed fatality and all selected pumps; 2) it computes the shortest walking path between each simulated fatality and all selected pumps; and 3) to reduce over-plotting it computes the minimal set of segments needed to represent all walking paths within a given neighborhood.
+neighborhoodWalking() is computationally intensive. With default arguments (i.e., observed paths), plotting can take about 5 seconds to run on a single core of a 3.1 GHz Intel Core i5.^[With 2 physical cores and 4 logical ones, it takes about 4 seconds.]. With expected paths, plotting can takes about 40 seconds on a single core and 32 on 4 logical cores.
 
-If you want to explore many different scenarios, it may be better to pre-compute the data or to run in batch mode. For convenience, seven configurations return pre-computed results. The first three uses the original 13 pumps. The second three the revised 14 pumps. The three configurations are: 1) the default set of arguments, which uses all pumps; 2) the default set excluding the pump on Little Marlborough Street (pump 6); and 3) the default set with just the Little Marlborough Street and the Broad Street pumps (6 and 7). The seventh and final is Snow's Broad Street pump neighborhood, which represents his graphical annotation of the version of the map that appeared in the Vestry report.

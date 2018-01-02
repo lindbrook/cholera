@@ -1,5 +1,5 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub_Status_Badge](https://img.shields.io/badge/GitHub-0.2.9.9005-red.svg?style=flat-square)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub_Status_Badge](https://img.shields.io/badge/GitHub-0.2.9.9006-red.svg?style=flat-square)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
@@ -85,4 +85,4 @@ vignette("time.series")
 
 ### note
 
-neighborhoodWalking() is computationally intensive (1-2 minutes on a single core). To improve performance, seven basic configurations have been pre-computed (for details, see neighborhoodWalking()'s Help Page) and a parallel, multi-core implementation is available on Linux and Mac.
+neighborhoodWalking() is computationally intensive (between 5 and 40 seconds on a single core depending on configuration). To improve performance, a parallel, multi-core implementation is available on Linux and Mac.
