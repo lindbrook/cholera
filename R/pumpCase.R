@@ -41,5 +41,5 @@ pumpCase.walking <- function(obj) {
   }
 
   output <- obj$cases
-  stats::setNames(output, names(output))
+  stats::setNames(output, paste0("p", names(output)))
 }
