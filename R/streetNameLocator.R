@@ -62,12 +62,28 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 1,
       pch = NA, asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
 
+    id <- road.segments[road.segments$name == name, "id"]
+    seg.ortho <- cholera::ortho.proj[cholera::ortho.proj$road.segment %in% id, ]
+    seg.anchors <- cholera::fatalities.address$anchor.case %in% seg.ortho$case
+    seg.cases <- cholera::fatalities$case %in% seg.ortho$case
+
     if (all.cases) {
-      text(cholera::fatalities[, c("x", "y")],
-        labels = cholera::fatalities$case, cex = 0.5)
+      text(cholera::fatalities[!seg.cases, c("x", "y")],
+        labels = cholera::fatalities$case[!seg.cases], cex = 0.5)
+      if (any(seg.cases)) {
+        text(cholera::fatalities[seg.cases, c("x", "y")],
+          labels = cholera::fatalities$case[seg.cases], cex = 0.5,
+          col = "red")
+      }
     } else {
-      text(cholera::fatalities.address[, c("x", "y")],
-        labels = cholera::fatalities.address$anchor.case, cex = 0.5)
+      text(cholera::fatalities.address[!seg.anchors, c("x", "y")],
+        labels = cholera::fatalities.address$anchor.case[!seg.anchors],
+        cex = 0.5)
+      if (any(seg.anchors)) {
+        text(cholera::fatalities.address[seg.anchors, c("x", "y")],
+          labels = cholera::fatalities.address$anchor.case[seg.anchors],
+          cex = 0.5, col = "red")
+      }
     }
 
     points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
