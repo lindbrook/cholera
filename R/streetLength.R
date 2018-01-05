@@ -40,8 +40,8 @@ streetLength <- function(road.name = "Oxford Street", unit = NULL) {
   if (is.null(unit)) {
     sum(distances)
   } else if (unit == "yard") {
-    sum(distances) * 177 / 3
+    cholera::unitMeter(sum(distances), "yard")
   } else if (unit == "meter") {
-    sum(distances) * 54
+    cholera::unitMeter(sum(distances), "meter")
   }
 }
