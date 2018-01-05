@@ -547,7 +547,41 @@ plot.walking <- function(x, area = FALSE, ...) {
       }))
     }
 
-    if (x$observed) {
+    if (x$case.set == "snow") {
+      portland.mews <- which(edges$id == "160-4")
+      ship.yard <- which(edges$id %in% c("163-1", "163-2"))
+      tylers.court <- which(edges$id == "221-1")
+      maidenheard.court <- which(edges$id == "244-1")
+      cock.court <- which(edges$id == "225-1")
+      hopkins.street <- which(edges$id %in% c("245-2", "265-1", "265-2"))
+      unknownB <- which(edges$id == "263-1")
+      duck.ham <- which(edges$id %in% paste0(198, "-", 2:4))
+
+      dufours.place <- which(edges$id2 == "217-2c")
+      silver.street <- which(edges$id2 == "275-1a")
+      pulteney.court1 <- which(edges$id2 == "242-1h")
+      new.husband.street <- which(edges$id2 == "259-1d")
+      st.anns.place <- which(edges$id2 == "138-1a")
+      hopkins.street.sub <- which(edges$id2 == "245-1c")
+      kemps.court <- which(edges$id2 == "196-1d")
+
+      whole.segs <-  c(portland.mews, ship.yard, tylers.court,
+                       maidenheard.court, cock.court, hopkins.street, unknownB,
+                       duck.ham)
+
+      sub.segs <- c(dufours.place, silver.street, pulteney.court1,
+                    new.husband.street, st.anns.place, hopkins.street.sub,
+                    kemps.court)
+
+      invisible(lapply(c(whole.segs, sub.segs), function(x) {
+        n.edges <- edges[x, ]
+        segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
+                 col = snow.colors)
+
+      }))
+    }
+
+    if (x$case.set == "observed") {
       invisible(lapply(seq_along(n.sel), function(i) {
         points(cholera::fatalities.address[x$cases[[i]], c("x", "y")],
                pch = 20, cex = 0.75, col = snow.colors[i])
