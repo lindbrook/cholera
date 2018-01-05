@@ -23,7 +23,7 @@ A base R graphics plot.
 }
 \description{
 Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-selected road segment. With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional identifying number is appended to form a text string (e.g., "116-2").
+selected road segment and its cases. With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional identifying number is appended to form a text string (e.g., "116-2").
 }
 \examples{
 segmentLocator("190-1")

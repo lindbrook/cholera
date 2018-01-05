@@ -21,7 +21,7 @@ A base R graphics plot.
 }
 \description{
 Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-selected road. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
+selected road and its cases. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
 }
 \examples{
 streetNumberLocator(243)

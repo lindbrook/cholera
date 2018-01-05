@@ -1,7 +1,7 @@
 #' Locate road segment by its character ID.
 #'
 #' Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-#' selected road segment. With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional identifying number is appended to form a text string (e.g., "116-2").
+#' selected road segment and its cases. With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional identifying number is appended to form a text string (e.g., "116-2").
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.

@@ -1,8 +1,14 @@
+cholera 0.2.9.9007
+----------------------------------------------------------------
+
+* highlight cases in segmentLocator(), streetNameLocator() and
+  streetNumberLocator().
+
+
 cholera 0.2.9.9006
 ----------------------------------------------------------------
 
 * use code from neighborhoodPaths() for neighborhoodWalking().
-* highlight segment cases in segmentLocator().
 
 
 cholera 0.2.9.9005
