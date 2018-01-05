@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class "walking" created by neighborhoodWalking().}
 
-\item{area}{Logical. TRUE returns expected area plot. FALSE returns expected walking paths. Works only with neighborhoodWalking(observed = FALSE).}
+\item{area}{Logical. TRUE returns expected area plot. FALSE returns expected walking paths. Works only with neighborhoodWalking(case.set = "expected").}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -21,6 +21,6 @@ Plot method for neighborhoodWalking().
 }
 \examples{
 # plot(neighborhoodWalking())
-# plot(neighborhoodWalking(observed = FALSE))
-# plot(neighborhoodWalking(observed = FALSE), area = TRUE)
+# plot(neighborhoodWalking(case.set = "expected"))
+# plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 }

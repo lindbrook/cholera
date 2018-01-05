@@ -5,7 +5,7 @@
 \title{Compute walking path pump neighborhoods.}
 \usage{
 neighborhoodWalking(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  observed = TRUE, multi.core = FALSE)
+  case.set = "observed", multi.core = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Note that you can't just select the pump on Adam and Eve Court (#2): it is a technical isolate.}
@@ -14,7 +14,7 @@ neighborhoodWalking(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
 \item{weighted}{Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.}
 
-\item{observed}{Logical. Observed or expected walking path pump neighborhoods.}
+\item{case.set}{Character. "observed", "expected", or "snow".}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. Currently, only "multi.core = FALSE" is available on Windows.}
 }

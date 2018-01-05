@@ -4,7 +4,7 @@
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Note that you can't just select the pump on Adam and Eve Court (#2): it is a technical isolate.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.
-#' @param observed Logical. Observed or expected walking path pump neighborhoods.
+#' @param case.set Character. "observed", "expected", or "snow".
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. Currently, only "multi.core = FALSE" is available on Windows.
 #' @return An R list with 7 objects:
 #' \itemize{
@@ -23,7 +23,7 @@
 #' # neighborhoodWalking(pump.select = -6)
 
 neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, observed = TRUE, multi.core = FALSE) {
+  weighted = TRUE, case.set = "observed", multi.core = FALSE) {
 
   if (is.null(pump.select) == FALSE) {
     if (length(pump.select) == 1) {
@@ -33,6 +33,10 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
         stop(paste(msg1, msg2))
       }
     }
+  }
+
+  if (case.set %in% c("observed", "expected", "snow") == FALSE) {
+    stop('"case.set" must be "observed", "expected" or "snow".')
   }
 
   if (is.logical(multi.core)) {
@@ -60,7 +64,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   args <- list(pump.select = pump.select,
                vestry = vestry,
                weighted = weighted,
-               observed = observed,
+               case.set = case.set,
                cores = cores)
 
   nearest.path <- do.call("nearestPath", args)
@@ -83,7 +87,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   out <- list(paths = neighborhood.paths,
               cases = neighborhood.cases,
               vestry = vestry,
-              observed = observed,
+              case.set = case.set,
               pump.select = pump.select,
               cores = cores,
               metric = 1 / cholera::unitMeter(1, "meter"))
@@ -114,22 +118,24 @@ print.walking <- function(x, ...) {
 #' Plot method for neighborhoodWalking().
 #'
 #' @param x An object of class "walking" created by neighborhoodWalking().
-#' @param area Logical. TRUE returns expected area plot. FALSE returns expected walking paths. Works only with neighborhoodWalking(observed = FALSE).
+#' @param area Logical. TRUE returns expected area plot. FALSE returns expected walking paths. Works only with neighborhoodWalking(case.set = "expected").
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 #' @examples
 #' # plot(neighborhoodWalking())
-#' # plot(neighborhoodWalking(observed = FALSE))
-#' # plot(neighborhoodWalking(observed = FALSE), area = TRUE)
+#' # plot(neighborhoodWalking(case.set = "expected"))
+#' # plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 
 plot.walking <- function(x, area = FALSE, ...) {
   if (class(x) != "walking") {
     stop('"x"\'s class needs to be "walking".')
   }
 
-  if (x$observed & area) {
-    stop('"area = TRUE" valid only when neighborhoodWalking(observed = FALSE).')
+  if (area) {
+    if (x$case.set != "expected") {
+      stop('"area = TRUE" valid only when case.set = "expected".')
+    }
   }
 
   if (x$vestry) {
@@ -156,7 +162,7 @@ plot.walking <- function(x, area = FALSE, ...) {
 
   edge.data <- lapply(n.paths, function(x) unique(unlist(x)))
 
-  if (x$observed == FALSE) {
+  if (x$case.set == "expected") {
     # edge.data only capture segments where paths cross both endpoints.
     # To capture the remaining segments, find the missing whole segments and
     # the missing split segments (sub-segments which lead to different pumps.)
@@ -484,38 +490,43 @@ plot.walking <- function(x, area = FALSE, ...) {
     pch = NA, asp = 1)
 
   if (area) {
-    sel <- as.numeric(row.names(cholera::regular.cases)) %in% sim.proj$case
+    if (x$case.set == "expected") {
+      sel <- as.numeric(row.names(cholera::regular.cases)) %in% sim.proj$case
 
-    points(cholera::regular.cases[sel, ], col = sim.proj$color, pch = 15,
-      cex = 1.25)
-    invisible(lapply(road.list, lines))
-    invisible(lapply(border.list, lines))
+      points(cholera::regular.cases[sel, ], col = sim.proj$color, pch = 15,
+        cex = 1.25)
 
-    if (is.null(x$pump.select)) {
-      if (x$vestry) {
-        points(cholera::pumps.vestry[, c("x", "y")], pch = 24, bg = "white",
-          col = cholera::snowColors(vestry = TRUE))
-        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
-          col = "white", labels = paste0("p", cholera::pumps.vestry$id))
+      invisible(lapply(road.list, lines))
+      invisible(lapply(border.list, lines))
+
+      if (is.null(x$pump.select)) {
+        if (x$vestry) {
+          points(cholera::pumps.vestry[, c("x", "y")], pch = 24, bg = "white",
+            col = cholera::snowColors(vestry = TRUE))
+          text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
+            col = "white", labels = paste0("p", cholera::pumps.vestry$id))
+        } else {
+          points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white",
+            col = cholera::snowColors())
+          text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
+            col = "white", labels = paste0("p", cholera::pumps$id))
+        }
       } else {
-        points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white",
-          col = cholera::snowColors())
-        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
-          col = "white", labels = paste0("p", cholera::pumps$id))
-      }
-    } else {
-      if (x$vestry) {
-        points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
-          bg = "white", col = snow.colors)
-        text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-          col = "white", labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
-      } else {
-        points(cholera::pumps[n.sel, c("x", "y")], pch = 24, bg = "white",
-          col = snow.colors)
-        text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-          col = "white", labels = paste0("p", cholera::pumps$id[n.sel]))
+        if (x$vestry) {
+          points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
+            bg = "white", col = snow.colors)
+          text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+            col = "white",
+            labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
+        } else {
+          points(cholera::pumps[n.sel, c("x", "y")], pch = 24, bg = "white",
+            col = snow.colors)
+          text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+            col = "white", labels = paste0("p", cholera::pumps$id[n.sel]))
+        }
       }
     }
+
   } else {
     invisible(lapply(road.list, lines, col = "gray"))
     invisible(lapply(border.list, lines))
@@ -526,7 +537,7 @@ plot.walking <- function(x, area = FALSE, ...) {
        col = snow.colors[i])
     }))
 
-    if (x$observed == FALSE) {
+    if (x$case.set == "expected") {
       invisible(lapply(seq_along(whole.missing.segments), function(i) {
         dat <- cholera::road.segments[cholera::road.segments$id ==
           whole.missing.segments[i], ]
@@ -623,16 +634,16 @@ plot.walking <- function(x, area = FALSE, ...) {
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
-#' @param observed Logical. Observed or expected walking path pump neighborhoods.
+#' @param case.set Character. "observed", "expected", or "snow".
 #' @param cores Numeric. The number logical cores (truncates with as.integer()). Default is 1, which is the only possible value for Windows.
 #' @export
 #' @return A R list of vectors of nodes.
 
 nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  observed = TRUE, cores = 1L) {
+  case.set = "observed", cores = 1L) {
 
   dat <- neighborhoodData(vestry)
-  path.data <- pathData(dat, weighted, observed, cores)
+  path.data <- pathData(dat, weighted, case.set, cores)
   distances <- path.data$distances
   paths <- path.data$paths
   nodes.pump <- dat$nodes.pump
@@ -665,16 +676,26 @@ nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
-#' @param observed Logical. Observed or expected walking path pump neighborhoods.
+#' @param case.set Character. "observed", "expected", or "snow".
+#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
 #' @param cores  Numeric. The number logical cores (truncates with as.integer()). Default is 1, which is the only possible value for Windows.
 #' @export
 #' @return An R data frame.
 
 nearestPump <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  observed = TRUE, cores = 1L) {
+  case.set = "observed", unit = NULL, cores = 1L) {
+
+  if (case.set %in% c("observed", "expected", "snow") == FALSE) {
+    stop('"case.set" must be "observed", "expected" or "snow".')
+  }
+
+  if (is.null(unit) == FALSE) {
+    if (unit %in% c("meter", "yard") == FALSE)
+      stop('If specified, "unit" must either be "meter" or "yard".')
+  }
 
   dat <- neighborhoodData(vestry)
-  path.data <- pathData(dat, weighted, observed, cores)
+  path.data <- pathData(dat, weighted, case.set, cores)
   distances <- path.data$distances
   nodes.pump <- dat$nodes.pump
 
@@ -702,12 +723,16 @@ nearestPump <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
     }
   }
 
-  if (observed) {
+  if (case.set == "observed") {
     out <- data.frame(anchor = cholera::fatalities.address$anchor.case,
       do.call(rbind, dat), row.names = NULL)
-  } else {
+  } else if (case.set == "expected"){
     out <- data.frame(anchor = seq_along(dat), do.call(rbind, dat),
       row.names = NULL)
+  } else if (case.set == "snow") {
+    snow <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
+      cholera::snow.neighborhood, "anchor.case"])
+    out <- data.frame(anchor = snow, do.call(rbind, dat), row.names = NULL)
   }
 
   out$pump.name <- NA
@@ -724,7 +749,17 @@ nearestPump <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
     }
   }
 
-  out[, c("anchor", "pump", "pump.name", "distance")]
+  out <- out[, c("anchor", "pump", "pump.name", "distance")]
+
+  if (!is.null(unit)) {
+    if (unit == "meter") {
+      out$distance <- cholera::unitMeter(out$distance, "meter")
+    } else if (unit == "yard") {
+      out$distance <- cholera::unitMeter(out$distance, "yard")
+    }
+  }
+
+  out
 }
 
 neighborhoodData <- function(vestry = FALSE) {
@@ -743,17 +778,15 @@ neighborhoodData <- function(vestry = FALSE) {
   list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
 }
 
-pathData <- function(dat, weighted, observed, cores) {
+pathData <- function(dat, weighted, case.set, cores) {
   g <- dat$g
   nodes <- dat$nodes
   edges <- dat$edges
   nodes.pump <- dat$nodes.pump
 
-  if (observed) {
-    anchor <- cholera::fatalities.address$anchor.case
-
-    paths <- parallel::mclapply(anchor, function(x) {
-      case.node <- nodes[nodes$anchor == x, "node"]
+  paths <- function(x) {
+    parallel::mclapply(x, function(a) {
+      case.node <- nodes[nodes$anchor == a, "node"]
       if (weighted) {
         stats::setNames(igraph::shortest_paths(g, case.node, nodes.pump$node,
           weights = edges$d)$vpath, nodes.pump$pump)
@@ -762,9 +795,11 @@ pathData <- function(dat, weighted, observed, cores) {
           nodes.pump$node)$vpath, nodes.pump$pump)
       }
     }, mc.cores = cores)
+  }
 
-    distances <- parallel::mclapply(anchor, function(x) {
-      case.node <- nodes[nodes$anchor == x, "node"]
+  distances <- function(x) {
+    parallel::mclapply(x, function(a) {
+      case.node <- nodes[nodes$anchor == a, "node"]
       if (weighted) {
         stats::setNames(c(igraph::distances(g, case.node, nodes.pump$node,
           weights = edges$d)), nodes.pump$pump)
@@ -773,9 +808,43 @@ pathData <- function(dat, weighted, observed, cores) {
           nodes.pump$pump)
       }
     }, mc.cores = cores)
+  }
 
-    list(distances = distances, paths = paths)
-  } else {
+  if (case.set == "observed") {
+    anchor <- cholera::fatalities.address$anchor.case
+    list(distances = distances(anchor), paths = paths(anchor))
+
+  } else if (case.set == "snow") {
+    snow <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
+      cholera::snow.neighborhood, "anchor.case"])
+
+    paths.snow <- parallel::mclapply(snow, function(x) {
+      case.node <- nodes[nodes$anchor == x, "node"]
+      if (weighted) {
+        stats::setNames(igraph::shortest_paths(g, case.node,
+          nodes.pump[nodes.pump$pump == 7, "node"], weights = edges$d)$vpath,
+          7)
+      } else {
+        stats::setNames(igraph::shortest_paths(g, case.node,
+          nodes.pump[nodes.pump$pump == 7, "node"])$vpath, 7)
+      }
+    }, mc.cores = cores)
+
+    distances.snow <- parallel::mclapply(snow, function(x) {
+      case.node <- nodes[nodes$anchor == x, "node"]
+      if (weighted) {
+        stats::setNames(c(igraph::distances(g, case.node,
+          nodes.pump[nodes.pump$pump == 7, "node"], weights = edges$d)),
+          7)
+      } else {
+        stats::setNames(c(igraph::distances(g, case.node,
+          nodes.pump[nodes.pump$pump == 7, "node"])), 7)
+      }
+    }, mc.cores = cores)
+
+    list(distances = distances.snow, paths = paths.snow)
+
+  } else if (case.set == "expected") {
     road.nodes <- nodes[nodes$anchor == 0 & nodes$pump == 0, ]
 
     AE <- cholera::road.segments[cholera::road.segments$name ==
@@ -801,7 +870,7 @@ pathData <- function(dat, weighted, observed, cores) {
     exclude <- unique(c(ep1, ep2, ep3, ep4, ep5, ep6))
     road.nodes <- road.nodes[-exclude, "node"]
 
-    distances <- parallel::mclapply(road.nodes, function(x) {
+    distances.exp <- parallel::mclapply(road.nodes, function(x) {
       if (weighted) {
         stats::setNames(c(igraph::distances(g, x, nodes.pump$node,
           weights = edges$d)), nodes.pump$pump)
@@ -811,7 +880,7 @@ pathData <- function(dat, weighted, observed, cores) {
       }
     }, mc.cores = cores)
 
-    paths <- parallel::mclapply(seq_along(road.nodes), function(i) {
+    paths.exp <- parallel::mclapply(seq_along(road.nodes), function(i) {
       if (weighted) {
         stats::setNames(igraph::shortest_paths(g, road.nodes[i],
           nodes.pump$node, weights = edges$d)$vpath, nodes.pump$pump)
@@ -821,6 +890,6 @@ pathData <- function(dat, weighted, observed, cores) {
       }
     }, mc.cores = cores)
 
-    list(distances = distances, paths = paths)
+    list(distances = distances.exp, paths = paths.exp)
   }
 }

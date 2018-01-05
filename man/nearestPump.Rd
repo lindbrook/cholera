@@ -5,7 +5,7 @@
 \title{Compute walking distance from anchor cases to nearest pump (or from among selected pumps).}
 \usage{
 nearestPump(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  observed = TRUE, cores = 1L)
+  case.set = "observed", unit = NULL, cores = 1L)
 }
 \arguments{
 \item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
@@ -14,7 +14,9 @@ nearestPump(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
 \item{weighted}{Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.}
 
-\item{observed}{Logical. Observed or expected walking path pump neighborhoods.}
+\item{case.set}{Character. "observed", "expected", or "snow".}
+
+\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.}
 
 \item{cores}{Numeric. The number logical cores (truncates with as.integer()). Default is 1, which is the only possible value for Windows.}
 }
