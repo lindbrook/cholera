@@ -611,6 +611,37 @@ plot.walking <- function(x, area = FALSE, ...) {
       # all(contiguous)
       # [1] TRUE
 
+      classifyCase <- function(i) {
+        case.data <- partial.candidates[[i]]
+        seg.data <- partial.segments[[i]]
+
+        if (nrow(seg.data > 1)) {
+          seg.data <- seg.data[order(seg.data$id2), ]
+          classify.test <- vapply(case.data$case, function(case) {
+            obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
+            xs <- c(seg.data[1, "x1"], seg.data[nrow(seg.data), "x2"])
+            ys <- c(seg.data[1, "y1"], seg.data[nrow(seg.data), "y2"])
+            seg.df <- data.frame(x = xs, y = ys)
+            data1 <- rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))
+            data2 <- rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj))
+            seg.dist <- stats::dist(data1) + stats::dist(data2)
+            signif(stats::dist(seg.df)) == signif(seg.dist)
+          }, logical(1L))
+        } else {
+          classify.test <- vapply(case.data$case, function(case) {
+            obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
+            seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                                 y = c(seg.data$y1, seg.data$y2))
+            data1 <- rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))
+            data2 <- rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj))
+            seg.dist <- stats::dist(data1) + stats::dist(data2)
+            signif(stats::dist(seg.df)) == signif(seg.dist)
+          }, logical(1L))
+        }
+
+        case.data[classify.test, "case"]
+      }
+
       sim.case.partial <- lapply(seq_along(partial.candidates), classifyCase)
 
       points(cholera::regular.cases[unlist(sim.case.partial), ],
@@ -959,35 +990,4 @@ pathData <- function(dat, weighted, case.set, cores) {
 
     list(distances = distances.exp, paths = paths.exp)
   }
-}
-
-classifyCase <- function(i, partial.candidates, partial.segments) {
-  case.data <- partial.candidates[[i]]
-  seg.data <- partial.segments[[i]]
-
-  if (nrow(seg.data > 1)) {
-    seg.data <- seg.data[order(seg.data$id2), ]
-    classify.test <- vapply(case.data$case, function(case) {
-      obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
-      xs <- c(seg.data[1, "x1"], seg.data[nrow(seg.data), "x2"])
-      ys <- c(seg.data[1, "y1"], seg.data[nrow(seg.data), "y2"])
-      seg.df <- data.frame(x = xs, y = ys)
-      seg.dist <- stats::dist(rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))) +
-                  stats::dist(rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj)))
-      signif(stats::dist(seg.df)) == signif(seg.dist)
-    }, logical(1L))
-  } else {
-    classify.test <- vapply(case.data$case, function(case) {
-      obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
-      seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
-                           y = c(seg.data$y1, seg.data$y2))
-
-      seg.dist <- stats::dist(rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))) +
-        stats::dist(rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj)))
-
-      signif(stats::dist(seg.df)) == signif(seg.dist)
-    }, logical(1L))
-  }
-
-  case.data[classify.test, "case"]
 }
