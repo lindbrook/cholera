@@ -134,7 +134,7 @@ plot.walking <- function(x, area = FALSE, ...) {
 
   if (area) {
     if (all(x$case.set %in% c("expected", "snow") == FALSE)) {
-      stop('"area = TRUE" is not valid when case.set = "observed".')
+      stop('"area = TRUE" is valid only when case.set is "expected" or "snow".')
     }
   }
 
