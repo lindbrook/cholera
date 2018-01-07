@@ -4,7 +4,7 @@
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Note that you can't just select the pump on Adam and Eve Court (#2): it is a technical isolate.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.
-#' @param case.set Character. "observed", "expected", or "snow".
+#' @param case.set Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. Currently, only "multi.core = FALSE" is available on Windows.
 #' @return An R list with 7 objects:
 #' \itemize{
@@ -133,8 +133,8 @@ plot.walking <- function(x, area = FALSE, ...) {
   }
 
   if (area) {
-    if (x$case.set != "expected") {
-      stop('"area = TRUE" valid only when case.set = "expected".')
+    if (all(x$case.set %in% c("expected", "snow") == FALSE)) {
+      stop('"area = TRUE" is not valid when case.set = "observed".')
     }
   }
 
@@ -314,7 +314,6 @@ plot.walking <- function(x, area = FALSE, ...) {
     if (area == TRUE) {
 
       ## drawn segments ##
-
       sel <- is.na(cholera::sim.ortho.proj$road.segment) == FALSE
       sim.proj <- cholera::sim.ortho.proj[sel, ]
 
@@ -472,6 +471,32 @@ plot.walking <- function(x, area = FALSE, ...) {
         sim.proj[sim.proj$color == nm, "color"] <- color[names(color) == nm]
       }
     }
+
+  } else if (x$case.set == "snow") {
+    portland.mews <- which(edges$id == "160-4")
+    ship.yard <- which(edges$id %in% c("163-1", "163-2"))
+    tylers.court <- which(edges$id == "221-1")
+    maidenheard.court <- which(edges$id == "244-1")
+    cock.court <- which(edges$id == "225-1")
+    hopkins.street <- which(edges$id %in% c("245-2", "265-1", "265-2"))
+    unknownB <- which(edges$id == "263-1")
+    duck.ham <- which(edges$id %in% paste0(198, "-", 2:4))
+
+    dufours.place <- which(edges$id2 == "217-2c")
+    silver.street <- which(edges$id2 == "275-1a")
+    pulteney.court1 <- which(edges$id2 == "242-1h")
+    new.husband.street <- which(edges$id2 == "259-1d")
+    st.anns.place <- which(edges$id2 == "138-1a")
+    hopkins.street.sub <- which(edges$id2 == "245-1c")
+    kemps.court <- which(edges$id2 == "196-1d")
+
+    whole.segs <-  c(portland.mews, ship.yard, tylers.court,
+                     maidenheard.court, cock.court, hopkins.street, unknownB,
+                     duck.ham)
+
+    sub.segs <- c(dufours.place, silver.street, pulteney.court1,
+                  new.husband.street, st.anns.place, hopkins.street.sub,
+                  kemps.court)
   }
 
   # Plot #
@@ -525,7 +550,76 @@ plot.walking <- function(x, area = FALSE, ...) {
             col = "white", labels = paste0("p", cholera::pumps$id[n.sel]))
         }
       }
-    }
+
+    } else if (x$case.set == "snow") {
+      snow.edges <- edges[c(unlist(edge.data), whole.segs, sub.segs), ]
+
+      snow.ct <- unclass(table(snow.edges $id))
+      snow.ct <- data.frame(id = names(snow.ct),
+                            count = snow.ct,
+                            row.names = NULL,
+                            stringsAsFactors = FALSE)
+
+      edge.ct <- vapply(unique(snow.edges$id), function(x) {
+        sum(edges$id == x)
+      }, numeric(1L))
+
+      edge.ct <- data.frame(id = names(edge.ct),
+                            count = edge.ct,
+                            row.names = NULL,
+                            stringsAsFactors = FALSE)
+
+      audit <- merge(edge.ct, snow.ct, by = "id")
+      names(audit)[-1] <- c("edge.ct", "snow.ct")
+
+      # whole segments #
+      whole.audit <- audit[audit$edge.ct == audit$snow.ct, ]
+      whole.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment
+        %in% whole.audit$id, "case"]
+
+      points(cholera::regular.cases[whole.id, ],
+        col = grDevices::adjustcolor("dodgerblue", alpha.f = 0.75), pch = 15,
+        cex = 1.25)
+
+      # partial segments #
+
+      partial <- snow.edges[snow.edges$id %in% whole.audit$id == FALSE, ]
+
+      partial.proj <-
+        cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment %in%
+                                partial$id, ]
+
+      partial.candidates <- split(partial.proj, partial.proj$road.segment)
+      partial.segments <- split(partial, partial$id)
+
+      ## Test for contiguous partial segments ##
+
+      # contiguous <- vapply(partial.segments, function(x) {
+      #   if (nrow(x) == 1) {
+      #     # vapply(partial.segments, nrow, numeric(1L))
+      #     TRUE
+      #   } else {
+      #     seg.data <- x[order(x$id2), ]
+      #     omega <- substr(seg.data$id2[1], nchar(seg.data$id2[1]),
+      #       nchar(seg.data$id2[1]))
+      #     vec <- letters[which(omega == letters) +
+      #                    (seq_along(seg.data$id) - 1)]
+      #     all(seg.data$id2 == paste0(seg.data$id, vec))
+      #   }
+      # }, logical(1L))
+      #
+      # all(contiguous)
+      # [1] TRUE
+
+      sim.case.partial <- lapply(seq_along(partial.candidates), classifyCase)
+
+      points(cholera::regular.cases[unlist(sim.case.partial), ],
+        col = grDevices::adjustcolor("dodgerblue", alpha.f = 0.75), pch = 15,
+        cex = 1.25)
+      }
+
+    invisible(lapply(road.list, lines))
+    invisible(lapply(border.list, lines))
 
   } else {
     invisible(lapply(road.list, lines, col = "gray"))
@@ -537,7 +631,13 @@ plot.walking <- function(x, area = FALSE, ...) {
        col = snow.colors[i])
     }))
 
-    if (x$case.set == "expected") {
+    if (x$case.set == "observed") {
+      invisible(lapply(seq_along(n.sel), function(i) {
+        points(cholera::fatalities.address[x$cases[[i]], c("x", "y")],
+               pch = 20, cex = 0.75, col = snow.colors[i])
+      }))
+
+    } else if (x$case.set == "expected") {
       invisible(lapply(seq_along(whole.missing.segments), function(i) {
         dat <- cholera::road.segments[cholera::road.segments$id ==
           whole.missing.segments[i], ]
@@ -556,34 +656,8 @@ plot.walking <- function(x, area = FALSE, ...) {
         segments(dat$x1[2], dat$y1[2], dat$x2[2], dat$y2[2], lwd = 2,
           col = colors[2])
       }))
-    }
 
-    if (x$case.set == "snow") {
-      portland.mews <- which(edges$id == "160-4")
-      ship.yard <- which(edges$id %in% c("163-1", "163-2"))
-      tylers.court <- which(edges$id == "221-1")
-      maidenheard.court <- which(edges$id == "244-1")
-      cock.court <- which(edges$id == "225-1")
-      hopkins.street <- which(edges$id %in% c("245-2", "265-1", "265-2"))
-      unknownB <- which(edges$id == "263-1")
-      duck.ham <- which(edges$id %in% paste0(198, "-", 2:4))
-
-      dufours.place <- which(edges$id2 == "217-2c")
-      silver.street <- which(edges$id2 == "275-1a")
-      pulteney.court1 <- which(edges$id2 == "242-1h")
-      new.husband.street <- which(edges$id2 == "259-1d")
-      st.anns.place <- which(edges$id2 == "138-1a")
-      hopkins.street.sub <- which(edges$id2 == "245-1c")
-      kemps.court <- which(edges$id2 == "196-1d")
-
-      whole.segs <-  c(portland.mews, ship.yard, tylers.court,
-                       maidenheard.court, cock.court, hopkins.street, unknownB,
-                       duck.ham)
-
-      sub.segs <- c(dufours.place, silver.street, pulteney.court1,
-                    new.husband.street, st.anns.place, hopkins.street.sub,
-                    kemps.court)
-
+    } else if (x$case.set == "snow") {
       invisible(lapply(c(whole.segs, sub.segs), function(x) {
         n.edges <- edges[x, ]
         segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
@@ -591,38 +665,31 @@ plot.walking <- function(x, area = FALSE, ...) {
 
       }))
     }
+  }
 
-    if (x$case.set == "observed") {
-      invisible(lapply(seq_along(n.sel), function(i) {
-        points(cholera::fatalities.address[x$cases[[i]], c("x", "y")],
-               pch = 20, cex = 0.75, col = snow.colors[i])
-      }))
-    }
-
-    if (is.null(x$pump.select)) {
-      if (x$vestry) {
-        points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
-          col = cholera::snowColors(vestry = TRUE))
-        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
-          labels = paste0("p", cholera::pumps.vestry$id))
-      } else {
-        points(cholera::pumps[, c("x", "y")], pch = 24,
-          col = cholera::snowColors())
-        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
-          labels = paste0("p", cholera::pumps$id))
-      }
+  if (is.null(x$pump.select)) {
+    if (x$vestry) {
+      points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
+        col = cholera::snowColors(vestry = TRUE))
+      text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
+        labels = paste0("p", cholera::pumps.vestry$id))
     } else {
-      if (x$vestry) {
-        points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
-          col = snow.colors)
-        text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-          labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
-      } else {
-        points(cholera::pumps[n.sel, c("x", "y")], pch = 24,
-          col = snow.colors)
-        text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-          labels = paste0("p", cholera::pumps$id[n.sel]))
-      }
+      points(cholera::pumps[, c("x", "y")], pch = 24,
+        col = cholera::snowColors())
+      text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
+        labels = paste0("p", cholera::pumps$id))
+    }
+  } else {
+    if (x$vestry) {
+      points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
+        col = snow.colors)
+      text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+        labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
+    } else {
+      points(cholera::pumps[n.sel, c("x", "y")], pch = 24,
+        col = snow.colors)
+      text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+        labels = paste0("p", cholera::pumps$id[n.sel]))
     }
   }
 
@@ -892,4 +959,35 @@ pathData <- function(dat, weighted, case.set, cores) {
 
     list(distances = distances.exp, paths = paths.exp)
   }
+}
+
+classifyCase <- function(i, partial.candidates, partial.segments) {
+  case.data <- partial.candidates[[i]]
+  seg.data <- partial.segments[[i]]
+
+  if (nrow(seg.data > 1)) {
+    seg.data <- seg.data[order(seg.data$id2), ]
+    classify.test <- vapply(case.data$case, function(case) {
+      obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
+      xs <- c(seg.data[1, "x1"], seg.data[nrow(seg.data), "x2"])
+      ys <- c(seg.data[1, "y1"], seg.data[nrow(seg.data), "y2"])
+      seg.df <- data.frame(x = xs, y = ys)
+      seg.dist <- stats::dist(rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))) +
+                  stats::dist(rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj)))
+      signif(stats::dist(seg.df)) == signif(seg.dist)
+    }, logical(1L))
+  } else {
+    classify.test <- vapply(case.data$case, function(case) {
+      obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
+      seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                           y = c(seg.data$y1, seg.data$y2))
+
+      seg.dist <- stats::dist(rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))) +
+        stats::dist(rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj)))
+
+      signif(stats::dist(seg.df)) == signif(seg.dist)
+    }, logical(1L))
+  }
+
+  case.data[classify.test, "case"]
 }

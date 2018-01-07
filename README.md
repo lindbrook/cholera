@@ -1,5 +1,5 @@
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub_Status_Badge](https://img.shields.io/badge/GitHub-0.2.9.9008-red.svg?style=flat-square)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub_Status_Badge](https://img.shields.io/badge/GitHub-0.2.9.9009-red.svg?style=flat-square)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
@@ -9,7 +9,7 @@ John Snow's map of the 1854 cholera outbreak in London's Soho is one of the best
 
 The reasons are two-fold. First, as evidence of his claim that cholera is transmitted by water rather than air, Snow used a map to plot the spatial relationship between the location of water pumps, the primary source of drinking water, and that of cholera fatalities. Second, as a way to illustrate both the count and location of cases, Snow used "stacks" of horizontal bars (the orientation reflects the location's street).
 
-However, while the map shows a concentration of fatalities around the Broad Street pump, it actually doesn't do the best job of excluding rival explanation. The pattern we see is not clearly different from what airborne transmission might look like. To address this problem, Snow added a graphical annotation to a second, lesser-known version of the map published in the official report on the outbreak:
+However, while the map shows a concentration of fatalities around the Broad Street pump, it actually doesn't do the best job of excluding rival explanations. The pattern we see is not clearly different from what airborne transmission might look like. To address this problem, Snow added a graphical annotation to a second, lesser-known version of the map published in the official report on the outbreak:
 
 ![](vignettes/fig12-6.png)
 

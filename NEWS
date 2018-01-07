@@ -1,7 +1,13 @@
+cholera 0.2.9.9009
+----------------------------------------------------------------
+
+* implement area = TRUE in print.walking() for case.set = "snow".
+
+
 cholera 0.2.9.9008
 ----------------------------------------------------------------
 
-* add case.set argument to neighborhoodWalking() (in progress)
+* add case.set argument to neighborhoodWalking().
 
 
 cholera 0.2.9.9007
