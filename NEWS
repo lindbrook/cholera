@@ -1,3 +1,10 @@
+cholera 0.2.9.9010
+----------------------------------------------------------------
+
+* amend ortho.proj:
+  reclassify cases 369, 434, 11, 53, 193 from segment "194-1" to "148-1".
+
+
 cholera 0.2.9.9009
 ----------------------------------------------------------------
 
@@ -111,7 +118,7 @@ cholera 0.2.1.9008
 cholera 0.2.1.9007
 ----------------------------------------------------------------
 
-* amend ortho.proj: move case 483 from segment "242-1" to segment "326-2".
+* amend ortho.proj: reclassify case 483 from segment "242-1" to "326-2".
 * update default neighborhoodWalking() configurations (sysdata).
 * add classifierAudit() and classifierAuditPlot().
 
