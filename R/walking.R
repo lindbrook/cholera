@@ -33,6 +33,15 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
         stop(paste(msg1, msg2))
       }
     }
+    if (vestry) {
+      if (any(abs(pump.select) %in% 1:14 == FALSE)) {
+        stop('With "vestry = TRUE", 1 >= |"pump.select"| <= 14')
+      }
+    } else {
+      if (any(abs(pump.select) %in% 1:13 == FALSE)) {
+        stop('With "vestry = FALSE", 1 >= |"pump.select"| <= 13')
+      }
+    }
   }
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
