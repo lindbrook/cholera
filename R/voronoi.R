@@ -410,12 +410,10 @@ polygonColors <- function(resid.vector, upper.limit = 67, alpha = FALSE) {
   if (alpha) {
     col <- scales::col_numeric("RdBu", domain = NULL)(seq_along(vec))[color.id]
     # scales::alpha(col, 0.5)
+    grDevices::adjustcolor(col, alpha.f = 0.75)
   } else {
-    col <- scales::col_numeric("RdBu", domain = NULL)(seq_along(vec))[color.id]
-    # scales::alpha(col, 0.5)
+    scales::col_numeric("RdBu", domain = NULL)(seq_along(vec))[color.id]
   }
-  
-  grDevices::adjustcolor(col, alpha.f = 0.5)
 }
 
 segmentIntersection <- function(x1, y1, x2, y2, a1, b1, a2, b2) {
