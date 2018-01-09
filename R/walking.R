@@ -326,6 +326,9 @@ plot.walking <- function(x, area = FALSE, ...) {
       sel <- is.na(cholera::sim.ortho.proj$road.segment) == FALSE
       sim.proj <- cholera::sim.ortho.proj[sel, ]
 
+      # Wardour Street (188-1) -> Richmond Mews (189-1)
+      sim.proj[sim.proj$case == 3173, "road.segment"] <- "189-2"
+
       edge.data.id <- lapply(edge.data, function(i) {
         unique(edges[i, "id"]  )
       })
@@ -527,9 +530,8 @@ plot.walking <- function(x, area = FALSE, ...) {
   if (area) {
     if (x$case.set == "expected") {
       sel <- as.numeric(row.names(cholera::regular.cases)) %in% sim.proj$case
-
-      points(cholera::regular.cases[sel, ], col = sim.proj$color, pch = 15,
-        cex = 1.25)
+      points(cholera::regular.cases[sel, ], col = sim.proj$color,
+        pch = 15, cex = 1.25)
 
       invisible(lapply(road.list, lines))
       invisible(lapply(border.list, lines))
@@ -588,8 +590,7 @@ plot.walking <- function(x, area = FALSE, ...) {
         %in% whole.audit$id, "case"]
 
       points(cholera::regular.cases[whole.id, ],
-        col = grDevices::adjustcolor("dodgerblue", alpha.f = 0.75), pch = 15,
-        cex = 1.25)
+        col = "dodgerblue", pch = 15, cex = 1.25)
 
       # partial segments #
 
@@ -653,10 +654,14 @@ plot.walking <- function(x, area = FALSE, ...) {
       }
 
       sim.case.partial <- lapply(seq_along(partial.candidates), classifyCase)
+      sim.case.partial <- unlist(sim.case.partial)
 
-      points(cholera::regular.cases[unlist(sim.case.partial), ],
-        col = grDevices::adjustcolor("dodgerblue", alpha.f = 0.75), pch = 15,
-        cex = 1.25)
+      # regular.case 3173 is adjacent to Richmond Mews but othogonal to Wardour
+      # Street (188-1); dropped as outlier to Snow neighborhood.
+      drop3173 <- sim.case.partial != 3173
+
+      points(cholera::regular.cases[sim.case.partial[drop3173], ],
+        col = "dodgerblue", pch = 15, cex = 1.25)
       }
 
     invisible(lapply(road.list, lines))
@@ -693,7 +698,7 @@ plot.walking <- function(x, area = FALSE, ...) {
         }, character(1L))
 
         segments(dat$x1[1], dat$y1[1], dat$x2[1], dat$y2[1], lwd = 2,
-           col = colors[1])
+          col = colors[1])
         segments(dat$x1[2], dat$y1[2], dat$x2[2], dat$y2[2], lwd = 2,
           col = colors[2])
       }))

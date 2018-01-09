@@ -3,6 +3,7 @@ cholera 0.2.9.9010
 
 * amend ortho.proj:
   reclassify cases 369, 434, 11, 53, 193 from segment "194-1" to "148-1".
+* fix for regular.cases case 3173 in neighborhood area plots.  
 
 
 cholera 0.2.9.9009
