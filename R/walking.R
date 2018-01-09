@@ -498,6 +498,7 @@ plot.walking <- function(x, area = FALSE, ...) {
     st.anns.place <- which(edges$id2 == "138-1a")
     hopkins.street.sub <- which(edges$id2 == "245-1c")
     kemps.court <- which(edges$id2 == "196-1d")
+    bentinck.street <- which(edges$id2 == "167-1a")
 
     whole.segs <-  c(portland.mews, ship.yard, tylers.court,
                      maidenheard.court, cock.court, hopkins.street, unknownB,
@@ -505,7 +506,7 @@ plot.walking <- function(x, area = FALSE, ...) {
 
     sub.segs <- c(dufours.place, silver.street, pulteney.court1,
                   new.husband.street, st.anns.place, hopkins.street.sub,
-                  kemps.court)
+                  kemps.court, bentinck.street)
   }
 
   # Plot #
