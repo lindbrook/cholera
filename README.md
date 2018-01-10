@@ -85,4 +85,7 @@ vignette("time.series")
 
 ### note
 
-neighborhoodWalking() is computationally intensive. Plotting the grapths with the current development version takes between 5 and 40 seconds on a single core depending on configuration. To improve performance, a parallel, multi-core implementation is available on Linux and Mac.
+neighborhoodWalking() is computationally intensive. Using the development version on a single core (2.3 GHz Intel i7), plotting observed paths takes about 8 seconds while plotting expected paths takes about 35 seconds.
+
+With the parallel implementation (currently only available on Linux and Mac), these times fall to 5 and 15 seconds using 4 physical (8 logical) cores.
+

@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class "walking" created by neighborhoodWalking().}
 
-\item{area}{Logical. TRUE returns expected area plot. FALSE returns expected walking paths. Works only with neighborhoodWalking(case.set = "expected").}
+\item{area}{Logical. TRUE returns area plot. FALSE returns walking paths plot. Works only with case.set = "expected" or case.set = "snow".}
 
 \item{...}{Additional plotting parameters.}
 }

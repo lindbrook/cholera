@@ -89,5 +89,6 @@ While the latter is easier to "read" due to its familiarity, it is potentially l
 
 ### Note on neighborhoodWalking()
 
-neighborhoodWalking() is computationally intensive. With default arguments (i.e., observed paths), plotting can take about 5 seconds to run on a single core of a 3.1 GHz Intel Core i5.^[With 2 physical cores (4 logical cores), it takes about 4 seconds.] With expected paths, plotting takes about 40 seconds on a single core.^[With 2 physical cores (4 logical cores), it takes about 32 seconds.]
+neighborhoodWalking() is computationally intensive. Using the development version on a single core (2.3 GHz Intel i7), plotting observed paths takes about 8 seconds while plotting expected paths takes about 35 seconds.
 
+With the parallel implementation (currently only available on Linux and Mac), these times fall to 5 and 15 seconds using 4 physical (8 logical) cores.

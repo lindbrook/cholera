@@ -16,7 +16,7 @@ neighborhoodWalking(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
 \item{case.set}{Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. Currently, only "multi.core = FALSE" is available on Windows.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
 \value{
 An R list with 7 objects:
@@ -34,7 +34,7 @@ An R list with 7 objects:
 Compute and group walking paths by neighborhood using John Snow's 1854 London cholera data.
 }
 \section{Notes}{
- This function is computationally intensive: the default configuration takes about 5 seconds; expected configurations (observed == FALSE) take about 30 seconds.
+ This function is computationally intensive. On a single core (2.3 GHz Intel i7), plotting observed paths (case.set = "observed) takes about 8 seconds while plotting expected paths (case.set = "expected) takes about 35 seconds. The parallel implementation is currently only available on Linux and Mac.
 }
 
 \examples{

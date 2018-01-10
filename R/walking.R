@@ -5,7 +5,7 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
-#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. Currently, only "multi.core = FALSE" is available on Windows.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @return An R list with 7 objects:
 #' \itemize{
 #'   \item{\code{paths}: list of paths to nearest or selected pump(s).}
@@ -16,7 +16,7 @@
 #'   \item{\code{cores}: number of cores to use for parallel implementation.}
 #'   \item{\code{metric}: incremental metric used to find cut point on split road segments.}
 #' }
-#' @section Notes: This function is computationally intensive: the default configuration takes about 5 seconds; expected configurations (observed == FALSE) take about 30 seconds.
+#' @section Notes: This function is computationally intensive. On a single core (2.3 GHz Intel i7), plotting observed paths (case.set = "observed) takes about 8 seconds while plotting expected paths (case.set = "expected) takes about 35 seconds. The parallel implementation is currently only available on Linux and Mac.
 #' @export
 #' @examples
 #' # neighborhoodWalking()
@@ -127,7 +127,7 @@ print.walking <- function(x, ...) {
 #' Plot method for neighborhoodWalking().
 #'
 #' @param x An object of class "walking" created by neighborhoodWalking().
-#' @param area Logical. TRUE returns expected area plot. FALSE returns expected walking paths. Works only with neighborhoodWalking(case.set = "expected").
+#' @param area Logical. TRUE returns area plot. FALSE returns walking paths plot. Works only with case.set = "expected" or case.set = "snow".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
