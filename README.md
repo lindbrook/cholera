@@ -55,7 +55,7 @@ To install 'cholera' from CRAN:
 install.packages("cholera")
 ```
 
-To install the current/development version from GitHub:
+To install the current development version from GitHub:
 
 ``` r
 # Note that you may need to install the 'devtools' package
@@ -63,7 +63,7 @@ To install the current/development version from GitHub:
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 
-Read the package's vignettes. They include detailed discussions about the data, the functions and the methods used to "fix" the data and to compute walking distances and neighborhoods.
+Read the package's vignettes. They include detailed discussions about the data, the functions and the methods used to "fix" the data and to compute walking distances and pump neighborhoods.
 
 They are also available online:
 
@@ -85,7 +85,7 @@ vignette("time.series")
 
 ### note
 
-neighborhoodWalking() is computationally intensive. Using the development version on a single core (2.3 GHz Intel i7), plotting observed paths takes about 8 seconds while plotting expected paths takes about 35 seconds.
+neighborhoodWalking() is computationally intensive. Using the development version on a single core (2.3 GHz Intel i7), plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds.
 
-With the parallel implementation (currently only available on Linux and Mac), these times fall to 5 and 15 seconds using 4 physical (8 logical) cores.
+When using the parallel implementation of the function, which is currently only available on Linux and Mac, these times fall to 5 and 15 seconds (on 4 physical or 8 logical cores).
 
