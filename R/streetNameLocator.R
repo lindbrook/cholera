@@ -16,7 +16,7 @@
 #' streetNameLocator("Cambridge Street", zoom = TRUE)
 #' streetNameLocator("Cambridge Street", zoom = TRUE, radius = 0)
 
-streetNameLocator <- function(road.name, zoom = FALSE, radius = 1,
+streetNameLocator <- function(road.name, zoom = FALSE, radius = 0.1,
   unit = NULL, all.cases = FALSE) {
 
   real.road.names <- unique(cholera::roads$name)
