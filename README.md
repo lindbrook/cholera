@@ -23,6 +23,7 @@ This release includes two methods of computing neighborhoods. The first uses Vor
 
 ``` r
 plot(neighborhoodVoronoi())
+addLandmarks()
 ```
 
 ![](man/figures/README-voronoi-1.png)
@@ -31,6 +32,7 @@ The second method, which actually follows Snow's lead, computes neighborhoods ba
 
 ``` r
 plot(neighborhoodWalking())
+addLandmarks()
 ```
 
 ![](man/figures/README-walk-1.png)
