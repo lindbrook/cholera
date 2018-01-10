@@ -65,7 +65,7 @@ devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 
 Read the package's vignettes. They include detailed discussions about the data, the functions and the methods used to "fix" the data and to compute walking distances and pump neighborhoods.
 
-They are also available online:
+The vignettes from version 0.2.1 are available online:
 
 [Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)   
 ["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.fatalities.html)   
