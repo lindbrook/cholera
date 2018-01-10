@@ -1,7 +1,17 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.9.9010-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-"
+)
+```
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
 
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
@@ -17,51 +27,52 @@ However, while the map shows a concentration of fatalities around the Broad Stre
 
 ### pump neighborhoods
 
-This annotation outlines the Broad Street *pump neighborhood*, the residences Snow claims are within "close" walking distance to the pump. The notion of a pump neighborhood is important because it provides a specific (testable) prediction about where we should expect to find cases: if water is cholera's mode of transmission and if water pumps located on the street are the primary source of drinking water, then most, if not all, fatalities should be found *within* a neighborhood. To put it simply, the disease should stop at the neighborhood's borders. In this way, pump neighborhoods can help distinguish waterborne from airborne patterns of disease transmission.
+This annotation outlines the Broad Street _pump neighborhood_, the residences Snow claims are within "close" walking distance to the pump. The notion of a pump neighborhood is important because it provides a specific (testable) prediction about where we should expect to find cases: if water is cholera's mode of transmission and if water pumps located on the street are the primary source of drinking water, then most, if not all, fatalities should be found _within_ a neighborhood. To put it simply, the disease should stop at the neighborhood's borders. In this way, pump neighborhoods can help distinguish waterborne from airborne patterns of disease transmission.
 
 To that end, this package builds on Snow's work by offering systematic ways to compute pump neighborhoods. Doing so not only provides a way to replicate and validate Snow's efforts, it also allows people to explore and investigate the data for themselves.
 
 This release includes two methods of computing neighborhoods. The first uses Voronoi tessellation. It works by computing the Euclidean distances between pumps. While popular and easy to compute, its only drawback is that roads and walking distance play no role in the choice of pump: the method assumes that people can walk through walls to get to their preferred pump.
 
-``` r
+
+```{r, echo = FALSE}
+library(cholera)
+```
+
+```{r voronoi, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodVoronoi())
 addLandmarks()
 ```
 
-![](man/figures/README-voronoi-1.png)
-
 The second method, which actually follows Snow's lead, computes neighborhoods based on the "actual" walking distance along the streets of Soho. While more accurate, it is computationally more demanding to compute than Voronoi tessellation. To do so, I transform the roads on the map into a "social" graph and turn the computation of walking distance into a graph theory problem. For each case (observed or simulated), I compute the shortest weighted path to the nearest pump. Then by applying the "rinse and repeat" principle, the different pump neighborhoods emerge:
 
-``` r
+```{r walk, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodWalking())
 addLandmarks()
 ```
-
-![](man/figures/README-walk-1.png)
 
 To explore the data, you can consider a variety of scenarios by computing neighborhoods using any subset of pumps. By doing so, you can explore hypotheses like the possibility that the choice of pump is affected by water quality.
 
 ### other package features
 
--   Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
--   "Unstacks" the data in two ways to improve analysis and visualization.
--   Adds the ability to overlay graphical features like kernel density, Voronoi diagrams, and notable landmarks (John Snow's residence, the Lion Brewery, etc.).
--   Includes a variety of functions to find and locate cases, roads, pumps and walking paths.
--   Appends actual street names to the roads data.
--   Includes the revised pump data used in the second version of Snow's map from the Vestry report. This includes the corrected location of the Broad Street pump.
--   Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
+* Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
+* "Unstacks" the data in two ways to improve analysis and visualization.
+* Adds the ability to overlay graphical features like kernel density, Voronoi diagrams, and notable landmarks (John Snow's residence, the Lion Brewery, etc.).
+* Includes a variety of functions to find and locate cases, roads, pumps and walking paths.
+* Appends actual street names to the roads data.
+* Includes the revised pump data used in the second version of Snow's map from the Vestry report. This includes the corrected location of the Broad Street pump.
+* Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
 
 ### getting started
 
 To install 'cholera' from CRAN:
 
-``` r
+```{r, eval = FALSE}
 install.packages("cholera")
 ```
 
 To install the current development version from GitHub:
 
-``` r
+```{r, eval = FALSE}
 # Note that you may need to install the 'devtools' package
 # install.packages("devtools")
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
@@ -69,7 +80,7 @@ devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 
 Read the package's vignettes. They include detailed discussions about the data, the functions and the methods used to "fix" the data and to compute walking distances and neighborhoods.
 
-``` r
+```{r, eval = FALSE}
 vignette("duplicate.missing.cases")
 vignette("unstacking.fatalities")
 vignette("pump.neighborhoods")
