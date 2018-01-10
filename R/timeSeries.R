@@ -1,6 +1,5 @@
 #' Aggregate time series fatality data from the Vestry report.
 #'
-#' For use in integrating pumps and cases into road network needed to compute walking neighborhoods.
 #' @param vestry Logical. TRUE returns the data from the Vestry committee (Appendix B, p. 175). FALSE (default) returns John Snow's contribution to the report (p.117).
 #' @return A R list with two objects: "data" and "source" ("snow" or "vestry").
 #' \itemize{

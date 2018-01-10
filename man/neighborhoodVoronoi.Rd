@@ -34,7 +34,7 @@ An R list with 12 objects.
 }
 }
 \description{
-Voronoi tessellation of John Snow's 1854 London cholera data.
+Perform Voronoi tessellation of John Snow's 1854 London cholera data.
 }
 \examples{
 neighborhoodVoronoi()

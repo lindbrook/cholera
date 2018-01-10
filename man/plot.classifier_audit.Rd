@@ -17,7 +17,7 @@
 A base R graphic.
 }
 \description{
-Plot test result for classifierAudit().
+Plot case, segment and orthogonal projector.
 }
 \examples{
 plot(classifierAudit(case = 483, segment = "326-2"))

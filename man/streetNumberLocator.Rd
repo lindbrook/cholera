@@ -2,7 +2,7 @@
 % Please edit documentation in R/streetNumberLocator.R
 \name{streetNumberLocator}
 \alias{streetNumberLocator}
-\title{Locate road by its numerical ID.}
+\title{Locate road by numerical ID.}
 \usage{
 streetNumberLocator(road.number, zoom = FALSE, radius = 1,
   all.cases = FALSE)
@@ -20,8 +20,7 @@ streetNumberLocator(road.number, zoom = FALSE, radius = 1,
 A base R graphics plot.
 }
 \description{
-Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-selected road and its cases. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
+Highlights the selected road and its cases. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
 }
 \examples{
 streetNumberLocator(243)

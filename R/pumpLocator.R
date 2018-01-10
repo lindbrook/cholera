@@ -1,7 +1,6 @@
 #' Locate water pump by numerical ID.
 #'
-#' Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-#' selected water pump.
+#' Highlights the selected water pump.
 #' @param id Numeric or Integer. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 and 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.

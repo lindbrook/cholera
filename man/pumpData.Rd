@@ -14,7 +14,7 @@ pumpData(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE)
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 }
 \value{
-An R dataframe.
+An R data frame.
 }
 \description{
 Returns either the Dodson and Tobler coordinates for the original thirteen pumps, appended with name of nearest road or the fourteen pumps included in the second version of Snow's map in the Vestry report. Note that the location of the fourteenth pump, at Hanover Square, and the "correct" location of the Broad Street pump are approximate.

@@ -15,5 +15,5 @@ nodeData(embed = TRUE, vestry = FALSE)
 An R list of nodes, edges and an "igraph" package network graph.
 }
 \description{
-By default, embeds "anchor" cases and pumps into road network graph.
+Embed "anchor" cases and pumps into road network graph.
 }

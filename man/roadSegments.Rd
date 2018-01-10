@@ -2,12 +2,12 @@
 % Please edit documentation in R/roadSegments.R
 \name{roadSegments}
 \alias{roadSegments}
-\title{Reshape roads dataframe into road.segments dataframe.}
+\title{Reshape roads data frame into road.segments data frame.}
 \usage{
 roadSegments()
 }
 \value{
-An R dataframe.
+An R data frame.
 }
 \description{
 For use in integrating pumps and cases into road network needed to compute walking neighborhoods.

@@ -19,8 +19,7 @@ pumpLocator(id, zoom = FALSE, radius = 2, vestry = FALSE)
 A base R graphics plot.
 }
 \description{
-Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-selected water pump.
+Highlights the selected water pump.
 }
 \examples{
 pumpLocator(7) # Broad Street Pump

@@ -59,6 +59,7 @@ print.classifier_audit <- function(x, ...) {
 
 #' Plot test result for classifierAudit().
 #'
+#' Plot case, segment and orthogonal projector.
 #' @param x An object of class "classifier_audit" created by classifierAudit().
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param ... Additional parameters.

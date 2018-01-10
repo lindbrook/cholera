@@ -1,7 +1,6 @@
 #' Locate case by numerical ID.
 #'
-#' Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-#' selected observed or simulated case.
+#' Highlights the selected observed or simulated case.
 #' @param case Numeric or Integer. Whole number between 1 and 578.
 #' @param zoom Logical.
 #' @param observed Logical. TRUE for observed. FALSE for simulated.

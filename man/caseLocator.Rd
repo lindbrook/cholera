@@ -22,8 +22,7 @@ caseLocator(case, zoom = FALSE, observed = TRUE, radius = 2,
 A base R graphics plot.
 }
 \description{
-Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-selected observed or simulated case.
+Highlights the selected observed or simulated case.
 }
 \examples{
 caseLocator(290)

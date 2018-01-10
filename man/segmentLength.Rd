@@ -2,7 +2,7 @@
 % Please edit documentation in R/segmentLength.R
 \name{segmentLength}
 \alias{segmentLength}
-\title{Compute segment length.}
+\title{Compute length of selected road segment}
 \usage{
 segmentLength(id, unit = NULL)
 }
@@ -15,7 +15,7 @@ segmentLength(id, unit = NULL)
 An R vector of length one.
 }
 \description{
-Computes length of selected road segment.
+Compute length of selected road segment
 }
 \examples{
 segmentLength("242-1")

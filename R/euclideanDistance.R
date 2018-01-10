@@ -12,7 +12,7 @@
 #' # path from case 1 to nearest pump.
 #' euclideanDistance(1)
 #'
-#' # path from case 1 to nearest pump in meters (appox).
+#' # path from case 1 to nearest pump in meters (approximate).
 #' euclideanDistance(1, unit = "meter")
 #'
 #' # path from case 1 to pump 6.

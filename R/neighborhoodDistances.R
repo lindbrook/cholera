@@ -1,4 +1,4 @@
-#' Compute walking or Eucldean distances within pump neighborhoods.
+#' Compute walking or Euclidean distances within pump neighborhoods.
 #'
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.
 #' @param statistic Character. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.

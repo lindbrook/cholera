@@ -2,7 +2,7 @@
 % Please edit documentation in R/neighborhoodDistances.R
 \name{neighborhoodDistances}
 \alias{neighborhoodDistances}
-\title{Compute walking or Eucldean distances within pump neighborhoods.}
+\title{Compute walking or Euclidean distances within pump neighborhoods.}
 \usage{
 neighborhoodDistances(pump.select = NULL, statistic = "address",
   vestry = FALSE, metric = "walking", weighted = TRUE, unit = NULL,
@@ -24,7 +24,7 @@ neighborhoodDistances(pump.select = NULL, statistic = "address",
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
 }
 \description{
-Compute walking or Eucldean distances within pump neighborhoods.
+Compute walking or Euclidean distances within pump neighborhoods.
 }
 \note{
 Documents "neighborhood.distances".

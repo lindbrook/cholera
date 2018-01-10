@@ -1,6 +1,6 @@
 #' Compute walking path pump neighborhoods.
 #'
-#' Compute and group walking paths by neighborhood using John Snow's 1854 London cholera data.
+#' Compute and group walking paths by pump neighborhood.
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Note that you can't just select the pump on Adam and Eve Court (#2): it is a technical isolate.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.

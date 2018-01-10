@@ -1,6 +1,6 @@
 #' Compute network graph of roads, cases and pumps.
 #'
-#' By default, embeds "anchor" cases and pumps into road network graph.
+#' Embed "anchor" cases and pumps into road network graph.
 #' @param embed Logical. TRUE embeds sites into road network. FALSE returns just the road network.
 #' @param vestry Logical. Use Vestry Report pump data.
 #' @export
