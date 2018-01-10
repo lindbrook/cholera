@@ -37,8 +37,6 @@ addLandmarks()
 
 ![](man/figures/README-walk-1.png)
 
-![](man/figures/walking0.png)
-
 To explore the data, you can consider a variety of scenarios by computing neighborhoods using any subset of pumps. By doing so, you can explore hypotheses like the possibility that the choice of pump is affected by water quality.
 
 ### other package features
