@@ -8,7 +8,7 @@ neighborhoodWalking(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   case.set = "observed", multi.core = FALSE)
 }
 \arguments{
-\item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Note that you can't just select the pump on Adam and Eve Court (#2): it is a technical isolate.}
+\item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6). Note that you can't just select the pump on Adam and Eve Court (#2): it's a technical isolate.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -31,7 +31,7 @@ An R list with 7 objects:
 }
 }
 \description{
-Compute and group walking paths by pump neighborhood.
+Group cases into neighborhoods based on walking distances.
 }
 \section{Notes}{
  This function is computationally intensive. On a single core (2.3 GHz Intel i7), plotting observed paths (case.set = "observed) takes about 8 seconds while plotting expected paths (case.set = "expected) takes about 35 seconds. The parallel implementation is currently only available on Linux and Mac.

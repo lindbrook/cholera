@@ -2,13 +2,13 @@
 % Please edit documentation in R/voronoi.R
 \name{neighborhoodVoronoi}
 \alias{neighborhoodVoronoi}
-\title{Compute Voronoi neighborhoods.}
+\title{Compute Voronoi pump neighborhoods.}
 \usage{
 neighborhoodVoronoi(pump.select = NULL, vestry = FALSE, statistic = NULL,
   polygon.vertices = FALSE)
 }
 \arguments{
-\item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion is possible with negative selection (e.g., -6).}
+\item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6).}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -34,7 +34,7 @@ An R list with 12 objects.
 }
 }
 \description{
-Perform Voronoi tessellation of John Snow's 1854 London cholera data.
+Group cases into neighborhoods using Voronoi tessellation.
 }
 \examples{
 neighborhoodVoronoi()
