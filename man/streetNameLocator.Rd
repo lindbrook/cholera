@@ -4,7 +4,7 @@
 \alias{streetNameLocator}
 \title{Locate road by name.}
 \usage{
-streetNameLocator(road.name, zoom = FALSE, radius = 1, unit = NULL,
+streetNameLocator(road.name, zoom = FALSE, radius = 0.1, unit = NULL,
   all.cases = FALSE)
 }
 \arguments{
@@ -22,7 +22,7 @@ streetNameLocator(road.name, zoom = FALSE, radius = 1, unit = NULL,
 A base R graphics plot.
 }
 \description{
-Highlights the selected road and its cases. See the list of road names in \code{vignette}("road.names").
+Highlight the selected road and its cases. See the list of road names in \code{vignette}("road.names").
 }
 \examples{
 streetNameLocator("Oxford Street")

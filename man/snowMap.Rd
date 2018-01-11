@@ -17,7 +17,7 @@ snowMap(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE)
 A base R graphics plot.
 }
 \description{
-Dodson and Tobler's digitization of Snow's map with added landmarks.
+Plot Dodson and Tobler's digitization of Snow's map with added landmarks.
 }
 \examples{
 snowMap()

@@ -1,6 +1,6 @@
 #' Plot John Snow's cholera map.
 #'
-#' Dodson and Tobler's digitization of Snow's map with added landmarks.
+#' Plot Dodson and Tobler's digitization of Snow's map with added landmarks.
 #' @param add.landmarks Logical. Add landmarks.
 #' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param stacked Logical. Use stacked fatalities.

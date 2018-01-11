@@ -2,7 +2,7 @@
 % Please edit documentation in R/classifierAudit.R
 \name{print.classifier_audit}
 \alias{print.classifier_audit}
-\title{Return test result for classifierAudit().}
+\title{Return result of classifierAudit().}
 \usage{
 \method{print}{classifier_audit}(x, ...)
 }
@@ -15,7 +15,7 @@
 An R data frame.
 }
 \description{
-Return test result for classifierAudit().
+Return result of classifierAudit().
 }
 \examples{
 classifierAudit(case = 483, segment = "326-2")

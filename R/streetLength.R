@@ -1,4 +1,4 @@
-#' Computes length of selected street.
+#' Compute length of selected street.
 #'
 #' @param road.name Character. Road name. Tries to correct for case and to remove extra spaces.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.

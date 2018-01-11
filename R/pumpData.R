@@ -30,7 +30,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
 
     pumps <- rbind(pumps, p14)
 
-    # approximate "corrected" location of the Broad Street pump
+    # approximate "corrected" location of Broad Street pump
     pumps[pumps$id == 7, c("x", "y")] <- c(12.47044, 11.67793)
     pumps
   }

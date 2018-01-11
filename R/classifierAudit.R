@@ -1,8 +1,9 @@
-#' Test whether case is orthogonal to segment.
+#' Test if observed case "belongs" to segment.
 #'
-#' @param case Numeric or Integer. Numeric ID of case.
+#' Uses orthogonal projector from an observed case to see if it intersects a segment.
+#' @param case Numeric or Integer. Numeric ID of observed case.
 #' @param segment Character. Segment ID. See cholera::road.segments
-#' @note segment "326-2" is part of Little Windmill Street. This is a diagnostics; it is not a guarantee of correct classification.
+#' @note This is a diagnostics function. It is not a guarantee of correct classification.
 #' @return Logical TRUE or FALSE
 #' @export
 
@@ -39,7 +40,7 @@ classifierAudit <- function(case = 483, segment = "326-2") {
   out
 }
 
-#' Return test result for classifierAudit().
+#' Return result of classifierAudit().
 #'
 #' @param x An object of class "classifier_audit" created by classifierAudit().
 #' @param ... Additional parameters.
@@ -57,7 +58,7 @@ print.classifier_audit <- function(x, ...) {
   print(x$test)
 }
 
-#' Plot test result for classifierAudit().
+#' Plot result of classifierAudit().
 #'
 #' Plot case, segment and orthogonal projector.
 #' @param x An object of class "classifier_audit" created by classifierAudit().

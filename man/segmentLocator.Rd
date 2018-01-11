@@ -2,7 +2,7 @@
 % Please edit documentation in R/segmentLocator.R
 \name{segmentLocator}
 \alias{segmentLocator}
-\title{Locate road segment by its character ID.}
+\title{Locate road segment by ID.}
 \usage{
 segmentLocator(id, zoom = TRUE, radius = 0.5, all.cases = FALSE,
   unit = NULL)
@@ -22,9 +22,12 @@ segmentLocator(id, zoom = TRUE, radius = 0.5, all.cases = FALSE,
 A base R graphics plot.
 }
 \description{
-Plots John Snow's map of the 1854 London cholera outbreak and highlights the
-selected road segment and its cases. With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional identifying number is appended to form a text string (e.g., "116-2").
+Highlights the selected road segment and its cases.
 }
+\section{Notes}{
+ With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2").
+}
+
 \examples{
 segmentLocator("190-1")
 segmentLocator("216-1")

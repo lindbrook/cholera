@@ -2,7 +2,7 @@
 % Please edit documentation in R/streetLength.R
 \name{streetLength}
 \alias{streetLength}
-\title{Computes length of selected street.}
+\title{Compute length of selected street.}
 \usage{
 streetLength(road.name = "Oxford Street", unit = NULL)
 }
@@ -15,7 +15,7 @@ streetLength(road.name = "Oxford Street", unit = NULL)
 An R vector of length one.
 }
 \description{
-Computes length of selected street.
+Compute length of selected street.
 }
 \examples{
 streetLength("Oxford Street")

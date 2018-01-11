@@ -19,7 +19,7 @@ pumpLocator(id, zoom = FALSE, radius = 2, vestry = FALSE)
 A base R graphics plot.
 }
 \description{
-Highlights the selected water pump.
+Highlight selected water pump.
 }
 \examples{
 pumpLocator(7) # Broad Street Pump

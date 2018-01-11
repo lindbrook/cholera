@@ -2,7 +2,7 @@
 % Please edit documentation in R/classifierAudit.R
 \name{plot.classifier_audit}
 \alias{plot.classifier_audit}
-\title{Plot test result for classifierAudit().}
+\title{Plot result of classifierAudit().}
 \usage{
 \method{plot}{classifier_audit}(x, radius = 0.1, ...)
 }

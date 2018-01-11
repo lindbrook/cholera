@@ -2,12 +2,12 @@
 % Please edit documentation in R/classifierAudit.R
 \name{classifierAudit}
 \alias{classifierAudit}
-\title{Test whether case is orthogonal to segment.}
+\title{Test if observed case "belongs" to segment.}
 \usage{
 classifierAudit(case = 483, segment = "326-2")
 }
 \arguments{
-\item{case}{Numeric or Integer. Numeric ID of case.}
+\item{case}{Numeric or Integer. Numeric ID of observed case.}
 
 \item{segment}{Character. Segment ID. See cholera::road.segments}
 }
@@ -15,8 +15,8 @@ classifierAudit(case = 483, segment = "326-2")
 Logical TRUE or FALSE
 }
 \description{
-Test whether case is orthogonal to segment.
+Uses orthogonal projector from an observed case to see if it intersects a segment.
 }
 \note{
-segment "326-2" is part of Little Windmill Street. This is a diagnostics; it is not a guarantee of correct classification.
+This is a diagnostics function. It is not a guarantee of correct classification.
 }

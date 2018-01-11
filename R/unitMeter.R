@@ -1,4 +1,4 @@
-#' Convert map distance to yards or meters.
+#' Convert nominal map distance to yards or meters.
 #'
 #' A best guess estimate.
 #' @param x Numeric. Nominal map distance.

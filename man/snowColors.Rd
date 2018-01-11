@@ -2,7 +2,7 @@
 % Please edit documentation in R/snowColors.R
 \name{snowColors}
 \alias{snowColors}
-\title{Create a uniform set of colors for pump neighborhoods.}
+\title{Create a set of colors for pump neighborhoods.}
 \usage{
 snowColors(vestry = FALSE)
 }
@@ -13,5 +13,5 @@ snowColors(vestry = FALSE)
 A character vector of colors.
 }
 \description{
-Create a uniform set of colors for pump neighborhoods.
+Create a set of colors for pump neighborhoods.
 }

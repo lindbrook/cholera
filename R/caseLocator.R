@@ -1,6 +1,6 @@
 #' Locate case by numerical ID.
 #'
-#' Highlights the selected observed or simulated case.
+#' Highlight selected observed or simulated case.
 #' @param case Numeric or Integer. Whole number between 1 and 578.
 #' @param zoom Logical.
 #' @param observed Logical. TRUE for observed. FALSE for simulated.
@@ -27,6 +27,10 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 2,
   if (observed) {
     if (case %in% unique(cholera::fatalities$case) == FALSE) {
       stop("Observed case must be a whole number between 1 and 578.")
+    }
+  } else {
+    if (case %in% seq_len(nrow(cholera::regular.cases)) == FALSE) {
+      stop("Simulated case must be a whole number between 1 and 4993.")
     }
   }
 

@@ -1,6 +1,6 @@
 #' Locate road by numerical ID.
 #'
-#' Highlights the selected road and its cases. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
+#' Highlight the selected road and its cases. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
 #' @param road.number Numeric or integer. A whole number between 1 and 528.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.
