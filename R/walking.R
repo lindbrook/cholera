@@ -274,7 +274,7 @@ plot.walking <- function(x, area = FALSE, ...) {
       dat[c(split.missing.id[i], split.missing.id[i] + 1), ]
     })
 
-    split.missing.segments <- lapply(seq_along(split.missing.segs),
+    split.missing.segments <- parallel::mclapply(seq_along(split.missing.segs),
       function(i) {
 
       seg.data <- cholera::road.segments[cholera::road.segments$id ==
@@ -318,7 +318,7 @@ plot.walking <- function(x, area = FALSE, ...) {
       }
 
       data.frame(rbind(seg1, seg2), pump = split.data$pump)
-    })
+    }, mc.cores = x$cores)
 
     if (area == TRUE) {
 
@@ -386,7 +386,9 @@ plot.walking <- function(x, area = FALSE, ...) {
 
       sim.proj3 <- sim.proj3[sim.proj3$road.segment %in% falconberg == FALSE, ]
 
-      split.missing <- lapply(seq_along(split.missing.segs), function(i) {
+      split.missing <- parallel::mclapply(seq_along(split.missing.segs),
+        function(i) {
+
         seg.data <- cholera::road.segments[cholera::road.segments$id ==
           split.missing.segs[i], ]
 
@@ -434,7 +436,7 @@ plot.walking <- function(x, area = FALSE, ...) {
 
         out$id2 <- paste0(out$id, letters[25:26])
         out
-      })
+      }, mc.cores = x$cores)
 
       split.missing <- do.call(rbind, split.missing)
 
