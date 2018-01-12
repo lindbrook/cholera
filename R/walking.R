@@ -155,6 +155,7 @@ plot.walking <- function(x, area = FALSE, ...) {
 
   edges <- dat$edges
 
+  # Check if walking paths traverse both endpoints of a road segment.
   edgeAudit <- function(x) {
     vapply(seq_along(x[-1]), function(i) {
       ab <- edges$node1 %in% x[i] &
@@ -172,9 +173,11 @@ plot.walking <- function(x, area = FALSE, ...) {
   edge.data <- lapply(n.paths, function(x) unique(unlist(x)))
 
   if (x$case.set == "expected") {
-    # edge.data only capture segments where paths cross both endpoints.
-    # To capture the remaining segments, find the missing whole segments and
-    # the missing split segments (sub-segments which lead to different pumps.)
+    # edge.data only capture road segments where paths pass through both paths
+    # endpoints. To capture the remaining road segments in a neighborhood, we
+    # need to find 1) missing whole segments and 2) missing split segments
+    # (sub-segments that lead to different pumps).
+
     p.data <- dat$nodes.pump
 
     if (is.null(x$pump.select)) {
@@ -198,9 +201,11 @@ plot.walking <- function(x, area = FALSE, ...) {
     missing.segments <- setdiff(edgesID[-isolates], drawn.segments)
     missing.segments <- unique(edges[missing.segments, "id"])
 
-    # Exclude Portland Mews last segment (zero length).
+    # Exclude Portland Mews last segment (zero length due to manual fix).
     missing.segments <- missing.segments[missing.segments != "160-3"]
 
+    # Check for split segments. Find cutpoints, which lead to different pumps,
+    # by using 1 meter intervals (approx.) and run length encoding.
     nearest.pump <- parallel::mclapply(missing.segments, function(s) {
       seg.data <- cholera::road.segments[cholera::road.segments$id == s,
         c("x1", "y1", "x2", "y2")]
@@ -219,6 +224,7 @@ plot.walking <- function(x, area = FALSE, ...) {
         delta.x <- h * cos(theta)
         delta.y <- h * sin(theta)
 
+        # Set uniform "East-West" ordering of segment endpoints
         EW <- which.min(seg.data[, c("x1", "x2")])
 
         if (EW == 1) {
@@ -327,6 +333,7 @@ plot.walking <- function(x, area = FALSE, ...) {
       sim.proj <- cholera::sim.ortho.proj[sel, ]
 
       # Wardour Street (188-1) -> Richmond Mews (189-1)
+      # "misclassification" of 3173 fix
       sim.proj[sim.proj$case == 3173, "road.segment"] <- "189-2"
 
       edge.data.id <- lapply(edge.data, function(i) {
@@ -440,6 +447,8 @@ plot.walking <- function(x, area = FALSE, ...) {
 
       split.missing <- do.call(rbind, split.missing)
 
+      # Assign case to segment if orthogonal projector from case bisects
+      # segment.
       classify <- function(case, segment = segment.data$id2[1]) {
         obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
         seg.data <- segment.data[segment.data$id2 == segment,
@@ -455,7 +464,7 @@ plot.walking <- function(x, area = FALSE, ...) {
       }
 
       s3 <- unique(sim.proj3$road.segment)
-      s3 <- s3[s3 %in% "44-1" == FALSE]
+      s3 <- s3[s3 %in% "44-1" == FALSE] # Adam and Eve Court (isolate)
 
       for (s in s3) {
         case.data <- sim.proj3[sim.proj3$road.segment == s, ]
@@ -505,9 +514,9 @@ plot.walking <- function(x, area = FALSE, ...) {
     kemps.court <- which(edges$id2 == "196-1d")
     bentinck.street <- which(edges$id2 == "167-1a")
 
-    whole.segs <-  c(portland.mews, ship.yard, tylers.court,
-                     maidenheard.court, cock.court, hopkins.street, unknownB,
-                     duck.ham)
+    whole.segs <- c(portland.mews, ship.yard, tylers.court,
+                    maidenheard.court, cock.court, hopkins.street, unknownB,
+                    duck.ham)
 
     sub.segs <- c(dufours.place, silver.street, pulteney.court1,
                   new.husband.street, st.anns.place, hopkins.street.sub,
@@ -567,7 +576,6 @@ plot.walking <- function(x, area = FALSE, ...) {
 
     } else if (x$case.set == "snow") {
       snow.edges <- edges[c(unlist(edge.data), whole.segs, sub.segs), ]
-
       snow.ct <- unclass(table(snow.edges $id))
       snow.ct <- data.frame(id = names(snow.ct),
                             count = snow.ct,
@@ -605,7 +613,7 @@ plot.walking <- function(x, area = FALSE, ...) {
       partial.candidates <- split(partial.proj, partial.proj$road.segment)
       partial.segments <- split(partial, partial$id)
 
-      ## Test for contiguous partial segments ##
+      ## Test for contiguous (sequntial) partial segments ##
 
       # contiguous <- vapply(partial.segments, function(x) {
       #   if (nrow(x) == 1) {
@@ -744,13 +752,13 @@ plot.walking <- function(x, area = FALSE, ...) {
   title(main = "Pump Neighborhoods: Walking")
 }
 
-#' Compute walking path from anchor cases to nearest pump (or from among selected pumps).
+#' Compute shortest walking paths from anchor cases to nearest pump.
 #'
-#' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
+#' @param pump.select Numeric. Pump candidates to consider. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected", or "snow".
-#' @param cores Numeric. The number logical cores (truncates with as.integer()). Default is 1, which is the only possible value for Windows.
+#' @param cores Numeric. The number logical cores to use. Default is 1, which is the only possible value for Windows.
 #' @export
 #' @return A R list of vectors of nodes.
 
@@ -786,14 +794,14 @@ nearestPath <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   })
 }
 
-#' Compute walking distance from anchor cases to nearest pump (or from among selected pumps).
+#' Compute walking distance from anchor cases to nearest pump.
 #'
-#' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
+#' @param pump.select Numeric. Pump candidates to consider. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected", or "snow".
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
-#' @param cores  Numeric. The number logical cores (truncates with as.integer()). Default is 1, which is the only possible value for Windows.
+#' @param cores  Numeric. The number logical cores to use. Default is 1, which is the only possible value for Windows.
 #' @export
 #' @return An R data frame.
 
