@@ -576,7 +576,7 @@ plot.walking <- function(x, area = FALSE, ...) {
 
     } else if (x$case.set == "snow") {
       snow.edges <- edges[c(unlist(edge.data), whole.segs, sub.segs), ]
-      snow.ct <- unclass(table(snow.edges $id))
+      snow.ct <- unclass(table(snow.edges$id))
       snow.ct <- data.frame(id = names(snow.ct),
                             count = snow.ct,
                             row.names = NULL,
@@ -672,9 +672,35 @@ plot.walking <- function(x, area = FALSE, ...) {
 
       points(cholera::regular.cases[sim.case.partial[drop3173], ],
         col = "dodgerblue", pch = 15, cex = 1.25)
-      }
 
-    invisible(lapply(road.list, lines))
+      if (is.null(x$pump.select)) {
+        if (x$vestry) {
+          points(cholera::pumps.vestry[, c("x", "y")], pch = 24, bg = "white",
+            col = cholera::snowColors(vestry = TRUE))
+          text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
+            labels = paste0("p", cholera::pumps.vestry$id))
+        } else {
+          points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white",
+            col = cholera::snowColors())
+          text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
+            labels = paste0("p", cholera::pumps$id))
+        }
+      } else {
+        if (x$vestry) {
+          points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
+            bg = "white", col = snow.colors)
+          text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+            labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
+        } else {
+          points(cholera::pumps[n.sel, c("x", "y")], pch = 24, bg = "white",
+            col = snow.colors)
+          text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+            labels = paste0("p", cholera::pumps$id[n.sel]))
+        }
+      }
+    }
+
+    invisible(lapply(road.list, lines, col = "lightgray"))
     invisible(lapply(border.list, lines))
 
   } else {
@@ -718,34 +744,33 @@ plot.walking <- function(x, area = FALSE, ...) {
         n.edges <- edges[x, ]
         segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
                  col = snow.colors)
-
       }))
     }
-  }
 
-  if (is.null(x$pump.select)) {
-    if (x$vestry) {
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
-        col = cholera::snowColors(vestry = TRUE))
-      text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps.vestry$id))
+    if (is.null(x$pump.select)) {
+      if (x$vestry) {
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
+          col = cholera::snowColors(vestry = TRUE))
+        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps.vestry$id))
+      } else {
+        points(cholera::pumps[, c("x", "y")], pch = 24,
+          col = cholera::snowColors())
+        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps$id))
+      }
     } else {
-      points(cholera::pumps[, c("x", "y")], pch = 24,
-        col = cholera::snowColors())
-      text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps$id))
-    }
-  } else {
-    if (x$vestry) {
-      points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
-        col = snow.colors)
-      text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
-    } else {
-      points(cholera::pumps[n.sel, c("x", "y")], pch = 24,
-        col = snow.colors)
-      text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps$id[n.sel]))
+      if (x$vestry) {
+        points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
+          col = snow.colors)
+        text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
+      } else {
+        points(cholera::pumps[n.sel, c("x", "y")], pch = 24,
+          col = snow.colors)
+        text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps$id[n.sel]))
+      }
     }
   }
 
