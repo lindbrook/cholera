@@ -1,6 +1,6 @@
-#' Add Whitehead's Broad Street pump neighborhood.
+#' Add Rev. Henry Whitehead's Broad Street pump neighborhood.
 #'
-#' Adds a circle with a given radius from a specified water pump. By default, the function draws Whitehead's Broad Street pump neighborhood: a circle, centered on the Broad Street pump, with a radius of 210 yards.
+#' Adds a circle with a given radius from a specified water pump. By default, the function draws Whitehead's pump neighborhood: a circle, centered on the Broad Street pump, with a radius of 210 yards.
 #' @param radius Numeric. Distance from a pump in yards
 #' @param pump Character. The name of the pump, the street name where it is located. See \code{pumps} or \code{pumps.vestry}.
 #' @param color Character. Color of circle.

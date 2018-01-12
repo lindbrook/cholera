@@ -2,13 +2,13 @@
 % Please edit documentation in R/walking.R
 \name{nearestPump}
 \alias{nearestPump}
-\title{Compute walking distance from anchor cases to nearest pump (or from among selected pumps).}
+\title{Compute walking distance from anchor cases to nearest pump.}
 \usage{
 nearestPump(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   case.set = "observed", unit = NULL, cores = 1L)
 }
 \arguments{
-\item{pump.select}{Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
+\item{pump.select}{Numeric. Pump candidates to consider. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -18,11 +18,11 @@ nearestPump(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.}
 
-\item{cores}{Numeric. The number logical cores (truncates with as.integer()). Default is 1, which is the only possible value for Windows.}
+\item{cores}{Numeric. The number logical cores to use. Default is 1, which is the only possible value for Windows.}
 }
 \value{
 An R data frame.
 }
 \description{
-Compute walking distance from anchor cases to nearest pump (or from among selected pumps).
+Compute walking distance from anchor cases to nearest pump.
 }

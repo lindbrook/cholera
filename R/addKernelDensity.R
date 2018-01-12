@@ -1,4 +1,4 @@
-#' Add 2D kernel density contours to a plot.
+#' Add 2D kernel density contours.
 #'
 #' Uses KernSmooth::bkde2D().
 #' @param bandwidth Numeric. Bandwidth for kernel density estimation.

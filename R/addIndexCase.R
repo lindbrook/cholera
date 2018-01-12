@@ -5,6 +5,7 @@
 #' @param pch Numeric. Type of of point.
 #' @param add.label Logical. Add text annotation: 40 Broad Street.
 #' @param text.size Numeric. cex for text labels.
+#' @param ... Additional plotting parameters.
 #' @return Add base R point and (optionally) text to a graphics plot.
 #' @export
 #' @examples
@@ -12,7 +13,7 @@
 #' addIndexCase()
 
 addIndexCase <- function(cex = 2, col = "red", pch = 1, add.label = FALSE,
-  text.size = 0.5) {
+  text.size = 0.5, ...) {
 
   index.case <- cholera::fatalities[cholera::fatalities$case == 32, ]
 

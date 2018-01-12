@@ -16,6 +16,7 @@
 #' @examples
 #' snowMap(add.landmarks = FALSE)
 #' addPlaguePit()
+
 addPlaguePit <- function(color = "black", line.type = "solid", ...) {
   polygon(cholera::plague.pit, border = color, lty = line.type)
 }

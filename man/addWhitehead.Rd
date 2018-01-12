@@ -2,7 +2,7 @@
 % Please edit documentation in R/addWhitehead.R
 \name{addWhitehead}
 \alias{addWhitehead}
-\title{Add Whitehead's Broad Street pump neighborhood.}
+\title{Add Rev. Henry Whitehead's Broad Street pump neighborhood.}
 \usage{
 addWhitehead(pump = "Broad Street", radius = 210, color = "black",
   line.type = "solid", vestry = FALSE, ...)
@@ -24,7 +24,7 @@ addWhitehead(pump = "Broad Street", radius = 210, color = "black",
 Draws a circle, based on multiple line segments, to a graphics plot.
 }
 \description{
-Adds a circle with a given radius from a specified water pump. By default, the function draws Whitehead's Broad Street pump neighborhood: a circle, centered on the Broad Street pump, with a radius of 210 yards.
+Adds a circle with a given radius from a specified water pump. By default, the function draws Whitehead's pump neighborhood: a circle, centered on the Broad Street pump, with a radius of 210 yards.
 }
 \examples{
 snowMap(add.landmarks = FALSE)
