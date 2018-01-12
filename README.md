@@ -5,23 +5,21 @@
 
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
-John Snow's map of the 1854 cholera outbreak in London's Soho is one of the best known examples of data visualization and information design.
+John Snow's map of the 1854 cholera outbreak in the Soho area of London is one of the best known examples of data visualization and information design.
 
 ![](vignettes/msu-snows-mapB.jpg)
 
-The reasons are two-fold. First, as evidence of his claim that cholera is transmitted by water rather than air, Snow used a map to plot the spatial relationship between the location of water pumps, the primary source of drinking water, and that of cholera fatalities. Second, as a way to illustrate both the count and location of cases, Snow used "stacks" of horizontal bars (the orientation reflects the location's street).
+By plotting the number and location of fatalities on a map, Snow was able to do something that we take for granted today: visualizing the spatial distribution of cholera cases. To our modern eye, the pattern on the map is unmistakable. Snow's claims, that cholera is a waterborne disease and that the pump on Broad Street was the source of the outbreak, seem almost self-evident. And yet, despite the map both the authorities and Snow's colleagues in the medical and scientific communities were not convinced that Snow was right.
 
-However, while the map shows a concentration of fatalities around the Broad Street pump, it actually doesn't do the best job of excluding rival explanation. The pattern we see is not clearly different from what airborne transmission might look like. To address this problem, Snow added a graphical annotation to a second, lesser-known version of the map published in the official report on the outbreak:
+Beyond considerations of time and place, I would suggest that there are "scientific" reasons why the map failed to impress and why it still fails to do so. While the map does shows a concentration of fatalities around the Broad Street pump, it actually doesn't exclude rival explanation. The pattern is not clearly different from what airborne transmission (i.e., miasma) might look like. To address this problem, I would argue that this is the reason why Snow added a graphical annotation in a second, lesser-known version of the map, which was published in the official report on the outbreak:
 
 ![](vignettes/fig12-6.png)
 
 ### pump neighborhoods
 
-This annotation outlines the Broad Street *pump neighborhood*, the residences Snow claims are within "close" walking distance to the pump. The notion of a pump neighborhood is important because it provides a specific (testable) prediction about where we should expect to find cases: if water is cholera's mode of transmission and if water pumps located on the street are the primary source of drinking water, then most, if not all, fatalities should be found *within* a neighborhood. To put it simply, the disease should stop at the neighborhood's borders. In this way, pump neighborhoods can help distinguish waterborne from airborne patterns of disease transmission.
+This annotation outlines the Broad Street *pump neighborhood*, the residences that are, according to Snow, within "close" walking distance to the pump. The notion of a pump neighborhood is key to Snow's claims because it provides a prediction about where we should and, equally important, where we shouldn't expect to find cases. If water is cholera's mode of transmission and if water pumps located on the street are the primary source of drinking water, then most, if not all, fatalities should be found *within* a neighborhood. The disease should stop at the neighborhood's borders.
 
-To that end, this package builds on Snow's work by offering systematic ways to compute pump neighborhoods. Doing so not only provides a way to replicate and validate Snow's efforts, it also allows people to explore and investigate the data for themselves.
-
-This release includes two methods of computing neighborhoods. The first uses Voronoi tessellation. It works by computing the Euclidean distances between pumps. While popular and easy to compute, its only drawback is that roads and walking distance play no role in the choice of pump: the method assumes that people can walk through walls to get to their preferred pump.
+However, to accurately compute the Broad Street pump neighborhood means being able to compute the neighborhoods of surrounding pumps. To that end, this release builds on Snow's efforts by computing two different types of neighborhoods. The first uses Voronoi tessellation. It works by computing the Euclidean distances between pumps. While popular and easy to compute, its only drawback is that roads and walking distance play no role in the choice of pump: the method assumes that people can walk through walls to get to their preferred pump.
 
 ``` r
 plot(neighborhoodVoronoi())
@@ -30,7 +28,7 @@ addLandmarks()
 
 ![](man/figures/README-voronoi-1.png)
 
-The second method, which actually follows Snow's lead, computes neighborhoods based on the "actual" walking distance along the streets of Soho. While more accurate, it is computationally more demanding to compute than Voronoi tessellation. To do so, I transform the roads on the map into a "social" graph and turn the computation of walking distance into a graph theory problem. For each case (observed or simulated), I compute the shortest weighted path to the nearest pump. Then by applying the "rinse and repeat" principle, the different pump neighborhoods emerge:
+The second method, which follows Snow's lead, computes neighborhoods based on the "actual" walking distance. While more accurate, it is computationally more demanding to compute than Voronoi tessellation. To do so, I transform the roads on the map into a network graph and turn the computation of walking distance into a graph theory problem. For each case (observed or simulated), I compute the shortest path to the nearest pump, weighted by road distance. Then by applying the "rinse and repeat" principle, the different pump neighborhoods emerge:
 
 ``` r
 plot(neighborhoodWalking())
@@ -39,7 +37,29 @@ addLandmarks()
 
 ![](man/figures/README-walk-1.png)
 
-To explore the data, you can consider a variety of scenarios by computing neighborhoods using any subset of pumps. By doing so, you can explore hypotheses like the possibility that the choice of pump is affected by water quality.
+To explore the data, you can consider a variety of scenarios by computing neighborhoods using any subset of pumps. Here's the result excluding the Broad Street pump.
+
+``` r
+plot(neighborhoodWalking(-7))
+```
+
+![](man/figures/README-walk7-1.png)
+
+You can also explore "expected" neighborhoods:
+
+``` r
+plot(neighborhoodWalking(case.set = "expected"))
+```
+
+![](man/figures/README-expected-1.png)
+
+Or highlight the area of "expected" neighborhoods:
+
+``` r
+plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
+```
+
+![](man/figures/README-expected_area-1.png)
 
 ### other package features
 
@@ -53,16 +73,16 @@ To explore the data, you can consider a variety of scenarios by computing neighb
 
 ### getting started
 
-To install 'cholera' from CRAN:
+To install 'cholera' (v. 0.2.1) from CRAN:
 
 ``` r
 install.packages("cholera")
 ```
 
-To install the current development version from GitHub:
+To install the current development version (v. 0.2.9.9010) from GitHub:
 
 ``` r
-# Note that you may need to install the 'devtools' package
+# Note that you may need to install the 'devtools' package:
 # install.packages("devtools")
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
@@ -81,4 +101,4 @@ vignette("time.series")
 
 neighborhoodWalking() is computationally intensive. Using the development version on a single core (2.3 GHz Intel i7), plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds.
 
-When using the parallel implementation of the function, which is currently only available on Linux and Mac, these times fall to 5 and 15 seconds (on 4 physical or 8 logical cores).
+When using the parallel implementation of the function, which is currently only available on Linux and Mac and which is not guaranteed to work in any GUI, these times fall to 5 and 15 seconds (on 4 physical or 8 logical cores).
