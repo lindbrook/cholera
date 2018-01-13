@@ -48,6 +48,11 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     stop('"case.set" must be "observed", "expected" or "snow".')
   }
 
+  if (case.set == "snow" & is.null(pump.select) == FALSE) {
+    warning('With case.set = "snow", "pump.select" is ignored.')
+    pump.select <- NULL
+  }
+
   if (is.logical(multi.core)) {
     if (multi.core == TRUE) {
       cores <- parallel::detectCores()
@@ -155,7 +160,7 @@ plot.walking <- function(x, area = FALSE, ...) {
 
   edges <- dat$edges
 
-  # Check if walking paths traverse both endpoints of a road segment.
+  # Check if path traverses both endpoints of a road segment.
   edgeAudit <- function(x) {
     vapply(seq_along(x[-1]), function(i) {
       ab <- edges$node1 %in% x[i] &
@@ -173,10 +178,10 @@ plot.walking <- function(x, area = FALSE, ...) {
   edge.data <- lapply(n.paths, function(x) unique(unlist(x)))
 
   if (x$case.set == "expected") {
-    # edge.data only capture road segments where paths pass through both paths
-    # endpoints. To capture the remaining road segments in a neighborhood, we
-    # need to find 1) missing whole segments and 2) missing split segments
-    # (sub-segments that lead to different pumps).
+    # edge.data only captures road segments where walking paths pass through
+    # both segement endpoints. To capture the remaining road segments, we need
+    # to identify 1) missing whole segments and 2) missing split segments
+    # (sub-segments that are part of paths that lead to different pumps).
 
     p.data <- dat$nodes.pump
 
@@ -204,8 +209,10 @@ plot.walking <- function(x, area = FALSE, ...) {
     # Exclude Portland Mews last segment (zero length due to manual fix).
     missing.segments <- missing.segments[missing.segments != "160-3"]
 
-    # Check for split segments. Find cutpoints, which lead to different pumps,
-    # by using 1 meter intervals (approx.) and run length encoding.
+    # Check for split segments. To find the cut-point along a segment where
+    # paths lead to different pumps, I check for changes in destination using 1
+    # meter increments (approx.).
+
     nearest.pump <- parallel::mclapply(missing.segments, function(s) {
       seg.data <- cholera::road.segments[cholera::road.segments$id == s,
         c("x1", "y1", "x2", "y2")]
@@ -327,13 +334,12 @@ plot.walking <- function(x, area = FALSE, ...) {
     }, mc.cores = x$cores)
 
     if (area == TRUE) {
-
       ## drawn segments ##
       sel <- is.na(cholera::sim.ortho.proj$road.segment) == FALSE
       sim.proj <- cholera::sim.ortho.proj[sel, ]
 
       # Wardour Street (188-1) -> Richmond Mews (189-1)
-      # "misclassification" of 3173 fix
+      # "fix" for misclassification of 3173
       sim.proj[sim.proj$case == 3173, "road.segment"] <- "189-2"
 
       edge.data.id <- lapply(edge.data, function(i) {
@@ -447,7 +453,7 @@ plot.walking <- function(x, area = FALSE, ...) {
 
       split.missing <- do.call(rbind, split.missing)
 
-      # Assign case to segment if orthogonal projector from case bisects
+      # If orthogonal projector from case bisects segment, assign case to
       # segment.
       classify <- function(case, segment = segment.data$id2[1]) {
         obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
@@ -494,33 +500,6 @@ plot.walking <- function(x, area = FALSE, ...) {
         sim.proj[sim.proj$color == nm, "color"] <- color[names(color) == nm]
       }
     }
-
-  } else if (x$case.set == "snow") {
-    portland.mews <- which(edges$id == "160-4")
-    ship.yard <- which(edges$id %in% c("163-1", "163-2"))
-    tylers.court <- which(edges$id == "221-1")
-    maidenheard.court <- which(edges$id == "244-1")
-    cock.court <- which(edges$id == "225-1")
-    hopkins.street <- which(edges$id %in% c("245-2", "265-1", "265-2"))
-    unknownB <- which(edges$id == "263-1")
-    duck.ham <- which(edges$id %in% paste0(198, "-", 2:4))
-
-    dufours.place <- which(edges$id2 == "217-2c")
-    silver.street <- which(edges$id2 == "275-1a")
-    pulteney.court1 <- which(edges$id2 == "242-1h")
-    new.husband.street <- which(edges$id2 == "259-1d")
-    st.anns.place <- which(edges$id2 == "138-1a")
-    hopkins.street.sub <- which(edges$id2 == "245-1c")
-    kemps.court <- which(edges$id2 == "196-1d")
-    bentinck.street <- which(edges$id2 == "167-1a")
-
-    whole.segs <- c(portland.mews, ship.yard, tylers.court,
-                    maidenheard.court, cock.court, hopkins.street, unknownB,
-                    duck.ham)
-
-    sub.segs <- c(dufours.place, silver.street, pulteney.court1,
-                  new.husband.street, st.anns.place, hopkins.street.sub,
-                  kemps.court, bentinck.street)
   }
 
   # Plot #
@@ -575,128 +554,21 @@ plot.walking <- function(x, area = FALSE, ...) {
       }
 
     } else if (x$case.set == "snow") {
-      snow.edges <- edges[c(unlist(edge.data), whole.segs, sub.segs), ]
-      snow.ct <- unclass(table(snow.edges$id))
-      snow.ct <- data.frame(id = names(snow.ct),
-                            count = snow.ct,
-                            row.names = NULL,
-                            stringsAsFactors = FALSE)
+      snow <- cholera::snowNeighborhood()
 
-      edge.ct <- vapply(unique(snow.edges$id), function(x) {
-        sum(edges$id == x)
-      }, numeric(1L))
+      points(cholera::regular.cases[snow$sim.case, ], col = "dodgerblue",
+        pch = 15, cex = 1.25)
 
-      edge.ct <- data.frame(id = names(edge.ct),
-                            count = edge.ct,
-                            row.names = NULL,
-                            stringsAsFactors = FALSE)
-
-      audit <- merge(edge.ct, snow.ct, by = "id")
-      names(audit)[-1] <- c("edge.ct", "snow.ct")
-
-      # whole segments #
-      whole.audit <- audit[audit$edge.ct == audit$snow.ct, ]
-      whole.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment
-        %in% whole.audit$id, "case"]
-
-      points(cholera::regular.cases[whole.id, ],
-        col = "dodgerblue", pch = 15, cex = 1.25)
-
-      # partial segments #
-
-      partial <- snow.edges[snow.edges$id %in% whole.audit$id == FALSE, ]
-
-      partial.proj <-
-        cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment %in%
-                                partial$id, ]
-
-      partial.candidates <- split(partial.proj, partial.proj$road.segment)
-      partial.segments <- split(partial, partial$id)
-
-      ## Test for contiguous (sequntial) partial segments ##
-
-      # contiguous <- vapply(partial.segments, function(x) {
-      #   if (nrow(x) == 1) {
-      #     # vapply(partial.segments, nrow, numeric(1L))
-      #     TRUE
-      #   } else {
-      #     seg.data <- x[order(x$id2), ]
-      #     omega <- substr(seg.data$id2[1], nchar(seg.data$id2[1]),
-      #       nchar(seg.data$id2[1]))
-      #     vec <- letters[which(omega == letters) +
-      #                    (seq_along(seg.data$id) - 1)]
-      #     all(seg.data$id2 == paste0(seg.data$id, vec))
-      #   }
-      # }, logical(1L))
-      #
-      # all(contiguous)
-      # [1] TRUE
-
-      classifyCase <- function(i) {
-        case.data <- partial.candidates[[i]]
-        seg.data <- partial.segments[[i]]
-
-        if (nrow(seg.data > 1)) {
-          seg.data <- seg.data[order(seg.data$id2), ]
-          classify.test <- vapply(case.data$case, function(case) {
-            obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
-            xs <- c(seg.data[1, "x1"], seg.data[nrow(seg.data), "x2"])
-            ys <- c(seg.data[1, "y1"], seg.data[nrow(seg.data), "y2"])
-            seg.df <- data.frame(x = xs, y = ys)
-            data1 <- rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))
-            data2 <- rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj))
-            seg.dist <- stats::dist(data1) + stats::dist(data2)
-            signif(stats::dist(seg.df)) == signif(seg.dist)
-          }, logical(1L))
-        } else {
-          classify.test <- vapply(case.data$case, function(case) {
-            obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
-            seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
-                                 y = c(seg.data$y1, seg.data$y2))
-            data1 <- rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))
-            data2 <- rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj))
-            seg.dist <- stats::dist(data1) + stats::dist(data2)
-            signif(stats::dist(seg.df)) == signif(seg.dist)
-          }, logical(1L))
-        }
-
-        case.data[classify.test, "case"]
-      }
-
-      sim.case.partial <- lapply(seq_along(partial.candidates), classifyCase)
-      sim.case.partial <- unlist(sim.case.partial)
-
-      # regular.case 3173 is adjacent to Richmond Mews but othogonal to Wardour
-      # Street (188-1); dropped as outlier to Snow neighborhood.
-      drop3173 <- sim.case.partial != 3173
-
-      points(cholera::regular.cases[sim.case.partial[drop3173], ],
-        col = "dodgerblue", pch = 15, cex = 1.25)
-
-      if (is.null(x$pump.select)) {
-        if (x$vestry) {
-          points(cholera::pumps.vestry[, c("x", "y")], pch = 24, bg = "white",
-            col = cholera::snowColors(vestry = TRUE))
-          text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps.vestry$id))
-        } else {
-          points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white",
-            col = cholera::snowColors())
-          text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps$id))
-        }
+      if (x$vestry) {
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 24, bg = "white",
+          col = cholera::snowColors(vestry = TRUE))
+        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps.vestry$id))
       } else {
-        if (x$vestry) {
-          points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
-            bg = "white", col = snow.colors)
-          text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
-        } else {
-          points(cholera::pumps[n.sel, c("x", "y")], pch = 24, bg = "white",
-            col = snow.colors)
-          text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps$id[n.sel]))
-        }
+        points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white",
+          col = cholera::snowColors())
+        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps$id))
       }
     }
 
@@ -740,11 +612,25 @@ plot.walking <- function(x, area = FALSE, ...) {
       }))
 
     } else if (x$case.set == "snow") {
-      invisible(lapply(c(whole.segs, sub.segs), function(x) {
+      snow <- cholera::snowNeighborhood()
+
+      invisible(lapply(snow$other.edges, function(x) {
         n.edges <- edges[x, ]
         segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
-                 col = snow.colors)
+          col = snow.colors)
       }))
+
+      if (x$vestry) {
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 24, bg = "white",
+          col = cholera::snowColors(vestry = TRUE))
+        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps.vestry$id))
+      } else {
+        points(cholera::pumps[, c("x", "y")], pch = 24, bg = "white",
+          col = cholera::snowColors())
+        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps$id))
+      }
     }
 
     if (is.null(x$pump.select)) {
@@ -908,6 +794,149 @@ nearestPump <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   }
 
   out
+}
+
+#' Compute supplemental Snow neighborhood plotting data.
+#'
+#' Computes "missing" and split road segments data, and area plot data.
+#' @return An R list of edge IDs and simulated case IDs (sim.ortho.proj).
+#' @export
+
+snowNeighborhood <- function() {
+  snow <- cholera::neighborhoodWalking(case.set = "snow")
+
+  if (snow$vestry) {
+    dat <- neighborhoodData(vestry = TRUE)
+  } else {
+    dat <- neighborhoodData()
+  }
+
+  edges <- dat$edges
+
+  # Check if walking paths traverse both endpoints of a road segment.
+  edgeAudit <- function(x) {
+    vapply(seq_along(x[-1]), function(i) {
+      ab <- edges$node1 %in% x[i] &
+            edges$node2 %in% x[i + 1]
+      ba <- edges$node2 %in% x[i] &
+            edges$node1 %in% x[i + 1]
+      which(ab | ba)
+    }, numeric(1L))
+  }
+
+  n.paths <- lapply(snow$paths, function(neighborhood) {
+    dat <- lapply(neighborhood, edgeAudit)
+  })
+
+  edge.data <- unname(unlist(lapply(n.paths, function(x) unique(unlist(x)))))
+
+  ## Street Plot Data ##
+
+  portland.mews <- which(edges$id == "160-4")
+  ship.yard <- which(edges$id %in% c("163-1", "163-2"))
+  tylers.court <- which(edges$id == "221-1")
+  maidenheard.court <- which(edges$id == "244-1")
+  cock.court <- which(edges$id == "225-1")
+  hopkins.street <- which(edges$id %in% c("245-2", "265-1", "265-2"))
+  unknownB <- which(edges$id == "263-1")
+  duck.ham <- which(edges$id %in% paste0(198, "-", 2:4))
+
+  dufours.place <- which(edges$id2 == "217-2c")
+  silver.street <- which(edges$id2 == "275-1a")
+  pulteney.court1 <- which(edges$id2 == "242-1h")
+  new.husband.street <- which(edges$id2 == "259-1d")
+  st.anns.place <- which(edges$id2 == "138-1a")
+  hopkins.street.sub <- which(edges$id2 == "245-1c")
+  kemps.court <- which(edges$id2 == "196-1d")
+  bentinck.street <- which(edges$id2 == "167-1a")
+
+  whole.segs <- c(portland.mews, ship.yard, tylers.court,
+                  maidenheard.court, cock.court, hopkins.street, unknownB,
+                  duck.ham)
+
+  sub.segs <- c(dufours.place, silver.street, pulteney.court1,
+                new.husband.street, st.anns.place, hopkins.street.sub,
+                kemps.court, bentinck.street)
+
+  other.edges <- c(whole.segs, sub.segs)
+
+  ## Area Plot Data ##
+
+  snow.edges <- edges[c(edge.data, other.edges), ]
+  snow.ct <- unclass(table(snow.edges$id))
+  snow.ct <- data.frame(id = names(snow.ct),
+                        count = snow.ct,
+                        row.names = NULL,
+                        stringsAsFactors = FALSE)
+
+  edge.ct <- vapply(unique(snow.edges$id), function(x) {
+    sum(edges$id == x)
+  }, numeric(1L))
+
+  edge.ct <- data.frame(id = names(edge.ct),
+                        count = edge.ct,
+                        row.names = NULL,
+                        stringsAsFactors = FALSE)
+
+  audit <- merge(edge.ct, snow.ct, by = "id")
+  names(audit)[-1] <- c("edge.ct", "snow.ct")
+
+  # whole segments #
+
+  whole.audit <- audit[audit$edge.ct == audit$snow.ct, ]
+  whole.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment
+    %in% whole.audit$id, "case"]
+
+  # partial segments #
+
+  partial <- snow.edges[snow.edges$id %in% whole.audit$id == FALSE, ]
+
+  partial.proj <-
+    cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment %in%
+                            partial$id, ]
+
+  partial.candidates <- split(partial.proj, partial.proj$road.segment)
+  partial.segments <- split(partial, partial$id)
+
+  classifyCase <- function(i) {
+    case.data <- partial.candidates[[i]]
+    seg.data <- partial.segments[[i]]
+
+    if (nrow(seg.data > 1)) {
+      seg.data <- seg.data[order(seg.data$id2), ]
+      classify.test <- vapply(case.data$case, function(case) {
+        obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
+        xs <- c(seg.data[1, "x1"], seg.data[nrow(seg.data), "x2"])
+        ys <- c(seg.data[1, "y1"], seg.data[nrow(seg.data), "y2"])
+        seg.df <- data.frame(x = xs, y = ys)
+        data1 <- rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))
+        data2 <- rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj))
+        seg.dist <- stats::dist(data1) + stats::dist(data2)
+        signif(stats::dist(seg.df)) == signif(seg.dist)
+      }, logical(1L))
+    } else {
+      classify.test <- vapply(case.data$case, function(case) {
+        obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]
+        seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                             y = c(seg.data$y1, seg.data$y2))
+        data1 <- rbind(seg.df[1, ], c(obs$x.proj, obs$y.proj))
+        data2 <- rbind(seg.df[2, ], c(obs$x.proj, obs$y.proj))
+        seg.dist <- stats::dist(data1) + stats::dist(data2)
+        signif(stats::dist(seg.df)) == signif(seg.dist)
+      }, logical(1L))
+    }
+
+    case.data[classify.test, "case"]
+  }
+
+  sim.case.partial <- lapply(seq_along(partial.candidates), classifyCase)
+  sim.case.partial <- unlist(sim.case.partial)
+
+  # regular.case 3173 is adjacent to Richmond Mews but othogonal to Wardour
+  # Street (188-1); dropped as outlier to Snow neighborhood.
+  partial.id <- sim.case.partial[sim.case.partial != 3173]
+
+  list(other.edges = other.edges, sim.cases = c(whole.id, partial.id))
 }
 
 neighborhoodData <- function(vestry = FALSE) {
