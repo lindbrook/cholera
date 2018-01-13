@@ -835,7 +835,7 @@ snowNeighborhood <- function() {
   portland.mews <- which(edges$id == "160-4")
   ship.yard <- which(edges$id %in% c("163-1", "163-2"))
   tylers.court <- which(edges$id == "221-1")
-  maidenheard.court <- which(edges$id == "244-1")
+  maidenhead.court <- which(edges$id == "244-1")
   cock.court <- which(edges$id == "225-1")
   hopkins.street <- which(edges$id %in% c("245-2", "265-1", "265-2"))
   unknownB <- which(edges$id == "263-1")
@@ -851,7 +851,7 @@ snowNeighborhood <- function() {
   bentinck.street <- which(edges$id2 == "167-1a")
 
   whole.segs <- c(portland.mews, ship.yard, tylers.court,
-                  maidenheard.court, cock.court, hopkins.street, unknownB,
+                  maidenhead.court, cock.court, hopkins.street, unknownB,
                   duck.ham)
 
   sub.segs <- c(dufours.place, silver.street, pulteney.court1,
@@ -936,7 +936,9 @@ snowNeighborhood <- function() {
   # Street (188-1); dropped as outlier to Snow neighborhood.
   partial.id <- sim.case.partial[sim.case.partial != 3173]
 
-  list(other.edges = other.edges, sim.cases = c(whole.id, partial.id))
+  list(obs.edges = edge.data,
+       other.edges = other.edges,
+       sim.cases = c(whole.id, partial.id))
 }
 
 neighborhoodData <- function(vestry = FALSE) {
