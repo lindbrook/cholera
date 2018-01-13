@@ -33,8 +33,8 @@ An R list with 7 objects:
 \description{
 Group cases into neighborhoods based on walking distances.
 }
-\section{Notes}{
- This function is computationally intensive. On a single core (2.3 GHz Intel i7), plotting observed paths (case.set = "observed) takes about 8 seconds while plotting expected paths (case.set = "expected) takes about 35 seconds. The parallel implementation is currently only available on Linux and Mac.
+\section{Note}{
+ This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths takes about 8 seconds while plotting expected paths takes about 35 seconds. With the parallel implementation (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment), these times fall to 6 and 15 seconds using 4 physical (8 logical) cores.
 }
 
 \examples{

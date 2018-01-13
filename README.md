@@ -1,7 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.9.9011-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
 John Snow's map of the 1854 cholera outbreak in the Soho area of London is one of the best known examples of data visualization and information design.
@@ -72,7 +74,7 @@ plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 
 ### getting started
 
-To install 'cholera' (v. 0.2.1) from CRAN:
+To install "cholera"" (v. 0.2.1) from CRAN:
 
 ``` r
 install.packages("cholera")
@@ -98,6 +100,6 @@ vignette("time.series")
 
 ### note
 
-neighborhoodWalking() is computationally intensive. Using the development version on a single core (2.3 GHz Intel i7), plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds.
+neighborhoodWalking() is computationally intensive. Using the development version on a single core of a 2.3 GHz Intel i7, plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds.
 
-When using the parallel implementation of the function, which is currently only available on Linux and Mac and which is not guaranteed to work in any GUI, these times fall to 5 and 15 seconds (on 4 physical or 8 logical cores).
+When using the parallel implementation of the function (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment), these times fall to 6 and 15 seconds (on 4 physical or 8 logical cores).

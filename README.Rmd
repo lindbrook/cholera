@@ -75,7 +75,7 @@ plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 
 ### getting started
 
-To install 'cholera' (v. 0.2.1) from CRAN:
+To install "cholera"" (v. 0.2.1) from CRAN:
 
 ```{r, eval = FALSE}
 install.packages("cholera")
@@ -101,6 +101,6 @@ vignette("time.series")
 
 ### note
 
-neighborhoodWalking() is computationally intensive. Using the development version on a single core (2.3 GHz Intel i7), plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds.
+neighborhoodWalking() is computationally intensive. Using the development version on a single core of a 2.3 GHz Intel i7, plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds.
 
-When using the parallel implementation of the function, which is currently only available on Linux and Mac and which is not guaranteed to work in any GUI, these times fall to 5 and 15 seconds (on 4 physical or 8 logical cores).
+When using the parallel implementation of the function (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment), these times fall to 6 and 15 seconds (on 4 physical or 8 logical cores).
