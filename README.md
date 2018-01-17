@@ -2,6 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.9.9013-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
 John Snow's map of the 1854 cholera outbreak in the Soho area of London is one of the best known examples of data visualization and information design.
@@ -87,14 +88,6 @@ devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 
 Read the package's vignettes. They include detailed discussions about the data, the functions and the methods used to "fix" the data and to compute walking distances and neighborhoods.
-
-``` r
-vignette("duplicate.missing.cases")
-vignette("unstacking.fatalities")
-vignette("pump.neighborhoods")
-vignette("roads")
-vignette("time.series")
-```
 
 ### note
 
