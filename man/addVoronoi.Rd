@@ -27,8 +27,10 @@ addVoronoi()
 }
 \seealso{
 \code{\link{snowMap}},
+\code{\link{addIndexCase}},
 \code{\link{addKernelDensity}},
 \code{\link{addLandmarks}},
 \code{\link{addPlaguePit}},
+\code{\link{addSnow}},
 \code{\link{addWhitehead}}
 }

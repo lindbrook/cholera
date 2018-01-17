@@ -5,9 +5,10 @@
 #' @return Add base R points and text to a graphics plot.
 #' @param text.size Numeric. cex for text labels.
 #' @seealso \code{\link{snowMap}},
+#' \code{\link{addIndexCase}},
 #' \code{\link{addKernelDensity}},
 #' \code{\link{addPlaguePit}},
-# #' \code{\link{addSnow}},
+#' \code{\link{addSnow}},
 #' \code{\link{addVoronoi}},
 #' \code{\link{addWhitehead}}
 #' @import graphics

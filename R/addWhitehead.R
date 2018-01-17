@@ -8,10 +8,11 @@
 #' @param vestry Logical. TRUE uses the 14 pumps and locations from Vestry report. FALSE uses original 13 pumps.
 #' @param ... Additional plotting parameters.
 #' @seealso \code{\link{snowMap}},
+#' \code{\link{addIndexCase}},
 #' \code{\link{addKernelDensity}},
 #' \code{\link{addLandmarks}},
 #' \code{\link{addPlaguePit}},
-# #' \code{\link{addSnow}},
+#' \code{\link{addSnow}},
 #' \code{\link{addVoronoi}}
 #' @return Draws a circle, based on multiple line segments, to a graphics plot.
 #' @seealso \code{\link{addLandmarks}}

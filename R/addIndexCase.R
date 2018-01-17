@@ -6,6 +6,13 @@
 #' @param add.label Logical. Add text annotation: 40 Broad Street.
 #' @param text.size Numeric. cex for text labels.
 #' @param ... Additional plotting parameters.
+#' @seealso \code{\link{snowMap}},
+#' \code{\link{addKernelDensity}},
+#' \code{\link{addLandmarks}},
+#' \code{\link{addPlaguePit}},
+#' \code{\link{addSnow}},
+#' \code{\link{addVoronoi}},
+#' \code{\link{addWhitehead}}
 #' @return Add base R point and (optionally) text to a graphics plot.
 #' @export
 #' @examples

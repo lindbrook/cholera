@@ -8,9 +8,10 @@
 #' @param ... Additional plotting parameters.
 #' @return Add contours to a graphics plot.
 #' @seealso \code{\link{snowMap}},
+#' \code{\link{addIndexCase}},
 #' \code{\link{addLandmarks}},
 #' \code{\link{addPlaguePit}},
-# #' \code{\link{addSnow}},
+#' \code{\link{addSnow}},
 #' \code{\link{addVoronoi}},
 #' \code{\link{addWhitehead}}
 #' @import graphics

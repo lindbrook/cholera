@@ -6,9 +6,10 @@
 #' @param ... Additional plotting parameters.
 #' @return Adds a polygon, based on multiple base R line segments, to a graphics plot.
 #' @seealso \code{\link{snowMap}},
+#' \code{\link{addIndexCase}},
 #' \code{\link{addKernelDensity}},
 #' \code{\link{addLandmarks}},
-# #' \code{\link{addSnow}},
+#' \code{\link{addSnow}},
 #' \code{\link{addVoronoi}},
 #' \code{\link{addWhitehead}}
 #' @import graphics

@@ -81,7 +81,7 @@ To install "cholera"" (v. 0.2.1) from CRAN:
 install.packages("cholera")
 ```
 
-To install the current development version (v. 0.2.9.9012) from GitHub:
+To install the current development version (v. 0.2.9.9013) from GitHub:
 
 ```{r, eval = FALSE}
 # Note that you may need to install the 'devtools' package:
