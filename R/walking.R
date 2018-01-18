@@ -523,9 +523,6 @@ plot.walking <- function(x, area = FALSE, ...) {
       points(cholera::regular.cases[sel, ], col = sim.proj$color,
         pch = 15, cex = 1.25)
 
-      invisible(lapply(road.list, lines))
-      invisible(lapply(border.list, lines))
-
       if (is.null(x$pump.select)) {
         if (x$vestry) {
           points(cholera::pumps.vestry[, c("x", "y")], pch = 24, bg = "white",
