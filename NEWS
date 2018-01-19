@@ -1,169 +1,38 @@
-cholera 0.2.9.9013
+cholera 0.3.0
 ----------------------------------------------------------------
 
-* update addSnow().
-
-
-cholera 0.2.9.9012
-----------------------------------------------------------------
-
-* add snowNeighborhood().
-
-
-cholera 0.2.9.9011
-----------------------------------------------------------------
-
-* update pump neighborhoods vignette.
-
-
-cholera 0.2.9.9010
-----------------------------------------------------------------
-
-* amend ortho.proj:
-  reclassify cases 369, 434, 11, 53, 193 from segment "194-1" to "148-1".
-* fix for regular.cases case 3173 in neighborhood area plots.
-
-
-cholera 0.2.9.9009
-----------------------------------------------------------------
-
-* implement area = TRUE in print.walking() for case.set = "snow".
-
-
-cholera 0.2.9.9008
-----------------------------------------------------------------
-
-* add case.set argument to neighborhoodWalking().
-
-
-cholera 0.2.9.9007
-----------------------------------------------------------------
-
-* highlight cases in segmentLocator(), streetNameLocator() and
-  streetNumberLocator().
-
-
-cholera 0.2.9.9006
-----------------------------------------------------------------
-
-* use code from neighborhoodPaths() for neighborhoodWalking().
-
-
-cholera 0.2.9.9005
-----------------------------------------------------------------
-
-* add expected area plot to neighborhoodPaths().
-
-
-cholera 0.2.9.9004
-----------------------------------------------------------------
-
-* implement parallelization of neighborhoodPaths().
-
-
-cholera 0.2.9.9003
-----------------------------------------------------------------
-
-* add expected paths (observed = FALSE) to neighborhoodPaths().
-
-
-cholera 0.2.9.9002
-----------------------------------------------------------------
-
-* update yard distance factor in addWhitehead().
-* fix pump labels in caseLocator().
-* add unitMeter().
-
-
-cholera 0.2.9.9001
-----------------------------------------------------------------
-
-* add segmentLength().
-* add segmentLength() to segmentLocator().
-
-
-cholera 0.2.9.9000
-----------------------------------------------------------------
-
-* add neighborhoodPaths() w/ S3 plot and print methods.
-
-
-cholera 0.2.1.9014
-----------------------------------------------------------------
-
-* add nearestPump() and nearestPath().
-
-
-cholera 0.2.1.9013
-----------------------------------------------------------------
-
-* update neighborhoodDistances().
-* add print method to timeSeries().
-* add S3 implementation of classifierAudit().
-* add addIndexCase().
-
-
-cholera 0.2.1.9012
-----------------------------------------------------------------
-
-* amend S3 implementation of neighborhoodVoronoi() and neighborhoodWalking().
-
-
-cholera 0.2.1.9011
-----------------------------------------------------------------
-
-* add S3 implementation of walkingDistance() w/ plot and print methods.
-
-
-cholera 0.2.1.9010
-----------------------------------------------------------------
-
-* add S3 implementation of euclideanDistance() w/ plot and print methods.
-
-
-cholera 0.2.1.9009
-----------------------------------------------------------------
-
-* update walkingDistance() and walkingPath().
-* update neighborhood.distances.
-
-
-cholera 0.2.1.9008
-----------------------------------------------------------------
-
-* add nodeData().
-
-
-cholera 0.2.1.9007
-----------------------------------------------------------------
-
-* amend ortho.proj: reclassify case 483 from segment "242-1" to "326-2".
-* update default neighborhoodWalking() configurations (sysdata).
-* add classifierAudit() and classifierAuditPlot().
-
-
-cholera 0.2.1.9006
-----------------------------------------------------------------
-
-* add option to plot all case IDs with segmentLocator(), streetNameLocator(), streetNumberLocator().
-
-
-cholera 0.2.1.9005
-----------------------------------------------------------------
-
-* amend euclideanDistance().
-
-
-cholera 0.2.1.9004
-----------------------------------------------------------------
-
-* add neighborhoodDistances() and neighborhood.distances.
-
-
-cholera 0.2.1.9003
-----------------------------------------------------------------
-
-* add streetLength() and euclideanDistance().
+* Data Amendments and Additions
+  - ortho.proj:
+    reclassify case 483 from segment "242-1" to "326-2".
+    reclassify cases 369, 434, 11, 53, 193 from segment "194-1" to "148-1".
+
+  - regular.cases:
+    fix for case 3173 for neighborhood area plots.
+
+* Function Changes:
+  - addSnow(): "area", "street" and "boundary" graphical annotation.
+  - neighborhoodWalking(): improvements in functionality and performance.
+  - segmentLocator(), streetNameLocator() and streetNumberLocator() highlight
+    cases
+
+* Function Changes (S3):
+  - timeSeries()
+  - walkingDistance()
+
+* New Functions:
+  - addIndexCase()
+  - nearestPath()
+  - nearestPump()
+  - neighborhoodDistances()
+  - nodeData()
+  - segmentLength()
+  - snowNeighborhood()
+  - streetLength()
+  - unitMeter()
+
+* New Functions (S3):
+  - classifierAudit()
+  - euclideanDistance()
 
 
 cholera 0.2.1

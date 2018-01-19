@@ -1,7 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.9.9013-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
@@ -65,9 +66,9 @@ plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 
 -   Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
 -   "Unstacks" the data in two ways to improve analysis and visualization.
--   Adds the ability to overlay graphical features like kernel density, Voronoi diagrams, and notable landmarks (John Snow's residence, the Lion Brewery, etc.).
+-   Adds the ability to overlay graphical features like kernel density, Voronoi diagrams, Snow's annotation, and notable landmarks (John Snow's residence, the Lion Brewery, etc.).
 -   Includes a variety of functions to find and locate cases, roads, pumps and walking paths.
--   Appends actual street names to the roads data.
+-   Appends actual street names to the roads data set.
 -   Includes the revised pump data used in the second version of Snow's map from the Vestry report. This includes the corrected location of the Broad Street pump.
 -   Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
 
@@ -79,7 +80,7 @@ To install "cholera"" (v. 0.2.1) from CRAN:
 install.packages("cholera")
 ```
 
-To install the current development version (v. 0.2.9.9013) from GitHub:
+To install the current development version (v. 0.3.0) from GitHub:
 
 ``` r
 # Note that you may need to install the 'devtools' package:
@@ -93,4 +94,4 @@ Read the package's vignettes. They include detailed discussions about the data, 
 
 neighborhoodWalking() is computationally intensive. Using the development version on a single core of a 2.3 GHz Intel i7, plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds.
 
-When using the parallel implementation of the function (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment), these times fall to 6 and 15 seconds (on 4 physical or 8 logical cores).
+When using the function's parallel implementation (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment), these times fall to approximately 6 and 15 seconds using 4 physical or 8 logical cores.
