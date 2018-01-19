@@ -16,17 +16,7 @@ library(cholera)
 
 ## Overview
 
-John Snow's map of the 1854 cholera outbreak in London is a canonical example of the use of maps in data visualization and public health:^[The map was published in Snow's 1855 book, "On The Mode Of Communication Of Cholera", which was reprinted as John Snow et. al., 1936. _Snow on Cholera: Being a Reprint of Two Papers_. New York: The Common Wealth Fund. You can also find the map online (e.g., http://www.ph.ucla.edu/epi/snow/highressnowmap.html) and in many books, including Edward Tufte's 1997 "Visual Explanations: Images and Quantities, Evidence and Narrative".]
-
-![](msu-snows-mapB.jpg)
-
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available.^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] Those data are preserved in Michael Friendly's 'HistData' package. An amended version of the data, _fatalities_ in this package, is plotted below.
-
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
-snowMap()
-```
-
-Unfortunately, Dodson and Tobler did not include the names of roads (e.g., Broad Street) in their effort. While not strictly necessary for analysis or visualization, having the names will be useful to some. To that end, I append the actual street names, taken from the map itself, to the data. This appended data set is called _roads_.
+In 1992, Rusty Dodson and Waldo Tobler digitized John Snow's cholera map. Unfortunately, Dodson and Tobler did not include the names of roads (e.g., Broad Street) in their data set. While not strictly necessary for analysis or visualization, having the names will be useful to some. To that end, I append the actual street names, taken from the map itself, to the data. This appended data set is called _roads_.
 
 ## Roads data
 
@@ -38,7 +28,7 @@ nrow(roads)
 length(unique(roads$street))
 ```
 
-These 528 "streets" do not correspond to real-world streets. Excluding the 50 "streets" used to describe the frame around the map, the remaining 478 "streets" actually describe 206 "real-world" roads (e.g., Oxford Street, Regent Street). This is because 40% of "real-world" roads are composed of multiple "street" segments. For example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
+These 528 "streets" do not correspond to real-world streets. Excluding the 50 "streets" used to describe the map's frame, the remaining 478 "streets" describe 206 "real-world" roads (e.g., Oxford Street, Regent Street). This discrepancy emerges because 40% of "real-world" roads are composed of multiple "street" segments. For example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
 
 ```{r}
 # Map Border "Streets" #
@@ -93,7 +83,6 @@ To help locate and visualize streets and road segments (including map frame segm
 Note that _streetNameLocator_() uses the names in the _roads_ data set. However, the function tries to corrects for case and removes extraneous spaces: streetNameLocator("Oxford Street") and streetNameLocator("oxford street").
 
 _segmentLocator_() is for those interested in more granular analysis. It uses individual road segments as the unit of observation.
-
 
 ## List of road names
 
