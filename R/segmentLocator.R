@@ -16,7 +16,7 @@
 #' segmentLocator("216-1")
 #' segmentLocator("216-1", unit = "meter")
 
-segmentLocator <- function(id, zoom = TRUE, radius = 0.5, cases = "anchors",
+segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
   unit = NULL) {
 
   if (is.character(id) == FALSE) {
