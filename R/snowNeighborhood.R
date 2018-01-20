@@ -1,4 +1,4 @@
-#' Compute supplemental Snow neighborhood plotting data.
+#' Data for plotting Snow's annotated neighborhood.
 #'
 #' Computes "missing" and split road segments data, and area plot data.
 #' @return An R list of edge IDs and simulated case IDs (sim.ortho.proj).

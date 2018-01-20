@@ -2,7 +2,7 @@
 % Please edit documentation in R/nearestPath.R
 \name{nearestPath}
 \alias{nearestPath}
-\title{Compute shortest walking paths from anchor cases to nearest pump.}
+\title{Compute shortest walking paths from case to pump.}
 \usage{
 nearestPath(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   case.set = "observed", cores = 1L)
@@ -22,5 +22,5 @@ nearestPath(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 A R list of vectors of nodes.
 }
 \description{
-Compute shortest walking paths from anchor cases to nearest pump.
+Compute path from anchor case to nearest pump (or among selected pumps).
 }

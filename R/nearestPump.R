@@ -1,5 +1,6 @@
-#' Compute walking distance from anchor cases to nearest pump.
+#' Compute shortest walking path distance from case to pump.
 #'
+#' Compute path distance from anchor case to nearest pump (or among selected pumps).
 #' @param pump.select Numeric. Pump candidates to consider. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
