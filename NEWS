@@ -23,7 +23,8 @@ cholera 0.2.9.9015
     improvements in functionality and performance.
 
 - segmentLocator(), streetNameLocator() and streetNumberLocator()
-    highlight cases
+    highlight segment or street cases.
+    option to plot all cases, anchor cases or no cases.
 
 # New S3 Implementations #
 

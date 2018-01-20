@@ -4,8 +4,8 @@
 \alias{streetNameLocator}
 \title{Locate road by name.}
 \usage{
-streetNameLocator(road.name, zoom = FALSE, radius = 0.1, unit = NULL,
-  all.cases = FALSE)
+streetNameLocator(road.name, zoom = FALSE, radius = 0.1,
+  cases = "anchors", unit = NULL)
 }
 \arguments{
 \item{road.name}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.}
@@ -14,9 +14,9 @@ streetNameLocator(road.name, zoom = FALSE, radius = 0.1, unit = NULL,
 
 \item{radius}{Numeric. Controls the degree of zoom. For "radius" <= 5, the numeric ID of all cases or just the anchor case is plotted.}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
+\item{cases}{Character. Plot cases: NULL, "anchors" or "all".}
 
-\item{all.cases}{Logical. When zoom = TRUE and radius <= 5, all.cases = TRUE plots the numeric ID of all cases; when all.cases = FALSE only the numeric ID of the anchor case is shown.}
+\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
 }
 \value{
 A base R graphics plot.

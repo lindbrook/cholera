@@ -5,7 +5,7 @@
 \title{Locate road by numerical ID.}
 \usage{
 streetNumberLocator(road.number, zoom = FALSE, radius = 1,
-  all.cases = FALSE)
+  cases = "anchors", unit = NULL)
 }
 \arguments{
 \item{road.number}{Numeric or integer. A whole number between 1 and 528.}
@@ -14,7 +14,9 @@ streetNumberLocator(road.number, zoom = FALSE, radius = 1,
 
 \item{radius}{Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.}
 
-\item{all.cases}{Logical. When zoom = TRUE and radius <= 5, all.cases = TRUE plots the numeric ID of all cases; when all.cases = FALSE only the numeric ID of the anchor case is shown.}
+\item{cases}{Character. Plot cases: NULL, "anchors" or "all".}
+
+\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
 }
 \value{
 A base R graphics plot.
