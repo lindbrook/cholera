@@ -333,7 +333,7 @@ plot.walking <- function(x, area = FALSE, ...) {
       data.frame(rbind(seg1, seg2), pump = split.data$pump)
     }, mc.cores = x$cores)
 
-    if (area == TRUE) {
+    if (area) {
       ## drawn segments ##
       sel <- is.na(cholera::sim.ortho.proj$road.segment) == FALSE
       sim.proj <- cholera::sim.ortho.proj[sel, ]
