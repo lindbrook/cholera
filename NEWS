@@ -1,41 +1,50 @@
-cholera 0.3.0
-----------------------------------------------------------------
+cholera 0.2.9.9014
+==================
 
-* Data Amendments and Additions
-  - ortho.proj:
+# Data Changes #
+
+- ortho.proj:
     reclassify case 483 from segment "242-1" to "326-2".
     reclassify cases 369, 434, 11, 53, 193 from segment "194-1" to "148-1".
 
-  - regular.cases:
+- regular.cases:
     fix for case 3173 for neighborhood area plots.
 
-* Function Changes:
-  - addSnow(): "area", "street" and "boundary" graphical annotation.
-  - neighborhoodWalking(): improvements in functionality and performance.
-  - segmentLocator(), streetNameLocator() and streetNumberLocator() highlight
-    cases
+# Function Changes #
 
-* Function Changes (S3):
-  - timeSeries()
-  - walkingDistance()
+- addSnow()
+    "area", "street" and "boundary" graphical annotation.
 
-* New Functions:
-  - addIndexCase()
-  - nearestPath()
-  - nearestPump()
-  - neighborhoodDistances()
-  - nodeData()
-  - segmentLength()
-  - snowNeighborhood()
-  - streetLength()
-  - unitMeter()
+- neighborhoodWalking()
+    improvements in functionality and performance.
 
-* New Functions (S3):
-  - classifierAudit()
-  - euclideanDistance()
+- segmentLocator(), streetNameLocator() and streetNumberLocator()
+    highlight cases
+
+# New S3 Implementations #
+
+- timeSeries()
+- walkingDistance()
+
+# New Functions #
+
+- addIndexCase()
+- nearestPath()
+- nearestPump()
+- neighborhoodDistances()
+- nodeData()
+- segmentLength()
+- snowNeighborhood()
+- streetLength()
+- unitMeter()
+
+# New S3 Functions #
+
+- classifierAudit()
+- euclideanDistance()
 
 
 cholera 0.2.1
-----------------------------------------------------------------
+=============
 
-* Initial CRAN release.
+- Initial CRAN release.
