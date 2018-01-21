@@ -8,11 +8,14 @@ cholera 0.2.9.9015
 # Data Changes #
 
 - ortho.proj:
-    reclassify case 483 from segment "242-1" to "326-2".
-    reclassify cases 369, 434, 11, 53, 193 from segment "194-1" to "148-1".
+    reclassify case 483:
+      Pulteney Court (I) ("242-1") -> Little Windmill Street ("326-2").
+    reclassify cases 369, 434, 11, 53, 193:
+      from Poland Street ("194-1") -> St James Workhouse ("148-1").
 
 - regular.cases:
-    fix for case 3173 for neighborhood area plots.
+    fix for case 3173 for neighborhood area plots:
+      Wardour Street ("188-1") -> Richmond Mews ("189-1").
 
 # Function Changes #
 
