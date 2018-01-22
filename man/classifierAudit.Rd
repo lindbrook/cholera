@@ -4,12 +4,14 @@
 \alias{classifierAudit}
 \title{Test if observed case "belongs" to segment.}
 \usage{
-classifierAudit(case = 483, segment = "326-2")
+classifierAudit(case = 483, segment = "326-2", observed = TRUE)
 }
 \arguments{
 \item{case}{Numeric or Integer. Numeric ID of observed case.}
 
 \item{segment}{Character. Segment ID. See cholera::road.segments}
+
+\item{observed}{Logical. TRUE observed case; FALSE simulated case (cholera::regular.cases).}
 }
 \value{
 Logical TRUE or FALSE

@@ -4,7 +4,7 @@
 \alias{plot.classifier_audit}
 \title{Plot result of classifierAudit().}
 \usage{
-\method{plot}{classifier_audit}(x, radius = 0.1, ...)
+\method{plot}{classifier_audit}(x, radius = 0.5, ...)
 }
 \arguments{
 \item{x}{An object of class "classifier_audit" created by classifierAudit().}
