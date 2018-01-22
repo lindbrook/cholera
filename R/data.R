@@ -174,7 +174,7 @@
 #'
 #' For details, see \code{vignette}("pump.neighborhoods").
 #' @examples
-#' neighborhoodWalking()$pump.case
+#' # pumpCase(neighborhoodWalking())
 #' @docType data
 "pump.case"
 
@@ -188,7 +188,7 @@
 #'
 #' For details, see \code{vignette}("pump.neighborhoods").
 #' @examples
-#' neighborhoodWalking()$sim.pump.case
+#' # pumpCase(neighborhoodWalking(case.set = "expected"))
 #' @docType data
 "sim.pump.case"
 

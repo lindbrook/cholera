@@ -21,6 +21,6 @@ For details, see \code{vignette}("pump.neighborhoods").
 }
 
 \examples{
-neighborhoodWalking()$sim.pump.case
+# pumpCase(neighborhoodWalking(case.set = "expected"))
 }
 \keyword{datasets}
