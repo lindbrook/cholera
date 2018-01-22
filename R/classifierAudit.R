@@ -46,11 +46,15 @@ classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE) {
   distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
            stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
 
-  out <- list(segment = segment,
+  distance <- stats::dist(seg.df)
+
+  out <- list(case = case,
+              segment = segment,
               ols = ols,
               seg.df = seg.df,
               obs = obs,
-              test = signif(stats::dist(seg.df)) == signif(distB))
+              distance = distance,
+              test = signif(distance) == signif(distB))
 
   class(out) <- "classifier_audit"
   out
@@ -80,13 +84,16 @@ print.classifier_audit <- function(x, ...) {
 #' @param x An object of class "classifier_audit" created by classifierAudit().
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
+#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
 #' @param ... Additional parameters.
 #' @return A base R graphic.
 #' @export
 #' @examples
 #' plot(classifierAudit(case = 483, segment = "326-2"))
 
-plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, ...) {
+plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = NULL,
+  ...) {
+
   obs <- x$obs
   segment.slope <- stats::coef(x$ols)[2]
   segment.intercept <- stats::coef(x$ols)[1]
@@ -99,7 +106,7 @@ plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, ...) {
   y.proj <- segment.slope * x.proj + segment.intercept
 
   cholera::segmentLocator(x$segment, zoom = zoom, radius = radius,
-    subtitle = FALSE)
+    title = FALSE, subtitle = FALSE)
 
   # Bisection / Intersection test
   distB <- stats::dist(rbind(x$seg.df[1, ], c(x.proj, y.proj))) +
@@ -116,5 +123,21 @@ plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, ...) {
       lwd = 3)
   }
 
-  title(sub = x$test)
+  if (!is.null(unit)) {
+    if (unit == "meter") {
+      ortho.dist <- cholera::unitMeter(x$distance, "meter")
+      title(sub = paste(x$test, "; dist =", round(ortho.dist, 1),
+        "meters"))
+    } else if (unit == "yard") {
+      ortho.dist <- cholera::unitMeter(x$distance, "yard")
+      title(sub = paste(x$test, "; dist =", round(ortho.dist, 1),
+        "yards"))
+    }
+  } else {
+    title(sub = paste(x$test, "; dist =", round(x$distance, 1), "units"))
+  }
+
+  nm <- cholera::road.segments[cholera::road.segments$id == x$segment, "name"]
+
+  title(main = paste0(nm, ": Segment # ", x$segment, ", Case # ", x$case))
 }

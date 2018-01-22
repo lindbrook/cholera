@@ -4,7 +4,8 @@
 \alias{plot.classifier_audit}
 \title{Plot result of classifierAudit().}
 \usage{
-\method{plot}{classifier_audit}(x, zoom = TRUE, radius = 0.5, ...)
+\method{plot}{classifier_audit}(x, zoom = TRUE, radius = 0.5, unit = NULL,
+  ...)
 }
 \arguments{
 \item{x}{An object of class "classifier_audit" created by classifierAudit().}
@@ -12,6 +13,8 @@
 \item{zoom}{Logical.}
 
 \item{radius}{Numeric. Controls the degree of zoom.}
+
+\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
 
 \item{...}{Additional parameters.}
 }
