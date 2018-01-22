@@ -78,6 +78,7 @@ print.classifier_audit <- function(x, ...) {
 #'
 #' Plot case, segment and orthogonal projector.
 #' @param x An object of class "classifier_audit" created by classifierAudit().
+#' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param ... Additional parameters.
 #' @return A base R graphic.
@@ -85,7 +86,7 @@ print.classifier_audit <- function(x, ...) {
 #' @examples
 #' plot(classifierAudit(case = 483, segment = "326-2"))
 
-plot.classifier_audit <- function(x, radius = 0.5, ...) {
+plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, ...) {
   obs <- x$obs
   segment.slope <- stats::coef(x$ols)[2]
   segment.intercept <- stats::coef(x$ols)[1]
@@ -97,7 +98,7 @@ plot.classifier_audit <- function(x, radius = 0.5, ...) {
 
   y.proj <- segment.slope * x.proj + segment.intercept
 
-  cholera::segmentLocator(x$segment, zoom = TRUE, radius = radius,
+  cholera::segmentLocator(x$segment, zoom = zoom, radius = radius,
     subtitle = FALSE)
 
   # Bisection / Intersection test

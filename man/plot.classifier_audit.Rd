@@ -4,10 +4,12 @@
 \alias{plot.classifier_audit}
 \title{Plot result of classifierAudit().}
 \usage{
-\method{plot}{classifier_audit}(x, radius = 0.5, ...)
+\method{plot}{classifier_audit}(x, zoom = TRUE, radius = 0.5, ...)
 }
 \arguments{
 \item{x}{An object of class "classifier_audit" created by classifierAudit().}
+
+\item{zoom}{Logical.}
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
