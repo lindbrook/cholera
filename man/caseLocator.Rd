@@ -22,7 +22,7 @@ caseLocator(case, zoom = FALSE, observed = TRUE, radius = 2,
 A base R graphics plot.
 }
 \description{
-Highlight selected observed or simulated case.
+Highlight selected observed or simulated case and its home road segment.
 }
 \examples{
 caseLocator(290)

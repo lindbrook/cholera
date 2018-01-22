@@ -1,9 +1,9 @@
-cholera 0.2.9.9015
+cholera 0.2.9.9016
 ==================
 
-# Beta Testing #
+# In Beta #
 
-- addWalking() prototype
+- addWalking()
 
 # Data Changes #
 
@@ -21,6 +21,9 @@ cholera 0.2.9.9015
 
 - addSnow()
     "area", "street" and "boundary" graphical annotation.
+
+- caseLocator()
+    also highlights home road segment.
 
 - neighborhoodWalking()
     improvements in functionality and performance.
