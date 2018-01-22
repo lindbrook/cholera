@@ -2,7 +2,7 @@
 #'
 #' Highlights the selected road segment and its cases.
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.
-#' @param zoom Logical.
+#' @param zoom Logical. Default is FALSE.
 #' @param radius Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.
 #' @param cases Character. Plot cases: NULL, "anchors" or "all".
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
@@ -44,7 +44,6 @@ segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
       asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
 
-   # } else if (zoom & radius <= 5) {
   } else {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = NA, asp = 1)

@@ -5,8 +5,8 @@
 #' @return A list of pump neighborhoods with the numeric ID of observed cases.
 #' @export
 #' @examples
-#' pumpCase(neighborhoodVoronoi())
-#' pumpCase(neighborhoodWalking())
+#' # pumpCase(neighborhoodVoronoi())
+#' # pumpCase(neighborhoodWalking())
 
 pumpCase <- function(obj) UseMethod("pumpCase", obj)
 

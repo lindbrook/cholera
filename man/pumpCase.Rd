@@ -16,8 +16,8 @@ A list of pump neighborhoods with the numeric ID of observed cases.
 Extract numeric case IDs by neighborhood.
 }
 \examples{
-pumpCase(neighborhoodVoronoi())
-pumpCase(neighborhoodWalking())
+# pumpCase(neighborhoodVoronoi())
+# pumpCase(neighborhoodWalking())
 }
 \seealso{
 \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodWalking}},

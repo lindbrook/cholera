@@ -31,22 +31,22 @@ The function uses a case's "address" or "anchor" case to compute distance. Becau
 }
 \examples{
 # path from case 1 to nearest pump.
-walkingDistance(1)
+# walkingDistance(1)
 
 # path from case 1 to nearest pump in meters (appox).
-walkingDistance(1, unit = "meter")
+# walkingDistance(1, unit = "meter")
 
 # path from case 1 to pump 6.
-walkingDistance(1, 6)
+# walkingDistance(1, 6)
 
 # exclude pump 7 from consideration.
-walkingDistance(1, -7)
+# walkingDistance(1, -7)
 
 # path from case 1 to case 6.
-walkingDistance(1, 6, type = "cases")
+# walkingDistance(1, 6, type = "cases")
 
 # path from pump 1 to pump 6.
-walkingDistance(1, 6, type = "pumps")
+# walkingDistance(1, 6, type = "pumps")
 }
 \seealso{
 \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
