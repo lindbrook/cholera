@@ -5,7 +5,7 @@
 \title{Locate road segment by ID.}
 \usage{
 segmentLocator(id, zoom = FALSE, radius = 0.5, cases = "anchors",
-  unit = NULL, subtitle = TRUE)
+  unit = NULL, title = TRUE, subtitle = TRUE)
 }
 \arguments{
 \item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
@@ -18,7 +18,9 @@ segmentLocator(id, zoom = FALSE, radius = 0.5, cases = "anchors",
 
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
 
-\item{subtitle}{Logical. Print segment length subtitle.}
+\item{title}{Logical. Print title.}
+
+\item{subtitle}{Logical. Print subtitle.}
 }
 \value{
 A base R graphics plot.

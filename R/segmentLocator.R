@@ -6,7 +6,8 @@
 #' @param radius Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.
 #' @param cases Character. Plot cases: NULL, "anchors" or "all".
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
-#' @param subtitle Logical. Print segment length subtitle.
+#' @param title Logical. Print title.
+#' @param subtitle Logical. Print subtitle.
 #' @seealso \code{\link{road.segments}}
 #' @return A base R graphics plot.
 #' @import graphics
@@ -18,7 +19,7 @@
 #' segmentLocator("216-1", unit = "meter")
 
 segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
-  unit = NULL, subtitle = TRUE) {
+  unit = NULL, title = TRUE, subtitle = TRUE) {
 
   if (is.character(id) == FALSE) {
     stop('"id" must be a character.')
@@ -79,7 +80,8 @@ segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
   text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1,
     col = "blue")
   segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
-  title(main = paste0(st$name, ": Segment # ", id))
+
+  if (title) title(main = paste0(st$name, ": Segment # ", id))
 
   if (subtitle) {
     if (is.null(unit)) {
