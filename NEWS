@@ -17,13 +17,13 @@ cholera 0.2.9.9016
     fix for case 3173 for neighborhood area plots:
       Wardour Street ("188-1") -> Richmond Mews ("189-1").
 
-# Function Changes #
+# Added Functionality #
 
 - addSnow()
     "area", "street" and "boundary" graphical annotation.
 
 - caseLocator()
-    also highlights home road segment.
+    highlight home road segment.
 
 - neighborhoodWalking()
     improvements in functionality and performance.
