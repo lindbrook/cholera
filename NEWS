@@ -1,9 +1,5 @@
-cholera 0.2.9.9016
+cholera 0.2.9.9017
 ==================
-
-# In Beta #
-
-- addWalking()
 
 # Data Changes #
 
@@ -14,7 +10,7 @@ cholera 0.2.9.9016
       from Poland Street ("194-1") -> St James Workhouse ("148-1").
 
 - regular.cases:
-    fix for case 3173 for neighborhood area plots:
+    fix for case 3173 in neighborhoodWalking() for area plot:
       Wardour Street ("188-1") -> Richmond Mews ("189-1").
 
 # Added Functionality #
@@ -36,13 +32,13 @@ cholera 0.2.9.9016
 
 - timeSeries()
 - walkingDistance()
+    incorporates and deprecates walkingPath().
 
 # New Functions #
 
 - addIndexCase()
 - nearestPath()
 - nearestPump()
-- neighborhoodDistances()
 - nodeData()
 - segmentLength()
 - snowNeighborhood()
