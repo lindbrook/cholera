@@ -10,10 +10,10 @@ cholera 0.2.9.9017
       from Poland Street ("194-1") -> St James Workhouse ("148-1").
 
 - regular.cases:
-    fix for case 3173 in neighborhoodWalking() for area plot:
+    fix for case 3173 for area plot in neighborhoodWalking():
       Wardour Street ("188-1") -> Richmond Mews ("189-1").
 
-# Added Functionality #
+# Function Changes #
 
 - addSnow()
     "area", "street" and "boundary" graphical annotation.
@@ -22,7 +22,8 @@ cholera 0.2.9.9017
     highlight home road segment.
 
 - neighborhoodWalking()
-    improvements in functionality and performance.
+    "case-set" argument: "observed", "expected" and "snow".
+    updated implementation and improved performance.
 
 - segmentLocator(), streetNameLocator() and streetNumberLocator()
     highlight segment or street cases.
