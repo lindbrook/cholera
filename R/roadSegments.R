@@ -1,4 +1,4 @@
-#' Reshape roads data frame into road.segments data frame.
+#' Reshape 'roads' data frame into 'road.segments' data frame.
 #'
 #' For use in integrating pumps and cases into road network needed to compute walking neighborhoods.
 #' @return An R data frame.

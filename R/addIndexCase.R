@@ -1,10 +1,10 @@
 #' Highlight index case at 40 Broad Street.
 #'
-#' @param cex Numeric. cex for point()
-#' @param col Character. Color of point().
+#' @param cex Numeric. Size of point.
+#' @param col Character. Color of point.
 #' @param pch Numeric. Type of of point.
-#' @param add.label Logical. Add text annotation: 40 Broad Street.
-#' @param text.size Numeric. cex for text labels.
+#' @param add.label Logical. Add text annotation: "40 Broad Street"
+#' @param text.size Numeric. Sine of text label.
 #' @param ... Additional plotting parameters.
 #' @seealso \code{\link{snowMap}},
 #' \code{\link{addKernelDensity}},

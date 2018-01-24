@@ -2,7 +2,7 @@
 % Please edit documentation in R/classifierAudit.R
 \name{classifierAudit}
 \alias{classifierAudit}
-\title{Test if observed case "belongs" to segment.}
+\title{Test if case is orthogonal to segment.}
 \usage{
 classifierAudit(case = 483, segment = "326-2", observed = TRUE)
 }
@@ -17,8 +17,8 @@ classifierAudit(case = 483, segment = "326-2", observed = TRUE)
 Logical TRUE or FALSE
 }
 \description{
-Uses orthogonal projector from an observed case to see if it intersects a segment.
+Diagnostic to classify case by road segment.
 }
 \note{
-This is a diagnostics function. It is not a guarantee of correct classification.
+This function is a diagnostic. It is not a guarantee of correct classification.
 }

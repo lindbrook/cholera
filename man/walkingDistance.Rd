@@ -47,6 +47,9 @@ The function uses a case's "address" or "anchor" case to compute distance. Becau
 
 # path from pump 1 to pump 6.
 # walkingDistance(1, 6, type = "pumps")
+
+# Plot result
+plot(walkingDistance(1, unit = "meter"))
 }
 \seealso{
 \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}

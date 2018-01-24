@@ -2,24 +2,24 @@
 % Please edit documentation in R/addSnow.R
 \name{addSnow}
 \alias{addSnow}
-\title{Adds Snow's Broad Street pump walking neighborhood.}
+\title{Adds Snow's graphical annotation of the Broad Street pump walking neighborhood.}
 \usage{
 addSnow(type = "street", color = "dodgerblue", alpha.level = 0.25,
   line.width = 2, ...)
 }
 \arguments{
-\item{type}{Character. "area", "boundary" or "street".}
+\item{type}{Character. Type of annotation plot: "area", "boundary" or "street".}
 
 \item{color}{Character. Neighborhood color.}
 
-\item{alpha.level}{Numeric. A value in [0, 1] to set alpha level transparency for area plot.}
+\item{alpha.level}{Numeric. Alpha level transparency: a value in [0, 1].}
 
-\item{line.width}{Numeric. lwd for "street" and "boundary"}
+\item{line.width}{Numeric. Line width for "street" and "boundary".}
 
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Reproduces Snow's graphical annotation of the Vestry Report map.
+Uses alphahull::ashape().
 }
 \examples{
 # plot(neighborhoodVoronoi())

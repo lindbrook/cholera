@@ -7,14 +7,14 @@
 addPlaguePit(color = "black", line.type = "solid", ...)
 }
 \arguments{
-\item{color}{Character. Color of circle.}
+\item{color}{Character. Color of polygon.}
 
-\item{line.type}{Character. Type of line for circle.}
+\item{line.type}{Character. Polygon line type.}
 
 \item{...}{Additional plotting parameters.}
 }
 \value{
-Adds a polygon, based on multiple base R line segments, to a graphics plot.
+Adds a polygon to a graphics plot.
 }
 \description{
 Draws a polygon that approximates the plague pit located around Marshall Street. From Vestry Report map.

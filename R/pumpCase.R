@@ -1,8 +1,8 @@
-#' Extract numeric case IDs by neighborhood.
+#'  Numeric case IDs by pump neighborhood.
 #'
 #' @param obj An object created by neighborhoodVoronoi() or neighborhoodWalking().
 #' @seealso \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodWalking}},
-#' @return A list of pump neighborhoods with the numeric ID of observed cases.
+#' @return A list of pump neighborhoods with the numeric ID of cases.
 #' @export
 #' @examples
 #' # pumpCase(neighborhoodVoronoi())

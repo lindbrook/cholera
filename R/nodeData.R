@@ -1,10 +1,10 @@
 #' Compute network graph of roads, cases and pumps.
 #'
-#' Embed "anchor" cases and pumps into road network graph.
-#' @param embed Logical. TRUE embeds sites into road network. FALSE returns just the road network.
+#' Assembles "anchor" cases, pumps and road into a network graph.
+#' @param embed Logical. TRUE embeds cases and pumps into road network. FALSE returns just the road network.
 #' @param vestry Logical. Use Vestry Report pump data.
 #' @export
-#' @return An R list of nodes, edges and an "igraph" package network graph.
+#' @return An R list of nodes, edges and an 'igraph' network graph.
 
 nodeData <- function(embed = TRUE, vestry = FALSE) {
   case.segments <- unique(cholera::ortho.proj[cholera::ortho.proj$case %in%

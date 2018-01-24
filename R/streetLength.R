@@ -1,6 +1,6 @@
 #' Compute length of selected street.
 #'
-#' @param road Character or Numeric. Road name or number. For names, the function ries to correct for case and to remove extra spaces.
+#' @param road Character or Numeric. Road name or number. For names, the function tries to correct for case and to remove extra spaces.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
 #' @return  An R vector of length one.
 #' @seealso \code{\link{roads}}, code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}

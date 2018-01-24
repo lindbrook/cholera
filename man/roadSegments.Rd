@@ -2,7 +2,7 @@
 % Please edit documentation in R/roadSegments.R
 \name{roadSegments}
 \alias{roadSegments}
-\title{Reshape roads data frame into road.segments data frame.}
+\title{Reshape 'roads' data frame into 'road.segments' data frame.}
 \usage{
 roadSegments()
 }

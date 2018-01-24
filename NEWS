@@ -24,6 +24,7 @@ cholera 0.2.9.9017
 - neighborhoodWalking()
     "case-set" argument: "observed", "expected" and "snow".
     updated implementation and improved performance.
+    pre-computed configurations from version 0.2.1 removed.
 
 - segmentLocator(), streetNameLocator() and streetNumberLocator()
     highlight segment or street cases.

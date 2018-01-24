@@ -17,17 +17,19 @@ John Snow's map of the 1854 cholera outbreak in the Soho area of London is one o
 
 ![](vignettes/msu-snows-mapB.jpg)
 
-By plotting the number and location of fatalities on a map, Snow was able to do something that we take for granted today: visualizing the spatial distribution of cholera cases. To our modern eye, the pattern on the map is unmistakable. Snow's claims, that cholera is a waterborne disease and that the pump on Broad Street was the source of the outbreak, seem almost self-evident. And yet, despite the map both the authorities and Snow's colleagues in the medical and scientific communities were not convinced that Snow was right.
+By plotting the number and location of fatalities on a map, Snow was able to do something that we take for granted today: an ability to create and disseminate visual displays of a spatial distribution. To our modern eye, the pattern is unmistakable. Snow's claims, that cholera is a waterborne disease and that the pump on Broad Street is the source of the outbreak, seem unmistakeable. And yet, despite the map both the authorities and Snow's colleagues in the medical and scientific communities were not convinced.
 
-Beyond considerations of time and place, I would suggest that there are "scientific" reasons why the map failed to impress and why it still fails to do so. While the map does shows a concentration of fatalities around the Broad Street pump, it actually doesn't exclude rival explanation. The pattern is not clearly different from what airborne transmission (i.e., miasma) might look like. To address this problem, I would argue that this is the reason why Snow added a graphical annotation in a second, lesser-known version of the map, which was published in the official report on the outbreak:
+Beyond considerations of time and place, I would suggest that there are also "scientific" reasons why the map failed to impress and why it still fails to do so. While the map does shows a concentration of fatalities around the Broad Street pump, it doesn't help to exclude rival explanations. In fact, the pattern we see is not clearly different from what the principal rival explanation, airborne transmission or miasma theory, might look like. 
+
+To address this, I would argue that this may be one reason why Snow added a graphical annotation in a second, lesser-known version of the map:
 
 ![](vignettes/fig12-6.png)
 
 ### pump neighborhoods
 
-This annotation outlines the Broad Street _pump neighborhood_, the residences that are, according to Snow, within "close" walking distance to the pump. The notion of a pump neighborhood is key to Snow's claims because it provides a prediction about where we should and, equally important, where we shouldn't expect to find cases. If water is cholera's mode of transmission and if water pumps located on the street are the primary source of drinking water, then most, if not all, fatalities should be found _within_ a neighborhood. The disease should stop at the neighborhood's borders.
+This annotation outlines what we might call the Broad Street _pump neighborhood_. These are the residences that are, according to Snow, within "close" walking distance to the pump. The notion of a pump neighborhood is key because it provides a prediction about where we should and where we should _not_ expect to find cases. If water is cholera's mode of transmission and if water pumps are the primary source of drinking water, then most, if not all, fatalities should be found _within_ a neighborhood. The disease should stop at the neighborhood's borders.
 
-However, to accurately compute the Broad Street pump neighborhood means being able to compute the neighborhoods of surrounding pumps. To that end, this release builds on Snow's efforts by computing two different types of neighborhoods. The first uses Voronoi tessellation. It works by computing the Euclidean distances between pumps. While popular and easy to compute, its only drawback is that roads and walking distance play no role in the choice of pump: the method assumes that people can walk through walls to get to their preferred pump.
+However, to compute the a pump neighborhood means being able to compute the neighborhoods of surrounding pumps. To that end, this package builds on Snow's effort by computing two different types of neighborhoods. The first uses Voronoi tessellation. It works by computing the Euclidean distances between pumps. While popular and easy to compute, its drawback is that roads and walking distance play no role in the choice of pump. The method assumes that people can walk through walls to get to their preferred pump.
 
 ```{r, echo = FALSE}
 library(cholera)
@@ -38,7 +40,7 @@ plot(neighborhoodVoronoi())
 addLandmarks()
 ```
 
-The second method, which follows Snow's lead, computes neighborhoods based on the "actual" walking distance. While more accurate, it is computationally more demanding to compute than Voronoi tessellation. To do so, I transform the roads on the map into a network graph and turn the computation of walking distance into a graph theory problem. For each case (observed or simulated), I compute the shortest path to the nearest pump, weighted by road distance. Then by applying the "rinse and repeat" principle, the different pump neighborhoods emerge:
+The second method computes neighborhoods based on the "actual" walking distance. While more accurate, it's computationally more demanding than Voronoi tessellation. To do so, I transform the roads on the map into a network graph and turn the computation of walking distance into a graph theory problem. For each case (observed or simulated), I compute the shortest path, weighted by road distance, to the nearest pump. Then by applying the "rinse and repeat" principle, the different pump neighborhoods emerge:
 
 ```{r walk, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodWalking())
@@ -81,7 +83,7 @@ To install "cholera"" (v. 0.2.1) from CRAN:
 install.packages("cholera")
 ```
 
-To install the current development version (v. 0.2.9.9017) from GitHub:
+To install the current development version (v. 0.2.9.9018) from GitHub:
 
 ```{r, eval = FALSE}
 # Note that you may need to install the 'devtools' package:
@@ -93,6 +95,6 @@ Read the package's vignettes. They include detailed discussions about the data, 
 
 ### note
 
-neighborhoodWalking() is computationally intensive. Using the development version on a single core of a 2.3 GHz Intel i7, plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds.
+neighborhoodWalking() is computationally intensive. Using the development version on a single core of a 2.3 GHz Intel i7, plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds. When using the function's parallel implementation, these times fall to approximately 6 and 15 seconds using 4 physical or 8 logical cores.
 
-When using the function's parallel implementation (currently only available on Linux and Mac and which the developers of the 'parallel' package strongly discourages against using in a GUI or embedded environment), these times fall to approximately 6 and 15 seconds using 4 physical or 8 logical cores.
+Note that the parallelized version is currently only available on Linux and Mac. Also, note that the developers of the 'parallel' package strongly discourage against using paralleization within a GUI or embedded environment.

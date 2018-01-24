@@ -2,7 +2,7 @@
 #'
 #' A best guess estimate.
 #' @param x Numeric. Nominal map distance.
-#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on coordinate unit distances.
+#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @export
 
 unitMeter <- function(x, unit = NULL) {

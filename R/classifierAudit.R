@@ -1,12 +1,15 @@
-#' Test if observed case "belongs" to segment.
+#' Test if case is orthogonal to segment.
 #'
-#' Uses orthogonal projector from an observed case to see if it intersects a segment.
+#' Diagnostic to classify case by road segment.
 #' @param case Numeric or Integer. Numeric ID of observed case.
 #' @param segment Character. Segment ID. See cholera::road.segments
 #' @param observed Logical. TRUE observed case; FALSE simulated case (cholera::regular.cases).
-#' @note This is a diagnostics function. It is not a guarantee of correct classification.
+#' @note This function is a diagnostic. It is not a guarantee of correct classification.
 #' @return Logical TRUE or FALSE
 #' @export
+#' @example
+#' classifierAudit(case = 483, segment = "326-2")
+#' plot(classifierAudit(case = 483, segment = "326-2"))
 
 classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE) {
   if (!is.numeric(case)) {

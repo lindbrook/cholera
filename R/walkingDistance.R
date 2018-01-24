@@ -28,6 +28,9 @@
 #'
 #' # path from pump 1 to pump 6.
 #' # walkingDistance(1, 6, type = "pumps")
+#'
+#' # Plot result
+#' plot(walkingDistance(1, unit = "meter"))
 
 walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   weighted = TRUE, vestry = FALSE, unit = NULL) {

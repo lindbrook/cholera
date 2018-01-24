@@ -1,8 +1,8 @@
 #' Add Rev. Henry Whitehead's Broad Street pump neighborhood.
 #'
-#' Adds a circle with a given radius from a specified water pump. By default, the function draws Whitehead's pump neighborhood: a circle, centered on the Broad Street pump, with a radius of 210 yards.
+#' A circle (polygon), centered around a desired pump with a radius of 210 yards. The Broad Street pump is the default.
 #' @param radius Numeric. Distance from a pump in yards
-#' @param pump Character. The name of the pump, the street name where it is located. See \code{pumps} or \code{pumps.vestry}.
+#' @param pump Character. Name of selected pump (road name). See \code{pumps} or \code{pumps.vestry}.
 #' @param color Character. Color of circle.
 #' @param line.type Character. Circle line type.
 #' @param vestry Logical. TRUE uses the 14 pumps and locations from Vestry report. FALSE uses original 13 pumps.
@@ -14,7 +14,7 @@
 #' \code{\link{addPlaguePit}},
 #' \code{\link{addSnow}},
 #' \code{\link{addVoronoi}}
-#' @return Draws a circle, based on multiple line segments, to a graphics plot.
+#' @return Adds a circle (polygon) to a graphics plot.
 #' @seealso \code{\link{addLandmarks}}
 #' @import graphics
 #' @export

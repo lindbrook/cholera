@@ -1,10 +1,10 @@
-#' Adds Snow's Broad Street pump walking neighborhood.
+#' Adds Snow's graphical annotation of the Broad Street pump walking neighborhood.
 #'
-#' Reproduces Snow's graphical annotation of the Vestry Report map.
-#' @param type Character. "area", "boundary" or "street".
+#' Uses alphahull::ashape().
+#' @param type Character. Type of annotation plot: "area", "boundary" or "street".
 #' @param color Character. Neighborhood color.
-#' @param alpha.level Numeric. A value in [0, 1] to set alpha level transparency for area plot.
-#' @param line.width Numeric. lwd for "street" and "boundary"
+#' @param alpha.level Numeric. Alpha level transparency: a value in [0, 1].
+#' @param line.width Numeric. Line width for "street" and "boundary".
 #' @param ... Additional plotting parameters.
 #' @seealso \code{\link{snowMap}},
 #' \code{\link{addIndexCase}},

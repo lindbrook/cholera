@@ -8,15 +8,15 @@ addIndexCase(cex = 2, col = "red", pch = 1, add.label = FALSE,
   text.size = 0.5, ...)
 }
 \arguments{
-\item{cex}{Numeric. cex for point()}
+\item{cex}{Numeric. Size of point.}
 
-\item{col}{Character. Color of point().}
+\item{col}{Character. Color of point.}
 
 \item{pch}{Numeric. Type of of point.}
 
-\item{add.label}{Logical. Add text annotation: 40 Broad Street.}
+\item{add.label}{Logical. Add text annotation: "40 Broad Street"}
 
-\item{text.size}{Numeric. cex for text labels.}
+\item{text.size}{Numeric. Sine of text label.}
 
 \item{...}{Additional plotting parameters.}
 }

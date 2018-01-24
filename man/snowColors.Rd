@@ -13,5 +13,5 @@ snowColors(vestry = FALSE)
 A character vector of colors.
 }
 \description{
-Create a set of colors for pump neighborhoods.
+Uses RColorBrewer::brewer.pal().
 }

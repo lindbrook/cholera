@@ -1,4 +1,4 @@
-#' Compute length of road segment
+#' Compute length of road segment.
 #'
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.

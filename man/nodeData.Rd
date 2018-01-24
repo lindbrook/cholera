@@ -7,13 +7,13 @@
 nodeData(embed = TRUE, vestry = FALSE)
 }
 \arguments{
-\item{embed}{Logical. TRUE embeds sites into road network. FALSE returns just the road network.}
+\item{embed}{Logical. TRUE embeds cases and pumps into road network. FALSE returns just the road network.}
 
 \item{vestry}{Logical. Use Vestry Report pump data.}
 }
 \value{
-An R list of nodes, edges and an "igraph" package network graph.
+An R list of nodes, edges and an 'igraph' network graph.
 }
 \description{
-Embed "anchor" cases and pumps into road network graph.
+Assembles "anchor" cases, pumps and road into a network graph.
 }

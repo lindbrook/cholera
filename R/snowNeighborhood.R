@@ -1,4 +1,4 @@
-#' Data for plotting Snow's annotated neighborhood.
+#' Plotting data for Snow's graphicaal annotated of the Broad Street pump neighborhood.
 #'
 #' Computes "missing" and split road segments data, and area plot data.
 #' @return An R list of edge IDs and simulated case IDs (sim.ortho.proj).

@@ -7,7 +7,7 @@
 streetLength(road = "Oxford Street", unit = NULL)
 }
 \arguments{
-\item{road}{Character or Numeric. Road name or number. For names, the function ries to correct for case and to remove extra spaces.}
+\item{road}{Character or Numeric. Road name or number. For names, the function tries to correct for case and to remove extra spaces.}
 
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
 }

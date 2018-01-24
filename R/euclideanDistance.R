@@ -26,6 +26,9 @@
 #'
 #' # path from pump 1 to pump 6.
 #' euclideanDistance(1, 6, type = "pumps")
+#'
+#' # Plot result
+#' plot(euclideanDistance(1, unit = "meter"))
 
 euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
   vestry = FALSE, unit = NULL) {

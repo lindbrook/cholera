@@ -24,6 +24,10 @@ Aggregate time series fatality data from the Vestry report.
  The "snow" data appears on p. 117 of the report; the "vestry" data appear in Appendix B on p.175.
 }
 
+\examples{
+timeSeries(vestr = TRUE)
+plot(timeSeries())
+}
 \seealso{
 \code{\link{plot.time_series}}, \code{\link{print.time_series}}, \code{vignette("time.series")}
 }

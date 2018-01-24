@@ -10,6 +10,9 @@
 #' @section Note: The "snow" data appears on p. 117 of the report; the "vestry" data appear in Appendix B on p.175.
 #' @seealso \code{\link{plot.time_series}}, \code{\link{print.time_series}}, \code{vignette("time.series")}
 #' @export
+#' @examples
+#' timeSeries(vestr = TRUE)
+#' plot(timeSeries())
 
 timeSeries <- function(vestry = FALSE) {
   if (vestry) {

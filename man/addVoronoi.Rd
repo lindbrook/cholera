@@ -8,18 +8,18 @@ addVoronoi(pump.select = NULL, vestry = FALSE, color = "black",
   line.type = "solid", ...)
 }
 \arguments{
-\item{pump.select}{Numeric. Default is NULL and all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}.}
+\item{pump.select}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6).}
 
 \item{vestry}{Logical. FALSE for original 13 pumps. TRUE for 14 pumps in Vestry Report.}
 
-\item{color}{Character. Color of borders.}
+\item{color}{Character. Color of cell edges.}
 
-\item{line.type}{Character. Type of line for borders.}
+\item{line.type}{Character. Type of line for cell edges.}
 
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Computes and draws Voronoi cells using deldir::deldir().
+Uses deldir::deldir().
 }
 \examples{
 snowMap(add.landmarks = FALSE)

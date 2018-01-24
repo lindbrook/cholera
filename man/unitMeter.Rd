@@ -9,7 +9,7 @@ unitMeter(x, unit = NULL)
 \arguments{
 \item{x}{Numeric. Nominal map distance.}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on coordinate unit distances.}
+\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 }
 \description{
 A best guess estimate.

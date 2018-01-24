@@ -12,7 +12,7 @@ streetNumberLocator(road.number, zoom = FALSE, radius = 1,
 
 \item{zoom}{Logical.}
 
-\item{radius}{Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.}
+\item{radius}{Numeric. Controls the degree of zoom.}
 
 \item{cases}{Character. Plot cases: NULL, "anchors" or "all".}
 
@@ -22,7 +22,7 @@ streetNumberLocator(road.number, zoom = FALSE, radius = 1,
 A base R graphics plot.
 }
 \description{
-Highlight the selected road and its cases. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
+Highlight a road and its cases. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
 }
 \examples{
 streetNumberLocator(243)

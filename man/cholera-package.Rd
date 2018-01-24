@@ -24,7 +24,7 @@ To learn more, start with the vignettes:
 
 \code{vignette("duplicate.missing.cases")}
 
-\code{vignette("unstacking.fatalities")}
+\code{vignette("unstacking.bars")}
 
 \code{vignette("pump.neighborhoods")}
 

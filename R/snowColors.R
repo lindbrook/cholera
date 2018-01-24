@@ -1,5 +1,6 @@
 #' Create a set of colors for pump neighborhoods.
 #'
+#' Uses RColorBrewer::brewer.pal().
 #' @param vestry Logical. TRUE uses the 14 pumps in the Vestry Report. FALSE uses the original 13.
 #' @return A character vector of colors.
 #' @export
