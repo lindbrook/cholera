@@ -20,7 +20,7 @@ A base R plot.
 Plot method for neighborhoodWalking().
 }
 \examples{
-plot(neighborhoodWalking())
+# plot(neighborhoodWalking())
 # plot(neighborhoodWalking(case.set = "expected"))
 # plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 }
