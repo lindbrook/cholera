@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.2.9.9019-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
@@ -84,7 +84,7 @@ To install 'cholera' (v. 0.2.1) from CRAN:
 install.packages("cholera")
 ```
 
-To install the current development version (v. 0.2.9.9019) from GitHub:
+To install the current development version (v. 0.3.0) from GitHub:
 
 ``` r
 # Note that you may need to install the 'devtools' package:
