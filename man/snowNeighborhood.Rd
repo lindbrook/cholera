@@ -2,7 +2,7 @@
 % Please edit documentation in R/snowNeighborhood.R
 \name{snowNeighborhood}
 \alias{snowNeighborhood}
-\title{Plotting data for Snow's graphical annotated of the Broad Street pump neighborhood.}
+\title{Plotting data for Snow's graphical annotation of the Broad Street pump neighborhood.}
 \usage{
 snowNeighborhood()
 }
