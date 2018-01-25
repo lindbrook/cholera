@@ -137,7 +137,7 @@ print.walking <- function(x, ...) {
 #' @return A base R plot.
 #' @export
 #' @examples
-#' # plot(neighborhoodWalking())
+#' plot(neighborhoodWalking())
 #' # plot(neighborhoodWalking(case.set = "expected"))
 #' # plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 
