@@ -22,3 +22,7 @@ Diagnostic to classify case by road segment.
 \note{
 This function is a diagnostic. It is not a guarantee of correct classification.
 }
+\examples{
+classifierAudit(case = 483, segment = "326-2")
+plot(classifierAudit(case = 483, segment = "326-2"))
+}

@@ -7,7 +7,7 @@
 #' @note This function is a diagnostic. It is not a guarantee of correct classification.
 #' @return Logical TRUE or FALSE
 #' @export
-#' @example
+#' @examples
 #' classifierAudit(case = 483, segment = "326-2")
 #' plot(classifierAudit(case = 483, segment = "326-2"))
 
