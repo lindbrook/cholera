@@ -78,13 +78,13 @@ plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 
 ### getting started
 
-To install 'cholera' (v. 0.2.1) from CRAN:
+To install 'cholera' from CRAN:
 
 ``` r
 install.packages("cholera")
 ```
 
-To install the current development version (v. 0.3.0) from GitHub:
+To install the current/development version of 'cholera' from GitHub:
 
 ``` r
 # Note that you may need to install the 'devtools' package:
