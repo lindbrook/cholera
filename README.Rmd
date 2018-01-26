@@ -21,7 +21,7 @@ By plotting the number and location of fatalities on a map, Snow was able to do 
 
 Beyond considerations of time and place, there are "scientific" reasons for this failure. The map shows a concentration of cases around the Broad Street pump, but that alone should not convince us that Snow is right. The map doesn't refute Snow's primary rival, miasma theory. The pattern we see is not unlike what airborne transmission might look like. And while the presence of a pump near or at the epicenter of the distribution of fatalities is strong circumstantial evidence, it is still circumstantial. There are a host of rival explanations that the map doesn't consider and cannot rule out: location of sewer grates, elevation, weather patterns, etc..
 
-Arguable, this may be one reason why Snow added a graphical annotation in a second, lesser-known version of the map that was published in the official report on the outbreak (_Report On The Cholera Outbreak In The Parish Of St. James, Westminster, During The Autumn Of 1854_):
+Arguably, this may be one reason why Snow added a graphical annotation in a second, lesser-known version of the map that was published in the official report on the outbreak (_Report On The Cholera Outbreak In The Parish Of St. James, Westminster, During The Autumn Of 1854_):
 
 ![](vignettes/fig12-6.png)
 
