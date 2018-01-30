@@ -209,9 +209,9 @@ plot.walking <- function(x, area = FALSE, ...) {
     # Exclude Portland Mews last segment (zero length due to manual fix).
     missing.segments <- missing.segments[missing.segments != "160-3"]
 
-    # Check for split segments. To find the cut-point along a segment where
-    # paths lead to different pumps, I check for changes in destination using 1
-    # meter increments (approx.).
+    # Check for split segments. To find the cut-point on the segment where
+    # paths diverge and go to different pumps, I check for changes in
+    # destination using (approx.) 1 meter increments.
 
     nearest.pump <- parallel::mclapply(missing.segments, function(s) {
       seg.data <- cholera::road.segments[cholera::road.segments$id == s,
