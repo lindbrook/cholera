@@ -4,7 +4,8 @@
 \alias{snowMap}
 \title{Plot John Snow's cholera map.}
 \usage{
-snowMap(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE, ...)
+snowMap(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
+  add.title = FALSE, ...)
 }
 \arguments{
 \item{add.landmarks}{Logical. Add landmarks.}
@@ -12,6 +13,8 @@ snowMap(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE, ...)
 \item{vestry}{Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.}
 
 \item{stacked}{Logical. Use stacked fatalities.}
+
+\item{add.title}{Logical. Add title.}
 
 \item{...}{Additional plotting parameters.}
 }

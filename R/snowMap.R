@@ -4,6 +4,7 @@
 #' @param add.landmarks Logical. Add landmarks.
 #' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param stacked Logical. Use stacked fatalities.
+#' @param add.title Logical. Add title.
 #' @param ... Additional plotting parameters.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{addLandmarks}},
@@ -18,7 +19,9 @@
 #' snowMap()
 #' snowMap(vestry = TRUE, stacked = FALSE)
 
-snowMap <- function(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE, ...) {
+snowMap <- function(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
+  add.title = FALSE, ...) {
+
   x.range <- range(cholera::roads$x)
   y.range <- range(cholera::roads$y)
   borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
@@ -49,7 +52,9 @@ snowMap <- function(add.landmarks = TRUE, vestry = FALSE, stacked = TRUE, ...) {
       col = "blue")
   }
 
-  title(main = "Snow's Cholera Map")
+  if (add.title) {
+    title(main = "Snow's Cholera Map")
+  }
 
   if (add.landmarks) addLandmarks()
 }
