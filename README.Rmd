@@ -11,6 +11,33 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-"
 )
 ```
+### what's new
+
+```{r, echo = FALSE}
+library(cholera)
+```
+
+The original addKernelDensity() function pools all observations:
+
+```{r kde, fig.width = 6, fig.height = 6, message = FALSE}
+snowMap(add.landmarks = TRUE, add.title = TRUE)
+addKernelDensity()
+```
+
+Now you can view the kernel densitities of pump neighborhoods separately. Either as subset of the observed neighborhoods:
+
+```{r kde2, fig.width = 6, fig.height = 6, message = FALSE}
+snowMap()
+addKernelDensity(neighborhood = c(6, 8))
+```
+
+Or from neighborhoods you construct from a specified set of pumps: 
+
+```{r kde3, fig.width = 6, fig.height = 6, message = FALSE}
+snowMap()
+addKernelDensity(pump.select = c(6, 8))
+```
+
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
 John Snow's map of the 1854 cholera outbreak in London is one of the best known examples of data visualization and information design.
@@ -32,10 +59,6 @@ The annotation outlines what we might call the Broad Street _pump neighborhood_:
 Creating this annotation is not a trivial matter. To identify the neighborhood of the Broad Street pump, you actually need to identify the neighborhoods of surrounding pumps. Snow writes: "The inner dotted line on the map shews [sic] the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps ..." (Ibid., p. 109.).
 
 I build on Snow's efforts by writing functions that allow you to compute pump neighborhoods. There are two flavors. The first is based on Voronoi tessellation. It works by computing the Euclidean distances between pumps. It's easy to compute and has been a popular choice for analysts of Snow's map. However, it has two drawbacks: 1) roads and buildings play no role. It assumes that people can walk directly to their preferred pump; and 2) it's not what Snow has in mind. For that, you'll need to consider the second flavor.
-
-```{r, echo = FALSE}
-library(cholera)
-```
 
 ```{r voronoi, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodVoronoi())

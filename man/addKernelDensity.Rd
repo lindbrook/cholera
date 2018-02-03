@@ -4,17 +4,26 @@
 \alias{addKernelDensity}
 \title{Add 2D kernel density contours.}
 \usage{
-addKernelDensity(bandwidth = 0.5, color = "black", line.type = "solid",
-  data = NULL, ...)
+addKernelDensity(neighborhood = "pooled", pump.select = NULL,
+  walking.neighborhood = TRUE, data = NULL, bandwidth = 0.5,
+  color = "black", line.type = "solid", multi.core = FALSE, ...)
 }
 \arguments{
+\item{neighborhood}{Character or Numeric: "pooled", "all", or numeric vector of observed pump neighborhoods (3 through 12 or [3, 12]).}
+
+\item{pump.select}{Numeric. A vector of pumps to consider.}
+
+\item{walking.neighborhood}{Logical. FALSE uses voronoi neighborhoods.}
+
+\item{data}{Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "fatality" uses \code{fatalities}.}
+
 \item{bandwidth}{Numeric. Bandwidth for kernel density estimation.}
 
 \item{color}{Character. Color of contour lines.}
 
 \item{line.type}{Character. Line type for contour lines.}
 
-\item{data}{Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "fatality" uses \code{fatalities}.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -25,8 +34,17 @@ Add contours to a graphics plot.
 Uses KernSmooth::bkde2D().
 }
 \examples{
-snowMap(add.landmarks = FALSE)
-addKernelDensity()
+# snowMap()
+# addKernelDensity()
+
+# snowMap()
+# addKernelDensity("all")
+
+# snowMap()
+# addKernelDensity(c(6, 8))
+
+# snowMap()
+# addKernelDensity(pump.select = c(6, 8))
 }
 \seealso{
 \code{\link{snowMap}},

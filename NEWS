@@ -1,6 +1,10 @@
 cholera 0.3.0.9000
 ==================
 
+- update addKernelDensity().
+  "neighborhood" and "pump.select" arguments.
+
+
 cholera 0.3.0
 ==================
 
