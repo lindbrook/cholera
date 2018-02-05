@@ -3,6 +3,7 @@
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
+#' @param observed Logical. Use observed or "simulated" expected data.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of nodes.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
@@ -33,7 +34,7 @@
 #' plot(walkingDistance(1, unit = "meter"))
 
 walkingDistance <- function(origin, destination = NULL, type = "case-pump",
-  weighted = TRUE, vestry = FALSE, unit = NULL) {
+  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = NULL) {
 
   if (is.null(unit) == FALSE) {
     if (unit %in% c("meter", "yard") == FALSE)
@@ -44,10 +45,18 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
     stop('"type" must be "case-pump", "cases" or "pumps".')
   }
 
-  if (vestry) {
-    node.data <- cholera::nodeData(vestry = TRUE)
+  if (observed) {
+    if (vestry) {
+      node.data <- cholera::nodeData(vestry = TRUE)
+    } else {
+      node.data <- cholera::nodeData()
+    }
   } else {
-    node.data <- cholera::nodeData()
+    if (vestry) {
+      node.data <- cholera::nodeData(vestry = TRUE, observed = FALSE)
+    } else {
+      node.data <- cholera::nodeData(observed = FALSE)
+    }
   }
 
   nodes <- node.data$nodes
@@ -55,8 +64,18 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   g <- node.data$g
 
   if (type == "case-pump") {
-    if (origin %in% 1:578 == FALSE) {
-      stop('With type = "case-pump", "origin" must be between 1 and 578.')
+    if (observed) {
+      if (origin %in% 1:578 == FALSE) {
+        txt1 <- 'With type = "case-pump" and "observed" = TRUE,'
+        txt2 <- '"origin" must be between 1 and 578.'
+        stop(paste(txt1, txt2))
+      }
+    } else {
+      if (origin %in% 1:4993 == FALSE) {
+        txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
+        txt2 <- '"origin" must be between 1 and 4993.'
+        stop(paste(txt1, txt2))
+      }
     }
 
     if (!is.null(destination)) {
@@ -85,9 +104,14 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
       }
     }
 
-    ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
-      "anchor.case"]
-    ego.node <- nodes[nodes$anchor == ego.id, "node"]
+    if (observed) {
+      ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
+        "anchor.case"]
+      ego.node <- nodes[nodes$anchor == ego.id, "node"]
+    } else {
+      ego.id <- origin
+      ego.node <- nodes[nodes$anchor == ego.id, "node"]
+    }
 
     if (!is.null(destination)) {
       if (all(destination < 0)) {
@@ -122,26 +146,48 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
                       row.names = NULL)
 
   } else if (type == "cases") {
-    if (any(abs(c(origin, destination)) %in% 1:578 == FALSE)) {
-      txt1 <- 'With type = "cases", the absolute value of both "origin"'
-      txt2 <- 'and "destination" must be between 1 and 578.'
-      stop(paste(txt1, txt2))
+    if (observed) {
+      if (any(abs(c(origin, destination)) %in% 1:578 == FALSE)) {
+        txt1 <- 'With type = "cases", the absolute value of both "origin"'
+        txt2 <- 'and "destination" must be between 1 and 578.'
+        stop(paste(txt1, txt2))
+      }
+    } else {
+      if (any(abs(c(origin, destination)) %in% 1:4993 == FALSE)) {
+        txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
+        txt2 <- 'both "origin" and "destination" must be between 1 and 4993.'
+        stop(paste(txt1, txt2))
+      }
     }
 
-    ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
-      "anchor.case"]
-    ego.node <- nodes[nodes$anchor == ego.id, "node"]
+    if (observed) {
+      ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
+        "anchor.case"]
+      ego.node <- nodes[nodes$anchor == ego.id, "node"]
+    } else {
+      ego.id <- origin
+      ego.node <- nodes[nodes$anchor == ego.id, "node"]
+    }
 
     if (is.null(destination)) {
       alters <- nodes[nodes$anchor != 0 & nodes$node != ego.node, "node"]
     } else {
-      if (all(destination > 0)) {
-        alter.case <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
-          destination, "anchor.case"])
-      } else if (all(destination < 0)) {
-        alter.case <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
-          abs(destination) == FALSE, "anchor.case"])
+      if (observed) {
+        if (all(destination > 0)) {
+          alter.case <- unique(cholera::anchor.case[cholera::anchor.case$case
+            %in% destination, "anchor.case"])
+        } else if (all(destination < 0)) {
+          alter.case <- unique(cholera::anchor.case[cholera::anchor.case$case
+            %in% abs(destination) == FALSE, "anchor.case"])
+        }
+      } else {
+        if (all(destination > 0)) {
+          alter.case <- nodes$anchor[nodes$anchor %in% destination]
+        } else if (all(destination < 0)) {
+          alter.case <- nodes$anchor[nodes$anchor %in% destination == FALSE]
+        }
       }
+
       alters <- nodes$node[nodes$anchor %in% alter.case &
                            nodes$node != ego.node]
     }

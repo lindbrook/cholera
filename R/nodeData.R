@@ -3,12 +3,19 @@
 #' Assembles "anchor" cases, pumps and road into a network graph.
 #' @param embed Logical. TRUE embeds cases and pumps into road network. FALSE returns just the road network.
 #' @param vestry Logical. Use Vestry Report pump data.
+#' @param observed Logical. Use observed or "simulated" expected data.
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
-nodeData <- function(embed = TRUE, vestry = FALSE) {
-  case.segments <- unique(cholera::ortho.proj[cholera::ortho.proj$case %in%
-    cholera::fatalities.address$anchor.case, "road.segment"])
+nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
+  if (observed) {
+    case.segments <- unique(cholera::ortho.proj[cholera::ortho.proj$case %in%
+      cholera::fatalities.address$anchor.case, "road.segment"])
+  } else {
+    sim.proj <- simProj()
+    case.segments <- unique(sim.proj$road.segment)
+    case.segments <- case.segments[is.na(case.segments) == FALSE]
+  }
 
   road.segments <- cholera::road.segments
 
@@ -25,12 +32,23 @@ nodeData <- function(embed = TRUE, vestry = FALSE) {
 
     edits <- c(case.pump, case.no_pump, no_case.pump)
 
-    if (vestry) {
-      nodes <- lapply(edits, embedSites, vestry = TRUE)
-      edges <- lapply(edits, embedSites, type = "edges", vestry = TRUE)
+    if (observed) {
+      if (vestry) {
+        nodes <- lapply(edits, embedSites, vestry = TRUE)
+        edges <- lapply(edits, embedSites, type = "edges", vestry = TRUE)
+      } else {
+        nodes <- lapply(edits, embedSites)
+        edges <- lapply(edits, embedSites, type = "edges")
+      }
     } else {
-      nodes <- lapply(edits, embedSites)
-      edges <- lapply(edits, embedSites, type = "edges")
+      if (vestry) {
+        nodes <- lapply(edits, embedSites, vestry = TRUE, observed = FALSE)
+        edges <- lapply(edits, embedSites, type = "edges", vestry = TRUE,
+          observed = FALSE)
+      } else {
+        nodes <- lapply(edits, embedSites, observed = FALSE)
+        edges <- lapply(edits, embedSites, type = "edges", observed = FALSE)
+      }
     }
 
     # Edges #
@@ -40,7 +58,12 @@ nodeData <- function(embed = TRUE, vestry = FALSE) {
     road.segments <- road.segments[road.segments$id %in% edits == FALSE, ]
     road.segments$node1 <- paste0(road.segments$x1, "-", road.segments$y1)
     road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
-    road.segments$id2 <- paste0(road.segments$id, "a")
+
+    if (observed) {
+      road.segments$id2 <- paste0(road.segments$id, "a")
+    } else {
+      road.segments$id2 <- paste0(road.segments$id, "-1")
+    }
 
     edges <- rbind(edges, road.segments)
     edges$d <- sqrt((edges$x1 - edges$x2)^2 + (edges$y1 - edges$y2)^2)
@@ -83,7 +106,13 @@ nodeData <- function(embed = TRUE, vestry = FALSE) {
   } else {
     road.segments$node1 <- paste0(road.segments$x1, "-", road.segments$y1)
     road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
-    road.segments$id2 <- paste0(road.segments$id, "a")
+
+    if (observed) {
+      road.segments$id2 <- paste0(road.segments$id, "a")
+    } else {
+      road.segments$id2 <- paste0(road.segments$id, "-1")
+    }
+
     road.segments$d <- sqrt((road.segments$x1 - road.segments$x2)^2 +
                             (road.segments$y1 - road.segments$y2)^2)
 
@@ -105,13 +134,14 @@ nodeData <- function(embed = TRUE, vestry = FALSE) {
   }
 }
 
-embedSites <- function(id, type = "nodes", vestry = FALSE) {
+embedSites <- function(id, type = "nodes", vestry = FALSE, observed = TRUE) {
   if (id %in% cholera::road.segments$id == FALSE) {
       stop('Valid "id" values are listed in cholera::road.segments$id.')
   }
 
   road.data <- cholera::road.segments[cholera::road.segments$id == id, ]
 
+if (observed) {
   if (road.data$id %in% cholera::ortho.proj$road.segment) {
     road.fatalities <- cholera::ortho.proj[cholera::ortho.proj$road.segment %in%
       road.data$id, ]
@@ -124,6 +154,20 @@ embedSites <- function(id, type = "nodes", vestry = FALSE) {
                       anchor = road.address$case,
                       pump = 0)
   }
+} else {
+  sim.proj <- simProj()
+
+  if (road.data$id %in% sim.proj$road.segment) {
+    road.fatalities <- sim.proj[sim.proj$road.segment %in% road.data$id, ]
+
+    sel <- road.fatalities$case[road.fatalities$case %in% sim.proj$case]
+    road.address <- road.fatalities[road.fatalities$case %in% sel, ]
+
+    rds <- data.frame(road.address[, c("x.proj", "y.proj")],
+                      anchor = road.address$case,
+                      pump = 0)
+  }
+}
 
   endptA <- data.frame(x.proj = road.data$x1,
                        y.proj = road.data$y1,
@@ -141,7 +185,12 @@ embedSites <- function(id, type = "nodes", vestry = FALSE) {
     pumps <- cholera::ortho.proj.pump
   }
 
-  case.seg <- road.data$id %in% cholera::ortho.proj$road.segment
+  if (observed) {
+    case.seg <- road.data$id %in% cholera::ortho.proj$road.segment
+  } else {
+    case.seg <- road.data$id %in% sim.proj$road.segment
+  }
+
   pump.seg <- id %in% pumps$road.segment
 
   if (pump.seg) {
@@ -181,11 +230,96 @@ embedSites <- function(id, type = "nodes", vestry = FALSE) {
   edges <- cbind(road.data[1, c("street", "id", "name")], edges,
     row.names = NULL)
 
-  edges$id2 <- paste0(edges$id, letters[seq_len(nrow(edges))])
+  if (observed) {
+    edges$id2 <- paste0(edges$id, letters[seq_len(nrow(edges))])
+  } else {
+    edges$id2 <- paste0(edges$id, "-", seq_len(nrow(edges)))
+  }
 
   if (type == "nodes") {
     nodes
   } else if (type == "edges") {
     edges
   }
+}
+
+simProj <- function() {
+  distanceFix <- function(case) {
+    a <- unlist(cholera::regular.cases[case, ])
+    b <- unlist(dat[dat$case == case, c("x.proj", "y.proj")])
+    c(stats::dist(matrix(c(a, b), 2, 2, byrow = TRUE)))
+  }
+
+  orthoProjFix <- function(s, east.end = TRUE,
+    nudge = 1 / (2 * cholera::unitMeter(1, "meter"))) {
+
+    seg.data <- cholera::road.segments[cholera::road.segments$id == s,
+      c("x1", "y1", "x2", "y2")]
+
+    seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                         y = c(seg.data$y1, seg.data$y2))
+
+    ols <- stats::lm(y ~ x, data = seg.df)
+    segment.slope <- stats::coef(ols)[2]
+    theta <- atan(segment.slope)
+    h <- nudge
+    delta.x <- h * cos(theta)
+    delta.y <- h * sin(theta)
+
+    # "East-West" ordering of segment endpoints
+    EW <- which.min(seg.data[, c("x1", "x2")])
+
+    if (EW == 1) {
+      east <- seg.df[1, ] + c(delta.x, delta.y)
+      west <- seg.df[2, ] - c(delta.x, delta.y)
+    } else {
+      east <- seg.df[2, ] + c(delta.x, delta.y)
+      west <- seg.df[1, ] - c(delta.x, delta.y)
+    }
+
+    if(east.end) east else west
+  }
+
+  ## manual re-classification ##
+  dat <- cholera::sim.ortho.proj
+
+  # Wardour Street (188-1) -> Richmond Mews (189-1)
+  # p7 -> p11
+  # "fix" for misclassification of 3173
+  dat[dat$case == 3173, "road.segment"] <- "189-2"
+  dat[dat$case == 3173, c("x.proj", "y.proj")] <-
+    orthoProjFix("189-2")
+  dat[dat$case == 3173, "ortho.dist"] <- distanceFix(3173)
+
+  # # Oxford Street (76-1) -> Blenheim Mews (106-1)
+  # # p1 -> p3
+  # # "fix" for misclassification of 4022
+  # dat[dat$case == 4022, "road.segment"] <- "106-1"
+
+  # Swallow Place (133-3) -> Princes Street/Hanover Square (184-1)
+  # p5 -> p6
+  # "fix" for misclassification of 3553
+  dat[dat$case == 3553, "road.segment"] <- "184-1"
+  dat[dat$case == 3553, c("x.proj", "y.proj")] <-
+    orthoProjFix("184-1")
+  dat[dat$case == 3553, "ortho.dist"] <- distanceFix(3553)
+
+  # Princes Street/Hanover Square (184-1) -> Oxford Street (113-1)
+  # p6 -> p5
+  # "fix" for misclassification of 3772, 3699, 3626
+  dat[dat$case %in% c(3772, 3699, 3626), "road.segment"] <- "113-1"
+  dat[dat$case %in% c(3772, 3699, 3626), c("x.proj", "y.proj")] <-
+    orthoProjFix("113-1")
+  dat[dat$case %in% c(3772, 3699, 3626), "ortho.dist"] <-
+    distanceFix(3772)
+
+  # Regents Quadrant (523-2) -> Vine Street (520-2)
+  # p13 -> p8
+  # "fix" for misclassification of 594
+  dat[dat$case == 594, "road.segment"] <- "520-2"
+  dat[dat$case == 594, c("x.proj", "y.proj")] <-
+    orthoProjFix("520-2")
+  dat[dat$case == 594, "ortho.dist"] <- distanceFix(594)
+
+  dat
 }

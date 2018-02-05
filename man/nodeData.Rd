@@ -4,12 +4,14 @@
 \alias{nodeData}
 \title{Compute network graph of roads, cases and pumps.}
 \usage{
-nodeData(embed = TRUE, vestry = FALSE)
+nodeData(embed = TRUE, vestry = FALSE, observed = TRUE)
 }
 \arguments{
 \item{embed}{Logical. TRUE embeds cases and pumps into road network. FALSE returns just the road network.}
 
 \item{vestry}{Logical. Use Vestry Report pump data.}
+
+\item{observed}{Logical. Use observed or "simulated" expected data.}
 }
 \value{
 An R list of nodes, edges and an 'igraph' network graph.

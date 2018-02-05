@@ -1,3 +1,10 @@
+cholera 0.3.0.9001
+==================
+
+- add "simulated" expected cases to walkingDistance().
+- add "simulated" expected cases to nodeData().
+
+
 cholera 0.3.0.9000
 ==================
 

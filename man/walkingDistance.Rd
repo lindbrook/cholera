@@ -5,7 +5,7 @@
 \title{Compute the shortest walking distance between cases and/or pumps.}
 \usage{
 walkingDistance(origin, destination = NULL, type = "case-pump",
-  weighted = TRUE, vestry = FALSE, unit = NULL)
+  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = NULL)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
@@ -13,6 +13,8 @@ walkingDistance(origin, destination = NULL, type = "case-pump",
 \item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.}
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
+
+\item{observed}{Logical. Use observed or "simulated" expected data.}
 
 \item{weighted}{Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of nodes.}
 
