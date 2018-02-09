@@ -164,20 +164,6 @@
 #' @docType data
 "plague.pit"
 
-#' List of the observed fatality "addresses" grouped by walking-distance pump neighborhood.
-#'
-#' @format A list 321 IDs spread over 13 vectors.
-#' \describe{
-#'  \item{\code{pump.case}}{numerical ID}
-#' }
-#' @section Notes: \code{\link{neighborhoodWalking}} documents the code for these data.
-#'
-#' For details, see \code{vignette}("pump.neighborhoods").
-#' @examples
-#' # pumpCase(neighborhoodWalking())
-#' @docType data
-"pump.case"
-
 #' List of "simulated" fatalities grouped by walking-distance pump neighborhood.
 #'
 #' @format A list 4972 IDs spread over 13 vectors.
