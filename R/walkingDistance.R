@@ -298,10 +298,19 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
     }
   }
 
-  output <- list(origin = origin, destination = destination, type = type,
-    weighted = weighted, vestry = vestry, unit = unit, nodes = nodes,
-    edges = edges, g = g, ego.node = ego.node, alter.node = names(sel),
-    d = out$distance,summary = out)
+  output <- list(origin = origin,
+                 destination = destination,
+                 type = type,
+                 observed = observed,
+                 weighted = weighted,
+                 vestry = vestry,
+                 unit = unit,
+                 nodes = nodes,
+                 edges = edges,
+                 g = g,
+                 ego.node = ego.node,
+                 alter.node = names(sel),
+                 d = out$distance,summary = out)
 
   class(output) <- "walking_distance"
   output
