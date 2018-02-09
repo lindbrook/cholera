@@ -400,22 +400,42 @@ plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
   if (x$type == "case-pump") {
     alter <- nodes[nodes$node == alter.node, "pump"]
     case.color <- colors[alter]
-    origin.obs <- cholera::fatalities[cholera::fatalities$case == x$origin,
-      c("x", "y")]
+
+    if (x$observed) {
+      origin.obs <- cholera::fatalities[cholera::fatalities$case == x$origin,
+        c("x", "y")]
+    } else {
+      origin.obs <- cholera::regular.cases[x$origin, ]
+    }
+
   } else if (x$type == "cases") {
     alter <- nodes[nodes$node == alter.node, "anchor"]
     case.color <- "blue"
 
-    origin.obs <- cholera::fatalities[cholera::fatalities$case == x$origin,
-      c("x", "y")]
-
-    if (is.null(x$destination)) {
-      destination.obs <- cholera::fatalities[cholera::fatalities$case == alter,
+    if (x$observed) {
+      origin.obs <- cholera::fatalities[cholera::fatalities$case == x$origin,
         c("x", "y")]
     } else {
+      origin.obs <- cholera::regular.cases[x$origin, ]
+    }
+
+    if (is.null(x$destination)) {
+      if (x$observed) {
+        destination.obs <- cholera::fatalities[cholera::fatalities$case ==
+          alter, c("x", "y")]
+      } else {
+        destination.obs <-  cholera::regular.cases[alter, ]
+      }
+    } else {
       id <- x$destination[x$sel]
-      destination.obs <- cholera::fatalities[cholera::fatalities$case == id,
-        c("x", "y")]
+
+      if (x$observed) {
+        destination.obs <- cholera::fatalities[cholera::fatalities$case == id,
+          c("x", "y")]
+      } else {
+        destination.obs <- cholera::regular.cases[id, ]
+      }
+
     }
   } else if (x$type == "pumps") {
     alter <- nodes[nodes$node == alter.node, "pump"]
@@ -455,8 +475,13 @@ plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
   points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
 
   if (zoom) {
-    text(cholera::fatalities[cholera::fatalities$case == x$origin,
-      c("x", "y")], labels = x$origin, pos = 1, col = "red")
+    if (x$observed) {
+      text(cholera::fatalities[cholera::fatalities$case == x$origin,
+        c("x", "y")], labels = x$origin, pos = 1, col = "red")
+    } else {
+      text(cholera::regular.cases[x$origin, ], labels = x$origin, pos = 1,
+        col = "red")
+    }
   }
 
   if (sum(intermediate.roads) >= 2) {
