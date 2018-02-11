@@ -134,13 +134,21 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
       }, numeric(1L))
     }
 
-    sel <- which.min(d)
-    alter.id <- nodes[nodes$node %in% names(sel), "pump"]
+    if (all(is.infinite(d))) {
+      alter.id <- NA
+      p.name <- NA
+      alter.node <- NA
+    } else {
+      sel <- which.min(d)
+      alter.id <- nodes[nodes$node %in% names(sel), "pump"]
+      p.name <- pumps[pumps$id == alter.id, "street"]
+      alter.node <- names(sel)
+    }
 
     out <- data.frame(case = origin,
                       anchor = ego.id,
                       pump = alter.id,
-                      pump.name = pumps[pumps$id == alter.id, "street"],
+                      pump.name = p.name,
                       distance = d[sel],
                       stringsAsFactors = FALSE,
                       row.names = NULL)
@@ -202,8 +210,14 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
       }, numeric(1L))
     }
 
-    sel <- which.min(d)
-    alter.id <- nodes[nodes$node %in% names(sel), "anchor"]
+    if (all(is.infinite(d))) {
+      alter.id <- NA
+      alter.node <- NA
+    } else {
+      sel <- which.min(d)
+      alter.id <- nodes[nodes$node %in% names(sel), "anchor"]
+      alter.node <- names(sel)
+    }
 
     if (is.null(destination) | all(destination < 0)) {
       out <- data.frame(caseA = origin,
@@ -309,8 +323,9 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
                  edges = edges,
                  g = g,
                  ego.node = ego.node,
-                 alter.node = names(sel),
-                 d = out$distance,summary = out)
+                 alter.node = alter.node,
+                 d = out$distance,
+                 summary = out)
 
   class(output) <- "walking_distance"
   output
@@ -349,6 +364,12 @@ print.walking_distance <- function(x, ...) {
 plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
   if (class(x) != "walking_distance") {
     stop('"x"\'s class needs to be "walking_distance".')
+  }
+
+  if (is.na(x$alter.node)) {
+    txt1 <- paste("Case", x$origin, "is part of an isolated subgraph.")
+    txt2 <- "It (technically) has no neareast pump."
+    stop(paste(txt1, txt2))
   }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
