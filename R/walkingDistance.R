@@ -507,9 +507,17 @@ plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
     if (x$observed) {
       text(cholera::fatalities[cholera::fatalities$case == x$origin,
         c("x", "y")], labels = x$origin, pos = 1, col = "red")
+      if (x$type == "cases") {
+        text(cholera::fatalities[cholera::fatalities$case == x$summary$caseB,
+          c("x", "y")], labels = x$summary$caseB, pos = 1, col = "red")
+      }
     } else {
       text(cholera::regular.cases[x$origin, ], labels = x$origin, pos = 1,
         col = "red")
+      if (x$type == "cases") {
+        text(cholera::regular.cases[x$summary$caseB, ],
+          labels = x$summary$caseB, pos = 1, col = "red")
+      }
     }
   }
 
