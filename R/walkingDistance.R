@@ -291,9 +291,17 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
       }, numeric(1L))
     }
 
-    sel <- which.min(d)
     A <- p.nodes[p.nodes$node == ego.node, "pump"]
-    B <- p.nodes[p.nodes$node == names(sel), "pump"]
+    ego.node <- p.nodes[p.nodes$node == ego.node, "node"]
+
+    if (all(is.infinite(d))) {
+      B <- NA
+      alter.node <- NA
+    } else {
+      sel <- which.min(d)
+      B <- p.nodes[p.nodes$node == names(sel), "pump"]
+      alter.node <- p.nodes[p.nodes$node == names(sel), "node"]
+    }
 
     out <- data.frame(pumpA = A,
                       nameA = pumps[pumps$id == A, "street"],
