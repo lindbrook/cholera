@@ -29,7 +29,9 @@ An R list.
 Compute the shortest walking distance between cases and/or pumps.
 }
 \note{
-The function uses a case's "address" or "anchor" case to compute distance. Because Adam and Eve Court is disconnected from the larger road network (an isolate), only cases on that road can reach pump 2. All others will return Inf.
+The function uses a case's "address" or "anchor" case to compute distance.
+
+Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
 }
 \examples{
 # path from case 1 to nearest pump.
