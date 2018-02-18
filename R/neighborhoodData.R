@@ -76,7 +76,6 @@ nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
     # Edges #
 
     edges <- do.call(rbind, edges)
-
     road.segments <- road.segments[road.segments$id %in% edits == FALSE, ]
     road.segments$node1 <- paste0(road.segments$x1, "-", road.segments$y1)
     road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
