@@ -22,20 +22,6 @@ nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
     stop('"case.set" must be "observed", "expected" or "snow".')
   }
 
-  # if (case.set == "observed") {
-  #   if (origin %in% 1:578 == FALSE) {
-  #     txt1 <- 'With type = "case-pump" and "observed" = TRUE,'
-  #     txt2 <- '"origin" must be between 1 and 578.'
-  #     stop(paste(txt1, txt2))
-  #   }
-  # } else if (case.set == "expected") {
-  #   if (origin %in% 1:4993 == FALSE) {
-  #     txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
-  #     txt2 <- '"origin" must be between 1 and 4993.'
-  #     stop(paste(txt1, txt2))
-  #   }
-  # }
-
   if (is.null(unit) == FALSE) {
     if (unit %in% c("meter", "yard") == FALSE)
       stop('If specified, "unit" must either be "meter" or "yard".')
