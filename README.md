@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9001-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9002-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 ### what's new (current/development version)
 
 The original addKernelDensity() function pools all observations:
@@ -111,7 +111,7 @@ To install 'cholera' from CRAN:
 install.packages("cholera")
 ```
 
-To install the current/development version of 'cholera' from GitHub:
+The current/development version of 'cholera' is in beta and some functionality is broken. If you really want to install it, it's available from GitHub:
 
 ``` r
 # Note that you may need to install the 'devtools' package:
