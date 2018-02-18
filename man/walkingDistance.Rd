@@ -53,7 +53,7 @@ Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected f
 # walkingDistance(1, 6, type = "pumps")
 
 # Plot result
-plot(walkingDistance(1, unit = "meter"))
+# plot(walkingDistance(1, unit = "meter"))
 }
 \seealso{
 \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}

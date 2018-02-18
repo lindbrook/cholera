@@ -33,7 +33,7 @@
 #' # walkingDistance(1, 6, type = "pumps")
 #'
 #' # Plot result
-#' plot(walkingDistance(1, unit = "meter"))
+#' # plot(walkingDistance(1, unit = "meter"))
 
 walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = NULL) {
@@ -49,15 +49,16 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 
   if (observed) {
     if (vestry) {
-      node.data <- cholera::nodeData(vestry = TRUE)
+      node.data <- cholera::neighborhoodData(vestry = TRUE)
     } else {
-      node.data <- cholera::nodeData()
+      node.data <- cholera::neighborhoodData()
     }
   } else {
     if (vestry) {
-      node.data <- cholera::nodeData(vestry = TRUE, observed = FALSE)
+      node.data <- cholera::neighborhoodData(vestry = TRUE,
+        case.set = "expected")
     } else {
-      node.data <- cholera::nodeData(observed = FALSE)
+      node.data <- cholera::neighborhoodData(case.set = "expected")
     }
   }
 
@@ -350,8 +351,8 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 #' @return An R data frame.
 #' @export
 #' @examples
-#' walkingDistance(1)
-#' print(walkingDistance(1))
+#' # walkingDistance(1)
+#' # print(walkingDistance(1))
 
 print.walking_distance <- function(x, ...) {
   if (class(x) != "walking_distance") {
@@ -370,7 +371,7 @@ print.walking_distance <- function(x, ...) {
 #' @return A base R plot.
 #' @export
 #' @examples
-#' plot(walkingDistance(1))
+#' # plot(walkingDistance(1))
 
 plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
   if (class(x) != "walking_distance") {

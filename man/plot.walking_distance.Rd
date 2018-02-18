@@ -22,5 +22,5 @@ A base R plot.
 Plot the walking distance between cases and/or pumps.
 }
 \examples{
-plot(walkingDistance(1))
+# plot(walkingDistance(1))
 }
