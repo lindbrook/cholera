@@ -2,13 +2,16 @@
 % Please edit documentation in R/nearestPump.R
 \name{nearestPump}
 \alias{nearestPump}
-\title{Compute shortest walking path distance from case to pump.}
+\title{Compute shortest walking distances or paths.}
 \usage{
-nearestPump(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  case.set = "observed", unit = NULL, cores = 1L)
+nearestPump(pump.select = NULL, output = "distance", vestry = FALSE,
+  weighted = TRUE, case.set = "observed", unit = NULL,
+  multi.core = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Pump candidates to consider. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
+
+\item{output}{Character. "distance" or "path".}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -16,13 +19,13 @@ nearestPump(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
 \item{case.set}{Character. "observed", "expected", or "snow".}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.}
+\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE and "output" is "distance". See \code{vignette("roads")} for information on unit distances.}
 
-\item{cores}{Numeric. The number logical cores to use. Default is 1, which is the only possible value for Windows.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
 \value{
-An R data frame.
+An R data frome or list of 'igraph' paths.
 }
 \description{
-Compute path distance from anchor case to nearest pump (or among selected pumps).
+Compute the distance or path from observed or expected cases to nearest pump (or from among selected pumps).
 }
