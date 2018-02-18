@@ -26,7 +26,7 @@ addSnow <- function(type = "street", color = "dodgerblue", alpha.level = 0.25,
     stop('"type" must be "area", "boundary" or "street".')
   }
 
-  edges <- neighborhoodData()$edges
+  edges <- cholera::neighborhoodData()$edges
   snow <- cholera::snowNeighborhood()
 
   if (type == "street") {

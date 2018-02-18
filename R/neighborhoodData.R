@@ -1,11 +1,33 @@
 #' Compute network graph of roads, cases and pumps.
 #'
-#' Assembles "anchor" cases, pumps and road into a network graph.
-#' @param embed Logical. TRUE embeds cases and pumps into road network. FALSE returns just the road network.
+#' Assembles cases, pumps and road into a network graph.
 #' @param vestry Logical. Use Vestry Report pump data.
-#' @param observed Logical. Use observed or "simulated" expected data.
+#' @param case.set Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
+
+neighborhoodData <- function(vestry = FALSE, case.set = "observed") {
+  if (case.set == "expected") {
+    if (vestry) {
+      node.data <- nodeData(vestry = TRUE, observed = FALSE)
+    } else {
+      node.data <- nodeData(observed = FALSE)
+    }
+  } else {
+    if (vestry) {
+      node.data <- nodeData(vestry = TRUE)
+    } else {
+      node.data <- nodeData()
+    }
+  }
+
+  nodes <- node.data$nodes
+  edges <- node.data$edges
+  g <- node.data$g
+  nodes.pump <- nodes[nodes$pump != 0, ]
+  nodes.pump <- nodes.pump[order(nodes.pump$pump), c("pump", "node")]
+  list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
+}
 
 nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
   if (observed) {
@@ -141,33 +163,34 @@ embedSites <- function(id, type = "nodes", vestry = FALSE, observed = TRUE) {
 
   road.data <- cholera::road.segments[cholera::road.segments$id == id, ]
 
-if (observed) {
-  if (road.data$id %in% cholera::ortho.proj$road.segment) {
-    road.fatalities <- cholera::ortho.proj[cholera::ortho.proj$road.segment %in%
-      road.data$id, ]
+  if (observed) {
+    if (road.data$id %in% cholera::ortho.proj$road.segment) {
+      road.fatalities <-
+        cholera::ortho.proj[cholera::ortho.proj$road.segment %in%
+          road.data$id, ]
 
-    sel <- road.fatalities$case[road.fatalities$case %in%
-      cholera::fatalities.address$anchor.case]
-    road.address <- road.fatalities[road.fatalities$case %in% sel, ]
+      sel <- road.fatalities$case[road.fatalities$case %in%
+        cholera::fatalities.address$anchor.case]
+      road.address <- road.fatalities[road.fatalities$case %in% sel, ]
 
-    rds <- data.frame(road.address[, c("x.proj", "y.proj")],
-                      anchor = road.address$case,
-                      pump = 0)
+      rds <- data.frame(road.address[, c("x.proj", "y.proj")],
+                        anchor = road.address$case,
+                        pump = 0)
+    }
+  } else {
+    sim.proj <- simProj()
+
+    if (road.data$id %in% sim.proj$road.segment) {
+      road.fatalities <- sim.proj[sim.proj$road.segment %in% road.data$id, ]
+
+      sel <- road.fatalities$case[road.fatalities$case %in% sim.proj$case]
+      road.address <- road.fatalities[road.fatalities$case %in% sel, ]
+
+      rds <- data.frame(road.address[, c("x.proj", "y.proj")],
+                        anchor = road.address$case,
+                        pump = 0)
+    }
   }
-} else {
-  sim.proj <- simProj()
-
-  if (road.data$id %in% sim.proj$road.segment) {
-    road.fatalities <- sim.proj[sim.proj$road.segment %in% road.data$id, ]
-
-    sel <- road.fatalities$case[road.fatalities$case %in% sim.proj$case]
-    road.address <- road.fatalities[road.fatalities$case %in% sel, ]
-
-    rds <- data.frame(road.address[, c("x.proj", "y.proj")],
-                      anchor = road.address$case,
-                      pump = 0)
-  }
-}
 
   endptA <- data.frame(x.proj = road.data$x1,
                        y.proj = road.data$y1,

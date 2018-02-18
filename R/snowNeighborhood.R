@@ -6,13 +6,7 @@
 
 snowNeighborhood <- function() {
   snow <- cholera::neighborhoodWalking(case.set = "snow")
-
-  if (snow$vestry) {
-    dat <- neighborhoodData(vestry = TRUE)
-  } else {
-    dat <- neighborhoodData()
-  }
-
+  dat <- cholera::neighborhoodData(vestry = snow$vestry)
   edges <- dat$edges
 
   # Check if walking paths traverse both endpoints of a road segment.
