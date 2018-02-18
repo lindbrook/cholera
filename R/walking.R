@@ -237,7 +237,7 @@ plot.walking <- function(x, area = FALSE, ...) {
       logical(1L))
 
     missing.edges <- leftover.edges[missing.id]
-    missing.edges.pump <- unlist(leftover.audit[missing.id])
+    missing.edges.pump <- names(x$paths)[unlist(leftover.audit[missing.id])]
     pumpID <- sort(unique(missing.edges.pump))
 
     missing.edges <- lapply(pumpID, function(p) {
