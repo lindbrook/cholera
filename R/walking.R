@@ -166,7 +166,7 @@ plot.walking <- function(x, area = FALSE, ...) {
     }
   }
 
-  dat <- neighborhoodData(vestry = x$vestry, case.set = x$case.set)
+  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = x$case.set)
   edges <- dat$edges
   nodes <- dat$nodes
 
