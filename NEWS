@@ -1,10 +1,16 @@
+cholera 0.3.0.9003
+==================
+
+- beta implementation of neighborhoodWalking()
+    segment based expected neighborhoods.
+    "area" plot currently unavailable.
+
+
 cholera 0.3.0.9002
 ==================
 
-- beta testing
-    use neighborhoodData() in place of nodeData()
-    combine nearestPump() and nearestPath()
-    beta implementation of neighborhoodWalking()
+- use neighborhoodData() in place of nodeData()
+- combine nearestPath() into nearestPump()
 
 
 cholera 0.3.0.9001
