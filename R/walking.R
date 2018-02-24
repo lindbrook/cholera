@@ -399,9 +399,18 @@ plot.walking <- function(x, ...) {
   })
 
   unobs.segments <- setdiff(cholera::road.segments$id, unlist(obs.segments))
+
   falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
   unobs.segments <- unobs.segments[unobs.segments %in%
     falconberg.ct.mews == FALSE]
+
+  # Exclude segment is A&E pump is not among selected.
+  AE <- cholera::pumps[cholera::pumps$street == "Adam and Eve Court", "id"]
+
+  if (AE %in% x$pump.select == FALSE) {
+    adam.eve.ct <- "44-1"
+    unobs.segments <- unobs.segments[unobs.segments %in% adam.eve.ct == FALSE]
+  }
 
   ## Whole ##
 
@@ -458,19 +467,19 @@ plot.walking <- function(x, ...) {
 
     invisible(lapply(names(obs.whole), function(nm) {
       n.edges <- edges[edges$id %in% obs.whole[[nm]], ]
-      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
+      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
         col = snow.colors[paste0("p", nm)])
     }))
 
     invisible(lapply(names(obs.partial.whole), function(nm) {
       n.edges <- edges[edges$id %in% obs.partial.whole[[nm]], ]
-      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
+      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
         col = snow.colors[paste0("p", nm)])
     }))
 
     invisible(lapply(names(unobs.whole), function(nm) {
       n.edges <- edges[edges$id %in% unobs.whole[[nm]], ]
-      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
+      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
         col = snow.colors[paste0("p", nm)])
     }))
 
@@ -478,9 +487,9 @@ plot.walking <- function(x, ...) {
       dat <- obs.partial.split[[i]]
       ps <- obs.partial.split.pump[[i]]
       ps.col <- snow.colors[paste0("p", ps)]
-      segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 2,
+      segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 4,
                col = ps.col[1])
-      segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 2,
+      segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 4,
                col = ps.col[2])
     }))
 
@@ -488,11 +497,13 @@ plot.walking <- function(x, ...) {
       dat <- unobs.split[[i]]
       ps <- unobs.split.pump[[i]]
       ps.col <- snow.colors[paste0("p", ps)]
-      segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 2,
+      segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 4,
         col = ps.col[1])
-      segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 2,
+      segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 4,
         col = ps.col[2])
      }))
+
+    invisible(lapply(road.list, lines, col = "gray"))
   }
 
   if (is.null(x$pump.select)) {
