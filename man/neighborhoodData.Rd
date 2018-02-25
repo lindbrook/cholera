@@ -9,7 +9,7 @@ neighborhoodData(vestry = FALSE, case.set = "observed")
 \arguments{
 \item{vestry}{Logical. Use Vestry Report pump data.}
 
-\item{case.set}{Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.}
+\item{case.set}{Character. "observed" or "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.}
 }
 \value{
 An R list of nodes, edges and an 'igraph' network graph.

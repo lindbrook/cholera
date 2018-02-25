@@ -2,11 +2,15 @@
 #'
 #' Assembles cases, pumps and road into a network graph.
 #' @param vestry Logical. Use Vestry Report pump data.
-#' @param case.set Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
+#' @param case.set Character. "observed" or "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
 neighborhoodData <- function(vestry = FALSE, case.set = "observed") {
+  if (case.set %in% c("observed", "expected", "snow") == FALSE) {
+    stop('"case.set" must be "observed", "expected" or "snow".')
+  }
+
   if (case.set == "expected") {
     if (vestry) {
       node.data <- nodeData(vestry = TRUE, observed = FALSE)
@@ -31,15 +35,13 @@ neighborhoodData <- function(vestry = FALSE, case.set = "observed") {
 
 nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
   if (observed) {
-    case.segments <- unique(cholera::ortho.proj[cholera::ortho.proj$case %in%
-      cholera::fatalities.address$anchor.case, "road.segment"])
+    sel <- cholera::ortho.proj$case %in% cholera::fatalities.address$anchor.case
+    case.segments <- unique(cholera::ortho.proj[sel, "road.segment"])
   } else {
     sim.proj <- simProj()
     case.segments <- unique(sim.proj$road.segment)
     case.segments <- case.segments[is.na(case.segments) == FALSE]
   }
-
-  road.segments <- cholera::road.segments
 
   if (embed) {
     if (vestry) {
@@ -51,7 +53,6 @@ nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
     case.pump <- intersect(ortho.pump$road.segment, case.segments)
     case.no_pump <- setdiff(case.segments, ortho.pump$road.segment)
     no_case.pump <- setdiff(ortho.pump$road.segment, case.segments)
-
     edits <- c(case.pump, case.no_pump, no_case.pump)
 
     if (observed) {
@@ -76,6 +77,7 @@ nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
     # Edges #
 
     edges <- do.call(rbind, edges)
+    road.segments <- cholera::road.segments
     road.segments <- road.segments[road.segments$id %in% edits == FALSE, ]
     road.segments$node1 <- paste0(road.segments$x1, "-", road.segments$y1)
     road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
@@ -92,15 +94,14 @@ nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
     # Nodes #
 
     nodes <- do.call(rbind, nodes)
-
-    endpt.node1 <- road.segments[road.segments$node1 %in%
-                                 nodes$node == FALSE, "node1"]
-    endpt.node2 <- road.segments[road.segments$node2 %in%
-                                 nodes$node == FALSE, "node2"]
+    select1 <- road.segments$node1 %in% nodes$node == FALSE
+    select2 <- road.segments$node2 %in% nodes$node == FALSE
+    endpt.node1 <- road.segments[select1, "node1"]
+    endpt.node2 <- road.segments[select2, "node2"]
 
     null.nodes <- lapply(union(endpt.node1, endpt.node2), function(x) {
-      dat <- road.segments[road.segments$node1 == x |
-                           road.segments$node2 == x, ]
+      sel <- road.segments$node1 == x | road.segments$node2 == x
+      dat <- road.segments[sel, ]
 
       endpt1 <- dat$node1 == x & dat$node2 != x
       endpt2 <- dat$node1 != x & dat$node2 == x
@@ -137,10 +138,10 @@ nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
     road.segments$d <- sqrt((road.segments$x1 - road.segments$x2)^2 +
                             (road.segments$y1 - road.segments$y2)^2)
 
-    a <- stats::setNames(road.segments[, c("x1", "y1", "node1")],
-      c("x.proj", "y.proj", "node"))
-    b <- stats::setNames(road.segments[, c("x2", "y2", "node2")],
-      c("x.proj", "y.proj", "node"))
+    rs1 <- road.segments[, c("x1", "y1", "node1")]
+    rs2 <- road.segments[, c("x2", "y2", "node2")]
+    a <- stats::setNames(rs1, c("x.proj", "y.proj", "node"))
+    b <- stats::setNames(rs2, c("x.proj", "y.proj", "node"))
 
     nodes <- unique(rbind(a, b))
     nodes <- data.frame(nodes[, c("x.proj", "y.proj")],
@@ -157,21 +158,20 @@ nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
 
 embedSites <- function(id, type = "nodes", vestry = FALSE, observed = TRUE) {
   if (id %in% cholera::road.segments$id == FALSE) {
-      stop('Valid "id" values are listed in cholera::road.segments$id.')
+    stop('See cholera::road.segments$id for valid "id" values.')
   }
 
   road.data <- cholera::road.segments[cholera::road.segments$id == id, ]
 
   if (observed) {
     if (road.data$id %in% cholera::ortho.proj$road.segment) {
-      road.fatalities <-
-        cholera::ortho.proj[cholera::ortho.proj$road.segment %in%
-          road.data$id, ]
+      sel <- cholera::ortho.proj$road.segment %in% road.data$id
+      road.fatalities <- cholera::ortho.proj[sel, ]
 
-      sel <- road.fatalities$case[road.fatalities$case %in%
-        cholera::fatalities.address$anchor.case]
-      road.address <- road.fatalities[road.fatalities$case %in% sel, ]
+      sel <- road.fatalities$case %in% cholera::fatalities.address$anchor.case
+      cases <- road.fatalities[sel, "case"]
 
+      road.address <- road.fatalities[road.fatalities$case %in% cases, ]
       rds <- data.frame(road.address[, c("x.proj", "y.proj")],
                         anchor = road.address$case,
                         pump = 0)
@@ -245,7 +245,6 @@ embedSites <- function(id, type = "nodes", vestry = FALSE, observed = TRUE) {
   sel <- c("x.proj", "y.proj")
   edges <- cbind(nodes[-nrow(nodes), sel], nodes[-1, sel])
   names(edges) <- c("x1", "y1", "x2", "y2")
-
   edges$node1 <- paste0(edges$x1, "-", edges$y1)
   edges$node2 <- paste0(edges$x2, "-", edges$y2)
 
