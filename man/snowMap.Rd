@@ -5,7 +5,7 @@
 \title{Plot John Snow's cholera map.}
 \usage{
 snowMap(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
-  add.title = FALSE, ...)
+  add.title = TRUE, ...)
 }
 \arguments{
 \item{add.landmarks}{Logical. Add landmarks.}

@@ -20,7 +20,7 @@
 #' snowMap(vestry = TRUE, stacked = FALSE)
 
 snowMap <- function(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
-  add.title = FALSE, ...) {
+  add.title = TRUE, ...) {
 
   x.range <- range(cholera::roads$x)
   y.range <- range(cholera::roads$y)
