@@ -371,36 +371,23 @@ plot.walking <- function(x, ...) {
 
   ## ------------ Observed ------------ ##
 
-  ## Whole ##
-
   obs.whole <- lapply(segment.audit, function(x) x$`whole`)
-
-  ## Partial ##
 
   obs.partial <- lapply(segment.audit, function(x) x$`partial`)
   obs.partial.segments <- unname(unlist(obs.partial))
-
-  # partial whole #
-
   obs.partial.whole <- wholeSegments(obs.partial.segments)
-
-  # partial split #
 
   obs.partial.leftover <- setdiff(obs.partial.segments,
     unlist(obs.partial.whole))
-
   obs.partial.split.data <- parallel::mclapply(obs.partial.leftover,
     splitSegments, mc.cores = x$cores)
-
   cutpoints <- cutpointValues(obs.partial.split.data)
-
-  obs.partial.split <- splitData(obs.partial.leftover, cutpoints)
   obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
     unique(x$pump))
+  obs.partial.split <- splitData(obs.partial.leftover, cutpoints)
+
 
   ## ------------ Unobserved ------------ ##
-
-  # partial and whole segments #
 
   obs.segments <- lapply(n.path.edges, function(x) {
     unique(edges[unique(unlist(x)), "id"])
@@ -412,26 +399,19 @@ plot.walking <- function(x, ...) {
   unobs.segments <- unobs.segments[unobs.segments %in%
     falconberg.ct.mews == FALSE]
 
-  # Exclude segment is A&E pump is not among selected.
+  # Exclude segment if A&E pump is not among selected.
   AE <- cholera::pumps[cholera::pumps$street == "Adam and Eve Court", "id"]
-
   if (AE %in% x$pump.select == FALSE) {
     adam.eve.ct <- "44-1"
     unobs.segments <- unobs.segments[unobs.segments %in% adam.eve.ct == FALSE]
   }
 
-  ## Whole ##
-
   unobs.whole <- wholeSegments(unobs.segments)
-
-  ## Partial ##
 
   unobs.split.segments <- setdiff(unobs.segments, unlist(unobs.whole))
   unobs.split.data <- parallel::mclapply(unobs.split.segments, splitSegments,
     mc.cores = x$cores)
-
   cutpoints <- cutpointValues(unobs.split.data)
-
   unobs.split.pump <- lapply(unobs.split.data, function(x) unique(x$pump))
   unobs.split <- splitData(unobs.split.segments, cutpoints)
 
@@ -450,10 +430,10 @@ plot.walking <- function(x, ...) {
   plot(cholera::fatalities[, c("x", "y")], xlim = x.range, ylim = y.range,
     pch = NA, asp = 1)
 
-  if (x$case.set == "observed") {
-    invisible(lapply(road.list, lines, col = "gray"))
-    invisible(lapply(border.list, lines))
+  invisible(lapply(road.list, lines, col = "gray"))
+  invisible(lapply(border.list, lines))
 
+  if (x$case.set == "observed") {
     obs.whole.edges <- lapply(n.path.edges, function(x) {
       edges[unique(unlist(x)), "id2"]
     })
