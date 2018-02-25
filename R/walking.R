@@ -519,30 +519,28 @@ plot.walking <- function(x, ...) {
       segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 4,
         col = ps.col[2])
      }))
-
-    invisible(lapply(road.list, lines, col = "gray"))
   }
 
   if (is.null(x$pump.select)) {
     if (x$vestry) {
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 24,
+      points(cholera::pumps.vestry[, c("x", "y")], pch = 24, lwd = 1.25,
         col = cholera::snowColors(vestry = TRUE))
       text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
         labels = paste0("p", cholera::pumps.vestry$id))
     } else {
-      points(cholera::pumps[, c("x", "y")], pch = 24,
+      points(cholera::pumps[, c("x", "y")], pch = 24, lwd = 1.25,
         col = cholera::snowColors())
       text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
         labels = paste0("p", cholera::pumps$id))
     }
   } else {
     if (x$vestry) {
-      points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24,
+      points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24, lwd = 1.25,
         col = snow.colors[paste0("p", n.sel)])
       text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
         labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
     } else {
-      points(cholera::pumps[n.sel, c("x", "y")], pch = 24,
+      points(cholera::pumps[n.sel, c("x", "y")], pch = 24, lwd = 1.25,
         col = snow.colors[paste0("p", n.sel)])
       text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
         labels = paste0("p", cholera::pumps$id[n.sel]))
