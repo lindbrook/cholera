@@ -16,7 +16,7 @@
 #'   \item{\code{cores}: number of cores to use for parallel implementation.}
 #'   \item{\code{metric}: incremental metric used to find cut point on split road segments.}
 #' }
-#' @section Note: This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths takes about 8 seconds while plotting expected paths takes about 35 seconds. With the parallel implementation (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment), these times fall to 6 and 15 seconds using 4 physical (8 logical) cores.
+#' @section Note: This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed or expected paths takes about 30 seconds. Using the parallel implementation on 4 physical (8 logical) cores (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment), these times fall to approximately 12 seconds.
 #' @export
 #' @examples
 #' # neighborhoodWalking()
@@ -532,9 +532,9 @@ plot.walking <- function(x, type = "road", ...) {
         ps <- splits.pump[[i]]
         ps.col <- snow.colors[paste0("p", ps)]
         segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 3,
-                 col = ps.col[1])
+          col = ps.col[1])
         segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 3,
-                 col = ps.col[2])
+          col = ps.col[2])
       }))
     }
   }
