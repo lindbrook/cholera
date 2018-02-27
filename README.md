@@ -14,7 +14,7 @@ addKernelDensity()
 
 ![](man/figures/README-kde-1.png)
 
-Now you can view the kernel densitities of pump neighborhoods separately. Either as subset of the observed neighborhoods:
+Now you can view the kernel densitities of pump neighborhoods separately. Either as a subset of the observed neighborhoods:
 
 ``` r
 snowMap(add.title = FALSE)
@@ -89,7 +89,7 @@ plot(neighborhoodWalking(case.set = "expected"))
 Or highlight the area of "expected" neighborhoods:
 
 ``` r
-plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
+plot(neighborhoodWalking(case.set = "expected"), type = "area")
 ```
 
 ![](man/figures/README-expected_area-1.png)

@@ -160,8 +160,7 @@ print.walking <- function(x, ...) {
 #' Plot method for neighborhoodWalking().
 #'
 #' @param x An object of class "walking" created by neighborhoodWalking().
-# #' @param area Logical. TRUE returns area plot. FALSE returns walking paths plot. Works only with case.set = "expected" or case.set = "snow".
-#' @param area Logical. TRUE returns area plot. FALSE returns walking paths plot. Works only with case.set = "expected".
+#' @param type Character. "road" or "area". "area" only valid when case.set = "expected".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
@@ -170,14 +169,18 @@ print.walking <- function(x, ...) {
 #' # plot(neighborhoodWalking(case.set = "expected"))
 #' # plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 
-plot.walking <- function(x, area = FALSE, ...) {
+plot.walking <- function(x, type = "road", ...) {
   if (class(x) != "walking") {
     stop('"x"\'s class needs to be "walking".')
   }
 
-  if (area) {
+  if (type %in% c("road", "area") == FALSE) {
+    stop('"type" must be "road" or "area".')
+  }
+
+  if (type == "area") {
     if (all(x$case.set %in% c("expected") == FALSE)) {
-      stop('"area = TRUE" is valid only when case.set is "expected".')
+      stop('type = "area" valid only when case.set = "expected".')
     }
   }
 
@@ -460,7 +463,7 @@ plot.walking <- function(x, area = FALSE, ...) {
 
     names(wholes) <- 1:13
 
-    if (area) {
+    if (type == "area") {
       invisible(lapply(names(wholes), function(nm) {
         cases <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment
           %in% wholes[[nm]], "case"]
