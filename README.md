@@ -1,13 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9004-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9005-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+
 ### what's new (current/development version)
 
 The original addKernelDensity() function pools all observations:
 
 ``` r
-snowMap(add.landmarks = TRUE, add.title = TRUE)
+snowMap(add.landmarks = TRUE)
 addKernelDensity()
 ```
 
@@ -16,7 +17,7 @@ addKernelDensity()
 Now you can view the kernel densitities of pump neighborhoods separately. Either as subset of the observed neighborhoods:
 
 ``` r
-snowMap()
+snowMap(add.title = FALSE)
 addKernelDensity(neighborhood = c(6, 8))
 ```
 
@@ -25,7 +26,7 @@ addKernelDensity(neighborhood = c(6, 8))
 Or from neighborhoods you construct from a specified set of pumps:
 
 ``` r
-snowMap()
+snowMap(add.title = FALSE)
 addKernelDensity(pump.select = c(6, 8))
 ```
 
@@ -111,7 +112,7 @@ To install 'cholera' from CRAN:
 install.packages("cholera")
 ```
 
-The current/development version of 'cholera' is in beta and some functionality is broken. If you really want to install it, it's available from GitHub:
+The current/development version of 'cholera' is available on GitHub:
 
 ``` r
 # Note that you may need to install the 'devtools' package:
@@ -123,6 +124,6 @@ Read the package's vignettes. They include detailed discussions about the data, 
 
 ### note
 
-neighborhoodWalking() is computationally intensive. Using the current/development version on a single core of a 2.3 GHz Intel i7, plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds. When using the function's parallel implementation, these times fall to approximately 6 and 15 seconds using 4 physical or 8 logical cores.
+neighborhoodWalking() is computationally intensive. Using the current/development version on a single core of a 2.3 GHz Intel i7, plotting observed or expected paths take about 30 seconds. When using the function's parallel implementation, the time falls to approximately 12 seconds using 4 physical or 8 logical cores.
 
 Note that the parallelized version is currently only available on Linux and Mac. Also, note that the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment.

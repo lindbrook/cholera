@@ -75,7 +75,7 @@ plot(neighborhoodWalking(case.set = "expected"))
 In the second, I identify neighborhoods by coloring regions.^[Mackenzie (N.D) uses this approach. While it is easier to "read", it's potentially less accurate and more misleading. Conceptually, the problem is that the latter takes the focus away from roads and walking distances, and puts it on regions, which may not have a relevant meaning because they include points or locations where there are no roads or residences. Computationally, the problem is that the shape of neighborhoods will be sensitive to the algorithm that determines the closest pump. Depending on our choices, this can produce different results. Cliff and Haggett also produce an adjusted Voronoi cells that reflect walking distances: "So far we have assumed that access to each pump was determined by 'crow-fly' distances. While the physical effort of carrying water mean that most people visited their nearest pump, recognition must be made of the complex street pattern in this area of London. Therefore in (D), the Thiessen polygons have been adjusted to take into account the patterns of access made possible by the street system shown in diagram (A) (Cliff and Haggett 1988, 53). However, details about how this was done don't appear to be available. Moreover, because the graphic only shows the outline of the polygon and not the streets, comparisons with other approaches is difficult.]
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
-# plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
+plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 ```
 
 ### Exploring scenarios
@@ -94,6 +94,6 @@ plot(neighborhoodWalking(-7))
 
 ### Note on neighborhoodWalking()
 
-neighborhoodWalking() is computationally intensive. Using the development version on a single core (2.3 GHz Intel i7), plotting observed paths takes about 8 seconds while plotting expected paths takes about 35 seconds.
+neighborhoodWalking() is computationally intensive. Using the current/development version on a single core of a 2.3 GHz Intel i7, plotting observed or expected paths take about 30 seconds. When using the function's parallel implementation, the time falls to approximately 12 seconds using 4 physical or 8 logical cores.
 
-With the parallel implementation (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment), these times fall to 6 and 15 seconds using 4 physical (8 logical) cores.
+Note that the parallelized version is currently only available on Linux and Mac. Also, note that the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment.

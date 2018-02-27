@@ -11,32 +11,39 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-"
 )
 ```
-### what's new (current/development version)
 
 ```{r, echo = FALSE}
 library(cholera)
 ```
 
+### what's new (current/development version)
+
 The original addKernelDensity() function pools all observations:
 
-```{r kde, fig.width = 6, fig.height = 6, message = FALSE}
-snowMap(add.landmarks = TRUE, add.title = TRUE)
+``` r
+snowMap(add.landmarks = TRUE)
 addKernelDensity()
 ```
 
+![](man/figures/README-kde-1.png)
+
 Now you can view the kernel densitities of pump neighborhoods separately. Either as subset of the observed neighborhoods:
 
-```{r kde2, fig.width = 6, fig.height = 6, message = FALSE}
-snowMap()
+``` r
+snowMap(add.title = FALSE)
 addKernelDensity(neighborhood = c(6, 8))
 ```
 
-Or from neighborhoods you construct from a specified set of pumps: 
+![](man/figures/README-kde2-1.png)
 
-```{r kde3, fig.width = 6, fig.height = 6, message = FALSE}
-snowMap()
+Or from neighborhoods you construct from a specified set of pumps:
+
+``` r
+snowMap(add.title = FALSE)
 addKernelDensity(pump.select = c(6, 8))
 ```
+
+![](man/figures/README-kde3-1.png)
 
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
@@ -108,7 +115,7 @@ To install 'cholera' from CRAN:
 install.packages("cholera")
 ```
 
-To install the current/development version of 'cholera' from GitHub:
+The current/development version of 'cholera' is available on GitHub:
 
 ```{r, eval = FALSE}
 # Note that you may need to install the 'devtools' package:
@@ -120,6 +127,6 @@ Read the package's vignettes. They include detailed discussions about the data, 
 
 ### note
 
-neighborhoodWalking() is computationally intensive. Using the current/development version on a single core of a 2.3 GHz Intel i7, plotting observed paths takes about 8 seconds while expected paths takes about 35 seconds. When using the function's parallel implementation, these times fall to approximately 6 and 15 seconds using 4 physical or 8 logical cores.
+neighborhoodWalking() is computationally intensive. Using the current/development version on a single core of a 2.3 GHz Intel i7, plotting observed or expected paths take about 30 seconds. When using the function's parallel implementation, the time falls to approximately 12 seconds using 4 physical or 8 logical cores.
 
 Note that the parallelized version is currently only available on Linux and Mac. Also, note that the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment.

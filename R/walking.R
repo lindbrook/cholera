@@ -48,11 +48,6 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     stop('"case.set" must be "observed", "expected" or "snow".')
   }
 
-  # if (case.set == "snow" & is.null(pump.select) == FALSE) {
-  #   warning('With case.set = "snow", "pump.select" is ignored.')
-  #   pump.select <- NULL
-  # }
-
   if (is.logical(multi.core)) {
     if (multi.core == TRUE) {
       cores <- parallel::detectCores()
@@ -98,11 +93,9 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
     sel <- cholera::sim.ortho.proj$road.segment %in% falconberg.ct.mews
     falconberg.cases <- cholera::sim.ortho.proj[sel, "case"]
-
     sel <- nearest.pump$case %in% falconberg.cases
     nearest.path <- nearest.path[sel == FALSE]
     nearest.pump <- nearest.pump[sel == FALSE, ]
-
     names(nearest.path) <- nearest.pump$case
   }
 
@@ -152,15 +145,15 @@ print.walking <- function(x, ...) {
 
   if (x$case.set == "observed" | x$case.set == "snow") {
    out <- vapply(x$paths, length, numeric(1L))
- } else if (x$case.set == "expected") {
-   args <- list(pump.select = x$pump.select,
-                vestry = x$vestry,
-                weighted = x$weighted,
-                case.set = x$case.set,
-                multi.core = x$cores)
+  } else if (x$case.set == "expected") {
+    args <- list(pump.select = x$pump.select,
+                 vestry = x$vestry,
+                 weighted = x$weighted,
+                 case.set = x$case.set,
+                 multi.core = x$cores)
     nearest.pump <- do.call("nearestPump", args)
     out <- table(nearest.pump$pump)
- }
+  }
    print(out)
 }
 
@@ -168,6 +161,7 @@ print.walking <- function(x, ...) {
 #'
 #' @param x An object of class "walking" created by neighborhoodWalking().
 # #' @param area Logical. TRUE returns area plot. FALSE returns walking paths plot. Works only with case.set = "expected" or case.set = "snow".
+#' @param area Logical. TRUE returns area plot. FALSE returns walking paths plot. Works only with case.set = "expected".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
@@ -176,17 +170,16 @@ print.walking <- function(x, ...) {
 #' # plot(neighborhoodWalking(case.set = "expected"))
 #' # plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
 
-# plot.walking <- function(x, area = FALSE, ...) {
-plot.walking <- function(x, ...) {
+plot.walking <- function(x, area = FALSE, ...) {
   if (class(x) != "walking") {
     stop('"x"\'s class needs to be "walking".')
   }
 
-  # if (area) {
-  #   if (all(x$case.set %in% c("expected", "snow") == FALSE)) {
-  #     stop('"area = TRUE" is valid only when case.set is "expected" or "snow".')
-  #   }
-  # }
+  if (area) {
+    if (all(x$case.set %in% c("expected") == FALSE)) {
+      stop('"area = TRUE" is valid only when case.set is "expected".')
+    }
+  }
 
   ## Functions ##
 
@@ -210,7 +203,6 @@ plot.walking <- function(x, ...) {
 
   wholeSegments <- function(segs) {
     distances <- parallel::mclapply(segs, checkSegment, mc.cores = x$cores)
-
     audit <- lapply(distances, function(d) {
       unique(vapply(d, which.min, integer(1L)))
     })
@@ -219,7 +211,6 @@ plot.walking <- function(x, ...) {
     out <- segs[id]
     out.pump <- p.name[unlist(audit[id])]
     pump <- p.name[sort(unique(unlist(audit[id])))]
-
     out <- lapply(pump, function(p) {
       out[out.pump %in% p]
     })
@@ -237,7 +228,7 @@ plot.walking <- function(x, ...) {
     segment.slope <- stats::coef(ols)[2]
     theta <- atan(segment.slope)
     hypotenuse <- c(stats::dist(seg.df))
-    hypotenuse.breaks <- seq(x$metric, hypotenuse - x$metric, x$metric)
+    hypotenuse.breaks <- seq(0, hypotenuse, x$metric)
 
     distances <- lapply(hypotenuse.breaks, function(h) {
       delta.x <- h * cos(theta)
@@ -259,8 +250,8 @@ plot.walking <- function(x, ...) {
                              x2 = c(test.x, s.data[nrow(s.data), "x2"]),
                              y2 = c(test.y, s.data[nrow(s.data), "y2"]),
                              node1 = c(s.data[1, "node1"], case.node),
-                             node2 = c(case.node,
-                               s.data[nrow(s.data), "node2"]),
+                             node2 = c(case.node, s.data[nrow(s.data),
+                               "node2"]),
                              id2 = c(s.data$id2[1], paste0(seg, "b")),
                              row.names = NULL)
 
@@ -352,8 +343,6 @@ plot.walking <- function(x, ...) {
     lapply(neighborhood, auditEdge)
   }, mc.cores = x$cores)
 
-  ##
-
   obs.segment.count <- lapply(n.path.edges, function(x) {
     table(edges[unique(unlist(x)), "id"])
   })
@@ -385,7 +374,6 @@ plot.walking <- function(x, ...) {
   obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
     unique(x$pump))
   obs.partial.split <- splitData(obs.partial.leftover, cutpoints)
-
 
   ## ------------ Unobserved ------------ ##
 
@@ -429,11 +417,11 @@ plot.walking <- function(x, ...) {
 
   plot(cholera::fatalities[, c("x", "y")], xlim = x.range, ylim = y.range,
     pch = NA, asp = 1)
-
-  invisible(lapply(road.list, lines, col = "gray"))
   invisible(lapply(border.list, lines))
 
   if (x$case.set == "observed") {
+    invisible(lapply(road.list, lines, col = "gray"))
+
     obs.whole.edges <- lapply(n.path.edges, function(x) {
       edges[unique(unlist(x)), "id2"]
     })
@@ -451,6 +439,8 @@ plot.walking <- function(x, ...) {
     }))
 
   } else if (x$case.set == "snow") {
+    invisible(lapply(road.list, lines, col = "gray"))
+
     obs.whole.edges <- lapply(n.path.edges, function(x) {
       edges[unique(unlist(x)), "id2"]
     })
@@ -462,43 +452,88 @@ plot.walking <- function(x, ...) {
     }))
 
   } else if (x$case.set == "expected") {
-    invisible(lapply(names(obs.whole), function(nm) {
-      n.edges <- edges[edges$id %in% obs.whole[[nm]], ]
-      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
-        col = snow.colors[paste0("p", nm)])
-    }))
+    wholes <- lapply(1:13, function(nm) {
+      c(obs.whole[[paste(nm)]],
+        unobs.whole[[paste(nm)]],
+        obs.partial.whole[[paste(nm)]])
+    })
 
-    invisible(lapply(names(obs.partial.whole), function(nm) {
-      n.edges <- edges[edges$id %in% obs.partial.whole[[nm]], ]
-      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
-        col = snow.colors[paste0("p", nm)])
-    }))
+    names(wholes) <- 1:13
 
-    invisible(lapply(names(unobs.whole), function(nm) {
-      n.edges <- edges[edges$id %in% unobs.whole[[nm]], ]
-      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
-        col = snow.colors[paste0("p", nm)])
-    }))
+    if (area) {
+      invisible(lapply(names(wholes), function(nm) {
+        cases <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment
+          %in% wholes[[nm]], "case"]
+        points(cholera::regular.cases[cases, ], pch = 15, cex = 1,
+          col = snow.colors[paste0("p", nm)])
+      }))
 
-    invisible(lapply(seq_along(obs.partial.split), function(i) {
-      dat <- obs.partial.split[[i]]
-      ps <- obs.partial.split.pump[[i]]
-      ps.col <- snow.colors[paste0("p", ps)]
-      segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 4,
-               col = ps.col[1])
-      segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 4,
-               col = ps.col[2])
-    }))
+      splits <- c(obs.partial.split, unobs.split)
+      splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
+      split.segs <- c(obs.partial.leftover, unobs.split.segments)
 
-    invisible(lapply(seq_along(unobs.split), function(i) {
-      dat <- unobs.split[[i]]
-      ps <- unobs.split.pump[[i]]
-      ps.col <- snow.colors[paste0("p", ps)]
-      segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 4,
-        col = ps.col[1])
-      segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 4,
-        col = ps.col[2])
-     }))
+      split.outcome <- lapply(seq_along(split.segs), function(i) {
+        id <- cholera::sim.ortho.proj$road.segment == split.segs[i] &
+              is.na(cholera::sim.ortho.proj$road.segment) == FALSE
+
+        sim.data <- cholera::sim.ortho.proj[id, ]
+        split.data <- splits[[i]]
+
+        sel <- vapply(seq_len(nrow(sim.data)), function(j) {
+          obs <- sim.data[j, c("x.proj", "y.proj")]
+          ds <- vapply(seq_len(nrow(split.data)), function(k) {
+            stats::dist(matrix(c(obs, split.data[k,]), 2, 2, byrow = TRUE))
+          }, numeric(1L))
+
+          test1 <- signif(sum(ds[1:2])) ==
+                   signif(c(stats::dist(split.data[c(1, 2), ])))
+          test2 <- signif(sum(ds[3:4])) ==
+                   signif(c(stats::dist(split.data[c(3, 4), ])))
+
+          ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
+        }, integer(1L))
+
+        data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
+      })
+
+      split.outcome <- do.call(rbind, split.outcome)
+      split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
+      split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
+        split.outcome[split.outcome$pump == p, "case"]
+      })
+
+      names(split.cases) <- sort(unique(split.outcome$pump))
+
+      invisible(lapply(names(split.cases), function(nm) {
+        cases <- split.cases[[nm]]
+        points(cholera::regular.cases[cases, ], pch = 15, cex = 1,
+          col = snow.colors[paste0("p", nm)])
+      }))
+
+      invisible(lapply(road.list, lines, col = "lightgray"))
+
+    } else {
+      invisible(lapply(road.list, lines, col = "gray"))
+
+      invisible(lapply(names(wholes), function(nm) {
+        n.edges <- edges[edges$id %in% wholes[[nm]], ]
+        segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 3,
+          col = snow.colors[paste0("p", nm)])
+      }))
+
+      splits <- c(obs.partial.split, unobs.split)
+      splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
+
+      invisible(lapply(seq_along(splits), function(i) {
+        dat <- splits[[i]]
+        ps <- splits.pump[[i]]
+        ps.col <- snow.colors[paste0("p", ps)]
+        segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 3,
+                 col = ps.col[1])
+        segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 3,
+                 col = ps.col[2])
+      }))
+    }
   }
 
   if (is.null(x$pump.select)) {

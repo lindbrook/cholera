@@ -4,10 +4,12 @@
 \alias{plot.walking}
 \title{Plot method for neighborhoodWalking().}
 \usage{
-\method{plot}{walking}(x, ...)
+\method{plot}{walking}(x, area = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "walking" created by neighborhoodWalking().}
+
+\item{area}{Logical. TRUE returns area plot. FALSE returns walking paths plot. Works only with case.set = "expected".}
 
 \item{...}{Additional plotting parameters.}
 }

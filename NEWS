@@ -1,8 +1,13 @@
+cholera 0.3.0.9005
+==================
+
+- beta of neighborhoodWalking() "area" plot.
+
+
 cholera 0.3.0.9004
 ==================
 
 - re-implement snow neighborhood in neighborhoodWalking().
-  "area" plot of neighborhoodWalking() currently unavailable.
 
 
 cholera 0.3.0.9003
