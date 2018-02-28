@@ -13,8 +13,9 @@ timeSeries(vestry = FALSE)
 A R list with two objects: "data" and "source" ("snow" or "vestry").
 \itemize{
   \item{\code{date}: Calendar date.}
-  \item{\code{deaths}: measure of fatality.}
-  \item{\code{fatal.attacks}: measure of fatality.}
+  \item{\code{day}: Day of the week.}
+  \item{\code{deaths}: Measure of fatality.}
+  \item{\code{fatal.attacks}: Measure of fatality.}
 }
 }
 \description{

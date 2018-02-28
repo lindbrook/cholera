@@ -4,8 +4,9 @@
 #' @return A R list with two objects: "data" and "source" ("snow" or "vestry").
 #' \itemize{
 #'   \item{\code{date}: Calendar date.}
-#'   \item{\code{deaths}: measure of fatality.}
-#'   \item{\code{fatal.attacks}: measure of fatality.}
+#'   \item{\code{day}: Day of the week.}
+#'   \item{\code{deaths}: Measure of fatality.}
+#'   \item{\code{fatal.attacks}: Measure of fatality.}
 #' }
 #' @section Note: The "snow" data appears on p. 117 of the report; the "vestry" data appear in Appendix B on p.175.
 #' @seealso \code{\link{plot.time_series}}, \code{\link{print.time_series}}, \code{vignette("time.series")}
@@ -33,8 +34,8 @@ timeSeries <- function(vestry = FALSE) {
 
     calendar.date <- as.Date(paste0(1854, "-", month.num, "-", day))
 
-    output <- list(data = data.frame(date = calendar.date, deaths,
-      fatal.attacks))
+    output <- list(data = data.frame(date = calendar.date,
+      day = weekdays(calendar.date), deaths, fatal.attacks))
 
   } else {
     # Note: entry for an additional 45 fatal attacks with "Date unknown".
@@ -50,8 +51,10 @@ timeSeries <- function(vestry = FALSE) {
       54, 46, 36, 20, 28, 12, 11, 5, 5, 1, 4, 0, 1, 4, 2, 3, 0, 0, 2, rep(1, 6),
       rep(0, 3))
 
-    output <- list(data = data.frame(date = as.Date(paste0(yr, "-", mo, "-",
-      day)), deaths, fatal.attacks))
+    calendar.date <- as.Date(paste0(yr, "-", mo, "-", day))
+
+    output <- list(data = data.frame(date = calendar.date,
+      day = weekdays(calendar.date), deaths, fatal.attacks))
   }
 
   class(output) <- "time_series"
