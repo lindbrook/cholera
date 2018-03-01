@@ -128,19 +128,19 @@ Charles Street | **Map Frame** | St James Workhouse
 Church Street | Margaret Court | Sutton Street
 Clifford Street | Margaret Street | Swallow Place
 Coach & Horses Yard | Market Court | Swallow Street
-Cock Court | Market Place | Tichborne Street
-Conduit Street | Market Row | Titchfield Street
-Cork Mews | Market Street | Turks Head Yard
-Cork Street | Marlborough Court | Tyler Court
-Coventry Street | Marlborough Mews | Tyler Street
-Cross Street | Marlborough Row | Tylers Court
-Crown Court | Marshall Street | Unknown-A1
-Dean Street | Marylebone Street | Unknown-A2
-Dover Street | Masons Arms Yard | Unknown-B
-Duck Lane/Ham Square | Meards Court/Street | Unknown-C
-Dufours Place | Mill Street | Unknown-D
-Edward Street | Nags Head Yard | Unknown-E
-Falconberg Court | Naylors Yard | Unknown-F
+Cock Court | Market Place | Tent Court
+Conduit Street | Market Row | Tichborne Street
+Cork Mews | Market Street | Titchfield Street
+Cork Street | Marlborough Court | Turks Head Yard
+Coventry Street | Marlborough Mews | Tyler Court
+Cross Street | Marlborough Row | Tyler Street
+Crown Court | Marshall Street | Tylers Court
+Dean Street | Marylebone Street | Unknown-A1
+Dover Street | Masons Arms Yard | Unknown-A2
+Duck Lane/Ham Square | Meards Court/Street | Unknown-B
+Dufours Place | Mill Street | Unknown-C
+Edward Street | Nags Head Yard | Unknown-D
+Falconberg Court | Naylors Yard | Unknown-E
 Falconberg Mews | New Bond Street | Upper James Street
 Fouberts Place | New Burlington Mews | Upper John Street
 Francis Street | New Burlington Street | Upper Rupert Street
