@@ -45,7 +45,7 @@ addLandmarks <- function(text.size = 0.5) {
   st.james <- data.frame(x = 11.5, y = 13.48414 )
   text(st.james$x, st.james$y, labels = "St James\nWorkhouse", cex = text.size)
 
-  # Lion Brewery (Huggins proprietors)
+  # Lion Brewery (Huggins' proprietors)
   brewery <- data.frame(x = 13.9022, y = 11.87315)
   text(brewery$x, brewery$y, labels = "Lion\nBrewery", cex = text.size)
   points(brewery$x, brewery$y, pch = 15, cex = 1/3)
@@ -61,4 +61,100 @@ addLandmarks <- function(text.size = 0.5) {
   text(stats::quantile(adam.eve[, "x"], 0.25),
        stats::quantile(adam.eve[, "y"], 0.25),
        labels = "Adam & Eve\nCourt", cex = text.size)
+
+  ## Edmund Cooper's Map ##
+
+  nm <- c("x", "y")
+
+  # Marlborough Mews: Earl of Aberdeen
+  NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "116-2", c("x2", "y2")], nm)
+  NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "144-1", c("x2", "y2")], nm)
+  SW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "161-1", c("x2", "y2")], nm)
+  SE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "161-1", c("x1", "y1")], nm)
+
+  aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
+                                  NE$x, NE$y, SW$x, SW$y)
+
+  text(aberdeen$x, aberdeen$y, labels = "Earl of\nAberdeen",
+    cex = text.size)
+
+  # Marlborough Mews: Police Station
+
+  rd.data <- cholera::road.segments[cholera::road.segments$id == "161-1",
+    c("x1", "y1", "x2", "y2")]
+
+  dat <- data.frame(x = unlist(rd.data[, grep("x", names(rd.data))]),
+                    y = unlist(rd.data[, grep("y", names(rd.data))]),
+                    row.names = NULL)
+
+  ols <- stats::lm(y ~ x, dat)
+  segment.slope <- stats::coef(ols)[2]
+  new.int <- aberdeen$y - aberdeen$x * segment.slope
+  orthogonal.slope <- -1 / segment.slope
+  orthogonal.intercept <- SW$y - orthogonal.slope * SW$x
+  new.x <- (orthogonal.intercept - new.int) / (segment.slope - orthogonal.slope)
+  new.y <- new.x * orthogonal.slope + orthogonal.intercept
+  text(new.x, new.y , labels = "Police\nStation", cex = text.size)
+
+
+  # Regent (opposite) at intersection with Little Argyll Street: Chapel
+
+  text(cholera::road.segments[cholera::road.segments$id == "144-1",
+    c("x1", "y1")], labels = "Chapel", pos = 2, cex = text.size)
+
+  # King Street (opposite) at intersection with Cross Street:
+  # Distillery and St James Theatre
+  NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "257-1", c("x1", "y1")], nm)
+  NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "305-1", c("x1", "y1")], nm)
+  SE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "306-1", c("x1", "y1")], nm)
+  SW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "306-1", c("x2", "y2")], nm)
+
+  st.james <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
+                                  NE$x, NE$y, SW$x, SW$y)
+
+  text(st.james$x, st.james$y, labels = "St James\nTheatre",
+    cex = text.size)
+
+  # Oxford Street (opposite) at intersection with Winsley Street: Pantheon Bazaar`
+
+  text(cholera::road.segments[cholera::road.segments$name == "Winsley Street",
+    c("x2", "y2")], pos = 1, labels = "The\nPantheon", cex = text.size)
+
+  # 7 Cambridge Street at corner intersection with Broad Street: PH
+
+  # Adjacent south of Lion Brewery: Model Lodging Housing
+  # (in process of erection)
+  # http://www.workhouses.org.uk/model/
+
+  sel <- cholera::road.segments$name == "Cock Court"
+  rd.data <- cholera::road.segments[sel, c("x2", "y2")]
+  NW <- stats::setNames(rd.data, nm)
+
+  sel <- cholera::road.segments$name == "Cock Court"
+  rd.data <- cholera::road.segments[sel, c("x1", "y1")]
+  NE <- stats::setNames(rd.data, nm)
+
+  sel <- cholera::road.segments$id == "259-1"
+  rd.data <- cholera::road.segments[sel, c("x2", "y2")]
+  SW <- stats::setNames(rd.data, nm)
+
+  sel <- cholera::road.segments$id == "259-1"
+  rd.data <- cholera::road.segments[sel, c("x1", "y1")]
+  SE <- stats::setNames(rd.data, nm)
+
+  model.lodging <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
+                                       NE$x, NE$y, SW$x, SW$y)
+
+  points(model.lodging $x, model.lodging $y, pch = 15, cex = 1/3)
+
+  text(model.lodging$x, model.lodging$y, labels = "Model\nLodging",
+    cex = text.size)
 }
