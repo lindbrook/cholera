@@ -83,7 +83,7 @@ addLandmarks <- function(text.size = 0.5) {
   text(aberdeen$x, aberdeen$y, labels = "Earl of\nAberdeen",
     cex = text.size)
 
-  # Marlborough Mews: Police Station
+  # 1) Marlborough Mews: Police Station
 
   rd.data <- cholera::road.segments[cholera::road.segments$id == "161-1",
     c("x1", "y1", "x2", "y2")]
@@ -102,8 +102,7 @@ addLandmarks <- function(text.size = 0.5) {
   points(new.x, new.y, pch = 15, cex = 1/3)
   text(new.x, new.y, labels = "Police\nStation", cex = text.size)
 
-
-  # Regent (opposite) at intersection with Little Argyll Street: Chapel
+  # 2) Regent (opposite) at intersection with Little Argyll Street: Chapel
 
   text(cholera::road.segments[cholera::road.segments$id == "144-1",
     c("x1", "y1")], labels = "Chapel", pos = 2, cex = text.size)
@@ -125,14 +124,15 @@ addLandmarks <- function(text.size = 0.5) {
   text(st.james$x, st.james$y, labels = "St James\nTheatre",
     cex = text.size)
 
-  # Oxford Street (opposite) at intersection with Winsley Street: Pantheon Bazaar`
+  # 3) Oxford Street (opposite) at intersection with Winsley Street:
+  # Pantheon Bazaar`
 
   text(cholera::road.segments[cholera::road.segments$name == "Winsley Street",
     c("x2", "y2")], pos = 1, labels = "The\nPantheon", cex = text.size)
 
-  # 7 Cambridge Street at corner intersection with Broad Street: PH
+  # 4) 7 Cambridge Street at corner intersection with Broad Street: PH
 
-  # Adjacent south of Lion Brewery: Model Lodging Housing
+  # 5) Adjacent south of Lion Brewery: Model Lodging Housing
   # (in process of erection)
   # http://www.workhouses.org.uk/model/
 
