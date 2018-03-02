@@ -108,7 +108,9 @@ addLandmarks <- function(text.size = 0.5) {
     c("x1", "y1")], labels = "Chapel", pos = 2, cex = text.size)
 
   # King Street (opposite) at intersection with Cross Street:
-  # Distillery and St James Theatre
+  # Distillery and St James Church
+  # https://maps.nls.uk/os/london-1890s/index.html
+  
   NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
     "257-1", c("x1", "y1")], nm)
   NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
@@ -121,7 +123,7 @@ addLandmarks <- function(text.size = 0.5) {
   st.james <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
                                   NE$x, NE$y, SW$x, SW$y)
 
-  text(st.james$x, st.james$y, labels = "St James\nTheatre",
+  text(st.james$x, st.james$y, labels = "St James\nChurch",
     cex = text.size)
 
   # 3) Oxford Street (opposite) at intersection with Winsley Street:
