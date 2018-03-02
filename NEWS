@@ -1,3 +1,10 @@
+cholera 0.3.0.9009
+==================
+
+- amend road name: from "Unknown-D" and "Unknown-E" to "St James's Market" and
+  "Market Street (II)" (https://maps.nls.uk/os/london-1890s/index.html).
+
+
 cholera 0.3.0.9008
 ==================
 
@@ -7,8 +14,8 @@ cholera 0.3.0.9008
 cholera 0.3.0.9007
 ==================
 
-- amend road name: from "Unknown-B" to "Tent Court":
-  according to Edmund Cooper's map.
+- amend road name: from "Unknown-B" to "Tent Court"
+  (Edmund Cooper's map).
 
 
 cholera 0.3.0.9006

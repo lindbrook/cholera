@@ -10,7 +10,8 @@ vignette: >
 ---
 
 ```{r, echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+# knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(collapse = TRUE, comment = "")
 library(cholera)
 ```
 
@@ -47,7 +48,7 @@ length(border)
 
 The primary source for road names is Snow's map. A high resolution version is available [here](http://www.ph.ucla.edu/epi/snow/highressnowmap.html). While great effort was made to correctly record and cross-reference names, there may still be errors. Error reports and suggestions for amendments are welcome.
 
-Some roads on the map do not have a name. In those cases, I attached unique labels like "Unknown-D".
+Some roads on the map do not have a name. In those cases, I attached unique labels like "Unknown-C".
 
 Some names appear multiple times even though they lie at different locations. For these, I use Roman numerals to distinguish them (e.g., "King Street (I)" and "King Street (II)").
 
@@ -88,78 +89,12 @@ _segmentLocator_() is for those interested in more granular analysis. It uses in
 
 There are 206 "valid" road names; 207, if we include "Map Frame":
 
-1 -70 | 71 - 140 | 141 - 207
-----------------------|----------------------|----------------------
-Adam and Eve Court | Greek Street | Phoenix Yard
-Air Street | Green Dragon Yard | Picadilly
-Albany Street | Greens Court | Plough Yard
-Albemarle Street | Ham Yard | Poland Street
-Allens Court | Hanover Street | Pollen Street
-Angel Court | Hanway Street | Portland Mews
-Archer Street | Haymarket | Portland Street
-Argyll Place | Heddon Court | Princes Street (I)
-Argyll Street | Heddon Street | Princes Street (II)
-Arundel Place | Hollen Street | Princes Street (III)
-Arundel Street | Hopkins Street | Princes Street/Hanover Square
-Batemans Buildings | Jermyn Street | Pulteney Court (I)
-Beak Street | John Street | Pulteney Court (II)
-Bentinck Street | Kemps Court | Queen Street (I)
-Berners Street | King Street (I) | Queen Street (II)
-Berwick Street | King Street (II) | Queen Street (III)
-Black Lion Court | Kings Arms Yard | Queens Head Court
-Blenheim Mews | Leicester Street (I) | Rathbone Place
-Blenheim Street | Leicester Street (II) | Regent Street
-Boyle Street | Lisle Street | Regents Quadrant
-Brewer Street | Little Argyll Street | Richmond Buildings/Mews
-Bridle Street | Little Chapel Street | Richmond Street
-Broad Street | Little Crown Court | Rupert Street
-Bruton Street | Little Dean Street | Sackville Street
-Bull Yard | Little Marlborough Street | Saville Row
-Burlington Arcade | Little Pulteney Street | Sherrard Street
-Burlington Gardens | Little Windmill Street | Ship Yard
-Cambridge Street | Lower James Street | Sidney Alley
-Carlisle Street | Lower John Street | Silver Street
-Carnaby Court | Lowndes Court | Smiths Court/Yard
-Carnaby Street | Macclesfield Street | Soho Square
-Castle Street East | Macclesfield Street/Gerrard Street | South Row
-Catherine Wheel Yard | Maddox Street | St Anns Court
-Chapel Place | Maidenhead Court | St Anns Place
-Charles Street | **Map Frame** | St James Workhouse
-Church Street | Margaret Court | Sutton Street
-Clifford Street | Margaret Street | Swallow Place
-Coach & Horses Yard | Market Court | Swallow Street
-Cock Court | Market Place | Tent Court
-Conduit Street | Market Row | Tichborne Street
-Cork Mews | Market Street | Titchfield Street
-Cork Street | Marlborough Court | Turks Head Yard
-Coventry Street | Marlborough Mews | Tyler Court
-Cross Street | Marlborough Row | Tyler Street
-Crown Court | Marshall Street | Tylers Court
-Dean Street | Marylebone Street | Unknown-A1
-Dover Street | Masons Arms Yard | Unknown-A2
-Duck Lane/Ham Square | Meards Court/Street | Unknown-B
-Dufours Place | Mill Street | Unknown-C
-Edward Street | Nags Head Yard | Unknown-D
-Falconberg Court | Naylors Yard | Unknown-E
-Falconberg Mews | New Bond Street | Upper James Street
-Fouberts Place | New Burlington Mews | Upper John Street
-Francis Street | New Burlington Street | Upper Rupert Street
-Frith Street | New Street | Vigo Street
-George Court (I) | New Street/Husband Street | Vine Street
-George Court (II) | Newman Street | Walkers Court
-George Place | Noel Street | Wardour Mews
-George Street | Norris's Place | Wardour Street
-George Yard | North Coventry Street | Warwick Street
-Glasshouse Street | Old Burlington Mews | Wellington Mews
-Golden Place | Old Burlington Street | Wells Street
-Golden Square | Old Compton Street | West Street
-Grafton Street | Orchard Place | Whitcomb Court
-Great Castle Street | Oxendon Street | White Bear Yard
-Great Chapel Street | Oxford Street | William and Mary Yard
-Great Crown Court | Panton Street | Winsley Street
-Great Marlborough Street | Perrys Place |
-Great Pulteney Street | Peter Street |
-Great Windmill Street | Pews Place |
+```{r, echo = FALSE}
+road.names <- sort(unique(roads$name))
+road.names <- road.names[road.names != "Map Frame"]
+road.names <- stats::setNames(data.frame(matrix(road.names, ncol = 2)), NULL)
+print(road.names, right = FALSE)
+```
 
 ## Coordinate unit
 
