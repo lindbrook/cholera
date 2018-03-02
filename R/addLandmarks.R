@@ -79,6 +79,7 @@ addLandmarks <- function(text.size = 0.5) {
   aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
                                   NE$x, NE$y, SW$x, SW$y)
 
+  points(aberdeen$x, aberdeen$y, pch = 15, cex = 1/3)
   text(aberdeen$x, aberdeen$y, labels = "Earl of\nAberdeen",
     cex = text.size)
 
@@ -98,7 +99,8 @@ addLandmarks <- function(text.size = 0.5) {
   orthogonal.intercept <- SW$y - orthogonal.slope * SW$x
   new.x <- (orthogonal.intercept - new.int) / (segment.slope - orthogonal.slope)
   new.y <- new.x * orthogonal.slope + orthogonal.intercept
-  text(new.x, new.y , labels = "Police\nStation", cex = text.size)
+  points(new.x, new.y, pch = 15, cex = 1/3)
+  text(new.x, new.y, labels = "Police\nStation", cex = text.size)
 
 
   # Regent (opposite) at intersection with Little Argyll Street: Chapel
@@ -153,7 +155,7 @@ addLandmarks <- function(text.size = 0.5) {
   model.lodging <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
                                        NE$x, NE$y, SW$x, SW$y)
 
-  points(model.lodging $x, model.lodging $y, pch = 15, cex = 1/3)
+  points(model.lodging$x, model.lodging$y, pch = 15, cex = 1/3)
 
   text(model.lodging$x, model.lodging$y, labels = "Model\nLodging",
     cex = text.size)
