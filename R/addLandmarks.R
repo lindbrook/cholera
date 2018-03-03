@@ -110,7 +110,7 @@ addLandmarks <- function(text.size = 0.5) {
   # King Street (opposite) at intersection with Cross Street:
   # Distillery and St James Church
   # https://maps.nls.uk/os/london-1890s/index.html
-  
+
   NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
     "257-1", c("x1", "y1")], nm)
   NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
@@ -158,7 +158,53 @@ addLandmarks <- function(text.size = 0.5) {
                                        NE$x, NE$y, SW$x, SW$y)
 
   points(model.lodging$x, model.lodging$y, pch = 15, cex = 1/3)
-
   text(model.lodging$x, model.lodging$y, labels = "Model\nLodging",
     cex = text.size)
+
+  # 6) Marshall Street Public Baths
+
+  intersectionPoint <- function(seg1, seg2, sel = 1) {
+    s1 <- cholera::road.segments[cholera::road.segments$id == seg1, ]
+    s2 <- cholera::road.segments[cholera::road.segments$id == seg2, ]
+    dat <- lapply(list(s1, s2), toDataFrame)
+    ols <- lapply(dat, stats::lm, formula = y ~ x)
+    coefs <- lapply(ols, stats::coef)
+    x <- (coefs[[1]][1] - coefs[[2]][1]) / (coefs[[2]][2] - coefs[[1]][2])
+    y <- coefs[[1]][1] + coefs[[1]][2] * x
+    h <- c(stats::dist(rbind(s2[, c(paste0("x", sel), paste0("y", sel))],
+                             c(x, y))))
+    segment.slope <- stats::coef(ols[[2]])[2]
+    theta <- atan(segment.slope)
+    delta.x <- (h / 2) * cos(theta)
+    delta.y <- (h / 2) * sin(theta)
+    x.new <- x + delta.x
+    y.new <- y + delta.y
+    data.frame(x = x.new, y = y.new)
+  }
+
+  toDataFrame <- function(dat) {
+    out <- data.frame(rbind(c(dat$x1, dat$y1), c(dat$x2, dat$y2)))
+    stats::setNames(out, c("x", "y"))
+  }
+
+  public.baths <- intersectionPoint("201-2", "217-2", 1)
+  text(public.baths, pos = 3, offset = 1, labels = "Public\nBaths",
+    cex = text.size)
+
+  # 7) Craven Chapel (Wesleyan)
+
+  ep1 <- cholera::road.segments[cholera::road.segments$name == "Lowndes Court",
+    c("x2", "y2")]
+  ep2 <- cholera::road.segments[cholera::road.segments$id == "201-1",
+    c("x2", "y2")]
+  dat <- stats::setNames(rbind(ep1, ep2), nm)
+  h <- c(stats::dist(dat))
+  ols <- stats::lm(y ~ x, dat)
+  segment.slope <- stats::coef(ols)[2]
+  theta <- atan(segment.slope)
+  delta.x <- (h / 2) * cos(theta)
+  delta.y <- (h / 2) * sin(theta)
+  x.new <- dat[1, "x"] + delta.x
+  y.new <- dat[1, "y"] + delta.y
+  text(x.new, y.new, labels = "Craven\nChapel", cex = text.size)
 }
