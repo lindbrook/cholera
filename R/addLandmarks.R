@@ -188,8 +188,10 @@ addLandmarks <- function(text.size = 0.5) {
   }
 
   public.baths <- intersectionPoint("201-2", "217-2", 1)
-  text(public.baths, pos = 3, offset = 1, labels = "Public\nBaths",
-    cex = text.size)
+  # text(public.baths, pos = 3, offset = 1, labels = "Public\nBaths",
+  #   cex = text.size)
+
+  text(public.baths, labels = "Public\nBaths", cex = text.size)
 
   # 7) Craven Chapel (Wesleyan)
 
