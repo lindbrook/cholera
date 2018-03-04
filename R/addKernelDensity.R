@@ -93,7 +93,8 @@ addKernelDensity <- function(neighborhood = "pooled", pump.select = NULL,
           cases <- cases[empty.cell != 0]
         }
 
-        kde <- lapply(cases, function(sel) {
+        kde <- lapply(cases, function(id) {
+          sel <- cholera::fatalities.address$anchor.case %in% id
           dat <- cholera::fatalities.address[sel, c("x", "y")]
           KernSmooth::bkde2D(dat, bandwidth = bw)
         })
@@ -120,7 +121,8 @@ addKernelDensity <- function(neighborhood = "pooled", pump.select = NULL,
         cases <- cases[empty.cell != 0]
       }
 
-      kde <- lapply(cases, function(sel) {
+      kde <- lapply(cases, function(id) {
+        sel <- cholera::fatalities.address$anchor.case %in% id
         dat <- cholera::fatalities.address[sel, c("x", "y")]
         KernSmooth::bkde2D(dat, bandwidth = bw)
       })
@@ -135,7 +137,8 @@ addKernelDensity <- function(neighborhood = "pooled", pump.select = NULL,
   } else {
     n.data <- cholera::neighborhoodWalking(pump.select, multi.core = cores)
     cases <- cholera::pumpCase(n.data)
-    kde <- lapply(cases, function(sel) {
+    kde <- lapply(cases, function(id) {
+      sel <- cholera::fatalities.address$anchor.case %in% id
       dat <- cholera::fatalities.address[sel, c("x", "y")]
       KernSmooth::bkde2D(dat, bandwidth = bw)
     })
