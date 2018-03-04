@@ -4,7 +4,7 @@
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6). Note that you can't just select the pump on Adam and Eve Court (#2): it's a technical isolate.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.
-#' @param case.set Character. "observed" or "expected".
+#' @param case.set Character. "observed", "expected" or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @return An R list with 7 objects:
 #' \itemize{
@@ -44,8 +44,8 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     }
   }
 
-  if (case.set %in% c("observed", "expected") == FALSE) {
-    stop('"case.set" must be "observed" or "expected".')
+  if (case.set %in% c("observed", "expected", "snow") == FALSE) {
+    stop('"case.set" must be "observed", "expected" or "snow".')
   }
 
   if (is.logical(multi.core)) {
@@ -383,18 +383,18 @@ plot.walking <- function(x, type = "road", ...) {
              cex = 0.75, col = snow.colors[paste0("p", nm)])
     }))
 
-  # } else if (x$case.set == "snow") {
-  #   invisible(lapply(road.list, lines, col = "gray"))
-  #
-  #   obs.whole.edges <- lapply(n.path.edges, function(x) {
-  #     edges[unique(unlist(x)), "id2"]
-  #   })
-  #
-  #   invisible(lapply(names(obs.whole.edges), function(nm) {
-  #     n.edges <- edges[edges$id2 %in% obs.whole.edges[[nm]], ]
-  #     segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
-  #              col = snow.colors[paste0("p", nm)])
-  #   }))
+  } else if (x$case.set == "snow") {
+    invisible(lapply(road.list, lines, col = "gray"))
+
+    obs.whole.edges <- lapply(n.path.edges, function(x) {
+      edges[unique(unlist(x)), "id2"]
+    })
+
+    invisible(lapply(names(obs.whole.edges), function(nm) {
+      n.edges <- edges[edges$id2 %in% obs.whole.edges[[nm]], ]
+      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
+               col = snow.colors[paste0("p", nm)])
+    }))
 
   } else if (x$case.set == "expected") {
     obs.segment.count <- lapply(n.path.edges, function(x) {
