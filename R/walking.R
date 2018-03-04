@@ -4,7 +4,7 @@
 #' @param pump.select Numeric. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6). Note that you can't just select the pump on Adam and Eve Court (#2): it's a technical isolate.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.
-#' @param case.set Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
+#' @param case.set Character. "observed" or "expected".
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @return An R list with 7 objects:
 #' \itemize{
@@ -44,8 +44,8 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     }
   }
 
-  if (case.set %in% c("observed", "expected", "snow") == FALSE) {
-    stop('"case.set" must be "observed", "expected" or "snow".')
+  if (case.set %in% c("observed", "expected") == FALSE) {
+    stop('"case.set" must be "observed" or "expected".')
   }
 
   if (is.logical(multi.core)) {
@@ -196,8 +196,12 @@ plot.walking <- function(x, type = "road", ...) {
     }, numeric(1L))
   }
 
-  checkSegment <- function(s) {
-    s.data <- edges[edges$id == s, ]
+  checkSegment <- function(s, sub.edge = FALSE) {
+    if (sub.edge) {
+      s.data <- edges[edges$id2 == s, ]
+    } else {
+      s.data <- edges[edges$id == s, ]
+    }
     case.node <- c(s.data[1, "node1"], s.data[nrow(s.data), "node2"])
     lapply(case.node, function(node) {
       igraph::distances(dat$g, node, p.node, weights = edges$d)
@@ -346,66 +350,6 @@ plot.walking <- function(x, type = "road", ...) {
     lapply(neighborhood, auditEdge)
   }, mc.cores = x$cores)
 
-  obs.segment.count <- lapply(n.path.edges, function(x) {
-    table(edges[unique(unlist(x)), "id"])
-  })
-
-  edge.count <- table(edges$id)
-
-  segment.audit <- lapply(obs.segment.count, function(neighborhood) {
-    whole.id <- vapply(names(neighborhood), function(nm) {
-      identical(neighborhood[nm], edge.count[nm])
-    }, logical(1L))
-
-    list(whole = names(neighborhood[whole.id]),
-         partial = names(neighborhood[!whole.id]))
-  })
-
-  ## ------------ Observed ------------ ##
-
-  obs.whole <- lapply(segment.audit, function(x) x$`whole`)
-
-  obs.partial <- lapply(segment.audit, function(x) x$`partial`)
-  obs.partial.segments <- unname(unlist(obs.partial))
-  obs.partial.whole <- wholeSegments(obs.partial.segments)
-
-  obs.partial.leftover <- setdiff(obs.partial.segments,
-    unlist(obs.partial.whole))
-  obs.partial.split.data <- parallel::mclapply(obs.partial.leftover,
-    splitSegments, mc.cores = x$cores)
-  cutpoints <- cutpointValues(obs.partial.split.data)
-  obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
-    unique(x$pump))
-  obs.partial.split <- splitData(obs.partial.leftover, cutpoints)
-
-  ## ------------ Unobserved ------------ ##
-
-  obs.segments <- lapply(n.path.edges, function(x) {
-    unique(edges[unique(unlist(x)), "id"])
-  })
-
-  unobs.segments <- setdiff(cholera::road.segments$id, unlist(obs.segments))
-
-  falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
-  unobs.segments <- unobs.segments[unobs.segments %in%
-    falconberg.ct.mews == FALSE]
-
-  # Exclude segment if A&E pump is not among selected.
-  AE <- cholera::pumps[cholera::pumps$street == "Adam and Eve Court", "id"]
-  if (AE %in% x$pump.select == FALSE) {
-    adam.eve.ct <- "44-1"
-    unobs.segments <- unobs.segments[unobs.segments %in% adam.eve.ct == FALSE]
-  }
-
-  unobs.whole <- wholeSegments(unobs.segments)
-
-  unobs.split.segments <- setdiff(unobs.segments, unlist(unobs.whole))
-  unobs.split.data <- parallel::mclapply(unobs.split.segments, splitSegments,
-    mc.cores = x$cores)
-  cutpoints <- cutpointValues(unobs.split.data)
-  unobs.split.pump <- lapply(unobs.split.data, function(x) unique(x$pump))
-  unobs.split <- splitData(unobs.split.segments, cutpoints)
-
   ## ------------ Plot ------------ ##
 
   n.sel <- as.numeric(names(x$paths))
@@ -425,14 +369,12 @@ plot.walking <- function(x, type = "road", ...) {
   if (x$case.set == "observed") {
     invisible(lapply(road.list, lines, col = "gray"))
 
-    obs.whole.edges <- lapply(n.path.edges, function(x) {
-      edges[unique(unlist(x)), "id2"]
-    })
+    edge.data <- lapply(n.path.edges, function(x) unique(unlist(x)))
 
-    invisible(lapply(names(obs.whole.edges), function(nm) {
-      n.edges <- edges[edges$id2 %in% obs.whole.edges[[nm]], ]
+    invisible(lapply(names(edge.data), function(nm) {
+      n.edges <- edges[edge.data[[nm]], ]
       segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
-               col = snow.colors[paste0("p", nm)])
+        col = snow.colors[paste0("p", nm)])
     }))
 
     invisible(lapply(names(x$cases), function(nm) {
@@ -441,20 +383,82 @@ plot.walking <- function(x, type = "road", ...) {
              cex = 0.75, col = snow.colors[paste0("p", nm)])
     }))
 
-  } else if (x$case.set == "snow") {
-    invisible(lapply(road.list, lines, col = "gray"))
-
-    obs.whole.edges <- lapply(n.path.edges, function(x) {
-      edges[unique(unlist(x)), "id2"]
-    })
-
-    invisible(lapply(names(obs.whole.edges), function(nm) {
-      n.edges <- edges[edges$id2 %in% obs.whole.edges[[nm]], ]
-      segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
-               col = snow.colors[paste0("p", nm)])
-    }))
+  # } else if (x$case.set == "snow") {
+  #   invisible(lapply(road.list, lines, col = "gray"))
+  #
+  #   obs.whole.edges <- lapply(n.path.edges, function(x) {
+  #     edges[unique(unlist(x)), "id2"]
+  #   })
+  #
+  #   invisible(lapply(names(obs.whole.edges), function(nm) {
+  #     n.edges <- edges[edges$id2 %in% obs.whole.edges[[nm]], ]
+  #     segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
+  #              col = snow.colors[paste0("p", nm)])
+  #   }))
 
   } else if (x$case.set == "expected") {
+    obs.segment.count <- lapply(n.path.edges, function(x) {
+      table(edges[unique(unlist(x)), "id"])
+    })
+
+    edge.count <- table(edges$id)
+
+    segment.audit <- lapply(obs.segment.count, function(neighborhood) {
+      whole.id <- vapply(names(neighborhood), function(nm) {
+        identical(neighborhood[nm], edge.count[nm])
+      }, logical(1L))
+
+      list(whole = names(neighborhood[whole.id]),
+           partial = names(neighborhood[!whole.id]))
+    })
+
+    ## ------------ Observed ------------ ##
+
+    obs.whole <- lapply(segment.audit, function(x) x$`whole`)
+
+    obs.partial <- lapply(segment.audit, function(x) x$`partial`)
+    obs.partial.segments <- unname(unlist(obs.partial))
+    obs.partial.whole <- wholeSegments(obs.partial.segments)
+
+    obs.partial.leftover <- setdiff(obs.partial.segments,
+      unlist(obs.partial.whole))
+    obs.partial.split.data <- parallel::mclapply(obs.partial.leftover,
+      splitSegments, mc.cores = x$cores)
+    cutpoints <- cutpointValues(obs.partial.split.data)
+    obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
+      unique(x$pump))
+    obs.partial.split <- splitData(obs.partial.leftover, cutpoints)
+
+    ## ------------ Unobserved ------------ ##
+
+    obs.segments <- lapply(n.path.edges, function(x) {
+      unique(edges[unique(unlist(x)), "id"])
+    })
+
+    unobs.segments <- setdiff(cholera::road.segments$id, unlist(obs.segments))
+
+    falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
+    unobs.segments <- unobs.segments[unobs.segments %in%
+      falconberg.ct.mews == FALSE]
+
+    # Exclude segment if A&E pump is not among selected.
+    AE <- cholera::pumps[cholera::pumps$street == "Adam and Eve Court", "id"]
+    if (AE %in% x$pump.select == FALSE) {
+      adam.eve.ct <- "44-1"
+      unobs.segments <- unobs.segments[unobs.segments %in% adam.eve.ct == FALSE]
+    }
+
+    unobs.whole <- wholeSegments(unobs.segments)
+
+    unobs.split.segments <- setdiff(unobs.segments, unlist(unobs.whole))
+    unobs.split.data <- parallel::mclapply(unobs.split.segments, splitSegments,
+      mc.cores = x$cores)
+    cutpoints <- cutpointValues(unobs.split.data)
+    unobs.split.pump <- lapply(unobs.split.data, function(x) unique(x$pump))
+    unobs.split <- splitData(unobs.split.segments, cutpoints)
+
+    ## ------------ Data Assembly ------------ ##
+
     wholes <- lapply(1:13, function(nm) {
       c(obs.whole[[paste(nm)]],
         unobs.whole[[paste(nm)]],
