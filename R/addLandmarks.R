@@ -42,8 +42,22 @@ addLandmarks <- function(text.size = 0.5) {
   text(golden.sq$x, golden.sq$y, labels = "Golden\nSquare", cex = text.size)
 
   # St. James Workhouse
-  st.james <- data.frame(x = 11.5, y = 13.48414 )
-  text(st.james$x, st.james$y, labels = "St James\nWorkhouse", cex = text.size)
+  right <- cholera::road.segments[cholera::road.segments$name ==
+    "St James Workhouse", c("x1", "y1")]
+  left <- cholera::road.segments[cholera::road.segments$id == "201-1",
+    c("x2", "y2")]
+  dat <- stats::setNames(data.frame(rbind(unlist(right), unlist(left))),
+    c("x", "y"))
+  h <- c(stats::dist(dat))
+  ols <- stats::lm(y ~ x, dat)
+  segment.slope <- stats::coef(ols)[2]
+  theta <- atan(segment.slope)
+  delta.x <- (h / 2) * cos(theta)
+  delta.y <- (h / 2) * sin(theta)
+  x.new <- left$x2 + delta.x
+  y.new <- left$y2 + delta.y
+  # st.james <- data.frame(x = 11.5, y = 13.48414 )
+  text(x.new, y.new, labels = "St James\nWorkhouse", cex = text.size)
 
   # Lion Brewery (Huggins' proprietors)
   brewery <- data.frame(x = 13.9022, y = 11.87315)
@@ -104,10 +118,10 @@ addLandmarks <- function(text.size = 0.5) {
 
   # 2) Regent (opposite) at intersection with Little Argyll Street: Chapel
 
-  text(cholera::road.segments[cholera::road.segments$id == "144-1",
-    c("x1", "y1")], labels = "Chapel", pos = 2, cex = text.size)
+  # text(cholera::road.segments[cholera::road.segments$id == "144-1",
+  #   c("x1", "y1")], labels = "Chapel", pos = 2, cex = text.size)
 
-  # King Street (opposite) at intersection with Cross Street:
+  # 3) King Street (opposite) at intersection with Cross Street:
   # Distillery and St James Church
   # https://maps.nls.uk/os/london-1890s/index.html
 
@@ -126,15 +140,15 @@ addLandmarks <- function(text.size = 0.5) {
   text(st.james$x, st.james$y, labels = "St James\nChurch",
     cex = text.size)
 
-  # 3) Oxford Street (opposite) at intersection with Winsley Street:
+  # 4) Oxford Street (opposite) at intersection with Winsley Street:
   # Pantheon Bazaar`
 
   text(cholera::road.segments[cholera::road.segments$name == "Winsley Street",
     c("x2", "y2")], pos = 1, labels = "The\nPantheon", cex = text.size)
 
-  # 4) 7 Cambridge Street at corner intersection with Broad Street: PH
+  # 5) 7 Cambridge Street at corner intersection with Broad Street: PH
 
-  # 5) Adjacent south of Lion Brewery: Model Lodging Housing
+  # 6) Adjacent south of Lion Brewery: Model Lodging Housing
   # (in process of erection)
   # http://www.workhouses.org.uk/model/
 
@@ -161,7 +175,7 @@ addLandmarks <- function(text.size = 0.5) {
   text(model.lodging$x, model.lodging$y, labels = "Model\nLodging",
     cex = text.size)
 
-  # 6) Marshall Street Public Baths
+  # 7) Marshall Street Public Baths
 
   intersectionPoint <- function(seg1, seg2, sel = 1) {
     s1 <- cholera::road.segments[cholera::road.segments$id == seg1, ]
@@ -188,12 +202,9 @@ addLandmarks <- function(text.size = 0.5) {
   }
 
   public.baths <- intersectionPoint("201-2", "217-2", 1)
-  # text(public.baths, pos = 3, offset = 1, labels = "Public\nBaths",
-  #   cex = text.size)
-
   text(public.baths, labels = "Public\nBaths", cex = text.size)
 
-  # 7) Craven Chapel (Wesleyan)
+  # 8) Craven Chapel (Wesleyan)
 
   ep1 <- cholera::road.segments[cholera::road.segments$name == "Lowndes Court",
     c("x2", "y2")]
