@@ -373,7 +373,7 @@ plot.walking <- function(x, type = "road", ...) {
   ## ------------ Plot ------------ ##
 
   n.sel <- as.numeric(names(x$paths))
-  snow.colors <- cholera::snowColors()
+  snow.colors <- cholera::snowColors(x$vestry)
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
@@ -479,14 +479,22 @@ plot.walking <- function(x, type = "road", ...) {
 
     ## ------------ Data Assembly ------------ ##
 
-    wholes <- lapply(1:13, function(nm) {
-      c(obs.whole[[paste(nm)]],
-        unobs.whole[[paste(nm)]],
-        obs.partial.whole[[paste(nm)]])
-    })
-
-    names(wholes) <- 1:13
-
+    if (x$vestry) {
+      wholes <- lapply(1:14, function(nm) {
+        c(obs.whole[[paste(nm)]],
+          unobs.whole[[paste(nm)]],
+          obs.partial.whole[[paste(nm)]])
+      })
+      names(wholes) <- 1:14
+    } else {
+      wholes <- lapply(1:13, function(nm) {
+        c(obs.whole[[paste(nm)]],
+          unobs.whole[[paste(nm)]],
+          obs.partial.whole[[paste(nm)]])
+      })
+      names(wholes) <- 1:13
+    }
+    
     if (type == "area") {
       invisible(lapply(names(wholes), function(nm) {
         cases <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment
