@@ -3,6 +3,7 @@ cholera 0.3.0.9010
 
 - fix addKernelDensity() case selection.
 - improve performance of neighborhoodWalking() and plot.walking().
+- add node ID to pumpData(), ortho.proj.pump and ortho.proj.pump.vestry.
 - add addKernelDensity() vignette.
 
 
