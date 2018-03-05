@@ -4,12 +4,13 @@
 \name{ortho.proj.pump}
 \alias{ortho.proj.pump}
 \title{Orthogonal projection of 13 original pumps.}
-\format{A data frame with 5 variables that records the position of the orthogonal projection of the 13 original pumps onto the network of roads.
+\format{A data frame with 6 variables that records the position of the orthogonal projection of the 13 original pumps onto the network of roads.
  \describe{
     \item{\code{road.segment}}{"address" road segment}
     \item{\code{x.proj}}{x-coordinate}
     \item{\code{y.proj}}{y-coordinate}
     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+    \item{\code{node}}{node ID}
     \item{\code{pump.id}}{numeric ID}
  }}
 \usage{

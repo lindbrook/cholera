@@ -136,6 +136,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
         out <- out[1, ]
       }
 
+      out$node <- paste0(out$x.proj, "-", out$y.proj)
       out$pump.id <- i
       row.names(out) <- NULL
       out
