@@ -2,35 +2,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.0.9010-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
-### what's new (current/development version)
-
-The original addKernelDensity() function pools all observations:
-
-``` r
-snowMap(add.landmarks = TRUE)
-addKernelDensity()
-```
-
-![](man/figures/README-kde-1.png)
-
-Now you can view the kernel densitities of pump neighborhoods separately. Either as a subset of the observed neighborhoods:
-
-``` r
-snowMap(add.title = FALSE)
-addKernelDensity(neighborhood = c(6, 8))
-```
-
-![](man/figures/README-kde2-1.png)
-
-Or from neighborhoods you construct from a specified set of pumps:
-
-``` r
-snowMap(add.title = FALSE)
-addKernelDensity(pump.select = c(6, 8))
-```
-
-![](man/figures/README-kde3-1.png)
-
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
 John Snow's map of the 1854 cholera outbreak in London is one of the best known examples of data visualization and information design.

@@ -1,0 +1,40 @@
+---
+title: "Kernel Density Plot"
+author: "lindbrook"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Time Series}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(cholera)
+```
+
+## Overview
+
+By default, addKernelDensity() function pools all observations:
+
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+snowMap(add.title = FALSE)
+addKernelDensity()
+```
+
+But you can also view the kernel densitities of pump neighborhoods Individually.
+
+## Individual observed neighborhoods:
+
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+snowMap(add.title = FALSE)
+addKernelDensity(neighborhood = c(6, 8))
+```
+
+## Individual constructed neighborhoods:
+
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+snowMap(add.title = FALSE)
+addKernelDensity(pump.select = c(6, 8))
+```
