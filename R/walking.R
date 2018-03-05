@@ -91,16 +91,22 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     nearest.pump <- vapply(nearest.path, function(paths) {
       sel <- cholera::ortho.proj.pump.vestry$node %in% paths[length(paths)]
       cholera::ortho.proj.pump.vestry[sel, "pump.id"]
-    }, integer(1L))
+    }, numeric(1L))
   } else {
     nearest.pump <- vapply(nearest.path, function(paths) {
       sel <- cholera::ortho.proj.pump$node %in% paths[length(paths)]
       cholera::ortho.proj.pump[sel, "pump.id"]
-    }, integer(1L))
+    }, numeric(1L))
   }
 
-  nearest.pump <- data.frame(case = cholera::fatalities.address$anchor.case,
-                             pump = nearest.pump)
+  if (case.set == "snow") {
+    snow.anchors <- cholera::snow.neighborhood[cholera::snow.neighborhood %in%
+      cholera::fatalities.address$anchor.case]
+    nearest.pump <- data.frame(case = snow.anchors, pump = nearest.pump)
+  } else {
+    nearest.pump <- data.frame(case = cholera::fatalities.address$anchor.case,
+                               pump = nearest.pump)
+  }
 
   # Falconberg Court and Falconberg Mews isolate
   if (case.set == "expected") {
