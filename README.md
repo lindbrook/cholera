@@ -26,7 +26,6 @@ I build on Snow's efforts by writing functions that allow you to compute pump ne
 
 ``` r
 plot(neighborhoodVoronoi())
-addLandmarks()
 ```
 
 ![](man/figures/README-voronoi-1.png)
@@ -35,7 +34,6 @@ The second flavor is based on the walking distance along the roads on the map. W
 
 ``` r
 plot(neighborhoodWalking())
-addLandmarks()
 ```
 
 ![](man/figures/README-walk-1.png)
@@ -76,7 +74,7 @@ plot(neighborhoodWalking(case.set = "expected"), type = "area")
 
 ### getting started
 
-To install 'cholera' from CRAN:
+To install 'cholera' from CRAN (<https://cran.r-project.org/package=cholera>):
 
 ``` r
 install.packages("cholera")
