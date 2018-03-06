@@ -102,7 +102,8 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   if (case.set == "snow") {
     snow.anchors <- cholera::snow.neighborhood[cholera::snow.neighborhood %in%
       cholera::fatalities.address$anchor.case]
-    nearest.pump <- data.frame(case = snow.anchors, pump = nearest.pump)
+    nearest.pump <- data.frame(case = snow.anchors,
+                               pump = nearest.pump)
   } else {
     nearest.pump <- data.frame(case = cholera::fatalities.address$anchor.case,
                                pump = nearest.pump)
@@ -238,10 +239,7 @@ plot.walking <- function(x, type = "road", ...) {
     out <- segs[id]
     out.pump <- p.name[unlist(audit[id])]
     pump <- p.name[sort(unique(unlist(audit[id])))]
-    out <- lapply(pump, function(p) {
-      out[out.pump %in% p]
-    })
-
+    out <- lapply(pump, function(p) out[out.pump %in% p])
     names(out) <- pump
     out
   }
@@ -400,7 +398,7 @@ plot.walking <- function(x, type = "road", ...) {
     invisible(lapply(names(x$cases), function(nm) {
       sel <- cholera::fatalities.address$anchor.case %in% x$cases[[nm]]
       points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-             cex = 0.75, col = snow.colors[paste0("p", nm)])
+        cex = 0.75, col = snow.colors[paste0("p", nm)])
     }))
 
   } else if (x$case.set == "snow") {
@@ -413,7 +411,7 @@ plot.walking <- function(x, type = "road", ...) {
     invisible(lapply(names(obs.whole.edges), function(nm) {
       n.edges <- edges[edges$id2 %in% obs.whole.edges[[nm]], ]
       segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
-               col = snow.colors[paste0("p", nm)])
+        col = snow.colors[paste0("p", nm)])
     }))
 
   } else if (x$case.set == "expected") {
@@ -497,8 +495,8 @@ plot.walking <- function(x, type = "road", ...) {
 
     if (type == "area") {
       invisible(lapply(names(wholes), function(nm) {
-        cases <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment
-          %in% wholes[[nm]], "case"]
+        sel <- cholera::sim.ortho.proj$road.segment %in% wholes[[nm]]
+        cases <- cholera::sim.ortho.proj[sel, "case"]
         points(cholera::regular.cases[cases, ], pch = 15, cex = 1,
           col = snow.colors[paste0("p", nm)])
       }))
@@ -517,7 +515,7 @@ plot.walking <- function(x, type = "road", ...) {
         sel <- vapply(seq_len(nrow(sim.data)), function(j) {
           obs <- sim.data[j, c("x.proj", "y.proj")]
           ds <- vapply(seq_len(nrow(split.data)), function(k) {
-            stats::dist(matrix(c(obs, split.data[k,]), 2, 2, byrow = TRUE))
+            stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
           }, numeric(1L))
 
           test1 <- signif(sum(ds[1:2])) ==
