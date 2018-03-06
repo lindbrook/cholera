@@ -569,31 +569,62 @@ plot.walking <- function(x, type = "road", ...) {
     }
   }
 
-  if (is.null(x$pump.select)) {
-    if (x$vestry) {
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 24, lwd = 1.25,
-        col = cholera::snowColors(vestry = TRUE))
-      text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps.vestry$id))
+  pumpTokens(x$pump.select, x$vestry, n.sel, snow.colors, type)
+  title(main = "Pump Neighborhoods: Walking")
+}
+
+pumpTokens <- function(pump.select, vestry, n.sel, snow.colors, type) {
+  if (type == "road" ) {
+    if (is.null(pump.select)) {
+      if (vestry) {
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 24, lwd = 1.25,
+          col = cholera::snowColors(vestry = TRUE))
+        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps.vestry$id))
+      } else {
+        points(cholera::pumps[, c("x", "y")], pch = 24, lwd = 1.25,
+          col = cholera::snowColors())
+        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps$id))
+      }
     } else {
-      points(cholera::pumps[, c("x", "y")], pch = 24, lwd = 1.25,
-        col = cholera::snowColors())
-      text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps$id))
+      if (vestry) {
+        points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24, lwd = 1.25,
+          col = snow.colors[paste0("p", n.sel)])
+        text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
+      } else {
+        points(cholera::pumps[n.sel, c("x", "y")], pch = 24, lwd = 1.25,
+          col = snow.colors[paste0("p", n.sel)])
+        text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps$id[n.sel]))
+      }
     }
-  } else {
-    if (x$vestry) {
-      points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24, lwd = 1.25,
-        col = snow.colors[paste0("p", n.sel)])
-      text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
+  } else if (type == "area") {
+    if (is.null(pump.select)) {
+      if (vestry) {
+        points(cholera::pumps.vestry[, c("x", "y")], pch = 24, lwd = 1.25,
+          col = "white", bg = cholera::snowColors(vestry = TRUE))
+        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps.vestry$id))
+      } else {
+        points(cholera::pumps[, c("x", "y")], pch = 24, lwd = 1.25,
+          col = "white", bg = cholera::snowColors())
+        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps$id))
+      }
     } else {
-      points(cholera::pumps[n.sel, c("x", "y")], pch = 24, lwd = 1.25,
-        col = snow.colors[paste0("p", n.sel)])
-      text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", cholera::pumps$id[n.sel]))
+      if (vestry) {
+        points(cholera::pumps.vestry[n.sel, c("x", "y")], pch = 24, lwd = 1.25,
+          col = snow.colors[paste0("p", n.sel)])
+        text(cholera::pumps.vestry[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps.vestry$id[n.sel]))
+      } else {
+        points(cholera::pumps[n.sel, c("x", "y")], pch = 24, lwd = 1.25,
+          col = snow.colors[paste0("p", n.sel)])
+        text(cholera::pumps[n.sel, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", cholera::pumps$id[n.sel]))
+      }
     }
   }
-
-  title(main = "Pump Neighborhoods: Walking")
 }
