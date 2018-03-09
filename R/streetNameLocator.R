@@ -5,6 +5,7 @@
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param cases Character. Plot cases: NULL, "anchors" or "all".
+#' @param add.title Logical. Include title.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
@@ -17,7 +18,7 @@
 #' streetNameLocator("Cambridge Street", zoom = TRUE, radius = 0)
 
 streetNameLocator <- function(road.name, zoom = FALSE, radius = 0.1,
-  cases = "anchors", unit = NULL) {
+  cases = "anchors", add.title = TRUE, unit = NULL) {
 
   real.road.names <- unique(cholera::roads$name)
 
@@ -111,7 +112,7 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 0.1,
     subtitle <- paste(round(street.length, 2), "yards")
   }
 
-  title(main = name, sub = subtitle)
+  if (add.title) title(main = name, sub = subtitle)
 }
 
 wordCase <- function(x) {

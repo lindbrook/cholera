@@ -5,7 +5,7 @@
 \title{Locate road by name.}
 \usage{
 streetNameLocator(road.name, zoom = FALSE, radius = 0.1,
-  cases = "anchors", unit = NULL)
+  cases = "anchors", add.title = TRUE, unit = NULL)
 }
 \arguments{
 \item{road.name}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.}
@@ -15,6 +15,8 @@ streetNameLocator(road.name, zoom = FALSE, radius = 0.1,
 \item{radius}{Numeric. Controls the degree of zoom.}
 
 \item{cases}{Character. Plot cases: NULL, "anchors" or "all".}
+
+\item{add.title}{Logical. Include title.}
 
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
 }
