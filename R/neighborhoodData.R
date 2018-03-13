@@ -304,6 +304,14 @@ simProj <- function() {
   ## manual re-classification ##
   dat <- cholera::sim.ortho.proj
 
+  # Oxford Street (76-1) -> Blenheim Mews (106-1)
+  # p1 -> p3
+  # "fix" for misclassification of 4022
+  dat[dat$case == 4022, "road.segment"] <- "106-1"
+  dat[dat$case == 4022, c("x.proj", "y.proj")] <-
+    orthoProjFix("106-1", east.end = FALSE)
+  dat[dat$case == 4022, "ortho.dist"] <- distanceFix(4022)
+
   # Wardour Street (188-1) -> Richmond Mews (189-1)
   # p7 -> p11
   # "fix" for misclassification of 3173
