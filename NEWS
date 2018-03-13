@@ -1,3 +1,10 @@
+cholera 0.3.9.9000
+==================
+
+- use polygon-based neighborhoodWalking() area graphs in place of
+  alphahull::ashape().
+
+
 cholera 0.3.0.9010
 ==================
 

@@ -19,7 +19,7 @@ addSnow(type = "street", color = "dodgerblue", alpha.level = 0.25,
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Uses alphahull::ashape().
+Adds Snow's graphical annotation of the Broad Street pump walking neighborhood.
 }
 \examples{
 # plot(neighborhoodVoronoi())
