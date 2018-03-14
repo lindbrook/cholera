@@ -359,7 +359,7 @@ plot.walking <- function(x, type = "road", ...) {
 
   pearlString <- function(vertices) {
     dat <- cholera::regular.cases[vertices, ]
-    dat <- dat[order(dat$y), ] # set southernmost point as prime.
+    dat <- dat[order(dat$y), ] # set southern most point as first observation.
     pearl.string <- vector(mode = "character", length = length(vertices))
     pearl.string[1] <- row.names(dat[1, ])
 
@@ -393,55 +393,104 @@ plot.walking <- function(x, type = "road", ...) {
       SE <- signif(alters$x) == signif(dat[ego.case, "x"] + radius) &
             signif(alters$y) == signif(dat[ego.case, "y"] - radius)
 
-      master.list <- list(S, SE, E, NE, N, NW, W, SW)
-      names(master.list) <- c("S", "SE", "E", "NE", "N", "NW", "W", "SW")
+      master.list <- list(S = S, SE = SE, E= E, NE = NE, N = N, NW = NW, W = W,
+        SW = SW)
 
       if (j > 2) {
         delta <- dat[ego.case, ] -
-                 dat[added.pearls[(length(added.pearls) - 1)], ]
+          dat[added.pearls[(length(added.pearls) - 1)], ]
 
-        # Prev:South
         if (delta$x == 0 & delta$y > 0) {
-          lst <- master.list[-1]
+          lst <- master.list[-1]                            # Prev:South
 
-        # Prev:South-East
         } else if (delta$x < 0 & delta$y > 0) {
-          lst <- master.list[c(3:length(master.list), 1)]
+          lst <- master.list[c(3:length(master.list), 1)]   # Prev:South-East
 
-        # Prev:East
         } else if (delta$x < 0 & delta$y == 0) {
-          lst <- master.list[c(4:length(master.list), 1:2)]
+          lst <- master.list[c(4:length(master.list), 1:2)] # Prev:East
 
-        # Prev:North-East
         } else if (delta$x < 0 & delta$y < 0) {
-          lst <- master.list[c(5:length(master.list), 1:3)]
+          lst <- master.list[c(5:length(master.list), 1:3)] # Prev:North-East
 
-        # Prev:North
         } else if (delta$x == 0 & delta$y < 0) {
-          lst <- master.list[c(6:length(master.list), 1:4)]
+          lst <- master.list[c(6:length(master.list), 1:4)] # Prev:North
 
-        # Prev:North-West
         } else if (delta$x > 0 & delta$y < 0) {
-          lst <- master.list[c(7:length(master.list), 1:5)]
+          lst <- master.list[c(7:length(master.list), 1:5)] # Prev:North-West
 
-        # Prev:West
         } else if (delta$x > 0 & delta$y == 0) {
-          lst <- master.list[c(8, 1:6)]
+          lst <- master.list[c(8, 1:6)]                     # Prev:West
 
-        # Prev:North-East
         } else if (delta$x > 0 & delta$y > 0) {
-          lst <- master.list[-length(master.list)]
+          lst <- master.list[-length(master.list)]          # Prev:North-East
         }
 
         candidates <- vapply(lst, any, logical(1L))
+
+        if (all(candidates == FALSE)) {
+          n   <- signif(alters$x) == signif(dat[ego.case, "x"]) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
+
+          nne <- signif(alters$x) == signif(dat[ego.case, "x"] + radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
+
+          ne  <- signif(alters$x) == signif(dat[ego.case, "x"] + 2 * radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
+
+          ene <- signif(alters$x) == signif(dat[ego.case, "x"] + 2 * radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] + radius)
+
+          e   <- signif(alters$x) == signif(dat[ego.case, "x"] + 2 * radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"])
+
+          ese <- signif(alters$x) == signif(dat[ego.case, "x"] + 2 * radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] - radius)
+
+          se  <- signif(alters$x) == signif(dat[ego.case, "x"] + 2 * radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] - 2 * radius)
+
+          sse <- signif(alters$x) == signif(dat[ego.case, "x"] + radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] - 2 * radius)
+
+          s   <- signif(alters$x) == signif(dat[ego.case, "x"]) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] - 2 * radius)
+
+          ssw <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] - 2 * radius)
+
+          sw  <- signif(alters$x) == signif(dat[ego.case, "x"] - 2 * radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] - 2 * radius)
+
+          wsw <- signif(alters$x) == signif(dat[ego.case, "x"] - 2 * radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] - radius)
+
+          w   <- signif(alters$x) == signif(dat[ego.case, "x"] - 2 * radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"])
+
+          wnw <- signif(alters$x) == signif(dat[ego.case, "x"] - 2 * radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] + radius)
+
+          nw  <- signif(alters$x) == signif(dat[ego.case, "x"] - 2 * radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
+
+          nnw <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
+                 signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
+
+          master.list2 <- list(n = n, nne = nne, ne = ne, ene = ene, e = e,
+            ese = ese, se = se, sse = sse, s = s, ssw = ssw, sw = sw, wsw = wsw,
+            w = w, wnw = wnw, nw = nw, nnw = nnw)
+
+          candidates2 <- vapply(master.list2, any, logical(1L))
+          sel <- which(get(names(which(candidates2)[1])))
+        } else {
+          sel <- which(get(names(which(candidates)[1])))
+        }
       } else {
         candidates <- vapply(master.list, any, logical(1L))
+        sel <- which(get(names(which(candidates)[1])))
       }
-
-      sel <- which(get(names(which(candidates)[1])))
       pearl.string[j] <- row.names(alters[sel, ])
     }
-
     pearl.string
   }
 
