@@ -27,28 +27,7 @@ nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
       stop('If specified, "unit" must either be "meter" or "yard".')
   }
 
-  if (is.logical(multi.core)) {
-    if (multi.core == TRUE) {
-      cores <- parallel::detectCores()
-    } else {
-      if (is.numeric(multi.core)) {
-        if (is.integer(multi.core)) {
-          cores <- multi.core
-        } else {
-          cores <- as.integer(multi.core)
-        }
-      } else {
-        cores <- 1L
-      }
-    }
-  } else if (is.numeric(multi.core)) {
-    if (is.integer(multi.core)) {
-      cores <- multi.core
-    } else {
-      cores <- as.integer(multi.core)
-    }
-  }
-
+  cores <- multiCore(multi.core)
   dat <- cholera::neighborhoodData(vestry, case.set)
   path.data <- pathData(dat, weighted, case.set, cores)
   distances <- path.data$distances

@@ -48,27 +48,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     stop('"case.set" must be "observed", "expected" or "snow".')
   }
 
-  if (is.logical(multi.core)) {
-    if (multi.core == TRUE) {
-      cores <- parallel::detectCores()
-    } else {
-      if (is.numeric(multi.core)) {
-        if (is.integer(multi.core)) {
-          cores <- multi.core
-        } else {
-          cores <- as.integer(multi.core)
-        }
-      } else {
-        cores <- 1L
-      }
-    }
-  } else if (is.numeric(multi.core)) {
-    if (is.integer(multi.core)) {
-      cores <- multi.core
-    } else {
-      cores <- as.integer(multi.core)
-    }
-  }
+  cores <- multiCore(multi.core)
 
   if (case.set == "expected") {
     args <- list(pump.select = pump.select,
@@ -589,6 +569,33 @@ plot.walking <- function(x, type = "road", ...) {
 
   pumpTokens(x$pump.select, x$vestry, n.sel, snow.colors, type)
   title(main = "Pump Neighborhoods: Walking")
+}
+
+## Functions ##
+
+multiCore <- function(x) {
+  if (is.logical(x)) {
+    if (x) {
+      cores <- parallel::detectCores()
+    } else {
+      if (is.numeric(x)) {
+        if (is.integer(x)) {
+          cores <- x
+        } else {
+          cores <- as.integer(x)
+        }
+      } else {
+        cores <- 1L
+      }
+    }
+  } else if (is.numeric(x)) {
+    if (is.integer(x)) {
+      cores <- x
+    } else {
+      cores <- as.integer(x)
+    }
+  }
+  cores
 }
 
 peripheryCases <- function(n.points, radius) {

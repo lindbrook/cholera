@@ -28,28 +28,7 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
   fatalities = cholera::fixFatalities()) {
 
   if (compute) {
-    if (is.logical(multi.core)) {
-      if (multi.core == TRUE) {
-        cores <- parallel::detectCores()
-      } else {
-        if (is.numeric(multi.core)) {
-          if (is.integer(multi.core)) {
-            cores <- multi.core
-          } else {
-            cores <- as.integer(multi.core)
-          }
-        } else {
-          cores <- 1L
-        }
-      }
-    } else if (is.numeric(multi.core)) {
-      if (is.integer(multi.core)) {
-        cores <- multi.core
-      } else {
-        cores <- as.integer(multi.core)
-      }
-    }
-
+    cores <- multiCore(multi.core)
     rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
     map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
     roads.list <- split(rd[, c("x", "y")], rd$street)
