@@ -5,17 +5,17 @@
 \title{Add 2D kernel density contours.}
 \usage{
 addKernelDensity(neighborhood = "pooled", pump.select = NULL,
-  walking.neighborhood = TRUE, data = NULL, bandwidth = 0.5,
+  neighborhood.type = "walking", obs.unit = "unstacked", bandwidth = 0.5,
   color = "black", line.type = "solid", multi.core = FALSE, ...)
 }
 \arguments{
-\item{neighborhood}{Character or Numeric: "pooled", "all", or numeric vector of observed pump neighborhoods (3 through 12 or [3, 12]).}
+\item{neighborhood}{Character or Numeric: "pooled", "individual", or numeric vector of observed pump neighborhoods (3 through 12 or [3, 12]). This vector selects a subset of observed pump neighborhood (negative selection possible).}
 
-\item{pump.select}{Numeric. A vector of pumps to consider.}
+\item{pump.select}{Numeric. Vector of pumps to consider. This creates a scenario where the only pumps are those in the vector (negative selection possible).}
 
-\item{walking.neighborhood}{Logical. FALSE uses voronoi neighborhoods.}
+\item{neighborhood.type}{Character. "voronoi" or "walking"}
 
-\item{data}{Character. NULL uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "fatality" uses \code{fatalities}.}
+\item{obs.unit}{Character. Unit of observation. "unstacked" uses \code{fatalities.unstacked}. "address" uses \code{fatalities.address}. "fatality" uses \code{fatalities}.}
 
 \item{bandwidth}{Numeric. Bandwidth for kernel density estimation.}
 
@@ -38,7 +38,7 @@ Uses KernSmooth::bkde2D().
 # addKernelDensity()
 
 # snowMap()
-# addKernelDensity("all")
+# addKernelDensity("individual")
 
 # snowMap()
 # addKernelDensity(c(6, 8))
