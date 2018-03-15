@@ -16,7 +16,7 @@
 #'   \item{\code{cores}: number of cores to use for parallel implementation.}
 #'   \item{\code{metric}: incremental metric used to find cut point on split road segments.}
 #' }
-#' @section Note: This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths takes up to 6 seconds while expected paths takes up to 26 seconds. Using the parallel implementation on 4 physical (8 logical) cores (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment - though some precautions are taken in R.app on macOS), these times fall to approximately 4 and 11 seconds.
+#' @section Note: This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths takes up to 6 seconds while expected paths takes up to 29 seconds. Using the parallel implementation on 4 physical (8 logical) cores (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment - though some precautions are taken in R.app on macOS), these times fall to approximately 4 and 12 seconds.
 #' @export
 #' @examples
 #' # neighborhoodWalking()
