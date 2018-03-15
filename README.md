@@ -46,7 +46,11 @@ plot(neighborhoodWalking(-7))
 
 ![](man/figures/README-walk7-1.png)
 
-You can also explore "expected" neighborhoods:
+### "expected" pump neighborhoods
+
+You can also explore "expected" neighborhoods.
+
+You can color roads by neighborhood.
 
 ``` r
 plot(neighborhoodWalking(case.set = "expected"))
@@ -54,13 +58,29 @@ plot(neighborhoodWalking(case.set = "expected"))
 
 ![](man/figures/README-expected-1.png)
 
-Or highlight the area of "expected" neighborhoods:
+Here's the plot without the Broad Street pump.
+
+``` r
+plot(neighborhoodWalking(-7, case.set = "expected"))
+```
+
+![](man/figures/README-expected_no7-1.png)
+
+Or you can color "expected" areas:
 
 ``` r
 plot(neighborhoodWalking(case.set = "expected"), type = "area")
 ```
 
 ![](man/figures/README-expected_area-1.png)
+
+Here's the result without the Broad Street pump.
+
+``` r
+plot(neighborhoodWalking(-7, case.set = "expected"), type = "area")
+```
+
+![](man/figures/README-expected_area_no7-1.png)
 
 ### other package features
 
