@@ -134,12 +134,17 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @param x An object of class "walking" created by neighborhoodWalking().
 #' @param ... Additional parameters.
 #' @return An R vector.
+#' @section Note that printing an object with case.set = "expected" is computationally intensive () since you are computing the paths of almost 5000 cases.
 #' @export
 #' @examples
 #' # neighborhoodWalking()
 #' # print(neighborhoodWalking())
 
 print.walking <- function(x, ...) {
+  if (class(x) != "walking") {
+    stop('"x"\'s class needs to be "walking".')
+  }
+
   if (x$case.set == "observed" | x$case.set == "snow") {
     out <- vapply(x$paths, length, numeric(1L))
   } else if (x$case.set == "expected") {
@@ -571,8 +576,6 @@ plot.walking <- function(x, type = "road", ...) {
   title(main = "Pump Neighborhoods: Walking")
 }
 
-## Functions ##
-
 multiCore <- function(x) {
   if (is.logical(x)) {
     if (x) {
@@ -816,298 +819,26 @@ pumpTokens <- function(pump.select, vestry, n.sel, snow.colors, type) {
 }
 
 expectedCount <- function(x) {
-  if (class(x) != "walking") {
-    stop('"x"\'s class needs to be "walking".')
-  }
+  args <- list(pump.select = x$pump.select,
+               vestry = x$vestry,
+               weighted = x$weighted,
+               case.set = "expected",
+               multi.core = x$cores)
 
-  ## Functions ##
-
-  auditEdge <- function(p) {
-    vapply(seq_along(p[-1]), function(i) {
-      ab <- edges$node1 %in% p[i] &
-            edges$node2 %in% p[i + 1]
-      ba <- edges$node2 %in% p[i] &
-            edges$node1 %in% p[i + 1]
-      which(ab | ba)
-    }, numeric(1L))
-  }
-
-  checkSegment <- function(s, sub.edge = FALSE) {
-    if (sub.edge) {
-      s.data <- edges[edges$id2 == s, ]
-    } else {
-      s.data <- edges[edges$id == s, ]
-    }
-    case.node <- c(s.data[1, "node1"], s.data[nrow(s.data), "node2"])
-    lapply(case.node, function(node) {
-      igraph::distances(dat$g, node, p.node, weights = edges$d)
-    })
-  }
-
-  wholeSegments <- function(segs) {
-    distances <- parallel::mclapply(segs, checkSegment, mc.cores = x$cores)
-    audit <- lapply(distances, function(d) {
-      unique(vapply(d, which.min, integer(1L)))
-    })
-
-    id <- vapply(audit, function(x) length(x) == 1, logical(1L))
-    out <- segs[id]
-    out.pump <- p.name[unlist(audit[id])]
-    pump <- p.name[sort(unique(unlist(audit[id])))]
-    out <- lapply(pump, function(p) out[out.pump %in% p])
-    names(out) <- pump
-    out
-  }
-
-  splitSegments <- function(seg) {
-    s.data <- edges[edges$id == seg, ]
-    seg.df <- data.frame(x = c(s.data[1, "x1"], s.data[nrow(s.data), "x2"]),
-                         y = c(s.data[1, "y1"], s.data[nrow(s.data), "y2"]))
-
-    ols <- stats::lm(y ~ x, data = seg.df)
-    segment.slope <- stats::coef(ols)[2]
-    theta <- atan(segment.slope)
-    hypotenuse <- c(stats::dist(seg.df))
-    hypotenuse.breaks <- seq(0, hypotenuse, x$metric)
-
-    distances <- lapply(hypotenuse.breaks, function(h) {
-      delta.x <- h * cos(theta)
-      delta.y <- h * sin(theta)
-
-      EW <- which.min(c(s.data[1, "x1"], s.data[nrow(s.data), "x2"]))
-
-      if (EW == 1) {
-        test.x <- seg.df[1, "x"] + delta.x
-        test.y <- seg.df[1, "y"] + delta.y
-      } else {
-        test.x <- seg.df[2, "x"] + delta.x
-        test.y <- seg.df[2, "y"] + delta.y
-      }
-
-      case.node <- paste0(test.x, "-", test.y)
-      seg.edge <- data.frame(x1 = c(s.data[1, "x1"], test.x),
-                             y1 = c(s.data[1, "y1"], test.y),
-                             x2 = c(test.x, s.data[nrow(s.data), "x2"]),
-                             y2 = c(test.y, s.data[nrow(s.data), "y2"]),
-                             node1 = c(s.data[1, "node1"], case.node),
-                             node2 = c(case.node, s.data[nrow(s.data),
-                               "node2"]),
-                             id2 = c(s.data$id2[1], paste0(seg, "b")),
-                             row.names = NULL)
-
-      seg.info <- s.data[rep(1, each = nrow(seg.edge)),
-        c("street", "id", "name")]
-      seg.edge <- cbind(seg.info, seg.edge, row.names = NULL)
-      seg.edge$d <- sqrt((seg.edge$x1 - seg.edge$x2)^2 +
-                         (seg.edge$y1 - seg.edge$y2)^2)
-
-      edges2 <- rbind(seg.edge, edges[edges$id != seg, ])
-      edge.list <- edges2[, c("node1", "node2")]
-      g2 <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
-      stats::setNames(c(igraph::distances(g2, case.node, p.node,
-        weights = edges2$d)), p.name)
-    })
-
-    p <- vapply(distances, function(x) {
-      as.numeric(names(which.min((x))))
-    }, numeric(1L))
-
-    data.frame(id = seg, cutpoint = hypotenuse.breaks, pump = p,
-      stringsAsFactors = FALSE)
-  }
-
-  cutpointValues <- function(dat) {
-    rle.audit <- lapply(dat, function(x) rle(x$pump))
-    lapply(seq_along(rle.audit), function(i) {
-      rle.obs <- rle.audit[[i]]
-      cutpoint.obs <- dat[[i]]
-      sel <- rle.obs$lengths[1]
-      if (length(rle.obs$lengths) != 1) {
-        c(cutpoint.obs$cutpoint[sel], cutpoint.obs$cutpoint[sel + 1])
-      } else {
-        c(cutpoint.obs$cutpoint[sel], cutpoint.obs$cutpoint[sel])
-      }
-    })
-  }
-
-  splitData <- function(dat, cutpoints) {
-    lapply(seq_along(dat), function(i) {
-      s.data <- edges[edges$id == dat[i], ]
-      seg.df <- data.frame(x = c(s.data[1, "x1"], s.data[nrow(s.data), "x2"]),
-                           y = c(s.data[1, "y1"], s.data[nrow(s.data), "y2"]))
-
-      ols <- stats::lm(y ~ x, data = seg.df)
-      segment.slope <- stats::coef(ols)[2]
-      theta <- atan(segment.slope)
-      h <- cutpoints[[i]]
-      delta.x <- h * cos(theta)
-      delta.y <- h * sin(theta)
-
-      EW <- which.min(seg.df$x)
-
-      if (EW == 1) {
-        x.cut <- seg.df$x[1] + delta.x
-        y.cut <- seg.df$y[1] + delta.y
-        data.frame(x = c(seg.df$x[1], x.cut, seg.df$x[2]),
-                   y = c(seg.df$y[1], y.cut, seg.df$y[2]))
-      } else {
-        x.cut <- seg.df$x[2] + delta.x
-        y.cut <- seg.df$y[2] + delta.y
-        data.frame(x = c(seg.df$x[2], x.cut, seg.df$x[1]),
-                   y = c(seg.df$y[2], y.cut, seg.df$y[1]))
-      }
-    })
-  }
-
-  ## Data ##
-
-  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
-  edges <- dat$edges
-  nodes <- dat$nodes
-  p.data <- dat$nodes.pump
-
-  if (is.null(x$pump.select)) {
-    p.node <- p.data$node
-    p.name <- p.data$pump
-  } else {
-    if (all(x$pump.select > 0)) {
-      p.data <- p.data[p.data$pump %in% x$pump.select, ]
-    } else if (all(x$pump.select < 0)) {
-      p.data <- p.data[p.data$pump %in% abs(x$pump.select) == FALSE, ]
-    }
-    p.node <- p.data$node
-    p.name <- p.data$pump
-  }
-
-  n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
-    lapply(neighborhood, auditEdge)
-  }, mc.cores = x$cores)
-
-  obs.segment.count <- lapply(n.path.edges, function(x) {
-    table(edges[unique(unlist(x)), "id"])
-  })
-
-  edge.count <- table(edges$id)
-
-  segment.audit <- lapply(obs.segment.count, function(neighborhood) {
-    whole.id <- vapply(names(neighborhood), function(nm) {
-      identical(neighborhood[nm], edge.count[nm])
-    }, logical(1L))
-
-    list(whole = names(neighborhood[whole.id]),
-         partial = names(neighborhood[!whole.id]))
-  })
-
-  ## ------------ Observed ------------ ##
-
-  obs.whole <- lapply(segment.audit, function(x) x$`whole`)
-
-  obs.partial <- lapply(segment.audit, function(x) x$`partial`)
-  obs.partial.segments <- unname(unlist(obs.partial))
-  obs.partial.whole <- wholeSegments(obs.partial.segments)
-
-  obs.partial.leftover <- setdiff(obs.partial.segments,
-    unlist(obs.partial.whole))
-  obs.partial.split.data <- parallel::mclapply(obs.partial.leftover,
-    splitSegments, mc.cores = x$cores)
-  cutpoints <- cutpointValues(obs.partial.split.data)
-  obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
-    unique(x$pump))
-  obs.partial.split <- splitData(obs.partial.leftover, cutpoints)
-
-  ## ------------ Unobserved ------------ ##
-
-  obs.segments <- lapply(n.path.edges, function(x) {
-    unique(edges[unique(unlist(x)), "id"])
-  })
-
-  unobs.segments <- setdiff(cholera::road.segments$id, unlist(obs.segments))
-
-  falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
-  unobs.segments <- unobs.segments[unobs.segments %in%
-    falconberg.ct.mews == FALSE]
-
-  # Exclude segment if A&E pump is not among selected.
-  AE <- cholera::pumps[cholera::pumps$street == "Adam and Eve Court", "id"]
-  if (AE %in% x$pump.select == FALSE) {
-    adam.eve.ct <- "44-1"
-    unobs.segments <- unobs.segments[unobs.segments %in% adam.eve.ct == FALSE]
-  }
-
-  unobs.whole <- wholeSegments(unobs.segments)
-
-  unobs.split.segments <- setdiff(unobs.segments, unlist(unobs.whole))
-  unobs.split.data <- parallel::mclapply(unobs.split.segments, splitSegments,
-    mc.cores = x$cores)
-  cutpoints <- cutpointValues(unobs.split.data)
-  unobs.split.pump <- lapply(unobs.split.data, function(x) unique(x$pump))
-  unobs.split <- splitData(unobs.split.segments, cutpoints)
+  nearest.path <- do.call("nearestPump", c(args, output = "path"))
 
   if (x$vestry) {
-    wholes <- lapply(1:14, function(nm) {
-      c(obs.whole[[paste(nm)]],
-        unobs.whole[[paste(nm)]],
-        obs.partial.whole[[paste(nm)]])
-    })
-    names(wholes) <- 1:14
+    nearest.pump <- vapply(nearest.path, function(paths) {
+      sel <- cholera::ortho.proj.pump.vestry$node %in% paths[length(paths)]
+      cholera::ortho.proj.pump.vestry[sel, "pump.id"]
+    }, numeric(1L))
   } else {
-    wholes <- lapply(1:13, function(nm) {
-      c(obs.whole[[paste(nm)]],
-        unobs.whole[[paste(nm)]],
-        obs.partial.whole[[paste(nm)]])
-    })
-    names(wholes) <- 1:13
+    nearest.pump <- vapply(nearest.path, function(paths) {
+      sel <- cholera::ortho.proj.pump$node %in% paths[length(paths)]
+      cholera::ortho.proj.pump[sel, "pump.id"]
+    }, numeric(1L))
   }
 
-  ##
-
-  splits <- c(obs.partial.split, unobs.split)
-  splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
-  split.segs <- c(obs.partial.leftover, unobs.split.segments)
-
-  split.outcome <- lapply(seq_along(split.segs), function(i) {
-    id <- cholera::sim.ortho.proj$road.segment == split.segs[i] &
-          is.na(cholera::sim.ortho.proj$road.segment) == FALSE
-
-    sim.data <- cholera::sim.ortho.proj[id, ]
-    split.data <- splits[[i]]
-
-    sel <- vapply(seq_len(nrow(sim.data)), function(j) {
-      obs <- sim.data[j, c("x.proj", "y.proj")]
-      ds <- vapply(seq_len(nrow(split.data)), function(k) {
-        stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
-      }, numeric(1L))
-
-      test1 <- signif(sum(ds[1:2])) ==
-               signif(c(stats::dist(split.data[c(1, 2), ])))
-      test2 <- signif(sum(ds[3:4])) ==
-               signif(c(stats::dist(split.data[c(3, 4), ])))
-
-      ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
-    }, integer(1L))
-
-    data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-  })
-
-  split.outcome <- do.call(rbind, split.outcome)
-  split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
-  split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
-    split.outcome[split.outcome$pump == p, "case"]
-  })
-
-  names(split.cases) <- sort(unique(split.outcome$pump))
-
-  #
-
-  whole.ct <- vapply(names(wholes), function(nm) {
-    sum(cholera::sim.ortho.proj$road.segment %in% wholes[[nm]])
-  }, integer(1L))
-
-  split.ct <- vapply(split.cases, length, integer(1L))
-
-  out <- vapply(union(names(wholes), names(split.cases)), function(nm) {
-    whole.ct[nm] + ifelse(is.na(split.ct[nm]), 0, split.ct[nm])
-  }, numeric(1L))
-
-  out[out != 0]
+  out <- table(nearest.pump)
+  stats::setNames(as.vector(out), names(out))
 }

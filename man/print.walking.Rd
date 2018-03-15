@@ -17,6 +17,10 @@ An R vector.
 \description{
 Return count of paths (anchor cases) by pump neighborhood.
 }
+\section{Note that printing an object with case.set = "expected" is computationally intensive () since you are computing the paths of almost 5000 cases.}{
+NA
+}
+
 \examples{
 # neighborhoodWalking()
 # print(neighborhoodWalking())
