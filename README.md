@@ -112,6 +112,8 @@ Read the package's vignettes. They include detailed discussions about the data, 
 
 ### note
 
-neighborhoodWalking() is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths takes up to 6 seconds while expected paths takes up to 29 seconds. Using the parallel implementation on 4 physical (8 logical) cores (currently only available on Linux and Mac and which the developer strongly discourages against using in a GUI or embedded environment - though some precautions are taken in R.app on macOS), these times fall to approximately 4 and 12 seconds.
+neighborhoodWalking() is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths takes up to 6 seconds while expected paths takes up to 29 seconds. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to approximately 4 and 12 seconds.
 
-Note that the parallelized version is currently only available on Linux and Mac. Also, note that the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment (though some precautions are taken in R.app on macOS - See vignette("parallel")).
+Note that parallelization is currently only available on Linux and Mac.
+
+Also, note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. See vignette("parallel") for details.
