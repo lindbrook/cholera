@@ -58,14 +58,6 @@ plot(neighborhoodWalking(case.set = "expected"))
 
 ![](man/figures/README-expected-1.png)
 
-Here's the plot without the Broad Street pump.
-
-``` r
-plot(neighborhoodWalking(-7, case.set = "expected"))
-```
-
-![](man/figures/README-expected_no7-1.png)
-
 Or you can color "expected" areas:
 
 ``` r
@@ -73,14 +65,6 @@ plot(neighborhoodWalking(case.set = "expected"), type = "area")
 ```
 
 ![](man/figures/README-expected_area-1.png)
-
-Here's the result without the Broad Street pump.
-
-``` r
-plot(neighborhoodWalking(-7, case.set = "expected"), type = "area")
-```
-
-![](man/figures/README-expected_area_no7-1.png)
 
 ### other package features
 
@@ -100,7 +84,7 @@ To install 'cholera' from CRAN (<https://cran.r-project.org/package=cholera>):
 install.packages("cholera")
 ```
 
-The current/development version of 'cholera' is available on GitHub:
+To install the current/development version of 'cholera' from GitHub:
 
 ``` r
 # Note that you may need to install the 'devtools' package:

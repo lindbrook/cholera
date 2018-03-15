@@ -64,22 +64,10 @@ You can color roads by neighborhood.
 plot(neighborhoodWalking(case.set = "expected"))
 ```
 
-Here's the plot without the Broad Street pump.
-
-```{r expected_no7, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodWalking(-7, case.set = "expected"))
-```
-
 Or you can color "expected" areas:
 
 ```{r expected_area, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodWalking(case.set = "expected"), type = "area")
-```
-
-Here's the result without the Broad Street pump.
-
-```{r expected_area_no7, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodWalking(-7, case.set = "expected"), type = "area")
 ```
 
 ### other package features
@@ -100,7 +88,7 @@ To install 'cholera' from CRAN (https://cran.r-project.org/package=cholera):
 install.packages("cholera")
 ```
 
-The current/development version of 'cholera' is available on GitHub:
+To install the current/development version of 'cholera' from GitHub:
 
 ```{r, eval = FALSE}
 # Note that you may need to install the 'devtools' package:
