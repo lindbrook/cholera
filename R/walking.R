@@ -694,7 +694,7 @@ pearlString <- function(vertices, radius) {
 
       candidates <- vapply(lst, any, logical(1L))
 
-      # Exception to consider second-order candidate for pearl string.
+      # Exception to consider second-order candidates for pearl string.
       if (all(candidates == FALSE)) {
         n   <- signif(alters$x) == signif(dat[ego.case, "x"]) &
                signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
