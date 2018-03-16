@@ -90,15 +90,15 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   }
 
   # Falconberg Court and Falconberg Mews isolate
-  if (case.set == "expected") {
-    falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
-    sel <- cholera::sim.ortho.proj$road.segment %in% falconberg.ct.mews
-    falconberg.cases <- cholera::sim.ortho.proj[sel, "case"]
-    sel <- nearest.pump$case %in% falconberg.cases
-    nearest.path <- nearest.path[sel == FALSE]
-    nearest.pump <- nearest.pump[sel == FALSE, ]
-    names(nearest.path) <- nearest.pump$case
-  }
+  # if (case.set == "expected") {
+  #   falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
+  #   sel <- cholera::sim.ortho.proj$road.segment %in% falconberg.ct.mews
+  #   falconberg.cases <- cholera::sim.ortho.proj[sel, "case"]
+  #   sel <- nearest.pump$case %in% falconberg.cases
+  #   nearest.path <- nearest.path[sel == FALSE]
+  #   nearest.pump <- nearest.pump[sel == FALSE, ]
+  #   names(nearest.path) <- nearest.pump$case
+  # }
 
   pumpID <- sort(unique(nearest.pump$pump))
 
