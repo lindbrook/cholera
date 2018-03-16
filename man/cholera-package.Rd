@@ -31,4 +31,6 @@ To learn more, start with the vignettes:
 \code{vignette("roads")}
 
 \code{vignette("time.series")}
+
+\code{vignette("kernel.density")}
 }
