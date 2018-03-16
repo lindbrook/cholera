@@ -96,7 +96,7 @@ Read the package's vignettes. They include detailed discussions about the data, 
 
 ### note
 
-neighborhoodWalking() is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths takes up to 6 seconds while expected paths takes up to 29 seconds. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to approximately 4 and 12 seconds.
+neighborhoodWalking() is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths takes about 6 seconds while expected paths takes about 29 seconds. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to about 4 and 12 seconds.
 
 Note that parallelization is currently only available on Linux and Mac.
 
