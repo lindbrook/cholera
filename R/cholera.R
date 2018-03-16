@@ -25,6 +25,8 @@
 #' \code{vignette("roads")}
 #'
 #' \code{vignette("time.series")}
+#'
+#' \code{vignette("kernel.density")}
 #' @docType package
 #' @name cholera-package
 NULL
