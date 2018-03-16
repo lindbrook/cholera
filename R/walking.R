@@ -345,7 +345,9 @@ plot.walking <- function(x, type = "road", ...) {
 
   ## ------------ Plot ------------ ##
 
+  # ID of observed pumps
   n.sel <- as.numeric(names(x$paths))
+
   snow.colors <- cholera::snowColors(x$vestry)
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
@@ -407,12 +409,16 @@ plot.walking <- function(x, type = "road", ...) {
 
     ## ------------ Observed ------------ ##
 
+    # list of whole traversed segments
     obs.whole <- lapply(segment.audit, function(x) x$`whole`)
 
+    # list of partially traversed segments
     obs.partial <- lapply(segment.audit, function(x) x$`partial`)
     obs.partial.segments <- unname(unlist(obs.partial))
     obs.partial.whole <- wholeSegments(obs.partial.segments)
 
+    # list of os split segements (leading to different pumps)
+    # the cutpoint is foudn use approximate 1 meter increments: cutpointValues()
     obs.partial.leftover <- setdiff(obs.partial.segments,
       unlist(obs.partial.whole))
     obs.partial.split.data <- parallel::mclapply(obs.partial.leftover,
@@ -424,10 +430,12 @@ plot.walking <- function(x, type = "road", ...) {
 
     ## ------------ Unobserved ------------ ##
 
+    # list of edges that are wholly or partially traversed
     obs.segments <- lapply(n.path.edges, function(x) {
       unique(edges[unique(unlist(x)), "id"])
     })
 
+    # list of edges that are untouched by any path
     unobs.segments <- setdiff(cholera::road.segments$id, unlist(obs.segments))
 
     falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
@@ -601,6 +609,7 @@ multiCore <- function(x) {
   cores
 }
 
+# remove observations with neighbors at each of the 4 cardinal directions
 peripheryCases <- function(n.points, radius) {
   n.area <- cholera::regular.cases[n.points, ]
   periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {
@@ -624,6 +633,7 @@ peripheryCases <- function(n.points, radius) {
   row.names(n.area[which(periphery.test == FALSE), ])
 }
 
+# sort points on periphery to form a concave hull
 pearlString <- function(vertices, radius) {
   dat <- cholera::regular.cases[vertices, ]
   dat <- dat[order(dat$y), ] # set southern most point as first observation.
