@@ -443,11 +443,20 @@ plot.walking <- function(x, type = "road", ...) {
       falconberg.ct.mews == FALSE]
 
     # Exclude segment if A&E pump is not among selected.
-    AE <- cholera::pumps[cholera::pumps$street == "Adam and Eve Court", "id"]
+    sel <- "Adam and Eve Court"
+    AE.pump <- cholera::pumps[cholera::pumps$street == sel, "id"]
+    AE <- cholera::road.segments[cholera::road.segments$name == sel, "id"]
 
-    if (AE %in% x$pump.select == FALSE) {
-      adam.eve.ct <- "44-1"
-      unobs.segments <- unobs.segments[unobs.segments %in% adam.eve.ct == FALSE]
+    if (is.null(x$pump.select) == FALSE) {
+      if (all(x$pump.select > 0)) {
+        if (AE.pump %in% x$pump.select == FALSE) {
+          unobs.segments <- unobs.segments[unobs.segments %in% AE == FALSE]
+        }
+      } else if (all(x$pump < 0)) {
+        if (AE.pump %in% abs(x$pump.select)) {
+          unobs.segments <- unobs.segments[unobs.segments %in% AE == FALSE]
+        }
+      }
     }
 
     unobs.whole <- wholeSegments(unobs.segments)
