@@ -17,8 +17,8 @@ An R vector.
 \description{
 Return count of paths (anchor cases) by pump neighborhood.
 }
-\section{Note that printing an object with case.set = "expected" is computationally intensive () since you are computing the paths of almost 5000 cases.}{
-NA
+\section{Note that printing an object with case.set = "expected" is computationally intensive since you are computing the paths of almost 5000 cases}{
+ on a 2.3 GHz Intel i7 it takes approximately 90 seconds on single core; 42 seconds on 4 physical or 8 logical cores.
 }
 
 \examples{

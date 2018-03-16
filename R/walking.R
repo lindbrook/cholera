@@ -134,7 +134,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @param x An object of class "walking" created by neighborhoodWalking().
 #' @param ... Additional parameters.
 #' @return An R vector.
-#' @section Note that printing an object with case.set = "expected" is computationally intensive () since you are computing the paths of almost 5000 cases.
+#' @section Note that printing an object with case.set = "expected" is computationally intensive since you are computing the paths of almost 5000 cases: on a 2.3 GHz Intel i7 it takes approximately 90 seconds on single core; 42 seconds on 4 physical or 8 logical cores.
 #' @export
 #' @examples
 #' # neighborhoodWalking()
