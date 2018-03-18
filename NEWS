@@ -1,7 +1,14 @@
+cholera 0.3.9.9002
+==================
+
+- test new simProj() in neighborhoodData().
+- test new pearlString() in neighborhoodWalking().
+
+
 cholera 0.3.9.9001
 ==================
 
-- amend expectedCount() for print.walking()
+- amend expectedCount() for print.walking().
 
 
 cholera 0.3.9.9000
