@@ -334,9 +334,6 @@ plot.walking <- function(x, type = "road", ...) {
 
   ## ------------ Plot ------------ ##
 
-  # ID of observed pumps
-  # n.sel <- as.numeric(names(x$paths))
-
   snow.colors <- cholera::snowColors(x$vestry)
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
@@ -632,7 +629,7 @@ peripheryCases <- function(n.points, radius) {
 }
 
 # sort points on periphery to form a concave hull
-pearlString <- function(vertices, radius) {
+pearlString <- function(vertices, radius, orientation = "clockwise") {
   dat <- cholera::regular.cases[vertices, ]
   dat <- dat[order(dat$y), ] # set southern most point as first observation.
   pearl.string <- vector(mode = "character", length = length(vertices))
@@ -643,18 +640,6 @@ pearlString <- function(vertices, radius) {
     ego.case <- added.pearls[length(added.pearls)]
     alter.sel <- row.names(dat) %in% added.pearls == FALSE
     alters <- dat[alter.sel, ]
-
-    S  <- signif(alters$x) == signif(dat[ego.case, "x"]) &
-          signif(alters$y) == signif(dat[ego.case, "y"] - radius)
-
-    SW <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
-          signif(alters$y) == signif(dat[ego.case, "y"] - radius)
-
-    W  <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
-          signif(alters$y) == signif(dat[ego.case, "y"])
-
-    NW <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
-          signif(alters$y) == signif(dat[ego.case, "y"] + radius)
 
     N  <- signif(alters$x) == signif(dat[ego.case, "x"]) &
           signif(alters$y) == signif(dat[ego.case, "y"] + radius)
@@ -668,39 +653,60 @@ pearlString <- function(vertices, radius) {
     SE <- signif(alters$x) == signif(dat[ego.case, "x"] + radius) &
           signif(alters$y) == signif(dat[ego.case, "y"] - radius)
 
-    master.list <- list(S = S, SE = SE, E= E, NE = NE, N = N, NW = NW, W = W,
-      SW = SW)
+    S  <- signif(alters$x) == signif(dat[ego.case, "x"]) &
+          signif(alters$y) == signif(dat[ego.case, "y"] - radius)
+
+    SW <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
+          signif(alters$y) == signif(dat[ego.case, "y"] - radius)
+
+    W  <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
+          signif(alters$y) == signif(dat[ego.case, "y"])
+
+    NW <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
+          signif(alters$y) == signif(dat[ego.case, "y"] + radius)
+
+    master.list <- list(N = N, NE = NE, E = E, SE = SE, S = S, SW = SW, W = W,
+      NW = NW)
 
     if (j > 2) {
-      delta <- dat[ego.case, ] -
-        dat[added.pearls[(length(added.pearls) - 1)], ]
+      clockwise.compass <- lapply(-seq_len(length(master.list)), function(i) {
+        vec <- names(master.list)[i]
+        if (abs(i) == 1 | abs(i) == length(master.list)) vec
+        else vec[c(abs(i):length(vec), 1:(abs(i) - 1))]
+      })
 
-      if (delta$x == 0 & delta$y > 0) {
-        lst <- master.list[-1]                            # Prev:South
+      counterclockwise.compass <- lapply(clockwise.compass, rev)
 
-      } else if (delta$x < 0 & delta$y > 0) {
-        lst <- master.list[c(3:length(master.list), 1)]   # Prev:South-East
+      names(clockwise.compass) <- names(master.list)
+      names(counterclockwise.compass) <- names(master.list)
 
-      } else if (delta$x < 0 & delta$y == 0) {
-        lst <- master.list[c(4:length(master.list), 1:2)] # Prev:East
-
-      } else if (delta$x < 0 & delta$y < 0) {
-        lst <- master.list[c(5:length(master.list), 1:3)] # Prev:North-East
-
-      } else if (delta$x == 0 & delta$y < 0) {
-        lst <- master.list[c(6:length(master.list), 1:4)] # Prev:North
-
-      } else if (delta$x > 0 & delta$y < 0) {
-        lst <- master.list[c(7:length(master.list), 1:5)] # Prev:North-West
-
-      } else if (delta$x > 0 & delta$y == 0) {
-        lst <- master.list[c(8, 1:6)]                     # Prev:West
-
-      } else if (delta$x > 0 & delta$y > 0) {
-        lst <- master.list[-length(master.list)]          # Prev:North-East
+      if (orientation == "clockwise") {
+        compass <- clockwise.compass
+      } else if (orientation == "counterclockwise") {
+        compass <- counterclockwise.compass
       }
 
-      candidates <- vapply(lst, any, logical(1L))
+      delta <- dat[ego.case, ] - dat[added.pearls[(length(added.pearls) - 1)], ]
+
+      if (delta$x == 0 & delta$y < 0) {
+        lst <- compass["N"]  # Prev: North
+      } else if (delta$x < 0 & delta$y < 0) {
+        lst <- compass["NE"] # Prev: North-East
+      } else if (delta$x < 0 & delta$y == 0) {
+        lst <- compass["E"]  # Prev: East
+      } else if (delta$x < 0 & delta$y > 0) {
+        lst <- compass["SE"] # Prev: South-East
+      } else if (delta$x == 0 & delta$y > 0) {
+        lst <- compass["S"]  # Prev: South
+      } else if (delta$x > 0 & delta$y > 0) {
+        lst <- compass["SW"] # Prev: South-West
+      } else if (delta$x > 0 & delta$y == 0) {
+        lst <- compass["W"]  # Prev: West
+      } else if (delta$x > 0 & delta$y < 0) {
+        lst <- compass["NW"] # Prev: North-West
+      }
+
+      candidates <- vapply(master.list, any, logical(1L))[unlist(lst)]
 
       # Exception to consider second-order candidates for pearl string.
       if (all(candidates == FALSE)) {
@@ -756,14 +762,65 @@ pearlString <- function(vertices, radius) {
           ese = ese, se = se, sse = sse, s = s, ssw = ssw, sw = sw, wsw = wsw,
           w = w, wnw = wnw, nw = nw, nnw = nnw)
 
-        candidates2 <- vapply(master.list2, any, logical(1L))
+        idx <- -seq_len(length(master.list2))
+
+        clockwise.compass2 <- lapply(idx, function(i) {
+          vec <- names(master.list2 )[i]
+          if (abs(i) == 1 | abs(i) == length(master.list2)) vec
+          else vec[c(abs(i):length(vec), 1:(abs(i) - 1))]
+        })
+
+        counterclockwise.compass2 <- lapply(clockwise.compass2, rev)
+
+        names(clockwise.compass2) <- names(master.list2)
+        names(counterclockwise.compass2) <- names(master.list2)
+
+        if (orientation == "clockwise") {
+          compass2 <- clockwise.compass2
+        } else if (orientation == "counterclockwise") {
+          compass2 <- counterclockwise.compass2
+        }
+
+        # still increment by just one compass point with new compass
+        if (delta$x == 0 & delta$y < 0) {
+          lst2 <- compass2["n"]  # Prev: North
+        } else if (delta$x < 0 & delta$y < 0) {
+          lst2 <- compass2["ne"] # Prev: North-East
+        } else if (delta$x < 0 & delta$y == 0) {
+          lst2 <- compass2["e"]  # Prev: East
+        } else if (delta$x < 0 & delta$y > 0) {
+          lst2 <- compass2["se"] # Prev: South-East
+        } else if (delta$x == 0 & delta$y > 0) {
+          lst2 <- compass2["s"]  # Prev: South
+        } else if (delta$x > 0 & delta$y > 0) {
+          lst2 <- compass2["sw"] # Prev: South-West
+        } else if (delta$x > 0 & delta$y == 0) {
+          lst2 <- compass2["w"]  # Prev: West
+        } else if (delta$x > 0 & delta$y < 0) {
+          lst2 <- compass2["nw"] # Prev: North-West
+        }
+
+        candidates2 <- vapply(master.list2, any, logical(1L))[unlist(lst2)]
         sel <- which(get(names(which(candidates2)[1])))
+
       } else {
         sel <- which(get(names(which(candidates)[1])))
       }
+
     } else {
       candidates <- vapply(master.list, any, logical(1L))
-      sel <- which(get(names(which(candidates)[1])))
+
+      if (orientation == "clockwise") {
+        second.pearl <- vapply(c("W", "NW", "N", "NE"), function(x) {
+          x %in% names(candidates[candidates])
+        }, logical(1L))
+      } else if (orientation == "counterclockwise") {
+        second.pearl <- vapply(c("E", "NE", "N", "NW"), function(x) {
+          x %in% names(candidates[candidates])
+        }, logical(1L))
+      }
+
+      sel <- which(get(names(second.pearl[second.pearl])))
     }
     pearl.string[j] <- row.names(alters[sel, ])
   }
