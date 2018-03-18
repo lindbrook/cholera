@@ -304,6 +304,58 @@ simProj <- function() {
   ## manual re-classification ##
   dat <- cholera::sim.ortho.proj
 
+  #
+
+  # Dufours Place (217-2) -> Poland Street(194-1)
+  # p7 -> p7
+  # St Johns Workhouse empty space problem/entrance
+  dat[dat$case == 3296, "road.segment"] <- "194-1"
+  dat[dat$case == 3296, c("x.proj", "y.proj")] <-
+    orthoProjFix("194-1", east.end = FALSE)
+  dat[dat$case == 3296, "ortho.dist"] <- distanceFix(3296)
+
+  # Dufours Place (217-2) -> Poland Street(194-1)
+  # p7 -> p7
+  # St Johns Workhouse empty space problem/entrance
+  dat[dat$case == 3223, "road.segment"] <- "194-1"
+  dat[dat$case == 3223, c("x.proj", "y.proj")] <-
+    orthoProjFix("194-1", east.end = FALSE)
+  dat[dat$case == 3223, "ortho.dist"] <- distanceFix(3223)
+
+  # Dufours Place (217-2) -> Poland Street(194-1)
+  # p7 -> p7
+  # St Johns Workhouse empty space problem/entrance
+  # dat[dat$case == 3151, "road.segment"] <- "194-1"
+  # dat[dat$case == 3151, c("x.proj", "y.proj")] <-
+  #   orthoProjFix("194-1", east.end = FALSE)
+  # dat[dat$case == 3151, "ortho.dist"] <- distanceFix(3151)
+
+  # Dufours Place (217-2) -> Poland Street(194-1)
+  # p7 -> p7
+  # St Johns Workhouse empty space problem/entrance
+  # dat[dat$case == 3077, "road.segment"] <- "194-1"
+  # dat[dat$case == 3077, c("x.proj", "y.proj")] <-
+  #   orthoProjFix("194-1", east.end = FALSE)
+  # dat[dat$case == 3077, "ortho.dist"] <- distanceFix(3077)
+
+  # Dufours Place (217-2) -> Poland Street(194-1)
+  # p7 -> p7
+  # St Johns Workhouse empty space problem/entrance
+  # dat[dat$case == 3078, "road.segment"] <- "194-1"
+  # dat[dat$case == 3151, c("x.proj", "y.proj")] <-
+  #   orthoProjFix("194-1", east.end = FALSE)
+  # dat[dat$case == 3151, "ortho.dist"] <- distanceFix(3151)
+
+  #
+
+  # Oxford Street (76-1) -> Blenheim Mews (106-1)
+  # p1 -> p3
+  # "fix" for misclassification of 4022
+  dat[dat$case == 4022, "road.segment"] <- "106-1"
+  dat[dat$case == 4022, c("x.proj", "y.proj")] <-
+    orthoProjFix("106-1", east.end = FALSE)
+  dat[dat$case == 4022, "ortho.dist"] <- distanceFix(4022)
+
   # Oxford Street (76-1) -> Blenheim Mews (106-1)
   # p1 -> p3
   # "fix" for misclassification of 4022
