@@ -304,49 +304,28 @@ simProj <- function() {
   ## manual re-classification ##
   dat <- cholera::sim.ortho.proj
 
-  #
+  # Sutton Street (85-1) -> Soho Square (86-1)
+  # p4 -> ?
+  dat[dat$case == 4497, "road.segment"] <- "86-1"
+  dat[dat$case == 4497, c("x.proj", "y.proj")] <-
+    orthoProjFix("86-1", east.end = TRUE)
+  dat[dat$case == 4497, "ortho.dist"] <- distanceFix(4497)
 
-  # Dufours Place (217-2) -> Poland Street(194-1)
+  # Dufours Place (217-2) -> St James Workhouse (148-1)
   # p7 -> p7
   # St Johns Workhouse empty space problem/entrance
   dat[dat$case == 3296, "road.segment"] <- "194-1"
   dat[dat$case == 3296, c("x.proj", "y.proj")] <-
-    orthoProjFix("194-1", east.end = FALSE)
+    cholera::ortho.proj[cholera::ortho.proj$case == 369, c("x.proj", "y.proj")]
   dat[dat$case == 3296, "ortho.dist"] <- distanceFix(3296)
 
-  # Dufours Place (217-2) -> Poland Street(194-1)
+  # Dufours Place (217-2) -> St James Workhouse (148-1)
   # p7 -> p7
   # St Johns Workhouse empty space problem/entrance
   dat[dat$case == 3223, "road.segment"] <- "194-1"
   dat[dat$case == 3223, c("x.proj", "y.proj")] <-
-    orthoProjFix("194-1", east.end = FALSE)
+    cholera::ortho.proj[cholera::ortho.proj$case == 369, c("x.proj", "y.proj")]
   dat[dat$case == 3223, "ortho.dist"] <- distanceFix(3223)
-
-  # Dufours Place (217-2) -> Poland Street(194-1)
-  # p7 -> p7
-  # St Johns Workhouse empty space problem/entrance
-  # dat[dat$case == 3151, "road.segment"] <- "194-1"
-  # dat[dat$case == 3151, c("x.proj", "y.proj")] <-
-  #   orthoProjFix("194-1", east.end = FALSE)
-  # dat[dat$case == 3151, "ortho.dist"] <- distanceFix(3151)
-
-  # Dufours Place (217-2) -> Poland Street(194-1)
-  # p7 -> p7
-  # St Johns Workhouse empty space problem/entrance
-  # dat[dat$case == 3077, "road.segment"] <- "194-1"
-  # dat[dat$case == 3077, c("x.proj", "y.proj")] <-
-  #   orthoProjFix("194-1", east.end = FALSE)
-  # dat[dat$case == 3077, "ortho.dist"] <- distanceFix(3077)
-
-  # Dufours Place (217-2) -> Poland Street(194-1)
-  # p7 -> p7
-  # St Johns Workhouse empty space problem/entrance
-  # dat[dat$case == 3078, "road.segment"] <- "194-1"
-  # dat[dat$case == 3151, c("x.proj", "y.proj")] <-
-  #   orthoProjFix("194-1", east.end = FALSE)
-  # dat[dat$case == 3151, "ortho.dist"] <- distanceFix(3151)
-
-  #
 
   # Oxford Street (76-1) -> Blenheim Mews (106-1)
   # p1 -> p3
@@ -371,11 +350,6 @@ simProj <- function() {
   dat[dat$case == 3173, c("x.proj", "y.proj")] <-
     orthoProjFix("189-2")
   dat[dat$case == 3173, "ortho.dist"] <- distanceFix(3173)
-
-  # # Oxford Street (76-1) -> Blenheim Mews (106-1)
-  # # p1 -> p3
-  # # "fix" for misclassification of 4022
-  # dat[dat$case == 4022, "road.segment"] <- "106-1"
 
   # Swallow Place (133-3) -> Princes Street/Hanover Square (184-1)
   # p5 -> p6
