@@ -61,13 +61,13 @@ You can also explore "expected" neighborhoods.
 You can color roads by neighborhood.
 
 ```{r expected, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodWalking(case.set = "expected"))
+plot(neighborhoodWalking(case.set = "expected", vestry = TRUE))
 ```
 
 Or you can color "expected" areas:
 
 ```{r expected_area, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodWalking(case.set = "expected"), type = "area")
+plot(neighborhoodWalking(case.set = "expected", vestry = TRUE), type = "area")
 ```
 
 ### other package features
