@@ -491,7 +491,7 @@ plot.walking <- function(x, type = "road", ...) {
       splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
       split.segs <- c(obs.partial.leftover, unobs.split.segments)
 
-      split.outcome <- lapply(seq_along(split.segs), function(i) {
+      split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
         id <- sim.ortho.proj$road.segment == split.segs[i] &
               is.na(sim.ortho.proj$road.segment) == FALSE
 
@@ -513,7 +513,7 @@ plot.walking <- function(x, type = "road", ...) {
         }, integer(1L))
 
         data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-      })
+      }, mc.cores = x$cores)
 
       split.outcome <- do.call(rbind, split.outcome)
       split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
