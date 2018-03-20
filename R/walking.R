@@ -604,8 +604,12 @@ multiCore <- function(x) {
   cores
 }
 
+pearlStringRadius <- function() {
+  c(stats::dist(cholera::regular.cases[c(1, 3), ]))
+}
+
 # remove observations with neighbors at each of the 4 cardinal directions
-peripheryCases <- function(n.points, radius) {
+peripheryCases <- function(n.points, radius = pearlStringRadius()) {
   n.area <- cholera::regular.cases[n.points, ]
   periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {
     case.point <- n.area[i, ]
@@ -629,7 +633,9 @@ peripheryCases <- function(n.points, radius) {
 }
 
 # sort points on periphery to form a concave hull
-pearlString <- function(vertices, radius, orientation = "clockwise") {
+pearlString <- function(vertices, radius = pearlStringRadius(),
+  orientation = "clockwise") {
+
   dat <- cholera::regular.cases[vertices, ]
   dat <- dat[order(dat$y), ] # set southern most point as first observation.
   pearl.string <- vector(mode = "character", length = length(vertices))
