@@ -403,16 +403,19 @@ plot.walking <- function(x, type = "road", ...) {
     obs.partial.segments <- unname(unlist(obs.partial))
     obs.partial.whole <- wholeSegments(obs.partial.segments)
 
-    # list of os split segements (leading to different pumps)
-    # the cutpoint is foudn use approximate 1 meter increments: cutpointValues()
+    # list of of split segments (lead to different pumps)
+    # the cutpoint is found using appox. 1 meter increments via cutpointValues()
     obs.partial.leftover <- setdiff(obs.partial.segments,
       unlist(obs.partial.whole))
-    obs.partial.split.data <- parallel::mclapply(obs.partial.leftover,
-      splitSegments, mc.cores = x$cores)
-    cutpoints <- cutpointValues(obs.partial.split.data)
-    obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
-      unique(x$pump))
-    obs.partial.split <- splitData(obs.partial.leftover, cutpoints)
+
+    if (length(obs.partial.leftover) > 0) {
+      obs.partial.split.data <- parallel::mclapply(obs.partial.leftover,
+        splitSegments, mc.cores = x$cores)
+      cutpoints <- cutpointValues(obs.partial.split.data)
+      obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
+        unique(x$pump))
+      obs.partial.split <- splitData(obs.partial.leftover, cutpoints)
+    }
 
     ## ------------ Unobserved ------------ ##
 
@@ -429,11 +432,11 @@ plot.walking <- function(x, type = "road", ...) {
       falconberg.ct.mews == FALSE]
 
     # Exclude segment if A&E pump is not among selected.
-    sel <- "Adam and Eve Court"
-    AE.pump <- cholera::pumps[cholera::pumps$street == sel, "id"]
-    AE <- cholera::road.segments[cholera::road.segments$name == sel, "id"]
-
     if (is.null(x$pump.select) == FALSE) {
+      sel <- "Adam and Eve Court"
+      AE.pump <- cholera::pumps[cholera::pumps$street == sel, "id"]
+      AE <- cholera::road.segments[cholera::road.segments$name == sel, "id"]
+
       if (all(x$pump.select > 0)) {
         if (AE.pump %in% x$pump.select == FALSE) {
           unobs.segments <- unobs.segments[unobs.segments %in% AE == FALSE]
@@ -446,13 +449,15 @@ plot.walking <- function(x, type = "road", ...) {
     }
 
     unobs.whole <- wholeSegments(unobs.segments)
-
     unobs.split.segments <- setdiff(unobs.segments, unlist(unobs.whole))
-    unobs.split.data <- parallel::mclapply(unobs.split.segments, splitSegments,
-      mc.cores = x$cores)
-    cutpoints <- cutpointValues(unobs.split.data)
-    unobs.split.pump <- lapply(unobs.split.data, function(x) unique(x$pump))
-    unobs.split <- splitData(unobs.split.segments, cutpoints)
+
+    if (length(unobs.split.segments) > 0) {
+      unobs.split.data <- parallel::mclapply(unobs.split.segments,
+        splitSegments, mc.cores = x$cores)
+      cutpoints <- cutpointValues(unobs.split.data)
+      unobs.split.pump <- lapply(unobs.split.data, function(x) unique(x$pump))
+      unobs.split <- splitData(unobs.split.segments, cutpoints)
+    }
 
     ## ------------ Data Assembly ------------ ##
 
@@ -472,6 +477,24 @@ plot.walking <- function(x, type = "road", ...) {
       names(wholes) <- 1:13
     }
 
+    # split segments #
+    split.test1 <- length(obs.partial.leftover)
+    split.test2 <- length(unobs.split.segments)
+
+    if (split.test1 > 0 & split.test2 == 0) {
+      splits <- obs.partial.split
+      splits.pump <- obs.partial.split.pump
+      split.segs <- obs.partial.leftover
+    } else if (split.test1 == 0 & split.test2 > 0) {
+      splits <- unobs.split.segments
+      splits.pump <- unobs.split.pump
+      split.segs <- unobs.split.segments
+    } else if (split.test1 > 0 & split.test2 > 0) {
+      splits <- c(obs.partial.split, unobs.split)
+      splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
+      split.segs <- c(obs.partial.leftover, unobs.split.segments)
+    }
+
     if (type == "area") {
       invisible(lapply(road.list, lines))
       sim.ortho.proj <- simProj()
@@ -485,43 +508,39 @@ plot.walking <- function(x, type = "road", ...) {
 
       names(whole.cases) <- names(wholes)
 
-      # splits #
+      if (split.test1 | split.test2) {
+        split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
+          id <- sim.ortho.proj$road.segment == split.segs[i] &
+                is.na(sim.ortho.proj$road.segment) == FALSE
 
-      splits <- c(obs.partial.split, unobs.split)
-      splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
-      split.segs <- c(obs.partial.leftover, unobs.split.segments)
+          sim.data <- sim.ortho.proj[id, ]
+          split.data <- splits[[i]]
 
-      split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
-        id <- sim.ortho.proj$road.segment == split.segs[i] &
-              is.na(sim.ortho.proj$road.segment) == FALSE
+          sel <- vapply(seq_len(nrow(sim.data)), function(j) {
+            obs <- sim.data[j, c("x.proj", "y.proj")]
+            ds <- vapply(seq_len(nrow(split.data)), function(k) {
+              stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
+            }, numeric(1L))
 
-        sim.data <- sim.ortho.proj[id, ]
-        split.data <- splits[[i]]
+            test1 <- signif(sum(ds[1:2])) ==
+                     signif(c(stats::dist(split.data[c(1, 2), ])))
+            test2 <- signif(sum(ds[3:4])) ==
+                     signif(c(stats::dist(split.data[c(3, 4), ])))
 
-        sel <- vapply(seq_len(nrow(sim.data)), function(j) {
-          obs <- sim.data[j, c("x.proj", "y.proj")]
-          ds <- vapply(seq_len(nrow(split.data)), function(k) {
-            stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
-          }, numeric(1L))
+            ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
+          }, integer(1L))
 
-          test1 <- signif(sum(ds[1:2])) ==
-                   signif(c(stats::dist(split.data[c(1, 2), ])))
-          test2 <- signif(sum(ds[3:4])) ==
-                   signif(c(stats::dist(split.data[c(3, 4), ])))
+          data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
+        }, mc.cores = x$cores)
 
-          ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
-        }, integer(1L))
+        split.outcome <- do.call(rbind, split.outcome)
+        split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
+        split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
+          split.outcome[split.outcome$pump == p, "case"]
+        })
 
-        data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-      }, mc.cores = x$cores)
-
-      split.outcome <- do.call(rbind, split.outcome)
-      split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
-      split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
-        split.outcome[split.outcome$pump == p, "case"]
-      })
-
-      names(split.cases) <- sort(unique(split.outcome$pump))
+        names(split.cases) <- sort(unique(split.outcome$pump))
+      }
 
       ###################
       # sting of pearls #
@@ -530,20 +549,23 @@ plot.walking <- function(x, type = "road", ...) {
       pearl.neighborhood <- vapply(whole.cases, length, integer(1L))
       pearl.neighborhood <- names(pearl.neighborhood[pearl.neighborhood != 0])
 
-      neighborhood.cases <- lapply(pearl.neighborhood, function(nm) {
-        c(whole.cases[[nm]], split.cases[[nm]])
-      })
+      if (split.test1 | split.test2) {
+        neighborhood.cases <- lapply(pearl.neighborhood, function(nm) {
+          c(whole.cases[[nm]], split.cases[[nm]])
+        })
+      } else {
+        neighborhood.cases <- lapply(pearl.neighborhood, function(nm) {
+          whole.cases[[nm]]
+        })
+      }
 
       names(neighborhood.cases) <- pearl.neighborhood
 
-      radius <- c(stats::dist(cholera::regular.cases[c(1, 3), ]))
-
-      periphery.cases <- parallel::mclapply(neighborhood.cases, function(nc) {
-        peripheryCases(nc, radius)
-      }, mc.cores = x$cores)
+      periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
+        mc.cores = x$cores)
 
       pearl.string <- parallel::mclapply(periphery.cases, pearlString,
-        radius = radius, mc.cores = x$cores)
+        mc.cores = x$cores)
 
       invisible(lapply(names(pearl.string), function(nm) {
         sel <- paste0("p", nm)
@@ -560,18 +582,17 @@ plot.walking <- function(x, type = "road", ...) {
           col = snow.colors[paste0("p", nm)])
       }))
 
-      splits <- c(obs.partial.split, unobs.split)
-      splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
-
-      invisible(lapply(seq_along(splits), function(i) {
-        dat <- splits[[i]]
-        ps <- splits.pump[[i]]
-        ps.col <- snow.colors[paste0("p", ps)]
-        segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 3,
-          col = ps.col[1])
-        segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 3,
-          col = ps.col[2])
-      }))
+      if (split.test1 | split.test2) {
+        invisible(lapply(seq_along(splits), function(i) {
+          dat <- splits[[i]]
+          ps <- splits.pump[[i]]
+          ps.col <- snow.colors[paste0("p", ps)]
+          segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 3,
+            col = ps.col[1])
+          segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 3,
+            col = ps.col[2])
+        }))
+      }
     }
   }
 
@@ -956,11 +977,10 @@ pumpTokens <- function(pump.select, vestry, case.set, snow.colors, type) {
         } else if (all(pump.select < 0)) {
           if (vestry) {
             sel <- cholera::pumps.vestry$id %in% abs(pump.select) == FALSE
-            points(cholera::pumps.vestry[sel, c("x", "y")], pch = 24, lwd = 1.25,
-              col = "white", bg = snow.colors[sel])
+            points(cholera::pumps.vestry[sel, c("x", "y")], pch = 24,
+              lwd = 1.25, col = "white", bg = snow.colors[sel])
             text(cholera::pumps.vestry[sel, c("x", "y")], pos = 1, cex = 0.9,
               labels = paste0("p", cholera::pumps.vestry$id[sel]))
-
           } else {
             sel <- cholera::pumps$id %in% abs(pump.select) == FALSE
             points(cholera::pumps[sel, c("x", "y")], pch = 24, lwd = 1.25,
