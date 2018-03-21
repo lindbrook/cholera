@@ -51,21 +51,21 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   cores <- multiCore(multi.core)
 
   if (case.set == "expected") {
-    args <- list(pump.select = pump.select,
-                 vestry = vestry,
-                 weighted = weighted,
-                 case.set = "observed",
-                 multi.core = cores)
+    arguments <- list(pump.select = pump.select,
+                      vestry = vestry,
+                      weighted = weighted,
+                      case.set = "observed",
+                      multi.core = cores)
 
   } else {
-    args <- list(pump.select = pump.select,
-                 vestry = vestry,
-                 weighted = weighted,
-                 case.set = case.set,
-                 multi.core = cores)
+    arguments <- list(pump.select = pump.select,
+                      vestry = vestry,
+                      weighted = weighted,
+                      case.set = case.set,
+                      multi.core = cores)
   }
 
-  nearest.path <- do.call("nearestPump", c(args, output = "path"))
+  nearest.path <- do.call("nearestPump", c(arguments, output = "path"))
 
   if (vestry) {
     nearest.pump <- vapply(nearest.path, function(paths) {
