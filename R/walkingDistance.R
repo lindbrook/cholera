@@ -161,14 +161,15 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
     if (observed) {
       if (any(abs(c(origin, destination)) %in% 1:578 == FALSE)) {
         txt1 <- 'With type = "cases", the absolute value of both "origin"'
-        txt2 <- 'and "destination" must be between 1 and 578.'
+        txt2 <- 'and "destination" must be a whole number between 1 and 578.'
         stop(paste(txt1, txt2))
       }
     } else {
       if (any(abs(c(origin, destination)) %in% 1:4993 == FALSE)) {
         txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
-        txt2 <- 'both "origin" and "destination" must be between 1 and 4993.'
-        stop(paste(txt1, txt2))
+        txt2 <- 'both "origin" and "destination" must be whole numbers between'
+        txt3 <- '1 and 4993.'
+        stop(paste(txt1, txt2, txt3))
       }
     }
 
@@ -257,7 +258,7 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 
       if (any(abs(c(origin, destination)) %in% 1:14 == FALSE)) {
         txt1 <- 'With type = "pumps" and "vestry = TRUE",'
-        txt2 <- 'origin and destination must be 1 >= |x| <= 14.'
+        txt2 <- 'origin and destination must whole numbers 1 >= |x| <= 14.'
         stop(paste(txt1, txt2))
       }
     } else {
@@ -265,7 +266,7 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 
       if (any(abs(c(origin, destination)) %in% 1:13 == FALSE)) {
         txt1 <- 'With type = "pumps" and "vestry = FALSE",'
-        txt2 <- 'origin and destination must be 1 >= |x| <= 13.'
+        txt2 <- 'origin and destination must be whole numbers 1 >= |x| <= 13.'
         stop(paste(txt1, txt2))
       }
     }
