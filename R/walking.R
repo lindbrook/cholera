@@ -995,26 +995,14 @@ pumpTokens <- function(pump.select, vestry, case.set, snow.colors, type) {
 }
 
 expectedCount <- function(x) {
-  args <- list(pump.select = x$pump.select,
-               vestry = x$vestry,
-               weighted = x$weighted,
-               case.set = "expected",
-               multi.core = x$cores)
+  arguments <- list(pump.select = x$pump.select,
+                    vestry = x$vestry,
+                    weighted = x$weighted,
+                    case.set = "expected",
+                    multi.core = x$cores)
 
-  nearest.path <- do.call("nearestPump", c(args, output = "path"))
-
-  if (x$vestry) {
-    nearest.pump <- vapply(nearest.path, function(paths) {
-      sel <- cholera::ortho.proj.pump.vestry$node %in% paths[length(paths)]
-      cholera::ortho.proj.pump.vestry[sel, "pump.id"]
-    }, numeric(1L))
-  } else {
-    nearest.pump <- vapply(nearest.path, function(paths) {
-      sel <- cholera::ortho.proj.pump$node %in% paths[length(paths)]
-      cholera::ortho.proj.pump[sel, "pump.id"]
-    }, numeric(1L))
-  }
-
-  out <- table(nearest.pump)
+  nearest.pump <- do.call("nearestPump", c(arguments))
+  nearest.pump <- nearest.pump[is.infinite(nearest.pump$distance) == FALSE, ]
+  out <- table(nearest.pump$pump)
   stats::setNames(as.vector(out), names(out))
 }
