@@ -486,7 +486,7 @@ plot.walking <- function(x, type = "road", ...) {
       splits.pump <- obs.partial.split.pump
       split.segs <- obs.partial.leftover
     } else if (split.test1 == 0 & split.test2 > 0) {
-      splits <- unobs.split.segments
+      splits <- unobs.split
       splits.pump <- unobs.split.pump
       split.segs <- unobs.split.segments
     } else if (split.test1 > 0 & split.test2 > 0) {
