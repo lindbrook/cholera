@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.9.9003-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.9.9004-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 ### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
 
 John Snow's map of the 1854 cholera outbreak in London is one of the best known examples of data visualization and information design.
@@ -61,10 +61,10 @@ plot(neighborhoodWalking(case.set = "expected", vestry = TRUE))
 Or you can color "expected" areas:
 
 ``` r
-plot(neighborhoodWalking(case.set = "expected", vestry = TRUE), type = "area")
+plot(neighborhoodWalking(case.set = "expected", vestry = TRUE), type = "area.polygons")
 ```
 
-![](man/figures/README-expected_area-1.png)
+![](man/figures/README-expected_area_polygons-1.png)
 
 ### other package features
 

@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class "walking" created by neighborhoodWalking().}
 
-\item{type}{Character. "road" or "area". "area" only valid when case.set = "expected".}
+\item{type}{Character. "road", "area.points" or "area.polygons". "area" flavors only valid when case.set = "expected".}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -19,8 +19,12 @@ A base R plot.
 \description{
 Plot method for neighborhoodWalking().
 }
+\section{Note}{
+ "area.polygons" is experimental.
+}
+
 \examples{
 # plot(neighborhoodWalking())
 # plot(neighborhoodWalking(case.set = "expected"))
-# plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
+# plot(neighborhoodWalking(case.set = "expected"), "area.points")
 }

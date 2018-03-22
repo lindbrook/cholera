@@ -66,8 +66,8 @@ plot(neighborhoodWalking(case.set = "expected", vestry = TRUE))
 
 Or you can color "expected" areas:
 
-```{r expected_area, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodWalking(case.set = "expected", vestry = TRUE), type = "area")
+```{r expected_area_polygons, fig.width = 6, fig.height = 6, message = FALSE}
+plot(neighborhoodWalking(case.set = "expected", vestry = TRUE), type = "area.polygons")
 ```
 
 ### other package features

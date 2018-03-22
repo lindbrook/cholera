@@ -145,27 +145,28 @@ print.walking <- function(x, ...) {
 #' Plot method for neighborhoodWalking().
 #'
 #' @param x An object of class "walking" created by neighborhoodWalking().
-#' @param type Character. "road" or "area". "area" only valid when case.set = "expected".
+#' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when case.set = "expected".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
+#' @section Note: "area.polygons" is experimental.
 #' @export
 #' @examples
 #' # plot(neighborhoodWalking())
 #' # plot(neighborhoodWalking(case.set = "expected"))
-#' # plot(neighborhoodWalking(case.set = "expected"), area = TRUE)
+#' # plot(neighborhoodWalking(case.set = "expected"), "area.points")
 
 plot.walking <- function(x, type = "road", ...) {
   if (class(x) != "walking") {
     stop('"x"\'s class needs to be "walking".')
   }
 
-  if (type %in% c("road", "area") == FALSE) {
-    stop('"type" must be "road" or "area".')
+  if (type %in% c("road", "area.points", "area.polygons") == FALSE) {
+    stop('"type" must be "road", "area.points", "area.polygons".')
   }
 
-  if (type == "area") {
-    if (all(x$case.set %in% c("expected") == FALSE)) {
-      stop('type = "area" valid only when case.set = "expected".')
+  if (type %in% c("area.points", "area.polygons")) {
+    if (x$case.set != "expected") {
+      stop('area plots valid only when case.set = "expected".')
     }
   }
 
@@ -400,21 +401,20 @@ plot.walking <- function(x, type = "road", ...) {
 
     # list of partially traversed segments
     obs.partial <- lapply(segment.audit, function(x) x$`partial`)
-    obs.partial.segments <- unname(unlist(obs.partial))
-    obs.partial.whole <- wholeSegments(obs.partial.segments)
+    partial.segs <- unname(unlist(obs.partial))
+    obs.partial.whole <- wholeSegments(partial.segs)
 
     # list of of split segments (lead to different pumps)
     # the cutpoint is found using appox. 1 meter increments via cutpointValues()
-    obs.partial.leftover <- setdiff(obs.partial.segments,
-      unlist(obs.partial.whole))
+    obs.partial.segments <- setdiff(partial.segs, unlist(obs.partial.whole))
 
-    if (length(obs.partial.leftover) > 0) {
-      obs.partial.split.data <- parallel::mclapply(obs.partial.leftover,
+    if (length(obs.partial.segments) > 0) {
+      obs.partial.split.data <- parallel::mclapply(obs.partial.segments,
         splitSegments, mc.cores = x$cores)
       cutpoints <- cutpointValues(obs.partial.split.data)
       obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
         unique(x$pump))
-      obs.partial.split <- splitData(obs.partial.leftover, cutpoints)
+      obs.partial.split <- splitData(obs.partial.segments, cutpoints)
     }
 
     ## ------------ Unobserved ------------ ##
@@ -478,13 +478,13 @@ plot.walking <- function(x, type = "road", ...) {
     }
 
     # split segments #
-    split.test1 <- length(obs.partial.leftover)
+    split.test1 <- length(obs.partial.segments)
     split.test2 <- length(unobs.split.segments)
 
     if (split.test1 > 0 & split.test2 == 0) {
       splits <- obs.partial.split
       splits.pump <- obs.partial.split.pump
-      split.segs <- obs.partial.leftover
+      split.segs <- obs.partial.segments
     } else if (split.test1 == 0 & split.test2 > 0) {
       splits <- unobs.split
       splits.pump <- unobs.split.pump
@@ -492,59 +492,86 @@ plot.walking <- function(x, type = "road", ...) {
     } else if (split.test1 > 0 & split.test2 > 0) {
       splits <- c(obs.partial.split, unobs.split)
       splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
-      split.segs <- c(obs.partial.leftover, unobs.split.segments)
+      split.segs <- c(obs.partial.segments, unobs.split.segments)
     }
 
-    if (type == "area") {
+    sim.proj <- simProj()  # in neighborhoodData.R
+    sim.proj.segs <- unique(sim.proj$road.segment)
+    sim.proj.segs <- sim.proj.segs[!is.na(sim.proj.segs)]
+
+    if (split.test1 > 0 | split.test2 > 0) {
+      split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
+        id <- sim.proj$road.segment == split.segs[i] &
+          is.na(sim.proj$road.segment) == FALSE
+
+        sim.data <- sim.proj[id, ]
+        split.data <- splits[[i]]
+
+        sel <- vapply(seq_len(nrow(sim.data)), function(j) {
+          obs <- sim.data[j, c("x.proj", "y.proj")]
+          ds <- vapply(seq_len(nrow(split.data)), function(k) {
+            stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
+          }, numeric(1L))
+
+          test1 <- signif(sum(ds[1:2])) ==
+            signif(c(stats::dist(split.data[c(1, 2), ])))
+          test2 <- signif(sum(ds[3:4])) ==
+            signif(c(stats::dist(split.data[c(3, 4), ])))
+
+          ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
+        }, integer(1L))
+
+        data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
+      }, mc.cores = x$cores)
+
+      split.outcome <- do.call(rbind, split.outcome)
+      split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
+      split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
+        split.outcome[split.outcome$pump == p, "case"]
+      })
+
+      names(split.cases) <- sort(unique(split.outcome$pump))
+    }
+
+    if (type == "area.points") {
+      wholes.id <- sim.proj.segs[sim.proj.segs %in% unlist(wholes)]
+      sim.proj.wholes <- sim.proj[sim.proj$road.segment %in% wholes.id, ]
+      sim.proj.wholes$pump <- NA
+      sim.proj.wholes$color <- NA
+
+      for (nm in names(wholes)) {
+        sel <- sim.proj.wholes$road.segment %in% wholes[[nm]]
+        sim.proj.wholes[sel, "pump"] <- as.numeric(nm)
+        sim.proj.wholes[sel, "color"] <- snow.colors[paste0("p", nm)]
+      }
+
+      sim.proj.splits <- sim.proj[sim.proj$case %in% unlist(split.cases), ]
+      sim.proj.splits$pump <- NA
+      sim.proj.splits$color <- NA
+
+      for (nm in names(split.cases)) {
+        sel <- sim.proj.splits$case %in% split.cases[[nm]]
+        sim.proj.splits[sel, "pump"] <- as.numeric(nm)
+        sim.proj.splits[sel, "color"] <- snow.colors[paste0("p", nm)]
+      }
+
+      points(cholera::regular.cases[sim.proj.wholes$case, ],
+        col = sim.proj.wholes$color, pch = 15, cex = 1.25)
+      points(cholera::regular.cases[sim.proj.splits$case, ],
+        col = sim.proj.splits$color, pch = 15, cex = 1.25)
       invisible(lapply(road.list, lines))
-      sim.ortho.proj <- simProj()
+
+    } else if (type == "area.polygons") {
+      invisible(lapply(road.list, lines))
 
       # wholes #
       whole.cases <- lapply(names(wholes), function(nm) {
-        sel <- sim.ortho.proj$road.segment %in% wholes[[nm]]
-        cases <- sim.ortho.proj[sel, "case"]
+        sel <- sim.proj$road.segment %in% wholes[[nm]]
+        cases <- sim.proj[sel, "case"]
         as.numeric(row.names(cholera::regular.cases[cases, ]))
       })
 
       names(whole.cases) <- names(wholes)
-
-      if (split.test1 | split.test2) {
-        split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
-          id <- sim.ortho.proj$road.segment == split.segs[i] &
-                is.na(sim.ortho.proj$road.segment) == FALSE
-
-          sim.data <- sim.ortho.proj[id, ]
-          split.data <- splits[[i]]
-
-          sel <- vapply(seq_len(nrow(sim.data)), function(j) {
-            obs <- sim.data[j, c("x.proj", "y.proj")]
-            ds <- vapply(seq_len(nrow(split.data)), function(k) {
-              stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
-            }, numeric(1L))
-
-            test1 <- signif(sum(ds[1:2])) ==
-                     signif(c(stats::dist(split.data[c(1, 2), ])))
-            test2 <- signif(sum(ds[3:4])) ==
-                     signif(c(stats::dist(split.data[c(3, 4), ])))
-
-            ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
-          }, integer(1L))
-
-          data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-        }, mc.cores = x$cores)
-
-        split.outcome <- do.call(rbind, split.outcome)
-        split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
-        split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
-          split.outcome[split.outcome$pump == p, "case"]
-        })
-
-        names(split.cases) <- sort(unique(split.outcome$pump))
-      }
-
-      ###################
-      # sting of pearls #
-      ###################
 
       pearl.neighborhood <- vapply(whole.cases, length, integer(1L))
       pearl.neighborhood <- names(pearl.neighborhood[pearl.neighborhood != 0])
@@ -570,7 +597,7 @@ plot.walking <- function(x, type = "road", ...) {
       invisible(lapply(names(pearl.string), function(nm) {
         sel <- paste0("p", nm)
         polygon(cholera::regular.cases[pearl.string[[nm]], ],
-          col = grDevices::adjustcolor(snow.colors[sel], alpha.f = 0.5))
+          col = grDevices::adjustcolor(snow.colors[sel], alpha.f = 2/3))
       }))
 
     } else {
@@ -946,7 +973,7 @@ pumpTokens <- function(pump.select, vestry, case.set, snow.colors, type) {
           }
         }
       }
-    } else if (type == "area") {
+    } else if (type %in% c("area.points", "area.polygons")) {
       if (is.null(pump.select)) {
         if (vestry) {
           points(cholera::pumps.vestry[, c("x", "y")], pch = 24, lwd = 1.25,
