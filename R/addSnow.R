@@ -37,8 +37,8 @@ addSnow <- function(type = "street", color = "dodgerblue", alpha.level = 0.25,
   } else if (type == "area" | type == "boundary") {
     snow.area <- cholera::regular.cases[snow$sim.case, ]
     radius <- c(stats::dist(cholera::regular.cases[c(1, 3), ]))
-    periphery.cases <- peripheryCases(row.names(snow.area), radius)
-    pearl.string <- pearlString(periphery.cases, radius)
+    periphery.cases <- peripheryCases(row.names(snow.area), pearlStringRadius())
+    pearl.string <- pearlString(periphery.cases, pearlStringRadius())
 
     if (type == "boundary") {
       polygon(cholera::regular.cases[pearl.string, ], border = color, col = NA)
