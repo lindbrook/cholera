@@ -2,10 +2,10 @@
 % Please edit documentation in R/addNeighborhood.R
 \name{addNeighborhood}
 \alias{addNeighborhood}
-\title{Add expected neighborhood area.}
+\title{Add expected neighborhood polygons}
 \usage{
 addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, multi.core = TRUE, type = "area", color = NULL,
+  weighted = TRUE, multi.core = FALSE, type = "area", color = NULL,
   alpha.level = 0.125, ...)
 }
 \arguments{
@@ -35,8 +35,8 @@ In-development prototype.
 }
 
 \examples{
-# streetNameLocator("marshall street", zoom = TRUE, add.title = FALSE,
-#   highlight = FALSE, unit = "meter", cases = NULL)
+# streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
+#   unit = "meter", cases = NULL)
 # addNeighborhood(6:7)
 }
 \seealso{
