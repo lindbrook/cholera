@@ -1,8 +1,19 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.3.9.9004-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
-### cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
+cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
+-------------------------------------------------------------------------
+
+### package features
+
+-   Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
+-   "Unstacks" the data in two ways to improve analysis and visualization.
+-   Adds the ability to overlay graphical features like kernel density, Voronoi diagrams, Snow's annotation, and notable landmarks (John Snow's residence, the Lion Brewery, etc.).
+-   Includes a variety of functions to highlight specific cases, roads, pumps and walking paths.
+-   Appends street names to the roads data set.
+-   Includes the revised pump data used in the second version of Snow's map from the Vestry report. This includes the corrected location of the Broad Street pump.
+-   Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
+
+### background
 
 John Snow's map of the 1854 cholera outbreak in London is one of the best known examples of data visualization and information design.
 
@@ -64,16 +75,6 @@ plot(neighborhoodWalking(case.set = "expected", vestry = TRUE), type = "area.pol
 
 ![](man/figures/README-expected_area_polygons-1.png)
 
-### other package features
-
--   Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
--   "Unstacks" the data in two ways to improve analysis and visualization.
--   Adds the ability to overlay graphical features like kernel density, Voronoi diagrams, Snow's annotation, and notable landmarks (John Snow's residence, the Lion Brewery, etc.).
--   Includes a variety of functions to highlight specific cases, roads, pumps and walking paths.
--   Appends street names to the roads data set.
--   Includes the revised pump data used in the second version of Snow's map from the Vestry report. This includes the corrected location of the Broad Street pump.
--   Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
-
 ### getting started
 
 To install 'cholera' from CRAN (<https://cran.r-project.org/package=cholera>):
@@ -94,7 +95,7 @@ Read the package's vignettes. They include detailed discussions about the data, 
 
 ### note
 
-neighborhoodWalking() is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 6 seconds while doing so for expected paths takes about 30 seconds. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to about 4 and 12 seconds.
+neighborhoodWalking() and addNeighborhood() are computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 6 seconds while doing so for expected paths takes about 30 seconds. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to about 4 and 12 seconds.
 
 Note that parallelization is currently only available on Linux and Mac.
 
