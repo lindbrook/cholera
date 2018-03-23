@@ -29,5 +29,5 @@ addIndexCase <- function(cex = 2, col = "red", pch = 1, add.label = FALSE,
       cex = text.size)
   }
 
-  points(index.case$x, index.case$y, col = "red", cex = 2, pch = 1)
+  points(index.case$x, index.case$y, col = col, cex = cex, pch = pch)
 }
