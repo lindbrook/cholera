@@ -148,7 +148,7 @@ print.walking <- function(x, ...) {
 #' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when case.set = "expected".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
-#' @section Note: "area.polygons" is experimental.
+#' @section Note: "area.polygons" is experimental and still under developtment: it may occassionally throw an error.
 #' @export
 #' @examples
 #' # plot(neighborhoodWalking())

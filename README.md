@@ -48,9 +48,7 @@ plot(neighborhoodWalking(-7))
 
 ### "expected" pump neighborhoods
 
-You can also explore "expected" neighborhoods.
-
-You can color roads by neighborhood.
+You can also explore "expected" neighborhoods. Currently, you can do so in three ways. The first colors roads. This is the default.
 
 ``` r
 plot(neighborhoodWalking(case.set = "expected", vestry = TRUE))
@@ -58,7 +56,7 @@ plot(neighborhoodWalking(case.set = "expected", vestry = TRUE))
 
 ![](man/figures/README-expected-1.png)
 
-Or you can color "expected" areas:
+The second and third color each neighborhoods's area by using either points or polygons. The polygon implementation is shown below. It is new and still under development. As such, it will occassionally throw an error. For exploration, type = "area.points" is the more robust opption.
 
 ``` r
 plot(neighborhoodWalking(case.set = "expected", vestry = TRUE), type = "area.polygons")
