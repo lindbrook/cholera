@@ -18,7 +18,7 @@
 #' # plot(neighborhoodVoronoi())
 #' # addSnow()
 
-addSnow <- function(type = "street", color = "dodgerblue", alpha.level = 0.25,
+addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
   line.width = 2, ...) {
 
   if (type %in% c("area", "boundary", "street") == FALSE) {
