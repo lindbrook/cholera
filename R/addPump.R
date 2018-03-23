@@ -10,7 +10,7 @@
 #' @param ... Additional plotting parameters.
 #' @export
 
-addPump <- function(id, vestry = FALSE, col = "red", pch = 17, label = TRUE,
+addPump <- function(id, vestry = FALSE, col = NULL, pch = 24, label = TRUE,
   pos = 1, ...) {
 
   if (is.numeric(id) == FALSE) {
@@ -31,7 +31,12 @@ addPump <- function(id, vestry = FALSE, col = "red", pch = 17, label = TRUE,
     dat <- cholera::pumps
   }
 
-  points(dat[dat$id == id, c("x", "y")], pch = pch, col = col)
+  if (is.null(col)) {
+    snow.col <- snowColors(vestry)[paste0("p", id)]
+    points(dat[dat$id == id, c("x", "y")], pch = pch, bg = snow.col)
+  } else {
+    points(dat[dat$id == id, c("x", "y")], pch = pch, bg = col)
+  }
 
   if (label) {
     text(dat[dat$id == id, c("x", "y")], pos = pos, labels = paste0("p", id))

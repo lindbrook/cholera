@@ -4,7 +4,7 @@
 \alias{addPump}
 \title{Add water pump by numerical ID.}
 \usage{
-addPump(id, vestry = FALSE, col = "red", pch = 17, label = TRUE,
+addPump(id, vestry = FALSE, col = NULL, pch = 24, label = TRUE,
   pos = 1, ...)
 }
 \arguments{
