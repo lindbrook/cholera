@@ -5,7 +5,7 @@
 \title{Locate road by name.}
 \usage{
 streetNameLocator(road.name, zoom = FALSE, radius = 0.1,
-  cases = "anchors", add.title = TRUE, add.pump = TRUE,
+  cases = "anchors", add.title = TRUE, add.pump = TRUE, vestry = FALSE,
   highlight = TRUE, unit = NULL)
 }
 \arguments{
@@ -20,6 +20,8 @@ streetNameLocator(road.name, zoom = FALSE, radius = 0.1,
 \item{add.title}{Logical. Include title.}
 
 \item{add.pump}{Logical. Include nearby pumps.}
+
+\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
 \item{highlight}{Logical. Highlight selected road.}
 
