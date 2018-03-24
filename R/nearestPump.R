@@ -91,32 +91,60 @@ pathData <- function(dat, weighted, case.set, cores) {
   edges <- dat$edges
   nodes.pump <- dat$nodes.pump
 
+  ## Adam and Eve Court: isolate with pump ##
+
+  rd <- "Adam and Eve Court"
+  adam.eve.ct <- cholera::road.segments[cholera::road.segments$name == rd, "id"]
+  sel <- cholera::sim.ortho.proj$road.segment == adam.eve.ct &
+         !is.na(cholera::sim.ortho.proj$road.segment)
+  AE.cases <- cholera::sim.ortho.proj[sel, "case"]
+
+  # AE.nodes <- nodes[nodes$anchor %in% AE.cases, "node"]
+  # AE.pump.node <- nodes[nodes$pump == 2, "node"]
+
+  ## ##
+
   paths <- function(x) {
     parallel::mclapply(x, function(a) {
       case.node <- nodes[nodes$anchor == a, "node"]
 
-      if (weighted) {
-        if (case.set == "observed") {
-          p <- igraph::shortest_paths(g, case.node,
-            nodes.pump[nodes.pump$pump != 2, "node"], weights = edges$d)$vpath
-          stats::setNames(p, nodes.pump[nodes.pump$pump != 2, "pump"])
-        } else if (case.set == "expected") {
-          p <- igraph::shortest_paths(g, case.node, nodes.pump$node,
-            weights = edges$d)$vpath
-          stats::setNames(p, nodes.pump$pump)
+        if (weighted) {
+          if (case.set == "observed") {
+            p <- igraph::shortest_paths(g, case.node,
+              nodes.pump[nodes.pump$pump != 2, "node"], weights = edges$d)$vpath
+            stats::setNames(p, nodes.pump[nodes.pump$pump != 2, "pump"])
+          } else if (case.set == "expected") {
+            if (a %in% AE.cases) {
+              p.nodes <- nodes.pump[nodes.pump$pump == 2, "node"]
+              p <- igraph::shortest_paths(g, case.node, p.nodes,
+                weights = edges$d)$vpath
+              stats::setNames(p, nodes.pump[nodes.pump$pump == 2, "pump"])
+            } else {
+              p.nodes <- nodes.pump[nodes.pump$pump != 2, "node"]
+              p <- igraph::shortest_paths(g, case.node, p.nodes,
+                weights = edges$d)$vpath
+              stats::setNames(p, nodes.pump[nodes.pump$pump != 2, "pump"])
+            }
+          }
+        } else {
+          if (case.set == "observed") {
+            p <- igraph::shortest_paths(g, case.node,
+              nodes.pump[nodes.pump$pump != 2, "node"])$vpath
+            stats::setNames(p, nodes.pump[nodes.pump$pump != 2, "pump"])
+          } else if (case.set == "expected") {
+            if (a %in% AE.cases) {
+              p.nodes <- nodes.pump[nodes.pump$pump == 2, "node"]
+              p <- igraph::shortest_paths(g, case.node, p.nodes)$vpath
+              stats::setNames(p, nodes.pump[nodes.pump$pump == 2, "pump"])
+            } else {
+              p.nodes <- nodes.pump[nodes.pump$pump != 2, "node"]
+              p <- igraph::shortest_paths(g, case.node, p.nodes)$vpath
+              stats::setNames(p, nodes.pump[nodes.pump$pump != 2, "pump"])
+            }
+          }
         }
-      } else {
-        if (case.set == "observed") {
-          p <- igraph::shortest_paths(g, case.node,
-            nodes.pump[nodes.pump$pump != 2, "node"])$vpath
-          stats::setNames(p, nodes.pump[nodes.pump$pump != 2, "pump"])
-        } else if (case.set == "expected") {
-          p <- igraph::shortest_paths(g, case.node, nodes.pump$node)$vpath
-          stats::setNames(p, nodes.pump$pump)
-        }
-      }
-    }, mc.cores = cores)
-  }
+      }, mc.cores = cores)
+    }
 
   distances <- function(x) {
     parallel::mclapply(x, function(a) {
@@ -180,6 +208,14 @@ pathData <- function(dat, weighted, case.set, cores) {
 
   } else if (case.set == "expected") {
     exp.case <- sort(nodes$anchor[nodes$anchor != 0])
+
+    ## Falconberg Court and Mews: isolate without pumps ##
+    falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
+    sel <- cholera::sim.ortho.proj$road.segment %in% falconberg.ct.mews &
+           !is.na(cholera::sim.ortho.proj$road.segment)
+    FCM.cases <- cholera::sim.ortho.proj[sel, "case"]
+    exp.case <- exp.case[exp.case %in% FCM.cases == FALSE]
+
     list(case = exp.case,
          distances = distances(exp.case),
          paths = paths(exp.case))
