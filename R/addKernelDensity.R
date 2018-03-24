@@ -1,7 +1,7 @@
 #' Add 2D kernel density contours.
 #'
 #' Uses KernSmooth::bkde2D().
-#' @param neighborhood Character or Numeric: "pooled", "individual", or numeric vector of observed pump neighborhoods (3 through 12 or [3, 12]). This vector selects a subset of observed pump neighborhood (negative selection possible).
+#' @param pump.subset Character or Numeric: "pooled", "individual", or numeric vector of observed pump neighborhoods (3 through 12 or [3, 12]). The vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible.
 #' @param pump.select Numeric. Vector of pumps to consider. This creates a scenario where the only pumps are those in the vector (negative selection possible).
 #' @param neighborhood.type Character. "voronoi" or "walking"
 #' @param bandwidth Numeric. Bandwidth for kernel density estimation.
@@ -33,7 +33,7 @@
 #' # snowMap()
 #' # addKernelDensity(pump.select = c(6, 8))
 
-addKernelDensity <- function(neighborhood = "pooled", pump.select = NULL,
+addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
   neighborhood.type = "walking", obs.unit = "unstacked", bandwidth = 0.5,
   color = "black", line.type = "solid", multi.core = FALSE, ...) {
 
@@ -51,8 +51,8 @@ addKernelDensity <- function(neighborhood = "pooled", pump.select = NULL,
   bw <- rep(bandwidth, 2)
 
   if (is.null(pump.select)) {
-    if (all(is.character(neighborhood))) {
-      if (neighborhood == "pooled") {
+    if (all(is.character(pump.subset))) {
+      if (pump.subset == "pooled") {
         if (obs.unit == "unstacked") {
           kde <- KernSmooth::bkde2D(cholera::fatalities.unstacked[,
             c("x", "y")], bandwidth = bw)
@@ -69,7 +69,7 @@ addKernelDensity <- function(neighborhood = "pooled", pump.select = NULL,
         contour(x = kde$x1, y = kde$x2, z = kde$fhat, col = color,
           lty = line.type, add = TRUE)
 
-      } else if (neighborhood == "individual") {
+      } else if (pump.subset == "individual") {
         if (neighborhood.type == "walking") {
           n.data <- cholera::neighborhoodWalking(multi.core = cores)
           cases <- cholera::pumpCase(n.data)
@@ -94,21 +94,21 @@ addKernelDensity <- function(neighborhood = "pooled", pump.select = NULL,
         }))
       }
 
-    } else if (all(is.numeric(neighborhood))) {
+    } else if (all(is.numeric(pump.subset))) {
       if (neighborhood.type == "walking") {
         n.data <- cholera::neighborhoodWalking(multi.core = cores)
         obs.neighborhood <- as.numeric(names(n.data$paths))
 
-        if (any(abs(neighborhood) %in% obs.neighborhood == FALSE)) {
+        if (any(abs(pump.subset) %in% obs.neighborhood == FALSE)) {
           stop('For walking neighborhoods, only 3 through 12 are valid.')
         }
 
         cases.list <- cholera::pumpCase(n.data)
 
-        if (all(neighborhood > 0)) {
-          cases <- cases.list[paste0("p", neighborhood)]
-        } else if (all(neighborhood < 0)) {
-          sel <- names(cases.list) %in% paste0("p", abs(neighborhood)) == FALSE
+        if (all(pump.subset > 0)) {
+          cases <- cases.list[paste0("p", pump.subset)]
+        } else if (all(pump.subset < 0)) {
+          sel <- names(cases.list) %in% paste0("p", abs(pump.subset)) == FALSE
           cases <- cases.list[sel]
         }
 

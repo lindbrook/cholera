@@ -4,12 +4,12 @@
 \alias{addKernelDensity}
 \title{Add 2D kernel density contours.}
 \usage{
-addKernelDensity(neighborhood = "pooled", pump.select = NULL,
+addKernelDensity(pump.subset = "pooled", pump.select = NULL,
   neighborhood.type = "walking", obs.unit = "unstacked", bandwidth = 0.5,
   color = "black", line.type = "solid", multi.core = FALSE, ...)
 }
 \arguments{
-\item{neighborhood}{Character or Numeric: "pooled", "individual", or numeric vector of observed pump neighborhoods (3 through 12 or [3, 12]). This vector selects a subset of observed pump neighborhood (negative selection possible).}
+\item{pump.subset}{Character or Numeric: "pooled", "individual", or numeric vector of observed pump neighborhoods (3 through 12 or [3, 12]). The vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible.}
 
 \item{pump.select}{Numeric. Vector of pumps to consider. This creates a scenario where the only pumps are those in the vector (negative selection possible).}
 
