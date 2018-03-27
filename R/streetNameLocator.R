@@ -9,7 +9,7 @@
 #' @param add.pump Logical. Include nearby pumps.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param highlight Logical. Highlight selected road.
-#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
+#' @param unit Character. Unit of measurement: "meter" or "yard". NULL returns the map's native scale.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
 #' @import graphics
@@ -22,7 +22,7 @@
 
 streetNameLocator <- function(road.name, zoom = FALSE, radius = 0.1,
   cases = "anchors", add.title = TRUE, add.pump = TRUE, vestry = FALSE,
-  highlight = TRUE, unit = NULL) {
+  highlight = TRUE, unit = "meter") {
 
   real.road.names <- unique(cholera::roads$name)
 
