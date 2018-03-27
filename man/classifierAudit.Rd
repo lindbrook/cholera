@@ -4,7 +4,8 @@
 \alias{classifierAudit}
 \title{Test if case is orthogonal to segment.}
 \usage{
-classifierAudit(case = 483, segment = "326-2", observed = TRUE)
+classifierAudit(case = 483, segment = "326-2", observed = TRUE,
+  coordinates = FALSE)
 }
 \arguments{
 \item{case}{Numeric or Integer. Numeric ID of observed case.}
@@ -12,6 +13,8 @@ classifierAudit(case = 483, segment = "326-2", observed = TRUE)
 \item{segment}{Character. Segment ID. See cholera::road.segments}
 
 \item{observed}{Logical. TRUE observed case; FALSE simulated case (cholera::regular.cases).}
+
+\item{coordinates}{Logical. Orthogonal projection coordinates.}
 }
 \value{
 Logical TRUE or FALSE

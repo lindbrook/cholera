@@ -4,6 +4,7 @@
 #' @param case Numeric or Integer. Numeric ID of observed case.
 #' @param segment Character. Segment ID. See cholera::road.segments
 #' @param observed Logical. TRUE observed case; FALSE simulated case (cholera::regular.cases).
+#' @param coordinates Logical. Orthogonal projection coordinates.
 #' @note This function is a diagnostic. It is not a guarantee of correct classification.
 #' @return Logical TRUE or FALSE
 #' @export
@@ -11,7 +12,9 @@
 #' classifierAudit(case = 483, segment = "326-2")
 #' plot(classifierAudit(case = 483, segment = "326-2"))
 
-classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE) {
+classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE,
+  coordinates = FALSE) {
+
   if (!is.numeric(case)) {
     stop("case must be numeric.")
   }
@@ -45,22 +48,26 @@ classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE) {
 
   y.proj <- segment.slope * x.proj + segment.intercept
 
-  # Bisection / Intersection test
-  distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
-           stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
+  if (coordinates) {
+    data.frame(x = x.proj, y = y.proj)
+  } else {
+    # Bisection / Intersection test
+    distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
+             stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
 
-  distance <- stats::dist(seg.df)
+    distance <- stats::dist(seg.df)
 
-  out <- list(case = case,
-              segment = segment,
-              ols = ols,
-              seg.df = seg.df,
-              obs = obs,
-              distance = distance,
-              test = signif(distance) == signif(distB))
+    out <- list(case = case,
+                segment = segment,
+                ols = ols,
+                seg.df = seg.df,
+                obs = obs,
+                distance = distance,
+                test = signif(distance) == signif(distB))
 
-  class(out) <- "classifier_audit"
-  out
+    class(out) <- "classifier_audit"
+    out
+  }
 }
 
 #' Return result of classifierAudit().
