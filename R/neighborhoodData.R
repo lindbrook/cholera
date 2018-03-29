@@ -370,5 +370,12 @@ simProj <- function() {
     orthoProjFix("520-2")
   dat[dat$case == 594, "ortho.dist"] <- distanceFix(594)
 
+  # Great Marlborough Street (135-1) -> Poland Street (122-1)
+  dat[dat$case == 3951, "road.segment"] <- "122-1"
+  dat[dat$case == 3951, c("x.proj", "y.proj")] <-
+    cholera::classifierAudit(3951, "122-1", observed = FALSE,
+      coordinates = TRUE)
+  dat[dat$case == 3951, "ortho.dist"] <- distanceFix(3951)
+
   dat
 }
