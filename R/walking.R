@@ -148,7 +148,7 @@ print.walking <- function(x, ...) {
 #' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when case.set = "expected".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
-#' @section Note: "area.polygons" is experimental and still under developtment: it may occassionally throw an error.
+#' @section Note: "area.polygons" is experimental and, for certain configurations, may return an error.
 #' @export
 #' @examples
 #' # plot(neighborhoodWalking())
@@ -730,7 +730,6 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
       })
 
       counterclockwise.compass <- lapply(clockwise.compass, rev)
-
       names(clockwise.compass) <- names(master.list)
       names(counterclockwise.compass) <- names(master.list)
 
@@ -812,50 +811,53 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
         nnw <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
                signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
 
-        master.list2 <- list(n = n, nne = nne, ne = ne, ene = ene, e = e,
-          ese = ese, se = se, sse = sse, s = s, ssw = ssw, sw = sw, wsw = wsw,
-          w = w, wnw = wnw, nw = nw, nnw = nnw)
+        # closest second order neighbors
+        master.listB <- list(n = n, e = e, s = s, w = w,
+                             nne = nne, ene = ene,
+                             ese = ese, sse = sse,
+                             ssw = ssw, wsw = wsw,
+                             wnw = wnw, nnw = nnw,
+                             ne = ne, se = se, sw = sw, nw = nw)
 
-        idx <- -seq_len(length(master.list2))
+        idx <- -seq_len(length(master.listB))
 
-        clockwise.compass2 <- lapply(idx, function(i) {
-          vec <- names(master.list2 )[i]
-          if (abs(i) == 1 | abs(i) == length(master.list2)) vec
+        clockwise.compassB <- lapply(idx, function(i) {
+          vec <- names(master.listB)[i]
+          if (abs(i) == 1 | abs(i) == length(master.listB)) vec
           else vec[c(abs(i):length(vec), 1:(abs(i) - 1))]
         })
 
-        counterclockwise.compass2 <- lapply(clockwise.compass2, rev)
-
-        names(clockwise.compass2) <- names(master.list2)
-        names(counterclockwise.compass2) <- names(master.list2)
+        counterclockwise.compassB <- lapply(clockwise.compassB, rev)
+        names(clockwise.compassB) <- names(master.listB)
+        names(counterclockwise.compassB) <- names(master.listB)
 
         if (orientation == "clockwise") {
-          compass2 <- clockwise.compass2
+          compassB <- clockwise.compassB
         } else if (orientation == "counterclockwise") {
-          compass2 <- counterclockwise.compass2
+          compassB <- counterclockwise.compassB
         }
 
-        # still increment by just one compass point with new compass
+        # increment by one compass point
         if (delta$x == 0 & delta$y < 0) {
-          lst2 <- compass2["n"]  # Prev: North
+          lstB <- compassB["n"]  # Prev: North
         } else if (delta$x < 0 & delta$y < 0) {
-          lst2 <- compass2["ne"] # Prev: North-East
+          lstB <- compassB["ne"] # Prev: North-East
         } else if (delta$x < 0 & delta$y == 0) {
-          lst2 <- compass2["e"]  # Prev: East
+          lstB <- compassB["e"]  # Prev: East
         } else if (delta$x < 0 & delta$y > 0) {
-          lst2 <- compass2["se"] # Prev: South-East
+          lstB <- compassB["se"] # Prev: South-East
         } else if (delta$x == 0 & delta$y > 0) {
-          lst2 <- compass2["s"]  # Prev: South
+          lstB <- compassB["s"]  # Prev: South
         } else if (delta$x > 0 & delta$y > 0) {
-          lst2 <- compass2["sw"] # Prev: South-West
+          lstB <- compassB["sw"] # Prev: South-West
         } else if (delta$x > 0 & delta$y == 0) {
-          lst2 <- compass2["w"]  # Prev: West
+          lstB <- compassB["w"]  # Prev: West
         } else if (delta$x > 0 & delta$y < 0) {
-          lst2 <- compass2["nw"] # Prev: North-West
+          lstB <- compassB["nw"] # Prev: North-West
         }
 
-        candidates2 <- vapply(master.list2, any, logical(1L))[unlist(lst2)]
-        sel <- which(get(names(which(candidates2)[1])))
+        candidatesB <- vapply(master.listB, any, logical(1L))[unlist(lstB)]
+        sel <- which(get(names(which(candidatesB)[1])))
 
       } else {
         sel <- which(get(names(which(candidates)[1])))

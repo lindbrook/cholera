@@ -20,7 +20,7 @@ A base R plot.
 Plot method for neighborhoodWalking().
 }
 \section{Note}{
- "area.polygons" is experimental and still under developtment: it may occassionally throw an error.
+ "area.polygons" is experimental and, for certain configurations, may return an error.
 }
 
 \examples{
