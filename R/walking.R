@@ -153,7 +153,8 @@ print.walking <- function(x, ...) {
 #' @examples
 #' # plot(neighborhoodWalking())
 #' # plot(neighborhoodWalking(case.set = "expected"))
-#' # plot(neighborhoodWalking(case.set = "expected"), "area.points")
+#' # plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
+#' # plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 
 plot.walking <- function(x, type = "road", ...) {
   if (class(x) != "walking") {
