@@ -74,7 +74,7 @@ In the second, I identify neighborhoods by coloring regions using points or poly
 plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
 ```
 
-The virtue of the polygon approach, which is still under development, is that it better lends itself to building graphs at different scales.
+The virtue of the polygon approach, which is still under development and may return an error for certain configurations, is that it better lends itself to building graphs at different scales.
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
