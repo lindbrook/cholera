@@ -2,18 +2,18 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.4.0-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
-
-cholera: amend, augment and aid analysis of John Snow's 1854 cholera data
--------------------------------------------------------------------------
+cholera: amend, augment and aid analysis of John Snow's 1854 cholera map
+------------------------------------------------------------------------
 
 ### package features
 
 -   Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
 -   "Unstacks" the data in two ways to improve analysis and visualization.
--   Adds the ability to overlay graphical features like kernel density, Voronoi diagrams, Snow's annotation, and notable landmarks (John Snow's residence, the Lion Brewery, etc.).
+-   Computes and visualizes "pump neighborhoods" based on Euclidean (Voronoi tessellation) and walking distance.
+-   Ability to overlay graphical features like kernel density, Voronoi diagrams, Snow's Broad Street neighborhood, and notable landmarks (John Snow's residence, the Lion Brewery, etc.).
 -   Includes a variety of functions to highlight specific cases, roads, pumps and walking paths.
 -   Appends street names to the roads data set.
--   Includes the revised pump data used in the second version of Snow's map from the Vestry report. This includes the corrected location of the Broad Street pump.
+-   Includes the revised pump data used in the second version of Snow's map from the Vestry report. This includes the "correct" location of the Broad Street pump.
 -   Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
 
 ### background
@@ -70,7 +70,7 @@ plot(neighborhoodWalking(case.set = "expected", vestry = TRUE))
 
 ![](man/figures/README-expected-1.png)
 
-The second and third color each neighborhood's area by using either points or polygons. The polygon implementation is shown below. It's new and still under development. As such, it'll occassionally throw an error. For exploration, type = "road" (the default shown above) or type = "area.points" are preferred.
+The second and third color each neighborhood's area by using either points or polygons. The polygon implementation is shown below. It's new, still under development and will for certain configurations throw an error. For exploration, type = "road" (the default shown above) or type = "area.points" are preferable.
 
 ``` r
 plot(neighborhoodWalking(case.set = "expected", vestry = TRUE), type = "area.polygons")
@@ -86,7 +86,7 @@ To install 'cholera' from CRAN (<https://cran.r-project.org/package=cholera>):
 install.packages("cholera")
 ```
 
-To install the current/development version of 'cholera' from GitHub:
+To install the development version of 'cholera' from GitHub:
 
 ``` r
 # Note that you may need to install the 'devtools' package:
