@@ -23,7 +23,7 @@ snowMap(add.title = FALSE)
 addKernelDensity()
 ```
 
-But you can also view the kernel densitities of individual pump neighborhoods. Either by selecting a subset of pump neighborhood or by specifying which pumps should be considered (i.e., defining the "population" of pump neighborhoods).
+But you can also view the kernel densities of individual pump neighborhoods. Either by selecting a subset of pump neighborhood or by specifying which pumps should be considered (i.e., defining the "population" of pump neighborhoods).
 
 ## Selecting a subset of observed neighborhoods:
 
