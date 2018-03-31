@@ -13,7 +13,6 @@
 #' \item Appends actual street names to roads data.
 #' \item Includes the revised pump data used in the second version of Snow's map from the Vestry report. This includes the "correct" location of the Broad Street pump.
 #' \item Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
-#' }
 #' \item Computes and visualizes two types of "pump neighborhoods": Voronoi (based on Euclidean distance) and walking (based on computed walking distances).
 #' }
 #' To learn more, start with the vignettes:

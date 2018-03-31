@@ -24,7 +24,7 @@ nearestPump(pump.select = NULL, output = "distance", vestry = FALSE,
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
 \value{
-An R data frome or list of 'igraph' paths.
+An R data frame or list of 'igraph' paths.
 }
 \description{
 Compute the distance or path from observed or expected cases to nearest pump (or from among selected pumps).

@@ -9,7 +9,7 @@
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE and "output" is "distance". See \code{vignette("roads")} for information on unit distances.
 #' @export
-#' @return An R data frome or list of 'igraph' paths.
+#' @return An R data frame or list of 'igraph' paths.
 
 nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
   weighted = TRUE, case.set = "observed", unit = NULL, multi.core = FALSE) {

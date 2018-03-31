@@ -9,7 +9,7 @@ addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   alpha.level = 0.125, ...)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selectes all pumps in "pump.select".}
+\item{pump.subset}{Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
 
 \item{pump.select}{Numeric. Numeric vector of pumps to define pump neighborhoods (i.e. the "population"). Negative selection possible. NULL selects all pumps.}
 
