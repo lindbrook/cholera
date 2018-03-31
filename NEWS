@@ -1,137 +1,56 @@
-cholera 0.3.9.9008
+cholera 0.4.0
 ==================
 
-- amend simProj().
-- use nearest second order neighbor in pearlString().
-- amend pump neighborhoods vignette.
+# Data Changes #
 
+- ortho.proj.pump and ortho.proj.pump.vestry now include node ID.
 
-cholera 0.3.9.9007
-==================
+- roads and road.segments amend street names:
+    "Unknown-B" to "Tent Court" (Edmund Cooper's map).
+    "Unknown-D" to "St James's Market" (https://maps.nls.uk).
+    "Unknown-E" to "Market Street (II)" (https://maps.nls.uk).
 
-- add coordinates argument to classifierAudit().
-- set default unit to "meter" in streetNameLocator().
-- amend simProj() in neighborhoodData().
+# Function Changes #
 
+- addKernelDensity()
+  uses "pump.subset" and "pump.select" arguments.
 
-cholera 0.3.9.9006
-==================
+- addLandmarks()
+  add landmarks from Edmund Cooper's map.
 
-- add exceptions for isolates in nearestPump().
+- classifierAudit() can return coordinates of address.
 
+- nearestPump() now incorporates nearestPath().
 
-cholera 0.3.9.9005
-==================
+- neighborhoodWalking()
+  segment and sub-segment implementation.
 
-- add addNeighborhood() prototype.
+- pumpData()
+  returns node ID.
 
+- timeSeries()
+  includes day of the week.
 
-cholera 0.3.9.9004
-==================
+- walkingDistance()
+  add "simulated" expected cases.
 
-- add type = "area.points" or type = "area.polygons" to plot.neighborhood().
+# New Functions #
 
+- addNeighborhood()
 
-cholera 0.3.9.9003
-==================
+# New S3 Implementations #
 
-- add pearlStringRadius().
-- make exception for Adam and Eve Court pump (#2) for area graph.
-- add addPump().
+- plot.walking
+  type = "area.points" and type = "area-polygons".
+  type = "area-polygons" via pearlString() replaces alphahull::ashape().
 
+- print.walking() uses expectedCount().
 
-cholera 0.3.9.9002
-==================
+# Vignette Changes #
 
-- amend simProj() in neighborhoodData().
-- amend pearlString() in neighborhoodWalking().
+- add "Kernel Density Plot".
 
-
-cholera 0.3.9.9001
-==================
-
-- amend expectedCount() for print.walking().
-
-
-cholera 0.3.9.9000
-==================
-
-- use polygon-based neighborhoodWalking() area graphs in place of
-  alphahull::ashape().
-
-
-cholera 0.3.0.9010
-==================
-
-- fix addKernelDensity() case selection.
-- improve performance of neighborhoodWalking() and plot.walking().
-- add node ID to pumpData(), ortho.proj.pump and ortho.proj.pump.vestry.
-- add addKernelDensity() vignette.
-
-
-cholera 0.3.0.9009
-==================
-
-- amend road name: from "Unknown-D" and "Unknown-E" to "St James's Market" and
-  "Market Street (II)" (https://maps.nls.uk/os/london-1890s/index.html).
-
-
-cholera 0.3.0.9008
-==================
-
-- add landmarks from Edmund Cooper's map.
-
-
-cholera 0.3.0.9007
-==================
-
-- amend road name: from "Unknown-B" to "Tent Court"
-  (Edmund Cooper's map).
-
-
-cholera 0.3.0.9006
-==================
-
-- add day of the week to timeSeries().
-
-
-cholera 0.3.0.9005
-==================
-
-- beta of neighborhoodWalking() "area" plot.
-
-
-cholera 0.3.0.9004
-==================
-
-- re-implement snow neighborhood in neighborhoodWalking().
-
-
-cholera 0.3.0.9003
-==================
-
-- segment based implementation of neighborhoodWalking().
-
-
-cholera 0.3.0.9002
-==================
-
-- use neighborhoodData() in place of nodeData()
-- combine nearestPath() into nearestPump()
-
-
-cholera 0.3.0.9001
-==================
-
-- add "simulated" expected cases to walkingDistance().
-- add "simulated" expected cases to nodeData().
-
-
-cholera 0.3.0.9000
-==================
-
-- update addKernelDensity().
-  "neighborhood" and "pump.select" arguments.
+- update "Pump Neighborhoods" with discussion of area plots.
 
 
 cholera 0.3.0
