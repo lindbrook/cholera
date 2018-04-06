@@ -6,7 +6,7 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
-#' @param type Character. Type of annotation plot: "area", "border" or "street".
+#' @param type Character. Type of annotation: currently, type = "area" is the only choice.
 #' @param color Character. Neighborhood color.
 #' @param alpha.level Numeric. Alpha level transparency: a value in [0, 1].
 #' @param ... Additional plotting parameters.

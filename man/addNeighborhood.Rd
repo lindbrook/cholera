@@ -19,7 +19,7 @@ addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 
-\item{type}{Character. Type of annotation plot: "area", "border" or "street".}
+\item{type}{Character. Type of annotation: currently, type = "area" is the only choice.}
 
 \item{color}{Character. Neighborhood color.}
 
