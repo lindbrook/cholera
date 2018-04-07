@@ -2,7 +2,7 @@
 % Please edit documentation in R/addNeighborhood.R
 \name{addNeighborhood}
 \alias{addNeighborhood}
-\title{Add expected neighborhood polygons}
+\title{Add expected neighborhoods.}
 \usage{
 addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   weighted = TRUE, multi.core = FALSE, type = "area", color = NULL,
@@ -19,7 +19,7 @@ addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 
-\item{type}{Character. Type of annotation: currently, type = "area" is the only choice.}
+\item{type}{Character. "area", "exp.paths", or "obs.paths".}
 
 \item{color}{Character. Neighborhood color.}
 
