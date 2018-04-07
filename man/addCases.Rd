@@ -12,7 +12,7 @@ addCases(pump.subset = NULL, pump.select = NULL, type = "address",
 
 \item{pump.select}{Numeric. Numeric vector of pumps to define pump neighborhoods (i.e. the "population"). Negative selection possible. NULL selects all pumps.}
 
-\item{type}{Character. Type of cases: "address" or "fatalities".}
+\item{type}{Character. Type of case: "address" (base of stack) or "fatalities" (entire stack).}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
@@ -23,7 +23,7 @@ addCases(pump.subset = NULL, pump.select = NULL, type = "address",
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Plots address or unstacked fatalities.
+Add cases, as "address" (cholera::fatalties.address) or stacked "fatalties" (cholera::fatalties), as points to an existing plot.
 }
 \examples{
 snowMap()

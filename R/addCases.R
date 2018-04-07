@@ -1,9 +1,9 @@
 #' Add observed cases.
 #'
-#' Plots address or unstacked fatalities.
+#' Add cases, as "address" (cholera::fatalties.address) or stacked "fatalties" (cholera::fatalties), as points to an existing plot.
 #' @param pump.subset Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".
 #' @param pump.select Numeric. Numeric vector of pumps to define pump neighborhoods (i.e. the "population"). Negative selection possible. NULL selects all pumps.
-#' @param type Character. Type of cases: "address" or "fatalities".
+#' @param type Character. Type of case: "address" (base of stack) or "fatalities" (entire stack).
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
@@ -50,6 +50,18 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
 
   snow.colors <- cholera::snowColors(vestry)
   selected.pumps <- unique(nearest.pump$pump)
+
+  if (is.null(pump.subset) == FALSE) {
+    if (all(pump.subset > 0)) {
+      if (all(pump.subset %in% selected.pumps) == FALSE) {
+        stop('"pump.subset" must be a subset of "selected.pumps".')
+      }
+    } else if (all(pump.subset < 0)) {
+      if (all(abs(pump.subset) %in% selected.pumps) == FALSE) {
+        stop('"|pump.subset|" must be a subset of "selected.pumps".')
+      }
+    }
+  }
 
   if (type == "address") {
     if (is.null(pump.subset)) {
