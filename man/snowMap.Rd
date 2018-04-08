@@ -5,7 +5,8 @@
 \title{Plot John Snow's cholera map.}
 \usage{
 snowMap(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
-  add.cases = TRUE, add.pumps = TRUE, add.title = TRUE, ...)
+  add.cases = TRUE, add.pumps = TRUE, add.roads = TRUE,
+  add.title = TRUE, ...)
 }
 \arguments{
 \item{add.landmarks}{Logical. Add landmarks.}
@@ -17,6 +18,8 @@ snowMap(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
 \item{add.cases}{Logical. Add observed cases.}
 
 \item{add.pumps}{Logical. Add pumps.}
+
+\item{add.roads}{Logical. Add roads.}
 
 \item{add.title}{Logical. Add title.}
 

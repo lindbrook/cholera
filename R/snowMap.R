@@ -6,6 +6,7 @@
 #' @param stacked Logical. Use stacked fatalities.
 #' @param add.cases Logical. Add observed cases.
 #' @param add.pumps Logical. Add pumps.
+#' @param add.roads Logical. Add roads.
 #' @param add.title Logical. Add title.
 #' @param ... Additional plotting parameters.
 #' @return A base R graphics plot.
@@ -21,7 +22,7 @@
 #' snowMap(vestry = TRUE, stacked = FALSE)
 
 snowMap <- function(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
-  add.cases = TRUE, add.pumps = TRUE, add.title = TRUE, ...) {
+  add.cases = TRUE, add.pumps = TRUE, add.roads = TRUE, add.title = TRUE, ...) {
 
   x.range <- range(cholera::roads$x)
   y.range <- range(cholera::roads$y)
@@ -37,8 +38,11 @@ snowMap <- function(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
   }
 
   plot(cases[, c("x", "y")], xlim = x.range, ylim = y.range, pch = NA, asp = 1)
-  invisible(lapply(roads.list, lines, col = "gray"))
   invisible(lapply(border.list, lines))
+
+  if (add.roads) {
+    invisible(lapply(roads.list, lines, col = "gray"))
+  }
 
   if (add.cases) {
     points(cases[, c("x", "y")], pch = 15, col = "gray", cex = 0.5)
