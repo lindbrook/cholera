@@ -5,7 +5,7 @@
 \title{Add expected neighborhoods.}
 \usage{
 addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, multi.core = FALSE, type = "area", color = NULL,
+  weighted = TRUE, multi.core = FALSE, area = TRUE, path = NULL,
   alpha.level = 0.125, ...)
 }
 \arguments{
@@ -19,9 +19,9 @@ addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 
-\item{type}{Character. "area", "exp.paths", or "obs.paths".}
+\item{area}{Logical. Area polygons.}
 
-\item{color}{Character. Neighborhood color.}
+\item{path}{Character. "expected" or "observed".}
 
 \item{alpha.level}{Numeric. Alpha level transparency: a value in [0, 1].}
 
