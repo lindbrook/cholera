@@ -7,7 +7,7 @@
 #' @return An R vector.
 #' @export
 
-walkingTime <- function(x, unit = "minute", meter.unit = 54, speed = 3) {
+distanceTime <- function(x, unit = "minute", meter.unit = 54, speed = 3) {
   if (is.numeric(x) == FALSE) {
     stop('"x" must be numeric.')
   }
