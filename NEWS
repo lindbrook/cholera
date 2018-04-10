@@ -1,6 +1,12 @@
 cholera 0.4.0.9003
 ==================
 
+- add walkingTime().
+
+
+cholera 0.4.0.9003
+==================
+
 - add separate arguments for area polygons and for paths in addNeighborhood().
 - set default to plot all pumps in addPump().
 - add "add.roads" argument to snowMap().
