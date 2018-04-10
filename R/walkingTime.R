@@ -1,4 +1,4 @@
-#' Estimate walking time.
+#' Convert distance to time.
 #'
 #' @param x Numeric. Nominal map distance.
 #' @param unit Character. Unit of measurement: "hour" or "minute".

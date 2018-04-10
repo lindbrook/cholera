@@ -2,7 +2,7 @@
 % Please edit documentation in R/walkingTime.R
 \name{walkingTime}
 \alias{walkingTime}
-\title{Estimate walking time.}
+\title{Convert distance to time.}
 \usage{
 walkingTime(x, unit = "minute", meter.unit = 54, speed = 3)
 }
@@ -19,5 +19,5 @@ walkingTime(x, unit = "minute", meter.unit = 54, speed = 3)
 An R vector.
 }
 \description{
-Estimate walking time.
+Convert distance to time.
 }
