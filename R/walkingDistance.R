@@ -7,9 +7,9 @@
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of nodes.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
-#' @note The function uses a case's "address" or "anchor" case to compute distance.
-#'
-#' Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
+#' @param time.unit Character. "hour", "minute", or "second".
+#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
+#' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
 #' @return An R list.
 #' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
@@ -36,11 +36,17 @@
 #' # plot(walkingDistance(1, unit = "meter"))
 
 walkingDistance <- function(origin, destination = NULL, type = "case-pump",
-  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = NULL) {
+  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = NULL,
+  time.unit = "second", walking.speed = 5) {
 
   if (is.null(unit) == FALSE) {
-    if (unit %in% c("meter", "yard") == FALSE)
-      stop('If specified, "unit" must either be "meter" or "yard".')
+    if (unit %in% c("meter", "yard") == FALSE) {
+      stop('If specified, "unit" must be "meter" or "yard".')
+    }
+  }
+
+  if (time.unit %in% c("hour", "minute", "second") == FALSE) {
+    stop('"time.unit" must be "hour", "minute" or "second".')
   }
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
@@ -154,6 +160,7 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
                       pump = alter.id,
                       pump.name = p.name,
                       distance = d[sel],
+                      # time = cholera::distanceTime(d[sel]),
                       stringsAsFactors = FALSE,
                       row.names = NULL)
 
@@ -317,6 +324,9 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
                       row.names = NULL)
   }
 
+  out$time <- cholera::distanceTime(out$distance, unit = time.unit,
+    speed = walking.speed)
+
   if (!is.null(unit)) {
     if (unit == "meter") {
       out$distance <- cholera::unitMeter(out$distance, "meter")
@@ -332,12 +342,14 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
                  weighted = weighted,
                  vestry = vestry,
                  unit = unit,
+                 time.unit = time.unit,
                  nodes = nodes,
                  edges = edges,
                  g = g,
                  ego.node = ego.node,
                  alter.node = alter.node,
                  d = out$distance,
+                 t = out$time,
                  summary = out)
 
   class(output) <- "walking_distance"
@@ -539,12 +551,20 @@ plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
 
   nominal.distance <- round(x$d, 1)
 
+  if (x$time.unit == "hour") {
+    nominal.time <- paste(round(x$t, 1), "hr.")
+  } else if (x$time.unit == "minute") {
+    nominal.time <- paste(round(x$t, 1), "mins.")
+  } else if (x$time.unit == "second") {
+    nominal.time <- paste(round(x$t, 1), "secs.")
+  }
+
   if (is.null(x$unit)) {
-    title(sub = paste(nominal.distance, "units"))
+    title(sub = paste(nominal.distance, "units;", nominal.time))
   } else if (x$unit == "meter") {
-    title(sub = paste(nominal.distance, "meters"))
+    title(sub = paste(nominal.distance, "meters;", nominal.time))
   } else if (x$unit == "yard") {
-    title(sub = paste(nominal.distance, "yards"))
+    title(sub = paste(nominal.distance, "yards;", nominal.time))
   }
 }
 
