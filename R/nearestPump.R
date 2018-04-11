@@ -8,11 +8,15 @@
 #' @param case.set Character. "observed", "expected", or "snow".
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE and "output" is "distance". See \code{vignette("roads")} for information on unit distances.
+#' @param time.unit Character. "hour", "minute", or "second".
+#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
+#' @note Time is computed using distanceTime().
 #' @export
 #' @return An R data frame or list of 'igraph' paths.
 
 nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
-  weighted = TRUE, case.set = "observed", unit = NULL, multi.core = FALSE) {
+  weighted = TRUE, case.set = "observed", unit = NULL, multi.core = FALSE,
+  time.unit = "second", walking.speed = 5) {
 
   if (output %in% c("distance", "path") == FALSE) {
     stop('"output" must be "distance" or "path".')
@@ -72,6 +76,9 @@ nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
     }
 
     out <- out[, c("case", "pump", "pump.name", "distance")]
+
+    out$time <- cholera::distanceTime(out$distance, unit = time.unit,
+      speed = walking.speed)
 
     if (!is.null(unit)) {
       if (unit == "meter") {

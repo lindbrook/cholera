@@ -5,7 +5,9 @@
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
-#' @note The function uses a case's "address" or "anchor" case to compute distance.
+#' @param time.unit Character. "hour", "minute", or "second".
+#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
+#' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime().
 #' @return An R list.
 #' @export
 #' @examples
@@ -31,11 +33,15 @@
 #' plot(euclideanDistance(1, unit = "meter"))
 
 euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
-  vestry = FALSE, unit = NULL) {
+  vestry = FALSE, unit = NULL, time.unit = "second", walking.speed = 5) {
 
   if (is.null(unit) == FALSE) {
     if (unit %in% c("meter", "yard") == FALSE)
       stop('If specified, "unit" must either be "meter" or "yard".')
+  }
+
+  if (time.unit %in% c("hour", "minute", "second") == FALSE) {
+    stop('"time.unit" must be "hour", "minute" or "second".')
   }
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
@@ -203,6 +209,9 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
                       stringsAsFactors = FALSE)
   }
 
+  out$time <- cholera::distanceTime(out$distance, unit = time.unit,
+    speed = walking.speed)
+
   if (!is.null(unit)) {
     if (unit == "meter") {
       out$distance <- cholera::unitMeter(out$distance, "meter")
@@ -211,13 +220,20 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
     }
   }
 
-  output <- list(origin = origin, destination = destination, type = type,
-    alters = alters, sel = sel, vestry = vestry, unit = unit, summary = out)
+  output <- list(origin = origin,
+                 destination = destination,
+                 type = type,
+                 alters = alters,
+                 sel = sel,
+                 vestry = vestry,
+                 unit = unit,
+                 time.unit = time.unit,
+                 t = out$time,
+                 summary = out)
 
   class(output) <- "euclidean_distance"
   output
 }
-
 
 #' Summary of euclideanDistance().
 #'
@@ -337,13 +353,22 @@ plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
     col = case.color, code = 3)
 
   distance <- stats::dist(dat)
+  
+  if (x$time.unit == "hour") {
+    nominal.time <- paste(round(x$t, 1), "hr.")
+  } else if (x$time.unit == "minute") {
+    nominal.time <- paste(round(x$t, 1), "mins.")
+  } else if (x$time.unit == "second") {
+    nominal.time <- paste(round(x$t, 1), "secs.")
+  }
 
   if (is.null(x$unit)) {
-    title(sub = paste(round(distance, 2), "units"))
+    title(sub = paste(round(distance, 1), "units;", nominal.time))
   } else if (x$unit == "meter") {
-    title(sub = paste(round(cholera::unitMeter(distance, "meter"), 2),
-      "meters"))
+    title(sub = paste(round(cholera::unitMeter(distance, "meter"), 1),
+      "meters;", nominal.time))
   } else if (x$unit == "yard") {
-    title(sub = paste(round(cholera::unitMeter(distance, "yard"), 2), "yards"))
+    title(sub = paste(round(cholera::unitMeter(distance, "yard"), 1), "yards;",
+      nominal.time))
   }
 }
