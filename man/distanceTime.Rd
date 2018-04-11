@@ -4,16 +4,16 @@
 \alias{distanceTime}
 \title{Convert distance to time.}
 \usage{
-distanceTime(x, unit = "minute", meter.unit = 54, speed = 3)
+distanceTime(x, unit = "second", meter.unit = 54, speed = 5)
 }
 \arguments{
 \item{x}{Numeric. Nominal map distance.}
 
-\item{unit}{Character. Unit of measurement: "hour" or "minute".}
+\item{unit}{Character. Unit of measurement: "hour", "minute" or "second".}
 
-\item{meter.unit}{Numeric. Estimate of meters per map unit: 54.}
+\item{meter.unit}{Numeric. 1 meter is approximately 54 map units.}
 
-\item{speed}{Numeric. Walking speed: 3 meters per hour.}
+\item{speed}{Numeric. Walking speed: 5 km/hr.}
 }
 \value{
 An R vector.
