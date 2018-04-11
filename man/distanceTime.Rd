@@ -4,14 +4,15 @@
 \alias{distanceTime}
 \title{Convert distance to time.}
 \usage{
-distanceTime(x, unit = "second", meter.unit = 54, speed = 5)
+distanceTime(x, unit = "second", meter.unit = cholera::unitMeter(1, unit =
+  "meter"), speed = 5)
 }
 \arguments{
 \item{x}{Numeric. Nominal map distance.}
 
 \item{unit}{Character. Unit of measurement: "hour", "minute" or "second".}
 
-\item{meter.unit}{Numeric. 1 meter is approximately 54 map units.}
+\item{meter.unit}{Numeric. 1 meter is approximately 54 map units. Set by unitMeter().}
 
 \item{speed}{Numeric. Walking speed: 5 km/hr.}
 }
