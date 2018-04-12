@@ -350,10 +350,10 @@ plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
   }
 
   arrows(ego.xy$x, ego.xy$y, alter.xy$x, alter.xy$y, length = 0.1,
-    col = case.color, code = 3)
+    col = case.color, lwd = 2, code = 2)
 
   distance <- stats::dist(dat)
-  
+
   if (x$time.unit == "hour") {
     nominal.time <- paste(round(x$t, 1), "hr.")
   } else if (x$time.unit == "minute") {
