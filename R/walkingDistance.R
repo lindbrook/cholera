@@ -160,7 +160,6 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
                       pump = alter.id,
                       pump.name = p.name,
                       distance = d[sel],
-                      # time = cholera::distanceTime(d[sel]),
                       stringsAsFactors = FALSE,
                       row.names = NULL)
 
