@@ -8,7 +8,9 @@
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @param area Logical. Area polygons.
 #' @param path Character. "expected" or "observed".
-#' @param alpha.level Numeric. Alpha level transparency: a value in [0, 1].
+#' @param path.color Character. Use a single color for all paths. NULL uses neighborhood colors defined by snowColors().
+#' @param path.width Numeric. Set width of paths.
+#' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @param ... Additional plotting parameters.
 #' @seealso \code{\link{snowMap}},
 #' \code{\link{addIndexCase}},
@@ -27,7 +29,7 @@
 
 addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, weighted = TRUE, multi.core = FALSE, area = TRUE,
-  path = NULL, alpha.level = 0.125, ...) {
+  path = NULL, path.color = NULL, path.width = 3, alpha.level = 0.125, ...) {
 
   if (is.null(path) == FALSE) {
     if (path %in% c("expected", "observed") == FALSE) {
@@ -456,8 +458,13 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
       if (is.null(pump.subset)) {
         invisible(lapply(names(wholes), function(nm) {
           n.edges <- edges[edges$id %in% wholes[[nm]], ]
-          segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 3,
-            col = snow.colors[paste0("p", nm)])
+          if (is.null(path.color)) {
+            segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+              lwd = path.width, col = snow.colors[paste0("p", nm)])
+          } else {
+            segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+              lwd = path.width, col = path.color)
+          }
         }))
 
         if (split.test1 | split.test2) {
@@ -465,18 +472,30 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
             dat <- splits[[i]]
             ps <- splits.pump[[i]]
             ps.col <- snow.colors[paste0("p", ps)]
-            segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
-              lwd = 3, col = ps.col[1])
-            segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
-              lwd = 3, col = ps.col[2])
+            if (is.null(path.color)) {
+              segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
+                lwd = path.width, col = ps.col[1])
+              segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
+                lwd = path.width, col = ps.col[2])
+            } else {
+              segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
+                lwd = path.width, col = path.color)
+              segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
+                lwd = path.width, col = path.color)
+            }
           }))
         }
       } else {
         if (all(pump.subset > 0)) {
           invisible(lapply(paste(pump.subset), function(nm) {
             n.edges <- edges[edges$id %in% wholes[[nm]], ]
-            segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 3,
-              col = snow.colors[paste0("p", nm)])
+            if (is.null(path.color)) {
+              segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+                lwd = path.width, col = snow.colors[paste0("p", nm)])
+            } else {
+              segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+                lwd = path.width, col = path.color)
+            }
           }))
 
           if (split.test1 | split.test2) {
@@ -496,13 +515,23 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
               ps <- splits.pump.subset[[i]]
               ps.col <- snow.colors[paste0("p", ps)]
 
+            if (is.null(path.color)) {
               if (split.select[i] == 1) {
                 segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
-                  lwd = 3, col = ps.col[1])
+                  lwd = path.width, col = ps.col[1])
               } else if (split.select[i] == 2) {
                 segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
-                  lwd = 3, col = ps.col[2])
+                  lwd = path.width, col = ps.col[2])
               }
+            } else {
+              if (split.select[i] == 1) {
+                segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
+                  lwd = path.width, col = path.color)
+              } else if (split.select[i] == 2) {
+                segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
+                  lwd = path.width, col = path.color)
+              }
+            }
             }))
           }
         } else if (all(pump.subset < 0)) {
@@ -512,8 +541,13 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
 
           invisible(lapply(paste(select), function(nm) {
             n.edges <- edges[edges$id %in% wholes[[nm]], ]
-            segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 3,
-              col = snow.colors[paste0("p", nm)])
+            if (is.null(path.color)) {
+              segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+                lwd = path.width, col = snow.colors[paste0("p", nm)])
+            } else {
+              segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+                lwd = path.width, col = path.color)
+            }
           }))
 
           if (split.test1 | split.test2) {
@@ -536,12 +570,22 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
               dat <- splits.subset[singles][[i]]
               ps <- splits.pump.subset[singles][[i]]
               ps.col <- snow.colors[paste0("p", ps)]
-              if (split.select[singles][i] == 1) {
-                segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
-                  lwd = 3, col = ps.col[1])
-              } else if (split.select[singles][i] == 2) {
-                segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
-                  lwd = 3, col = ps.col[2])
+              if (is.null(path.color)) {
+                if (split.select[singles][i] == 1) {
+                  segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
+                    lwd = path.width, col = ps.col[1])
+                } else if (split.select[singles][i] == 2) {
+                  segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
+                    lwd = path.width, col = ps.col[2])
+                }
+              } else {
+                if (split.select[singles][i] == 1) {
+                  segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
+                    lwd = path.width, col = path.color)
+                } else if (split.select[singles][i] == 2) {
+                  segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
+                    lwd = path.width, col = path.color)
+                }
               }
             }))
 
@@ -549,10 +593,17 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
               dat <- splits.subset[!singles][[i]]
               ps <- splits.pump.subset[!singles][[i]]
               ps.col <- snow.colors[paste0("p", ps)]
-              segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
-                lwd = 3, col = ps.col[1])
-              segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
-                lwd = 3, col = ps.col[2])
+              if (is.null(path.color)) {
+                segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
+                  lwd = path.width, col = ps.col[1])
+                segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
+                  lwd = path.width, col = ps.col[2])
+              } else {
+                segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"],
+                  lwd = path.width, col = path.color)
+                segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"],
+                  lwd = path.width, col = path.color)
+              }
             }))
           }
         }
@@ -561,31 +612,54 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
     } else if (path == "observed") {
       if (is.null(pump.subset)) {
         edge.data <- lapply(n.path.edges, function(x) unique(unlist(x)))
-
-        invisible(lapply(names(edge.data), function(nm) {
-          n.edges <- edges[edge.data[[nm]], ]
-          segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
-            col = snow.colors[paste0("p", nm)])
-        }))
+        if (is.null(path.color)) {
+          invisible(lapply(names(edge.data), function(nm) {
+            n.edges <- edges[edge.data[[nm]], ]
+            segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+              lwd = path.width, col = snow.colors[paste0("p", nm)])
+          }))
+        } else {
+          invisible(lapply(names(edge.data), function(nm) {
+            n.edges <- edges[edge.data[[nm]], ]
+            segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+              lwd = path.width, col = path.color)
+          }))
+        }
       } else {
         if (all(pump.subset > 0)) {
           sel <- names(n.path.edges) %in% pump.subset
           edge.data <- lapply(n.path.edges[sel], function(x) unique(unlist(x)))
 
-          invisible(lapply(names(edge.data), function(nm) {
-            n.edges <- edges[edge.data[[nm]], ]
-            segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
-              col = snow.colors[paste0("p", nm)])
-          }))
+          if (is.null(path.color)) {
+            invisible(lapply(names(edge.data), function(nm) {
+              n.edges <- edges[edge.data[[nm]], ]
+              segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+                lwd = path.width, col = snow.colors[paste0("p", nm)])
+            }))
+          } else {
+            invisible(lapply(names(edge.data), function(nm) {
+              n.edges <- edges[edge.data[[nm]], ]
+              segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+                lwd = path.width, col = path.color)
+            }))
+          }
         } else if (all(pump.subset < 0)) {
           sel <- names(n.path.edges) %in% abs(pump.subset) == FALSE
           edge.data <- lapply(n.path.edges[sel], function(x) unique(unlist(x)))
 
-          invisible(lapply(names(edge.data), function(nm) {
-            n.edges <- edges[edge.data[[nm]], ]
-            segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
-              col = snow.colors[paste0("p", nm)])
-          }))
+          if (is.null(path.color)) {
+            invisible(lapply(names(edge.data), function(nm) {
+              n.edges <- edges[edge.data[[nm]], ]
+              segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+                lwd = path.width, col = snow.colors[paste0("p", nm)])
+            }))
+          } else {
+            invisible(lapply(names(edge.data), function(nm) {
+              n.edges <- edges[edge.data[[nm]], ]
+              segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2,
+                lwd = path.width, col = path.color)
+            }))
+          }
         }
       }
     }

@@ -6,7 +6,7 @@
 \usage{
 addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   weighted = TRUE, multi.core = FALSE, area = TRUE, path = NULL,
-  alpha.level = 0.125, ...)
+  path.color = NULL, path.width = 3, alpha.level = 0.125, ...)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
@@ -23,7 +23,11 @@ addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 
 \item{path}{Character. "expected" or "observed".}
 
-\item{alpha.level}{Numeric. Alpha level transparency: a value in [0, 1].}
+\item{path.color}{Character. Use a single color for all paths. NULL uses neighborhood colors defined by snowColors().}
+
+\item{path.width}{Numeric. Set width of paths.}
+
+\item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
 \item{...}{Additional plotting parameters.}
 }
