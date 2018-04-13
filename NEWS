@@ -2,6 +2,7 @@ cholera 0.4.0.9006
 ==================
 
 - add "path.color" and "path.width" arguments to addNeighborhood().
+- consolidate streetNameLocator() and streetNumberLocator().
 
 
 cholera 0.4.0.9005

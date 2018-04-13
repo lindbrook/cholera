@@ -5,7 +5,9 @@
 \title{Locate road by numerical ID.}
 \usage{
 streetNumberLocator(road.number, zoom = FALSE, radius = 1,
-  cases = "anchors", unit = NULL)
+  cases = "anchors", add.title = TRUE, add.pump = TRUE, vestry = FALSE,
+  highlight = TRUE, unit = "meter", time.unit = "second",
+  walking.speed = 5)
 }
 \arguments{
 \item{road.number}{Numeric or integer. A whole number between 1 and 528.}
@@ -16,7 +18,19 @@ streetNumberLocator(road.number, zoom = FALSE, radius = 1,
 
 \item{cases}{Character. Plot cases: NULL, "anchors" or "all".}
 
+\item{add.title}{Logical. Include title.}
+
+\item{add.pump}{Logical. Include nearby pumps.}
+
+\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
+
+\item{highlight}{Logical. Highlight selected road.}
+
 \item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
+
+\item{time.unit}{Character. "hour", "minute", or "second".}
+
+\item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
 }
 \value{
 A base R graphics plot.
