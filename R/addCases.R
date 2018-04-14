@@ -6,6 +6,7 @@
 #' @param type Character. Type of case: "address" (base of stack) or "fatalities" (entire stack).
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.
+#' @param case.color Character. Use a single color for all paths. NULL uses neighborhood colors defined by snowColors().
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @param ... Additional plotting parameters.
 #' @export
@@ -17,7 +18,7 @@
 #' addCases(pump.select = c(6, 10))
 
 addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
-  vestry = FALSE, weighted = TRUE, multi.core = FALSE, ...) {
+  vestry = FALSE, weighted = TRUE, case.color = NULL, multi.core = FALSE, ...) {
 
   if (type %in% c("address", "fatalities") == FALSE) {
     stop('"type" must be "address" or "fatalities".')
@@ -49,6 +50,12 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
                              pump = nearest.pump)
 
   snow.colors <- cholera::snowColors(vestry)
+
+  if (!is.null(case.color)) {
+    snow.colors <- stats::setNames(rep(case.color, length(snow.colors)),
+      names(snow.colors))
+  }
+
   selected.pumps <- unique(nearest.pump$pump)
 
   if (is.null(pump.subset) == FALSE) {
