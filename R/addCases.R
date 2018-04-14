@@ -81,21 +81,16 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
     } else {
       if (all(pump.subset > 0)) {
         select <- selected.pumps[selected.pumps %in% pump.subset]
-        invisible(lapply(select, function(x) {
-          addr <- nearest.pump[nearest.pump$pump == x, "case"]
-          sel <- cholera::fatalities.address$anchor.case %in% addr
-          points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-            cex = 0.75, col = snow.colors[paste0("p", x)])
-        }))
       } else if (all(pump.subset < 0)) {
         select <- selected.pumps[selected.pumps %in% abs(pump.subset) == FALSE]
-        invisible(lapply(select, function(x) {
-          addr <- nearest.pump[nearest.pump$pump == x, "case"]
-          sel <- cholera::fatalities.address$anchor.case %in% addr
-          points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-            cex = 0.75, col = snow.colors[paste0("p", x)])
-        }))
       }
+      
+      invisible(lapply(select, function(x) {
+        addr <- nearest.pump[nearest.pump$pump == x, "case"]
+        sel <- cholera::fatalities.address$anchor.case %in% addr
+        points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
+          cex = 0.75, col = snow.colors[paste0("p", x)])
+      }))
     }
 
   } else if (type == "fatalities") {
@@ -111,25 +106,18 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
     } else {
       if (all(pump.subset > 0)) {
         select <- selected.pumps[selected.pumps %in% pump.subset]
-        invisible(lapply(select, function(x) {
-          addr <- nearest.pump[nearest.pump$pump == x, "case"]
-          fatal <- cholera::anchor.case[cholera::anchor.case$anchor.case %in%
-            addr, "case"]
-          sel <- cholera::fatalities$case %in% fatal
-          points(cholera::fatalities[sel, c("x", "y")], pch = 20,
-            cex = 0.75, col = snow.colors[paste0("p", x)])
-        }))
       } else if (all(pump.subset < 0)) {
         select <- selected.pumps[selected.pumps %in% abs(pump.subset) == FALSE]
-        invisible(lapply(select, function(x) {
-          addr <- nearest.pump[nearest.pump$pump == x, "case"]
-          fatal <- cholera::anchor.case[cholera::anchor.case$anchor.case %in%
-            addr, "case"]
-          sel <- cholera::fatalities$case %in% fatal
-          points(cholera::fatalities[sel, c("x", "y")], pch = 20,
-            cex = 0.75, col = snow.colors[paste0("p", x)])
-        }))
       }
+
+      invisible(lapply(select, function(x) {
+        addr <- nearest.pump[nearest.pump$pump == x, "case"]
+        fatal <- cholera::anchor.case[cholera::anchor.case$anchor.case %in%
+          addr, "case"]
+        sel <- cholera::fatalities$case %in% fatal
+        points(cholera::fatalities[sel, c("x", "y")], pch = 20,
+          cex = 0.75, col = snow.colors[paste0("p", x)])
+      }))
     }
   }
 }
