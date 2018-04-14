@@ -29,7 +29,7 @@
 
 addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, weighted = TRUE, multi.core = FALSE, area = TRUE,
-  path = NULL, path.color = NULL, path.width = 3, alpha.level = 0.125, ...) {
+  path = NULL, path.color = NULL, path.width = 3, alpha.level = 0.25, ...) {
 
   if (is.null(path) == FALSE) {
     if (path %in% c("expected", "observed") == FALSE) {
