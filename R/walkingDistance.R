@@ -401,11 +401,7 @@ plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
   roads.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
-  if (x$vestry) {
-    colors <- cholera::snowColors(vestry = TRUE)
-  } else {
-    colors <- cholera::snowColors()
-  }
+  colors <- cholera::snowColors(x$vestry)
 
   nodes <- x$nodes
   edges <- x$edges
