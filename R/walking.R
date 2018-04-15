@@ -879,140 +879,62 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
 }
 
 pumpTokens <- function(pump.select, vestry, case.set, snow.colors, type) {
+  if (vestry) {
+    dat <- cholera::pumps.vestry
+  } else {
+    dat <- cholera::pumps
+  }
+
   if (case.set == "observed") {
     if (is.null(pump.select)) {
-      if (vestry) {
-        points(cholera::pumps.vestry[, c("x", "y")], pch = 24, lwd = 1.25,
-          col = cholera::snowColors(vestry = TRUE))
-        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
-          labels = paste0("p", cholera::pumps.vestry$id))
-      } else {
-        points(cholera::pumps[, c("x", "y")], pch = 24, lwd = 1.25,
-          col = cholera::snowColors())
-        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
-          labels = paste0("p", cholera::pumps$id))
-      }
+      points(dat[, c("x", "y")], pch = 24, lwd = 1.25, col = snow.colors)
+      text(dat[, c("x", "y")], pos = 1, cex = 0.9, labels = paste0("p", dat$id))
     } else {
       if (all(pump.select > 0)) {
-        if (vestry) {
-          sel <- cholera::pumps.vestry$id %in% pump.select
-          points(cholera::pumps.vestry[sel, c("x", "y")], pch = 24,
-            lwd = 1.25, col = snow.colors[sel])
-          text(cholera::pumps.vestry[sel, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps.vestry$id[sel]))
-        } else {
-          sel <- cholera::pumps$id %in% abs(pump.select)
-          points(cholera::pumps[sel, c("x", "y")], pch = 24, lwd = 1.25,
-            col = snow.colors[sel])
-          text(cholera::pumps[sel, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps$id[sel]))
-        }
+        sel <- dat$id %in% pump.select
       } else if (all(pump.select < 0)) {
-        if (vestry) {
-          sel <- cholera::pumps.vestry$id %in% abs(pump.select) == FALSE
-          points(cholera::pumps.vestry[sel, c("x", "y")], pch = 24, lwd = 1.25,
-            col = snow.colors[sel])
-          text(cholera::pumps.vestry[sel, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps.vestry$id[sel]))
-
-        } else {
-          sel <- cholera::pumps$id %in% abs(pump.select) == FALSE
-          points(cholera::pumps[sel, c("x", "y")], pch = 24, lwd = 1.25,
-            col = snow.colors[sel])
-          text(cholera::pumps[sel, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps$id[sel]))
-        }
+        sel <- dat$id %in% abs(pump.select) == FALSE
       }
+      points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25,
+        col = snow.colors[sel])
+      text(dat[sel, c("x", "y")], pos = 1, cex = 0.9,
+        labels = paste0("p", dat$id[sel]))
     }
+
   } else if (case.set == "expected") {
     if (type == "road") {
       if (is.null(pump.select)) {
-        if (vestry) {
-          points(cholera::pumps.vestry[, c("x", "y")], pch = 24, lwd = 1.25,
-            bg = cholera::snowColors(vestry = TRUE))
-          text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps.vestry$id))
-        } else {
-          points(cholera::pumps[, c("x", "y")], pch = 24, lwd = 1.25,
-            bg = cholera::snowColors())
-          text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps$id))
-        }
+        points(dat[, c("x", "y")], pch = 24, lwd = 1.25, bg = snow.colors)
+        text(dat[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", dat$id))
       } else {
         if (all(pump.select > 0)) {
-          if (vestry) {
-            sel <- cholera::pumps.vestry$id %in% pump.select
-            points(cholera::pumps.vestry[sel, c("x", "y")], pch = 24,
-              lwd = 1.25, bg = snow.colors[sel])
-            text(cholera::pumps.vestry[sel, c("x", "y")], pos = 1, cex = 0.9,
-              labels = paste0("p", cholera::pumps.vestry$id[sel]))
-          } else {
-            sel <- cholera::pumps$id %in% abs(pump.select)
-            points(cholera::pumps[sel, c("x", "y")], pch = 24, lwd = 1.25,
-              bg = snow.colors[sel])
-            text(cholera::pumps[sel, c("x", "y")], pos = 1, cex = 0.9,
-              labels = paste0("p", cholera::pumps$id[sel]))
-          }
+          sel <- dat$id %in% pump.select
         } else if (all(pump.select < 0)) {
-          if (vestry) {
-            sel <- cholera::pumps.vestry$id %in% abs(pump.select) == FALSE
-            points(cholera::pumps.vestry[sel, c("x", "y")], pch = 24,
-              lwd = 1.25, bg = snow.colors[sel])
-            text(cholera::pumps.vestry[sel, c("x", "y")], pos = 1, cex = 0.9,
-              labels = paste0("p", cholera::pumps.vestry$id[sel]))
-
-          } else {
-            sel <- cholera::pumps$id %in% abs(pump.select) == FALSE
-            points(cholera::pumps[sel, c("x", "y")], pch = 24, lwd = 1.25,
-              bg = snow.colors[sel])
-            text(cholera::pumps[sel, c("x", "y")], pos = 1, cex = 0.9,
-              labels = paste0("p", cholera::pumps$id[sel]))
-          }
+          sel <- dat$id %in% abs(pump.select) == FALSE
         }
+        points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25,
+          bg = snow.colors[sel])
+        text(dat[sel, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", dat$id[sel]))
       }
+
     } else if (type %in% c("area.points", "area.polygons")) {
       if (is.null(pump.select)) {
-        if (vestry) {
-          points(cholera::pumps.vestry[, c("x", "y")], pch = 24, lwd = 1.25,
-            col = "white", bg = cholera::snowColors(vestry = TRUE))
-          text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps.vestry$id))
-        } else {
-          points(cholera::pumps[, c("x", "y")], pch = 24, lwd = 1.25,
-            col = "white", bg = cholera::snowColors())
-          text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.9,
-            labels = paste0("p", cholera::pumps$id))
-        }
+        points(dat[, c("x", "y")], pch = 24, lwd = 1.25,
+          col = "white", bg = snow.colors)
+        text(dat[, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", dat$id))
       } else {
         if (all(pump.select > 0)) {
-          if (vestry) {
-            sel <- cholera::pumps.vestry$id %in% pump.select
-            points(cholera::pumps.vestry[sel, c("x", "y")], pch = 24,
-              lwd = 1.25, col = "white", bg = snow.colors[sel])
-            text(cholera::pumps.vestry[sel, c("x", "y")], pos = 1, cex = 0.9,
-              labels = paste0("p", cholera::pumps.vestry$id[sel]))
-          } else {
-            sel <- cholera::pumps$id %in% abs(pump.select)
-            points(cholera::pumps[sel, c("x", "y")], pch = 24, lwd = 1.25,
-              col = "white", bg = snow.colors[sel])
-            text(cholera::pumps[sel, c("x", "y")], pos = 1, cex = 0.9,
-              labels = paste0("p", cholera::pumps$id[sel]))
-          }
+          sel <- dat$id %in% pump.select
         } else if (all(pump.select < 0)) {
-          if (vestry) {
-            sel <- cholera::pumps.vestry$id %in% abs(pump.select) == FALSE
-            points(cholera::pumps.vestry[sel, c("x", "y")], pch = 24,
-              lwd = 1.25, col = "white", bg = snow.colors[sel])
-            text(cholera::pumps.vestry[sel, c("x", "y")], pos = 1, cex = 0.9,
-              labels = paste0("p", cholera::pumps.vestry$id[sel]))
-          } else {
-            sel <- cholera::pumps$id %in% abs(pump.select) == FALSE
-            points(cholera::pumps[sel, c("x", "y")], pch = 24, lwd = 1.25,
-              col = "white", bg = snow.colors[sel])
-            text(cholera::pumps[sel, c("x", "y")], pos = 1, cex = 0.9,
-              labels = paste0("p", cholera::pumps$id[sel]))
-          }
+          sel <- dat$id %in% abs(pump.select) == FALSE
         }
+        points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25,
+          col = "white", bg = snow.colors[sel])
+        text(dat[sel, c("x", "y")], pos = 1, cex = 0.9,
+          labels = paste0("p", dat$id[sel]))
       }
     }
   }
