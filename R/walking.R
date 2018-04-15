@@ -462,21 +462,15 @@ plot.walking <- function(x, type = "road", ...) {
 
     ## ------------ Data Assembly ------------ ##
 
-    if (x$vestry) {
-      wholes <- lapply(1:14, function(nm) {
-        c(obs.whole[[paste(nm)]],
-          unobs.whole[[paste(nm)]],
-          obs.partial.whole[[paste(nm)]])
-      })
-      names(wholes) <- 1:14
-    } else {
-      wholes <- lapply(1:13, function(nm) {
-        c(obs.whole[[paste(nm)]],
-          unobs.whole[[paste(nm)]],
-          obs.partial.whole[[paste(nm)]])
-      })
-      names(wholes) <- 1:13
-    }
+    if (x$vestry) pumpID <- 1:14 else pumpID <- 1:13
+
+    wholes <- lapply(pumpID, function(nm) {
+      c(obs.whole[[paste(nm)]],
+        unobs.whole[[paste(nm)]],
+        obs.partial.whole[[paste(nm)]])
+    })
+
+    names(wholes) <- pumpID
 
     # split segments #
     split.test1 <- length(obs.partial.segments)
