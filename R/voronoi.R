@@ -48,6 +48,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
       if (any(abs(pump.select) %in% 1:14 == FALSE)) {
         stop('With "vestry = TRUE", 1 >= |"pump.select"| <= 14')
       }
+
     } else {
       if (length(unique((1:13)[pump.select])) < 2) {
         stop(msg)
@@ -56,6 +57,12 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
         stop('With "vestry = FALSE", 1 >= |"pump.select"| <= 13')
       }
     }
+  }
+
+  if (vestry) {
+    pump.data <- cholera::pumps.vestry
+  } else {
+    pump.data <- cholera::pumps
   }
 
   if (is.null(statistic) == FALSE) {
@@ -69,43 +76,23 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   y.rng <- range(cholera::roads$y)
 
   if (is.null(pump.select)) {
-    if (vestry) {
-      pump.id <- cholera::pumps.vestry$id
-      voronoi <- deldir::deldir(cholera::pumps.vestry[, c("x", "y")],
-        rw = c(x.rng, y.rng), suppressMsge = TRUE)
-      snow.colors <- cholera::snowColors(vestry = TRUE)
-      select.string <- NULL
-    } else {
-      pump.id <- cholera::pumps$id
-      voronoi <- deldir::deldir(cholera::pumps[, c("x", "y")],
-        rw = c(x.rng, y.rng), suppressMsge = TRUE)
-      snow.colors <- cholera::snowColors()
-      select.string <- NULL
-    }
+    pump.id <- pump.data$id
+    voronoi <- deldir::deldir(pump.data[, c("x", "y")], rw = c(x.rng, y.rng),
+      suppressMsge = TRUE)
+    snow.colors <- cholera::snowColors(vestry = TRUE)
+    select.string <- NULL
   } else {
-    if (vestry) {
-      pump.id <- cholera::pumps.vestry$id[pump.select]
-      voronoi <- deldir::deldir(cholera::pumps.vestry[pump.select, c("x", "y")],
-        rw = c(x.rng, y.rng), suppressMsge = TRUE)
-      snow.colors <- cholera::snowColors(vestry = TRUE)[pump.select]
-      select.string <- paste(sort(pump.select), collapse = ", ")
-    } else {
-      pump.id <- cholera::pumps$id[pump.select]
-      voronoi <- deldir::deldir(cholera::pumps[pump.select, c("x", "y")],
-        rw = c(x.rng, y.rng), suppressMsge = TRUE)
-      snow.colors <- cholera::snowColors()[pump.select]
-      select.string <- paste(sort(pump.select), collapse = ", ")
-    }
+    pump.id <- pump.data$id[pump.select]
+    voronoi <- deldir::deldir(pump.data[pump.select, c("x", "y")],
+      rw = c(x.rng, y.rng), suppressMsge = TRUE)
+    snow.colors <- cholera::snowColors(vestry = TRUE)[pump.select]
+    select.string <- paste(sort(pump.select), collapse = ", ")
   }
 
   cell.data <- voronoi$dirsgs
   voronoi.order <- as.numeric(rownames(voronoi$summary))
 
-  if (vestry) {
-    pump.sel <- cholera::pumps.vestry$id
-  } else {
-    pump.sel <- cholera::pumps$id
-  }
+  pump.sel <- pump.data$id
 
   if (is.null(pump.select)) {
     expected.data <- data.frame(pump = pump.sel[voronoi.order],
@@ -179,45 +166,33 @@ plot.voronoi <- function(x, ...) {
   roads.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
+  if (x$vestry) {
+    pump.data <- cholera::pumps.vestry
+  } else {
+    pump.data <- cholera::pumps
+  }
+
   plot(cholera::fatalities.address[, c("x", "y")], xlim = x$x.rng,
     ylim = x$y.rng, pch = NA, asp = 1)
-
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
 
   if (is.null(x$statistic)) {
     if (is.null(x$pump.select)) {
-      if (x$vestry) {
-        points(cholera::pumps.vestry[, c("x", "y")], pch = 2,
-          col = x$snow.colors)
-        text(cholera::pumps.vestry[, c("x", "y")], pos = 1,
-          label = paste0("p", x$pump.id))
-      } else {
-        points(cholera::pumps[, c("x", "y")], pch = 2, col = x$snow.colors)
-        text(cholera::pumps[, c("x", "y")], label = paste0("p", x$pump.id),
-          pos = 1)
-      }
+      points(pump.data[, c("x", "y")], pch = 2, col = x$snow.colors)
+      text(pump.data[, c("x", "y")], pos = 1, label = paste0("p", x$pump.id))
       title(main = "Pump Neighborhoods: Voronoi (address)")
-
     } else {
-      if (x$vestry) {
-        points(cholera::pumps.vestry[x$pump.select, c("x", "y")], pch = 2,
-          col = x$snow.colors)
-        text(cholera::pumps.vestry[x$pump.select, c("x", "y")],
-          label = paste0("p", x$pump.id), pos = 1)
-      } else {
-        points(cholera::pumps[x$pump.select, c("x", "y")], pch = 2,
-          col = x$snow.colors)
-        text(cholera::pumps[x$pump.select, c("x", "y")],
-          label = paste0("p", x$pump.id), pos = 1)
-      }
+      points(pump.data[x$pump.select, c("x", "y")], pch = 2,
+        col = x$snow.colors)
+      text(pump.data[x$pump.select, c("x", "y")],
+        label = paste0("p", x$pump.id), pos = 1)
       title(main = paste0("Pump Neighborhoods: Voronoi (address)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
     }
 
     plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none",
       lty = "solid")
-
     voronoi.case.id <- cholera::pumpCase(x)
     voronoi.colors <- vector(length = length(unlist(voronoi.case.id)))
     names(voronoi.colors) <- cholera::fatalities.address$anchor.case
@@ -239,9 +214,7 @@ plot.voronoi <- function(x, ...) {
         col = polygon.cols[i], border = NA)
     }))
 
-    plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none",
-      lty = "solid")
-
+    plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
     invisible(lapply(roads.list, lines, col = "lightgray"))
     invisible(lapply(border.list, lines))
 
@@ -252,30 +225,14 @@ plot.voronoi <- function(x, ...) {
     }
 
     if (is.null(x$pump.select)) {
-      if (x$vestry) {
-        text(cholera::pumps.vestry[, c("x", "y")], label = stat.data$Count)
-        text(cholera::pumps.vestry[, c("x", "y")], pos = 1, cex = 0.8,
-          col = "blue", label = round(stat.data$Pearson, 2))
-      } else {
-        text(cholera::pumps[, c("x", "y")], label = stat.data$Count)
-        text(cholera::pumps[, c("x", "y")], pos = 1, cex = 0.8, col = "blue",
-          label = round(stat.data$Pearson, 2))
-      }
-
+      text(pump.data[, c("x", "y")], label = stat.data$Count)
+      text(pump.data[, c("x", "y")], pos = 1, cex = 0.8,
+        col = "blue", label = round(stat.data$Pearson, 2))
       title(main = caption)
     } else {
-      if (x$vestry) {
-        text(cholera::pumps.vestry[x$pump.select, c("x", "y")],
-          label = stat.data$Count)
-        text(cholera::pumps.vestry[x$pump.select, c("x", "y")], pos = 1,
-          cex = 0.8, col = "blue", label = round(stat.data$Pearson, 2))
-      } else {
-        text(cholera::pumps[x$pump.select, c("x", "y")],
-          label = stat.data$Count)
-        text(cholera::pumps[x$pump.select, c("x", "y")], pos = 1, cex = 0.8,
-          col = "blue", label = round(stat.data$Pearson, 2))
-      }
-
+      text(pump.data[x$pump.select, c("x", "y")], label = stat.data$Count)
+      text(pump.data[x$pump.select, c("x", "y")], pos = 1, cex = 0.8,
+        col = "blue", label = round(stat.data$Pearson, 2))
       title(main = paste0(caption, "\n", "Pumps ", x$select.string))
     }
   }
