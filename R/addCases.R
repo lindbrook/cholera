@@ -11,11 +11,13 @@
 #' @param ... Additional plotting parameters.
 #' @export
 #' @examples
+#' \dontrun{
 #' snowMap()
 #' addCases(pump.susbet = c(6, 10))
 #'
 #' snowMap()
 #' addCases(pump.select = c(6, 10))
+#' }
 
 addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
   vestry = FALSE, weighted = TRUE, case.color = NULL, multi.core = FALSE, ...) {
@@ -84,7 +86,7 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
       } else if (all(pump.subset < 0)) {
         select <- selected.pumps[selected.pumps %in% abs(pump.subset) == FALSE]
       }
-      
+
       invisible(lapply(select, function(x) {
         addr <- nearest.pump[nearest.pump$pump == x, "case"]
         sel <- cholera::fatalities.address$anchor.case %in% addr

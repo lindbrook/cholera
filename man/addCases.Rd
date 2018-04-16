@@ -29,9 +29,11 @@ addCases(pump.subset = NULL, pump.select = NULL, type = "address",
 Add cases, as "address" (cholera::fatalties.address) or stacked "fatalties" (cholera::fatalties), as points to an existing plot.
 }
 \examples{
+\dontrun{
 snowMap()
 addCases(pump.susbet = c(6, 10))
 
 snowMap()
 addCases(pump.select = c(6, 10))
+}
 }
