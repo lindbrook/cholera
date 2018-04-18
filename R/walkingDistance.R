@@ -6,7 +6,7 @@
 #' @param observed Logical. Use observed or "simulated" expected data.
 #' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of nodes.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
+#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Default walking speed is 5 km/hr.
 #' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
@@ -14,35 +14,35 @@
 #' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
-#' # path from case 1 to nearest pump.
-#' # walkingDistance(1)
+#' \dontrun{
+#' path from case 1 to nearest pump.
+#' walkingDistance(1)
 #'
-#' # path from case 1 to nearest pump in meters (appox).
-#' # walkingDistance(1, unit = "meter")
+#' path from case 1 to nearest pump in meters (appox).
+#' walkingDistance(1)
 #'
-#' # path from case 1 to pump 6.
-#' # walkingDistance(1, 6)
+#' path from case 1 to pump 6.
+#' walkingDistance(1, 6)
 #'
-#' # exclude pump 7 from consideration.
-#' # walkingDistance(1, -7)
+#' exclude pump 7 from consideration.
+#' walkingDistance(1, -7)
 #'
-#' # path from case 1 to case 6.
-#' # walkingDistance(1, 6, type = "cases")
+#' path from case 1 to case 6.
+#' walkingDistance(1, 6, type = "cases")
 #'
-#' # path from pump 1 to pump 6.
-#' # walkingDistance(1, 6, type = "pumps")
+#' path from pump 1 to pump 6.
+#' walkingDistance(1, 6, type = "pumps")
 #'
-#' # Plot result
-#' # plot(walkingDistance(1, unit = "meter"))
+#' Plot result
+#' plot(walkingDistance(1, unit = "meter"))
+#' }
 
 walkingDistance <- function(origin, destination = NULL, type = "case-pump",
-  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = NULL,
+  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5) {
 
-  if (is.null(unit) == FALSE) {
-    if (unit %in% c("meter", "yard") == FALSE) {
-      stop('If specified, "unit" must be "meter" or "yard".')
-    }
+  if (unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('If specified, "unit" must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
@@ -326,13 +326,15 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   out$time <- cholera::distanceTime(out$distance, unit = time.unit,
     speed = walking.speed)
 
-  if (!is.null(unit)) {
+
     if (unit == "meter") {
       out$distance <- cholera::unitMeter(out$distance, "meter")
     } else if (unit == "yard") {
       out$distance <- cholera::unitMeter(out$distance, "yard")
+    } else if (unit == "native") {
+      out$distance <- cholera::unitMeter(out$distance, "native")
     }
-  }
+
 
   output <- list(origin = origin,
                  destination = destination,
@@ -349,6 +351,7 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
                  alter.node = alter.node,
                  d = out$distance,
                  t = out$time,
+                 speed = walking.speed,
                  summary = out)
 
   class(output) <- "walking_distance"
@@ -363,8 +366,8 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 #' @return An R data frame.
 #' @export
 #' @examples
-#' # walkingDistance(1)
-#' # print(walkingDistance(1))
+#' walkingDistance(1)
+#' print(walkingDistance(1))
 
 print.walking_distance <- function(x, ...) {
   if (class(x) != "walking_distance") {
@@ -383,7 +386,7 @@ print.walking_distance <- function(x, ...) {
 #' @return A base R plot.
 #' @export
 #' @examples
-#' # plot(walkingDistance(1))
+#' plot(walkingDistance(1))
 
 plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
   if (class(x) != "walking_distance") {

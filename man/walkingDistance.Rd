@@ -5,7 +5,7 @@
 \title{Compute the shortest walking distance between cases and/or pumps.}
 \usage{
 walkingDistance(origin, destination = NULL, type = "case-pump",
-  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = NULL,
+  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5)
 }
 \arguments{
@@ -21,7 +21,7 @@ walkingDistance(origin, destination = NULL, type = "case-pump",
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. Meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.}
+\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
@@ -37,26 +37,28 @@ Compute the shortest walking distance between cases and/or pumps.
 The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
 }
 \examples{
-# path from case 1 to nearest pump.
-# walkingDistance(1)
+\dontrun{
+path from case 1 to nearest pump.
+walkingDistance(1)
 
-# path from case 1 to nearest pump in meters (appox).
-# walkingDistance(1, unit = "meter")
+path from case 1 to nearest pump in meters (appox).
+walkingDistance(1)
 
-# path from case 1 to pump 6.
-# walkingDistance(1, 6)
+path from case 1 to pump 6.
+walkingDistance(1, 6)
 
-# exclude pump 7 from consideration.
-# walkingDistance(1, -7)
+exclude pump 7 from consideration.
+walkingDistance(1, -7)
 
-# path from case 1 to case 6.
-# walkingDistance(1, 6, type = "cases")
+path from case 1 to case 6.
+walkingDistance(1, 6, type = "cases")
 
-# path from pump 1 to pump 6.
-# walkingDistance(1, 6, type = "pumps")
+path from pump 1 to pump 6.
+walkingDistance(1, 6, type = "pumps")
 
-# Plot result
-# plot(walkingDistance(1, unit = "meter"))
+Plot result
+plot(walkingDistance(1, unit = "meter"))
+}
 }
 \seealso{
 \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
