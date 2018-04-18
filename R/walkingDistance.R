@@ -554,13 +554,16 @@ plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
     nominal.time <- paste(round(x$t, 1), "secs.")
   }
 
-  if (is.null(x$unit)) {
-    title(sub = paste(nominal.distance, "units;", nominal.time))
+  if (x$unit == "native") {
+    d.unit <- "units;"
   } else if (x$unit == "meter") {
-    title(sub = paste(nominal.distance, "meters;", nominal.time))
+    d.unit <- "meters;"
   } else if (x$unit == "yard") {
-    title(sub = paste(nominal.distance, "yards;", nominal.time))
+    d.unit <- "yards;"
   }
+
+  title(sub = paste(nominal.distance, d.unit, nominal.time, "@",
+    x$speed, "km/hr"))
 }
 
 numericNodeCoordinates <- function(x) {
