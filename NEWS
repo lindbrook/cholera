@@ -1,3 +1,10 @@
+cholera 0.4.0.9011
+==================
+
+- amend walkingDistance(): "meter" default distance
+- amend plot.walking_distance(): details about time and walking speed
+
+
 cholera 0.4.0.9010
 ==================
 
