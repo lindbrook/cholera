@@ -4,7 +4,7 @@
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
-#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
+#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Default walking speed is 5 km/hr.
 #' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime().
@@ -13,9 +13,6 @@
 #' @examples
 #' # path from case 1 to nearest pump.
 #' euclideanDistance(1)
-#'
-#' # path from case 1 to nearest pump in meters (approximate).
-#' euclideanDistance(1, unit = "meter")
 #'
 #' # path from case 1 to pump 6.
 #' euclideanDistance(1, 6)
@@ -30,14 +27,13 @@
 #' euclideanDistance(1, 6, type = "pumps")
 #'
 #' # Plot result
-#' plot(euclideanDistance(1, unit = "meter"))
+#' plot(euclideanDistance(1))
 
 euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
-  vestry = FALSE, unit = NULL, time.unit = "second", walking.speed = 5) {
+  vestry = FALSE, unit = "meter", time.unit = "second", walking.speed = 5) {
 
-  if (is.null(unit) == FALSE) {
-    if (unit %in% c("meter", "yard") == FALSE)
-      stop('If specified, "unit" must either be "meter" or "yard".')
+  if (unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('If specified, "unit" must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
@@ -212,12 +208,12 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
   out$time <- cholera::distanceTime(out$distance, unit = time.unit,
     speed = walking.speed)
 
-  if (!is.null(unit)) {
-    if (unit == "meter") {
-      out$distance <- cholera::unitMeter(out$distance, "meter")
-    } else if (unit == "yard") {
-      out$distance <- cholera::unitMeter(out$distance, "yard")
-    }
+  if (unit == "meter") {
+    out$distance <- cholera::unitMeter(out$distance, "meter")
+  } else if (unit == "yard") {
+    out$distance <- cholera::unitMeter(out$distance, "yard")
+  } else if (unit == "native") {
+    out$distance <- cholera::unitMeter(out$distance, "native")
   }
 
   output <- list(origin = origin,
@@ -228,7 +224,9 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
                  vestry = vestry,
                  unit = unit,
                  time.unit = time.unit,
+                 d = out$distance,
                  t = out$time,
+                 speed = walking.speed,
                  summary = out)
 
   class(output) <- "euclidean_distance"
@@ -352,8 +350,6 @@ plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
   arrows(ego.xy$x, ego.xy$y, alter.xy$x, alter.xy$y, length = 0.1,
     col = case.color, lwd = 2, code = 2)
 
-  distance <- stats::dist(dat)
-
   if (x$time.unit == "hour") {
     nominal.time <- paste(round(x$t, 1), "hr.")
   } else if (x$time.unit == "minute") {
@@ -362,13 +358,13 @@ plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
     nominal.time <- paste(round(x$t, 1), "secs.")
   }
 
-  if (is.null(x$unit)) {
-    title(sub = paste(round(distance, 1), "units;", nominal.time))
+  if (x$unit == "native") {
+    d.unit <- "units;"
   } else if (x$unit == "meter") {
-    title(sub = paste(round(cholera::unitMeter(distance, "meter"), 1),
-      "meters;", nominal.time))
+    d.unit <- "meters;"
   } else if (x$unit == "yard") {
-    title(sub = paste(round(cholera::unitMeter(distance, "yard"), 1), "yards;",
-      nominal.time))
+    d.unit <- "yards;"
   }
+
+  title(sub = paste(round(x$d, 1), d.unit, nominal.time, "@", x$speed, "km/hr"))
 }

@@ -14,28 +14,23 @@
 #' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
-#' \dontrun{
-#' path from case 1 to nearest pump.
+#' # path from case 1 to nearest pump.
 #' walkingDistance(1)
 #'
-#' path from case 1 to nearest pump in meters (appox).
-#' walkingDistance(1)
-#'
-#' path from case 1 to pump 6.
+#' # path from case 1 to pump 6.
 #' walkingDistance(1, 6)
 #'
-#' exclude pump 7 from consideration.
+#' # exclude pump 7 from consideration.
 #' walkingDistance(1, -7)
 #'
-#' path from case 1 to case 6.
+#' # path from case 1 to case 6.
 #' walkingDistance(1, 6, type = "cases")
 #'
-#' path from pump 1 to pump 6.
+#' # path from pump 1 to pump 6.
 #' walkingDistance(1, 6, type = "pumps")
 #'
-#' Plot result
-#' plot(walkingDistance(1, unit = "meter"))
-#' }
+#' # Plot result
+#' plot(walkingDistance(1))
 
 walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
@@ -54,18 +49,9 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   }
 
   if (observed) {
-    if (vestry) {
-      node.data <- cholera::neighborhoodData(vestry = TRUE)
-    } else {
-      node.data <- cholera::neighborhoodData()
-    }
+    node.data <- cholera::neighborhoodData(vestry)
   } else {
-    if (vestry) {
-      node.data <- cholera::neighborhoodData(vestry = TRUE,
-        case.set = "expected")
-    } else {
-      node.data <- cholera::neighborhoodData(case.set = "expected")
-    }
+    node.data <- cholera::neighborhoodData(vestry, case.set = "expected")
   }
 
   nodes <- node.data$nodes
@@ -326,15 +312,13 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   out$time <- cholera::distanceTime(out$distance, unit = time.unit,
     speed = walking.speed)
 
-
-    if (unit == "meter") {
-      out$distance <- cholera::unitMeter(out$distance, "meter")
-    } else if (unit == "yard") {
-      out$distance <- cholera::unitMeter(out$distance, "yard")
-    } else if (unit == "native") {
-      out$distance <- cholera::unitMeter(out$distance, "native")
-    }
-
+  if (unit == "meter") {
+    out$distance <- cholera::unitMeter(out$distance, "meter")
+  } else if (unit == "yard") {
+    out$distance <- cholera::unitMeter(out$distance, "yard")
+  } else if (unit == "native") {
+    out$distance <- cholera::unitMeter(out$distance, "native")
+  }
 
   output <- list(origin = origin,
                  destination = destination,
@@ -547,7 +531,7 @@ plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
     drawPath(c(first.mile, last.mile), case.color)
   }
 
-  nominal.distance <- round(x$d, 1)
+  distance <- round(x$d, 1)
 
   if (x$time.unit == "hour") {
     nominal.time <- paste(round(x$t, 1), "hr.")
@@ -565,8 +549,7 @@ plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
     d.unit <- "yards;"
   }
 
-  title(sub = paste(nominal.distance, d.unit, nominal.time, "@",
-    x$speed, "km/hr"))
+  title(sub = paste(distance, d.unit, nominal.time, "@", x$speed, "km/hr"))
 }
 
 numericNodeCoordinates <- function(x) {

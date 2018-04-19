@@ -1,8 +1,10 @@
 cholera 0.4.0.9011
 ==================
 
-- amend walkingDistance(): "meter" default distance
-- amend plot.walking_distance(): details about time and walking speed
+- set "meter" as default distance for euclideanDistance(), nearestPump() and
+  walkingDistance()
+- add "walking.speed" to nearestPump(), plot.euclidean_distance() and
+  plot.walking_distance()
 
 
 cholera 0.4.0.9010

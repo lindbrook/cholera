@@ -5,7 +5,8 @@
 \title{Compute the Euclidean distance between cases and/or pumps.}
 \usage{
 euclideanDistance(origin, destination = NULL, type = "case-pump",
-  vestry = FALSE, unit = NULL, time.unit = "second", walking.speed = 5)
+  vestry = FALSE, unit = "meter", time.unit = "second",
+  walking.speed = 5)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
@@ -16,7 +17,7 @@ euclideanDistance(origin, destination = NULL, type = "case-pump",
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
+\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
@@ -35,9 +36,6 @@ The function uses a case's "address" (i.e., "anchor" case of a stack) to compute
 # path from case 1 to nearest pump.
 euclideanDistance(1)
 
-# path from case 1 to nearest pump in meters (approximate).
-euclideanDistance(1, unit = "meter")
-
 # path from case 1 to pump 6.
 euclideanDistance(1, 6)
 
@@ -51,5 +49,5 @@ euclideanDistance(1, 6, type = "cases")
 euclideanDistance(1, 6, type = "pumps")
 
 # Plot result
-plot(euclideanDistance(1, unit = "meter"))
+plot(euclideanDistance(1))
 }
