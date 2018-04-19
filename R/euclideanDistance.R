@@ -274,11 +274,11 @@ plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
   roads.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
+  colors <- cholera::snowColors(x$vestry)
+
   if (x$vestry) {
-    colors <- cholera::snowColors(vestry = TRUE)
     pmp <- cholera::pumps.vestry
   } else {
-    colors <- cholera::snowColors()
     pmp <- cholera::pumps
   }
 
