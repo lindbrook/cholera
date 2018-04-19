@@ -33,7 +33,7 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
   vestry = FALSE, unit = "meter", time.unit = "second", walking.speed = 5) {
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('If specified, "unit" must be "meter", "yard" or "native".')
+    stop('"unit" must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {

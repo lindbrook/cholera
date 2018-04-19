@@ -13,7 +13,7 @@ unitMeter <- function(x, unit = NULL, yard.unit = 177 / 3, meter.unit = 54) {
   }
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('If specified, "unit" must be "meter", "yard" or "native".')
+    stop('"unit" must be "meter", "yard" or "native".')
   }
 
   if (unit == "meter") {

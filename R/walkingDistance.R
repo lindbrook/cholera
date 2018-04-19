@@ -37,7 +37,7 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   time.unit = "second", walking.speed = 5) {
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('If specified, "unit" must be "meter", "yard" or "native".')
+    stop('"unit" must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
@@ -463,8 +463,8 @@ plot.walking_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
       } else {
         destination.obs <- cholera::regular.cases[id, ]
       }
-
     }
+    
   } else if (x$type == "pumps") {
     alter <- nodes[nodes$node == alter.node, "pump"]
     case.color <- "blue"

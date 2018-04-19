@@ -27,7 +27,7 @@ nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
   }
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('If specified, "unit" must be "meter", "yard" or "native".')
+    stop('"unit" must be "meter", "yard" or "native".')
   }
 
   cores <- multiCore(multi.core)
