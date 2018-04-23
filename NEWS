@@ -1,8 +1,15 @@
+cholera 0.4.0.9012
+==================
+
+- replace networkPeriphery() with milePosts() prototype.
+
+
 cholera 0.4.0.9011
 ==================
 
 - set "meter" as default distance for euclideanDistance(), nearestPump() and
   walkingDistance().
+
 - add "walking.speed" to nearestPump(), plot.euclidean_distance() and
   plot.walking_distance().
 

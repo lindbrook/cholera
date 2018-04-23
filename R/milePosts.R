@@ -1,11 +1,12 @@
-#' Compute the periphery of walkin path network.
+#' Compute the coordinates of walking path mileposts.
 #'
 #' In-progress prottotype.
 #' @param pump.select Numeric.
+#' @param milepost.interval Numeric. Meters.
 #' @return An R data frame:
 #' @export
 
-networkPeriphery <- function(pump.select) {
+milePosts <- function(pump.select, milepost.interval = 50) {
   x <- neighborhoodWalking(multi.core = TRUE)
 
   auditEdge <- function(p) {
@@ -57,17 +58,17 @@ networkPeriphery <- function(pump.select) {
     hypotenuse.breaks <- seq(0, hypotenuse, x$metric)
 
     distances <- lapply(hypotenuse.breaks, function(h) {
-      delta.x <- h * cos(theta)
-      delta.y <- h * sin(theta)
+      candidates.x <- h * cos(theta)
+      candidates.y <- h * sin(theta)
 
       EW <- which.min(c(s.data[1, "x1"], s.data[nrow(s.data), "x2"]))
 
       if (EW == 1) {
-        test.x <- seg.df[1, "x"] + delta.x
-        test.y <- seg.df[1, "y"] + delta.y
+        test.x <- seg.df[1, "x"] + candidates.x
+        test.y <- seg.df[1, "y"] + candidates.y
       } else {
-        test.x <- seg.df[2, "x"] + delta.x
-        test.y <- seg.df[2, "y"] + delta.y
+        test.x <- seg.df[2, "x"] + candidates.x
+        test.y <- seg.df[2, "y"] + candidates.y
       }
 
       case.node <- paste0(test.x, "-", test.y)
@@ -126,19 +127,19 @@ networkPeriphery <- function(pump.select) {
       segment.slope <- stats::coef(ols)[2]
       theta <- atan(segment.slope)
       h <- cutpoints[[i]]
-      delta.x <- h * cos(theta)
-      delta.y <- h * sin(theta)
+      candidates.x <- h * cos(theta)
+      candidates.y <- h * sin(theta)
 
       EW <- which.min(seg.df$x)
 
       if (EW == 1) {
-        x.cut <- seg.df$x[1] + delta.x
-        y.cut <- seg.df$y[1] + delta.y
+        x.cut <- seg.df$x[1] + candidates.x
+        y.cut <- seg.df$y[1] + candidates.y
         data.frame(x = c(seg.df$x[1], x.cut, seg.df$x[2]),
                    y = c(seg.df$y[1], y.cut, seg.df$y[2]))
       } else {
-        x.cut <- seg.df$x[2] + delta.x
-        y.cut <- seg.df$y[2] + delta.y
+        x.cut <- seg.df$x[2] + candidates.x
+        y.cut <- seg.df$y[2] + candidates.y
         data.frame(x = c(seg.df$x[2], x.cut, seg.df$x[1]),
                    y = c(seg.df$y[2], y.cut, seg.df$y[1]))
       }
@@ -169,36 +170,77 @@ networkPeriphery <- function(pump.select) {
     lapply(neighborhood, auditEdge)
   }, mc.cores = x$cores)
 
-  # edge.data <- lapply(n.path.edges, function(x) unique(unlist(x)))
+  # neighborhood paths by edge
+  n.path.edges.select <- n.path.edges[[paste(pump.select)]]
 
-  n.edges <- n.path.edges[[paste(pump.select)]]
-  alphas <- vapply(n.edges, function(x) x[1], numeric(1L))
-  omegas <- lapply(n.edges, function(x) x[-1])
-  delta <- edges[setdiff(alphas, unlist(omegas)), ]
-  dat <- edges[unique(unlist(n.edges)), ]
+  # path's case edge and path's other, remaining edges
+  case.edge <- vapply(n.path.edges.select, function(x) x[1], numeric(1L))
+  noncase.edges <- lapply(n.path.edges.select, function(x) x[-1])
 
-  audit <- lapply(seq_len(nrow(delta)), function(i) {
-    t1 <- delta[i, "node1"] %in% dat$node1 &
-          delta[i, "node1"] %in% dat$node2
-    t2 <- delta[i, "node2"] %in% dat$node1 &
-          delta[i, "node2"] %in% dat$node2
+  # b/c paths can overlap; some case.edges will not be dead ends
+  candidates.id <- which(case.edge %in% unlist(noncase.edges) == FALSE)
+  candidates <- edges[setdiff(case.edge, unlist(noncase.edges)), ]
+
+  # unique edges in neighborhood
+  n.path.data <- edges[unique(unlist(n.path.edges.select)), ]
+
+  # presence of just one end point indicates a dead end, periphery case
+  audit <- lapply(seq_len(nrow(candidates)), function(i) {
+    t1 <- candidates[i, "node1"] %in% n.path.data$node1 &
+          candidates[i, "node1"] %in% n.path.data$node2
+    t2 <- candidates[i, "node2"] %in% n.path.data$node1 &
+          candidates[i, "node2"] %in% n.path.data$node2
     c(t1, t2)
   })
 
-  sel <- vapply(audit, function(x) which(x == FALSE), integer(1L))
+  endptID <- vapply(audit, function(x) which(x == FALSE), integer(1L))
 
-  # invisible(lapply(seq_along(delta), function(i) {
-  #   points(delta[i, c(paste0("x", sel[i]), paste0("y", sel[i]))])
-  # }))
-
-  # endpts <- lapply(seq_along(delta), function(i) {
-  #   delta[i, c(paste0("x", sel[i]), paste0("y", sel[i]))]
-  # })
-
-  endpts <- lapply(seq_along(delta), function(i) {
-    data.frame(x = delta[i, paste0("x", sel[i])],
-               y = delta[i, paste0("y", sel[i])])
+  endpt.paths <- lapply(candidates.id, function(x) {
+    edges[n.path.edges.select[[x]], ]
   })
 
-  do.call(rbind, endpts)
+  lapply(endpt.paths, function(x) milePostCoordinates(x, milepost.interval))
+}
+
+## Compute mileposts ##
+
+milePostCoordinates <- function(dat, milepost.interval) {
+  case.distance <- unitMeter(cumsum(rev(dat$d)), "meter")
+  total.distance <- unitMeter(sum(dat$d), "meter")
+  mile.post <- seq(0, total.distance, milepost.interval)
+
+  if (max(mile.post) > max(case.distance)) {
+    mile.post <- mile.post[-length(mile.post)]
+  }
+
+  bins <- data.frame(lo = c(0, case.distance[-length(case.distance)]),
+                     hi = case.distance)
+
+  edge.select <- vapply(mile.post[-1], function(x) {
+    which(vapply(seq_len(nrow(bins)), function(i) {
+      x >= bins[i, "lo"] & x < bins[i, "hi"]
+    }, logical(1L)))
+  }, integer(1L))
+
+  dat.rev <- lapply(rev(dat$id2), function(x) {
+    dat[dat$id2 == x, ]
+  })
+
+  dat.rev <- do.call(rbind, dat.rev)
+
+  post.coordinates <- lapply(seq_along(edge.select), function(i) {
+    dat <- dat.rev[edge.select[i], ]
+    edge.data <- data.frame(x = c(dat$x1, dat$x2), y = c(dat$y1, dat$y2))
+    ols <- stats::lm(y ~ x, data = edge.data)
+    edge.slope <- stats::coef(ols)[2]
+    edge.intercept <- stats::coef(ols)[1]
+    theta <- atan(edge.slope)
+    h <- (mile.post[-1][i] - case.distance[edge.select[i] - 1]) /
+      unitMeter(1, "meter")
+    post.x <- h * cos(theta) + edge.data[1, "x"]
+    post.y <- h * sin(theta) + edge.data[1, "y"]
+    data.frame(x = post.x, y = post.y, row.names = NULL)
+  })
+
+  do.call(rbind, post.coordinates)
 }
