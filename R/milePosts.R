@@ -3,11 +3,13 @@
 #' In-progress prottotype.
 #' @param pump.select Numeric.
 #' @param milepost.interval Numeric. Meters.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @return An R data frame:
 #' @export
 
-milePosts <- function(pump.select, milepost.interval = 50) {
-  x <- neighborhoodWalking(multi.core = TRUE)
+milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
+  cores <- multiCore(multi.core)
+  x <- neighborhoodWalking(multi.core = cores)
 
   auditEdge <- function(p) {
     vapply(seq_along(p[-1]), function(i) {
@@ -199,14 +201,16 @@ milePosts <- function(pump.select, milepost.interval = 50) {
     edges[n.path.edges.select[[x]], ]
   })
 
-  lapply(endpt.paths, function(x) milePostCoordinates(x, milepost.interval))
+  parallel::mclapply(endpt.paths, function(x) {
+    milePostCoordinates(x, milepost.interval)
+  }, mc.cores = cores)
 }
 
 ## Compute mileposts ##
 
 milePostCoordinates <- function(dat, milepost.interval) {
-  case.distance <- unitMeter(cumsum(rev(dat$d)), "meter")
-  total.distance <- unitMeter(sum(dat$d), "meter")
+  case.distance <- cholera::unitMeter(cumsum(rev(dat$d)), "meter")
+  total.distance <- cholera::unitMeter(sum(dat$d), "meter")
   mile.post <- seq(0, total.distance, milepost.interval)
 
   if (max(mile.post) > max(case.distance)) {
@@ -236,7 +240,7 @@ milePostCoordinates <- function(dat, milepost.interval) {
     edge.intercept <- stats::coef(ols)[1]
     theta <- atan(edge.slope)
     h <- (mile.post[-1][i] - case.distance[edge.select[i] - 1]) /
-      unitMeter(1, "meter")
+      cholera::unitMeter(1, "meter")
     post.x <- h * cos(theta) + edge.data[1, "x"]
     post.y <- h * sin(theta) + edge.data[1, "y"]
     data.frame(x = post.x, y = post.y, row.names = NULL)

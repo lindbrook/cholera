@@ -4,12 +4,14 @@
 \alias{milePosts}
 \title{Compute the coordinates of walking path mileposts.}
 \usage{
-milePosts(pump.select, milepost.interval = 50)
+milePosts(pump.select, milepost.interval = 50, multi.core = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric.}
 
 \item{milepost.interval}{Numeric. Meters.}
+
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
 \value{
 An R data frame:
