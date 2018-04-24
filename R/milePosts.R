@@ -1,10 +1,10 @@
 #' Compute the coordinates of walking path mileposts.
 #'
-#' In-progress prottotype.
+#' In-progress prototype.
 #' @param pump.select Numeric.
 #' @param milepost.interval Numeric. Meters.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
-#' @return An R data frame:
+#' @return An R list.
 #' @export
 
 milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
