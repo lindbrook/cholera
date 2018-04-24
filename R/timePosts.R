@@ -209,9 +209,6 @@ timePosts <- function(pump.select, timepost.interval = 60, multi.core = FALSE) {
 ## Compute timeposts ##
 
 timePostCoordinates <- function(dat, timepost.interval) {
-  # case.distance <- cholera::unitMeter(cumsum(rev(dat$d)), "meter")
-  # total.distance <- cholera::unitMeter(sum(dat$d), "meter")
-
   case.time <- cholera::distanceTime(cumsum(rev(dat$d)))
   total.time <- cholera::distanceTime(sum(dat$d))
   time.post <- seq(0, total.time, timepost.interval)
@@ -242,7 +239,8 @@ timePostCoordinates <- function(dat, timepost.interval) {
     edge.slope <- stats::coef(ols)[2]
     edge.intercept <- stats::coef(ols)[1]
     theta <- atan(edge.slope)
-    h <- (time.post[-1][i] - case.time[edge.select[i] - 1]) / distanceTime(1)
+    h <- (time.post[-1][i] - case.time[edge.select[i] - 1]) /
+      cholera::distanceTime(1)
     post.x <- h * cos(theta) + edge.data[1, "x"]
     post.y <- h * sin(theta) + edge.data[1, "y"]
     data.frame(x = post.x, y = post.y, row.names = NULL)
