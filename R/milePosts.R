@@ -195,6 +195,7 @@ milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
     c(t1, t2)
   })
 
+  # case is (x1, y1) or (x2, y2)
   endptID <- vapply(audit, function(x) which(x == FALSE), integer(1L))
 
   endpt.paths <- lapply(candidates.id, function(x) {
@@ -206,12 +207,50 @@ milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
   }, mc.cores = cores)
 }
 
+pathOrderCheck <- function(dat, ep) {
+  all(vapply(seq_len(nrow(dat) - 1), function(i) {
+    if (ep == 1) {
+      dat[i, "node2"] == dat[i + 1, "node1"]
+    } else if (ep == 2) {
+      dat[i, "node1"] == dat[i + 1, "node2"]
+    }
+  }, logical(1L)))
+}
+
+pathOrder <- function(dat, ep) {
+  if (ep == 1) {
+    init.connector <- 2
+  } else if (ep == 2) {
+    init.connector <- 1
+  }
+
+  node.connector <- vector(mode = "integer", length = nrow(dat))
+  node.connector[1] <- init.connector
+
+  for (j in seq_along(node.connector[-1])) {
+    previous <- node.connector[j]
+    connector <- unlist(dat[j, c("node1", "node2")][previous])
+    connected <- which(connector == dat[j + 1, c("node1", "node2")])
+    node.connector[j + 1] <- ifelse(connected == 2, 1, 2)
+  }
+
+  tmp <- dat[node.connector == 2, ]
+  ptA <- tmp[, c("street", "id", "name")]
+  ptB <- tmp[, c("x2", "y2", "x1", "y1", "node2", "node1")]
+  ptC <- tmp[, c("id2", "d")]
+  ptB <- stats::setNames(ptB, c("x1", "y1", "x2", "y2", "node1", "node2"))
+  dat[node.connector == 2, ] <- cbind(ptA, ptB, ptC)
+  dat
+}
+
 ## Compute mileposts ##
 
 milePostCoordinates <- function(dat, milepost.interval) {
   case.distance <- cholera::unitMeter(cumsum(rev(dat$d)), "meter")
+
   total.distance <- cholera::unitMeter(sum(dat$d), "meter")
-  mile.post <- seq(0, total.distance, milepost.interval)
+  # mile.post <- seq(0, total.distance, milepost.interval)
+  mile.post <- seq(milepost.interval, total.distance, milepost.interval)
 
   if (max(mile.post) > max(case.distance)) {
     mile.post <- mile.post[-length(mile.post)]
@@ -220,7 +259,13 @@ milePostCoordinates <- function(dat, milepost.interval) {
   bins <- data.frame(lo = c(0, case.distance[-length(case.distance)]),
                      hi = case.distance)
 
-  edge.select <- vapply(mile.post[-1], function(x) {
+  # edge.select <- vapply(mile.post[-1], function(x) {
+  #   which(vapply(seq_len(nrow(bins)), function(i) {
+  #     x >= bins[i, "lo"] & x < bins[i, "hi"]
+  #   }, logical(1L)))
+  # }, integer(1L))
+
+  edge.select <- vapply(mile.post, function(x) {
     which(vapply(seq_len(nrow(bins)), function(i) {
       x >= bins[i, "lo"] & x < bins[i, "hi"]
     }, logical(1L)))
