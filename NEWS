@@ -2,6 +2,7 @@ cholera 0.4.0.9015
 ==================
 
 - add "token" argument for "id" or "point" in addCases().
+- remove "Kernel Density" and "Time Series" vignettes.
 
 
 cholera 0.4.0.9014
