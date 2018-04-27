@@ -5,6 +5,7 @@
 #' @param pump.select Numeric. Numeric vector of pumps to define pump neighborhoods (i.e. the "population"). Negative selection possible. NULL selects all pumps.
 #' @param type Character. Type of case: "address" (base of stack) or "fatalities" (entire stack).
 #' @param token Character. Plot token: "point" or "id".
+#' @param text.size Numeric. Size of case ID text.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.
 #' @param case.color Character. Use a single color for all paths. NULL uses neighborhood colors defined by snowColors().
@@ -21,8 +22,8 @@
 #' }
 
 addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
-  token = "id", vestry = FALSE, weighted = TRUE, case.color = NULL,
-  multi.core = FALSE, ...) {
+  token = "id", text.size = 0.5, vestry = FALSE, weighted = TRUE,
+  case.color = NULL, multi.core = FALSE, ...) {
 
   if (type %in% c("address", "fatalities") == FALSE) {
     stop('"type" must be "address" or "fatalities".')
@@ -89,7 +90,7 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
             cex = 0.75, col = snow.colors[paste0("p", x)])
         } else if (token == "id") {
           text(cholera::fatalities.address[sel, c("x", "y")],
-            cex = 2/3, col = snow.colors[paste0("p", x)],
+            cex = text.size, col = snow.colors[paste0("p", x)],
             labels = cholera::fatalities.address[sel, "anchor.case"])
         }
       }))
@@ -112,7 +113,7 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
           addr <- nearest.pump[nearest.pump$pump == x, "case"]
           sel <- cholera::fatalities.address$anchor.case %in% addr
           text(cholera::fatalities.address[sel, c("x", "y")],
-            cex = 2/3, col = snow.colors[paste0("p", x)],
+            cex = text.size, col = snow.colors[paste0("p", x)],
             labels = cholera::fatalities.address[sel, "anchor.case"])
         }))
       }

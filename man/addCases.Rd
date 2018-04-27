@@ -5,8 +5,8 @@
 \title{Add observed cases.}
 \usage{
 addCases(pump.subset = NULL, pump.select = NULL, type = "address",
-  token = "id", vestry = FALSE, weighted = TRUE, case.color = NULL,
-  multi.core = FALSE, ...)
+  token = "id", text.size = 0.5, vestry = FALSE, weighted = TRUE,
+  case.color = NULL, multi.core = FALSE, ...)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
@@ -16,6 +16,8 @@ addCases(pump.subset = NULL, pump.select = NULL, type = "address",
 \item{type}{Character. Type of case: "address" (base of stack) or "fatalities" (entire stack).}
 
 \item{token}{Character. Plot token: "point" or "id".}
+
+\item{text.size}{Numeric. Size of case ID text.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
