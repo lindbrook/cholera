@@ -638,6 +638,10 @@ multiCore <- function(x) {
       }
     }
   } else if (is.numeric(x)) {
+    obs.cores <- parallel::detectCores()
+    if (x > obs.cores) {
+      stop(paste0('For your system, "cores" must be <= ', obs.cores, "."))
+    }
     if (is.integer(x)) {
       cores <- x
     } else {
