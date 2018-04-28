@@ -2,14 +2,17 @@
 #'
 #' In-progress prototype.
 #' @param pump.select Numeric.
-#' @param timepost.interval Numeric. Seconds.
+#' @param timepost.interval Numeric. Timepost interval in seconds.
+#' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @return An R list.
 #' @export
 
-timePosts <- function(pump.select, timepost.interval = 60, multi.core = FALSE) {
+timePosts <- function(pump.select, timepost.interval = 60, walking.speed = 5,
+  multi.core = FALSE) {
+
   cores <- multiCore(multi.core)
-  x <- neighborhoodWalking(multi.core = cores)
+  x <- cholera::neighborhoodWalking(multi.core = cores)
 
   auditEdge <- function(p) {
     vapply(seq_along(p[-1]), function(i) {
@@ -188,29 +191,49 @@ timePosts <- function(pump.select, timepost.interval = 60, multi.core = FALSE) {
 
   # presence of just one end point indicates a dead end, periphery case
   audit <- lapply(seq_len(nrow(candidates)), function(i) {
-    t1 <- candidates[i, "node1"] %in% n.path.data$node1 &
-          candidates[i, "node1"] %in% n.path.data$node2
-    t2 <- candidates[i, "node2"] %in% n.path.data$node1 &
-          candidates[i, "node2"] %in% n.path.data$node2
-    c(t1, t2)
+    test1 <- candidates[i, "node1"] %in% n.path.data$node1 &
+             candidates[i, "node1"] %in% n.path.data$node2
+    test2 <- candidates[i, "node2"] %in% n.path.data$node1 &
+             candidates[i, "node2"] %in% n.path.data$node2
+    # direct path exception
+    if (all(c(test1, test2) == FALSE)) {
+      test1A <- sum(candidates[i, "node1"] == n.path.data$node1)
+      test1B <- sum(candidates[i, "node1"] == n.path.data$node2)
+      test2A <- sum(candidates[i, "node2"] == n.path.data$node1)
+      test2B <- sum(candidates[i, "node2"] == n.path.data$node2)
+      c(any(c(test1A, test1B) == 2), any(c(test2A, test2B) == 2))
+    } else c(test1, test2)
   })
 
+  # case is (x1, y1) or (x2, y2)
   endptID <- vapply(audit, function(x) which(x == FALSE), integer(1L))
 
   endpt.paths <- lapply(candidates.id, function(x) {
     edges[n.path.edges.select[[x]], ]
   })
 
+  path.order.check <- vapply(seq_along(endpt.paths), function(i) {
+    pathOrderCheck(endpt.paths[[i]], endptID[i])
+  }, logical(1L))
+
+  out.of.order <- which(path.order.check == FALSE)
+
+  endpt.pathsB <- lapply(out.of.order, function(x) {
+    pathOrder(endpt.paths[[x]], endptID[x])
+  })
+
+  endpt.paths[out.of.order] <- endpt.pathsB
+
   parallel::mclapply(endpt.paths, function(x) {
-    timePostCoordinates(x, timepost.interval)
+    timePostCoordinates(x, timepost.interval, walking.speed)
   }, mc.cores = cores)
 }
 
 ## Compute timeposts ##
 
-timePostCoordinates <- function(dat, timepost.interval) {
-  case.time <- cholera::distanceTime(cumsum(rev(dat$d)))
-  total.time <- cholera::distanceTime(sum(dat$d))
+timePostCoordinates <- function(dat, timepost.interval, walking.speed) {
+  case.time <- cholera::distanceTime(cumsum(rev(dat$d)), speed = walking.speed)
+  total.time <- cholera::distanceTime(sum(dat$d), speed = walking.speed)
   time.post <- seq(0, total.time, timepost.interval)
 
   if (max(time.post) > max(case.time)) {
@@ -233,16 +256,60 @@ timePostCoordinates <- function(dat, timepost.interval) {
   dat.rev <- do.call(rbind, dat.rev)
 
   post.coordinates <- lapply(seq_along(edge.select), function(i) {
-    dat <- dat.rev[edge.select[i], ]
-    edge.data <- data.frame(x = c(dat$x1, dat$x2), y = c(dat$y1, dat$y2))
+    sel.data <- dat.rev[edge.select[i], ]
+    edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
+                            y = c(sel.data$y1, sel.data$y2))
+
     ols <- stats::lm(y ~ x, data = edge.data)
     edge.slope <- stats::coef(ols)[2]
     edge.intercept <- stats::coef(ols)[1]
     theta <- atan(edge.slope)
-    h <- (time.post[-1][i] - case.time[edge.select[i] - 1]) /
-      cholera::distanceTime(1)
-    post.x <- h * cos(theta) + edge.data[1, "x"]
-    post.y <- h * sin(theta) + edge.data[1, "y"]
+    h <- (time.post[-1][i] - bins[edge.select[i], "lo"]) /
+      cholera::distanceTime(1, speed = walking.speed)
+
+    delta <- edge.data[2, ] - edge.data[1, ]
+
+    # Quadrant I
+    if (all(delta > 0)) {
+      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+
+    # Quadrant II
+    } else if (delta[1] < 0 & delta[2] > 0) {
+      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+
+    # Quadrant III
+    } else if (all(delta < 0)) {
+      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+
+    # Quadrant IV
+    } else if (delta[1] > 0 & delta[2] < 0) {
+      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+
+    # I:IV
+    } else if (delta[1] > 0 & delta[2] == 0) {
+      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+      post.y <- edge.data[1, "y"]
+
+    # I:II
+    } else if (delta[1] == 0 & delta[2] > 0) {
+      post.x <- edge.data[1, "x"]
+      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+
+    # II:III
+    } else if (delta[1] < 0 & delta[2] == 0) {
+      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+      post.y <- edge.data[1, "y"]
+
+    # III:IV
+    } else if (delta[1] == 0 & delta[2] < 0) {
+      post.x <- edge.data[1, "x"]
+      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+    }
+
     data.frame(x = post.x, y = post.y, row.names = NULL)
   })
 

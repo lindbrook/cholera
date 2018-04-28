@@ -226,6 +226,7 @@ milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
 }
 
 ## Check path order ##
+
 pathOrderCheck <- function(dat, ep) {
   all(vapply(seq_len(nrow(dat) - 1), function(i) {
     if (ep == 1) {
@@ -237,6 +238,7 @@ pathOrderCheck <- function(dat, ep) {
 }
 
 ## Order path ##
+
 pathOrder <- function(dat, ep) {
   if (ep == 1) {
     init.connector <- 2

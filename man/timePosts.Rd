@@ -4,12 +4,15 @@
 \alias{timePosts}
 \title{Compute the coordinates of walking path timeposts.}
 \usage{
-timePosts(pump.select, timepost.interval = 60, multi.core = FALSE)
+timePosts(pump.select, timepost.interval = 60, walking.speed = 5,
+  multi.core = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric.}
 
-\item{timepost.interval}{Numeric. Seconds.}
+\item{timepost.interval}{Numeric. Timepost interval in seconds.}
+
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
