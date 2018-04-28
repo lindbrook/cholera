@@ -2,7 +2,7 @@
 % Please edit documentation in R/milePosts.R
 \name{milePosts}
 \alias{milePosts}
-\title{Compute the coordinates of walking path mileposts.}
+\title{Compute coordinates and angles of walking path mileposts.}
 \usage{
 milePosts(pump.select, milepost.interval = 50, multi.core = FALSE)
 }
@@ -17,5 +17,5 @@ milePosts(pump.select, milepost.interval = 50, multi.core = FALSE)
 An R list.
 }
 \description{
-Compute the coordinates of walking path mileposts.
+Compute coordinates and angles of walking path mileposts.
 }

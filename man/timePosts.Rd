@@ -2,7 +2,7 @@
 % Please edit documentation in R/timePosts.R
 \name{timePosts}
 \alias{timePosts}
-\title{Compute the coordinates of walking path timeposts.}
+\title{Compute coordinates and angles of walking path timeposts.}
 \usage{
 timePosts(pump.select, timepost.interval = 60, walking.speed = 5,
   multi.core = FALSE)
@@ -20,5 +20,5 @@ timePosts(pump.select, timepost.interval = 60, walking.speed = 5,
 An R list.
 }
 \description{
-In-progress prototype.
+Compute coordinates and angles of walking path timeposts.
 }

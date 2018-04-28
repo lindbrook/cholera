@@ -1,6 +1,5 @@
-#' Compute the coordinates of walking path timeposts.
+#' Compute coordinates and angles of walking path timeposts.
 #'
-#' In-progress prototype.
 #' @param pump.select Numeric.
 #' @param timepost.interval Numeric. Timepost interval in seconds.
 #' @param walking.speed Numeric. Walking speed in km/hr.
@@ -310,7 +309,8 @@ timePostCoordinates <- function(dat, timepost.interval, walking.speed) {
       post.y <- edge.data[1, "y"] - abs(h * sin(theta))
     }
 
-    data.frame(x = post.x, y = post.y, row.names = NULL)
+    data.frame(x = post.x, y = post.y, angle = theta * 180L / pi,
+      row.names = NULL)
   })
 
   do.call(rbind, post.coordinates)

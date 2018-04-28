@@ -1,4 +1,4 @@
-#' Compute the coordinates of walking path mileposts.
+#' Compute coordinates and angles of walking path mileposts.
 #'
 #' @param pump.select Numeric.
 #' @param milepost.interval Numeric. Milepost interval in meters.
@@ -344,7 +344,8 @@ milePostCoordinates <- function(dat, milepost.interval) {
       post.y <- edge.data[1, "y"] - abs(h * sin(theta))
     }
 
-    data.frame(x = post.x, y = post.y, row.names = NULL)
+    data.frame(x = post.x, y = post.y, angle = theta * 180L / pi,
+      row.names = NULL)
   })
 
   do.call(rbind, post.coordinates)
