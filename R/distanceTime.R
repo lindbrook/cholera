@@ -2,8 +2,8 @@
 #'
 #' @param x Numeric. Nominal map distance.
 #' @param unit Character. Unit of measurement: "hour", "minute" or "second".
-#' @param meter.unit Numeric. 1 meter is approximately 54 map units. Set by unitMeter().
-#' @param speed Numeric. Walking speed: 5 km/hr.
+#' @param meter.unit Numeric. 1 meter is approximately 54 map units. Set by cholera::unitMeter().
+#' @param speed Numeric. Walking speed in km/hr.
 #' @return An R vector.
 #' @export
 
