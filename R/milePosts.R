@@ -8,6 +8,7 @@
 #' @export
 
 milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
+
   cores <- multiCore(multi.core)
   x <- cholera::neighborhoodWalking(multi.core = cores)
 
@@ -183,43 +184,48 @@ milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
   candidates.id <- which(case.edge %in% unlist(noncase.edges) == FALSE)
   candidates <- edges[setdiff(case.edge, unlist(noncase.edges)), ]
 
-  # unique edges in neighborhood
-  n.path.data <- edges[unique(unlist(n.path.edges.select)), ]
+  # Pump 5 Marlborough Mews exception
+  if (nrow(candidates) > 1) {
+    # unique edges in neighborhood
+    n.path.data <- edges[unique(unlist(n.path.edges.select)), ]
 
-  # presence of just one end point indicates a dead end, periphery case
-  audit <- lapply(seq_len(nrow(candidates)), function(i) {
-    test1 <- candidates[i, "node1"] %in% n.path.data$node1 &
-             candidates[i, "node1"] %in% n.path.data$node2
-    test2 <- candidates[i, "node2"] %in% n.path.data$node1 &
-             candidates[i, "node2"] %in% n.path.data$node2
-    # direct path exception
-    if (all(c(test1, test2) == FALSE)) {
-      test1A <- sum(candidates[i, "node1"] == n.path.data$node1)
-      test1B <- sum(candidates[i, "node1"] == n.path.data$node2)
-      test2A <- sum(candidates[i, "node2"] == n.path.data$node1)
-      test2B <- sum(candidates[i, "node2"] == n.path.data$node2)
-      c(any(c(test1A, test1B) == 2), any(c(test2A, test2B) == 2))
-    } else c(test1, test2)
-  })
+    # presence of just one end point indicates a dead end, periphery case
+    audit <- lapply(seq_len(nrow(candidates)), function(i) {
+      test1 <- candidates[i, "node1"] %in% n.path.data$node1 &
+               candidates[i, "node1"] %in% n.path.data$node2
+      test2 <- candidates[i, "node2"] %in% n.path.data$node1 &
+               candidates[i, "node2"] %in% n.path.data$node2
+      # direct path exception
+      if (all(c(test1, test2) == FALSE)) {
+        test1A <- sum(candidates[i, "node1"] == n.path.data$node1)
+        test1B <- sum(candidates[i, "node1"] == n.path.data$node2)
+        test2A <- sum(candidates[i, "node2"] == n.path.data$node1)
+        test2B <- sum(candidates[i, "node2"] == n.path.data$node2)
+        c(any(c(test1A, test1B) == 2), any(c(test2A, test2B) == 2))
+      } else c(test1, test2)
+    })
 
-  # case is (x1, y1) or (x2, y2)
-  endptID <- vapply(audit, function(x) which(x == FALSE), integer(1L))
+    # case is (x1, y1) or (x2, y2)
+    endptID <- vapply(audit, function(x) which(x == FALSE), integer(1L))
 
-  endpt.paths <- lapply(candidates.id, function(x) {
-    edges[n.path.edges.select[[x]], ]
-  })
+    endpt.paths <- lapply(candidates.id, function(x) {
+      edges[n.path.edges.select[[x]], ]
+    })
 
-  path.order.check <- vapply(seq_along(endpt.paths), function(i) {
-    pathOrderCheck(endpt.paths[[i]], endptID[i])
-  }, logical(1L))
+    path.order.check <- vapply(seq_along(endpt.paths), function(i) {
+      pathOrderCheck(endpt.paths[[i]], endptID[i])
+    }, logical(1L))
 
-  out.of.order <- which(path.order.check == FALSE)
+    out.of.order <- which(path.order.check == FALSE)
 
-  endpt.pathsB <- lapply(out.of.order, function(x) {
-    pathOrder(endpt.paths[[x]], endptID[x])
-  })
+    endpt.pathsB <- lapply(out.of.order, function(x) {
+      pathOrder(endpt.paths[[x]], endptID[x])
+    })
 
-  endpt.paths[out.of.order] <- endpt.pathsB
+    endpt.paths[out.of.order] <- endpt.pathsB
+  } else {
+    endpt.paths <- list(candidates)
+  }
 
   parallel::mclapply(seq_along(endpt.paths), function(i) {
     milePostCoordinates(endpt.paths[[i]], pump.select, milepost.interval)
