@@ -28,17 +28,6 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 0.1,
 
   real.road.names <- unique(cholera::roads$name)
 
-  if (is.null(unit) == FALSE) {
-    if (unit %in% c("meter", "yard") == FALSE)
-      stop('If specified, "unit" must either be "meter" or "yard".')
-  }
-
-  if (is.null(cases) == FALSE) {
-    if (cases %in% c("anchors", "all") == FALSE) {
-      stop('If specified, "cases" must either be "anchors" or "all".')
-    }
-  }
-
   if (is.character(road.name) == FALSE) {
     stop("Road name must be a character string.")
   } else if (road.name %in% real.road.names == FALSE) {
@@ -50,6 +39,22 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 0.1,
       stop(error.msg)
     } else name <- case.name
   } else name <- road.name
+
+  if (is.null(cases) == FALSE) {
+    if (cases %in% c("anchors", "all") == FALSE) {
+      stop('If specified, "cases" must either be "anchors" or "all".')
+    }
+  }
+
+  if (is.null(unit) == FALSE) {
+    if (unit %in% c("meter", "yard") == FALSE)
+      stop('If specified, "unit" must either be "meter" or "yard".')
+  }
+
+  if (time.unit %in% c("minute", "hour", "second") == FALSE) {
+    stop('"time.unit" must be "hour", "minute" or "second".')
+  }
+
 
   selected.road <- cholera::roads[cholera::roads$name == name, "street"]
   roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)

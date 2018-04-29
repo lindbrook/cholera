@@ -105,11 +105,6 @@ pathData <- function(dat, weighted, case.set, cores) {
          !is.na(cholera::sim.ortho.proj$road.segment)
   AE.cases <- cholera::sim.ortho.proj[sel, "case"]
 
-  # AE.nodes <- nodes[nodes$anchor %in% AE.cases, "node"]
-  # AE.pump.node <- nodes[nodes$pump == 2, "node"]
-
-  ## ##
-
   paths <- function(x) {
     parallel::mclapply(x, function(a) {
       case.node <- nodes[nodes$anchor == a, "node"]

@@ -27,16 +27,10 @@ streetNumberLocator <- function(road.number, zoom = FALSE, radius = 1,
 
   if (is.numeric(road.number) == FALSE) {
     stop("road.number must be numeric.")
-  }
-
-  if (is.null(unit) == FALSE) {
-    if (unit %in% c("meter", "yard") == FALSE) {
-      stop('If specified, "unit" must either be "meter" or "yard".')
+  } else {
+    if (road.number %in% unique(cholera::roads$street) == FALSE) {
+      stop("road.number must lie between 1 and 528.")
     }
-  }
-
-  if (road.number %in% unique(cholera::roads$street) == FALSE) {
-    stop("road.number must lie between 1 and 528.")
   }
 
   if (is.null(cases) == FALSE) {
@@ -45,7 +39,18 @@ streetNumberLocator <- function(road.number, zoom = FALSE, radius = 1,
     }
   }
 
+  if (is.null(unit) == FALSE) {
+    if (unit %in% c("meter", "yard") == FALSE) {
+      stop('If specified, "unit" must either be "meter" or "yard".')
+    }
+  }
+
+  if (time.unit %in% c("minute", "hour", "second") == FALSE) {
+    stop('"time.unit" must be "hour", "minute" or "second".')
+  }
+
   roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)
+
   rng <- lapply(cholera::roads[cholera::roads$street == road.number,
     c("x", "y")], range)
   x.rng <- c(min(rng$x) - radius, max(rng$x) + radius)
