@@ -1,9 +1,10 @@
-#' Compute coordinates and angles of walking path mileposts.
+#' Compute walking path mileposts.
 #'
+#' Return coordinates, post labels and post angles.
 #' @param pump.select Numeric.
 #' @param milepost.interval Numeric. Milepost interval in meters.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
-#' @return An R list.
+#' @return A list of data frames.
 #' @export
 
 milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
@@ -221,7 +222,7 @@ milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
   endpt.paths[out.of.order] <- endpt.pathsB
 
   parallel::mclapply(seq_along(endpt.paths), function(i) {
-    milePostCoordinates(endpt.paths[[i]], milepost.interval)
+    milePostCoordinates(endpt.paths[[i]], pump.select, milepost.interval)
   }, mc.cores = cores)
 }
 
@@ -267,7 +268,7 @@ pathOrder <- function(dat, ep) {
 
 ## Compute mileposts ##
 
-milePostCoordinates <- function(dat, milepost.interval) {
+milePostCoordinates <- function(dat, pump.select, milepost.interval) {
   case.distance <- cholera::unitMeter(cumsum(rev(dat$d)), "meter")
   total.distance <- case.distance[length(case.distance)]
   mile.post <- seq(0, total.distance, milepost.interval)
@@ -344,8 +345,8 @@ milePostCoordinates <- function(dat, milepost.interval) {
       post.y <- edge.data[1, "y"] - abs(h * sin(theta))
     }
 
-    data.frame(x = post.x, y = post.y, angle = theta * 180L / pi,
-      row.names = NULL)
+    data.frame(pump = pump.select, post = mile.post[-1], x = post.x,
+      y = post.y, angle = theta * 180L / pi, row.names = NULL)
   })
 
   do.call(rbind, post.coordinates)

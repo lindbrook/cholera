@@ -2,7 +2,7 @@
 % Please edit documentation in R/timePosts.R
 \name{timePosts}
 \alias{timePosts}
-\title{Compute coordinates and angles of walking path timeposts.}
+\title{Compute walking path timeposts.}
 \usage{
 timePosts(pump.select, timepost.interval = 60, walking.speed = 5,
   multi.core = FALSE)
@@ -17,8 +17,8 @@ timePosts(pump.select, timepost.interval = 60, walking.speed = 5,
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
 \value{
-An R list.
+A list of data frames.
 }
 \description{
-Compute coordinates and angles of walking path timeposts.
+Return coordinates, post labels and post angles.
 }

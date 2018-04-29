@@ -2,7 +2,7 @@
 % Please edit documentation in R/milePosts.R
 \name{milePosts}
 \alias{milePosts}
-\title{Compute coordinates and angles of walking path mileposts.}
+\title{Compute walking path mileposts.}
 \usage{
 milePosts(pump.select, milepost.interval = 50, multi.core = FALSE)
 }
@@ -14,8 +14,8 @@ milePosts(pump.select, milepost.interval = 50, multi.core = FALSE)
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
 \value{
-An R list.
+A list of data frames.
 }
 \description{
-Compute coordinates and angles of walking path mileposts.
+Return coordinates, post labels and post angles.
 }

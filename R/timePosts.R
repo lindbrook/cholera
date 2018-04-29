@@ -1,10 +1,11 @@
-#' Compute coordinates and angles of walking path timeposts.
+#' Compute walking path timeposts.
 #'
+#' Return coordinates, post labels and post angles.
 #' @param pump.select Numeric.
 #' @param timepost.interval Numeric. Timepost interval in seconds.
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
-#' @return An R list.
+#' @return A list of data frames.
 #' @export
 
 timePosts <- function(pump.select, timepost.interval = 60, walking.speed = 5,
@@ -224,13 +225,15 @@ timePosts <- function(pump.select, timepost.interval = 60, walking.speed = 5,
   endpt.paths[out.of.order] <- endpt.pathsB
 
   parallel::mclapply(endpt.paths, function(x) {
-    timePostCoordinates(x, timepost.interval, walking.speed)
+    timePostCoordinates(x, pump.select, timepost.interval, walking.speed)
   }, mc.cores = cores)
 }
 
 ## Compute timeposts ##
 
-timePostCoordinates <- function(dat, timepost.interval, walking.speed) {
+timePostCoordinates <- function(dat, pump.select, timepost.interval,
+  walking.speed) {
+
   case.time <- cholera::distanceTime(cumsum(rev(dat$d)), speed = walking.speed)
   total.time <- cholera::distanceTime(sum(dat$d), speed = walking.speed)
   time.post <- seq(0, total.time, timepost.interval)
@@ -309,8 +312,8 @@ timePostCoordinates <- function(dat, timepost.interval, walking.speed) {
       post.y <- edge.data[1, "y"] - abs(h * sin(theta))
     }
 
-    data.frame(x = post.x, y = post.y, angle = theta * 180L / pi,
-      row.names = NULL)
+    data.frame(pump = pump.select, post = time.post[-1], x = post.x,
+      y = post.y, angle = theta * 180L / pi, row.names = NULL)
   })
 
   do.call(rbind, post.coordinates)
