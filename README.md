@@ -1,20 +1,19 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.4.0.9019-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
-
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.4.0.9020-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 cholera: amend, augment and aid analysis of John Snow's 1854 cholera map
 ------------------------------------------------------------------------
 
 ### package features
 
 -   Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
--   "Unstacks" the data in two ways to improve analysis and visualization.
+-   "Unstacks" the data in two ways to make analysis and visualization easier and more meaningful.
 -   Computes and visualizes "pump neighborhoods" based on Euclidean (Voronoi tessellation) and walking distance.
 -   Ability to overlay graphical features like kernel density, Voronoi diagrams, Snow's Broad Street neighborhood, and notable landmarks (John Snow's residence, the Lion Brewery, etc.).
 -   Includes a variety of functions to highlight specific cases, roads, pumps and walking paths.
 -   Appends street names to the roads data set.
--   Includes the revised pump data used in the second version of Snow's map from the Vestry report. This includes the "correct" location of the Broad Street pump.
+-   Includes the revised pump data used in the second version of Snow's map from the Vestry report, which includes the "correct" location of the Broad Street pump.
 -   Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
 
 ### background
