@@ -9,9 +9,9 @@
 #' @param add.pump Logical. Include nearby pumps.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param highlight Logical. Highlight selected road.
-#' @param unit Character. Unit of measurement: "meter" or "yard". NULL returns the map's native scale.
+#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @param time.unit Character. "hour", "minute", or "second".
-#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
+#' @param walking.speed Numeric. Walking speed in km/hr.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
 #' @import graphics
@@ -46,15 +46,13 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 0.1,
     }
   }
 
-  if (is.null(unit) == FALSE) {
-    if (unit %in% c("meter", "yard") == FALSE)
-      stop('If specified, "unit" must either be "meter" or "yard".')
+  if (unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('"unit" must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("minute", "hour", "second") == FALSE) {
     stop('"time.unit" must be "hour", "minute" or "second".')
   }
-
 
   selected.road <- cholera::roads[cholera::roads$name == name, "street"]
   roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)
@@ -145,7 +143,7 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 0.1,
     nominal.time <- paste(round(est.time, 1), "secs.")
   }
 
-  if (is.null(unit)) {
+  if (unit == "native") {
     subtitle <- paste(round(street.length, 1), "units;", nominal.time)
   } else if (unit == "meter") {
     subtitle <- paste(round(street.length, 1), "meters;", nominal.time)

@@ -5,7 +5,9 @@
 #' @param zoom Logical. Default is FALSE.
 #' @param radius Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.
 #' @param cases Character. Plot cases: NULL, "anchors" or "all".
-#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
+#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
+#' @param time.unit Character. "hour", "minute", or "second".
+#' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param title Logical. Print title.
 #' @param subtitle Logical. Print subtitle.
 #' @seealso \code{\link{road.segments}}
@@ -16,10 +18,11 @@
 #' @examples
 #' segmentLocator("190-1")
 #' segmentLocator("216-1")
-#' segmentLocator("216-1", unit = "meter")
+#' segmentLocator("216-1", unit = "yard")
 
 segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
-  unit = NULL, title = TRUE, subtitle = TRUE) {
+  unit = "meter", time.unit = "minute", walking.speed = 5, title = TRUE,
+  subtitle = TRUE) {
 
   if (is.character(id) == FALSE) {
     stop('"id" must be a character.')
@@ -27,6 +30,10 @@ segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
 
   if (id %in% cholera::road.segments$id == FALSE) {
     stop("Invalid segment ID. See cholera::road.segments.")
+  }
+
+  if (unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('"unit" must be "meter", "yard" or "native".')
   }
 
   st <- cholera::road.segments[cholera::road.segments$id == id, ]
@@ -83,13 +90,26 @@ segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
 
   if (title) title(main = paste0(st$name, ": Segment # ", id))
 
+  segment.length <- cholera::segmentLength(id, unit)
+
+  est.time <- cholera::distanceTime(cholera::segmentLength(id),
+    unit = time.unit, speed = walking.speed)
+
+  if (time.unit == "hour") {
+    nominal.time <- paste(round(est.time, 1), "hr.")
+  } else if (time.unit == "minute") {
+    nominal.time <- paste(round(est.time, 1), "mins.")
+  } else if (time.unit == "second") {
+    nominal.time <- paste(round(est.time, 1), "secs.")
+  }
+
   if (subtitle) {
-    if (is.null(unit)) {
-      title(sub = paste(round(segmentLength(id, unit = unit), 2), "units"))
+    if (unit == "native") {
+      title(sub = paste(round(segment.length, 2), "units;", nominal.time))
     } else if (unit == "meter") {
-      title(sub = paste(round(segmentLength(id, unit = unit), 2), "meters"))
+      title(sub = paste(round(segment.length, 2), "meters;", nominal.time))
     } else if (unit == "yard") {
-      title(sub = paste(round(segmentLength(id, unit = unit), 2), "yards"))
+      title(sub = paste(round(segment.length, 2), "yards;", nominal.time))
     }
   }
 }

@@ -4,12 +4,12 @@
 \alias{streetLength}
 \title{Compute length of selected street.}
 \usage{
-streetLength(road = "Oxford Street", unit = NULL)
+streetLength(road = "Oxford Street", unit = "meter")
 }
 \arguments{
 \item{road}{Character or Numeric. Road name or number. For names, the function tries to correct for case and to remove extra spaces.}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
+\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 }
 \value{
 An R vector of length one.
@@ -20,7 +20,7 @@ Compute length of selected street.
 \examples{
 streetLength("Oxford Street")
 streetLength("oxford street")
-streetLength("oxford street", unit = "meter")
+streetLength("oxford street", unit = "yard")
 }
 \seealso{
 \code{\link{roads}}, code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}

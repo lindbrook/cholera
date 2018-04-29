@@ -5,7 +5,8 @@
 \title{Locate road segment by ID.}
 \usage{
 segmentLocator(id, zoom = FALSE, radius = 0.5, cases = "anchors",
-  unit = NULL, title = TRUE, subtitle = TRUE)
+  unit = "meter", time.unit = "minute", walking.speed = 5, title = TRUE,
+  subtitle = TRUE)
 }
 \arguments{
 \item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
@@ -16,7 +17,11 @@ segmentLocator(id, zoom = FALSE, radius = 0.5, cases = "anchors",
 
 \item{cases}{Character. Plot cases: NULL, "anchors" or "all".}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
+\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
+
+\item{time.unit}{Character. "hour", "minute", or "second".}
+
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{title}{Logical. Print title.}
 
@@ -35,7 +40,7 @@ Highlights the selected road segment and its cases.
 \examples{
 segmentLocator("190-1")
 segmentLocator("216-1")
-segmentLocator("216-1", unit = "meter")
+segmentLocator("216-1", unit = "yard")
 }
 \seealso{
 \code{\link{road.segments}}

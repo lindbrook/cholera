@@ -26,11 +26,11 @@ streetNameLocator(road.name, zoom = FALSE, radius = 0.1,
 
 \item{highlight}{Logical. Highlight selected road.}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". NULL returns the map's native scale.}
+\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
-\item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 }
 \value{
 A base R graphics plot.

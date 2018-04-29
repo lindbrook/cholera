@@ -1,19 +1,18 @@
 #' Compute length of selected street.
 #'
 #' @param road Character or Numeric. Road name or number. For names, the function tries to correct for case and to remove extra spaces.
-#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
+#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @return  An R vector of length one.
 #' @seealso \code{\link{roads}}, code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
 #' @export
 #' @examples
 #' streetLength("Oxford Street")
 #' streetLength("oxford street")
-#' streetLength("oxford street", unit = "meter")
+#' streetLength("oxford street", unit = "yard")
 
-streetLength <- function(road = "Oxford Street", unit = NULL) {
-  if (is.null(unit) == FALSE) {
-    if (unit %in% c("meter", "yard") == FALSE)
-      stop('If specified, "unit" must either be "meter" or "yard".')
+streetLength <- function(road = "Oxford Street", unit = "meter") {
+  if (unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('"unit" must be "meter", "yard" or "native".')
   }
 
   if (is.character(road)) {
@@ -41,7 +40,7 @@ streetLength <- function(road = "Oxford Street", unit = NULL) {
                       as.matrix(dat[dat$id == i, c("x2", "y2")])))
   }, numeric(1L))
 
-  if (is.null(unit)) {
+  if (unit == "native") {
     sum(distances)
   } else if (unit == "yard") {
     cholera::unitMeter(sum(distances), "yard")
