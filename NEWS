@@ -1,3 +1,11 @@
+cholera 0.4.0.9020
+==================
+
+- add exception for pump 5 Marlborough Mews in milePosts() and timePosts().
+- set meter as default distance:
+  segmentLength(), segmentLocator(), streetLength(), streetNameLocator().
+
+
 cholera 0.4.0.9019
 ==================
 
