@@ -187,7 +187,7 @@ timePosts <- function(pump.select, timepost.interval = 60, walking.speed = 5,
   candidates <- edges[setdiff(case.edge, unlist(noncase.edges)), ]
 
   # Pump 5 Marlborough Mews exception
-  if (nrow(candidates) > 1) {
+  if (length(unlist(noncase.edges)) > 0) {
     # unique edges in neighborhood
     n.path.data <- edges[unique(unlist(n.path.edges.select)), ]
 
