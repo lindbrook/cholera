@@ -1,0 +1,372 @@
+#' Add walking path timeposts.
+#'
+#' Return coordinates, post labels and post angles: in-progress prototype.
+#' @param pump.subset Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".
+#' @param pump.select Numeric. Numeric vector of pumps to define pump neighborhoods (i.e. the "population"). Negative selection possible. NULL selects all pumps.
+#' @param timepost.interval Numeric. Timepost interval in seconds.
+#' @param walking.speed Numeric. Walking speed in km/hr.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
+#' @return A list of data frames.
+#' @export
+
+addTimePosts <- function(pump.subset = NULL, pump.select = NULL,
+  timepost.interval = 60, walking.speed = 5, multi.core = FALSE) {
+
+  cores <- multiCore(multi.core)
+  x <- cholera::neighborhoodWalking(multi.core = cores)
+
+  auditEdge <- function(p) {
+    vapply(seq_along(p[-1]), function(i) {
+      ab <- edges$node1 %in% p[i] &
+            edges$node2 %in% p[i + 1]
+      ba <- edges$node2 %in% p[i] &
+            edges$node1 %in% p[i + 1]
+      which(ab | ba)
+    }, numeric(1L))
+  }
+
+  checkSegment <- function(s, sub.edge = FALSE) {
+    if (sub.edge) {
+      s.data <- edges[edges$id2 == s, ]
+    } else {
+      s.data <- edges[edges$id == s, ]
+    }
+    case.node <- c(s.data[1, "node1"], s.data[nrow(s.data), "node2"])
+    lapply(case.node, function(node) {
+      igraph::distances(dat$g, node, p.node, weights = edges$d)
+    })
+  }
+
+  wholeSegments <- function(segs) {
+    distances <- parallel::mclapply(segs, checkSegment, mc.cores = x$cores)
+    audit <- lapply(distances, function(d) {
+      unique(vapply(d, which.min, integer(1L)))
+    })
+
+    id <- vapply(audit, function(x) length(x) == 1, logical(1L))
+    out <- segs[id]
+    out.pump <- p.name[unlist(audit[id])]
+    pump <- p.name[sort(unique(unlist(audit[id])))]
+    out <- lapply(pump, function(p) out[out.pump %in% p])
+    names(out) <- pump
+    out
+  }
+
+  splitSegments <- function(seg) {
+    s.data <- edges[edges$id == seg, ]
+    seg.df <- data.frame(x = c(s.data[1, "x1"], s.data[nrow(s.data), "x2"]),
+                         y = c(s.data[1, "y1"], s.data[nrow(s.data), "y2"]))
+
+    ols <- stats::lm(y ~ x, data = seg.df)
+    segment.slope <- stats::coef(ols)[2]
+    theta <- atan(segment.slope)
+    hypotenuse <- c(stats::dist(seg.df))
+    hypotenuse.breaks <- seq(0, hypotenuse, x$metric)
+
+    distances <- lapply(hypotenuse.breaks, function(h) {
+      candidates.x <- h * cos(theta)
+      candidates.y <- h * sin(theta)
+
+      EW <- which.min(c(s.data[1, "x1"], s.data[nrow(s.data), "x2"]))
+
+      if (EW == 1) {
+        test.x <- seg.df[1, "x"] + candidates.x
+        test.y <- seg.df[1, "y"] + candidates.y
+      } else {
+        test.x <- seg.df[2, "x"] + candidates.x
+        test.y <- seg.df[2, "y"] + candidates.y
+      }
+
+      case.node <- paste0(test.x, "-", test.y)
+      seg.edge <- data.frame(x1 = c(s.data[1, "x1"], test.x),
+                             y1 = c(s.data[1, "y1"], test.y),
+                             x2 = c(test.x, s.data[nrow(s.data), "x2"]),
+                             y2 = c(test.y, s.data[nrow(s.data), "y2"]),
+                             node1 = c(s.data[1, "node1"], case.node),
+                             node2 = c(case.node, s.data[nrow(s.data),
+                               "node2"]),
+                             id2 = c(s.data$id2[1], paste0(seg, "b")),
+                             row.names = NULL)
+
+      seg.info <- s.data[rep(1, each = nrow(seg.edge)),
+        c("street", "id", "name")]
+      seg.edge <- cbind(seg.info, seg.edge, row.names = NULL)
+      seg.edge$d <- sqrt((seg.edge$x1 - seg.edge$x2)^2 +
+                         (seg.edge$y1 - seg.edge$y2)^2)
+
+      edges2 <- rbind(seg.edge, edges[edges$id != seg, ])
+      edge.list <- edges2[, c("node1", "node2")]
+      g2 <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
+      stats::setNames(c(igraph::distances(g2, case.node, p.node,
+        weights = edges2$d)), p.name)
+    })
+
+    p <- vapply(distances, function(x) {
+      as.numeric(names(which.min((x))))
+    }, numeric(1L))
+
+    data.frame(id = seg, cutpoint = hypotenuse.breaks, pump = p,
+      stringsAsFactors = FALSE)
+  }
+
+  cutpointValues <- function(dat) {
+    rle.audit <- lapply(dat, function(x) rle(x$pump))
+    lapply(seq_along(rle.audit), function(i) {
+      rle.obs <- rle.audit[[i]]
+      cutpoint.obs <- dat[[i]]
+      sel <- rle.obs$lengths[1]
+      if (length(rle.obs$lengths) != 1) {
+        c(cutpoint.obs$cutpoint[sel], cutpoint.obs$cutpoint[sel + 1])
+      } else {
+        c(cutpoint.obs$cutpoint[sel], cutpoint.obs$cutpoint[sel])
+      }
+    })
+  }
+
+  splitData <- function(dat, cutpoints) {
+    lapply(seq_along(dat), function(i) {
+      s.data <- edges[edges$id == dat[i], ]
+      seg.df <- data.frame(x = c(s.data[1, "x1"], s.data[nrow(s.data), "x2"]),
+                           y = c(s.data[1, "y1"], s.data[nrow(s.data), "y2"]))
+
+      ols <- stats::lm(y ~ x, data = seg.df)
+      segment.slope <- stats::coef(ols)[2]
+      theta <- atan(segment.slope)
+      h <- cutpoints[[i]]
+      candidates.x <- h * cos(theta)
+      candidates.y <- h * sin(theta)
+
+      EW <- which.min(seg.df$x)
+
+      if (EW == 1) {
+        x.cut <- seg.df$x[1] + candidates.x
+        y.cut <- seg.df$y[1] + candidates.y
+        data.frame(x = c(seg.df$x[1], x.cut, seg.df$x[2]),
+                   y = c(seg.df$y[1], y.cut, seg.df$y[2]))
+      } else {
+        x.cut <- seg.df$x[2] + candidates.x
+        y.cut <- seg.df$y[2] + candidates.y
+        data.frame(x = c(seg.df$x[2], x.cut, seg.df$x[1]),
+                   y = c(seg.df$y[2], y.cut, seg.df$y[1]))
+      }
+    })
+  }
+
+  ## Data ##
+
+  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
+  edges <- dat$edges
+  nodes <- dat$nodes
+  p.data <- dat$nodes.pump
+
+  if (is.null(x$pump.select)) {
+    p.node <- p.data$node
+    p.name <- p.data$pump
+  } else {
+    if (all(x$pump.select > 0)) {
+      p.data <- p.data[p.data$pump %in% x$pump.select, ]
+    } else if (all(x$pump.select < 0)) {
+      p.data <- p.data[p.data$pump %in% abs(x$pump.select) == FALSE, ]
+    }
+    p.node <- p.data$node
+    p.name <- p.data$pump
+  }
+
+  n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
+    lapply(neighborhood, auditEdge)
+  }, mc.cores = x$cores)
+
+  if (!is.null(pump.subset)) {
+    # neighborhood paths by edge
+    n.path.edges.subset <- n.path.edges[[paste(pump.subset)]]
+
+    # path's case edge and path's other, remaining edges
+    case.edge <- vapply(n.path.edges.subset, function(x) x[1], numeric(1L))
+    noncase.edges <- lapply(n.path.edges.subset, function(x) x[-1])
+
+  } else {
+    # neighborhood paths by edge
+    case.edge <- lapply(n.path.edges, function(n) {
+      vapply(n, function(x) x[1], numeric(1L))
+    })
+
+    # path's case edge and path's other, remaining edges
+    noncase.edges <- lapply(n.path.edges, function(n) {
+      lapply(n, function(x) x[-1])
+    })
+  }
+
+
+
+
+
+  candidates.id <- lapply(seq_along(case.edge), function(i) {
+    which(case.edge[[i]] %in% unlist(noncase.edges[[i]]) == FALSE)
+  })
+
+  candidates <- lapply(seq_along(case.edge), function(i) {
+    edges[setdiff(case.edge[[i]], unlist(noncase.edges[[i]])), ]
+  })
+
+  candidates.id <- stats::setNames(candidates.id, names(x$paths))
+  candidates <- stats::setNames(candidates, names(x$paths))
+
+  p5.test <- vapply(noncase.edges, function(x) {
+    length(unlist(x)) != 0
+  }, logical(1L))
+
+  n.path.data <- edges[unique(unlist(n.path.edges)), ]
+
+  audit <- lapply(names(p5.test)[p5.test], function(nm) {
+    cs <- candidates[[nm]]
+    lapply(seq_len(nrow(cs)), function(i) {
+      test1 <- cs[i, "node1"] %in% n.path.data$node1 &
+               cs[i, "node1"] %in% n.path.data$node2
+      test2 <- cs[i, "node2"] %in% n.path.data$node1 &
+               cs[i, "node2"] %in% n.path.data$node2
+      # direct path exception
+      if (all(c(test1, test2) == FALSE)) {
+        test1A <- sum(cs[i, "node1"] == n.path.data$node1)
+        test1B <- sum(cs[i, "node1"] == n.path.data$node2)
+        test2A <- sum(cs[i, "node2"] == n.path.data$node1)
+        test2B <- sum(cs[i, "node2"] == n.path.data$node2)
+        c(any(c(test1A, test1B) == 2), any(c(test2A, test2B) == 2))
+      } else c(test1, test2)
+    })
+  })
+
+  audit <- stats::setNames(audit, names(p5.test)[p5.test])
+
+  endptID <- lapply(audit, function(a) {
+    vapply(a, function(x) which(x == FALSE), integer(1L))
+  })
+
+  endpt.paths <- lapply(names(audit), function(nm) {
+    c.id <- candidates.id[[nm]]
+    npe <- n.path.edges[[nm]]
+    lapply(c.id, function(x) edges[npe[[x]], ])
+  })
+
+  endpt.paths <- stats::setNames(endpt.paths, names(audit))
+
+  path.order.check <- lapply(names(audit), function(nm) {
+    ep.id <- endptID[[nm]]
+    ep <- endpt.paths[[nm]]
+    vapply(seq_along(ep), function(i) {
+      pathOrderCheck(ep[[i]], ep.id[i])
+    }, logical(1L))
+  })
+
+  out.of.order <- lapply(path.order.check, function(check) {
+    which(check == FALSE)
+  })
+
+  out.of.order <- stats::setNames(out.of.order, names(audit))
+  out.of.order.names <- names(vapply(out.of.order, length, integer(1L)))
+
+  endpt.pathsB <- lapply(out.of.order.names, function(nm) {
+    dat <- endpt.paths[[nm]]
+    id <- endptID[[nm]]
+    lapply(seq_along(dat), function(i) pathOrder(dat[[i]], id[[i]]))
+  })
+
+  endpt.paths[out.of.order.names] <- endpt.pathsB
+
+  out <- parallel::mclapply(names(endpt.paths), function(nm) {
+    dat <- endpt.paths[[nm]]
+    lapply(dat, timePostCoordinates, pump.select = as.numeric(nm),
+      timepost.interval, walking.speed)
+  }, mc.cores = 1L)
+
+  stats::setNames(out, names(endpt.paths))
+}
+
+## Compute timeposts ##
+
+timePostCoordinates <- function(dat, pump.select, timepost.interval,
+  walking.speed) {
+
+  case.time <- cholera::distanceTime(cumsum(rev(dat$d)), speed = walking.speed)
+  total.time <- cholera::distanceTime(sum(dat$d), speed = walking.speed)
+  time.post <- seq(0, total.time, timepost.interval)
+
+  if (max(time.post) > max(case.time)) {
+    time.post <- time.post[-length(time.post)]
+  }
+
+  bins <- data.frame(lo = c(0, case.time[-length(case.time)]),
+                     hi = case.time)
+
+  edge.select <- vapply(time.post[-1], function(x) {
+    which(vapply(seq_len(nrow(bins)), function(i) {
+      x >= bins[i, "lo"] & x < bins[i, "hi"]
+    }, logical(1L)))
+  }, integer(1L))
+
+  dat.rev <- lapply(rev(dat$id2), function(x) {
+    dat[dat$id2 == x, ]
+  })
+
+  dat.rev <- do.call(rbind, dat.rev)
+
+  post.coordinates <- lapply(seq_along(edge.select), function(i) {
+    sel.data <- dat.rev[edge.select[i], ]
+    edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
+                            y = c(sel.data$y1, sel.data$y2))
+
+    ols <- stats::lm(y ~ x, data = edge.data)
+    edge.slope <- stats::coef(ols)[2]
+    edge.intercept <- stats::coef(ols)[1]
+    theta <- atan(edge.slope)
+    h <- (time.post[-1][i] - bins[edge.select[i], "lo"]) /
+      cholera::distanceTime(1, speed = walking.speed)
+
+    delta <- edge.data[2, ] - edge.data[1, ]
+
+    # Quadrant I
+    if (all(delta > 0)) {
+      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+
+    # Quadrant II
+    } else if (delta[1] < 0 & delta[2] > 0) {
+      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+
+    # Quadrant III
+    } else if (all(delta < 0)) {
+      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+
+    # Quadrant IV
+    } else if (delta[1] > 0 & delta[2] < 0) {
+      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+
+    # I:IV
+    } else if (delta[1] > 0 & delta[2] == 0) {
+      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+      post.y <- edge.data[1, "y"]
+
+    # I:II
+    } else if (delta[1] == 0 & delta[2] > 0) {
+      post.x <- edge.data[1, "x"]
+      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+
+    # II:III
+    } else if (delta[1] < 0 & delta[2] == 0) {
+      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+      post.y <- edge.data[1, "y"]
+
+    # III:IV
+    } else if (delta[1] == 0 & delta[2] < 0) {
+      post.x <- edge.data[1, "x"]
+      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+    }
+
+    data.frame(pump = pump.select, post = time.post[-1], x = post.x,
+      y = post.y, angle = theta * 180L / pi, row.names = NULL)
+  })
+
+  do.call(rbind, post.coordinates)
+}
