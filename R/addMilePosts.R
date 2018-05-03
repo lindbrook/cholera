@@ -1,7 +1,6 @@
 #' Add walking path mileposts.
 #'
-#' in-progress prototype.
-#' Return coordinates, post labels and post angles.
+#' Return coordinates, post labels and post angles: in-progress prototype.
 #' @param pump.subset Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".
 #' @param pump.select Numeric. Numeric vector of pumps to define pump neighborhoods (i.e. the "population"). Negative selection possible. NULL selects all pumps.
 #' @param milepost.interval Numeric. Milepost interval in meters.
@@ -195,7 +194,6 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
       lapply(n, function(x) x[-1])
     })
   }
-
 
   candidates.id <- lapply(seq_along(case.edge), function(i) {
     which(case.edge[[i]] %in% unlist(noncase.edges[[i]]) == FALSE)
@@ -402,33 +400,4 @@ milePostCoordinates <- function(dat, pump.select, milepost.interval) {
   })
 
   do.call(rbind, post.coordinates)
-}
-
-multiCore <- function(x) {
-  if (is.logical(x)) {
-    if (x) {
-      cores <- parallel::detectCores()
-    } else {
-      if (is.numeric(x)) {
-        if (is.integer(x)) {
-          cores <- x
-        } else {
-          cores <- as.integer(x)
-        }
-      } else {
-        cores <- 1L
-      }
-    }
-  } else if (is.numeric(x)) {
-    obs.cores <- parallel::detectCores()
-    if (x > obs.cores) {
-      stop(paste0('For your system, "cores" must be <= ', obs.cores, "."))
-    }
-    if (is.integer(x)) {
-      cores <- x
-    } else {
-      cores <- as.integer(x)
-    }
-  }
-  cores
 }

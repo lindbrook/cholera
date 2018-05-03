@@ -20,6 +20,5 @@ addMilePosts(pump.subset = NULL, pump.select = NULL,
 A list of data frames.
 }
 \description{
-in-progress prototype.
-Return coordinates, post labels and post angles.
+Return coordinates, post labels and post angles: in-progress prototype.
 }
