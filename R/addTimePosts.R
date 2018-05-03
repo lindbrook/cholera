@@ -196,10 +196,6 @@ addTimePosts <- function(pump.subset = NULL, pump.select = NULL,
     })
   }
 
-
-
-
-
   candidates.id <- lapply(seq_along(case.edge), function(i) {
     which(case.edge[[i]] %in% unlist(noncase.edges[[i]]) == FALSE)
   })
@@ -276,7 +272,7 @@ addTimePosts <- function(pump.subset = NULL, pump.select = NULL,
     dat <- endpt.paths[[nm]]
     lapply(dat, timePostCoordinates, pump.select = as.numeric(nm),
       timepost.interval, walking.speed)
-  }, mc.cores = 1L)
+  }, mc.cores = cores)
 
   stats::setNames(out, names(endpt.paths))
 }

@@ -271,7 +271,7 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
     dat <- endpt.paths[[nm]]
     lapply(dat, milePostCoordinates, pump.select = as.numeric(nm),
       milepost.interval)
-  }, mc.cores = 1L)
+  }, mc.cores = cores)
 
   stats::setNames(out, names(endpt.paths))
 }
