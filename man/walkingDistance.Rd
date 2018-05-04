@@ -37,23 +37,21 @@ Compute the shortest walking distance between cases and/or pumps.
 The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
 }
 \examples{
-# path from case 1 to nearest pump.
+# distance from case 1 to nearest pump.
 walkingDistance(1)
 
-# path from case 1 to pump 6.
+# distance from case 1 to pump 6.
 walkingDistance(1, 6)
 
 # exclude pump 7 from consideration.
 walkingDistance(1, -7)
 
-# path from case 1 to case 6.
+# distance from case 1 to case 6.
 walkingDistance(1, 6, type = "cases")
 
-# path from pump 1 to pump 6.
+# distance from pump 1 to pump 6.
 walkingDistance(1, 6, type = "pumps")
 
-# Plot result
-plot(walkingDistance(1))
 }
 \seealso{
 \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
