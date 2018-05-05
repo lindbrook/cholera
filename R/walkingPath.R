@@ -385,14 +385,14 @@ print.walking_path <- function(x, ...) {
 #' @param x An object of class "walking_path" created by walkingPath().
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param add.milepost Logical.
+#' @param add.mileposts Logical.
 #' @param milepost.interval Numeric. Distance between posts in meters.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
 plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
-  add.milepost = FALSE, milepost.interval = 25, ...) {
+  add.mileposts = FALSE, milepost.interval = 25, ...) {
 
   if (class(x) != "walking_path") {
     stop('"x"\'s class needs to be "walking_path".')
@@ -563,7 +563,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     d.unit <- "yards;"
   }
 
-  if (add.milepost) {
+  if (add.mileposts) {
     path <- rev(x$path)
 
     path.edge <- data.frame(node1 = path[1:(length(path) - 1)],
@@ -596,10 +596,10 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
       if (start.node[i] == 1) {
         edge.seg <- data.frame(x = c(sel.data$x1, sel.data$x2),
-                                y = c(sel.data$y1, sel.data$y2))
+                               y = c(sel.data$y1, sel.data$y2))
       } else if (start.node[i] == 2) {
         edge.seg <- data.frame(x = c(sel.data$x2, sel.data$x1),
-                                y = c(sel.data$y2, sel.data$y1))
+                               y = c(sel.data$y2, sel.data$y1))
       }
 
       ols <- stats::lm(y ~ x, data = edge.seg)
