@@ -385,11 +385,15 @@ print.walking_path <- function(x, ...) {
 #' @param x An object of class "walking_path" created by walkingPath().
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
+#' @param add.milepost Logical.
+#' @param milepost.interval Numeric. Distance between posts in meters.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.walking_path <- function(x, zoom = TRUE, radius = 0.5, ...) {
+plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
+  add.milepost = FALSE, milepost.interval = 25, ...) {
+
   if (class(x) != "walking_path") {
     stop('"x"\'s class needs to be "walking_path".')
   }
@@ -559,6 +563,103 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5, ...) {
     d.unit <- "yards;"
   }
 
+  if (add.milepost) {
+    path <- rev(x$path)
+
+    path.edge <- data.frame(node1 = path[1:(length(path) - 1)],
+                            node2 = path[2:length(path)],
+                            stringsAsFactors = FALSE)
+
+    edge.data <- identifyEdges(path.edge, edges)
+    interval <- milepost.interval
+    case.distance <- cholera::unitMeter(cumsum(edge.data$d), "meter")
+    total.distance <- case.distance[length(case.distance)]
+    mile.post <- seq(0, total.distance, interval)
+
+    if (max(mile.post) > max(case.distance)) {
+      mile.post <- mile.post[-length(mile.post)]
+    }
+
+    edge.bins <- data.frame(lo = c(0, case.distance[-length(case.distance)]),
+                            hi = case.distance)
+
+    edge.id <- vapply(mile.post[-1], function(x) {
+      which(vapply(seq_len(nrow(edge.bins)), function(i) {
+        x >= edge.bins[i, "lo"] & x < edge.bins[i, "hi"]
+      }, logical(1L)))
+    }, integer(1L))
+
+    start.node <- edgeOrderCheck(edge.data, edges)
+
+    post.coordinates <- lapply(seq_along(edge.id), function(i) {
+      sel.data <- edge.data[edge.id[i], ]
+
+      if (start.node[i] == 1) {
+        edge.seg <- data.frame(x = c(sel.data$x1, sel.data$x2),
+                                y = c(sel.data$y1, sel.data$y2))
+      } else if (start.node[i] == 2) {
+        edge.seg <- data.frame(x = c(sel.data$x2, sel.data$x1),
+                                y = c(sel.data$y2, sel.data$y1))
+      }
+
+      ols <- stats::lm(y ~ x, data = edge.seg)
+      edge.slope <- stats::coef(ols)[2]
+      edge.intercept <- stats::coef(ols)[1]
+      theta <- atan(edge.slope)
+      h <- (mile.post[-1][i] - edge.bins[edge.id[i], "lo"]) /
+        cholera::unitMeter(1, "meter")
+
+      delta <- edge.seg[2, ] - edge.seg[1, ]
+
+      # Quadrant I
+      if (all(delta > 0)) {
+        post.x <- edge.seg[1, "x"] + abs(h * cos(theta))
+        post.y <- edge.seg[1, "y"] + abs(h * sin(theta))
+
+      # Quadrant II
+      } else if (delta[1] < 0 & delta[2] > 0) {
+        post.x <- edge.seg[1, "x"] - abs(h * cos(theta))
+        post.y <- edge.seg[1, "y"] + abs(h * sin(theta))
+
+      # Quadrant III
+      } else if (all(delta < 0)) {
+        post.x <- edge.seg[1, "x"] - abs(h * cos(theta))
+        post.y <- edge.seg[1, "y"] - abs(h * sin(theta))
+
+      # Quadrant IV
+      } else if (delta[1] > 0 & delta[2] < 0) {
+        post.x <- edge.seg[1, "x"] + abs(h * cos(theta))
+        post.y <- edge.seg[1, "y"] - abs(h * sin(theta))
+
+      # I:IV
+      } else if (delta[1] > 0 & delta[2] == 0) {
+        post.x <- edge.seg[1, "x"] + abs(h * cos(theta))
+        post.y <- edge.seg[1, "y"]
+
+      # I:II
+      } else if (delta[1] == 0 & delta[2] > 0) {
+        post.x <- edge.seg[1, "x"]
+        post.y <- edge.seg[1, "y"] + abs(h * sin(theta))
+
+      # II:III
+      } else if (delta[1] < 0 & delta[2] == 0) {
+        post.x <- edge.seg[1, "x"] - abs(h * cos(theta))
+        post.y <- edge.seg[1, "y"]
+
+      # III:IV
+      } else if (delta[1] == 0 & delta[2] < 0) {
+        post.x <- edge.seg[1, "x"]
+        post.y <- edge.seg[1, "y"] - abs(h * sin(theta))
+      }
+
+      data.frame(post = mile.post[-1][i], x = post.x, y = post.y,
+        angle = theta * 180L / pi, row.names = NULL)
+    })
+
+    coords <- do.call(rbind, post.coordinates)
+    points(coords[ c("x", "y")], pch = 22, bg = "white", cex = 0.75)
+  }
+
   title(sub = paste(distance, d.unit, nominal.time, "@", x$speed, "km/hr"))
 }
 
@@ -572,4 +673,31 @@ drawPath <- function(x, case.color) {
   n1 <- dat[1:(nrow(dat) - 1), ]
   n2 <- dat[2:nrow(dat), ]
   arrows(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2, length = 0.05)
+}
+
+identifyEdges <- function(dat, edges) {
+  out <- lapply(seq_len(nrow(dat)), function(i) {
+    test1 <- dat[i, "node1"] == edges$node1 &
+             dat[i, "node2"] == edges$node2
+    test2 <- dat[i, "node2"] == edges$node1 &
+             dat[i, "node1"] == edges$node2
+    if (any(test1)) {
+      edges[test1, ]
+    } else if (any(test2)) {
+      edges[test2, ]
+    } else {
+     stop("Error.")
+    }
+  })
+  do.call(rbind, out)
+}
+
+edgeOrderCheck <- function(dat, edges) {
+  vapply(seq_len(nrow(dat)), function(i) {
+    test1 <- dat[i, "node1"] == edges$node1 &
+             dat[i, "node2"] == edges$node2
+    test2 <- dat[i, "node2"] == edges$node1 &
+             dat[i, "node1"] == edges$node2
+    ifelse(any(test1), 1, ifelse(any(test2), 2, 0))
+  }, numeric(1L))
 }
