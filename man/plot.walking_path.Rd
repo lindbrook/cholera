@@ -5,7 +5,7 @@
 \title{Plot the walking distance between cases and/or pumps.}
 \usage{
 \method{plot}{walking_path}(x, zoom = TRUE, radius = 0.5,
-  add.mileposts = FALSE, milepost.interval = 25, ...)
+  unit.posts = NULL, unit.interval = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class "walking_path" created by walkingPath().}
@@ -14,9 +14,9 @@
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
-\item{add.mileposts}{Logical.}
+\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
 
-\item{milepost.interval}{Numeric. Distance between posts in meters.}
+\item{unit.interval}{Numeric. Intervals: meters fot mileposts, seconds for timeposts.}
 
 \item{...}{Additional plotting parameters.}
 }
