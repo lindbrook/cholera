@@ -390,6 +390,9 @@ print.walking_path <- function(x, ...) {
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
+#' @examples
+#' plot(walkingPath(1))
+#' plot(walkingPath(1), unit.posts = "distance")
 
 plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   unit.posts = NULL, unit.interval = NULL, ...) {

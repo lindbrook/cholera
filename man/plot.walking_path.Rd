@@ -26,3 +26,7 @@ A base R plot.
 \description{
 Plot the walking distance between cases and/or pumps.
 }
+\examples{
+plot(walkingPath(1))
+plot(walkingPath(1), unit.posts = "distance")
+}
