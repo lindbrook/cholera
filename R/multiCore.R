@@ -1,6 +1,6 @@
-#' Set or compute the number of cores for parallel::mclapply()
+#' Set or compute the number of cores for parallel::mclapply().
 #'
-#' @param x Logical or Numeric.
+#' @param x Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. Or, you can also specify the number of logical cores to use.
 #' @noRd
 
 multiCore <- function(x) {
