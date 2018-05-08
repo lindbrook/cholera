@@ -607,7 +607,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         }, logical(1L)))
       }, integer(1L))
 
-      start.node <- edgeOrderCheck(edge.data, path.edge)
+      start.node <- edgeOrder(edge.data, path.edge)
 
       post.coordinates <- lapply(seq_along(edge.id), function(i) {
         sel.data <- edge.data[edge.id[i], ]
@@ -704,7 +704,7 @@ identifyEdges <- function(dat, edges) {
   do.call(rbind, out)
 }
 
-edgeOrderCheck <- function(dat, path.edge) {
+edgeOrder <- function(dat, path.edge) {
   vapply(seq_len(nrow(dat)), function(i) {
     test1 <- dat[i, "node1"] == path.edge[i, "node1"] &
              dat[i, "node2"] == path.edge[i, "node2"]
