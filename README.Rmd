@@ -103,7 +103,7 @@ Read the package's vignettes. They expand on the concepts and data, and highligh
 [Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)   
 ["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.bars.html)   
 [Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)   
-[Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)
+[Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)   
 [Kernel Density Plot](https://cran.r-project.org/web/packages/cholera/vignettes/kernel.density.html)
 
 ### note
