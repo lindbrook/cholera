@@ -100,7 +100,7 @@ Read the package's vignettes. They expand on the concepts and data, and highligh
 [Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)
 [Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)
 ["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.fatalities.html)
-[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)
+[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)   
 [Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)
 
 ### note
