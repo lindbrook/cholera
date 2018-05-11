@@ -380,13 +380,13 @@ print.walking_path <- function(x, ...) {
   print(x[ c("path", "data")])
 }
 
-#' Plot the walking distance between cases and/or pumps.
+#' Plot the walking path between cases and/or pumps.
 #'
 #' @param x An object of class "walking_path" created by walkingPath().
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts.
-#' @param unit.interval Numeric. Intervals: meters fot mileposts, seconds for timeposts.
+#' @param unit.interval Numeric. Interval between posts: mileposts default is 25 meters; timepost default is 60 seconds.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export

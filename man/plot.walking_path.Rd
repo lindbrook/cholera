@@ -2,7 +2,7 @@
 % Please edit documentation in R/walkingPath.R
 \name{plot.walking_path}
 \alias{plot.walking_path}
-\title{Plot the walking distance between cases and/or pumps.}
+\title{Plot the walking path between cases and/or pumps.}
 \usage{
 \method{plot}{walking_path}(x, zoom = TRUE, radius = 0.5,
   unit.posts = NULL, unit.interval = NULL, ...)
@@ -16,7 +16,7 @@
 
 \item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
 
-\item{unit.interval}{Numeric. Intervals: meters fot mileposts, seconds for timeposts.}
+\item{unit.interval}{Numeric. Interval between posts: mileposts default is 25 meters; timepost default is 60 seconds.}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -24,7 +24,7 @@
 A base R plot.
 }
 \description{
-Plot the walking distance between cases and/or pumps.
+Plot the walking path between cases and/or pumps.
 }
 \examples{
 plot(walkingPath(1))
