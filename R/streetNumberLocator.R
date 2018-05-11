@@ -128,8 +128,9 @@ streetNumberLocator <- function(road.number, zoom = FALSE, radius = 1,
 
   street.length <- cholera::streetLength(road.number, unit)
 
-  est.time <- cholera::distanceTime(cholera::streetLength(road.number),
-    unit = time.unit, speed = walking.speed)
+  native.street.length <- cholera::streetLength(road.number, unit = "native")
+  est.time <- cholera::distanceTime(native.street.length, unit = time.unit,
+    speed = walking.speed)
 
   if (time.unit == "hour") {
     nominal.time <- paste(round(est.time, 1), "hr.")
