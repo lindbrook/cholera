@@ -12,7 +12,7 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   milepost.interval = 50, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
-  x <- cholera::neighborhoodWalking(multi.core = cores)
+  x <- cholera::neighborhoodWalking(pump.select, multi.core = cores)
 
   auditEdge <- function(p) {
     vapply(seq_along(p[-1]), function(i) {
@@ -20,8 +20,8 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
             edges$node2 %in% p[i + 1]
       ba <- edges$node2 %in% p[i] &
             edges$node1 %in% p[i + 1]
-      which(ab | ba)
-    }, numeric(1L))
+      edges[which(ab | ba), "id2"]
+    }, character(1L))
   }
 
   checkSegment <- function(s, sub.edge = FALSE) {
@@ -171,22 +171,28 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
     p.name <- p.data$pump
   }
 
+  # vector of nodes for the 321 observed anchor cases
   n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
     lapply(neighborhood, auditEdge)
   }, mc.cores = x$cores)
 
   if (!is.null(pump.subset)) {
     # neighborhood paths by edge
-    n.path.edges.subset <- n.path.edges[[paste(pump.subset)]]
+    n.path.edges.subset <- n.path.edges[paste(pump.subset)]
 
     # path's case edge and path's other, remaining edges
-    case.edge <- vapply(n.path.edges.subset, function(x) x[1], numeric(1L))
-    noncase.edges <- lapply(n.path.edges.subset, function(x) x[-1])
+    case.edge <- lapply(n.path.edges.subset, function(n) {
+      vapply(n, function(x) x[1], numeric(1L))
+    })
+
+    noncase.edges <- lapply(n.path.edges.subset, function(n) {
+      lapply(n, function(x) x[-1])
+    })
 
   } else {
     # neighborhood paths by edge
     case.edge <- lapply(n.path.edges, function(n) {
-      vapply(n, function(x) x[1], numeric(1L))
+      vapply(n, function(x) x[1], character(1L))
     })
 
     # path's case edge and path's other, remaining edges
@@ -195,131 +201,104 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
     })
   }
 
-  candidates.id <- lapply(seq_along(case.edge), function(i) {
-    which(case.edge[[i]] %in% unlist(noncase.edges[[i]]) == FALSE)
+  # potential neighborhood periphery edges
+  candidate.case.edge <- lapply(seq_along(case.edge), function(i) {
+    case.edge[[i]][case.edge[[i]] %in% unlist(noncase.edges[[i]]) == FALSE]
   })
 
-  candidates <- lapply(seq_along(case.edge), function(i) {
-    edges[setdiff(case.edge[[i]], unlist(noncase.edges[[i]])), ]
+  candidate.data <- lapply(seq_along(candidate.case.edge), function(i) {
+    sel <- setdiff(candidate.case.edge[[i]], unlist(noncase.edges[[i]]))
+    edges[edges$id2 %in% sel, ]
   })
 
-  candidates.id <- stats::setNames(candidates.id, names(x$paths))
-  candidates <- stats::setNames(candidates, names(x$paths))
+  if (!is.null(pump.subset)) {
+    candidate.case.edge <- stats::setNames(candidate.case.edge,
+      paste(pump.subset))
+    candidate.data <- stats::setNames(candidate.data, paste(pump.subset))
+  } else {
+    candidate.case.edge <- stats::setNames(candidate.case.edge, names(x$paths))
+    candidate.data <- stats::setNames(candidate.data, names(x$paths))
+  }
 
-  p5.test <- vapply(noncase.edges, function(x) {
-    length(unlist(x)) != 0
-  }, logical(1L))
+  # all unique observed edges
+  n.path.data <- edges[edges$id2 %in% unique(unlist(n.path.edges)), ]
 
-  n.path.data <- edges[unique(unlist(n.path.edges)), ]
+  #
 
-  audit <- lapply(names(p5.test)[p5.test], function(nm) {
-    cs <- candidates[[nm]]
-    lapply(seq_len(nrow(cs)), function(i) {
-      test1 <- cs[i, "node1"] %in% n.path.data$node1 &
-               cs[i, "node1"] %in% n.path.data$node2
-      test2 <- cs[i, "node2"] %in% n.path.data$node1 &
-               cs[i, "node2"] %in% n.path.data$node2
-      # direct path exception
-      if (all(c(test1, test2) == FALSE)) {
-        test1A <- sum(cs[i, "node1"] == n.path.data$node1)
-        test1B <- sum(cs[i, "node1"] == n.path.data$node2)
-        test2A <- sum(cs[i, "node2"] == n.path.data$node1)
-        test2B <- sum(cs[i, "node2"] == n.path.data$node2)
-        c(any(c(test1A, test1B) == 2), any(c(test2A, test2B) == 2))
-      } else c(test1, test2)
+  candidateID <- lapply(seq_along(case.edge), function(i) {
+    case.edge[[i]] %in% candidate.case.edge[[i]]
+  })
+
+  candidateID <- stats::setNames(candidateID, names(x$paths))
+
+  #
+
+  endpt.paths <- lapply(names(candidateID), function(nm) {
+    n.path <- x$paths[[nm]]
+    c.id <- candidateID[[nm]]
+    n.path[c.id]
+  })
+
+  endpt.paths <- stats::setNames(endpt.paths, names(x$paths))
+
+  #
+
+  identifyEdges <- function(dat) {
+    out <- lapply(seq_len(nrow(dat)), function(i) {
+      test1 <- dat[i, "node1"] == edges$node1 &
+               dat[i, "node2"] == edges$node2
+      test2 <- dat[i, "node2"] == edges$node1 &
+               dat[i, "node1"] == edges$node2
+      if (any(test1)) {
+        edges[test1, ]
+      } else if (any(test2)) {
+        edges[test2, ]
+      } else {
+       stop("Error!")
+      }
     })
-  })
+    do.call(rbind, out)
+  }
 
-  audit <- stats::setNames(audit, names(p5.test)[p5.test])
+  edgeData <- function(endpt.paths) {
+    lapply(endpt.paths, function(p.vectors) {
+      out <- lapply(p.vectors, function(p) {
+        path <- rev(p)
+        path.edge <- data.frame(node1 = path[1:(length(path) - 1)],
+                                node2 = path[2:length(path)],
+                                stringsAsFactors = FALSE)
 
-  endptID <- lapply(audit, function(a) {
-    vapply(a, function(x) which(x == FALSE), integer(1L))
-  })
+        edge.data <- identifyEdges(path.edge)
+        audit1 <- path.edge$node1 == edge.data$node1
+        audit2 <- path.edge$node2 == edge.data$node2
 
-  endpt.paths <- lapply(names(audit), function(nm) {
-    c.id <- candidates.id[[nm]]
-    npe <- n.path.edges[[nm]]
-    lapply(c.id, function(x) edges[npe[[x]], ])
-  })
+        if (!all(audit1 == audit2)) {
+          stop("Error!")
+        } else {
+          out.of.order <- which(audit1 == FALSE)
+          tmp.sel <- c("x2", "y2", "x1", "y1", "node2", "node1")
+          tmp <- edge.data[out.of.order, tmp.sel]
+          out.sel <- c("x1", "y1", "x2", "y2", "node1", "node2")
+          edge.data[out.of.order, out.sel] <- tmp
+          edge.data
+        }
+      })
+      out
+    })
+  }
 
-  endpt.paths <- stats::setNames(endpt.paths, names(audit))
-
-  path.order.check <- lapply(names(audit), function(nm) {
-    ep.id <- endptID[[nm]]
-    ep <- endpt.paths[[nm]]
-    vapply(seq_along(ep), function(i) {
-      pathOrderCheck(ep[[i]], ep.id[i])
-    }, logical(1L))
-  })
-
-  out.of.order <- lapply(path.order.check, function(check) {
-    which(check == FALSE)
-  })
-
-  out.of.order <- stats::setNames(out.of.order, names(audit))
-  out.of.order.names <- names(vapply(out.of.order, length, integer(1L)))
-
-  endpt.pathsB <- lapply(out.of.order.names, function(nm) {
-    dat <- endpt.paths[[nm]]
-    id <- endptID[[nm]]
-    lapply(seq_along(dat), function(i) pathOrder(dat[[i]], id[[i]]))
-  })
-
-  endpt.paths[out.of.order.names] <- endpt.pathsB
+  edge.data <- edgeData(endpt.paths)
 
   out <- parallel::mclapply(names(endpt.paths), function(nm) {
-    dat <- endpt.paths[[nm]]
-    lapply(dat, milePostCoordinates, pump.select = as.numeric(nm),
-      milepost.interval)
+    dat <- edge.data[[nm]]
+    lapply(dat, milePostCoordinates, milepost.interval)
   }, mc.cores = cores)
 
   stats::setNames(out, names(endpt.paths))
 }
 
-## Check path order ##
-
-pathOrderCheck <- function(dat, ep) {
-  all(vapply(seq_len(nrow(dat) - 1), function(i) {
-    if (ep == 1) {
-      dat[i, "node2"] == dat[i + 1, "node1"]
-    } else if (ep == 2) {
-      dat[i, "node1"] == dat[i + 1, "node2"]
-    }
-  }, logical(1L)))
-}
-
-## Order path ##
-
-pathOrder <- function(dat, ep) {
-  if (ep == 1) {
-    init.connector <- 2
-  } else if (ep == 2) {
-    init.connector <- 1
-  }
-
-  node.connector <- vector(mode = "integer", length = nrow(dat))
-  node.connector[1] <- init.connector
-
-  for (j in seq_along(node.connector[-1])) {
-    previous <- node.connector[j]
-    connector <- unlist(dat[j, c("node1", "node2")][previous])
-    connected <- which(connector == dat[j + 1, c("node1", "node2")])
-    node.connector[j + 1] <- ifelse(connected == 2, 1, 2)
-  }
-
-  tmp <- dat[node.connector == 2, ]
-  ptA <- tmp[, c("street", "id", "name")]
-  ptB <- tmp[, c("x2", "y2", "x1", "y1", "node2", "node1")]
-  ptC <- tmp[, c("id2", "d")]
-  ptB <- stats::setNames(ptB, c("x1", "y1", "x2", "y2", "node1", "node2"))
-  dat[node.connector == 2, ] <- cbind(ptA, ptB, ptC)
-  dat
-}
-
-## Compute mileposts ##
-
-milePostCoordinates <- function(dat, pump.select, milepost.interval) {
-  case.distance <- cholera::unitMeter(cumsum(rev(dat$d)), "meter")
+milePostCoordinates <- function(dat, milepost.interval) {
+  case.distance <- cholera::unitMeter(cumsum(dat$d), "meter")
   total.distance <- case.distance[length(case.distance)]
   mile.post <- seq(0, total.distance, milepost.interval)
 
@@ -336,12 +315,8 @@ milePostCoordinates <- function(dat, pump.select, milepost.interval) {
     }, logical(1L)))
   }, integer(1L))
 
-  dat.rev <- do.call(rbind, lapply(rev(dat$id2), function(x) {
-    dat[dat$id2 == x, ]
-  }))
-
   post.coordinates <- lapply(seq_along(edge.select), function(i) {
-    sel.data <- dat.rev[edge.select[i], ]
+    sel.data <- dat[edge.select[i], ]
     edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
                             y = c(sel.data$y1, sel.data$y2))
 
@@ -395,7 +370,7 @@ milePostCoordinates <- function(dat, pump.select, milepost.interval) {
       post.y <- edge.data[1, "y"] - abs(h * sin(theta))
     }
 
-    data.frame(pump = pump.select, post = mile.post[-1], x = post.x,
+    data.frame(post = mile.post[-1][i], x = post.x,
       y = post.y, angle = theta * 180L / pi, row.names = NULL)
   })
 
