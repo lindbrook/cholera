@@ -290,14 +290,13 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   edge.data <- edgeData(endpt.paths)
 
   out <- parallel::mclapply(names(endpt.paths), function(nm) {
-    dat <- edge.data[[nm]]
-    lapply(dat, milePostCoordinates, milepost.interval)
+    lapply(edge.data[[nm]], milePostCoordinatesB, milepost.interval)
   }, mc.cores = cores)
 
   stats::setNames(out, names(endpt.paths))
 }
 
-milePostCoordinates <- function(dat, milepost.interval) {
+milePostCoordinatesB <- function(dat, milepost.interval) {
   case.distance <- cholera::unitMeter(cumsum(dat$d), "meter")
   total.distance <- case.distance[length(case.distance)]
   mile.post <- seq(0, total.distance, milepost.interval)
@@ -370,8 +369,8 @@ milePostCoordinates <- function(dat, milepost.interval) {
       post.y <- edge.data[1, "y"] - abs(h * sin(theta))
     }
 
-    data.frame(post = mile.post[-1][i], x = post.x,
-      y = post.y, angle = theta * 180L / pi, row.names = NULL)
+    data.frame(post = mile.post[-1][i], x = post.x, y = post.y,
+      angle = theta * 180L / pi, row.names = NULL)
   })
 
   do.call(rbind, post.coordinates)
