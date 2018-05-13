@@ -289,11 +289,16 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
 
   edge.data <- edgeData(endpt.paths)
 
-  out <- parallel::mclapply(names(endpt.paths), function(nm) {
+  coords <- parallel::mclapply(names(endpt.paths), function(nm) {
     lapply(edge.data[[nm]], milePostCoordinatesB, milepost.interval)
   }, mc.cores = cores)
 
-  stats::setNames(out, names(endpt.paths))
+  coords <- stats::setNames(coords, names(endpt.paths))
+
+  invisible(lapply(coords, function(z) {
+    dat <- do.call(rbind, z)
+    points(dat[, c("x", "y")], pch = 22, bg = "white", cex = 2/3)
+  }))
 }
 
 milePostCoordinatesB <- function(dat, milepost.interval) {
