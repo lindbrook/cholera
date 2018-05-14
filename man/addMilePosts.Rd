@@ -2,17 +2,24 @@
 % Please edit documentation in R/addMilePosts.R
 \name{addMilePosts}
 \alias{addMilePosts}
-\title{Add walking path mileposts.}
+\title{Add distance or time based mileposts to walking distance based plot.}
 \usage{
-addMilePosts(pump.subset = NULL, pump.select = NULL,
-  milepost.interval = 50, multi.core = FALSE)
+addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
+  unit = "distance", interval = NULL, walking.speed = 5,
+  multi.core = FALSE)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
+\item{pump.subset}{Numeric. Vector of pumps to subset from neighborhoods defined by "pump.select". Negative selection is possible. NULL selects all pumps in "pump.select".}
 
-\item{pump.select}{Numeric. Numeric vector of pumps to define pump neighborhoods (i.e. the "population"). Negative selection possible. NULL selects all pumps.}
+\item{pump.select}{Numeric. Numeric vector of pumps to define possible pump neighborhoods (i.e. the "population"). Negative selection is possible. NULL selects all "observed" pumps (i.e., pumps with at least one case).}
 
-\item{milepost.interval}{Numeric. Milepost interval in meters.}
+\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 from the original map.}
+
+\item{unit}{Character. Milepost unit of measurement: "distance" or "time".}
+
+\item{interval}{Numeric. Interval between mileposts: 50 meters for "distance";  60 seconds for "time".}
+
+\item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
@@ -20,5 +27,5 @@ addMilePosts(pump.subset = NULL, pump.select = NULL,
 A list of data frames.
 }
 \description{
-Return coordinates, post labels and post angles: in-progress prototype.
+Add distance or time based mileposts to walking distance based plot.
 }

@@ -1,18 +1,21 @@
-#' Add walking path mileposts.
+#' Add distance or time based mileposts to walking distance based plot.
 #'
-#' Return coordinates, post labels and post angles: in-progress prototype.
-#' @param pump.subset Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".
-#' @param pump.select Numeric. Numeric vector of pumps to define pump neighborhoods (i.e. the "population"). Negative selection possible. NULL selects all pumps.
-#' @param milepost.interval Numeric. Milepost interval in meters.
+#' @param pump.subset Numeric. Vector of pumps to subset from neighborhoods defined by "pump.select". Negative selection is possible. NULL selects all pumps in "pump.select".
+#' @param pump.select Numeric. Numeric vector of pumps to define possible pump neighborhoods (i.e. the "population"). Negative selection is possible. NULL selects all "observed" pumps (i.e., pumps with at least one case).
+#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 from the original map.
+#' @param unit Character. Milepost unit of measurement: "distance" or "time".
+#' @param interval Numeric. Interval between mileposts: 50 meters for "distance";  60 seconds for "time".
+#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @return A list of data frames.
 #' @export
 
 addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
-  milepost.interval = 50, multi.core = FALSE) {
+  vestry = FALSE, unit = "distance", interval = NULL, walking.speed = 5,
+  multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
-  x <- cholera::neighborhoodWalking(pump.select, multi.core = cores)
+  x <- cholera::neighborhoodWalking(pump.select, vestry, multi.core = cores)
 
   auditEdge <- function(p) {
     vapply(seq_along(p[-1]), function(i) {
@@ -282,8 +285,13 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
 
   edge.data <- edgeData(endpt.paths)
 
+  if (is.null(interval)) {
+    if (unit == "distance") interval <- 50
+    else if (unit == "time") interval <- 60
+  }
+
   coords <- parallel::mclapply(names(endpt.paths), function(nm) {
-    lapply(edge.data[[nm]], milePostCoordinatesB, milepost.interval)
+    lapply(edge.data[[nm]], postCoordinates, unit, interval, walking.speed)
   }, mc.cores = cores)
 
   coords <- stats::setNames(coords, names(endpt.paths))
@@ -294,19 +302,25 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   }))
 }
 
-milePostCoordinatesB <- function(dat, milepost.interval) {
-  case.distance <- cholera::unitMeter(cumsum(dat$d), "meter")
-  total.distance <- case.distance[length(case.distance)]
-  mile.post <- seq(0, total.distance, milepost.interval)
-
-  if (max(mile.post) > max(case.distance)) {
-    mile.post <- mile.post[-length(mile.post)]
+postCoordinates <- function(dat, unit, interval, walking.speed) {
+  if (unit == "distance") {
+    cumulative <- cholera::unitMeter(cumsum(dat$d), "meter")
+  } else if (unit == "time") {
+    cumulative <- cholera::distanceTime(cumsum(dat$d), speed = walking.speed)
   }
 
-  bins <- data.frame(lo = c(0, case.distance[-length(case.distance)]),
-                     hi = case.distance)
+  # interval <- interval
+  total <- cumulative[length(cumulative)]
+  posts <- seq(0, total, interval)
 
-  edge.select <- vapply(mile.post[-1], function(x) {
+  if (max(posts) > max(cumulative)) {
+    posts <- posts[-length(posts)]
+  }
+
+  bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
+                     hi = cumulative)
+
+  edge.select <- vapply(posts[-1], function(x) {
     which(vapply(seq_len(nrow(bins)), function(i) {
       x >= bins[i, "lo"] & x < bins[i, "hi"]
     }, logical(1L)))
@@ -321,7 +335,7 @@ milePostCoordinatesB <- function(dat, milepost.interval) {
     edge.slope <- stats::coef(ols)[2]
     edge.intercept <- stats::coef(ols)[1]
     theta <- atan(edge.slope)
-    h <- (mile.post[-1][i] - bins[edge.select[i], "lo"]) /
+    h <- (posts[-1][i] - bins[edge.select[i], "lo"]) /
       cholera::unitMeter(1, "meter")
 
     delta <- edge.data[2, ] - edge.data[1, ]
@@ -367,7 +381,7 @@ milePostCoordinatesB <- function(dat, milepost.interval) {
       post.y <- edge.data[1, "y"] - abs(h * sin(theta))
     }
 
-    data.frame(post = mile.post[-1][i], x = post.x, y = post.y,
+    data.frame(post = posts[-1][i], x = post.x, y = post.y,
       angle = theta * 180L / pi, row.names = NULL)
   })
 
