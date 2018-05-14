@@ -151,98 +151,6 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
     })
   }
 
-  ## Data ##
-
-  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
-  edges <- dat$edges
-  nodes <- dat$nodes
-  p.data <- dat$nodes.pump
-
-  if (is.null(x$pump.select)) {
-    p.node <- p.data$node
-    p.name <- p.data$pump
-  } else {
-    if (all(x$pump.select > 0)) {
-      p.data <- p.data[p.data$pump %in% x$pump.select, ]
-    } else if (all(x$pump.select < 0)) {
-      p.data <- p.data[p.data$pump %in% abs(x$pump.select) == FALSE, ]
-    }
-    p.node <- p.data$node
-    p.name <- p.data$pump
-  }
-
-  # vector of nodes for the 321 observed anchor cases
-  n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
-    lapply(neighborhood, auditEdge)
-  }, mc.cores = x$cores)
-
-  if (!is.null(pump.subset)) {
-    # neighborhood paths by edge
-    n.path.edges.subset <- n.path.edges[paste(pump.subset)]
-
-    # path's case edge and path's other, remaining edges
-    case.edge <- lapply(n.path.edges.subset, function(n) {
-      vapply(n, function(x) x[1], numeric(1L))
-    })
-
-    noncase.edges <- lapply(n.path.edges.subset, function(n) {
-      lapply(n, function(x) x[-1])
-    })
-
-  } else {
-    # neighborhood paths by edge
-    case.edge <- lapply(n.path.edges, function(n) {
-      vapply(n, function(x) x[1], character(1L))
-    })
-
-    # path's case edge and path's other, remaining edges
-    noncase.edges <- lapply(n.path.edges, function(n) {
-      lapply(n, function(x) x[-1])
-    })
-  }
-
-  # potential neighborhood periphery edges
-  candidate.case.edge <- lapply(seq_along(case.edge), function(i) {
-    case.edge[[i]][case.edge[[i]] %in% unlist(noncase.edges[[i]]) == FALSE]
-  })
-
-  candidate.data <- lapply(seq_along(candidate.case.edge), function(i) {
-    sel <- setdiff(candidate.case.edge[[i]], unlist(noncase.edges[[i]]))
-    edges[edges$id2 %in% sel, ]
-  })
-
-  if (!is.null(pump.subset)) {
-    candidate.case.edge <- stats::setNames(candidate.case.edge,
-      paste(pump.subset))
-    candidate.data <- stats::setNames(candidate.data, paste(pump.subset))
-  } else {
-    candidate.case.edge <- stats::setNames(candidate.case.edge, names(x$paths))
-    candidate.data <- stats::setNames(candidate.data, names(x$paths))
-  }
-
-  # all unique observed edges
-  n.path.data <- edges[edges$id2 %in% unique(unlist(n.path.edges)), ]
-
-  #
-
-  candidateID <- lapply(seq_along(case.edge), function(i) {
-    case.edge[[i]] %in% candidate.case.edge[[i]]
-  })
-
-  candidateID <- stats::setNames(candidateID, names(x$paths))
-
-  #
-
-  endpt.paths <- lapply(names(candidateID), function(nm) {
-    n.path <- x$paths[[nm]]
-    c.id <- candidateID[[nm]]
-    n.path[c.id]
-  })
-
-  endpt.paths <- stats::setNames(endpt.paths, names(x$paths))
-
-  #
-
   identifyEdges <- function(dat) {
     out <- lapply(seq_len(nrow(dat)), function(i) {
       test1 <- dat[i, "node1"] == edges$node1 &
@@ -286,6 +194,91 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
       out
     })
   }
+
+  ## Data ##
+
+  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
+  edges <- dat$edges
+  nodes <- dat$nodes
+  p.data <- dat$nodes.pump
+
+  if (is.null(x$pump.select)) {
+    p.node <- p.data$node
+    p.name <- p.data$pump
+  } else {
+    if (all(x$pump.select > 0)) {
+      p.data <- p.data[p.data$pump %in% x$pump.select, ]
+    } else if (all(x$pump.select < 0)) {
+      p.data <- p.data[p.data$pump %in% abs(x$pump.select) == FALSE, ]
+    }
+    p.node <- p.data$node
+    p.name <- p.data$pump
+  }
+
+  # vector of nodes for the 321 observed anchor cases
+  n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
+    lapply(neighborhood, auditEdge)
+  }, mc.cores = x$cores)
+
+  if (!is.null(pump.subset)) {
+    if (all(pump.subset > 0)) {
+      sel <- paste(pump.subset)
+    } else if (all(pump.select < 0)) {
+      sel <- setdiff(names(x$paths), paste(abs(pump.subset)))
+    }
+
+    # path's case edge and path's other, remaining edges
+    case.edge <- lapply(n.path.edges[sel], function(n) {
+      vapply(n, function(x) x[1], character(1L))
+    })
+
+    # path's case edge and path's other, remaining edges
+    noncase.edges <- lapply(n.path.edges[sel], function(n) {
+      lapply(n, function(x) x[-1])
+    })
+
+    neighborhood.names <- sel
+
+  } else {
+    case.edge <- lapply(n.path.edges, function(n) {
+      vapply(n, function(x) x[1], character(1L))
+    })
+
+    noncase.edges <- lapply(n.path.edges, function(n) {
+      lapply(n, function(x) x[-1])
+    })
+
+    neighborhood.names <- names(x$path)
+  }
+
+  # potential neighborhood periphery edges
+  candidate.case.edge <- lapply(seq_along(case.edge), function(i) {
+    case.edge[[i]][case.edge[[i]] %in% unlist(noncase.edges[[i]]) == FALSE]
+  })
+
+  candidate.case.edge <- stats::setNames(candidate.case.edge,
+    neighborhood.names)
+
+  candidate.data <- lapply(seq_along(candidate.case.edge), function(i) {
+    sel <- setdiff(candidate.case.edge[[i]], unlist(noncase.edges[[i]]))
+    edges[edges$id2 %in% sel, ]
+  })
+
+  candidate.data <- stats::setNames(candidate.data, neighborhood.names)
+
+  candidateID <- lapply(seq_along(case.edge), function(i) {
+    case.edge[[i]] %in% candidate.case.edge[[i]]
+  })
+
+  candidateID <- stats::setNames(candidateID, neighborhood.names)
+
+  endpt.paths <- lapply(names(candidateID), function(nm) {
+    n.path <- x$paths[[nm]]
+    c.id <- candidateID[[nm]]
+    n.path[c.id]
+  })
+
+  endpt.paths <- stats::setNames(endpt.paths, neighborhood.names)
 
   edge.data <- edgeData(endpt.paths)
 
