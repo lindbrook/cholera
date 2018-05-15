@@ -2,7 +2,7 @@
 % Please edit documentation in R/addMilePosts.R
 \name{addMilePosts}
 \alias{addMilePosts}
-\title{Add distance or time based mileposts to walking distance based plot.}
+\title{Add distance or time based mileposts to plot.}
 \usage{
 addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   unit = "distance", interval = NULL, walking.speed = 5,
@@ -24,8 +24,8 @@ addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
 \value{
-A list of data frames.
+points() graphic elements.
 }
 \description{
-Add distance or time based mileposts to walking distance based plot.
+Add distance or time based mileposts to plot.
 }

@@ -1,4 +1,4 @@
-#' Add distance or time based mileposts to walking distance based plot.
+#' Add distance or time based mileposts to plot.
 #'
 #' @param pump.subset Numeric. Vector of pumps to subset from neighborhoods defined by "pump.select". Negative selection is possible. NULL selects all pumps in "pump.select".
 #' @param pump.select Numeric. Numeric vector of pumps to define possible pump neighborhoods (i.e. the "population"). Negative selection is possible. NULL selects all "observed" pumps (i.e., pumps with at least one case).
@@ -7,7 +7,7 @@
 #' @param interval Numeric. Interval between mileposts: 50 meters for "distance";  60 seconds for "time".
 #' @param walking.speed Numeric. Default walking speed is 5 km/hr.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
-#' @return A list of data frames.
+#' @return points() graphic elements.
 #' @export
 
 addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
@@ -300,90 +300,4 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
     dat <- do.call(rbind, z)
     points(dat[, c("x", "y")], pch = 22, bg = "white", cex = 2/3)
   }))
-}
-
-postCoordinates <- function(dat, unit, interval, walking.speed) {
-  if (unit == "distance") {
-    cumulative <- cholera::unitMeter(cumsum(dat$d), "meter")
-  } else if (unit == "time") {
-    cumulative <- cholera::distanceTime(cumsum(dat$d), speed = walking.speed)
-  }
-
-  # interval <- interval
-  total <- cumulative[length(cumulative)]
-  posts <- seq(0, total, interval)
-
-  if (max(posts) > max(cumulative)) {
-    posts <- posts[-length(posts)]
-  }
-
-  bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
-                     hi = cumulative)
-
-  edge.select <- vapply(posts[-1], function(x) {
-    which(vapply(seq_len(nrow(bins)), function(i) {
-      x >= bins[i, "lo"] & x < bins[i, "hi"]
-    }, logical(1L)))
-  }, integer(1L))
-
-  post.coordinates <- lapply(seq_along(edge.select), function(i) {
-    sel.data <- dat[edge.select[i], ]
-    edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
-                            y = c(sel.data$y1, sel.data$y2))
-
-    ols <- stats::lm(y ~ x, data = edge.data)
-    edge.slope <- stats::coef(ols)[2]
-    edge.intercept <- stats::coef(ols)[1]
-    theta <- atan(edge.slope)
-    h <- (posts[-1][i] - bins[edge.select[i], "lo"]) /
-      cholera::unitMeter(1, "meter")
-
-    delta <- edge.data[2, ] - edge.data[1, ]
-
-    # Quadrant I
-    if (all(delta > 0)) {
-      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-    # Quadrant II
-    } else if (delta[1] < 0 & delta[2] > 0) {
-      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-    # Quadrant III
-    } else if (all(delta < 0)) {
-      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-
-    # Quadrant IV
-    } else if (delta[1] > 0 & delta[2] < 0) {
-      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-
-    # I:IV
-    } else if (delta[1] > 0 & delta[2] == 0) {
-      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-      post.y <- edge.data[1, "y"]
-
-    # I:II
-    } else if (delta[1] == 0 & delta[2] > 0) {
-      post.x <- edge.data[1, "x"]
-      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-    # II:III
-    } else if (delta[1] < 0 & delta[2] == 0) {
-      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-      post.y <- edge.data[1, "y"]
-
-    # III:IV
-    } else if (delta[1] == 0 & delta[2] < 0) {
-      post.x <- edge.data[1, "x"]
-      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-    }
-
-    data.frame(post = posts[-1][i], x = post.x, y = post.y,
-      angle = theta * 180L / pi, row.names = NULL)
-  })
-
-  do.call(rbind, post.coordinates)
 }
