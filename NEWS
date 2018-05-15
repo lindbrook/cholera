@@ -1,3 +1,10 @@
+cholera 0.4.9.9001
+==================
+
+- consolidate milePosts() and timePosts() into milePosts().
+- consolidate addMilePosts() and addTimePosts() into addMilePosts().
+
+
 cholera 0.4.9.9000
 ==================
 
