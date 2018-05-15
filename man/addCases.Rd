@@ -6,7 +6,7 @@
 \usage{
 addCases(pump.subset = NULL, pump.select = NULL, type = "address",
   token = "id", text.size = 0.5, vestry = FALSE, weighted = TRUE,
-  case.color = NULL, multi.core = FALSE, ...)
+  color = NULL, multi.core = FALSE, ...)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
@@ -23,7 +23,7 @@ addCases(pump.subset = NULL, pump.select = NULL, type = "address",
 
 \item{weighted}{Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.}
 
-\item{case.color}{Character. Use a single color for all paths. NULL uses neighborhood colors defined by snowColors().}
+\item{color}{Character. Use a single color for all paths. NULL uses neighborhood colors defined by snowColors().}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 
