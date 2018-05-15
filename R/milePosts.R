@@ -1,16 +1,21 @@
-#' Compute walking path mileposts.
+#' Compute distance or time based mileposts.
 #'
-#' Return coordinates, post labels and post angles.
-#' @param pump.select Numeric.
-#' @param milepost.interval Numeric. Milepost interval in meters.
+#' @param pump.subset Numeric. Vector of pumps to subset from neighborhoods defined by "pump.select". Negative selection is possible. NULL selects all pumps in "pump.select".
+#' @param pump.select Numeric. Numeric vector of pumps to define possible pump neighborhoods (i.e. the "population"). Negative selection is possible. NULL selects all "observed" pumps (i.e., pumps with at least one case).
+#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 from the original map.
+#' @param unit Character. Milepost unit of measurement: "distance" or "time".
+#' @param interval Numeric. Interval between mileposts: 50 meters for "distance";  60 seconds for "time".
+#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @return A list of data frames.
 #' @export
 
-milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
+milePosts <- function(pump.subset = NULL, pump.select = NULL,
+  vestry = FALSE, unit = "distance", interval = NULL, walking.speed = 5,
+  multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
-  x <- cholera::neighborhoodWalking(multi.core = cores)
+  x <- cholera::neighborhoodWalking(pump.select, vestry, multi.core = cores)
 
   auditEdge <- function(p) {
     vapply(seq_along(p[-1]), function(i) {
@@ -18,8 +23,8 @@ milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
             edges$node2 %in% p[i + 1]
       ba <- edges$node2 %in% p[i] &
             edges$node1 %in% p[i + 1]
-      which(ab | ba)
-    }, numeric(1L))
+      edges[which(ab | ba), "id2"]
+    }, character(1L))
   }
 
   checkSegment <- function(s, sub.edge = FALSE) {
@@ -149,6 +154,50 @@ milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
     })
   }
 
+  identifyEdges <- function(dat) {
+    out <- lapply(seq_len(nrow(dat)), function(i) {
+      test1 <- dat[i, "node1"] == edges$node1 &
+               dat[i, "node2"] == edges$node2
+      test2 <- dat[i, "node2"] == edges$node1 &
+               dat[i, "node1"] == edges$node2
+      if (any(test1)) {
+        edges[test1, ]
+      } else if (any(test2)) {
+        edges[test2, ]
+      } else {
+       stop("Error!")
+      }
+    })
+    do.call(rbind, out)
+  }
+
+  edgeData <- function(endpt.paths) {
+    lapply(endpt.paths, function(p.vectors) {
+      out <- lapply(p.vectors, function(p) {
+        path <- rev(p)
+        path.edge <- data.frame(node1 = path[1:(length(path) - 1)],
+                                node2 = path[2:length(path)],
+                                stringsAsFactors = FALSE)
+
+        edge.data <- identifyEdges(path.edge)
+        audit1 <- path.edge$node1 == edge.data$node1
+        audit2 <- path.edge$node2 == edge.data$node2
+
+        if (!all(audit1 == audit2)) {
+          stop("Error!")
+        } else {
+          out.of.order <- which(audit1 == FALSE)
+          tmp.sel <- c("x2", "y2", "x1", "y1", "node2", "node1")
+          tmp <- edge.data[out.of.order, tmp.sel]
+          out.sel <- c("x1", "y1", "x2", "y2", "node1", "node2")
+          edge.data[out.of.order, out.sel] <- tmp
+          edge.data
+        }
+      })
+      out
+    })
+  }
+
   ## Data ##
 
   dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
@@ -169,135 +218,111 @@ milePosts <- function(pump.select, milepost.interval = 50, multi.core = FALSE) {
     p.name <- p.data$pump
   }
 
+  # vector of nodes for the 321 observed anchor cases
   n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
     lapply(neighborhood, auditEdge)
   }, mc.cores = x$cores)
 
-  # neighborhood paths by edge
-  n.path.edges.select <- n.path.edges[[paste(pump.select)]]
-
-  # path's case edge and path's other, remaining edges
-  case.edge <- vapply(n.path.edges.select, function(x) x[1], numeric(1L))
-  noncase.edges <- lapply(n.path.edges.select, function(x) x[-1])
-
-  # b/c paths can overlap; some case.edges will not be dead ends
-  candidates.id <- which(case.edge %in% unlist(noncase.edges) == FALSE)
-  candidates <- edges[setdiff(case.edge, unlist(noncase.edges)), ]
-
-  # Pump 5 Marlborough Mews exception
-  if (length(unlist(noncase.edges)) > 0) {
-    # unique edges in neighborhood
-    n.path.data <- edges[unique(unlist(n.path.edges.select)), ]
-
-    # presence of just one end point indicates a dead end, periphery case
-    audit <- lapply(seq_len(nrow(candidates)), function(i) {
-      test1 <- candidates[i, "node1"] %in% n.path.data$node1 &
-               candidates[i, "node1"] %in% n.path.data$node2
-      test2 <- candidates[i, "node2"] %in% n.path.data$node1 &
-               candidates[i, "node2"] %in% n.path.data$node2
-      # direct path exception
-      if (all(c(test1, test2) == FALSE)) {
-        test1A <- sum(candidates[i, "node1"] == n.path.data$node1)
-        test1B <- sum(candidates[i, "node1"] == n.path.data$node2)
-        test2A <- sum(candidates[i, "node2"] == n.path.data$node1)
-        test2B <- sum(candidates[i, "node2"] == n.path.data$node2)
-        c(any(c(test1A, test1B) == 2), any(c(test2A, test2B) == 2))
-      } else c(test1, test2)
-    })
-
-    # case is (x1, y1) or (x2, y2)
-    endptID <- vapply(audit, function(x) which(x == FALSE), integer(1L))
-
-    endpt.paths <- lapply(candidates.id, function(x) {
-      edges[n.path.edges.select[[x]], ]
-    })
-
-    path.order.check <- vapply(seq_along(endpt.paths), function(i) {
-      pathOrderCheck(endpt.paths[[i]], endptID[i])
-    }, logical(1L))
-
-    out.of.order <- which(path.order.check == FALSE)
-
-    endpt.pathsB <- lapply(out.of.order, function(x) {
-      pathOrder(endpt.paths[[x]], endptID[x])
-    })
-
-    endpt.paths[out.of.order] <- endpt.pathsB
-  } else {
-    endpt.paths <- list(candidates)
-  }
-
-  parallel::mclapply(seq_along(endpt.paths), function(i) {
-    milePostCoordinates(endpt.paths[[i]], pump.select, milepost.interval)
-  }, mc.cores = cores)
-}
-
-## Check path order ##
-
-pathOrderCheck <- function(dat, ep) {
-  all(vapply(seq_len(nrow(dat) - 1), function(i) {
-    if (ep == 1) {
-      dat[i, "node2"] == dat[i + 1, "node1"]
-    } else if (ep == 2) {
-      dat[i, "node1"] == dat[i + 1, "node2"]
+  if (!is.null(pump.subset)) {
+    if (all(pump.subset > 0)) {
+      sel <- paste(pump.subset)
+    } else if (all(pump.select < 0)) {
+      sel <- setdiff(names(x$paths), paste(abs(pump.subset)))
     }
-  }, logical(1L)))
+
+    # path's case edge and path's other, remaining edges
+    case.edge <- lapply(n.path.edges[sel], function(n) {
+      vapply(n, function(x) x[1], character(1L))
+    })
+
+    # path's case edge and path's other, remaining edges
+    noncase.edges <- lapply(n.path.edges[sel], function(n) {
+      lapply(n, function(x) x[-1])
+    })
+
+    neighborhood.names <- sel
+
+  } else {
+    case.edge <- lapply(n.path.edges, function(n) {
+      vapply(n, function(x) x[1], character(1L))
+    })
+
+    noncase.edges <- lapply(n.path.edges, function(n) {
+      lapply(n, function(x) x[-1])
+    })
+
+    neighborhood.names <- names(x$path)
+  }
+
+  # potential neighborhood periphery edges
+  candidate.case.edge <- lapply(seq_along(case.edge), function(i) {
+    case.edge[[i]][case.edge[[i]] %in% unlist(noncase.edges[[i]]) == FALSE]
+  })
+
+  candidate.case.edge <- stats::setNames(candidate.case.edge,
+    neighborhood.names)
+
+  candidate.data <- lapply(seq_along(candidate.case.edge), function(i) {
+    sel <- setdiff(candidate.case.edge[[i]], unlist(noncase.edges[[i]]))
+    edges[edges$id2 %in% sel, ]
+  })
+
+  candidate.data <- stats::setNames(candidate.data, neighborhood.names)
+
+  candidateID <- lapply(seq_along(case.edge), function(i) {
+    case.edge[[i]] %in% candidate.case.edge[[i]]
+  })
+
+  candidateID <- stats::setNames(candidateID, neighborhood.names)
+
+  endpt.paths <- lapply(names(candidateID), function(nm) {
+    n.path <- x$paths[[nm]]
+    c.id <- candidateID[[nm]]
+    n.path[c.id]
+  })
+
+  endpt.paths <- stats::setNames(endpt.paths, neighborhood.names)
+
+  edge.data <- edgeData(endpt.paths)
+
+  if (is.null(interval)) {
+    if (unit == "distance") interval <- 50
+    else if (unit == "time") interval <- 60
+  }
+
+  coords <- parallel::mclapply(names(endpt.paths), function(nm) {
+    lapply(edge.data[[nm]], postCoordinates, unit, interval, walking.speed)
+  }, mc.cores = cores)
+
+  stats::setNames(coords, names(endpt.paths))
 }
 
-## Order path ##
-
-pathOrder <- function(dat, ep) {
-  if (ep == 1) {
-    init.connector <- 2
-  } else if (ep == 2) {
-    init.connector <- 1
+postCoordinates <- function(dat, unit, interval, walking.speed) {
+  if (unit == "distance") {
+    cumulative <- cholera::unitMeter(cumsum(dat$d), "meter")
+  } else if (unit == "time") {
+    cumulative <- cholera::distanceTime(cumsum(dat$d), speed = walking.speed)
   }
 
-  node.connector <- vector(mode = "integer", length = nrow(dat))
-  node.connector[1] <- init.connector
+  # interval <- interval
+  total <- cumulative[length(cumulative)]
+  posts <- seq(0, total, interval)
 
-  for (j in seq_along(node.connector[-1])) {
-    previous <- node.connector[j]
-    connector <- unlist(dat[j, c("node1", "node2")][previous])
-    connected <- which(connector == dat[j + 1, c("node1", "node2")])
-    node.connector[j + 1] <- ifelse(connected == 2, 1, 2)
+  if (max(posts) > max(cumulative)) {
+    posts <- posts[-length(posts)]
   }
 
-  tmp <- dat[node.connector == 2, ]
-  ptA <- tmp[, c("street", "id", "name")]
-  ptB <- tmp[, c("x2", "y2", "x1", "y1", "node2", "node1")]
-  ptC <- tmp[, c("id2", "d")]
-  ptB <- stats::setNames(ptB, c("x1", "y1", "x2", "y2", "node1", "node2"))
-  dat[node.connector == 2, ] <- cbind(ptA, ptB, ptC)
-  dat
-}
+  bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
+                     hi = cumulative)
 
-## Compute mileposts ##
-
-milePostCoordinates <- function(dat, pump.select, milepost.interval) {
-  case.distance <- cholera::unitMeter(cumsum(rev(dat$d)), "meter")
-  total.distance <- case.distance[length(case.distance)]
-  mile.post <- seq(0, total.distance, milepost.interval)
-
-  if (max(mile.post) > max(case.distance)) {
-    mile.post <- mile.post[-length(mile.post)]
-  }
-
-  bins <- data.frame(lo = c(0, case.distance[-length(case.distance)]),
-                     hi = case.distance)
-
-  edge.select <- vapply(mile.post[-1], function(x) {
+  edge.select <- vapply(posts[-1], function(x) {
     which(vapply(seq_len(nrow(bins)), function(i) {
       x >= bins[i, "lo"] & x < bins[i, "hi"]
     }, logical(1L)))
   }, integer(1L))
 
-  dat.rev <- do.call(rbind, lapply(rev(dat$id2), function(x) {
-    dat[dat$id2 == x, ]
-  }))
-
   post.coordinates <- lapply(seq_along(edge.select), function(i) {
-    sel.data <- dat.rev[edge.select[i], ]
+    sel.data <- dat[edge.select[i], ]
     edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
                             y = c(sel.data$y1, sel.data$y2))
 
@@ -305,7 +330,7 @@ milePostCoordinates <- function(dat, pump.select, milepost.interval) {
     edge.slope <- stats::coef(ols)[2]
     edge.intercept <- stats::coef(ols)[1]
     theta <- atan(edge.slope)
-    h <- (mile.post[-1][i] - bins[edge.select[i], "lo"]) /
+    h <- (posts[-1][i] - bins[edge.select[i], "lo"]) /
       cholera::unitMeter(1, "meter")
 
     delta <- edge.data[2, ] - edge.data[1, ]
@@ -351,8 +376,8 @@ milePostCoordinates <- function(dat, pump.select, milepost.interval) {
       post.y <- edge.data[1, "y"] - abs(h * sin(theta))
     }
 
-    data.frame(pump = pump.select, post = mile.post[-1], x = post.x,
-      y = post.y, angle = theta * 180L / pi, row.names = NULL)
+    data.frame(post = posts[-1][i], x = post.x, y = post.y,
+      angle = theta * 180L / pi, row.names = NULL)
   })
 
   do.call(rbind, post.coordinates)

@@ -2,14 +2,24 @@
 % Please edit documentation in R/milePosts.R
 \name{milePosts}
 \alias{milePosts}
-\title{Compute walking path mileposts.}
+\title{Compute distance or time based mileposts.}
 \usage{
-milePosts(pump.select, milepost.interval = 50, multi.core = FALSE)
+milePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
+  unit = "distance", interval = NULL, walking.speed = 5,
+  multi.core = FALSE)
 }
 \arguments{
-\item{pump.select}{Numeric.}
+\item{pump.subset}{Numeric. Vector of pumps to subset from neighborhoods defined by "pump.select". Negative selection is possible. NULL selects all pumps in "pump.select".}
 
-\item{milepost.interval}{Numeric. Milepost interval in meters.}
+\item{pump.select}{Numeric. Numeric vector of pumps to define possible pump neighborhoods (i.e. the "population"). Negative selection is possible. NULL selects all "observed" pumps (i.e., pumps with at least one case).}
+
+\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 from the original map.}
+
+\item{unit}{Character. Milepost unit of measurement: "distance" or "time".}
+
+\item{interval}{Numeric. Interval between mileposts: 50 meters for "distance";  60 seconds for "time".}
+
+\item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
@@ -17,5 +27,5 @@ milePosts(pump.select, milepost.interval = 50, multi.core = FALSE)
 A list of data frames.
 }
 \description{
-Return coordinates, post labels and post angles.
+Compute distance or time based mileposts.
 }
