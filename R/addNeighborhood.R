@@ -23,9 +23,11 @@
 #' @section Note: This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 30 seconds. Using the parallel implementation on 4 physical (8 logical) cores, this time falls to about 12 seconds. Note that parallelization is currently only available on Linux and Mac, and that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. See vignette("parallel") for details.
 #' @export
 #' @examples
-#' # streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
-#' #   unit = "meter", cases = NULL)
-#' # addNeighborhood(6:7)
+#' \dontrun{
+#' streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
+#'   unit = "meter", cases = NULL)
+#' addNeighborhood(6:7)
+#' }
 
 addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, weighted = TRUE, multi.core = FALSE, area = TRUE,

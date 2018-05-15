@@ -39,9 +39,11 @@ In-development prototype.
 }
 
 \examples{
-# streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
-#   unit = "meter", cases = NULL)
-# addNeighborhood(6:7)
+\dontrun{
+streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
+  unit = "meter", cases = NULL)
+addNeighborhood(6:7)
+}
 }
 \seealso{
 \code{\link{snowMap}},
