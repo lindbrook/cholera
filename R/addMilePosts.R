@@ -154,23 +154,6 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
     })
   }
 
-  identifyEdges <- function(dat) {
-    out <- lapply(seq_len(nrow(dat)), function(i) {
-      test1 <- dat[i, "node1"] == edges$node1 &
-               dat[i, "node2"] == edges$node2
-      test2 <- dat[i, "node2"] == edges$node1 &
-               dat[i, "node1"] == edges$node2
-      if (any(test1)) {
-        edges[test1, ]
-      } else if (any(test2)) {
-        edges[test2, ]
-      } else {
-       stop("Error!")
-      }
-    })
-    do.call(rbind, out)
-  }
-
   edgeData <- function(endpt.paths) {
     lapply(endpt.paths, function(p.vectors) {
       out <- lapply(p.vectors, function(p) {
@@ -179,7 +162,7 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
                                 node2 = path[2:length(path)],
                                 stringsAsFactors = FALSE)
 
-        edge.data <- identifyEdges(path.edge)
+        edge.data <- identifyEdges(path.edge, edges)  # walkingPath.R
         audit1 <- path.edge$node1 == edge.data$node1
         audit2 <- path.edge$node2 == edge.data$node2
 
