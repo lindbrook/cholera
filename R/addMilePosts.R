@@ -297,7 +297,7 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   coords <- stats::setNames(coords, names(endpt.paths))
 
   invisible(lapply(coords, function(z) {
-    dat <- do.call(rbind, z)
+    dat <- unique(do.call(rbind, z))
     points(dat[, c("x", "y")], pch = 22, bg = "white", cex = 2/3)
   }))
 }
