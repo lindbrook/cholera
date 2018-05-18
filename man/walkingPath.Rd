@@ -52,8 +52,8 @@ walkingPath(1, 6, type = "cases")
 # path from pump 1 to pump 6.
 walkingPath(1, 6, type = "pumps")
 
-# path from case 1 to nearest pump.
-plot(walkingPath(1))
+# path from case 15 to nearest pump.
+plot(walkingPath(15))
 }
 \seealso{
 \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}

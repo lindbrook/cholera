@@ -5,7 +5,7 @@
 \title{Plot the walking path between cases and/or pumps.}
 \usage{
 \method{plot}{walking_path}(x, zoom = TRUE, radius = 0.5,
-  unit.posts = NULL, unit.interval = NULL, ...)
+  unit.posts = "distance", unit.interval = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class "walking_path" created by walkingPath().}
@@ -16,7 +16,7 @@
 
 \item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
 
-\item{unit.interval}{Numeric. Interval between posts: mileposts default is 25 meters; timepost default is 60 seconds.}
+\item{unit.interval}{Numeric. Interval between posts: mileposts default is 50 meters; timepost default is 60 seconds.}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -26,7 +26,11 @@ A base R plot.
 \description{
 Plot the walking path between cases and/or pumps.
 }
+\section{Note}{
+ "unit.posts" and "unit.interval" are represented as arrows pointing away from the destination (i.e., the reverse path).
+}
+
 \examples{
-plot(walkingPath(1))
-plot(walkingPath(1), unit.posts = "distance")
+plot(walkingPath(15))
+plot(walkingPath(15), unit.posts = "time")
 }
