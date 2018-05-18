@@ -287,7 +287,6 @@ postCoordinates <- function(dat, unit, interval, walking.speed) {
     cumulative <- cholera::distanceTime(cumsum(dat$d), speed = walking.speed)
   }
 
-  # interval <- interval
   total <- cumulative[length(cumulative)]
   posts <- seq(0, total, interval)
 

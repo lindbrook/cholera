@@ -419,7 +419,6 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   g <- x$g
   ego.node <- x$ego.node
   alter.node <- x$alter.node
-  # path <- x$path
 
   dat <- numericNodeCoordinates(x$path)
 
