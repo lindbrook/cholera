@@ -16,7 +16,7 @@
 
 \item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
 
-\item{unit.interval}{Numeric. Interval between posts: mileposts default is 50 meters; timepost default is 60 seconds.}
+\item{unit.interval}{Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -27,7 +27,7 @@ A base R plot.
 Plot the walking path between cases and/or pumps.
 }
 \section{Note}{
- "unit.posts" and "unit.interval" are represented as arrows pointing away from the destination (i.e., the reverse path).
+ Arrow points represent mileposts or timeposts to the destination.
 }
 
 \examples{

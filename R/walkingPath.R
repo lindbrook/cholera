@@ -10,8 +10,8 @@
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Default walking speed is 5 km/hr.
-#' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
-#' @return An R list.
+#' @note The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
+#' @return An R list with two elements: a character vector of path nodes and a data frame summary.
 #' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
@@ -30,8 +30,8 @@
 #' # path from pump 1 to pump 6.
 #' walkingPath(1, 6, type = "pumps")
 #'
-#' # path from case 15 to nearest pump.
-#' plot(walkingPath(15))
+#' # path from case 1 to nearest pump.
+#' plot(walkingPath(1))
 
 walkingPath <- function(origin, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
@@ -386,11 +386,11 @@ print.walking_path <- function(x, ...) {
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts.
-#' @param unit.interval Numeric. Interval between posts: mileposts default is 50 meters; timepost default is 60 seconds.
+#' @param unit.interval Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
-#' @section Note: "unit.posts" and "unit.interval" are represented as arrows pointing away from the destination (i.e., the reverse path).
+#' @section Note: Arrow points represent mileposts or timeposts to the destination.
 #' @examples
 #' plot(walkingPath(15))
 #' plot(walkingPath(15), unit.posts = "time")
@@ -527,9 +527,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     }
   }
 
-  drawPath2(x$path, case.color)
-
-  distance <- round(x$data$distance, 1)
+  drawPath(x$path, case.color)
 
   if (x$time.unit == "hour") {
     nominal.time <- paste(round(x$data$time, 1), "hr.")
@@ -613,30 +611,37 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       if (all(delta > 0)) {
         post.x <- edge.seg[1, "x"] + abs(h * cos(theta))
         post.y <- edge.seg[1, "y"] + abs(h * sin(theta))
+
       # Quadrant II
       } else if (delta[1] < 0 & delta[2] > 0) {
         post.x <- edge.seg[1, "x"] - abs(h * cos(theta))
         post.y <- edge.seg[1, "y"] + abs(h * sin(theta))
+
       # Quadrant III
       } else if (all(delta < 0)) {
         post.x <- edge.seg[1, "x"] - abs(h * cos(theta))
         post.y <- edge.seg[1, "y"] - abs(h * sin(theta))
+
       # Quadrant IV
       } else if (delta[1] > 0 & delta[2] < 0) {
         post.x <- edge.seg[1, "x"] + abs(h * cos(theta))
         post.y <- edge.seg[1, "y"] - abs(h * sin(theta))
+
       # I:IV
       } else if (delta[1] > 0 & delta[2] == 0) {
         post.x <- edge.seg[1, "x"] + abs(h * cos(theta))
         post.y <- edge.seg[1, "y"]
+
       # I:II
       } else if (delta[1] == 0 & delta[2] > 0) {
         post.x <- edge.seg[1, "x"]
         post.y <- edge.seg[1, "y"] + abs(h * sin(theta))
+
       # II:III
       } else if (delta[1] < 0 & delta[2] == 0) {
         post.x <- edge.seg[1, "x"] - abs(h * cos(theta))
         post.y <- edge.seg[1, "y"]
+
       # III:IV
       } else if (delta[1] == 0 & delta[2] < 0) {
         post.x <- edge.seg[1, "x"]
@@ -650,18 +655,17 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     coords <- do.call(rbind, post.coordinates)
     arrow.data <- edge.data[edge.id, ]
     start <- start.node[edge.id]
-    # points(coords[, c("x", "y")])
 
     invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
       if (start[i] == 1) {
-        arrows(arrow.data[i, "x1"],
-               arrow.data[i, "y1"],
+        arrows(arrow.data[i, "x2"],
+               arrow.data[i, "y2"],
                coords[i, "x"],
                coords[i, "y"],
                lwd = 2, length = 0.075, col = case.color, code = 2)
       } else if (start[i] == 2) {
-        arrows(arrow.data[i, "x2"],
-               arrow.data[i, "y2"],
+        arrows(arrow.data[i, "x1"],
+               arrow.data[i, "y1"],
                coords[i, "x"],
                coords[i, "y"],
                lwd = 2, length = 0.075, col = case.color, code = 2)
@@ -669,7 +673,14 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     }))
   }
 
-  title(sub = paste(distance, d.unit, nominal.time, "@", x$speed, "km/hr"))
+  if (unit.posts == "distance") {
+    post.info <- paste("mileposts =", unit.interval, "m.")
+  } else if (unit.posts == "time") {
+    post.info <- paste("timeposts =", unit.interval, "secs.")
+  }
+
+  title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
+    x$speed, "km/hr;", post.info))
 }
 
 numericNodeCoordinates <- function(x) {
@@ -678,13 +689,6 @@ numericNodeCoordinates <- function(x) {
 }
 
 drawPath <- function(x, case.color) {
-  dat <- numericNodeCoordinates(x)
-  n1 <- dat[1:(nrow(dat) - 1), ]
-  n2 <- dat[2:nrow(dat), ]
-  arrows(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2, length = 0.05)
-}
-
-drawPath2 <- function(x, case.color) {
   dat <- numericNodeCoordinates(x)
   n1 <- dat[1:(nrow(dat) - 1), ]
   n2 <- dat[2:nrow(dat), ]

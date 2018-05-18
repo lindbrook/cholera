@@ -1,3 +1,9 @@
+cholera 0.4.9.9003
+==================
+
+- reverse direction of milepost arrows in plot.walking_path().
+
+
 cholera 0.4.9.9002
 ==================
 

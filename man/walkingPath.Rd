@@ -28,13 +28,13 @@ walkingPath(origin, destination = NULL, type = "case-pump",
 \item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
 }
 \value{
-An R list.
+An R list with two elements: a character vector of path nodes and a data frame summary.
 }
 \description{
 summary info and vector of nodes: in-progress prototype.
 }
 \note{
-The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
+The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
 }
 \examples{
 # path from case 1 to nearest pump.
@@ -52,8 +52,8 @@ walkingPath(1, 6, type = "cases")
 # path from pump 1 to pump 6.
 walkingPath(1, 6, type = "pumps")
 
-# path from case 15 to nearest pump.
-plot(walkingPath(15))
+# path from case 1 to nearest pump.
+plot(walkingPath(1))
 }
 \seealso{
 \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
