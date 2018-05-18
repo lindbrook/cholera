@@ -554,6 +554,10 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       } else if (unit.posts == "time") {
         unit.interval <- 60
       }
+    } else {
+      if (!is.numeric(unit.interval)) {
+        stop('"unit.interval" must be numeric.')
+      }
     }
 
     path <- rev(x$path)
