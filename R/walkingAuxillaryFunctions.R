@@ -1,10 +1,8 @@
-#' Auxillary functions for walking() and walkingPath().
-#'
+#' Common auxillary functions for walking path functions.
+#' walking(), walkingPath(), addMilePosts(), milePosts(), addNeighborhood().
 #' @noRd
 
 walkingAuxillaryFunctions <- function() NULL
-
-## Functions ##
 
 auditEdge <- function(p, edges) {
   vapply(seq_along(p[-1]), function(i) {
@@ -14,6 +12,16 @@ auditEdge <- function(p, edges) {
           edges$node1 %in% p[i + 1]
     which(ab | ba)
   }, numeric(1L))
+}
+
+auditEdge2 <- function(p, edges) {
+  vapply(seq_along(p[-1]), function(i) {
+    ab <- edges$node1 %in% p[i] &
+          edges$node2 %in% p[i + 1]
+    ba <- edges$node2 %in% p[i] &
+          edges$node1 %in% p[i + 1]
+    edges[which(ab | ba), "id2"]
+  }, character(1L))
 }
 
 checkSegment <- function(s, dat, edges, p.node, sub.edge = FALSE) {
@@ -144,309 +152,133 @@ splitData <- function(dat, cutpoints, edges) {
   })
 }
 
+## mileposts and timeposts ##
 
-pearlStringRadius <- function() {
-  c(stats::dist(cholera::regular.cases[c(1, 3), ]))
-}
-
-# remove observations with neighbors at each of the 4 cardinal directions
-peripheryCases <- function(n.points, radius = pearlStringRadius()) {
-  n.area <- cholera::regular.cases[n.points, ]
-  periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {
-    case.point <- n.area[i, ]
-
-    N <- signif(case.point$x) == signif(n.area$x) &
-         signif(case.point$y + radius) == signif(n.area$y)
-
-    E <- signif(case.point$x + radius) == signif(n.area$x) &
-         signif(case.point$y) == signif(n.area$y)
-
-    S <- signif(case.point$x) == signif(n.area$x) &
-         signif(case.point$y - radius) == signif(n.area$y)
-
-    W <- signif(case.point$x - radius) == signif(n.area$x) &
-         signif(case.point$y) == signif(n.area$y)
-
-    sum(c(N, E, S, W)) == 4
-  }, logical(1L))
-
-  row.names(n.area[which(periphery.test == FALSE), ])
-}
-
-# sort points on periphery to form a concave hull
-pearlString <- function(vertices, radius = pearlStringRadius(),
-  orientation = "clockwise") {
-
-  dat <- cholera::regular.cases[vertices, ]
-  dat <- dat[order(dat$y), ] # set southern most point as first observation.
-  pearl.string <- vector(mode = "character", length = length(vertices))
-  pearl.string[1] <- row.names(dat[1, ])
-
-  for (j in 2:length(pearl.string)) {
-    added.pearls <- pearl.string[pearl.string != ""]
-    ego.case <- added.pearls[length(added.pearls)]
-    alter.sel <- row.names(dat) %in% added.pearls == FALSE
-    alters <- dat[alter.sel, ]
-
-    N  <- signif(alters$x) == signif(dat[ego.case, "x"]) &
-          signif(alters$y) == signif(dat[ego.case, "y"] + radius)
-
-    NE <- signif(alters$x) == signif(dat[ego.case, "x"] + radius) &
-          signif(alters$y) == signif(dat[ego.case, "y"] + radius)
-
-    E  <- signif(alters$x) == signif(dat[ego.case, "x"] + radius) &
-          signif(alters$y) == signif(dat[ego.case, "y"])
-
-    SE <- signif(alters$x) == signif(dat[ego.case, "x"] + radius) &
-          signif(alters$y) == signif(dat[ego.case, "y"] - radius)
-
-    S  <- signif(alters$x) == signif(dat[ego.case, "x"]) &
-          signif(alters$y) == signif(dat[ego.case, "y"] - radius)
-
-    SW <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
-          signif(alters$y) == signif(dat[ego.case, "y"] - radius)
-
-    W  <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
-          signif(alters$y) == signif(dat[ego.case, "y"])
-
-    NW <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
-          signif(alters$y) == signif(dat[ego.case, "y"] + radius)
-
-    master.list <- list(N = N, NE = NE, E = E, SE = SE, S = S, SW = SW, W = W,
-      NW = NW)
-
-    if (j > 2) {
-      clockwise.compass <- lapply(-seq_len(length(master.list)), function(i) {
-        vec <- names(master.list)[i]
-        if (abs(i) == 1 | abs(i) == length(master.list)) vec
-        else vec[c(abs(i):length(vec), 1:(abs(i) - 1))]
-      })
-
-      counterclockwise.compass <- lapply(clockwise.compass, rev)
-      names(clockwise.compass) <- names(master.list)
-      names(counterclockwise.compass) <- names(master.list)
-
-      if (orientation == "clockwise") {
-        compass <- clockwise.compass
-      } else if (orientation == "counterclockwise") {
-        compass <- counterclockwise.compass
-      }
-
-      delta <- dat[ego.case, ] - dat[added.pearls[(length(added.pearls) - 1)], ]
-
-      if (delta$x == 0 & delta$y < 0) {
-        lst <- compass["N"]  # Prev: North
-      } else if (delta$x < 0 & delta$y < 0) {
-        lst <- compass["NE"] # Prev: North-East
-      } else if (delta$x < 0 & delta$y == 0) {
-        lst <- compass["E"]  # Prev: East
-      } else if (delta$x < 0 & delta$y > 0) {
-        lst <- compass["SE"] # Prev: South-East
-      } else if (delta$x == 0 & delta$y > 0) {
-        lst <- compass["S"]  # Prev: South
-      } else if (delta$x > 0 & delta$y > 0) {
-        lst <- compass["SW"] # Prev: South-West
-      } else if (delta$x > 0 & delta$y == 0) {
-        lst <- compass["W"]  # Prev: West
-      } else if (delta$x > 0 & delta$y < 0) {
-        lst <- compass["NW"] # Prev: North-West
-      }
-
-      candidates <- vapply(master.list, any, logical(1L))[unlist(lst)]
-
-      # Exception to consider second-order candidates for pearl string.
-      if (all(candidates == FALSE)) {
-        n   <- signif(alters$x) == signif(dat[ego.case, "x"]) &
-               signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
-
-        nne <- signif(alters$x) == signif(dat[ego.case, "x"] + radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
-
-        ne  <- signif(alters$x) == signif(dat[ego.case, "x"] + 2 * radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
-
-        ene <- signif(alters$x) == signif(dat[ego.case, "x"] + 2 * radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] + radius)
-
-        e   <- signif(alters$x) == signif(dat[ego.case, "x"] + 2 * radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"])
-
-        ese <- signif(alters$x) == signif(dat[ego.case, "x"] + 2 * radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] - radius)
-
-        se  <- signif(alters$x) == signif(dat[ego.case, "x"] + 2 * radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] - 2 * radius)
-
-        sse <- signif(alters$x) == signif(dat[ego.case, "x"] + radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] - 2 * radius)
-
-        s   <- signif(alters$x) == signif(dat[ego.case, "x"]) &
-               signif(alters$y) == signif(dat[ego.case, "y"] - 2 * radius)
-
-        ssw <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] - 2 * radius)
-
-        sw  <- signif(alters$x) == signif(dat[ego.case, "x"] - 2 * radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] - 2 * radius)
-
-        wsw <- signif(alters$x) == signif(dat[ego.case, "x"] - 2 * radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] - radius)
-
-        w   <- signif(alters$x) == signif(dat[ego.case, "x"] - 2 * radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"])
-
-        wnw <- signif(alters$x) == signif(dat[ego.case, "x"] - 2 * radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] + radius)
-
-        nw  <- signif(alters$x) == signif(dat[ego.case, "x"] - 2 * radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
-
-        nnw <- signif(alters$x) == signif(dat[ego.case, "x"] - radius) &
-               signif(alters$y) == signif(dat[ego.case, "y"] + 2 * radius)
-
-        # closest second order neighbors
-        master.listB <- list(n = n, e = e, s = s, w = w,
-                             nne = nne, ene = ene,
-                             ese = ese, sse = sse,
-                             ssw = ssw, wsw = wsw,
-                             wnw = wnw, nnw = nnw,
-                             ne = ne, se = se, sw = sw, nw = nw)
-
-        idx <- -seq_len(length(master.listB))
-
-        clockwise.compassB <- lapply(idx, function(i) {
-          vec <- names(master.listB)[i]
-          if (abs(i) == 1 | abs(i) == length(master.listB)) vec
-          else vec[c(abs(i):length(vec), 1:(abs(i) - 1))]
-        })
-
-        counterclockwise.compassB <- lapply(clockwise.compassB, rev)
-        names(clockwise.compassB) <- names(master.listB)
-        names(counterclockwise.compassB) <- names(master.listB)
-
-        if (orientation == "clockwise") {
-          compassB <- clockwise.compassB
-        } else if (orientation == "counterclockwise") {
-          compassB <- counterclockwise.compassB
-        }
-
-        # increment by one compass point
-        if (delta$x == 0 & delta$y < 0) {
-          lstB <- compassB["n"]  # Prev: North
-        } else if (delta$x < 0 & delta$y < 0) {
-          lstB <- compassB["ne"] # Prev: North-East
-        } else if (delta$x < 0 & delta$y == 0) {
-          lstB <- compassB["e"]  # Prev: East
-        } else if (delta$x < 0 & delta$y > 0) {
-          lstB <- compassB["se"] # Prev: South-East
-        } else if (delta$x == 0 & delta$y > 0) {
-          lstB <- compassB["s"]  # Prev: South
-        } else if (delta$x > 0 & delta$y > 0) {
-          lstB <- compassB["sw"] # Prev: South-West
-        } else if (delta$x > 0 & delta$y == 0) {
-          lstB <- compassB["w"]  # Prev: West
-        } else if (delta$x > 0 & delta$y < 0) {
-          lstB <- compassB["nw"] # Prev: North-West
-        }
-
-        candidatesB <- vapply(master.listB, any, logical(1L))[unlist(lstB)]
-        sel <- which(get(names(which(candidatesB)[1])))
-
-      } else {
-        sel <- which(get(names(which(candidates)[1])))
-      }
-
+identifyEdges <- function(dat, edges) {
+  out <- lapply(seq_len(nrow(dat)), function(i) {
+    test1 <- dat[i, "node1"] == edges$node1 &
+             dat[i, "node2"] == edges$node2
+    test2 <- dat[i, "node2"] == edges$node1 &
+             dat[i, "node1"] == edges$node2
+    if (any(test1)) {
+      edges[test1, ]
+    } else if (any(test2)) {
+      edges[test2, ]
     } else {
-      candidates <- vapply(master.list, any, logical(1L))
-
-      if (orientation == "clockwise") {
-        second.pearl <- vapply(c("W", "NW", "N", "NE"), function(x) {
-          x %in% names(candidates[candidates])
-        }, logical(1L))
-      } else if (orientation == "counterclockwise") {
-        second.pearl <- vapply(c("E", "NE", "N", "NW"), function(x) {
-          x %in% names(candidates[candidates])
-        }, logical(1L))
-      }
-
-      sel <- which(get(names(second.pearl[second.pearl])))
+     stop("Error!")
     }
-    pearl.string[j] <- row.names(alters[sel, ])
-  }
-  pearl.string
+  })
+  do.call(rbind, out)
 }
 
-pumpTokens <- function(pump.select, vestry, case.set, snow.colors, type) {
-  if (vestry) {
-    dat <- cholera::pumps.vestry
-  } else {
-    dat <- cholera::pumps
-  }
+edgeData <- function(endpt.paths, edges) {
+  lapply(endpt.paths, function(p.vectors) {
+    out <- lapply(p.vectors, function(p) {
+      path <- rev(p)
+      path.edge <- data.frame(node1 = path[1:(length(path) - 1)],
+                              node2 = path[2:length(path)],
+                              stringsAsFactors = FALSE)
 
-  if (case.set == "observed") {
-    if (is.null(pump.select)) {
-      points(dat[, c("x", "y")], pch = 24, lwd = 1.25, col = snow.colors)
-      text(dat[, c("x", "y")], pos = 1, cex = 0.9, labels = paste0("p", dat$id))
-    } else {
-      if (all(pump.select > 0)) {
-        sel <- dat$id %in% pump.select
-      } else if (all(pump.select < 0)) {
-        sel <- dat$id %in% abs(pump.select) == FALSE
-      }
-      points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25,
-        col = snow.colors[sel])
-      text(dat[sel, c("x", "y")], pos = 1, cex = 0.9,
-        labels = paste0("p", dat$id[sel]))
-    }
+      edge.data <- identifyEdges(path.edge, edges)
+      audit1 <- path.edge$node1 == edge.data$node1
+      audit2 <- path.edge$node2 == edge.data$node2
 
-  } else if (case.set == "expected") {
-    if (type == "road") {
-      if (is.null(pump.select)) {
-        points(dat[, c("x", "y")], pch = 24, lwd = 1.25, bg = snow.colors)
-        text(dat[, c("x", "y")], pos = 1, cex = 0.9,
-          labels = paste0("p", dat$id))
+      if (!all(audit1 == audit2)) {
+        stop("Error!")
       } else {
-        if (all(pump.select > 0)) {
-          sel <- dat$id %in% pump.select
-        } else if (all(pump.select < 0)) {
-          sel <- dat$id %in% abs(pump.select) == FALSE
-        }
-        points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25,
-          bg = snow.colors[sel])
-        text(dat[sel, c("x", "y")], pos = 1, cex = 0.9,
-          labels = paste0("p", dat$id[sel]))
+        out.of.order <- which(audit1 == FALSE)
+        tmp.sel <- c("x2", "y2", "x1", "y1", "node2", "node1")
+        tmp <- edge.data[out.of.order, tmp.sel]
+        out.sel <- c("x1", "y1", "x2", "y2", "node1", "node2")
+        edge.data[out.of.order, out.sel] <- tmp
+        edge.data
       }
-
-    } else if (type %in% c("area.points", "area.polygons")) {
-      if (is.null(pump.select)) {
-        points(dat[, c("x", "y")], pch = 24, lwd = 1.25,
-          col = "white", bg = snow.colors)
-        text(dat[, c("x", "y")], pos = 1, cex = 0.9,
-          labels = paste0("p", dat$id))
-      } else {
-        if (all(pump.select > 0)) {
-          sel <- dat$id %in% pump.select
-        } else if (all(pump.select < 0)) {
-          sel <- dat$id %in% abs(pump.select) == FALSE
-        }
-        points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25,
-          col = "white", bg = snow.colors[sel])
-        text(dat[sel, c("x", "y")], pos = 1, cex = 0.9,
-          labels = paste0("p", dat$id[sel]))
-      }
-    }
-  }
+    })
+    out
+  })
 }
 
-expectedCount <- function(x) {
-  arguments <- list(pump.select = x$pump.select,
-                    vestry = x$vestry,
-                    weighted = x$weighted,
-                    case.set = "expected",
-                    multi.core = x$cores)
+postCoordinates <- function(dat, unit, interval, walking.speed) {
+  if (unit == "distance") {
+    cumulative <- cholera::unitMeter(cumsum(dat$d), "meter")
+  } else if (unit == "time") {
+    cumulative <- cholera::distanceTime(cumsum(dat$d), speed = walking.speed)
+  }
 
-  nearest.pump <- do.call("nearestPump", c(arguments))
-  nearest.pump <- nearest.pump[is.infinite(nearest.pump$distance) == FALSE, ]
-  out <- table(nearest.pump$pump)
-  stats::setNames(as.vector(out), names(out))
+  total <- cumulative[length(cumulative)]
+  posts <- seq(0, total, interval)
+
+  if (max(posts) > max(cumulative)) {
+    posts <- posts[-length(posts)]
+  }
+
+  bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
+                     hi = cumulative)
+
+  edge.select <- vapply(posts[-1], function(x) {
+    which(vapply(seq_len(nrow(bins)), function(i) {
+      x >= bins[i, "lo"] & x < bins[i, "hi"]
+    }, logical(1L)))
+  }, integer(1L))
+
+  post.coordinates <- lapply(seq_along(edge.select), function(i) {
+    sel.data <- dat[edge.select[i], ]
+    edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
+                            y = c(sel.data$y1, sel.data$y2))
+
+    ols <- stats::lm(y ~ x, data = edge.data)
+    edge.slope <- stats::coef(ols)[2]
+    edge.intercept <- stats::coef(ols)[1]
+    theta <- atan(edge.slope)
+    h <- (posts[-1][i] - bins[edge.select[i], "lo"]) /
+      cholera::unitMeter(1, "meter")
+
+    delta <- edge.data[2, ] - edge.data[1, ]
+
+    # Quadrant I
+    if (all(delta > 0)) {
+      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+
+    # Quadrant II
+    } else if (delta[1] < 0 & delta[2] > 0) {
+      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+
+    # Quadrant III
+    } else if (all(delta < 0)) {
+      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+
+    # Quadrant IV
+    } else if (delta[1] > 0 & delta[2] < 0) {
+      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+
+    # I:IV
+    } else if (delta[1] > 0 & delta[2] == 0) {
+      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+      post.y <- edge.data[1, "y"]
+
+    # I:II
+    } else if (delta[1] == 0 & delta[2] > 0) {
+      post.x <- edge.data[1, "x"]
+      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+
+    # II:III
+    } else if (delta[1] < 0 & delta[2] == 0) {
+      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+      post.y <- edge.data[1, "y"]
+
+    # III:IV
+    } else if (delta[1] == 0 & delta[2] < 0) {
+      post.x <- edge.data[1, "x"]
+      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+    }
+
+    data.frame(post = posts[-1][i], x = post.x, y = post.y,
+      angle = theta * 180L / pi, row.names = NULL)
+  })
+
+  do.call(rbind, post.coordinates)
 }
