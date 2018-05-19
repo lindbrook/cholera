@@ -61,7 +61,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
 
       within.radius <- lapply(road.segments$id, function(x) {
         dat <- road.segments[road.segments$id == x, ]
-        test1 <- withinRadius(case, dat[, c("x1", "y1")])
+        test1 <- withinRadius(case, dat[, c("x1", "y1")]) # in unstack.R
         test2 <- withinRadius(case, dat[, c("x2", "y2")])
         if (any(test1, test2)) unique(dat$id)
       })
@@ -123,8 +123,4 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
 
   do.call(rbind, orthogonal.projection)
   }
-}
-
-withinRadius <- function(a, b, radius = 2) {
-  (a$x - b$x)^2 + (a$y - b$y)^2 <= radius^2
 }
