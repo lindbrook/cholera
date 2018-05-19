@@ -530,19 +530,19 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   drawPath(x$path, case.color)
 
   if (x$time.unit == "hour") {
-    nominal.time <- paste(round(x$data$time, 1), "hr.")
+    nominal.time <- paste(round(x$data$time, 1), "hr")
   } else if (x$time.unit == "minute") {
-    nominal.time <- paste(round(x$data$time, 1), "mins.")
+    nominal.time <- paste(round(x$data$time, 1), "min")
   } else if (x$time.unit == "second") {
-    nominal.time <- paste(round(x$data$time, 1), "secs.")
+    nominal.time <- paste(round(x$data$time, 1), "sec")
   }
 
   if (x$unit == "native") {
     d.unit <- "units;"
   } else if (x$unit == "meter") {
-    d.unit <- "meters;"
+    d.unit <- "m;"
   } else if (x$unit == "yard") {
-    d.unit <- "yards;"
+    d.unit <- "yd;"
   }
 
   if (unit.posts %in% c("distance", "time") == FALSE) {
@@ -678,9 +678,9 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   }
 
   if (unit.posts == "distance") {
-    post.info <- paste("mileposts =", unit.interval, "m.")
+    post.info <- paste("posts @", unit.interval, "m")
   } else if (unit.posts == "time") {
-    post.info <- paste("timeposts =", unit.interval, "secs.")
+    post.info <- paste("posts @", unit.interval, "sec")
   }
 
   title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
