@@ -678,9 +678,9 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   }
 
   if (unit.posts == "distance") {
-    post.info <- paste("posts @", unit.interval, "m")
+    post.info <- paste("posts @", unit.interval, "m intervals")
   } else if (unit.posts == "time") {
-    post.info <- paste("posts @", unit.interval, "sec")
+    post.info <- paste("posts @", unit.interval, "sec intervals")
   }
 
   title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
