@@ -1,3 +1,10 @@
+cholera 0.4.9.9005
+==================
+
+- migrate to walkingAuxillaryFunctions.R.
+- consolidate withinRadius() in unstack.R.
+
+
 cholera 0.4.9.9004
 ==================
 

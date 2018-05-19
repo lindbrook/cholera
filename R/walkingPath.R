@@ -699,23 +699,6 @@ drawPath <- function(x, case.color) {
   segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2)
 }
 
-identifyEdges <- function(dat, edges) {
-  out <- lapply(seq_len(nrow(dat)), function(i) {
-    test1 <- dat[i, "node1"] == edges$node1 &
-             dat[i, "node2"] == edges$node2
-    test2 <- dat[i, "node2"] == edges$node1 &
-             dat[i, "node1"] == edges$node2
-    if (any(test1)) {
-      edges[test1, ]
-    } else if (any(test2)) {
-      edges[test2, ]
-    } else {
-     stop("Error!")
-    }
-  })
-  do.call(rbind, out)
-}
-
 edgeOrder <- function(dat, path.edge) {
   vapply(seq_len(nrow(dat)), function(i) {
     test1 <- dat[i, "node1"] == path.edge[i, "node1"] &
