@@ -161,7 +161,7 @@ expectedCount <- function(x) {
 #' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when case.set = "expected".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
-#' @section Note: "area.polygons" is under development and, for certain configurations, may return an error. For now, "area.points" is the more robust choice, especially for data exploration.
+#' @section Note: "area.polygons" is under development and, for certain configurations, may return an error. For now, "area.points" is the more robust choice, especially for data exploration. Because these graphics are based on simulated data (i.e., "regular.cases"), there may be discrepancies with observed data at the margins along the periphery of neighborhoods.
 #' @export
 #' @examples
 #' # plot(neighborhoodWalking())
