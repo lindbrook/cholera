@@ -580,76 +580,76 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       posts <- posts[-length(posts)]
     }
 
-    edge.bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
-                            hi = cumulative)
+    bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
+                       hi = cumulative)
 
-    edge.id <- vapply(posts[-1], function(x) {
-      which(vapply(seq_len(nrow(edge.bins)), function(i) {
-        x >= edge.bins[i, "lo"] & x < edge.bins[i, "hi"]
+    edge.select <- vapply(posts[-1], function(x) {
+      which(vapply(seq_len(nrow(bins)), function(i) {
+        x >= bins[i, "lo"] & x < bins[i, "hi"]
       }, logical(1L)))
     }, integer(1L))
 
     start.node <- edgeOrder(edge.data, path.edge)
 
-    post.coordinates <- lapply(seq_along(edge.id), function(i) {
-      sel.data <- edge.data[edge.id[i], ]
+    post.coordinates <- lapply(seq_along(edge.select), function(i) {
+      sel.data <- edge.data[edge.select[i], ]
 
-      if (start.node[edge.id[i]] == 1) {
-        edge.seg <- data.frame(x = c(sel.data$x1, sel.data$x2),
+      if (start.node[edge.select[i]] == 1) {
+        edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
                                y = c(sel.data$y1, sel.data$y2))
-      } else if (start.node[edge.id[i]] == 2) {
-        edge.seg <- data.frame(x = c(sel.data$x2, sel.data$x1),
+      } else if (start.node[edge.select[i]] == 2) {
+        edge.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
                                y = c(sel.data$y2, sel.data$y1))
       }
 
-      ols <- stats::lm(y ~ x, data = edge.seg)
+      ols <- stats::lm(y ~ x, data = edge.data)
       edge.slope <- stats::coef(ols)[2]
       edge.intercept <- stats::coef(ols)[1]
       theta <- atan(edge.slope)
-      h <- (posts[-1][i] - edge.bins[edge.id[i], "lo"]) /
+      h <- (posts[-1][i] - bins[edge.select[i], "lo"]) /
             cholera::unitMeter(1, "meter")
 
-      delta <- edge.seg[2, ] - edge.seg[1, ]
+      delta <- edge.data[2, ] - edge.data[1, ]
 
       # Quadrant I
       if (all(delta > 0)) {
-        post.x <- edge.seg[1, "x"] + abs(h * cos(theta))
-        post.y <- edge.seg[1, "y"] + abs(h * sin(theta))
+        post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+        post.y <- edge.data[1, "y"] + abs(h * sin(theta))
 
       # Quadrant II
       } else if (delta[1] < 0 & delta[2] > 0) {
-        post.x <- edge.seg[1, "x"] - abs(h * cos(theta))
-        post.y <- edge.seg[1, "y"] + abs(h * sin(theta))
+        post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+        post.y <- edge.data[1, "y"] + abs(h * sin(theta))
 
       # Quadrant III
       } else if (all(delta < 0)) {
-        post.x <- edge.seg[1, "x"] - abs(h * cos(theta))
-        post.y <- edge.seg[1, "y"] - abs(h * sin(theta))
+        post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+        post.y <- edge.data[1, "y"] - abs(h * sin(theta))
 
       # Quadrant IV
       } else if (delta[1] > 0 & delta[2] < 0) {
-        post.x <- edge.seg[1, "x"] + abs(h * cos(theta))
-        post.y <- edge.seg[1, "y"] - abs(h * sin(theta))
+        post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+        post.y <- edge.data[1, "y"] - abs(h * sin(theta))
 
       # I:IV
       } else if (delta[1] > 0 & delta[2] == 0) {
-        post.x <- edge.seg[1, "x"] + abs(h * cos(theta))
-        post.y <- edge.seg[1, "y"]
+        post.x <- edge.data[1, "x"] + abs(h * cos(theta))
+        post.y <- edge.data[1, "y"]
 
       # I:II
       } else if (delta[1] == 0 & delta[2] > 0) {
-        post.x <- edge.seg[1, "x"]
-        post.y <- edge.seg[1, "y"] + abs(h * sin(theta))
+        post.x <- edge.data[1, "x"]
+        post.y <- edge.data[1, "y"] + abs(h * sin(theta))
 
       # II:III
       } else if (delta[1] < 0 & delta[2] == 0) {
-        post.x <- edge.seg[1, "x"] - abs(h * cos(theta))
-        post.y <- edge.seg[1, "y"]
+        post.x <- edge.data[1, "x"] - abs(h * cos(theta))
+        post.y <- edge.data[1, "y"]
 
       # III:IV
       } else if (delta[1] == 0 & delta[2] < 0) {
-        post.x <- edge.seg[1, "x"]
-        post.y <- edge.seg[1, "y"] - abs(h * sin(theta))
+        post.x <- edge.data[1, "x"]
+        post.y <- edge.data[1, "y"] - abs(h * sin(theta))
       }
 
       data.frame(post = posts[-1][i], x = post.x, y = post.y,
@@ -657,8 +657,8 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     })
 
     coords <- do.call(rbind, post.coordinates)
-    arrow.data <- edge.data[edge.id, ]
-    start <- start.node[edge.id]
+    arrow.data <- edge.data[edge.select, ]
+    start <- start.node[edge.select]
 
     invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
       if (start[i] == 1) {
