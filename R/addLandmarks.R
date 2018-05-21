@@ -1,4 +1,4 @@
-#' Add landmarks.
+#' Add landmarks to plot.
 #'
 #' Adam and Eve Court (isolate), Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews (isolate), 18 Sackville Street (John Snow residence) and 28 Dean Street (Karl Marx residence).
 #' @note 18 Sackville Street and 28 Dean Street are approximate. Falconberg Court & Mews form an isolate: they are not part of the network of roads and are technically unreachable. Adam and Eve Court and its pump also form an isolate.
@@ -30,8 +30,8 @@ addLandmarks <- function(text.size = 0.5) {
 
   # St. Luke's Church; Henry Whitehead Assistant Curate
   st.luke <- data.frame(x = 14.94156, y = 11.25313)
-  # text(st.luke$x, st.luke$y, labels = "St Luke's\nChurch", cex = text.size)
-  text(st.luke$x, st.luke$y, labels = "St. Luke's\nChurch", cex = text.size, pos = 4, offset = 0.25)
+  text(st.luke$x, st.luke$y, labels = "St. Luke's\nChurch", cex = text.size,
+    pos = 4, offset = 0.25)
   points(st.luke$x, st.luke$y, pch = 15, cex = 1/3)
 
   # Soho Square
@@ -63,7 +63,6 @@ addLandmarks <- function(text.size = 0.5) {
   # Lion Brewery (Huggins' proprietors)
   brewery <- data.frame(x = 13.9022, y = 11.87315)
   text(brewery$x, brewery$y, labels = "Lion\nBrewery", cex = text.size)
-  # text(brewery$x, brewery$y, labels = "Lion Brewery", cex = text.size)
   points(brewery$x, brewery$y, pch = 15, cex = 1/3)
 
   # Falconberg Court and Mews (isolate)

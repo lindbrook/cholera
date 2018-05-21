@@ -2,7 +2,7 @@
 % Please edit documentation in R/addLandmarks.R
 \name{addLandmarks}
 \alias{addLandmarks}
-\title{Add landmarks.}
+\title{Add landmarks to plot.}
 \usage{
 addLandmarks(text.size = 0.5)
 }
