@@ -30,7 +30,8 @@ addLandmarks <- function(text.size = 0.5) {
 
   # St. Luke's Church; Henry Whitehead Assistant Curate
   st.luke <- data.frame(x = 14.94156, y = 11.25313)
-  text(st.luke$x, st.luke$y, labels = "St. Luke's\nChurch", cex = text.size)
+  # text(st.luke$x, st.luke$y, labels = "St Luke's\nChurch", cex = text.size)
+  text(st.luke$x, st.luke$y, labels = "St. Luke's\nChurch", cex = text.size, pos = 4, offset = 0.25)
   points(st.luke$x, st.luke$y, pch = 15, cex = 1/3)
 
   # Soho Square
@@ -62,6 +63,7 @@ addLandmarks <- function(text.size = 0.5) {
   # Lion Brewery (Huggins' proprietors)
   brewery <- data.frame(x = 13.9022, y = 11.87315)
   text(brewery$x, brewery$y, labels = "Lion\nBrewery", cex = text.size)
+  # text(brewery$x, brewery$y, labels = "Lion Brewery", cex = text.size)
   points(brewery$x, brewery$y, pch = 15, cex = 1/3)
 
   # Falconberg Court and Mews (isolate)
@@ -81,40 +83,40 @@ addLandmarks <- function(text.size = 0.5) {
   nm <- c("x", "y")
 
   # Marlborough Mews: Earl of Aberdeen
-  NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "116-2", c("x2", "y2")], nm)
-  NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "144-1", c("x2", "y2")], nm)
-  SW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "161-1", c("x2", "y2")], nm)
-  SE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "161-1", c("x1", "y1")], nm)
-
-  aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
-                                  NE$x, NE$y, SW$x, SW$y)
-
-  points(aberdeen$x, aberdeen$y, pch = 15, cex = 1/3)
-  text(aberdeen$x, aberdeen$y, labels = "Earl of\nAberdeen",
-    cex = text.size)
+  # NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+  #   "116-2", c("x2", "y2")], nm)
+  # NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+  #   "144-1", c("x2", "y2")], nm)
+  # SW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+  #   "161-1", c("x2", "y2")], nm)
+  # SE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+  #   "161-1", c("x1", "y1")], nm)
+  #
+  # aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
+  #                                 NE$x, NE$y, SW$x, SW$y)
+  #
+  # points(aberdeen$x, aberdeen$y, pch = 15, cex = 1/3)
+  # text(aberdeen$x, aberdeen$y, labels = "Earl of\nAberdeen",
+    # cex = text.size)
 
   # 1) Marlborough Mews: Police Station
 
-  rd.data <- cholera::road.segments[cholera::road.segments$id == "161-1",
-    c("x1", "y1", "x2", "y2")]
-
-  dat <- data.frame(x = unlist(rd.data[, grep("x", names(rd.data))]),
-                    y = unlist(rd.data[, grep("y", names(rd.data))]),
-                    row.names = NULL)
-
-  ols <- stats::lm(y ~ x, dat)
-  segment.slope <- stats::coef(ols)[2]
-  new.int <- aberdeen$y - aberdeen$x * segment.slope
-  orthogonal.slope <- -1 / segment.slope
-  orthogonal.intercept <- SW$y - orthogonal.slope * SW$x
-  new.x <- (orthogonal.intercept - new.int) / (segment.slope - orthogonal.slope)
-  new.y <- new.x * orthogonal.slope + orthogonal.intercept
-  points(new.x, new.y, pch = 15, cex = 1/3)
-  text(new.x, new.y, labels = "Police\nStation", cex = text.size)
+  # rd.data <- cholera::road.segments[cholera::road.segments$id == "161-1",
+  #   c("x1", "y1", "x2", "y2")]
+  #
+  # dat <- data.frame(x = unlist(rd.data[, grep("x", names(rd.data))]),
+  #                   y = unlist(rd.data[, grep("y", names(rd.data))]),
+  #                   row.names = NULL)
+  #
+  # ols <- stats::lm(y ~ x, dat)
+  # segment.slope <- stats::coef(ols)[2]
+  # new.int <- aberdeen$y - aberdeen$x * segment.slope
+  # orthogonal.slope <- -1 / segment.slope
+  # orthogonal.intercept <- SW$y - orthogonal.slope * SW$x
+  # new.x <- (orthogonal.intercept - new.int) / (segment.slope - orthogonal.slope)
+  # new.y <- new.x * orthogonal.slope + orthogonal.intercept
+  # points(new.x, new.y, pch = 15, cex = 1/3)
+  # text(new.x, new.y, labels = "Police\nStation", cex = text.size)
 
   # 2) Regent (opposite) at intersection with Little Argyll Street: Chapel
 
@@ -174,6 +176,8 @@ addLandmarks <- function(text.size = 0.5) {
   points(model.lodging$x, model.lodging$y, pch = 15, cex = 1/3)
   text(model.lodging$x, model.lodging$y, labels = "Model\nLodging",
     cex = text.size)
+  # text(model.lodging$x, model.lodging$y, labels = "Model Lodging",
+  #  cex = text.size)
 
   # 7) Marshall Street Public Bathsn 1929? London Encyclopedia (Marshall Street)
 
