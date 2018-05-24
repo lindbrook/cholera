@@ -596,10 +596,10 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
       if (start.node[edge.select[i]] == 1) {
         edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
-                               y = c(sel.data$y1, sel.data$y2))
+                                y = c(sel.data$y1, sel.data$y2))
       } else if (start.node[edge.select[i]] == 2) {
         edge.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
-                               y = c(sel.data$y2, sel.data$y1))
+                                y = c(sel.data$y2, sel.data$y1))
       }
 
       ols <- stats::lm(y ~ x, data = edge.data)
@@ -697,14 +697,4 @@ drawPath <- function(x, case.color) {
   n1 <- dat[1:(nrow(dat) - 1), ]
   n2 <- dat[2:nrow(dat), ]
   segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2)
-}
-
-edgeOrder <- function(dat, path.edge) {
-  vapply(seq_len(nrow(dat)), function(i) {
-    test1 <- dat[i, "node1"] == path.edge[i, "node1"] &
-             dat[i, "node2"] == path.edge[i, "node2"]
-    test2 <- dat[i, "node1"] == path.edge[i, "node2"] &
-             dat[i, "node2"] == path.edge[i, "node1"]
-    ifelse(any(test1), 1, ifelse(any(test2), 2, 0))
-  }, numeric(1L))
 }
