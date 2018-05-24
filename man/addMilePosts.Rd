@@ -6,7 +6,7 @@
 \usage{
 addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   unit = "distance", interval = NULL, walking.speed = 5,
-  multi.core = FALSE)
+  type = "arrows", multi.core = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of pumps to subset from neighborhoods defined by "pump.select". Negative selection is possible. NULL selects all pumps in "pump.select".}
@@ -20,6 +20,8 @@ addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 \item{interval}{Numeric. Interval between mileposts: 50 meters for "distance";  60 seconds for "time".}
 
 \item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
+
+\item{type}{Character. "arrows" or "points".}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }

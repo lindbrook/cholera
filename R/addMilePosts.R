@@ -6,13 +6,18 @@
 #' @param unit Character. Milepost unit of measurement: "distance" or "time".
 #' @param interval Numeric. Interval between mileposts: 50 meters for "distance";  60 seconds for "time".
 #' @param walking.speed Numeric. Default walking speed is 5 km/hr.
+#' @param type Character. "arrows" or "points".
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
 #' @return points() graphic elements.
 #' @export
 
 addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, unit = "distance", interval = NULL, walking.speed = 5,
-  multi.core = FALSE) {
+  type = "arrows", multi.core = FALSE) {
+
+  if (type %in% c("arrows", "points") == FALSE) {
+    stop('"type" must either be "arrows" or "points"')
+  }
 
   cores <- multiCore(multi.core)
   x <- cholera::neighborhoodWalking(pump.select, vestry, multi.core = cores)
@@ -105,14 +110,32 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
     else if (unit == "time") interval <- 60
   }
 
-  coords <- parallel::mclapply(names(endpt.paths), function(nm) {
-    lapply(edge.data[[nm]], postCoordinates, unit, interval, walking.speed)
-  }, mc.cores = cores)
+  if (type == "arrows") {
+    coords <- parallel::mclapply(names(endpt.paths), function(nm) {
+      lapply(edge.data[[nm]], function(dat) {
+        postCoordinatesB(dat, unit, interval, walking.speed, edge.sel = TRUE)
+      })
+    }, mc.cores = cores)
 
-  coords <- stats::setNames(coords, names(endpt.paths))
+    coords <- stats::setNames(coords, names(endpt.paths))
 
-  invisible(lapply(coords, function(z) {
-    dat <- unique(do.call(rbind, z))
-    points(dat[, c("x", "y")], pch = 22, bg = "white", cex = 2/3)
-  }))
+    invisible(lapply(names(coords)[-3], function(nm) {
+      dat <- unique(do.call(rbind, coords[[nm]]))
+      arrows(dat$x0, dat$y0, dat$x, dat$y,  lwd = 2, length = 0.05, code = 2,
+        col = cholera::snowColors()[paste0("p", nm)])
+    }))
+
+  } else if (type == "points") {
+    coords <- parallel::mclapply(names(endpt.paths), function(nm) {
+      lapply(edge.data[[nm]], postCoordinates, unit, interval, walking.speed)
+    }, mc.cores = cores)
+
+    coords <- stats::setNames(coords, names(endpt.paths))
+
+    invisible(lapply(coords, function(z) {
+      dat <- unique(do.call(rbind, z))
+      points(dat[, c("x", "y")], pch = 22, bg = "white", cex = 2/3)
+    }))
+  }
+
 }
