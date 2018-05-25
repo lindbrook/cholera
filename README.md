@@ -97,11 +97,11 @@ devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 
 Read the package's vignettes. They expand on the concepts and data, and highlight the methods used to "fix" the data and to compute walking distances and pump neighborhoods. They can be read online at the links below:
 
-[Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)
-[Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)
-["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.bars.html)
-[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)
-[Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)
+[Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)   
+[Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)   
+["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.bars.html)   
+[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)   
+[Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)   
 [Kernel Density Plot](https://cran.r-project.org/web/packages/cholera/vignettes/kernel.density.html)
 
 ### note
