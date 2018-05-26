@@ -8,7 +8,7 @@
 #' @param walking.speed Numeric. Default walking speed is 5 km/hr.
 #' @param type Character. "arrows" or "points".
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.
-#' @return points() graphic elements.
+#' @return R base graphics arrows or points.
 #' @export
 
 addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
@@ -119,10 +119,29 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
 
     coords <- stats::setNames(coords, names(endpt.paths))
 
-    invisible(lapply(names(coords)[-3], function(nm) {
+    # test for no mileposts or timeposts
+    no.posts <- vapply(coords, function(x) {
+      is.null(nrow(do.call(rbind, x)))
+    }, logical(1L))
+
+    invisible(lapply(names(coords)[!no.posts], function(nm) {
       dat <- unique(do.call(rbind, coords[[nm]]))
-      arrows(dat$x0, dat$y0, dat$x, dat$y,  lwd = 2, length = 0.05, code = 2,
-        col = cholera::snowColors()[paste0("p", nm)])
+      color <- cholera::snowColors()[paste0("p", nm)]
+      zero.length.x <- round(abs(dat$x0 - dat$x), 3) == 0
+      zero.length.y <- round(abs(dat$y0 - dat$y), 3) == 0
+
+      # fix for zero-length arrows
+      if (any(zero.length.x | zero.length.y)) {
+        zero <- zero.length.x | zero.length.y
+        text(dat[zero, c("x", "y")], labels = ">", srt = dat[zero, "angle"],
+          col = color)
+        arrows(dat[!zero, "x0"], dat[!zero, "y0"],
+               dat[!zero, "x"],  dat[!zero, "y"],
+               lwd = 2, length = 0.065, code = 2, col = color)
+      } else {
+        arrows(dat$x0, dat$y0, dat$x, dat$y, lwd = 2, length = 0.065, code = 2,
+          col = color)
+      }
     }))
 
   } else if (type == "points") {
@@ -137,5 +156,4 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
       points(dat[, c("x", "y")], pch = 22, bg = "white", cex = 2/3)
     }))
   }
-
 }

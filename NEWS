@@ -1,3 +1,9 @@
+cholera 0.4.9.9008
+==================
+
+- fix zero-length arrows in addMilePosts().
+
+
 cholera 0.4.9.9007
 ==================
 

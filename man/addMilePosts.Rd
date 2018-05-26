@@ -26,7 +26,7 @@ addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
 }
 \value{
-points() graphic elements.
+R base graphics arrows or points.
 }
 \description{
 Add distance or time based mileposts to plot.
