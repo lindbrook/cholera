@@ -534,7 +534,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   } else if (x$time.unit == "minute") {
     nominal.time <- paste(round(x$data$time, 1), "min")
   } else if (x$time.unit == "second") {
-    nominal.time <- paste(round(x$data$time, 1), "sec")
+    nominal.time <- paste(round(x$data$time), "sec")
   }
 
   if (x$unit == "native") {
