@@ -14,6 +14,7 @@
 #' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
+#' \dontrun{
 #' # distance from case 1 to nearest pump.
 #' walkingDistance(1)
 #'
@@ -28,7 +29,7 @@
 #'
 #' # distance from pump 1 to pump 6.
 #' walkingDistance(1, 6, type = "pumps")
-#'
+#' }
 
 walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",

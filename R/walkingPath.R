@@ -15,6 +15,7 @@
 #' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
+#' \dontrun{
 #' # path from case 1 to nearest pump.
 #' walkingPath(1)
 #'
@@ -32,6 +33,7 @@
 #'
 #' # path from case 1 to nearest pump.
 #' plot(walkingPath(1))
+#' }
 
 walkingPath <- function(origin, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
