@@ -424,14 +424,6 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
   dat <- numericNodeCoordinates(x$path)
 
-  if (zoom) {
-    x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
-    y.rng <- c(min(dat$y) - radius, max(dat$y) + radius)
-  } else {
-    x.rng <- range(cholera::roads$x)
-    y.rng <- range(cholera::roads$y)
-  }
-
   if (x$type == "case-pump") {
     alter <- nodes[nodes$node == alter.node, "pump"]
     case.color <- colors[alter]
@@ -475,6 +467,16 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   } else if (x$type == "pumps") {
     alter <- nodes[nodes$node == alter.node, "pump"]
     case.color <- "blue"
+  }
+
+  dat.plus.origin <- rbind(dat, origin.obs)
+
+  if (zoom) {
+    x.rng <- c(min(dat.plus.origin$x) - radius, max(dat.plus.origin$x) + radius)
+    y.rng <- c(min(dat.plus.origin$y) - radius, max(dat.plus.origin$y) + radius)
+  } else {
+    x.rng <- range(cholera::roads$x)
+    y.rng <- range(cholera::roads$y)
   }
 
   plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,

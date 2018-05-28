@@ -1,3 +1,9 @@
+cholera 0.4.9.9009
+==================
+
+- adjust zoom range in plot.walking_path().
+
+
 cholera 0.4.9.9008
 ==================
 
@@ -26,7 +32,7 @@ cholera 0.4.9.9005
 cholera 0.4.9.9004
 ==================
 
-- test migration to walkingAuxillaryFunctions.R
+- test migration to walkingAuxillaryFunctions.R.
 
 
 cholera 0.4.9.9003
