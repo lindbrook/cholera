@@ -94,15 +94,19 @@ print.classifier_audit <- function(x, ...) {
 #' @param x An object of class "classifier_audit" created by classifierAudit().
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
+#' @param unit Character. Unit of distance: "meter" (the default), "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
 #' @param ... Additional parameters.
 #' @return A base R graphic.
 #' @export
 #' @examples
 #' plot(classifierAudit(case = 483, segment = "326-2"))
 
-plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = NULL,
+plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = "meter",
   ...) {
+
+  if (unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('"unit" must be "meter", "yard" or "native".')
+  }
 
   obs <- x$obs
   segment.slope <- stats::coef(x$ols)[2]
@@ -133,21 +137,19 @@ plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = NULL,
       lwd = 3)
   }
 
-  if (!is.null(unit)) {
-    if (unit == "meter") {
-      ortho.dist <- cholera::unitMeter(x$distance, "meter")
-      title(sub = paste(x$test, "; dist =", round(ortho.dist, 1),
-        "meters"))
-    } else if (unit == "yard") {
-      ortho.dist <- cholera::unitMeter(x$distance, "yard")
-      title(sub = paste(x$test, "; dist =", round(ortho.dist, 1),
-        "yards"))
-    }
-  } else {
-    title(sub = paste(x$test, "; dist =", round(x$distance, 1), "units"))
+  if (unit == "meter") {
+    ortho.dist <- cholera::unitMeter(x$distance, "meter")
+    d.unit <- "m"
+  } else if (unit == "yard") {
+    ortho.dist <- cholera::unitMeter(x$distance, "yard")
+    d.unit <- "yd"
+  } else if (unit == "native") {
+    ortho.dist <- cholera::unitMeter(x$distance, "native")
+    d.unit <- "units"
   }
 
   nm <- cholera::road.segments[cholera::road.segments$id == x$segment, "name"]
 
-  title(main = paste0(nm, ": Segment # ", x$segment, ", Case # ", x$case))
+  title(main = paste0(nm, ": Segment # ", x$segment, ", Case # ", x$case),
+        sub = paste(x$test, "; dist =", round(ortho.dist, 1), d.unit))
 }

@@ -1,3 +1,9 @@
+cholera 0.4.9.9010
+==================
+
+- set meter as default unit of distance in classifierAudit().
+
+
 cholera 0.4.9.9009
 ==================
 

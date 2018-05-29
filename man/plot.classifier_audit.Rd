@@ -4,8 +4,8 @@
 \alias{plot.classifier_audit}
 \title{Plot result of classifierAudit().}
 \usage{
-\method{plot}{classifier_audit}(x, zoom = TRUE, radius = 0.5, unit = NULL,
-  ...)
+\method{plot}{classifier_audit}(x, zoom = TRUE, radius = 0.5,
+  unit = "meter", ...)
 }
 \arguments{
 \item{x}{An object of class "classifier_audit" created by classifierAudit().}
@@ -14,7 +14,7 @@
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
+\item{unit}{Character. Unit of distance: "meter" (the default), "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.}
 
 \item{...}{Additional parameters.}
 }
