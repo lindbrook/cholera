@@ -5,7 +5,7 @@
 \title{Generate simulated fatalities and their orthogonal projections.}
 \usage{
 simulateFatalities(compute = FALSE, multi.core = FALSE,
-  simulated.obs = 7500L)
+  simulated.obs = 10000L)
 }
 \arguments{
 \item{compute}{Logical. TRUE computes data. FALSE uses pre-computed data. For replication of data used in the package, FALSE is the default.}
@@ -21,6 +21,6 @@ An R list with two elements: \code{\link{sim.ortho.proj}} and \code{\link{regula
 Places regularly spaced "simulated" or "expected" cases across the face of the map. The cases are used, via orthogonal projection, to find their "addresses" on the road network. These data are used to generate "expected" paths and neighborhoods. The function relies on sp::spsample() and sp::Polygon().
 }
 \section{Notes}{
- This function is computationally intensive. With R version 3.5.0 and a 2.3 GHz Intel Core i7, it takes about 17 minutes to run on one, single core and 4 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}.
+ This function is computationally intensive. To compute 10,000 simulated cases with R version 3.5.0 on a 2.3 GHz Intel Core i7, the function takes about 46 minutes to on a single core and 11 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}.
 }
 
