@@ -1,3 +1,13 @@
+cholera 0.4.9.9011
+==================
+
+- amend regular.cases and sim.ortho.proj data frames with 7500 cases.
+- amend walkingDistance() and walkingPath().
+- amend simulateFatalities() with orthogonal or proximate addresses.
+- amend pearlStringRadius().
+- deprecate simProj() in addNeighborhood(), embedSites(), and plot.walking().
+
+
 cholera 0.4.9.9010
 ==================
 
