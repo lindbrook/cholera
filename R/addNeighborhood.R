@@ -236,14 +236,14 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
     split.segs <- c(obs.partial.segments, unobs.split.segments)
   }
 
-  sim.proj <- simProj()  # in neighborhoodData.R
+  sim.proj <- cholera::sim.ortho.proj
   sim.proj.segs <- unique(sim.proj$road.segment)
   sim.proj.segs <- sim.proj.segs[!is.na(sim.proj.segs)]
 
   if (split.test1 > 0 | split.test2 > 0) {
     split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
       id <- sim.proj$road.segment == split.segs[i] &
-        is.na(sim.proj$road.segment) == FALSE
+            is.na(sim.proj$road.segment) == FALSE
 
       sim.data <- sim.proj[id, ]
       split.data <- splits[[i]]
@@ -300,6 +300,7 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
 
     periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
       mc.cores = x$cores)
+      
     pearl.string <- parallel::mclapply(periphery.cases, pearlString,
       mc.cores = x$cores)
 
