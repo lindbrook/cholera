@@ -498,7 +498,7 @@ plot.walking <- function(x, type = "road", ...) {
 ## ------------- ##
 
 pearlStringRadius <- function() {
-  c(stats::dist(cholera::regular.cases[c(1, 3), ]))
+  c(stats::dist(cholera::regular.cases[c(1, 2), ]))
 }
 
 # remove observations with neighbors at each of the 4 cardinal directions
