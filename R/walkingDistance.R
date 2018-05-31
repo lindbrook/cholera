@@ -65,9 +65,9 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
         stop(paste(txt1, txt2))
       }
     } else {
-      if (origin %in% 1:7499 == FALSE) {
+      if (origin %in% 1:10001 == FALSE) {
         txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
-        txt2 <- '"origin" must be between 1 and 7499.'
+        txt2 <- '"origin" must be between 1 and 10001.'
         stop(paste(txt1, txt2))
       }
     }
@@ -156,10 +156,10 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
         stop(paste(txt1, txt2))
       }
     } else {
-      if (any(abs(c(origin, destination)) %in% 1:7499 == FALSE)) {
+      if (any(abs(c(origin, destination)) %in% 1:10001 == FALSE)) {
         txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
         txt2 <- 'both "origin" and "destination" must be whole numbers between'
-        txt3 <- '1 and 7499.'
+        txt3 <- '1 and 10001.'
         stop(paste(txt1, txt2, txt3))
       }
     }

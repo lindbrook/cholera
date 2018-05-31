@@ -20,7 +20,7 @@ A base R plot.
 Plot method for neighborhoodWalking().
 }
 \section{Note}{
- "area.polygons" is under development and, for certain configurations, may return an error. For now, "area.points" is the more robust choice, especially for data exploration. Because these graphics are based on simulated data (i.e., "regular.cases"), there may be discrepancies with observed data at the margins along the periphery of neighborhoods.
+ When plotting area graphs with simulated data (i.e., case.set = "exected"), there may be discrepancies between observed cases and expected neighborhoods, particularly at the borders between neighborhoods.
 }
 
 \examples{
