@@ -9,7 +9,7 @@
 #' @export
 
 simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
-  simulated.obs = 5000L) {
+  simulated.obs = 7500L) {
 
   if (compute == FALSE) {
     sim.ortho.proj <- cholera::sim.ortho.proj
@@ -18,6 +18,7 @@ simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
   } else {
     cores <- multiCore(multi.core)
     rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
+
     map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
     roads.list <- split(rd[, c("x", "y")], rd$street)
     border.list <- split(map.frame[, c("x", "y")], map.frame$street)
@@ -33,6 +34,14 @@ simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
     }, mc.cores = cores)
 
     road.segments <- do.call(rbind, road.segments)
+
+    ## order vertices for polygon functions ##
+
+    map.frame.centered <- data.frame(x = map.frame$x - mean(map.frame$x),
+                                     y = map.frame$y - mean(map.frame$y))
+
+    idx <- order(apply(map.frame.centered, 1, pracma::cart2pol)[1, ])
+    map.frame <- map.frame[idx, ]
 
     ## regularly-spaced simulated cases ##
 
@@ -70,7 +79,7 @@ simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
 
         y.proj <- segment.slope * x.proj + segment.intercept
 
-        # segment bisection/intersection test
+        ## segment bisection/intersection test ##
 
         distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
           stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
@@ -90,26 +99,64 @@ simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
         }
       })
 
-      out <- do.call(rbind, ortho.proj.test)
+      ortho <- do.call(rbind, ortho.proj.test)
 
-      if (all(is.na(out)) == FALSE) {
-        sel <- which.min(out$ortho.dist)
-        out[sel, ]
+      if (all(is.na(ortho$ortho.dist))) {
+        ortho.location <- ortho[1, ]
+        names(ortho.location)[names(ortho.location) == "ortho.dist"] <- "dist"
+        ortho.location$type <- NA
       } else {
-        out[1, ] # all candidate roads are NA so arbitrarily choose first obs.
+        ortho.location <- ortho[which.min(ortho$ortho.dist), ]
+        names(ortho.location)[names(ortho.location) == "ortho.dist"] <- "dist"
+        ortho.location$type <- "ortho"
       }
+
+      # nearest road segment endpoint
+      candidates <- road.segments[road.segments$id %in% within.radius, ]
+      no.bisect1 <- stats::setNames(candidates[, c("x1", "y1")], c("x", "y"))
+      no.bisect2 <- stats::setNames(candidates[, c("x2", "y2")], c("x", "y"))
+      no.bisect <- rbind(no.bisect1, no.bisect2)
+
+      endpt.dist <- vapply(seq_len(nrow(no.bisect)), function(i) {
+        stats::dist(rbind(case, no.bisect[i, ]))
+      }, numeric(1L))
+
+      nearest.endpt <- which.min(endpt.dist)
+
+      if (nearest.endpt <= nrow(ortho)) {
+        c.data <- cbind(candidates[nearest.endpt, c("id", "x1", "y1")],
+          endpt.dist[nearest.endpt])
+      } else {
+        c.data <- cbind(candidates[nearest.endpt - nrow(ortho),
+          c("id", "x2", "y2")], endpt.dist[nearest.endpt])
+      }
+
+      c.data$type <- "eucl"
+      prox.location <- stats::setNames(c.data, names(ortho.location))
+
+      nearest <- which.min(c(ortho.location$dist, prox.location$dist))
+      if (nearest == 1) {
+        out <- ortho.location
+      } else if (nearest == 2) {
+        out <- prox.location
+      }
+
+      out
     }, mc.cores = cores)
 
     sim.ortho.proj <- do.call(rbind, orthogonal.projection)
-    sim.ortho.proj$case <- 1:nrow(sim.ortho.proj)
+    sim.ortho.proj$case <- as.numeric(names(orthogonal.projection))
+    sim.ortho.proj <- sim.ortho.proj[order(sim.ortho.proj$case), ]
     row.names(sim.ortho.proj) <- NULL
 
-    # removes cases that don't find a road
+    # remove cases that can't find a road
     if (any(is.na(sim.ortho.proj))) {
       sim.ortho.proj <- stats::na.omit(sim.ortho.proj)
     }
 
-    list(sim.ortho.proj = sim.ortho.proj,
-         regular.cases = do.call(rbind, regular.cases))
+    rc <- do.call(rbind, regular.cases)
+    rc <- rc[order(as.numeric(row.names(rc))), ]
+
+    list(sim.ortho.proj = sim.ortho.proj, regular.cases = rc)
   }
 }

@@ -5,7 +5,7 @@
 \title{Generate simulated fatalities and their orthogonal projections.}
 \usage{
 simulateFatalities(compute = FALSE, multi.core = FALSE,
-  simulated.obs = 5000L)
+  simulated.obs = 7500L)
 }
 \arguments{
 \item{compute}{Logical. TRUE computes data. FALSE uses pre-computed data. For replication of data used in the package, FALSE is the default.}
