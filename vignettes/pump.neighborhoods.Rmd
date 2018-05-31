@@ -71,15 +71,16 @@ plot(neighborhoodWalking(case.set = "expected"))
 In the second, I identify neighborhoods by coloring regions using points or polygons.^[Mackenzie (N.D) uses this approach. Cliff and Haggett produce an adjusted Voronoi cells that reflect walking distances: "So far we have assumed that access to each pump was determined by 'crow-fly' distances. While the physical effort of carrying water mean that most people visited their nearest pump, recognition must be made of the complex street pattern in this area of London. Therefore in (D), the Thiessen polygons have been adjusted to take into account the patterns of access made possible by the street system shown in diagram (A) (Cliff and Haggett 1988, 53). However, details about how this was done don't appear to be available. Moreover, because the graphic only shows the outline of the polygon and not the streets, comparisons with other approaches is difficult.] The points approach, shown below, is faster and less tolerant of classification errors.
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
-plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
+plot(neighborhoodWalking(vestry = TRUE, case.set = "expected"), 
+  type = "area.points")
 ```
 
 The virtue of the polygon approach, which is still under development and may return an error for certain configurations, is that it better lends itself to building graphs at different scales.
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
-streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
-  add.title = FALSE, radius = 0.5)
-addNeighborhood()
+streetNameLocator("marshall street", zoom = TRUE, vestry = TRUE, 
+  highlight = FALSE, add.title = FALSE, radius = 0.5)
+addNeighborhood(vestry = TRUE)
 ```
 
 While easier to "read", these area graphs are potentially more misleading. Conceptually, the problem is that they take the focus away from roads and puts it on regions, which may not be meaningful because they can represent locations where there are no roads or residences. Computationally, the problem is that the shape of neighborhoods are sensitive to how we determines a case's street address. Depending on our choice, this can produce different results.
