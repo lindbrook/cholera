@@ -1,6 +1,5 @@
 #' Compute the shortest walking path between cases and/or pumps.
 #'
-#' summary info and vector of nodes: in-progress prototype.
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
@@ -382,7 +381,7 @@ print.walking_path <- function(x, ...) {
   print(x[ c("path", "data")])
 }
 
-#' Plot the walking path between cases and/or pumps.
+#' Plot the walking path between selected cases and/or pumps.
 #'
 #' @param x An object of class "walking_path" created by walkingPath().
 #' @param zoom Logical.

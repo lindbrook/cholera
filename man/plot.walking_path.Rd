@@ -2,7 +2,7 @@
 % Please edit documentation in R/walkingPath.R
 \name{plot.walking_path}
 \alias{plot.walking_path}
-\title{Plot the walking path between cases and/or pumps.}
+\title{Plot the walking path between selected cases and/or pumps.}
 \usage{
 \method{plot}{walking_path}(x, zoom = TRUE, radius = 0.5,
   unit.posts = "distance", unit.interval = NULL, ...)
@@ -24,7 +24,7 @@
 A base R plot.
 }
 \description{
-Plot the walking path between cases and/or pumps.
+Plot the walking path between selected cases and/or pumps.
 }
 \section{Note}{
  Arrow points represent mileposts or timeposts to the destination.
