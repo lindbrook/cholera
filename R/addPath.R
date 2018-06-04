@@ -34,11 +34,6 @@ addPath <- function(origin, destination = NULL, type = "case-pump",
                     time.unit = time.unit,
                     walking.speed = walking.speed)
 
-  # plot.arguments <- list(zoom = zoom,
-  #                        radius = radius,
-  #                        unit.posts = unit.posts,
-  #                        unit.interval)
-
   x <- do.call("walkingPath", arguments)
 
   if (is.na(x$alter.node)) {
@@ -47,10 +42,6 @@ addPath <- function(origin, destination = NULL, type = "case-pump",
     stop(paste(txt1, txt2))
   }
 
-  # rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
-  # map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-  # roads.list <- split(rd[, c("x", "y")], rd$street)
-  # border.list <- split(map.frame[, c("x", "y")], map.frame$street)
   colors <- cholera::snowColors(x$vestry)
 
   nodes <- x$nodes
@@ -106,43 +97,12 @@ addPath <- function(origin, destination = NULL, type = "case-pump",
     case.color <- "blue"
   }
 
-  # dat.plus.origin <- rbind(dat, origin.obs)
-
-  # if (zoom) {
-  #   x.rng <- c(min(dat.plus.origin$x) - radius, max(dat.plus.origin$x) + radius)
-  #   y.rng <- c(min(dat.plus.origin$y) - radius, max(dat.plus.origin$y) + radius)
-  # } else {
-  #   x.rng <- range(cholera::roads$x)
-  #   y.rng <- range(cholera::roads$y)
-  # }
-
-  # plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
-  #   xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
-  # invisible(lapply(roads.list, lines, col = "lightgray"))
-  # invisible(lapply(border.list, lines))
-
-  # if (x$vestry) {
-  #   pump.names <- paste0("p", cholera::pumps.vestry$id)
-  #   points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
-  #     col = colors)
-  #   text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
-  # } else {
-  #   pump.names <- paste0("p", cholera::pumps$id)
-  #   points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
-  #   text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
-  # }
-
   if (x$type == "case-pump" | x$type == "cases") {
     points(origin.obs, col = "red")
   }
 
-  if (x$type == "case-pump") {
-    # title(main = paste("Case", x$origin, "to Pump", alter))
-  } else if (x$type == "cases") {
+  if (x$type == "cases") {
     points(destination.obs, col = "red")
-    # title(main = paste("Case", x$origin, "to Case", alter))
-  } else if (x$type == "pumps") {
-    # title(main = paste("Pump", x$origin, "to Pump", alter))
   }
 
   points(dat[1, c("x", "y")], col = case.color, pch = 0)
@@ -317,25 +277,4 @@ addPath <- function(origin, destination = NULL, type = "case-pump",
       }
     }))
   }
-
-  # if (unit.posts == "distance") {
-  #   post.info <- paste("posts @", unit.interval, "m intervals")
-  # } else if (unit.posts == "time") {
-  #   post.info <- paste("posts @", unit.interval, "sec intervals")
-  # }
-
-  # title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
-  #   x$speed, "km/hr;", post.info))
 }
-
-# numericNodeCoordinates <- function(x) {
-#   nodes <- do.call(rbind, (strsplit(x, "-")))
-#   data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
-# }
-
-# drawPath <- function(x, case.color) {
-#   dat <- numericNodeCoordinates(x)
-#   n1 <- dat[1:(nrow(dat) - 1), ]
-#   n2 <- dat[2:nrow(dat), ]
-#   segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2)
-# }
