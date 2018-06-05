@@ -1,3 +1,10 @@
+cholera 0.4.9.9014
+==================
+
+- adjust figure size and placement in vignettes.
+- fix plot.walking_path() for type = "pumps".
+
+
 cholera 0.4.9.9013
 ==================
 
