@@ -464,6 +464,13 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     }
 
   } else if (x$type == "pumps") {
+    if (x$vestry) {
+      origin.obs <- cholera::pumps.vestry[cholera::pumps.vestry$id ==
+        x$origin, c("x", "y")]
+    } else {
+      origin.obs <- cholera::pumps[cholera::pumps$id == x$origin, c("x", "y")]
+    }
+
     alter <- nodes[nodes$node == alter.node, "pump"]
     case.color <- "blue"
   }
