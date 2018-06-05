@@ -22,7 +22,7 @@ John Snow's map of the 1854 cholera outbreak in London is a canonical example of
 
 In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's 'HistData' package. Those data are plotted below:
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 street.list <- split(Snow.streets[, c("x", "y")], Snow.streets$street)
 plot(Snow.deaths$x, Snow.deaths$y, pch = 20, cex = 0.5,
   xlim = range(Snow.streets$x), ylim = range(Snow.streets$y),
@@ -61,7 +61,7 @@ This fixed data set is available as _fatalities_ in this package and as _Snow.de
 
 The three pairs of duplicates lie at two different locations on opposite sides of Cambridge Street:
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 street.list <- split(Snow.streets[, c("x", "y")], Snow.streets$street)
 
 # Cambridge Street #
@@ -105,10 +105,10 @@ plot(Snow.deaths[, c("x", "y")], xlim = c(12, 13), ylim = c(10.9, 11.9),
      pch = NA, cex = 0.5, col = "blue", asp = 1)
 invisible(lapply(street.list, lines, col = "lightgray"))
 points(Snow.pumps[, c("x", "y")], col = "blue", pch = 2, cex = 1)
-text(Snow.pumps[, c("x", "y")], col = "blue", labels = "Broad Street Well",
-     pos = 4, cex = 0.85)
+text(Snow.pumps[, c("x", "y")], col = "blue", labels = "Broad St Pump",
+     pos = 3, cex = 0.85)
 points(Snow.deaths[-unlist(duplicates.id), c("x", "y")])
-title(main = "The Three Pairs of Duplicate Cases")
+title(main = "The Three Pairs of Duplicate Cases", cex.main = 0.9)
 
 invisible(lapply(duplicates.id, function(x) {
   points(Snow.deaths[c(x[1], x[2]), c("x", "y")], pch = 1:0, cex = c(1, 1.75),
@@ -125,7 +125,7 @@ text(bottom.data[1:2, ], labels = rownames(bottom.data)[1:2], pos = 1,
 text(bottom.data[3, c("x", "y")] + c(0.03, -0.03),
      labels = rownames(bottom.data)[3], cex = 0.9)
 legend(x = "bottomleft",
-       legend = c("Well", "Duplicate", "Case"),
+       legend = c("Pump", "Duplicate", "Case"),
        col = c("blue", "red", "black"),
        pch = c(2, 0, 1),
        bg = "white",
@@ -138,7 +138,7 @@ text(broad.x, broad.y, "Broad St", srt = broad.angle)
 
 ## Missing Cases: Broad Street
 
-40 Broad Street, which lies just southwest (below and left) of the Broad Street pump, is the location of two of the "missing" cases.
+40 Broad Street, which lies just southwest (below and left) of the Broad Street Pump, is the location of two of the "missing" cases.
 
 Snow's map shows four "bars" or cases:
 
@@ -146,7 +146,7 @@ Snow's map shows four "bars" or cases:
 
 But Dodson and Tobler's data show only two, cases 32 and 122. Furthermore, the two cases also appear to be farther apart than what we see in neighboring stacks:
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
 broad.40 <- c(32, 122)
 
@@ -157,21 +157,22 @@ invisible(lapply(street.list, lines, col = "lightgray"))
 points(Snow.deaths[-c(unlist(duplicates.id), broad.40), c("x", "y")])
 
 points(Snow.pumps[, c("x", "y")], col = "blue", pch = 2, cex = 1)
-text(Snow.pumps[, c("x", "y")], col = "blue", labels = "Broad Street Well",
-     pos = 4, cex = 0.85)
+text(Snow.pumps[, c("x", "y")], col = "blue", labels = "Broad St Pump",
+     pos = 3, cex = 0.85)
 
 points(Snow.deaths[broad.40, c("x", "y")], col = "#009E73")
 text(Snow.deaths[broad.40, c("x", "y")], labels = Snow.deaths$case[broad.40],
      cex = 0.9, pos = 4, col = "#009E73")
 
-title(main = "40 Broad Street:\nTwo (32 & 122) Rather than Four Cases")
+title(main = "40 Broad Street:\nTwo (32 & 122) Rather than Four Cases",
+  cex.main = 0.9)
 
 invisible(lapply(duplicates.id, function(x) {
   points(Snow.deaths[x[1], c("x", "y")])
 }))
 
 legend(x = "bottomleft",
-       legend = c("Well", "Case", "40 Broad St"),
+       legend = c("Pump", "Case", "40 Broad St"),
        col = c("blue", "black", "#009E73"),
        pch = c(2, 1, 1),
        bg = "white",
@@ -192,7 +193,7 @@ Snow's map shows three cases at the end of Noel Street:
 
 But Dodson and Tobler's data shows only two cases: 282 and 422. They also appear to be farther apart than what we see in neighboring stacks:
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
 # Noel Street #
 street.name <- "Noel Street"
@@ -246,7 +247,7 @@ text(Snow.deaths[noel.street, c("x", "y")], cex = 0.9, pos = 4,
      labels = Snow.deaths$case[noel.street], col = "#009E73")
 
 title(main = paste0("15 Noel Street:", "\n",
-                    " Two (282 & 422) Rather than Three Cases"))
+                    " Two (282 & 422) Rather than Three Cases"), cex.main = 0.9)
 
 legend(x = "bottomleft",
        legend = c("Case", "15 Noel St"),
@@ -317,7 +318,7 @@ interpolatedPoints <- function(case1, case2, segment = sel, multiplier = 0.5) {
 
 ```
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
 sel <- "216"  # street list element, one with 2 endpoints
 
@@ -329,8 +330,8 @@ invisible(lapply(street.list[names(street.list) != sel], lines,
 
 points(Snow.pumps[, c("x", "y")], col = "blue", pch = 2, cex = 1)
 
-text(Snow.pumps[, c("x", "y")], col = "blue", labels = "Broad Street Well",
-     pos = 4, cex = 0.85)
+text(Snow.pumps[, c("x", "y")], col = "blue", labels = "Broad St Pump",
+     pos = 3, cex = 0.85)
 
 points(Snow.deaths[-c(broad.40, duplicates$case), c("x", "y")], col = "gray")
 points(Snow.deaths[broad.40, c("x", "y")], col = "#009E73")
@@ -344,7 +345,7 @@ segments(seg.data["x1"], seg.data["y1"], seg.data["x2"], seg.data["y2"],
          col = "#009E73")
 
 title(main = paste0("Geometric Interpolation: Candidate Locations for",
-                    "\n", "the Two Missing Cases at 40 Broad Street"))
+  "\n", "the Two Missing Cases at 40 Broad Street"), cex.main = 0.9)
 
 ols <- segmentOLS(sel)
 segment.slope <- coef(ols)[2]
@@ -374,7 +375,7 @@ text(cam.x, cam.y, "Cambridge St", srt = cam.angle)
 text(broad.x, broad.y, "Broad St", srt = broad.angle)
 
 legend(x = "bottomleft",
-       legend = c("Well", "Broad St", "Candidate", "Others"),
+       legend = c("Pump", "Broad St", "Candidate", "Others"),
        col = c("blue", "#009E73", "red", "gray"),
        pch = c(2, 1, 4, 1),
        bg = "white",
@@ -389,7 +390,7 @@ To explain how I got these coordinates, I illustrate the computation of the _uni
 
 I use 40 Broad Street as the example. I rotate the data so that the stack lies along a single (horizontal) dimension. To fit one "missing" case between cases 32 and 122, I set the _unit_ distance between the two observed cases to 2:
 
-```{r, fig.width = 5, fig.height = 3.5, echo = FALSE}
+```{r, fig.width = 5, fig.height = 3.5, fig.align = "center", echo = FALSE}
 
 plot(0:3, rep(0, 4), xlim = c(0, 3.6), ylim = c(0, 1), pch = NA, xaxt = "n",
      yaxt = "n", bty = "n", ann = FALSE)
@@ -400,13 +401,13 @@ text(c(0.3, 2.3), rep(0.5, 2), labels = c(32, 122), pos = 1, cex = 0.9,
 arrows(0.3, 0.6, 2.3, 0.6, code = 3, length = 0.067, angle = 90, col = "blue")
 arrows(0.3, 0.6, 2.3, 0.6, code = 3, length = 0.1, col = "blue")
 text(1.3, 0.7, "2 units", col = "blue")
-title(main = "Broad Street Unit Distance")
+title(main = "Broad Street Unit Distance", cex.main = 0.9)
 
 ```
 
 I then place one "missing" case 1 _unit_ away from 32:
 
-```{r, fig.width = 5, fig.height = 3.5, echo = FALSE}
+```{r, fig.width = 5, fig.height = 3.5, fig.align = "center", echo = FALSE}
 plot(0:3, rep(0, 4), xlim = c(0, 3.6), ylim = c(0, 1), pch = NA, xaxt = "n",
      yaxt = "n", bty = "n", ann = FALSE)
 axis(1, seq(0.3, 3.3, 1), labels = 0:3)
@@ -418,12 +419,12 @@ text(1.3, 0.5, labels = "missing", pos = 1, col = "red")
 arrows(0.3, 0.6, 1.3, 0.6, code = 3, length = 0.067, angle = 90, col = "blue")
 arrows(0.3, 0.6, 1.3, 0.6, length = 0.1, col = "blue")
 text(0.8, 0.7, "1 unit", col = "blue")
-title(main = "Location for One Missing Case")
+title(main = "Location for One Missing Case", cex.main = 0.9)
 ```
 
 And place the other "missing" case three _units_ away:
 
-```{r, fig.width = 5, fig.height = 3.5, echo = FALSE}
+```{r, fig.width = 5, fig.height = 3.5, fig.align = "center", echo = FALSE}
 plot(0:3, rep(0, 4), xlim = c(0, 3.6), ylim = c(0, 1), pch = NA, xaxt = "n",
      yaxt = "n", bty = "n", ann = FALSE)
 axis(1, seq(0.3, 3.3, 1), labels = 0:3)
@@ -436,7 +437,7 @@ text(3.3, 0.5, labels = "missing", pos = 1, col = "red")
 arrows(0.3, 0.6, 3.3, 0.6, code = 3, length = 0.067, angle = 90, col = "blue")
 arrows(0.3, 0.6, 3.3, 0.6, length = 0.1, col = "blue")
 text(1.8, 0.7, "3 units", col = "blue")
-title(main = "Location for Other Missing Case")
+title(main = "Location for Other Missing Case", cex.main = 0.9)
 
 ```
 
@@ -501,7 +502,7 @@ meterB <- function(x, y, radius = 0.025) {
 
 ```
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
 center <- Snow.deaths[32, c("x", "y")]
 delta <- 0.1
@@ -545,7 +546,7 @@ What makes the line complicated is that the bars in the stacks in Dodson and Tob
 
 As a consequence, the line drawn through the stack's axis will pass through the circle's center:
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 plot(Snow.deaths[, c("x", "y")], xlim = c(center$x - delta, center$x + delta),
      ylim = c(center$y - delta, center$y + delta),
      pch = NA, col = "blue", asp = 1)
@@ -579,7 +580,7 @@ abline(ols)
 
 There will always be two points of intersection (red squares):
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 plot(Snow.deaths[, c("x", "y")], xlim = c(center$x - delta, center$x + delta),
      ylim = c(center$y - delta, center$y + delta),
      pch = NA, col = "blue", asp = 1)
@@ -622,7 +623,7 @@ abline(ols)
 
 So, finding the coordinates of the "missing" observations boils down to solving a quadratic equation and picking the appropriate solution.
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
 plot(Snow.deaths[, c("x", "y")], xlim = c(center$x - delta, center$x + delta),
      ylim = c(center$y - delta, center$y + delta),
@@ -714,7 +715,7 @@ interpolatedPoints <- function(case1, case2, segment, multiplier = 0.5) {
 
 Using this approach, I get the following results. For the two "missing" cases at 40 Broad Street, I move two duplicates, cases 91 and 93, from Cambridge Street:
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
 sel <- "216"  # street list element, one with 2 endpoints
 
@@ -726,8 +727,8 @@ invisible(lapply(street.list[names(street.list) != sel], lines,
 
 points(Snow.pumps[, c("x", "y")], col = "blue", pch = 2, cex = 1)
 
-text(Snow.pumps[, c("x", "y")], col = "blue", labels = "Broad Street Well",
-     pos = 4, cex = 0.85)
+text(Snow.pumps[, c("x", "y")], col = "blue", labels = "Broad St Pump",
+     pos = 3, cex = 0.85)
 
 points(Snow.deaths[-c(broad.40, unlist(duplicates.id)), c("x", "y")])
 points(Snow.deaths[broad.40, c("x", "y")], col = "#009E73")
@@ -751,7 +752,7 @@ segments(seg.data["x1"], seg.data["y1"], seg.data["x2"], seg.data["y2"],
          col = "#009E73")
 
 title(main = paste0("Two Duplicate Cases (91 & 93) as Substitutes for ", "\n",
-                    "the Two Missing Cases at 40 Broad Street"))
+                    "the Two Missing Cases at 40 Broad Street"), cex.main = 0.9)
 
 ols <- segmentOLS(sel)
 segment.slope <- coef(ols)[2]
@@ -819,7 +820,7 @@ text(x.out2, y.out2, pos = 1, col = "red", cex = 0.9,
      labels = paste(move.candidates[1], ordered.pair2))
 
 legend(x = "bottomleft",
-       legend = c("Well", "Duplicate", "Case", "40 Broad St"),
+       legend = c("Pump", "Duplicate", "Case", "40 Broad St"),
        col = c("blue", "red", "black", "#009E73"),
        pch = c(2, 0, 1, 1),
        bg = "white",
@@ -832,7 +833,7 @@ text(broad.x, broad.y, "Broad St", srt = broad.angle)
 
 For the missing case at 15 Noel Street, I move the remaining duplicate, case 209, from Cambridge Street:
 
-```{r, fig.width = 5.25, fig.height = 5.25, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
 noel.street <- c(282, 422)
 
@@ -855,7 +856,7 @@ text(Snow.deaths[noel.street, c("x", "y")], cex = 0.9, pos = 4,
      labels = Snow.deaths$case[noel.street], col = "#009E73")
 
 title(main = paste0("Duplicate Observation (209) as Substitute", "\n",
-                    "for Missing Case at 15 Noel Street"))
+                    "for Missing Case at 15 Noel Street"), cex.main = 0.9)
 
 ols <- segmentOLS(sel)
 segment.slope <- coef(ols)[2]
