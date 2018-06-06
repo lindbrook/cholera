@@ -5,7 +5,7 @@
 \title{Compute the Euclidean distance between cases and/or pumps.}
 \usage{
 euclideanDistance(origin, destination = NULL, type = "case-pump",
-  vestry = FALSE, unit = "meter", time.unit = "second",
+  observed = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
   walking.speed = 5)
 }
 \arguments{
@@ -14,6 +14,8 @@ euclideanDistance(origin, destination = NULL, type = "case-pump",
 \item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.}
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
+
+\item{observed}{Logical. Use observed or "simulated" expected data.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.}
 

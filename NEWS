@@ -1,3 +1,9 @@
+cholera 0.4.9.9016
+==================
+
+- add 'observed = FALSE' and fix 'type = "pumps"' in euclideanDistance().
+
+
 cholera 0.4.9.9015
 ==================
 

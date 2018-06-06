@@ -3,6 +3,7 @@
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
+#' @param observed Logical. Use observed or "simulated" expected data.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
@@ -30,7 +31,10 @@
 #' plot(euclideanDistance(1))
 
 euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
-  vestry = FALSE, unit = "meter", time.unit = "second", walking.speed = 5) {
+  observed = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
+  walking.speed = 5) {
+
+  n.sim.obs <- nrow(cholera::regular.cases)
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
     stop('"unit" must be "meter", "yard" or "native".')
@@ -45,8 +49,18 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
   }
 
   if (type == "case-pump") {
-    if (origin %in% 1:578 == FALSE) {
-      stop('With type = "case-pump", "origin" must be between 1 and 578.')
+    if (observed) {
+      if (origin %in% 1:578 == FALSE) {
+        txt1 <- 'With type = "case-pump" and "observed" = TRUE,'
+        txt2 <- '"origin" must be between 1 and 578.'
+        stop(paste(txt1, txt2))
+      }
+    } else {
+      if (origin %in% 1:n.sim.obs == FALSE) {
+        txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
+        txt2 <- '"origin" must be between 1 and'
+        stop(paste(txt1, txt2, n.sim.obs, "."))
+      }
     }
 
     if (!is.null(destination)) {
@@ -75,9 +89,15 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
       }
     }
 
-    ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
-      "anchor.case"]
-    ego <- cholera::fatalities[cholera::fatalities$case == ego.id, c("x", "y")]
+    if (observed) {
+      ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
+        "anchor.case"]
+      ego <- cholera::fatalities[cholera::fatalities$case == ego.id,
+        c("x", "y")]
+    } else {
+      ego <- cholera::regular.cases[origin, ]
+      ego.id <- as.numeric(row.names(ego))
+    }
 
     d <- vapply(alters$id, function(i) {
       c(stats::dist(rbind(alters[alters$id == i, c("x", "y")], ego)))
@@ -92,25 +112,52 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
                       stringsAsFactors = FALSE)
 
   } else if (type == "cases") {
-    if (any(abs(c(origin, destination)) %in% 1:578 == FALSE)) {
-      txt1 <- 'With type = "cases", the absolute value of both "origin"'
-      txt2 <- 'and "destination" must be between 1 and 578.'
-      stop(paste(txt1, txt2))
+    if (observed) {
+      if (any(abs(c(origin, destination)) %in% 1:578 == FALSE)) {
+        txt1 <- 'With type = "cases", the absolute value of both "origin"'
+        txt2 <- 'and "destination" must be between 1 and 578.'
+        stop(paste(txt1, txt2))
+      }
+    } else {
+      if (any(abs(c(origin, destination)) %in% 1:n.sim.obs == FALSE)) {
+        txt1 <- 'With type = "cases", the absolute value of both "origin"'
+        txt2 <- 'and "destination" must be between 1 and'
+        stop(paste(txt1, txt2, n.sim.obs, "."))
+      }
     }
 
-    ego.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
-      origin, "anchor.case"])
-    ego <- cholera::fatalities[cholera::fatalities$case == ego.id, ]
-
-    if (is.null(destination)) {
-      alters.id <- cholera::fatalities.address$anchor.case
+    if (observed) {
+      ego.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
+        origin, "anchor.case"])
+      ego <- cholera::fatalities[cholera::fatalities$case == ego.id, ]
     } else {
-      if (all(destination > 0)) {
-        alters.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
-          destination, "anchor.case"])
-      } else if (all(destination < 0)) {
-        alters.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
-          abs(destination) == FALSE, "anchor.case"])
+      ego <- cholera::regular.cases[origin, ]
+      ego.id <- as.numeric(row.names(ego))
+    }
+
+    if (observed) {
+      if (is.null(destination)) {
+        alters.id <- cholera::fatalities.address$anchor.case
+      } else {
+        if (all(destination > 0)) {
+          alters.id <- unique(cholera::anchor.case[cholera::anchor.case$case
+            %in% destination, "anchor.case"])
+        } else if (all(destination < 0)) {
+          alters.id <- unique(cholera::anchor.case[cholera::anchor.case$case
+            %in% abs(destination) == FALSE, "anchor.case"])
+        }
+      }
+    } else {
+      if (is.null(destination)) {
+        alters.id <- cholera::sim.ortho.proj$case
+      } else {
+        if (all(destination > 0)) {
+          alters.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case %in%
+            destination, "case"]
+        } else if (all(destination < 0)) {
+          alters.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case %in%
+            abs(destination) == FALSE, "case"]
+        }
       }
     }
 
@@ -219,6 +266,7 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
   output <- list(origin = origin,
                  destination = destination,
                  type = type,
+                 observed = observed,
                  alters = alters,
                  sel = sel,
                  vestry = vestry,
@@ -289,17 +337,29 @@ plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
     alter.xy <- pmp[pmp$id == end.pump, c("x", "y")]
   } else if (x$type == "cases") {
     end.case <- x$alters$case[end.sel]
-    alter.xy <- cholera::fatalities[cholera::fatalities$case == end.case,
-      c("x", "y")]
+
+    if (x$observed) {
+      alter.xy <- cholera::fatalities[cholera::fatalities$case == end.case,
+        c("x", "y")]
+    } else {
+      alter.xy <- cholera::regular.cases[end.case, c("x", "y")]
+    }
   }
 
   if (x$type == "case-pump" | x$type == "cases") {
-    origin.xy <- cholera::fatalities[cholera::fatalities$case == x$origin,
-      c("x", "y")]
-    ego.id <- cholera::anchor.case[cholera::anchor.case$case == x$origin,
-      "anchor.case"]
-    addr <- cholera::fatalities.address
-    ego.xy <- addr[addr$anchor.case == ego.id,  c("x", "y")]
+    if (x$observed) {
+      origin.xy <- cholera::fatalities[cholera::fatalities$case == x$origin,
+        c("x", "y")]
+      ego.id <- cholera::anchor.case[cholera::anchor.case$case == x$origin,
+        "anchor.case"]
+      addr <- cholera::fatalities.address
+      ego.xy <- addr[addr$anchor.case == ego.id,  c("x", "y")]
+    } else {
+      origin.xy <- cholera::regular.cases[x$origin, c("x", "y")]
+      ego.id <-  x$origin
+      ego.xy <- origin.xy
+    }
+
   } else if (x$type == "pumps") {
     origin.xy <- pmp[pmp$id == x$origin, c("x", "y")]
     ego.xy <- origin.xy
@@ -333,7 +393,7 @@ plot.euclidean_distance <- function(x, zoom = TRUE, radius = 0.5, ...) {
     title(main = paste("Case", x$origin, "to Case", end.case))
   } else if (x$type == "pumps") {
     case.color <- "blue"
-    title(main = paste("Pump", x$origin, "to Pump", end.sel))
+    title(main = paste("Pump", x$origin, "to Pump", x$alters$id[end.sel]))
   }
 
   if (x$vestry) {
