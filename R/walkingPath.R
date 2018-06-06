@@ -672,17 +672,23 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
     invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
       if (start[i] == 1) {
-        arrows(arrow.data[i, "x2"],
-               arrow.data[i, "y2"],
-               coords[i, "x"],
-               coords[i, "y"],
-               lwd = 2, length = 0.075, col = case.color, code = 2)
+        dataB <- data.frame(x = c(arrow.data[i, "x2"], coords[i, "x"]),
+                            y = c(arrow.data[i, "y2"], coords[i, "y"]))
       } else if (start[i] == 2) {
-        arrows(arrow.data[i, "x1"],
-               arrow.data[i, "y1"],
-               coords[i, "x"],
-               coords[i, "y"],
-               lwd = 2, length = 0.075, col = case.color, code = 2)
+        dataB <- data.frame(x = c(arrow.data[i, "x1"], coords[i, "x"]),
+                            y = c(arrow.data[i, "y1"], coords[i, "y"]))
+      }
+
+      zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 3) == 0
+      zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 3) == 0
+
+      if (any(zero.length.x | zero.length.y)) {
+        text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
+          col = case.color)
+      } else {
+        arrows(dataB[1, "x"], dataB[1, "y"],
+               dataB[2, "x"], dataB[2, "y"],
+               lwd = 2, length = 0.065, col = case.color, code = 2)
       }
     }))
   }
