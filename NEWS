@@ -1,8 +1,8 @@
 cholera 0.4.9.9017
 ==================
 
-- add walkingPath().
-- consolidate walkingDistance().
+- add euclideanPath().
+- consolidate euclideanDistance().
 
 
 cholera 0.4.9.9016
