@@ -49,7 +49,4 @@ euclideanDistance(1, 6, type = "cases")
 
 # path from pump 1 to pump 6.
 euclideanDistance(1, 6, type = "pumps")
-
-# Plot result
-plot(euclideanDistance(1))
 }
