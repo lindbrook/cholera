@@ -28,7 +28,7 @@ walkingDistance(origin, destination = NULL, type = "case-pump",
 \item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
 }
 \value{
-An R list.
+An R data frame.
 }
 \description{
 Compute the shortest walking distance between cases and/or pumps.

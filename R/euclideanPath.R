@@ -9,7 +9,7 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Default is 5 km/hr.
 #' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime().
-#' @return An R list with 3 data frames: x-y coordinates for the origin and destination, and summary of results..
+#' @return An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
 #' @export
 #' @examples
 #' # path from case 1 to nearest pump.

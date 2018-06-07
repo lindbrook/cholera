@@ -26,7 +26,7 @@ euclideanPath(origin, destination = NULL, type = "case-pump",
 \item{walking.speed}{Numeric. Default is 5 km/hr.}
 }
 \value{
-An R list with 3 data frames: x-y coordinates for the origin and destination, and summary of results..
+An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
 }
 \description{
 Compute path data of the Euclidean distance between cases and/or pumps.
