@@ -112,9 +112,8 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
 
   if (type == "arrows") {
     coords <- parallel::mclapply(names(endpt.paths), function(nm) {
-      lapply(edge.data[[nm]], function(dat) {
-        postCoordinatesB(dat, unit, interval, walking.speed, edge.sel = TRUE)
-      })
+      lapply(edge.data[[nm]], postCoordinates, unit, interval, walking.speed,
+        arrow.data = TRUE)
     }, mc.cores = cores)
 
     coords <- stats::setNames(coords, names(endpt.paths))

@@ -1,3 +1,10 @@
+cholera 0.4.9.9018
+==================
+
+- consolidate postCoordinatesB() in postCoordinates().
+- deprecate milePosts().
+
+
 cholera 0.4.9.9017
 ==================
 

@@ -198,93 +198,8 @@ edgeData <- function(endpt.paths, edges) {
   })
 }
 
-postCoordinates <- function(dat, unit, interval, walking.speed) {
-  if (unit == "distance") {
-    cumulative <- cholera::unitMeter(cumsum(dat$d), "meter")
-  } else if (unit == "time") {
-    cumulative <- cholera::distanceTime(cumsum(dat$d), speed = walking.speed)
-  }
-
-  total <- cumulative[length(cumulative)]
-  posts <- seq(0, total, interval)
-
-  if (max(posts) > max(cumulative)) {
-    posts <- posts[-length(posts)]
-  }
-
-  bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
-                     hi = cumulative)
-
-  edge.select <- vapply(posts[-1], function(x) {
-    which(vapply(seq_len(nrow(bins)), function(i) {
-      x >= bins[i, "lo"] & x < bins[i, "hi"]
-    }, logical(1L)))
-  }, integer(1L))
-
-  post.coordinates <- lapply(seq_along(edge.select), function(i) {
-    sel.data <- dat[edge.select[i], ]
-    edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
-                            y = c(sel.data$y1, sel.data$y2))
-
-    ols <- stats::lm(y ~ x, data = edge.data)
-    edge.slope <- stats::coef(ols)[2]
-    edge.intercept <- stats::coef(ols)[1]
-    theta <- atan(edge.slope)
-    h <- (posts[-1][i] - bins[edge.select[i], "lo"]) /
-      cholera::unitMeter(1, "meter")
-
-    delta <- edge.data[2, ] - edge.data[1, ]
-
-    # Quadrant I
-    if (all(delta > 0)) {
-      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-    # Quadrant II
-    } else if (delta[1] < 0 & delta[2] > 0) {
-      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-    # Quadrant III
-    } else if (all(delta < 0)) {
-      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-
-    # Quadrant IV
-    } else if (delta[1] > 0 & delta[2] < 0) {
-      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-
-    # I:IV
-    } else if (delta[1] > 0 & delta[2] == 0) {
-      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-      post.y <- edge.data[1, "y"]
-
-    # I:II
-    } else if (delta[1] == 0 & delta[2] > 0) {
-      post.x <- edge.data[1, "x"]
-      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-    # II:III
-    } else if (delta[1] < 0 & delta[2] == 0) {
-      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-      post.y <- edge.data[1, "y"]
-
-    # III:IV
-    } else if (delta[1] == 0 & delta[2] < 0) {
-      post.x <- edge.data[1, "x"]
-      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-    }
-
-    data.frame(post = posts[-1][i], x = post.x, y = post.y,
-      angle = theta * 180L / pi, row.names = NULL)
-  })
-
-  do.call(rbind, post.coordinates)
-}
-
-postCoordinatesB <- function(dat, unit, interval, walking.speed, coords = TRUE,
-  edge.sel = FALSE) {
+postCoordinates <- function(dat, unit, interval, walking.speed,
+  arrow.data = FALSE) {
 
     if (unit == "distance") {
       cumulative <- cholera::unitMeter(cumsum(dat$d), "meter")
@@ -363,13 +278,21 @@ postCoordinatesB <- function(dat, unit, interval, walking.speed, coords = TRUE,
         post.y <- edge.data[1, "y"] - abs(h * sin(theta))
       }
 
-      data.frame(post = posts[-1][i],
-                 x0 = edge.data[2, "x"],
-                 y0 = edge.data[2, "y"],
-                 x = post.x,
-                 y = post.y,
-                 angle = theta * 180L / pi,
-                 row.names = NULL)
+      if (arrow.data) {
+        data.frame(post = posts[-1][i],
+                   x0 = edge.data[2, "x"],
+                   y0 = edge.data[2, "y"],
+                   x = post.x,
+                   y = post.y,
+                   angle = theta * 180L / pi,
+                   row.names = NULL)
+      } else {
+        data.frame(post = posts[-1][i],
+                   x = post.x,
+                   y = post.y,
+                   angle = theta * 180L / pi,
+                   row.names = NULL)
+      }
     })
 
   do.call(rbind, post.coordinates)
