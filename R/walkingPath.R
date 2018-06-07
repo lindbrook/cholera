@@ -362,7 +362,7 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
   output
 }
 
-#' Print method for walkingPath().
+#' Print summary output for walkingPath().
 #'
 #' Return summary results.
 #' @param x An object of class "walking_path" created by walkingPath().
@@ -378,7 +378,7 @@ print.walking_path <- function(x, ...) {
     stop('"x"\'s class needs to be "walking_path".')
   }
 
-  print(x[ c("path", "data")])
+  print(x[c("path", "data")])
 }
 
 #' Plot the walking path between selected cases and/or pumps.
@@ -391,7 +391,7 @@ print.walking_path <- function(x, ...) {
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
-#' @section Note: Arrow points represent mileposts or timeposts to the destination.
+#' @section Note: Arrow represent mileposts or timeposts to the destination.
 #' @examples
 #' plot(walkingPath(15))
 #' plot(walkingPath(15), unit.posts = "time")

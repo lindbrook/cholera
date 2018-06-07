@@ -2,7 +2,7 @@
 % Please edit documentation in R/walkingPath.R
 \name{print.walking_path}
 \alias{print.walking_path}
-\title{Print method for walkingPath().}
+\title{Print summary output for walkingPath().}
 \usage{
 \method{print}{walking_path}(x, ...)
 }

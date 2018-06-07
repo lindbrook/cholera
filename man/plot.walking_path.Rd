@@ -27,7 +27,7 @@ A base R plot.
 Plot the walking path between selected cases and/or pumps.
 }
 \section{Note}{
- Arrow points represent mileposts or timeposts to the destination.
+ Arrow represent mileposts or timeposts to the destination.
 }
 
 \examples{
