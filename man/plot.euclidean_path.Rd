@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclideanPath.R
 \name{plot.euclidean_path}
 \alias{plot.euclidean_path}
-\title{Plot the Euclidean distance between cases and/or pumps.}
+\title{Plot the path of the Euclidean distance between cases and/or pumps.}
 \usage{
 \method{plot}{euclidean_path}(x, zoom = TRUE, radius = 0.5, ...)
 }
@@ -19,7 +19,7 @@
 A base R plot.
 }
 \description{
-Plot method for euclideanPath().
+Plot the path of the Euclidean distance between cases and/or pumps.
 }
 \examples{
 plot(euclideanPath(1))

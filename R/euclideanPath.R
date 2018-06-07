@@ -1,4 +1,4 @@
-#' Compute the Euclidean distance between cases and/or pumps.
+#' Compute path data of the Euclidean distance between cases and/or pumps.
 #'
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
@@ -7,9 +7,9 @@
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
-#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
+#' @param walking.speed Numeric. Default is 5 km/hr.
 #' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime().
-#' @return An R list.
+#' @return An R list with 3 data frames: x-y coordinates for the origin and destination, and summary of results..
 #' @export
 #' @examples
 #' # path from case 1 to nearest pump.
@@ -263,8 +263,6 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
     out$distance <- cholera::unitMeter(out$distance, "native")
   }
 
-  # data = list(ego = ego[, c("x", "y")], alter = alters[sel, c("x", "y")]
-
   output <- list(ego = ego[, c("x", "y")],
                  alter = alters[sel, c("x", "y")],
                  origin = origin,
@@ -287,7 +285,6 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
 
 #' Summary of euclideanPath().
 #'
-#' Print method for euclideanPath()
 #' @param x An object of class "euclidean_path" created by euclideanPath().
 #' @param ... Additional parameters.
 #' @return An R data frame.
@@ -304,9 +301,8 @@ print.euclidean_path <- function(x, ...) {
   print(x[c("ego", "alter", "summary")])
 }
 
-#' Plot the Euclidean distance between cases and/or pumps.
+#' Plot the path of the Euclidean distance between cases and/or pumps.
 #'
-#' Plot method for euclideanPath().
 #' @param x An object of class "euclidean_path" created by euclideanPath().
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.

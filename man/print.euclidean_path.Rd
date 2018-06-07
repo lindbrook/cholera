@@ -15,7 +15,7 @@
 An R data frame.
 }
 \description{
-Print method for euclideanPath()
+Summary of euclideanPath().
 }
 \examples{
 euclideanPath(1)

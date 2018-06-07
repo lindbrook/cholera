@@ -15,7 +15,7 @@
 An R data frame.
 }
 \description{
-Return summary results.
+Print summary output for walkingPath().
 }
 \examples{
 walkingPath(1)

@@ -23,10 +23,10 @@ euclideanDistance(origin, destination = NULL, type = "case-pump",
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
-\item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
+\item{walking.speed}{Numeric. Default is 5 km/hr.}
 }
 \value{
-An R list.
+An R data frame.
 }
 \description{
 Compute the Euclidean distance between cases and/or pumps.
