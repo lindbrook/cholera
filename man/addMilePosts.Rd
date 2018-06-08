@@ -9,7 +9,7 @@ addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   type = "arrows", multi.core = FALSE)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of pumps to subset from neighborhoods defined by "pump.select". Negative selection is possible. NULL selects all pumps in "pump.select".}
+\item{pump.subset}{Numeric. Vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
 
 \item{pump.select}{Numeric. Numeric vector of pumps to define possible pump neighborhoods (i.e. the "population"). Negative selection is possible. NULL selects all "observed" pumps (i.e., pumps with at least one case).}
 

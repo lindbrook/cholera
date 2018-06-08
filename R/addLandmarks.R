@@ -1,9 +1,7 @@
 #' Add landmarks to plot.
 #'
-#' Adam and Eve Court (isolate), Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews (isolate), 18 Sackville Street (John Snow residence) and 28 Dean Street (Karl Marx residence).
-#' @note 18 Sackville Street and 28 Dean Street are approximate. Falconberg Court & Mews form an isolate: they are not part of the network of roads and are technically unreachable. Adam and Eve Court and its pump also form an isolate.
-#' @return Add base R points and text to a graphics plot.
 #' @param text.size Numeric. cex for text labels.
+#' @note 18 Sackville Street and 28 Dean Street are approximate. Falconberg Court & Mews form an isolate: they are not part of the network of roads and are technically unreachable. Adam and Eve Court and its pump also form an isolate.
 #' @seealso \code{\link{snowMap}},
 #' \code{\link{addIndexCase}},
 #' \code{\link{addKernelDensity}},
@@ -11,6 +9,7 @@
 #' \code{\link{addSnow}},
 #' \code{\link{addVoronoi}},
 #' \code{\link{addWhitehead}}
+#' @return Base R points and text.
 #' @import graphics
 #' @export
 #' @examples

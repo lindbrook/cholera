@@ -1,6 +1,5 @@
-#' Add case or pump and the shortest walking path to a case or pumps.
+#' Add the shortest walking path between a selected cases or pumps.
 #'
-#' In-progress prototype.
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".

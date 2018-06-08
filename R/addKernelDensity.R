@@ -1,8 +1,8 @@
 #' Add 2D kernel density contours.
 #'
-#' Uses KernSmooth::bkde2D().
-#' @param pump.subset Character or Numeric: "pooled", "individual", or numeric vector of observed pump neighborhoods (3 through 12 or [3, 12]). The vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible.
-#' @param pump.select Numeric. Vector of pumps to consider. This creates a scenario where the only pumps are those in the vector (negative selection possible).
+#' Add 2D kernel density contours based on selected sets of observations.
+#' @param pump.subset Character or Numeric: "pooled", "individual", or numeric vector. "pooled" treats all observations as a single set. "individual" is a shortcut for all individual pump neighborhoods. Use of vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".
+#' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. NULL selects all pumps.
 #' @param neighborhood.type Character. "voronoi" or "walking"
 #' @param bandwidth Numeric. Bandwidth for kernel density estimation.
 #' @param color Character. Color of contour lines.
@@ -19,6 +19,7 @@
 #' \code{\link{addVoronoi}},
 #' \code{\link{addWhitehead}}
 #' @import graphics
+#' @note Note: This function uses KernSmooth::bkde2D().
 #' @export
 #' @examples
 #' # snowMap()

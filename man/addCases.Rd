@@ -9,13 +9,13 @@ addCases(pump.subset = NULL, pump.select = NULL, type = "address",
   color = NULL, multi.core = FALSE, ...)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
+\item{pump.subset}{Numeric. Vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
 
-\item{pump.select}{Numeric. Numeric vector of pumps to define pump neighborhoods (i.e. the "population"). Negative selection possible. NULL selects all pumps.}
+\item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. NULL selects all pumps.}
 
 \item{type}{Character. Type of case: "address" (base of stack) or "fatalities" (entire stack).}
 
-\item{token}{Character. Plot token: "point" or "id".}
+\item{token}{Character. Typoe of token to plot: "point" or "id".}
 
 \item{text.size}{Numeric. Size of case ID text.}
 
@@ -30,7 +30,7 @@ addCases(pump.subset = NULL, pump.select = NULL, type = "address",
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Add cases, as "address" (cholera::fatalties.address) or stacked "fatalties" (cholera::fatalties), as points to an existing plot.
+Add cases, as "address" or "fatalties" as points or IDs, to a plot.
 }
 \examples{
 \dontrun{

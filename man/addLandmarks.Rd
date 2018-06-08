@@ -10,10 +10,10 @@ addLandmarks(text.size = 0.5)
 \item{text.size}{Numeric. cex for text labels.}
 }
 \value{
-Add base R points and text to a graphics plot.
+Base R points and text.
 }
 \description{
-Adam and Eve Court (isolate), Golden Square, Lion Brewery, St James Workhouse, St Luke's Church (Henry Whitehead), Soho Square, Falconberg Court & Mews (isolate), 18 Sackville Street (John Snow residence) and 28 Dean Street (Karl Marx residence).
+Add landmarks to plot.
 }
 \note{
 18 Sackville Street and 28 Dean Street are approximate. Falconberg Court & Mews form an isolate: they are not part of the network of roads and are technically unreachable. Adam and Eve Court and its pump also form an isolate.

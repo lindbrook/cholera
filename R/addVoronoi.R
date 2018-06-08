@@ -1,6 +1,5 @@
 #' Add Voronoi cells.
 #'
-#' Uses deldir::deldir().
 #' @param pump.select Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6).
 #' @param vestry Logical. FALSE for original 13 pumps. TRUE for 14 pumps in Vestry Report.
 #' @param color Character. Color of cell edges.
@@ -13,6 +12,7 @@
 #' \code{\link{addPlaguePit}},
 #' \code{\link{addSnow}},
 #' \code{\link{addWhitehead}}
+#' @note Note: this function uses deldir::deldir().
 #' @import graphics
 #' @export
 #' @examples

@@ -9,9 +9,9 @@ addKernelDensity(pump.subset = "pooled", pump.select = NULL,
   color = "black", line.type = "solid", multi.core = FALSE, ...)
 }
 \arguments{
-\item{pump.subset}{Character or Numeric: "pooled", "individual", or numeric vector of observed pump neighborhoods (3 through 12 or [3, 12]). The vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible.}
+\item{pump.subset}{Character or Numeric: "pooled", "individual", or numeric vector. "pooled" treats all observations as a single set. "individual" is a shortcut for all individual pump neighborhoods. Use of vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
 
-\item{pump.select}{Numeric. Vector of pumps to consider. This creates a scenario where the only pumps are those in the vector (negative selection possible).}
+\item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. NULL selects all pumps.}
 
 \item{neighborhood.type}{Character. "voronoi" or "walking"}
 
@@ -31,7 +31,10 @@ addKernelDensity(pump.subset = "pooled", pump.select = NULL,
 Add contours to a graphics plot.
 }
 \description{
-Uses KernSmooth::bkde2D().
+Add 2D kernel density contours based on selected sets of observations.
+}
+\note{
+Note: This function uses KernSmooth::bkde2D().
 }
 \examples{
 # snowMap()

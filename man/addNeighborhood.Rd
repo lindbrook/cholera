@@ -2,14 +2,14 @@
 % Please edit documentation in R/addNeighborhood.R
 \name{addNeighborhood}
 \alias{addNeighborhood}
-\title{Add expected neighborhoods.}
+\title{Add expected walking neighborhoods.}
 \usage{
 addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   weighted = TRUE, multi.core = FALSE, area = TRUE, path = NULL,
   path.color = NULL, path.width = 3, alpha.level = 0.25, ...)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of pumps to select (subset) from neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
+\item{pump.subset}{Numeric. Vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
 
 \item{pump.select}{Numeric. Numeric vector of pumps to define pump neighborhoods (i.e. the "population"). Negative selection possible. NULL selects all pumps.}
 
@@ -32,7 +32,7 @@ addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 \item{...}{Additional plotting parameters.}
 }
 \description{
-In-development prototype.
+Add expected walking neighborhoods.
 }
 \section{Note}{
  This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 30 seconds. Using the parallel implementation on 4 physical (8 logical) cores, this time falls to about 12 seconds. Note that parallelization is currently only available on Linux and Mac, and that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. See vignette("parallel") for details.

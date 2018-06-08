@@ -2,13 +2,13 @@
 % Please edit documentation in R/addPump.R
 \name{addPump}
 \alias{addPump}
-\title{Add water pump by numerical ID.}
+\title{Add water pump to plot.}
 \usage{
 addPump(id = NULL, vestry = FALSE, col = NULL, pch = 24, label = TRUE,
   pos = 1, ...)
 }
 \arguments{
-\item{id}{Numeric or Integer. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 and 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps. NULL plots all pumps.}
+\item{id}{Numeric or Integer. Water pump's numerical ID. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 and 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps. NULL plots all pumps.}
 
 \item{vestry}{Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.}
 
@@ -23,5 +23,5 @@ addPump(id = NULL, vestry = FALSE, col = NULL, pch = 24, label = TRUE,
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Add water pump to existing plot.
+Add water pump to plot.
 }
