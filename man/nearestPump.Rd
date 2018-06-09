@@ -31,7 +31,7 @@ nearestPump(pump.select = NULL, output = "distance", vestry = FALSE,
 An R data frame or list of 'igraph' paths.
 }
 \description{
-Compute the distance or path from observed or expected cases to nearest pump (or from among selected pumps).
+Compute shortest walking distances or paths.
 }
 \note{
 Time is computed using distanceTime().

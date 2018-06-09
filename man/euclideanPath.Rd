@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclideanPath.R
 \name{euclideanPath}
 \alias{euclideanPath}
-\title{Compute path data of the Euclidean distance between cases and/or pumps.}
+\title{Compute path of the Euclidean distance between cases and/or pumps.}
 \usage{
 euclideanPath(origin, destination = NULL, type = "case-pump",
   observed = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
@@ -29,7 +29,7 @@ euclideanPath(origin, destination = NULL, type = "case-pump",
 An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
 }
 \description{
-Compute path data of the Euclidean distance between cases and/or pumps.
+Compute path of the Euclidean distance between cases and/or pumps.
 }
 \note{
 The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime().

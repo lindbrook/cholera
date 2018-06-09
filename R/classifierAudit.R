@@ -1,6 +1,6 @@
 #' Test if case is orthogonal to segment.
 #'
-#' Diagnostic to classify case by road segment.
+#' Diagnostic to check classification of case to a road segment.
 #' @param case Numeric or Integer. Numeric ID of observed case.
 #' @param segment Character. Segment ID. See cholera::road.segments
 #' @param observed Logical. TRUE observed case; FALSE simulated case (cholera::regular.cases).

@@ -1,4 +1,4 @@
-#' Compute path data of the Euclidean distance between cases and/or pumps.
+#' Compute path of the Euclidean distance between cases and/or pumps.
 #'
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.

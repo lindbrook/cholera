@@ -20,7 +20,7 @@ classifierAudit(case = 483, segment = "326-2", observed = TRUE,
 Logical TRUE or FALSE
 }
 \description{
-Diagnostic to classify case by road segment.
+Diagnostic to check classification of case to a road segment.
 }
 \note{
 This function is a diagnostic. It is not a guarantee of correct classification.

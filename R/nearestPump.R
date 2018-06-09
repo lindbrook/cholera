@@ -1,6 +1,5 @@
 #' Compute shortest walking distances or paths.
 #'
-#' Compute the distance or path from observed or expected cases to nearest pump (or from among selected pumps).
 #' @param pump.select Numeric. Pump candidates to consider. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param output Character. "distance" or "path".
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
