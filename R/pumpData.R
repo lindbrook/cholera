@@ -1,12 +1,13 @@
 #' Compute pump coordinates.
 #'
-#' Returns either the Dodson and Tobler coordinates for the original thirteen pumps, appended with name of nearest road or the fourteen pumps included in the second version of Snow's map in the Vestry report. Note that the location of the fourteenth pump, at Hanover Square, and the "correct" location of the Broad Street pump are approximate.
+#' Returns either the set of x-y coordinate for the pumps themseles or for their orthogonally projected "addresses" on the network of roads.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry report. FALSE uses the 13 in the original map.
 #' @param orthogonal Logical. TRUE returns pump "addresses": the coordinates of the orthogonal projection from a pump's location onto the network of roads. FALSE returns pump location coordinates.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
+#' @note Note: The location of the fourteenth pump, at Hanover Square, and the "correct" location of the Broad Street pump are approximate.
 #' @seealso\code{\link{pumpLocator}}
 #' @return An R data frame.
-#' @section Notes: This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
+#' @section Notes: The Dodson and Tobler coordinates of the original thirteen pumps, appended with name of nearest road, or the fourteen pumps included in the second version of Snow's map included in the Vestry report. This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
 #' @export
 
 pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {

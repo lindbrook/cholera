@@ -10,7 +10,7 @@ roadSegments()
 An R data frame.
 }
 \description{
-For use in integrating pumps and cases into road network needed to compute walking neighborhoods.
+Used to integrate pumps and cases into road network when computing walking neighborhoods.
 }
 \section{Notes}{
  This function documents the code that generates \code{\link[cholera]{road.segments}}.

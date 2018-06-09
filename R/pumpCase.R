@@ -2,7 +2,7 @@
 #'
 #' @param obj An object created by neighborhoodVoronoi() or neighborhoodWalking().
 #' @seealso \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodWalking}},
-#' @return A list of pump neighborhoods with the numeric ID of cases.
+#' @return An R list of numeric ID of cases by pump neighborhoods.
 #' @export
 #' @examples
 #' # pumpCase(neighborhoodVoronoi())

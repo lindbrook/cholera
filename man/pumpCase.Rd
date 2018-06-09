@@ -10,7 +10,7 @@ pumpCase(obj)
 \item{obj}{An object created by neighborhoodVoronoi() or neighborhoodWalking().}
 }
 \value{
-A list of pump neighborhoods with the numeric ID of cases.
+An R list of numeric ID of cases by pump neighborhoods.
 }
 \description{
 Numeric case IDs by pump neighborhood.

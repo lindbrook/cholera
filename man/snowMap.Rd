@@ -29,7 +29,7 @@ snowMap(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
 A base R graphics plot.
 }
 \description{
-Uses amended version of  Dodson and Tobler's data.
+Uses amended version of Dodson and Tobler's data.
 }
 \examples{
 snowMap()

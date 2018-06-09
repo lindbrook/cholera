@@ -1,6 +1,6 @@
-#' Generate simulated fatalities and their orthogonal projections.
+#' Generate simulated fatalities and their orthogonal projection on road network.
 #'
-#' Places regularly spaced "simulated" or "expected" cases across the face of the map. The cases are used, via orthogonal projection, to find their "addresses" on the road network. These data are used to generate "expected" paths and neighborhoods. The function relies on sp::spsample() and sp::Polygon().
+#' Places regularly spaced "simulated" or "expected" cases across the face of the map. The cases are used, via orthogonal projection, to logacte their "addresses" on the road network. These data are used to generate "expected" pump neighborhoods. The function relies on sp::spsample() and sp::Polygon().
 #' @param compute Logical. TRUE computes data. FALSE uses pre-computed data. For replication of data used in the package, FALSE is the default.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @param simulated.obs Numeric. Number of sample cases. Default is 5000.

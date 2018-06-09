@@ -1,6 +1,6 @@
 #' Reshape 'roads' data frame into 'road.segments' data frame.
 #'
-#' For use in integrating pumps and cases into road network needed to compute walking neighborhoods.
+#' Used to integrate pumps and cases into road network when computing walking neighborhoods.
 #' @return An R data frame.
 #' @section Notes: This function documents the code that generates \code{\link[cholera]{road.segments}}.
 #' @export

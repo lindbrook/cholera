@@ -2,7 +2,7 @@
 % Please edit documentation in R/simulateFatalities.R
 \name{simulateFatalities}
 \alias{simulateFatalities}
-\title{Generate simulated fatalities and their orthogonal projections.}
+\title{Generate simulated fatalities and their orthogonal projection on road network.}
 \usage{
 simulateFatalities(compute = FALSE, multi.core = FALSE,
   simulated.obs = 10000L)
@@ -18,7 +18,7 @@ simulateFatalities(compute = FALSE, multi.core = FALSE,
 An R list with two elements: \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}
 }
 \description{
-Places regularly spaced "simulated" or "expected" cases across the face of the map. The cases are used, via orthogonal projection, to find their "addresses" on the road network. These data are used to generate "expected" paths and neighborhoods. The function relies on sp::spsample() and sp::Polygon().
+Places regularly spaced "simulated" or "expected" cases across the face of the map. The cases are used, via orthogonal projection, to logacte their "addresses" on the road network. These data are used to generate "expected" pump neighborhoods. The function relies on sp::spsample() and sp::Polygon().
 }
 \section{Notes}{
  This function is computationally intensive. To compute 10,000 simulated cases with R version 3.5.0 on a 2.3 GHz Intel Core i7, the function takes about 46 minutes to on a single core and 11 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}.
