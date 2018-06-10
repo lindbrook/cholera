@@ -2,7 +2,7 @@
 % Please edit documentation in R/unitMeter.R
 \name{unitMeter}
 \alias{unitMeter}
-\title{Convert nominal map distance to yards or meters.}
+\title{Convert nominal map distance to meters or yards.}
 \usage{
 unitMeter(x, unit = NULL, yard.unit = 177/3, meter.unit = 54)
 }

@@ -1,6 +1,6 @@
-#' Fix apparent coding errors in Dodson and Tobler's digitization of Snow's map.
+#' Fix errors in Dodson and Tobler's digitization of Snow's map.
 #'
-#' Fix two apparent coding errors using three misplaced cases.
+#' Two apparent coding errors using three misplaced cases.
 #' @seealso \code{vignette("duplicate.missing.cases")}
 #' @return An R data frame.
 #' @export
