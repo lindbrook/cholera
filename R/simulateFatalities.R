@@ -5,11 +5,11 @@
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.
 #' @param simulated.obs Numeric. Number of sample cases. Default is 5000.
 #' @return An R list with two elements: \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}
-#' @section Notes: This function is computationally intensive. To compute 10,000 simulated cases with R version 3.5.0 on a 2.3 GHz Intel Core i7, the function takes about 46 minutes to on a single core and 11 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}.
+#' @section Notes: This function is computationally intensive. To compute 20,000 simulated cases with R version 3.5.0 on a 2.3 GHz Intel Core i7, the function takes about 94 minutes to on a single core and 22 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}.
 #' @export
 
 simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
-  simulated.obs = 10000L) {
+  simulated.obs = 20000L) {
 
   if (compute == FALSE) {
     sim.ortho.proj <- cholera::sim.ortho.proj
