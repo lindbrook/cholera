@@ -53,7 +53,7 @@ In his map of the 1854 cholera outbreak in London, John Snow uses stacks of bars
 
 In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and pump is assigned a unique x-y coordinate. Each road is translated into a series of straight line segments, each of which is defined by the segment's endpoints. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's 'HistData' package. The data are plotted below:
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = FALSE}
 roads.list <- split(roads[, c("x", "y")], roads$street)
 plot(fatalities[, c("x", "y")], xlim = range(roads$x), ylim = range(roads$y),
   pch = 15, cex = 0.5, col = "gray", asp = 1)
@@ -107,7 +107,7 @@ The graphs below plot the bivariate kernel density contours, of varying bandwidt
 
 With the "stacked" data, _fatalities_, the contours are looser (reflecting greater uncertainty) and the epicenter is further south than what we might expect given that the Broad Street pump (blue triangle)^[The blue triangle is the "correct" location of the pump as included in the amended, second version of the map that appears in the Vestry report. The empty green triangle is the pump's "wrong" location from the original map.] is the accepted source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward in a southerly direction.
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = FALSE}
 
 roads.list <- split(roads[, c("x", "y")], roads$street)
 
@@ -206,7 +206,7 @@ p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
 
 With _fatalities.unstacked_, the contours are "tighter" (reflecting lesser uncertainty) and the epicenter are located further north, nearer to the roads, the pump and to Broad Street:
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = FALSE}
 
 ## Data ##
 
@@ -268,7 +268,7 @@ The first method works by orthogonal projection. For each bar, the algorithm dra
 
 To illustrate, consider this stylized example. For case 12, there are three possible "home" road segments: the solid blue, solid red and the solid green segments. Of the three, only _red_ and _green_ are candidates. The problem with _blue_ is that its orthogonal projector (the blue arrow) does not intersect the solid blue segment. Of the two remaining candidates, _red_ is chosen because it is closer to case 12 than _green_: the red arrow is shorter than the green one.
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = FALSE}
 
 case.select <- 12
 case <- Snow.deaths[case.select, c("x", "y")]
@@ -329,7 +329,7 @@ text(broad.df$x, broad.df$y, "Broad St", srt = broad.angle)
 
 This procedure correctly classifies 508 of 578 cases, an error rate of 12.1%. Errors occur due to ambiguities surrounding a case's "home" segment. Unlike Snow's map where a bar's "horizontal" orientation reflects its "home" road segment, Dodson and Tobler only record a case's x-y coordinate. This can lead to problems at street intersections, where a point may be closer to the "wrong" segment, and at addresses with many cases.^[This is further exacerbated by the fact that the width of roads is not always taken into consideration. This creates instances where cases on one side of the street appear to be closer to the road than those on the other.  One particular case of note is Portland Mews. On the map, Portland Mews is a large yard or square. But in Dodson and Tobler's data, it is simply a set of line segments, which possibly corresponds to a roadway through the location. As a result, the three cases there appear to belong to a single cluster instead of two separate ones. I manually chose a more distant road segment on Portland Mews that better reflects the orientation of bars on Snow's map.] The problem with multiple cases is that stacking can push cases away from their "home" segment. Consider the figure below. Even though visual inspection (the alignment of the stack) would lead us to choose _black_, the algorithm chooses _red_. The reason is that stacking pushes the case so far from _black_ that it falls outside of the range of consideration. I corrected such errors by manually classifying them.
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = FALSE}
 
 case.select <- 290
 case <- Snow.deaths[case.select, c("x", "y")]
@@ -393,7 +393,7 @@ To link a bar to a stack, I use hierarchical cluster analysis.^[Specifically, I 
 
 To illustrate, the graph below plots the cases and their orthogonal projectors along a segment of Broad Street. Linking a bar to a stack and identifying a stack, boils down to identifying distinct clusters of points along the road segment. For the case at hand, visual inspection leads us to expect that we should find 8 different clusters: 4 on the north side, 4 on the south.
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = FALSE}
 
 broad.st.cases <- c(12, 21, 25, 32, 42, 72, 91, 93, 122, 190, 194, 212, 232,
                     239, 310, 321, 343, 373, 389, 396, 397, 398, 421, 496, 562,
@@ -571,7 +571,7 @@ The one fly in the ointment is that addresses directly opposite one another will
 
 For example, consider cases 321 and 239. They lie on opposite sides of Broad Street. In the figure below, 321's coordinates are shown in blue while 239's are shown in red. When we take the signs of the differences, we get (-, +) for 321 and (+, -) for 239. This distinguishes cases on the north side from those on the south side.
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = FALSE}
 
 sel <- c(321, 239)
 
@@ -646,7 +646,7 @@ In general, for roads with positive slopes (e.g., Broad Street), the differences
 
 With this information, I can use cluster analysis to identify stacks, or "addresses", on each side of a candidate road segment. Since we expect the distances between cases in a stack or "address" to be small, I use an arbitrarily low but reasonable cutoff "height" of 0.05. The two dendrograms below represent the North and South sides of Broad Street. We can see that this procedure correctly classifies the 8 different groups or stacks that can be seen in the figure above and that can be verified by looking at Snow's map.
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = FALSE}
 
 cutpoint <- 0.05
 
