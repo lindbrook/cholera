@@ -1,3 +1,9 @@
+cholera 0.4.9.9024
+==================
+
+- set expected observation count as variable in walkingDistance() and walkingPath().
+
+
 cholera 0.4.9.9023
 ==================
 

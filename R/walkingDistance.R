@@ -56,6 +56,7 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   nodes <- node.data$nodes
   edges <- node.data$edges
   g <- node.data$g
+  exp.ct <- nrow(cholera::regular.cases)
 
   if (type == "case-pump") {
     if (observed) {
@@ -65,9 +66,9 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
         stop(paste(txt1, txt2))
       }
     } else {
-      if (origin %in% 1:10001 == FALSE) {
+      if (origin %in% 1:exp.ct == FALSE) {
         txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
-        txt2 <- '"origin" must be between 1 and 10001.'
+        txt2 <- paste('"origin" must be between 1 and', paste0(exp.ct, "."))
         stop(paste(txt1, txt2))
       }
     }
@@ -156,10 +157,10 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
         stop(paste(txt1, txt2))
       }
     } else {
-      if (any(abs(c(origin, destination)) %in% 1:10001 == FALSE)) {
+      if (any(abs(c(origin, destination)) %in% 1:exp.ct == FALSE)) {
         txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
         txt2 <- 'both "origin" and "destination" must be whole numbers between'
-        txt3 <- '1 and 10001.'
+        txt3 <- paste('1 and', paste0(exp.ct, "."))
         stop(paste(txt1, txt2, txt3))
       }
     }
