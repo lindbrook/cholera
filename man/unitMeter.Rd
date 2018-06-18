@@ -4,7 +4,7 @@
 \alias{unitMeter}
 \title{Convert nominal map distance to meters or yards.}
 \usage{
-unitMeter(x, unit = NULL, yard.unit = 177/3, meter.unit = 54)
+unitMeter(x, unit = "meter", yard.unit = 177/3, meter.unit = 54)
 }
 \arguments{
 \item{x}{Numeric. Nominal map distance.}

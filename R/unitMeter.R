@@ -7,7 +7,7 @@
 #' @param meter.unit Numeric. Estimate of meters per map unit: 54.
 #' @export
 
-unitMeter <- function(x, unit = NULL, yard.unit = 177 / 3, meter.unit = 54) {
+unitMeter <- function(x, unit = "meter", yard.unit = 177 / 3, meter.unit = 54) {
   if (is.numeric(x) == FALSE) {
     stop('"x" must be numeric.')
   }
