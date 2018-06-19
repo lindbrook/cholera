@@ -1,5 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.4.9.9026-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+
 cholera: amend, augment and aid analysis of John Snow's 1854 cholera map
 ------------------------------------------------------------------------
 
@@ -94,11 +97,11 @@ devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 
 Read the package's vignettes. They expand on the concepts and data, and highlight the methods used to "fix" the data and to compute walking distances and pump neighborhoods. They can be read online at the links below:
 
-[Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)
-[Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)
-["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.bars.html)
-[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)
-[Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)
+[Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)   
+[Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)   
+["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.bars.html)   
+[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)   
+[Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)   
 [Kernel Density Plot](https://cran.r-project.org/web/packages/cholera/vignettes/kernel.density.html)
 
 ### note
