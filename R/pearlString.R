@@ -37,7 +37,8 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
   orientation = "clockwise") {
 
   dat <- cholera::regular.cases[vertices, ]
-  dat <- dat[order(dat$y), ] # set southern most point as first observation.
+  dat <- dat[order(dat$y, dat$x), ] # set most SW point as first observation.
+
   pearl.string <- vector(mode = "character", length = length(vertices))
   pearl.string[1] <- row.names(dat[1, ])
 
