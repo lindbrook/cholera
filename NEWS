@@ -1,3 +1,10 @@
+cholera 0.4.9.9026
+==================
+
+- use 40K simulated observations.
+- remove ''"Unstacking" Bars' vignette.
+
+
 cholera 0.4.9.9025
 ==================
 
