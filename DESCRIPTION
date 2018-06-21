@@ -21,6 +21,7 @@ Imports: deldir (>= 0.0-18),
          scales,
          sp,
          stats
-Suggests: knitr
+Suggests: ggplot2,
+          knitr
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
