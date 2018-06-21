@@ -1,4 +1,4 @@
-Duplicate and Missing Cases Notes
+Lab Notes: Duplicate and Missing Cases
 ================
 lindbrook
 2018-06-21
