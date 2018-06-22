@@ -97,18 +97,20 @@ To install the development version of 'cholera' from GitHub:
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 
-Read the package's vignettes. They expand on the concepts and data, and highlight the methods used to "fix" the data and to compute walking distances and pump neighborhoods. They can be read online at the links below:
+Read the package's vignettes. They expand on the concept of a "pump neighborhood", and go into greater detail on how the data was "fixed" and on the methods used to compute walking distances and pump neighborhoods.
 
-[Pump Neighborhoods](https://cran.r-project.org/web/packages/cholera/vignettes/pump.neighborhoods.html)   
-[Duplicate and Missing Cases](https://cran.r-project.org/web/packages/cholera/vignettes/duplicate.missing.cases.html)   
-["Unstacking" Bars](https://cran.r-project.org/web/packages/cholera/vignettes/unstacking.bars.html)   
-[Roads](https://cran.r-project.org/web/packages/cholera/vignettes/roads.html)   
-[Time Series](https://cran.r-project.org/web/packages/cholera/vignettes/time.series.html)   
-[Kernel Density Plot](https://cran.r-project.org/web/packages/cholera/vignettes/kernel.density.html)
+The development versions of the vignettes are available online:
+
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)
+["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)
+[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)
+[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)
+[Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)
 
 ### note
 
-neighborhoodWalking() and addNeighborhood() are computationally intensive. Using R version 3.5.0 on a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 5 seconds; doing the same for expected paths takes about 27 seconds. Using the functions' parallel implementation on 4 physical (8 logical) cores, the times fall to about 4 and 10 seconds.
+neighborhoodWalking() and addNeighborhood() are computationally intensive. Using R version 3.5.0 on a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 5 seconds; doing the same for expected paths takes about 29 seconds. Using the functions' parallel implementation on 4 physical (8 logical) cores, the times fall to about 4 and 11 seconds.
 
 Note that parallelization is currently only available on Linux and Mac.
 
