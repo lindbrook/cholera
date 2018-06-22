@@ -137,8 +137,8 @@ print.walking <- function(x, ...) {
   if (x$case.set == "observed" | x$case.set == "snow") {
     out <- vapply(x$paths, length, numeric(1L))
   } else if (x$case.set == "expected") {
-  #   out <- expectedCount(x)
-    NULL
+    # out <- expectedCount(x)
+    out <- NULL
   }
   print(out)
 }
