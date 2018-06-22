@@ -69,7 +69,7 @@ points(Snow.pumps[, c("x", "y")], col = "blue", pch = 2, cex = 1)
 text(Snow.pumps[, c("x", "y")], col = "blue", labels = "Broad St Pump",
      pos = 3, cex = 0.85)
 points(Snow.deaths[-unlist(duplicates.id), c("x", "y")])
-title(main = "The Three Pairs of Duplicate Cases", cex.main = 0.9)
+title(main = "The Three Pairs of Duplicate Cases")
 
 invisible(lapply(duplicates.id, function(x) {
   points(Snow.deaths[c(x[1], x[2]), c("x", "y")], pch = 1:0, cex = c(1, 1.75),
@@ -208,7 +208,7 @@ text(Snow.deaths[noel.street, c("x", "y")], cex = 0.9, pos = 4,
      labels = Snow.deaths$case[noel.street], col = "#009E73")
 
 title(main = paste0("15 Noel Street:", "\n",
-                    " Two (282 & 422) Rather than Three Cases"), cex.main = 0.9)
+                    " Two (282 & 422) Rather than Three Cases"))
 
 legend(x = "bottomleft",
        legend = c("Case", "15 Noel St"),
@@ -306,7 +306,7 @@ segments(seg.data["x1"], seg.data["y1"], seg.data["x2"], seg.data["y2"],
          col = "#009E73")
 
 title(main = paste0("Geometric Interpolation: Candidate Locations for",
-  "\n", "the Two Missing Cases at 40 Broad Street"), cex.main = 0.9)
+  "\n", "the Two Missing Cases at 40 Broad Street"))
 
 ols <- segmentOLS(sel)
 segment.slope <- coef(ols)[2]
@@ -362,7 +362,7 @@ text(c(0.3, 2.3), rep(0.5, 2), labels = c(32, 122), pos = 1, cex = 0.9,
 arrows(0.3, 0.6, 2.3, 0.6, code = 3, length = 0.067, angle = 90, col = "blue")
 arrows(0.3, 0.6, 2.3, 0.6, code = 3, length = 0.1, col = "blue")
 text(1.3, 0.7, "2 units", col = "blue")
-title(main = "Broad Street Unit Distance", cex.main = 0.9)
+title(main = "Broad Street Unit Distance")
 
 ```
 
@@ -380,7 +380,7 @@ text(1.3, 0.5, labels = "missing", pos = 1, col = "red")
 arrows(0.3, 0.6, 1.3, 0.6, code = 3, length = 0.067, angle = 90, col = "blue")
 arrows(0.3, 0.6, 1.3, 0.6, length = 0.1, col = "blue")
 text(0.8, 0.7, "1 unit", col = "blue")
-title(main = "Location for One Missing Case", cex.main = 0.9)
+title(main = "Location for One Missing Case")
 ```
 
 And place the other "missing" case three _units_ away:
@@ -398,7 +398,7 @@ text(3.3, 0.5, labels = "missing", pos = 1, col = "red")
 arrows(0.3, 0.6, 3.3, 0.6, code = 3, length = 0.067, angle = 90, col = "blue")
 arrows(0.3, 0.6, 3.3, 0.6, length = 0.1, col = "blue")
 text(1.8, 0.7, "3 units", col = "blue")
-title(main = "Location for Other Missing Case", cex.main = 0.9)
+title(main = "Location for Other Missing Case")
 
 ```
 
@@ -713,7 +713,7 @@ segments(seg.data["x1"], seg.data["y1"], seg.data["x2"], seg.data["y2"],
          col = "#009E73")
 
 title(main = paste0("Two Duplicate Cases (91 & 93) as Substitutes for ", "\n",
-                    "the Two Missing Cases at 40 Broad Street"), cex.main = 0.9)
+                    "the Two Missing Cases at 40 Broad Street"))
 
 ols <- segmentOLS(sel)
 segment.slope <- coef(ols)[2]
@@ -817,7 +817,7 @@ text(Snow.deaths[noel.street, c("x", "y")], cex = 0.9, pos = 4,
      labels = Snow.deaths$case[noel.street], col = "#009E73")
 
 title(main = paste0("Duplicate Observation (209) as Substitute", "\n",
-                    "for Missing Case at 15 Noel Street"), cex.main = 0.9)
+                    "for Missing Case at 15 Noel Street"))
 
 ols <- segmentOLS(sel)
 segment.slope <- coef(ols)[2]
