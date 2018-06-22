@@ -22,7 +22,7 @@ John Snow's map of the 1854 cholera outbreak in London is a canonical example of
 
 In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original data are no longer available,^[http://www.ncgia.ucsb.edu/pubs/snow/snow.html] they are preserved in Michael Friendly's 'HistData' package. Those data are plotted below:
 
-```{r, fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 street.list <- split(Snow.streets[, c("x", "y")], Snow.streets$street)
 plot(Snow.deaths$x, Snow.deaths$y, pch = 20, cex = 0.5,
   xlim = range(Snow.streets$x), ylim = range(Snow.streets$y),
@@ -55,6 +55,6 @@ fix <- data.frame(x = c(12.56974, 12.53617, 12.33145), y = c(11.51226, 11.58107,
 fatalities[c(91, 93, 209), c("x", "y")] <- fix
 ```
 
-This fixed data set is available as _fatalities_ in this package and as _Snow.deaths2_ in 'HistData' (>= ver. 0.7-8). For those interested, an explanation of how I arrived at these values is available [here.](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)
+This fixed data set is available as _fatalities_ in this package and as _Snow.deaths2_ in 'HistData' (>= ver. 0.7-8). For those interested, an explanation of how I arrived at these values is available on [GitHub.](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)
 
 ## Notes

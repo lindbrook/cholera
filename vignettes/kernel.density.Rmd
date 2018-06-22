@@ -18,7 +18,7 @@ library(cholera)
 
 By default, addKernelDensity() function pools all observations:
 
-```{r fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = TRUE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
 snowMap(add.title = FALSE)
 addKernelDensity()
 ```
@@ -27,14 +27,14 @@ But you can also view the kernel densities of individual pump neighborhoods. Eit
 
 ## Selecting a subset of observed neighborhoods:
 
-```{r fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = TRUE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
 snowMap(add.title = FALSE)
 addKernelDensity(pump.subset = c(6, 8))
 ```
 
 ## Defining the set of observed pump neighborhoods:
 
-```{r fig.width = 4.75, fig.height = 4.75, fig.align = "center", echo = TRUE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
 snowMap(add.title = FALSE)
 addKernelDensity(pump.select = c(6, 8))
 ```
