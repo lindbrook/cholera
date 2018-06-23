@@ -307,3 +307,31 @@ edgeOrder <- function(dat, path.edge) {
     ifelse(any(test1), 1, ifelse(any(test2), 2, 0))
   }, numeric(1L))
 }
+
+areaPointsData <- function(sim.proj.segs, wholes, snow.colors, sim.proj,
+  split.cases) {
+
+  wholes.id <- sim.proj.segs[sim.proj.segs %in% unlist(wholes)]
+  sim.proj.wholes <- sim.proj[sim.proj$road.segment %in% wholes.id, ]
+  sim.proj.wholes$pump <- NA
+  sim.proj.wholes$color <- NA
+
+  for (nm in names(wholes)) {
+    sel <- sim.proj.wholes$road.segment %in% wholes[[nm]]
+    sim.proj.wholes[sel, "pump"] <- as.numeric(nm)
+    sim.proj.wholes[sel, "color"] <- snow.colors[paste0("p", nm)]
+  }
+
+  sim.proj.splits <- sim.proj[sim.proj$case %in% unlist(split.cases), ]
+  sim.proj.splits$pump <- NA
+  sim.proj.splits$color <- NA
+
+  for (nm in names(split.cases)) {
+    sel <- sim.proj.splits$case %in% split.cases[[nm]]
+    sim.proj.splits[sel, "pump"] <- as.numeric(nm)
+    sim.proj.splits[sel, "color"] <- snow.colors[paste0("p", nm)]
+  }
+
+  list(sim.proj.wholes = sim.proj.wholes,
+       sim.proj.splits = sim.proj.splits)
+}
