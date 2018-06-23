@@ -1,7 +1,7 @@
 Pump Neighborhoods
 ================
 lindbrook
-2018-06-22
+2018-06-23
 
 Overview
 --------
@@ -85,8 +85,7 @@ plot(neighborhoodWalking(case.set = "expected"))
 In the second, I identify neighborhoods by coloring regions using points or polygons.[4] The points approach, shown below, is faster and less tolerant of classification errors.
 
 ``` r
-plot(neighborhoodWalking(case.set = "expected"),
-  type = "area.points")
+plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
 ```
 
 <img src="pump.neighborhoods_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
@@ -96,7 +95,7 @@ The virtue of the polygon approach, which is still under development and may ret
 ``` r
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
   add.title = FALSE, radius = 0.5)
-addNeighborhood(vestry = TRUE)
+addNeighborhood()
 ```
 
 <img src="pump.neighborhoods_files/figure-markdown_github/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
