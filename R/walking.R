@@ -137,23 +137,205 @@ print.walking <- function(x, ...) {
   if (x$case.set == "observed" | x$case.set == "snow") {
     out <- vapply(x$paths, length, numeric(1L))
   } else if (x$case.set == "expected") {
-    # out <- expectedCount(x)
-    out <- NULL
+    out <- expectedCount(x)
   }
   print(out)
 }
 
 expectedCount <- function(x) {
-  arguments <- list(pump.select = x$pump.select,
-                    vestry = x$vestry,
-                    weighted = x$weighted,
-                    case.set = "expected",
-                    multi.core = x$cores)
+  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
+  edges <- dat$edges
+  nodes <- dat$nodes
+  p.data <- dat$nodes.pump
 
-  nearest.pump <- do.call("nearestPump", c(arguments))
-  nearest.pump <- nearest.pump[is.infinite(nearest.pump$distance) == FALSE, ]
-  out <- table(nearest.pump$pump)
-  stats::setNames(as.vector(out), names(out))
+  if (is.null(x$pump.select)) {
+    p.node <- p.data$node
+    p.name <- p.data$pump
+  } else {
+    if (all(x$pump.select > 0)) {
+      p.data <- p.data[p.data$pump %in% x$pump.select, ]
+    } else if (all(x$pump.select < 0)) {
+      p.data <- p.data[p.data$pump %in% abs(x$pump.select) == FALSE, ]
+    }
+    p.node <- p.data$node
+    p.name <- p.data$pump
+  }
+
+
+  n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
+    lapply(neighborhood, auditEdge, edges)
+  }, mc.cores = x$cores)
+
+  ## ------------ Plot ------------ ##
+
+  snow.colors <- cholera::snowColors(x$vestry)
+
+  obs.segment.count <- lapply(n.path.edges, function(x) {
+    table(edges[unique(unlist(x)), "id"])
+  })
+
+  edge.count <- table(edges$id)
+
+  segment.audit <- lapply(obs.segment.count, function(neighborhood) {
+    whole.id <- vapply(names(neighborhood), function(nm) {
+      identical(neighborhood[nm], edge.count[nm])
+    }, logical(1L))
+
+    list(whole = names(neighborhood[whole.id]),
+         partial = names(neighborhood[!whole.id]))
+  })
+
+  ## ------------ Observed ------------ ##
+
+  # list of whole traversed segments
+  obs.whole <- lapply(segment.audit, function(x) x$`whole`)
+
+  # list of partially traversed segments
+  obs.partial <- lapply(segment.audit, function(x) x$`partial`)
+  partial.segs <- unname(unlist(obs.partial))
+  obs.partial.whole <- wholeSegments(partial.segs, dat, edges, p.name,
+    p.node, x)
+
+  # list of of split segments (lead to different pumps)
+  # the cutpoint is found using appox. 1 meter increments via cutpointValues()
+  obs.partial.segments <- setdiff(partial.segs, unlist(obs.partial.whole))
+
+  if (length(obs.partial.segments) > 0) {
+    obs.partial.split.data <- parallel::mclapply(obs.partial.segments,
+      splitSegments, edges, p.name, p.node, x, mc.cores = x$cores)
+    cutpoints <- cutpointValues(obs.partial.split.data)
+    obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
+      unique(x$pump))
+    obs.partial.split <- splitData(obs.partial.segments, cutpoints, edges)
+  }
+
+  ## ------------ Unobserved ------------ ##
+
+  # list of edges that are wholly or partially traversed
+  obs.segments <- lapply(n.path.edges, function(x) {
+    unique(edges[unique(unlist(x)), "id"])
+  })
+
+  # list of edges that are untouched by any path
+  unobs.segments <- setdiff(cholera::road.segments$id, unlist(obs.segments))
+
+  falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
+  unobs.segments <- unobs.segments[unobs.segments %in%
+    falconberg.ct.mews == FALSE]
+
+  # Exclude segment if A&E pump is not among selected.
+  if (is.null(x$pump.select) == FALSE) {
+    sel <- "Adam and Eve Court"
+    AE.pump <- cholera::pumps[cholera::pumps$street == sel, "id"]
+    AE <- cholera::road.segments[cholera::road.segments$name == sel, "id"]
+
+    if (all(x$pump.select > 0)) {
+      if (AE.pump %in% x$pump.select == FALSE) {
+        unobs.segments <- unobs.segments[unobs.segments %in% AE == FALSE]
+      }
+    } else if (all(x$pump < 0)) {
+      if (AE.pump %in% abs(x$pump.select)) {
+        unobs.segments <- unobs.segments[unobs.segments %in% AE == FALSE]
+      }
+    }
+  }
+
+  unobs.whole <- wholeSegments(unobs.segments, dat, edges, p.name, p.node, x)
+  unobs.split.segments <- setdiff(unobs.segments, unlist(unobs.whole))
+
+  if (length(unobs.split.segments) > 0) {
+    unobs.split.data <- parallel::mclapply(unobs.split.segments,
+      splitSegments, edges, p.name, p.node, x, mc.cores = x$cores)
+    cutpoints <- cutpointValues(unobs.split.data)
+    unobs.split.pump <- lapply(unobs.split.data, function(x) unique(x$pump))
+    unobs.split <- splitData(unobs.split.segments, cutpoints, edges)
+  }
+
+  ## ------------ Data Assembly ------------ ##
+
+  if (x$vestry) pumpID <- 1:14 else pumpID <- 1:13
+
+  wholes <- lapply(pumpID, function(nm) {
+    c(obs.whole[[paste(nm)]],
+      unobs.whole[[paste(nm)]],
+      obs.partial.whole[[paste(nm)]])
+  })
+
+  names(wholes) <- pumpID
+
+  # split segments #
+  split.test1 <- length(obs.partial.segments)
+  split.test2 <- length(unobs.split.segments)
+
+  if (split.test1 > 0 & split.test2 == 0) {
+    splits <- obs.partial.split
+    splits.pump <- obs.partial.split.pump
+    split.segs <- obs.partial.segments
+  } else if (split.test1 == 0 & split.test2 > 0) {
+    splits <- unobs.split
+    splits.pump <- unobs.split.pump
+    split.segs <- unobs.split.segments
+  } else if (split.test1 > 0 & split.test2 > 0) {
+    splits <- c(obs.partial.split, unobs.split)
+    splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
+    split.segs <- c(obs.partial.segments, unobs.split.segments)
+  }
+
+  sim.proj <- cholera::sim.ortho.proj
+  sim.proj.segs <- unique(sim.proj$road.segment)
+  sim.proj.segs <- sim.proj.segs[!is.na(sim.proj.segs)]
+
+  if (split.test1 > 0 | split.test2 > 0) {
+    split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
+      id <- sim.proj$road.segment == split.segs[i] &
+            is.na(sim.proj$road.segment) == FALSE
+
+      sim.data <- sim.proj[id, ]
+      split.data <- splits[[i]]
+
+      sel <- vapply(seq_len(nrow(sim.data)), function(j) {
+        obs <- sim.data[j, c("x.proj", "y.proj")]
+        ds <- vapply(seq_len(nrow(split.data)), function(k) {
+          stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
+        }, numeric(1L))
+
+        test1 <- signif(sum(ds[1:2])) ==
+          signif(c(stats::dist(split.data[c(1, 2), ])))
+        test2 <- signif(sum(ds[3:4])) ==
+          signif(c(stats::dist(split.data[c(3, 4), ])))
+
+        ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
+      }, integer(1L))
+
+      data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
+    }, mc.cores = x$cores)
+
+    split.outcome <- do.call(rbind, split.outcome)
+    split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
+    split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
+      split.outcome[split.outcome$pump == p, "case"]
+    })
+
+    names(split.cases) <- sort(unique(split.outcome$pump))
+  }
+
+  ap <- areaPointsData(sim.proj.segs, wholes, snow.colors, sim.proj,
+    split.cases)
+
+  split.count <- table(ap$sim.proj.splits$pump)
+  whole.count <- table(ap$sim.proj.wholes$pump)
+
+  split.count <- data.frame(pump = as.numeric(names(split.count)),
+                            count = unclass(split.count),
+                            stringsAsFactors = FALSE)
+
+  whole.count <- data.frame(pump = as.numeric(names(whole.count)),
+                            count = unclass(whole.count),
+                            stringsAsFactors = FALSE)
+
+  count.data <- merge(whole.count, split.count, by = "pump", all.x = TRUE)
+  count.data[is.na(count.data)] <- 0
+  stats::setNames(count.data$count.x + count.data$count.y, count.data$pump)
 }
 
 #' Plot method for neighborhoodWalking().
@@ -403,31 +585,12 @@ plot.walking <- function(x, type = "road", ...) {
     }
 
     if (type == "area.points") {
-      wholes.id <- sim.proj.segs[sim.proj.segs %in% unlist(wholes)]
-      sim.proj.wholes <- sim.proj[sim.proj$road.segment %in% wholes.id, ]
-      sim.proj.wholes$pump <- NA
-      sim.proj.wholes$color <- NA
-
-      for (nm in names(wholes)) {
-        sel <- sim.proj.wholes$road.segment %in% wholes[[nm]]
-        sim.proj.wholes[sel, "pump"] <- as.numeric(nm)
-        sim.proj.wholes[sel, "color"] <- snow.colors[paste0("p", nm)]
-      }
-
-      sim.proj.splits <- sim.proj[sim.proj$case %in% unlist(split.cases), ]
-      sim.proj.splits$pump <- NA
-      sim.proj.splits$color <- NA
-
-      for (nm in names(split.cases)) {
-        sel <- sim.proj.splits$case %in% split.cases[[nm]]
-        sim.proj.splits[sel, "pump"] <- as.numeric(nm)
-        sim.proj.splits[sel, "color"] <- snow.colors[paste0("p", nm)]
-      }
-
-      points(cholera::regular.cases[sim.proj.wholes$case, ],
-        col = sim.proj.wholes$color, pch = 15, cex = 1.25)
-      points(cholera::regular.cases[sim.proj.splits$case, ],
-        col = sim.proj.splits$color, pch = 15, cex = 1.25)
+      ap <- areaPointsData(sim.proj.segs, wholes, snow.colors, sim.proj,
+        split.cases)
+      points(cholera::regular.cases[ap$sim.proj.wholes$case, ],
+        col = ap$sim.proj.wholes$color, pch = 15, cex = 1.25)
+      points(cholera::regular.cases[ap$sim.proj.splits$case, ],
+        col = ap$sim.proj.splits$color, pch = 15, cex = 1.25)
       invisible(lapply(road.list, lines))
 
     } else if (type == "area.polygons") {
