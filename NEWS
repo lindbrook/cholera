@@ -1,7 +1,7 @@
 cholera 0.4.9.9030
 ==================
 
-- beta fix for print.walking() w/ case.set = "expected".
+- fix for print.walking() w/ case.set = "expected".
 
 
 cholera 0.4.9.9029
