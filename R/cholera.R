@@ -23,7 +23,11 @@
 #'
 #' \code{vignette("pump.neighborhoods")}
 #'
+#' \code{vignette("kernel.density")}
+#'
 #' \code{vignette("roads")}
+#'
+#' \code{vignette("time.series")}
 #'
 #' @docType package
 #' @name cholera-package
