@@ -145,7 +145,6 @@ print.walking <- function(x, ...) {
 expectedCount <- function(x) {
   dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
   edges <- dat$edges
-  nodes <- dat$nodes
   p.data <- dat$nodes.pump
 
   if (is.null(x$pump.select)) {
@@ -160,7 +159,6 @@ expectedCount <- function(x) {
     p.node <- p.data$node
     p.name <- p.data$pump
   }
-
 
   n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
     lapply(neighborhood, auditEdge, edges)
@@ -283,7 +281,6 @@ expectedCount <- function(x) {
 
   sim.proj <- cholera::sim.ortho.proj
   sim.proj.segs <- unique(sim.proj$road.segment)
-  sim.proj.segs <- sim.proj.segs[!is.na(sim.proj.segs)]
 
   if (split.test1 > 0 | split.test2 > 0) {
     split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
@@ -369,7 +366,6 @@ plot.walking <- function(x, type = "road", ...) {
 
   dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
   edges <- dat$edges
-  nodes <- dat$nodes
   p.data <- dat$nodes.pump
 
   if (is.null(x$pump.select)) {
@@ -548,7 +544,6 @@ plot.walking <- function(x, type = "road", ...) {
 
     sim.proj <- cholera::sim.ortho.proj
     sim.proj.segs <- unique(sim.proj$road.segment)
-    sim.proj.segs <- sim.proj.segs[!is.na(sim.proj.segs)]
 
     if (split.test1 > 0 | split.test2 > 0) {
       split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
