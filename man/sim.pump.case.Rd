@@ -14,12 +14,9 @@ sim.pump.case
 \description{
 List of "simulated" fatalities grouped by walking-distance pump neighborhood.
 }
-\section{Notes}{
- \code{\link{neighborhoodWalking}} documents the code for these data.
-
-For details, see \code{vignette}("pump.neighborhoods").
+\note{
+\code{\link{neighborhoodWalking}} documents the code for these data. For details, see \code{vignette}("pump.neighborhoods").
 }
-
 \examples{
 # pumpCase(neighborhoodWalking(case.set = "expected"))
 }

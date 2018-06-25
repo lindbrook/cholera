@@ -101,7 +101,7 @@
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @section Notes: \code{\link{unstackFatalities}} documents the code for these data.
+#' @note \code{\link{unstackFatalities}} documents the code for these data.
 #' @docType data
 "ortho.proj"
 
@@ -116,7 +116,7 @@
 #'     \item{\code{type}}{type of projection: Euclidean ("eucl") or orthogonal ("ortho")}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @section Notes: \code{\link{simulateFatalities}} documents the code for these data.
+#' @note \code{\link{simulateFatalities}} documents the code for these data.
 #' @docType data
 "sim.ortho.proj"
 
@@ -131,7 +131,7 @@
 #'     \item{\code{node}}{node ID}
 #'     \item{\code{pump.id}}{numeric ID}
 #'  }
-#' @section Notes: \code{\link{pumpData}} documents the code for these data.
+#' @note \code{\link{pumpData}} documents the code for these data.
 #' @docType data
 "ortho.proj.pump"
 
@@ -146,7 +146,7 @@
 #'     \item{\code{node}}{node ID}
 #'     \item{\code{pump.id}}{numeric ID}
 #'  }
-#' @section Notes: \code{\link{pumpData}} documents the code for these data.
+#' @note \code{\link{pumpData}} documents the code for these data.
 #' @docType data
 "ortho.proj.pump.vestry"
 
@@ -167,9 +167,7 @@
 #' \describe{
 #'  \item{\code{sim.pump.case}}{numerical ID}
 #' }
-#' @section Notes: \code{\link{neighborhoodWalking}} documents the code for these data.
-#'
-#' For details, see \code{vignette}("pump.neighborhoods").
+#' @note \code{\link{neighborhoodWalking}} documents the code for these data. For details, see \code{vignette}("pump.neighborhoods").
 #' @examples
 #' # pumpCase(neighborhoodWalking(case.set = "expected"))
 #' @docType data
@@ -187,7 +185,7 @@
 #'   \item{\code{y}}{y-coordinate}
 #' }
 #' @seealso \code{\link{pumpLocator}}
-#' @section Notes: \code{\link{pumpData}} documents the code for these data.
+#' @note \code{\link{pumpData}} documents the code for these data.
 #' @docType data
 "pumps"
 
@@ -203,7 +201,7 @@
 #'   \item{\code{y}}{y-coordinate}
 #' }
 #' @seealso \code{\link{pumpLocator}}
-#' @section Notes: \code{\link{pumpData}} documents the code for these data.
+#' @note \code{\link{pumpData}} documents the code for these data.
 #' @docType data
 "pumps.vestry"
 
@@ -216,7 +214,7 @@
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
 #'  }
-#' @section Notes: \code{\link{simulateFatalities}} documents the code for these data.
+#' @note \code{\link{simulateFatalities}} documents the code for these data.
 #' @docType data
 "regular.cases"
 
@@ -243,7 +241,7 @@
 #' \code{\link{streetNumberLocator}}
 #'
 #' \code{\link{segmentLocator}}
-#' @section Notes: \code{\link{roadSegments}} documents the code for these data.
+#' @note \code{\link{roadSegments}} documents the code for these data.
 #' @docType data
 "road.segments"
 

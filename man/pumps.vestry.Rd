@@ -17,10 +17,9 @@ pumps.vestry
 \description{
 These data include the fourteenth pump, at Hanover Square, and the "corrected" location of the Broad Street pump that Snow includes in the second version of his map in the Vestry report.
 }
-\section{Notes}{
- \code{\link{pumpData}} documents the code for these data.
+\note{
+\code{\link{pumpData}} documents the code for these data.
 }
-
 \seealso{
 \code{\link{pumpLocator}}
 }

@@ -33,10 +33,9 @@ A base R graphics plot.
 \description{
 Highlights the selected road segment and its cases.
 }
-\section{Notes}{
- With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2").  See cholera::road.segments.
+\note{
+With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2").  See cholera::road.segments.
 }
-
 \examples{
 segmentLocator("190-1")
 segmentLocator("216-1")

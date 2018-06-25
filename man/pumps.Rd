@@ -17,10 +17,9 @@ pumps
 \description{
 Adds and amends road locations for water pumps from John Snow's map to Dodson and Tobler's street data. The latter are available at Michael Friendly's HistData::Snow.streets.
 }
-\section{Notes}{
- \code{\link{pumpData}} documents the code for these data.
+\note{
+\code{\link{pumpData}} documents the code for these data.
 }
-
 \seealso{
 \code{\link{pumpLocator}}
 }

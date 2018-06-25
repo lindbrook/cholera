@@ -19,8 +19,7 @@ ortho.proj.pump
 \description{
 Orthogonal projection of 13 original pumps.
 }
-\section{Notes}{
- \code{\link{pumpData}} documents the code for these data.
+\note{
+\code{\link{pumpData}} documents the code for these data.
 }
-
 \keyword{datasets}

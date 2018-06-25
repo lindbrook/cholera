@@ -15,8 +15,7 @@ regular.cases
 \description{
 The result of using sp::spsample() and sp::Polygon() to generate 20007 regularly spaced simulated cases within the map's borders.
 }
-\section{Notes}{
- \code{\link{simulateFatalities}} documents the code for these data.
+\note{
+\code{\link{simulateFatalities}} documents the code for these data.
 }
-
 \keyword{datasets}

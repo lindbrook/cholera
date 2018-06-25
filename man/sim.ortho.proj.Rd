@@ -19,8 +19,7 @@ sim.ortho.proj
 \description{
 Road "address" of simulated (i.e., "expected") cases.
 }
-\section{Notes}{
- \code{\link{simulateFatalities}} documents the code for these data.
+\note{
+\code{\link{simulateFatalities}} documents the code for these data.
 }
-
 \keyword{datasets}

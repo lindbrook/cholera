@@ -20,10 +20,9 @@ road.segments
 \description{
 This data set transforms Dodson and Tobler's street data to give each straight line segment of a "road" a unique ID.
 }
-\section{Notes}{
- \code{\link{roadSegments}} documents the code for these data.
+\note{
+\code{\link{roadSegments}} documents the code for these data.
 }
-
 \seealso{
 \code{\link{roads}}
 

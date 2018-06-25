@@ -19,8 +19,7 @@ ortho.proj.pump.vestry
 \description{
 Orthogonal projection of the 14 pumps from the Vestry Report.
 }
-\section{Notes}{
- \code{\link{pumpData}} documents the code for these data.
+\note{
+\code{\link{pumpData}} documents the code for these data.
 }
-
 \keyword{datasets}

@@ -8,7 +8,7 @@
 #'   \item{\code{deaths}: Measure of fatality.}
 #'   \item{\code{fatal.attacks}: Measure of fatality.}
 #' }
-#' @section Note: The "snow" data appears on p. 117 of the report; the "vestry" data appear in Appendix B on p.175.
+#' @note The "snow" data appears on p. 117 of the report; the "vestry" data appear in Appendix B on p.175.
 #' @seealso \code{\link{plot.time_series}}, \code{\link{print.time_series}}, \code{vignette("time.series")}
 #' @export
 #' @examples
