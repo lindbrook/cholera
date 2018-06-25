@@ -1,4 +1,4 @@
-#' Convert distance to time.
+#' Convert distance to elapsed time.
 #'
 #' @param x Numeric. Nominal map distance.
 #' @param unit Character. Unit of measurement: "hour", "minute" or "second".

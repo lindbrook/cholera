@@ -14,8 +14,7 @@ anchor.case
 \description{
 Data frame that links a fatality to its stack, a stack's base case. For use with \code{\link{caseLocator}}.
 }
-\section{Notes}{
- \code{\link{unstackFatalities}} documents the code for these data.
+\note{
+\code{\link{unstackFatalities}} documents the code for these data.
 }
-
 \keyword{datasets}

@@ -12,7 +12,7 @@
 #' \code{\link{addPlaguePit}},
 #' \code{\link{addSnow}},
 #' \code{\link{addWhitehead}}
-#' @note Note: this function uses deldir::deldir().
+#' @note This function uses deldir::deldir().
 #' @import graphics
 #' @export
 #' @examples

@@ -7,7 +7,7 @@
 #'     \item{\code{case}}{numerical case ID}
 #'     \item{\code{anchor.case}}{numerical case ID of anchor.case}
 #' }
-#' @section Notes: \code{\link{unstackFatalities}} documents the code for these data.
+#' @note \code{\link{unstackFatalities}} documents the code for these data.
 #' @docType data
 "anchor.case"
 
@@ -39,9 +39,7 @@
 #'
 #' \code{\link{streetNumberLocator}}
 #'
-#' @section Notes: \code{\link{fixFatalities}} documents the code for these data.
-#'
-#' For details, see \code{vignette}("duplicate.missing.cases").
+#' @note \code{\link{fixFatalities}} documents the code for these data. For details, see \code{vignette}("duplicate.missing.cases").
 #' @seealso  \code{\link{caseLocator}}
 #'
 #' \code{\link{streetNameLocator}}
@@ -68,9 +66,7 @@
 #'
 #' \code{\link{streetNumberLocator}}
 #'
-#' @section Notes: \code{\link{unstackFatalities}} documents the code for these data.
-#'
-#' For details, see \code{vignette}("unstacking.fatalities").
+#' @note \code{\link{unstackFatalities}} documents the code for these data. For details, see \code{vignette}("unstacking.fatalities").
 #' @docType data
 "fatalities.address"
 
@@ -91,9 +87,7 @@
 #'
 #' \code{\link{streetNumberLocator}}
 #'
-#' @section Notes: \code{\link{unstackFatalities}} documents the code for these data.
-#'
-#' For details, see \code{vignette}("unstacking.fatalities").
+#' @note \code{\link{unstackFatalities}} documents the code for these data. For details, see \code{vignette}("unstacking.fatalities").
 #' @docType data
 "fatalities.unstacked"
 

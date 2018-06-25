@@ -4,7 +4,7 @@
 #' @param col Character. Color of point.
 #' @param pch Numeric. Type of of point.
 #' @param add.label Logical. Add text annotation: "40 Broad Street"
-#' @param text.size Numeric. Sine of text label.
+#' @param text.size Numeric. Size of text label.
 #' @param ... Additional plotting parameters.
 #' @seealso \code{\link{snowMap}},
 #' \code{\link{addKernelDensity}},

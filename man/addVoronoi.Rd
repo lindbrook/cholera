@@ -22,7 +22,7 @@ addVoronoi(pump.select = NULL, vestry = FALSE, color = "black",
 Add Voronoi cells.
 }
 \note{
-Note: this function uses deldir::deldir().
+This function uses deldir::deldir().
 }
 \examples{
 snowMap(add.landmarks = FALSE)

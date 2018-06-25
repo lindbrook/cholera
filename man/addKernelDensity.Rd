@@ -34,7 +34,7 @@ Add contours to a graphics plot.
 Add 2D kernel density contours based on selected sets of observations.
 }
 \note{
-Note: This function uses KernSmooth::bkde2D().
+This function uses KernSmooth::bkde2D().
 }
 \examples{
 # snowMap()

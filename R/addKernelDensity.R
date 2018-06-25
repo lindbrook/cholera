@@ -19,7 +19,7 @@
 #' \code{\link{addVoronoi}},
 #' \code{\link{addWhitehead}}
 #' @import graphics
-#' @note Note: This function uses KernSmooth::bkde2D().
+#' @note This function uses KernSmooth::bkde2D().
 #' @export
 #' @examples
 #' # snowMap()

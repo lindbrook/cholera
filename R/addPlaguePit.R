@@ -12,6 +12,7 @@
 #' \code{\link{addSnow}},
 #' \code{\link{addVoronoi}},
 #' \code{\link{addWhitehead}}
+#' @note In progress.
 #' @import graphics
 #' @export
 #' @examples

@@ -17,12 +17,9 @@ fatalities.address
 \description{
 An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinate of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
 }
-\section{Notes}{
- \code{\link{unstackFatalities}} documents the code for these data.
-
-For details, see \code{vignette}("unstacking.fatalities").
+\note{
+\code{\link{unstackFatalities}} documents the code for these data. For details, see \code{vignette}("unstacking.fatalities").
 }
-
 \seealso{
 \code{\link{caseLocator}}
 

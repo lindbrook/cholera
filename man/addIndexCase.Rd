@@ -16,7 +16,7 @@ addIndexCase(cex = 2, col = "red", pch = 1, add.label = FALSE,
 
 \item{add.label}{Logical. Add text annotation: "40 Broad Street"}
 
-\item{text.size}{Numeric. Sine of text label.}
+\item{text.size}{Numeric. Size of text label.}
 
 \item{...}{Additional plotting parameters.}
 }

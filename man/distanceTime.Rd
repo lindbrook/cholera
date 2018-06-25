@@ -2,7 +2,7 @@
 % Please edit documentation in R/distanceTime.R
 \name{distanceTime}
 \alias{distanceTime}
-\title{Convert distance to time.}
+\title{Convert distance to elapsed time.}
 \usage{
 distanceTime(x, unit = "second", meter.unit = cholera::unitMeter(1, unit =
   "meter"), speed = 5)
@@ -20,5 +20,5 @@ distanceTime(x, unit = "second", meter.unit = cholera::unitMeter(1, unit =
 An R vector.
 }
 \description{
-Convert distance to time.
+Convert distance to elapsed time.
 }

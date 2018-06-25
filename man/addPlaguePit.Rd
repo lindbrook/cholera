@@ -19,6 +19,9 @@ Adds a polygon to a graphics plot.
 \description{
 Draws a polygon that approximates the plague pit located around Marshall Street. From Vestry Report map.
 }
+\note{
+In progress.
+}
 \examples{
 snowMap(add.landmarks = FALSE)
 addPlaguePit()
