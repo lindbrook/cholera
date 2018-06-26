@@ -11,7 +11,9 @@ In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the original dat
 
 <img src="duplicate.missing.cases_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
 
-However, I would argue that there are two apparent coding errors in these that stem from three misplaced cases.
+### Data problem
+
+I would argue that there are two apparent coding errors in these data that stem from three misplaced cases.
 
 While the data record 578 bars, only 575 of them have a unique x-y coordinate.[3] Three pairs have identical coordinates: 1) 93 and 214; 2) 91 and 241; and 3) 209 and 429. Within the scheme of stacking bars to represent the fatality count, this cannot occur. Each bar should have a unique x-y coordinate. For this reason, duplicates are likely to be coding errors.
 

@@ -30,7 +30,9 @@ invisible(lapply(street.list, lines, lwd = 0.75))
 points(Snow.pumps$x, Snow.pumps$y, pch = 17, col = "blue")
 ```
 
-However, I would argue that there are two apparent coding errors in these that stem from three misplaced cases.
+### Data problem
+
+I would argue that there are two apparent coding errors in these data that stem from three misplaced cases.
 
 While the data record 578 bars, only 575 of them have a unique x-y coordinate.^[There is a lack of consensus about the actual number of cases represented in Snow's map. For what it's worth, I manually recounted the data on Snow's map and the result I got matches Dodson and Tobler's.] Three pairs have identical coordinates: 1) 93 and 214; 2) 91 and 241; and 3) 209 and 429. Within the scheme of stacking bars to represent the fatality count, this cannot occur. Each bar should have a unique x-y coordinate. For this reason, duplicates are likely to be coding errors.
 
