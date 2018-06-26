@@ -1,12 +1,12 @@
 Time Series
 ================
 lindbrook
-2018-06-22
+2018-06-25
 
 Overview
 --------
 
-The standard "textbook" story is that John Snow helped stem the tide of the cholera outbreak by getting the local government to remove the handle of the Broad Street pump.[1]
+The standard "textbook" story is that John Snow helped stem the tide of the cholera outbreak by getting local officials to remove the handle of the Broad Street pump.[1]
 
 While Snow likely believed that this action would have mitigated the outbreak, he was skeptical of its actual effect. He writes that by the time the pump was removed on Friday, 08 September 1854, "the epidemic had evidently subsided" (Snow 1855b, 153).
 

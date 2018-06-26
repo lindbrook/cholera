@@ -16,7 +16,7 @@ library(cholera)
 
 ## Overview
 
-The standard "textbook" story is that John Snow helped stem the tide of the cholera outbreak by getting the local government to remove the handle of the Broad Street pump.^[https://www.cdc.gov/mmwr/preview/mmwrhtml/mm5334a1.htm; https://www.nytimes.com/2017/02/06/health/cholera-vaccine-bangladesh.html]
+The standard "textbook" story is that John Snow helped stem the tide of the cholera outbreak by getting local officials to remove the handle of the Broad Street pump.^[https://www.cdc.gov/mmwr/preview/mmwrhtml/mm5334a1.htm; https://www.nytimes.com/2017/02/06/health/cholera-vaccine-bangladesh.html]
 
 While Snow likely believed that this action would have mitigated the outbreak, he was skeptical of its actual effect. He writes that by the time the pump was removed on Friday, 08 September 1854, "the epidemic had evidently subsided" (Snow 1855b, 153).
 

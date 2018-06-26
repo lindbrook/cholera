@@ -1,7 +1,7 @@
 Roads
 ================
 lindbrook
-2018-06-22
+2018-06-25
 
 Overview
 --------
@@ -207,6 +207,6 @@ Dodson and Tobler write that "The scale of the source map is approx. 1:2000. Coo
 Notes
 -----
 
-[1] Multiple names was not unusual. See Judith Flanders. 2012. *The Victorian City: everyday life in Dickens' London*. New York: St. Martin's Press, 57-58.
+[1] Streets with the same name were not an unusual occurrence. See Judith Flanders. 2012. *The Victorian City: everyday life in Dickens' London*. New York: St. Martin's Press, 57-58.
 
 [2] According to Dodson and Tobler's street data, the length of Carnaby Street from its intersection with Great Marlborough to its intersection with Silver Street is 2.61 units. According to Google Maps, the approximate analog of that segment is the distance along parts of Great Marlborough Street and Carnaby Street between 19-21 Great Marlborough Street and 43 Carnaby Street (at Ganton Street): 463 ft. This translates into approximately 177 feet/unit or 54 meters/unit.

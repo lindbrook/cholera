@@ -50,7 +50,7 @@ The primary source for road names is Snow's map. A high resolution version is av
 
 Some roads on the map do not have a name. In those cases, I attached unique labels like "Unknown-C".
 
-Some names appear multiple times even though they lie at different locations. For these, I use Roman numerals to distinguish them (e.g., "King Street (I)" and "King Street (II)").^[Multiple names was not unusual. See Judith Flanders. 2012. _The Victorian City: everyday life in Dickens' London_. New York: St. Martin's Press, 57-58.]
+Some names appear multiple times even though they lie at different locations. For these, I use Roman numerals to distinguish them (e.g., "King Street (I)" and "King Street (II)").^[Streets with the same name were not an unusual occurrence. See Judith Flanders. 2012. _The Victorian City: everyday life in Dickens' London_. New York: St. Martin's Press, 57-58.]
 
 ## Queen Street (I) and Marlborough Mews
 
