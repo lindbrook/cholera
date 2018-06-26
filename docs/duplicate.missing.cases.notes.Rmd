@@ -99,13 +99,13 @@ text(broad.x, broad.y, "Broad St", srt = broad.angle)
 
 ## Missing Cases: Broad Street
 
-40 Broad Street, which lies just southwest (below and left) of the Broad Street Pump, is the location of two of the "missing" cases.
+40 Broad Street, which lies just southwest (below and to the left) of the Broad Street Pump, is the location of two of the "missing" cases.
 
 Snow's map shows four "bars" or cases:
 
 ![](broad.street.A.png)
 
-But Dodson and Tobler's data show only two, cases 32 and 122. Furthermore, the two cases also appear to be farther apart than what we see in neighboring stacks:
+But Dodson and Tobler's data show only two, cases 32 and 122. Furthermore, the two cases also appear to be farther apart than what we see in nearby stacks:
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
@@ -152,7 +152,7 @@ Snow's map shows three cases at the end of Noel Street:
 
 ![](noel.street.png)
 
-But Dodson and Tobler's data shows only two cases: 282 and 422. They also appear to be farther apart than what we see in neighboring stacks:
+But Dodson and Tobler's data shows only two cases: 282 and 422. They also appear to be farther apart than what we see in nearby stacks:
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
@@ -226,11 +226,11 @@ text(poland.x, poland.y, "Poland St", srt = poland.angle)
 
 One solution to these problems is to use the three duplicate observations from Cambridge Street to fill in for the three "missing" observations on Broad and Noel Streets. This is both plausible and reasonable.
 
-What makes it plausible is that with the exception of the x-y coordinate of the case at the base of a stack, the remaining coordinates, which make up 44% (257/578) of all bars and which include the proposed locations for the three "missing" observations, do not represent the location of a case. They only serve to align bars within a stack. For this reason, there should be no objections to moving this category of bars.
+What makes it plausible is that with the exception of the x-y coordinate of the case at the base of a stack, the remaining coordinates, which make up 44% (257/578) of all bars and which include the proposed locations for the three "missing" observations, do not represent the location of a case. They only serve to align bars within a stack. For this reason, there should be no objections to moving this class of bars.
 
 What makes it reasonable is that I do not relocate bars by hand. Instead, I use simple geometric interpolation. I use existing observations in a stack to determine the "standard" _unit_ distance between bars and then use multiples of that _unit_ distance to position "missing" observations.
 
-Consider 40 Broad Street. On Snow's map, there are four cases but in Dodson and Tobler there are just two. Visual inspection leads me to three claims: 1) the distance between the two observed cases, 32 and 122, is greater than that at neighboring stacks; 2) there appears to be room for one "missing" case between 32 and 122; and 3) the other "missing" case should be located just beyond case 122.
+Consider 40 Broad Street. On Snow's map, there are four cases but in Dodson and Tobler there are just two. Visual inspection leads me to make three claims: 1) the distance between the two observed cases, 32 and 122, is greater than that at neighboring stacks; 2) there appears to be room for one "missing" case between 32 and 122; and 3) the other "missing" case should be located just beyond case 122.
 
 The proposed coordinates are illustrated below:
 

@@ -1,7 +1,7 @@
 "Unstacking" Bars
 ================
 lindbrook
-2018-06-22
+2018-06-26
 
 Overview
 --------
@@ -10,22 +10,22 @@ In his map of the 1854 cholera outbreak in London, John Snow uses stacks of bars
 
 ![](msu-snows-mapB.jpg)
 
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and pump is assigned a unique x-y coordinate. Each road is translated into a series of straight line segments, each of which is defined by the segment's endpoints. While the original data are no longer available,[2] they are preserved in Michael Friendly's 'HistData' package. The data are plotted below:
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and pump is assigned a unique x-y coordinate. Each road is translated into a series of straight line segments, defined by the segment's endpoints. While the original data are no longer available,[2] they are preserved in Michael Friendly's 'HistData' package. The data are plotted below:
 
 <img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
 
-Despite its appeal, I would argue that stacked bars are visually and computationally problematic. The reason, simply put, is that not all bars are created equal. Even though they are identical in terms of their appearance and the only thing that appears to distinguish them is their position on the map, bars can actually play different roles.
+Despite its appeal, I would argue that stacked bars are visually and computationally problematic. The reason, simply put, is that not all bars are created equal. Even though they are identical in terms of their appearance and the only thing that appears to distinguish them is their location, bars can actually play different roles.
 
-Sometimes a bar represents the location of a fatality, sometimes it doesn't. Standalone bars, a stack with a single bar (i.e., an addresses with one fatality), or the bar at the base of a stack represent a location. Bars above the base case do not. Their only purpose is to create the stacking effect to visually represent the number of fatalities at an address.
+Sometimes a bar represents the location of a fatality, sometimes it doesn't. Standalone bars, a stack with a single bar (i.e., an addresses with one fatality), or the bar at the base of a stack represent a location. Bars above the base case do not. They exist only to create the stacking effect to visually represent the number of fatalities at the address.
 
-This duality can be problematic. Because a map is a visual device that illustrates spatial relationships, it's natural to assume that the position of each element (e.g., a bar) reflects an actual, physical location. When we violate this assumption, we undermine the visual integrity of the map. This can handicap our analysis. This is particularly true given that 44% (257/578) of the bars in Snow's map fall into the second, geographically uninformative category.
+This duality is problematic. Because a map is a visual device that illustrates spatial relationships, it's natural to assume that the position of each element (e.g., a bar) reflects an actual, physical location. When we violate this assumption, we undermine the visual integrity of the map. This can handicap our analysis. This is particularly true given that 44% (257/578) of the bars in Snow's map fall into the second, geographically uninformative category.
 
 To address these problems, I "unstack" Dodson and Tobler's data. I do so in two ways. In the first, I give all all cases in a stack (i.e., at the same "address") the same x-y coordinate. These data are available in *fatalities.unstacked*. In the second, I make the address rather than the the case the unit of observation: each address is a single observation with a single x-y coordinate, and the number of cases observed at that location is an attribute of that address. These data are available in *fatalities.address*.
 
 Data details
 ------------
 
-To illustrate the differences between the two data sets, consider they deal with the largest outlier on Snow's map: the eighteen cases at 38 Broad Street.
+To illustrate the differences between the two data sets, consider how they handle the largest outlier on Snow's map: the eighteen cases at 38 Broad Street.
 
 With *fatalities*, all members of the stack have different coordinates:
 
@@ -107,7 +107,7 @@ With the "stacked" data, *fatalities*, the contours are looser (reflecting great
 
 <img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
 
-With *fatalities.unstacked*, the contours are "tighter" (reflecting lesser uncertainty) and the epicenter are located further north, nearer to the roads, the pump and to Broad Street:
+With *fatalities.unstacked*, the contours are "tighter" (reflecting lesser uncertainty) and the epicenter is located further north, nearer to the pump and to Broad Street:
 
 <img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
@@ -116,11 +116,11 @@ With *fatalities.unstacked*, the contours are "tighter" (reflecting lesser uncer
 
 The main roadblock to "unstacking" is that there is no notion of an "address" in the data: bars are merely points and streets are merely line segments.[4] Nothing links a point to a segments. And nothing connects one bar in a stack to another bar. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinates.
 
-To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I employ two different methods of classification.
+To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I use two methods of classification.
 
 ### Orthogonal projection
 
-The first method works by orthogonal projection. For each bar, the algorithm draws a series of lines that pass through the bar and are orthogonal to "nearby" road segment.[5] If the projected line bisects a road segment, it becomes a candidate for the bar's home segment. If there's more than one candidate, the algorithm chooses the segment "closest" to the bar: the segment with the shortest orthogonal projector.
+The first method uses orthogonal projection. For each bar, the algorithm draws a series of lines that pass through the bar and are orthogonal to "nearby" road segment.[5] If the projected line bisects a road segment, it becomes a candidate for the bar's home segment. If there's more than one candidate, the algorithm chooses the segment "closest" to the bar: the segment with the shortest orthogonal projector.
 
 To illustrate, consider this stylized example. For case 12, there are three possible "home" road segments: the solid blue, solid red and the solid green segments. Of the three, only *red* and *green* are candidates. The problem with *blue* is that its orthogonal projector (the blue arrow) does not intersect the solid blue segment. Of the two remaining candidates, *red* is chosen because it is closer to case 12 than *green*: the red arrow is shorter than the green one.
 
@@ -164,7 +164,7 @@ With this information, I can use cluster analysis to identify stacks, or "addres
 
 [5] To reduce computation, I only consider road segments with at least one endpoint within approximately 27 meters of the bar (i.e., a distance of 0.5 on the map's scale).
 
-[6] This is further exacerbated by the fact that the width of roads is not always taken into consideration. This creates instances where cases on one side of the street appear to be closer to the road than those on the other. One particular case of note is Portland Mews. On the map, Portland Mews is a large yard or square. But in Dodson and Tobler's data, it is simply a set of line segments, which possibly corresponds to a roadway through the location. As a result, the three cases there appear to belong to a single cluster instead of two separate ones. I manually chose a more distant road segment on Portland Mews that better reflects the orientation of bars on Snow's map.
+[6] This is further exacerbated by the fact that the width of roads is not always taken into consideration. This creates instances where cases on one side of the street appear to be closer to the road than those on the other. One particular case of note is Portland Mews. On the map, Portland Mews is a large yard or square. But in Dodson and Tobler's data, it is simply a set of line segments, which possibly corresponds to a roadway through the location. As a result, the three cases there appear to belong to a single cluster instead of two separate ones. I manually chose the more distant road segment on Portland Mews that better reflects the orientation of bars on Snow's map.
 
 [7] Specifically, I use stats::hclust(), which by default employs a "complete" method of agglomerative hierarchical clustering.
 
