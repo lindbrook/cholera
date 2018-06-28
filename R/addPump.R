@@ -1,4 +1,4 @@
-#' Add water pump to plot.
+#' Add pump to plot.
 #'
 #' @param id Numeric or Integer. Water pump's numerical ID. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 and 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps. NULL plots all pumps.
 #' @param vestry Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.

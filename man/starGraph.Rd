@@ -2,7 +2,7 @@
 % Please edit documentation in R/starGraph.R
 \name{starGraph}
 \alias{starGraph}
-\title{Plot all Euclidean paths.}
+\title{Plot all Euclidean paths from pumps to cases.}
 \usage{
 starGraph(pump.select = NULL, vestry = FALSE, multi.core = FALSE)
 }
@@ -17,5 +17,5 @@ starGraph(pump.select = NULL, vestry = FALSE, multi.core = FALSE)
 A base R graph.
 }
 \description{
-Star graph
+Star graphs.
 }

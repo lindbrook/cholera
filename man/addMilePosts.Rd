@@ -2,7 +2,7 @@
 % Please edit documentation in R/addMilePosts.R
 \name{addMilePosts}
 \alias{addMilePosts}
-\title{Add distance or time based "mileposts" to plot.}
+\title{Add distance or time based "mileposts" to a walking neighborhood plot.}
 \usage{
 addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   unit = "distance", interval = NULL, walking.speed = 5,
@@ -29,5 +29,5 @@ addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 R base graphics arrows or points.
 }
 \description{
-Add distance or time based "mileposts" to plot.
+Add distance or time based "mileposts" to a walking neighborhood plot.
 }

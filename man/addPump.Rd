@@ -2,7 +2,7 @@
 % Please edit documentation in R/addPump.R
 \name{addPump}
 \alias{addPump}
-\title{Add water pump to plot.}
+\title{Add pump to plot.}
 \usage{
 addPump(id = NULL, vestry = FALSE, col = NULL, pch = 24, label = TRUE,
   pos = 1, ...)
@@ -23,5 +23,5 @@ addPump(id = NULL, vestry = FALSE, col = NULL, pch = 24, label = TRUE,
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Add water pump to plot.
+Add pump to plot.
 }
