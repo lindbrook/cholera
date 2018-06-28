@@ -158,7 +158,9 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #' @examples
 #' plot(neighborhoodVoronoi())
 
-plot.voronoi <- function(x, voronoi.cells = TRUE, euclidean.paths = FALSE, ...) {
+plot.voronoi <- function(x, voronoi.cells = TRUE,
+  euclidean.paths = FALSE, ...) {
+
   if (class(x) != "voronoi") {
     stop('"x"\'s class needs to be "voronoi".')
   }
