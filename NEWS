@@ -1,7 +1,7 @@
 cholera 0.4.9.9036
 ==================
 
-- implement negative selction in pumpCase.voronoi().
+- implement negative selection in pumpCase.voronoi().
 - add starGraph().
 
 

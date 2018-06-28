@@ -65,11 +65,11 @@ starGraph <- function(pump.select = NULL, vestry = FALSE, multi.core = FALSE) {
   if (is.null(pump.select)) {
     points(pump.data[, c("x", "y")], pch = ". ")
     text(pump.data[, c("x", "y")], label = paste0("p", pump.id))
-    title(main = "Pump Neighborhoods: Eucldean Paths (address)")
+    title(main = "Pump Neighborhoods: Euclidean Paths (address)")
   } else {
     points(pump.data[pump.select, c("x", "y")], pch = ".")
     text(pump.data[pump.select, c("x", "y")], label = paste0("p", pump.id))
-    title(main = paste0("Pump Neighborhoods: Eucldean Paths (address)", "\n",
+    title(main = paste0("Pump Neighborhoods: Euclidean Paths (address)", "\n",
       "Pumps ", paste(sort(pump.select), collapse = ", ")))
   }
 }
