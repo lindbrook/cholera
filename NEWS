@@ -1,3 +1,9 @@
+cholera 0.4.9.9035
+==================
+
+- add "euclidean.paths" (star graph) and "voronoi.cells" arguments to plot.voronoi().
+
+
 cholera 0.4.9.9034
 ==================
 

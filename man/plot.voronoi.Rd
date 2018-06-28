@@ -4,10 +4,15 @@
 \alias{plot.voronoi}
 \title{Plot Voronoi neighborhoods.}
 \usage{
-\method{plot}{voronoi}(x, ...)
+\method{plot}{voronoi}(x, voronoi.cells = TRUE, euclidean.paths = FALSE,
+  ...)
 }
 \arguments{
 \item{x}{An object of class "voronoi" created by neighborhoodVoronoi().}
+
+\item{voronoi.cells}{Logical. Plot Voronoi tessellation cells.}
+
+\item{euclidean.paths}{Logical. Plot all Eucldian paths (star graph).}
 
 \item{...}{Additional plotting parameters.}
 }

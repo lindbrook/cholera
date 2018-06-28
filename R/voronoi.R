@@ -144,6 +144,8 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #' Plot Voronoi neighborhoods.
 #'
 #' @param x An object of class "voronoi" created by neighborhoodVoronoi().
+#' @param voronoi.cells Logical. Plot Voronoi tessellation cells.
+#' @param euclidean.paths Logical. Plot all Eucldian paths (star graph).
 #' @param ... Additional plotting parameters.
 #' @return A base R graph.
 #' @seealso
@@ -156,7 +158,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #' @examples
 #' plot(neighborhoodVoronoi())
 
-plot.voronoi <- function(x, ...) {
+plot.voronoi <- function(x, voronoi.cells = TRUE, euclidean.paths = FALSE, ...) {
   if (class(x) != "voronoi") {
     stop('"x"\'s class needs to be "voronoi".')
   }
@@ -191,8 +193,11 @@ plot.voronoi <- function(x, ...) {
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
     }
 
-    plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none",
-      lty = "solid")
+    if (voronoi.cells) {
+      plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none",
+        lty = "solid")
+    }
+
     voronoi.case.id <- cholera::pumpCase(x)
     voronoi.colors <- vector(length = length(unlist(voronoi.case.id)))
     names(voronoi.colors) <- cholera::fatalities.address$anchor.case
@@ -202,8 +207,23 @@ plot.voronoi <- function(x, ...) {
       voronoi.colors[names(voronoi.colors) %in% id] <- x$snow.colors[i]
     }
 
-    points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
-      pch = 20, cex = 0.75)
+    if (euclidean.paths) {
+      invisible(lapply(names(voronoi.case.id), function(nm) {
+        p.data <- pump.data[paste0("p", pump.data$id) == nm, ]
+        sel <- cholera::fatalities.address$anchor.case %in%
+          voronoi.case.id[[nm]]
+        n.data <- cholera::fatalities.address[sel, ]
+        n.color <- x$snow.colors[nm]
+        lapply(n.data$anchor.case, function(case) {
+          c.data <- n.data[n.data$anchor.case == case, ]
+          segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
+            lwd = 0.5)
+        })
+      }))
+    } else {
+      points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
+        pch = 20, cex = 0.75)
+    }
 
   } else {
     stat.data <- summary(x)
