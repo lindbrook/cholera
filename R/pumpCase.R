@@ -30,7 +30,7 @@ pumpCase.voronoi <- function(obj) {
       stats::setNames(out, paste0("p", 1:13))
     }
   } else {
-    stats::setNames(out, paste0("p", obj$pump.select))
+    stats::setNames(out, paste0("p", obj$pump.id))
   }
 }
 
