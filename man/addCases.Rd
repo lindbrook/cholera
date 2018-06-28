@@ -2,7 +2,7 @@
 % Please edit documentation in R/addCases.R
 \name{addCases}
 \alias{addCases}
-\title{Add observed cases.}
+\title{Add observed cases by walking neighborhood.}
 \usage{
 addCases(pump.subset = NULL, pump.select = NULL, type = "address",
   token = "id", text.size = 0.5, vestry = FALSE, weighted = TRUE,

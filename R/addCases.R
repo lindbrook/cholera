@@ -1,4 +1,4 @@
-#' Add observed cases.
+#' Add observed cases by walking neighborhood.
 #'
 #' Add cases, as "address" or "fatalties" as points or IDs, to a plot.
 #' @param pump.subset Numeric. Vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".
