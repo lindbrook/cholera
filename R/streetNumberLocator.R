@@ -13,7 +13,7 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Default walking speed is 5 km/hr.
 #' @return A base R graphics plot.
-#' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{vignette("road.names")}
+#' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{vignette("roads")}
 #' @import graphics
 #' @export
 #' @examples

@@ -23,5 +23,5 @@ streetLength("oxford street")
 streetLength("oxford street", unit = "yard")
 }
 \seealso{
-\code{\link{roads}}, code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
+\code{\link{roads}}, code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{\link{streetNumberLocator}}, \code{vignette("roads")}
 }

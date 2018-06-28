@@ -13,7 +13,7 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @return A base R graphics plot.
-#' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
+#' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNumberLocator}}, \code{vignette("roads")}
 #' @import graphics
 #' @export
 #' @examples
@@ -34,7 +34,7 @@ streetNameLocator <- function(road.name, zoom = FALSE, radius = 0.1,
     case.name <- caseAndSpace(road.name)
     if (case.name %in% real.road.names == FALSE) {
       txt1 <- "Invalid road name. Check spelling or"
-      txt2 <- 'see list of road names in vignette("road.names").'
+      txt2 <- 'see list of road names in vignette("roads").'
       error.msg <- paste(txt1, txt2)
       stop(error.msg)
     } else name <- case.name

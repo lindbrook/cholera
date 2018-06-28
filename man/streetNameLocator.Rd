@@ -45,5 +45,5 @@ streetNameLocator("Cambridge Street", zoom = TRUE)
 streetNameLocator("Cambridge Street", zoom = TRUE, radius = 0)
 }
 \seealso{
-\code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
+\code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNumberLocator}}, \code{vignette("roads")}
 }

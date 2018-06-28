@@ -3,7 +3,7 @@
 #' @param road Character or Numeric. Road name or number. For names, the function tries to correct for case and to remove extra spaces.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @return  An R vector of length one.
-#' @seealso \code{\link{roads}}, code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{\link{streetNumberLocator}}, \code{vignette("road.names")}
+#' @seealso \code{\link{roads}}, code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{\link{streetNumberLocator}}, \code{vignette("roads")}
 #' @export
 #' @examples
 #' streetLength("Oxford Street")
@@ -21,7 +21,7 @@ streetLength <- function(road = "Oxford Street", unit = "meter") {
       case.name <- caseAndSpace(road)
       if (case.name %in% real.road.names == FALSE) {
         error.msg <- paste("Invalid road name.",
-          'Check spelling or see list of road names in vignette("road.names").')
+          'Check spelling or see list of road names in vignette("roads").')
         stop(error.msg)
       } else nm <- case.name
     } else nm <- road
