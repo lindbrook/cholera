@@ -1,10 +1,10 @@
 #' Plot John Snow's cholera map.
 #'
 #' Uses amended version of Dodson and Tobler's data.
-#' @param add.landmarks Logical. Add landmarks.
 #' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param stacked Logical. Use stacked fatalities.
 #' @param add.cases Logical. Add observed cases.
+#' @param add.landmarks Logical. Add landmarks.
 #' @param add.pumps Logical. Add pumps.
 #' @param add.roads Logical. Add roads.
 #' @param add.title Logical. Add title.
@@ -21,8 +21,9 @@
 #' snowMap()
 #' snowMap(vestry = TRUE, stacked = FALSE)
 
-snowMap <- function(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
-  add.cases = TRUE, add.pumps = TRUE, add.roads = TRUE, add.title = TRUE, ...) {
+snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
+  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE, add.title = TRUE,
+  ...) {
 
   x.range <- range(cholera::roads$x)
   y.range <- range(cholera::roads$y)

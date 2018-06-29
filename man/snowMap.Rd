@@ -4,18 +4,18 @@
 \alias{snowMap}
 \title{Plot John Snow's cholera map.}
 \usage{
-snowMap(add.landmarks = FALSE, vestry = FALSE, stacked = TRUE,
-  add.cases = TRUE, add.pumps = TRUE, add.roads = TRUE,
+snowMap(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
+  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE,
   add.title = TRUE, ...)
 }
 \arguments{
-\item{add.landmarks}{Logical. Add landmarks.}
-
 \item{vestry}{Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.}
 
 \item{stacked}{Logical. Use stacked fatalities.}
 
 \item{add.cases}{Logical. Add observed cases.}
+
+\item{add.landmarks}{Logical. Add landmarks.}
 
 \item{add.pumps}{Logical. Add pumps.}
 
