@@ -1,3 +1,10 @@
+cholera 0.4.9.9037
+==================
+
+- set default observations to 20K in simulateFatalities().
+- re-order arguments in snowMap().
+
+
 cholera 0.4.9.9036
 ==================
 
