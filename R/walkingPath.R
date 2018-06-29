@@ -593,7 +593,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
                        hi = cumulative)
 
-    edge.select <- vapply(posts[-1], function(x) {
+    edge.select <- vapply(posts, function(x) {
       which(vapply(seq_len(nrow(bins)), function(i) {
         x >= bins[i, "lo"] & x < bins[i, "hi"]
       }, logical(1L)))
@@ -616,7 +616,8 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       edge.slope <- stats::coef(ols)[2]
       edge.intercept <- stats::coef(ols)[1]
       theta <- atan(edge.slope)
-      h <- (posts[-1][i] - bins[edge.select[i], "lo"]) /
+
+      h <- (posts[i] - bins[edge.select[i], "lo"]) /
             cholera::unitMeter(1, "meter")
 
       delta <- edge.data[2, ] - edge.data[1, ]
@@ -662,7 +663,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         post.y <- edge.data[1, "y"] - abs(h * sin(theta))
       }
 
-      data.frame(post = posts[-1][i], x = post.x, y = post.y,
+      data.frame(post = posts[i], x = post.x, y = post.y,
         angle = theta * 180L / pi, row.names = NULL)
     })
 

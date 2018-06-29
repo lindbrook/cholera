@@ -1,3 +1,9 @@
+cholera 0.4.9.9038
+==================
+
+- plot.walking_path(): add "milepost" at destination.
+
+
 cholera 0.4.9.9037
 ==================
 
