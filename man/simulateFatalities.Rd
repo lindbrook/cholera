@@ -5,7 +5,7 @@
 \title{Generate simulated fatalities and their orthogonal projection on road network.}
 \usage{
 simulateFatalities(compute = FALSE, multi.core = FALSE,
-  simulated.obs = 40000L)
+  simulated.obs = 20000L)
 }
 \arguments{
 \item{compute}{Logical. TRUE computes data. FALSE uses pre-computed data. For replication of data used in the package, FALSE is the default.}

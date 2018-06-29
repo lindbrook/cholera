@@ -9,7 +9,7 @@
 #' @export
 
 simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
-  simulated.obs = 40000L) {
+  simulated.obs = 20000L) {
 
   if (compute == FALSE) {
     sim.ortho.proj <- cholera::sim.ortho.proj
