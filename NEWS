@@ -1,3 +1,9 @@
+cholera 0.4.9.9039
+==================
+
+- fix time-based "mileposts" in plot.walking_path().
+
+
 cholera 0.4.9.9038
 ==================
 

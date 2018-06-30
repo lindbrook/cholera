@@ -617,8 +617,13 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       edge.intercept <- stats::coef(ols)[1]
       theta <- atan(edge.slope)
 
-      h <- (posts[i] - bins[edge.select[i], "lo"]) /
-            cholera::unitMeter(1, "meter")
+      if (unit.posts == "distance") {
+        h <- (posts[i] - bins[edge.select[i], "lo"]) /
+          cholera::unitMeter(1, "meter")
+      } else if (unit.posts == "time") {
+        h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * x$speed / 60^2 /
+          cholera::unitMeter(1, "meter")
+      }
 
       delta <- edge.data[2, ] - edge.data[1, ]
 
