@@ -605,14 +605,14 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       sel.data <- edge.data[edge.select[i], ]
 
       if (start.node[edge.select[i]] == 1) {
-        edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
-                                y = c(sel.data$y1, sel.data$y2))
+        e.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
+                             y = c(sel.data$y1, sel.data$y2))
       } else if (start.node[edge.select[i]] == 2) {
-        edge.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
-                                y = c(sel.data$y2, sel.data$y1))
+        e.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
+                             y = c(sel.data$y2, sel.data$y1))
       }
 
-      ols <- stats::lm(y ~ x, data = edge.data)
+      ols <- stats::lm(y ~ x, data = e.data)
       edge.slope <- stats::coef(ols)[2]
       edge.intercept <- stats::coef(ols)[1]
       theta <- atan(edge.slope)
@@ -625,47 +625,47 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
           cholera::unitMeter(1, "meter")
       }
 
-      delta <- edge.data[2, ] - edge.data[1, ]
+      delta <- e.data[2, ] - e.data[1, ]
 
       # Quadrant I
       if (all(delta > 0)) {
-        post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-        post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+        post.x <- e.data[1, "x"] + abs(h * cos(theta))
+        post.y <- e.data[1, "y"] + abs(h * sin(theta))
 
       # Quadrant II
       } else if (delta[1] < 0 & delta[2] > 0) {
-        post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-        post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+        post.x <- e.data[1, "x"] - abs(h * cos(theta))
+        post.y <- e.data[1, "y"] + abs(h * sin(theta))
 
       # Quadrant III
       } else if (all(delta < 0)) {
-        post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-        post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+        post.x <- e.data[1, "x"] - abs(h * cos(theta))
+        post.y <- e.data[1, "y"] - abs(h * sin(theta))
 
       # Quadrant IV
       } else if (delta[1] > 0 & delta[2] < 0) {
-        post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-        post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+        post.x <- e.data[1, "x"] + abs(h * cos(theta))
+        post.y <- e.data[1, "y"] - abs(h * sin(theta))
 
       # I:IV
       } else if (delta[1] > 0 & delta[2] == 0) {
-        post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-        post.y <- edge.data[1, "y"]
+        post.x <- e.data[1, "x"] + abs(h * cos(theta))
+        post.y <- e.data[1, "y"]
 
       # I:II
       } else if (delta[1] == 0 & delta[2] > 0) {
-        post.x <- edge.data[1, "x"]
-        post.y <- edge.data[1, "y"] + abs(h * sin(theta))
+        post.x <- e.data[1, "x"]
+        post.y <- e.data[1, "y"] + abs(h * sin(theta))
 
       # II:III
       } else if (delta[1] < 0 & delta[2] == 0) {
-        post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-        post.y <- edge.data[1, "y"]
+        post.x <- e.data[1, "x"] - abs(h * cos(theta))
+        post.y <- e.data[1, "y"]
 
       # III:IV
       } else if (delta[1] == 0 & delta[2] < 0) {
-        post.x <- edge.data[1, "x"]
-        post.y <- edge.data[1, "y"] - abs(h * sin(theta))
+        post.x <- e.data[1, "x"]
+        post.y <- e.data[1, "y"] - abs(h * sin(theta))
       }
 
       data.frame(post = posts[i], x = post.x, y = post.y,
