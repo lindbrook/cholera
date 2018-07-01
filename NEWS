@@ -1,3 +1,9 @@
+cholera 0.4.9.9040
+==================
+
+- fix zero-length arrow "mileposts" in addNeighborhood().
+
+
 cholera 0.4.9.9039
 ==================
 
