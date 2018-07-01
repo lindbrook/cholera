@@ -217,7 +217,7 @@ postCoordinates <- function(dat, unit, interval, walking.speed,
   bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
                      hi = cumulative)
 
-  edge.select <- vapply(posts[-1], function(x) {
+  edge.select <- vapply(posts, function(x) {
     which(vapply(seq_len(nrow(bins)), function(i) {
       x >= bins[i, "lo"] & x < bins[i, "hi"]
     }, logical(1L)))
@@ -232,8 +232,14 @@ postCoordinates <- function(dat, unit, interval, walking.speed,
     edge.slope <- stats::coef(ols)[2]
     edge.intercept <- stats::coef(ols)[1]
     theta <- atan(edge.slope)
-    h <- (posts[-1][i] - bins[edge.select[i], "lo"]) /
-      cholera::unitMeter(1, "meter")
+
+    if (unit == "distance") {
+      h <- (posts[i] - bins[edge.select[i], "lo"]) /
+        cholera::unitMeter(1, "meter")
+    } else if (unit == "time") {
+      h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * walking.speed /
+        60^2 / cholera::unitMeter(1, "meter")
+    }
 
     delta <- edge.data[2, ] - edge.data[1, ]
 
@@ -279,7 +285,7 @@ postCoordinates <- function(dat, unit, interval, walking.speed,
     }
 
     if (arrow.data) {
-      data.frame(post = posts[-1][i],
+      data.frame(post = posts[i],
                  x0 = edge.data[2, "x"],
                  y0 = edge.data[2, "y"],
                  x = post.x,
@@ -287,7 +293,7 @@ postCoordinates <- function(dat, unit, interval, walking.speed,
                  angle = theta * 180L / pi,
                  row.names = NULL)
     } else {
-      data.frame(post = posts[-1][i],
+      data.frame(post = posts[i],
                  x = post.x,
                  y = post.y,
                  angle = theta * 180L / pi,
