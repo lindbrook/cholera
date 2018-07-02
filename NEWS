@@ -1,7 +1,13 @@
+cholera 0.4.9.9041
+==================
+
+- starPlot() -> neighborhoodEuclidean().
+
+
 cholera 0.4.9.9040
 ==================
 
-- fix zero-length arrow "mileposts" in addNeighborhood().
+- fix zero-length arrows for "mileposts" in addNeighborhood().
 
 
 cholera 0.4.9.9039
