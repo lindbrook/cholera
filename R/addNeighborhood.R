@@ -425,6 +425,8 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
                 lwd = path.width, col = ps.col[2])
             }))
           }
+        } else {
+          stop('Use all positive or all negative "pump.subset"!')
         }
       }
 
@@ -441,6 +443,8 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
           sel <- names(n.path.edges) %in% pump.subset
         } else if (all(pump.subset < 0)) {
           sel <- names(n.path.edges) %in% abs(pump.subset) == FALSE
+        } else {
+          stop('Use all positive or all negative "pump.subset"!')
         }
 
         edge.data <- lapply(n.path.edges[sel], function(x) unique(unlist(x)))

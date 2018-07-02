@@ -76,6 +76,8 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
       if (all(abs(pump.subset) %in% selected.pumps) == FALSE) {
         stop('"|pump.subset|" must be a subset of "selected.pumps".')
       }
+    } else {
+      stop('Use all positive or all negative "pump.subset"!')
     }
   }
 
@@ -99,6 +101,8 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
         select <- selected.pumps[selected.pumps %in% pump.subset]
       } else if (all(pump.subset < 0)) {
         select <- selected.pumps[selected.pumps %in% abs(pump.subset) == FALSE]
+      } else {
+        stop('Use all positive or all negative "pump.subset"!')
       }
 
       if (token == "point") {
@@ -134,6 +138,8 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
         select <- selected.pumps[selected.pumps %in% pump.subset]
       } else if (all(pump.subset < 0)) {
         select <- selected.pumps[selected.pumps %in% abs(pump.subset) == FALSE]
+      } else {
+        stop('Use all positive or all negative "pump.subset"!')
       }
 
       invisible(lapply(select, function(x) {

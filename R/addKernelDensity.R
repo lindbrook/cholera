@@ -111,6 +111,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
         } else if (all(pump.subset < 0)) {
           sel <- names(cases.list) %in% paste0("p", abs(pump.subset)) == FALSE
           cases <- cases.list[sel]
+        } else {
+          stop('Use all positive or all negative "pump.subset"!')
         }
 
       } else if (neighborhood.type == "voronoi") {
