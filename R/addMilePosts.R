@@ -41,7 +41,7 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
 
   # vector of nodes for the 321 observed anchor cases
   n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
-    lapply(neighborhood, auditEdge2, edges)
+    lapply(neighborhood, auditEdge, edges, output = "id2")
   }, mc.cores = x$cores)
 
   if (!is.null(pump.subset)) {
