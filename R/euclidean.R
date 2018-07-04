@@ -8,11 +8,11 @@
 #' @return A base R graph.
 #' @export
 #' @examples
-#' networkEuclidean()
-#' networkEuclidean(-6)
-#' networkEuclidean(pump.select = 6:7)
+#' neighborhoodEuclidean()
+#' neighborhoodEuclidean(-6)
+#' neighborhoodEuclidean(pump.select = 6:7)
 
-networkEuclidean <- function(pump.subset = NULL, pump.select = NULL,
+neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
