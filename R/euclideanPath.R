@@ -306,13 +306,17 @@ print.euclidean_path <- function(x, ...) {
 #' @param x An object of class "euclidean_path" created by euclideanPath().
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
+#' @param unit.posts Character. "distance" for mileposts; "time" for timeposts.
+#' @param unit.interval Numeric. Sets interval between posts: for "distance",
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 #' @examples
 #' plot(euclideanPath(1))
 
-plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5, ...) {
+plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
+  unit.posts = "distance", unit.interval = NULL, ...) {
+
   if (class(x) != "euclidean_path") {
     stop('"x"\'s class needs to be "euclidean_path".')
   }
@@ -365,7 +369,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5, ...) {
     ego.xy <- origin.xy
   }
 
-  dat <- rbind(origin.xy, alter.xy)
+  dat <- rbind(alter.xy, origin.xy)
 
   if (zoom) {
     x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
@@ -383,7 +387,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5, ...) {
   if (x$type == "case-pump") {
     case.color <- colors[end.pump]
     points(origin.xy, col = "red")
-    title(main = paste("Case", x$origin, "to Pump", end.sel))
+    title(main = paste("Case", x$origin, "to Pump", x$alters$id[end.sel]))
   } else if (x$type == "cases") {
     case.color <- "blue"
     points(origin.xy, col = case.color)
@@ -407,24 +411,129 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5, ...) {
     text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
   }
 
-  arrows(ego.xy$x, ego.xy$y, alter.xy$x, alter.xy$y, length = 0.1,
-    col = case.color, lwd = 2, code = 2)
+  # mileposts #
+
+  if (unit.posts %in% c("distance", "time") == FALSE) {
+    stop('"unit.posts" must be "distance" or "time".')
+  } else {
+    if (is.null(unit.interval)) {
+      if (unit.posts == "distance")  {
+        unit.interval <- 50
+      } else if (unit.posts == "time") {
+        unit.interval <- 60
+      }
+    } else {
+      if (!is.numeric(unit.interval)) {
+        stop('"unit.interval" must be numeric.')
+      }
+    }
+
+    if (unit.posts == "distance") {
+      tot <- cholera::unitMeter(stats::dist(dat))
+      h <- seq(0, tot, unit.interval) / cholera::unitMeter(1)
+    } else if (unit.posts == "time") {
+      tot <- cholera::distanceTime(cholera::unitMeter(stats::dist(dat),
+        unit = "native"), speed = x$speed)
+      h <- seq(0, tot, unit.interval) * 1000 * x$speed / 60^2 /
+        cholera::unitMeter(1)
+    } else {
+      stop('specify a "unit.posts"')
+    }
+
+    ols <- stats::lm(y ~ x, data = dat)
+    edge.slope <- stats::coef(ols)[2]
+    edge.intercept <- stats::coef(ols)[1]
+    theta <- atan(edge.slope)
+
+    delta <- dat[2, ] - dat[1, ]
+
+    # Quadrant I
+    if (all(delta > 0)) {
+      post.x <- dat[1, "x"] + abs(h * cos(theta))
+      post.y <- dat[1, "y"] + abs(h * sin(theta))
+
+    # Quadrant II
+    } else if (delta[1] < 0 & delta[2] > 0) {
+      post.x <- dat[1, "x"] - abs(h * cos(theta))
+      post.y <- dat[1, "y"] + abs(h * sin(theta))
+
+    # Quadrant III
+    } else if (all(delta < 0)) {
+      post.x <- dat[1, "x"] - abs(h * cos(theta))
+      post.y <- dat[1, "y"] - abs(h * sin(theta))
+
+    # Quadrant IV
+    } else if (delta[1] > 0 & delta[2] < 0) {
+      post.x <- dat[1, "x"] + abs(h * cos(theta))
+      post.y <- dat[1, "y"] - abs(h * sin(theta))
+
+    # I:IV
+    } else if (delta[1] > 0 & delta[2] == 0) {
+      post.x <- dat[1, "x"] + abs(h * cos(theta))
+      post.y <- dat[1, "y"]
+
+    # I:II
+    } else if (delta[1] == 0 & delta[2] > 0) {
+      post.x <- dat[1, "x"]
+      post.y <- dat[1, "y"] + abs(h * sin(theta))
+
+    # II:III
+    } else if (delta[1] < 0 & delta[2] == 0) {
+      post.x <- dat[1, "x"] - abs(h * cos(theta))
+      post.y <- dat[1, "y"]
+
+    # III:IV
+    } else if (delta[1] == 0 & delta[2] < 0) {
+      post.x <- dat[1, "x"]
+      post.y <- dat[1, "y"] - abs(h * sin(theta))
+    }
+
+    post.data <- data.frame(x = c(post.x, ego.xy$x),
+                            y = c(post.y, ego.xy$y))
+
+    a.data <- cbind(post.data[-nrow(post.data), ], post.data[-1, ])
+    a.data <- stats::setNames(a.data, c("x1", "y1", "x2", "y2"))
+
+    invisible(lapply(seq_len(nrow(a.data)), function(i) {
+      dataB <- data.frame(x = c(a.data[i, "x1"], a.data[i, "x2"]),
+                          y = c(a.data[i, "y1"], a.data[i, "y2"]))
+
+      zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 2) == 0
+      zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 2) == 0
+
+      if (any(zero.length.x | zero.length.y)) {
+        text(dataB[1, c("x", "y")], labels = ">", srt = theta * 180L / pi,
+          col = case.color, cex = 1.5)
+      } else {
+        arrows(a.data[i, "x1"], a.data[i, "y1"],
+               a.data[i, "x2"], a.data[i, "y2"],
+               length = 0.1, col = case.color, lwd = 2, code = 1)
+      }
+    }))
+  }
 
   if (x$time.unit == "hour") {
-    nominal.time <- paste(round(x$t, 1), "hr.")
+    nominal.time <- paste(round(x$t, 1), "hr")
   } else if (x$time.unit == "minute") {
-    nominal.time <- paste(round(x$t, 1), "mins.")
+    nominal.time <- paste(round(x$t, 1), "min")
   } else if (x$time.unit == "second") {
-    nominal.time <- paste(round(x$t, 1), "secs.")
+    nominal.time <- paste(round(x$t, 1), "sec")
   }
 
   if (x$unit == "native") {
     d.unit <- "units;"
   } else if (x$unit == "meter") {
-    d.unit <- "meters;"
+    d.unit <- "m;"
   } else if (x$unit == "yard") {
-    d.unit <- "yards;"
+    d.unit <- "yd;"
   }
 
-  title(sub = paste(round(x$d, 1), d.unit, nominal.time, "@", x$speed, "km/hr"))
+  if (unit.posts == "distance") {
+    post.info <- paste("posts @", unit.interval, "m intervals")
+  } else if (unit.posts == "time") {
+    post.info <- paste("posts @", unit.interval, "sec intervals")
+  }
+
+  title(sub = paste(round(x$d, 1), d.unit, nominal.time, "@", x$speed, "km/hr;",
+    post.info))
 }

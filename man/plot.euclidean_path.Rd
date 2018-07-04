@@ -4,7 +4,8 @@
 \alias{plot.euclidean_path}
 \title{Plot the path of the Euclidean distance between cases and/or pumps.}
 \usage{
-\method{plot}{euclidean_path}(x, zoom = TRUE, radius = 0.5, ...)
+\method{plot}{euclidean_path}(x, zoom = TRUE, radius = 0.5,
+  unit.posts = "distance", unit.interval = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class "euclidean_path" created by euclideanPath().}
@@ -12,6 +13,10 @@
 \item{zoom}{Logical.}
 
 \item{radius}{Numeric. Controls the degree of zoom.}
+
+\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
+
+\item{unit.interval}{Numeric. Sets interval between posts: for "distance",}
 
 \item{...}{Additional plotting parameters.}
 }
