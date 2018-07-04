@@ -73,22 +73,22 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
     }))
   } else {
     if (all(pump.subset > 0)) {
-      select.cases <- anchors[unlist(nearest.pump) %in% pump.subset]
-      select.pumps <- nearest.pump[unlist(nearest.pump) %in% pump.subset]
+      anchors.subset <- anchors[unlist(nearest.pump) %in% pump.subset]
+      nearest.pump.subset <- nearest.pump[unlist(nearest.pump) %in% pump.subset]
     } else if (all(pump.subset < 0)) {
-      select.cases <- anchors[unlist(nearest.pump) %in%
+      anchors.subset <- anchors[unlist(nearest.pump) %in%
         abs(pump.subset) == FALSE]
-      select.pumps <- nearest.pump[unlist(nearest.pump) %in%
+      nearest.pump.subset <- nearest.pump[unlist(nearest.pump) %in%
         abs(pump.subset) ==- FALSE]
     } else {
       stop('Use all positive or all negative "pump.subset"!')
     }
 
-    invisible(lapply(seq_along(select.cases), function(i) {
-      p.data <- pump.data[pump.data$id == select.pumps[[i]], ]
-      sel <- cholera::fatalities.address$anchor.case %in% select.cases[i]
+    invisible(lapply(seq_along(anchors.subset), function(i) {
+      p.data <- pump.data[pump.data$id == nearest.pump.subset[[i]], ]
+      sel <- cholera::fatalities.address$anchor.case %in% anchors.subset[i]
       n.data <- cholera::fatalities.address[sel, ]
-      n.color <- snow.colors[paste0("p", select.pumps[[i]])]
+      n.color <- snow.colors[paste0("p", nearest.pump.subset[[i]])]
       lapply(n.data$anchor.case, function(case) {
         c.data <- n.data[n.data$anchor.case == case, ]
         segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
