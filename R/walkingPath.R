@@ -618,11 +618,10 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       theta <- atan(edge.slope)
 
       if (unit.posts == "distance") {
-        h <- (posts[i] - bins[edge.select[i], "lo"]) /
-          cholera::unitMeter(1, "meter")
+        h <- (posts[i] - bins[edge.select[i], "lo"]) / cholera::unitMeter(1)
       } else if (unit.posts == "time") {
         h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * x$speed / 60^2 /
-          cholera::unitMeter(1, "meter")
+          cholera::unitMeter(1)
       }
 
       delta <- e.data[2, ] - e.data[1, ]
@@ -685,12 +684,12 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
                             y = c(arrow.data[i, "y1"], coords[i, "y"]))
       }
 
-      zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 3) == 0
-      zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 3) == 0
+      zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 2) == 0
+      zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 2) == 0
 
       if (any(zero.length.x | zero.length.y)) {
         text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
-          col = case.color)
+          col = case.color, cex = 1.5)
       } else {
         arrows(dataB[1, "x"], dataB[1, "y"],
                dataB[2, "x"], dataB[2, "y"],
