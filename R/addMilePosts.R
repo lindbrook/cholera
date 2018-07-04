@@ -141,7 +141,7 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
         } else {
           invisible(lapply(which(zero), function(i) {
             text(dat[i, c("x", "y")], labels = ">", srt = dat[i, "angle"],
-              col = color)
+              col = color, cex = 1.5)
           }))
 
           arrows(dat[!zero, "x0"], dat[!zero, "y0"],
