@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.4.9.9042-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.4.9.9043-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 cholera: amend, augment and aid analysis of John Snow's 1854 cholera map
 ------------------------------------------------------------------------
@@ -100,8 +100,8 @@ Read the package vignettes. They expand on the concept of a "pump neighborhood",
 They are also available online at the links below:
 
 [Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)   
-[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)   
-["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)   
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
+["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
 [Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
 [Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)   
 [Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)
