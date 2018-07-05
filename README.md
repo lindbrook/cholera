@@ -95,7 +95,7 @@ To install the development version of 'cholera' from GitHub:
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 
-Read the package vignettes. They expand on the concept of a "pump neighborhood", and go into greater detail on how the data was "fixed" and on the methods used to compute walking distances and pump neighborhoods.
+Read the package vignettes (and lab notes). They expand on the concept of a "pump neighborhood", and go into greater detail on how the data was "fixed" and on the methods used to compute walking distances and pump neighborhoods.
 
 They are also available online at the links below:
 
@@ -103,7 +103,7 @@ They are also available online at the links below:
 [Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
 ["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
 [Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
-[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)   
+[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)  
 [Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)
 
 ### note

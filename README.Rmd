@@ -97,7 +97,7 @@ To install the development version of 'cholera' from GitHub:
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 
-Read the package vignettes. They expand on the concept of a "pump neighborhood", and go into greater detail on how the data was "fixed" and on the methods used to compute walking distances and pump neighborhoods. 
+Read the package vignettes (and lab notes). They expand on the concept of a "pump neighborhood", and go into greater detail on how the data was "fixed" and on the methods used to compute walking distances and pump neighborhoods. 
 
 They are also available online at the links below:
 
