@@ -1,3 +1,10 @@
+cholera 0.4.9.9043
+==================
+
+- consolidate auditEdge().
+- add print and plot methods for neighborhoodEuclidean().
+
+
 cholera 0.4.9.9042
 ==================
 
