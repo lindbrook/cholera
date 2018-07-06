@@ -18,7 +18,7 @@
 
 \item{unit.interval}{Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.}
 
-\item{...}{Additional parameters.}
+\item{...}{Additional plotting parameters.}
 }
 \value{
 A base R plot.
