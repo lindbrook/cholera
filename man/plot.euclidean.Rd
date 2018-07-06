@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class "euclidean" created by neighborhoodEuclidean().}
 
-\item{...}{Additional parameters.}
+\item{...}{Additional plotting parameters.}
 }
 \value{
 A base R plot.

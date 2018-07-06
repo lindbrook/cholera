@@ -72,7 +72,6 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
                 pump.id = pump.id,
                 snow.colors = snow.colors,
                 anchors = anchors,
-                # nearest.pump = nearest.pump)
                 nearest.pump = unlist(nearest.pump))
   } else {
     if (all(pump.subset > 0)) {
@@ -92,9 +91,6 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
                 pump.select = pump.select,
                 pump.id = pump.id,
                 snow.colors = snow.colors,
-                # anchors = anchors,
-                # nearest.pump = nearest.pump,
-                # nearest.pump = unlist(nearest.pump),
                 anchors = anchors.subset,
                 nearest.pump = unlist(nearest.pump.subset))
   }
@@ -106,7 +102,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 #' Plot method for neighborhoodWalking().
 #'
 #' @param x An object of class "euclidean" created by neighborhoodEuclidean().
-#' @param ... Additional parameters.
+#' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
