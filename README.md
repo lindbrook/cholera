@@ -99,11 +99,11 @@ Read the package vignettes (and the lab notes, if interested). They expand on th
 
 They are also available online at the links below:
 
-[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)
-[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)
-["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)
-[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)
-[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)   
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
+["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
+[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
+[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)   
 [Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)
 
 ### note
