@@ -123,7 +123,6 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @param x An object of class "walking" created by neighborhoodWalking().
 #' @param ... Additional parameters.
 #' @return An R vector.
-#' @note Printing an object with case.set = "expected" is computationally intensive (you are nominally computing the paths of almost 20,000 cases): on a 2.3 GHz Intel i7 this takes approximately 28 seconds on single core and 10 seconds on 4 physical (8 logical) cores.
 #' @export
 #' @examples
 #' # neighborhoodWalking()
@@ -341,7 +340,7 @@ expectedCount <- function(x) {
 #' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when case.set = "expected".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
-#' @note When plotting area graphs with simulated data (i.e., case.set = "exected"), there may be discrepancies between observed cases and expected neighborhoods, particularly at the borders between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
+#' @note When plotting area graphs with simulated data (i.e., case.set = "exected"), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
 #' @export
 #' @examples
 #' # plot(neighborhoodWalking())
