@@ -1,7 +1,13 @@
+cholera 0.4.9.9045
+==================
+
+- update walking neighborhood benchmark timings.
+
+
 cholera 0.4.9.9044
 ==================
 
-- update CRAN comments (win-builder)
+- update CRAN comments (win-builder).
 
 
 cholera 0.4.9.9043
