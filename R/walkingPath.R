@@ -717,5 +717,5 @@ drawPath <- function(x, case.color) {
   dat <- numericNodeCoordinates(x)
   n1 <- dat[1:(nrow(dat) - 1), ]
   n2 <- dat[2:nrow(dat), ]
-  segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 2)
+  segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 3)
 }
