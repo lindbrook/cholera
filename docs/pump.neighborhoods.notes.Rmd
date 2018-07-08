@@ -227,34 +227,36 @@ pearl.string <- parallel::mclapply(periphery.cases, pearlString,
 
 To draw the area polygons for pump neighborhoods, I did the following.
 
-First, using sp::spsample and sp::Polygon, I place approximately 20K regularly-spaced points across the face of the map.
+First, using sp::spsample() and sp::Polygon(), I place approximately 20K regularly-spaced points across the face of the map:
 
 ```{r, regular_cases, eval = FALSE}
 sp::spsample(sp::Polygon(map.frame[, c("x", "y")]), n = 20000, type = "regular")
 ```
 
-For each simulated cases, I compute the closet water pump. This partitions the simulated cases into clusters that reflect the selected pump neighborhoods. The figure below plots 1709 simulated cases for Broad Street pump neighborhood (pump #7).
+For each simulated cases, I compute the closet water pump. This partitions the simulated cases into clusters that reflect the selected pump neighborhoods. The details are in cholera::simulateFatalities(), located in [simulateFatalities.R](https://github.com/lindbrook/cholera/blob/master/R/simulateFatalities.R)
+
+The figure below plots the 1,709 simulated cases for the Broad Street pump neighborhood (pump #7).
 
 ```{r cloud, echo = FALSE}
 snowMap(add.cases = FALSE, add.pumps = FALSE, add.title = FALSE)
-points(regular.cases[neighborhood.cases$`7`, ], pch = 16, col = snowColors()["p7"], cex = 0.5)
+points(regular.cases[neighborhood.cases$`7`, ], pch = 16, col = snowColors()["p7"], cex = 1/4)
 ```
 
-The next step is to find the points along the periphery of the cluster.
+Second, I find the points that fall along the periphery of the cluster.
 
 ```{r perimeter, echo = FALSE}
 plot(regular.cases[neighborhood.cases$`7`, ], asp = 1, pch = 16, col = "lightgray", cex = 0.5)
 points(regular.cases[periphery.cases$`7`, ], col = "red")
 ```
 
-Eventually, this will allow me to use graphics::polygon() to create plots like the Marshall Street example:
+This is what allow me to use graphics::polygon() to create plots like the Marshall Street example in the vignette:
 
 ```{r marshall, echo = FALSE}
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE, add.title = FALSE, radius = 0.5)
 addNeighborhood()
 ```
 
-However, doing this is easier said than done. One could compute the convex hull of a neighborhood's points. But because the convex hull picks a space based on the most outlying points in the cloud, when there are concavities, points outside the neighborhood will fall within the polygon.
+Doing this, however, is easier said than done. While the convex hull of neighborhood's points gets us close, it's not a good general solution. This is because the convex hull will create a polygon based on the most outlying points. As a result, when there are concavities, points outside the neighborhood will fall within the resulting polygon.
 
 ```{r hull, echo = FALSE}
 plot(regular.cases[neighborhood.cases$`7`, ], asp = 1, pch = 16, col = "lightgray", cex = 0.5)
@@ -263,11 +265,13 @@ points(ndata[chull(ndata), ], col = "dodgerblue")
 polygon(ndata[chull(ndata), ], border = "dodgerblue")
 ```
 
-Another possibility, which I used in an earlier version of 'cholera', is the 'alphahull' package. But that not only requires tweaking a parameter, it also has an ACM license that CRAN doesn't like.
+Another possibility, which I used in an earlier version of 'cholera', is to use the 'alphahull' package. But that not only requires tweaking a parameter, it also has an ACM license that generates a warning on CRAN Package Check.
 
 ## String of pearls
 
-My workable but mechanical solution is the following. First, I identify candidate points along the periphery by eliminating simulated cases that has immediate neighbors at each of the 4 cardinal directions (i.e., North, South, East and West). Second, I then connect the dots in the "right" order by using [epicycles](https://en.wikipedia.org/wiki/Deferent_and_epicycle). This works as double loop. The outer loop, which assembles the vertices of the polygon, moves in clockwise fashion. The inner loop, which finds the next vertex, moves counterclockwise in order to capture concavities. A tertiary concern is the density of simulated cases. The algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data can help. As a tradeoff between computational speed and functional robustness, I use 20K simulated cases.
+My workable but mechanical solution does the following. First, I identify points along the periphery by eliminating simulated cases that have immediate neighbors at each of the 4 cardinal directions (i.e., North, South, East and West). I then try to connect the dots in the "right" order by using [epicycles](https://en.wikipedia.org/wiki/Deferent_and_epicycle). This works as a double loop. The outer loop, which moves around the perimeter in clockwise fashion, assembles the vertices of the polygon (i.e., add the pearls on the string). The inner loop, which finds the next vertex, moves counterclockwise epicycles. Doing so capture concavities in the polygon.
+
+Of equal if not greater importance is the density of simulated cases. The algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data can help. As a tradeoff between computational speed and functional robustness, I use 20K simulated cases.
 
 ```{r pearl_string, echo = FALSE}
 plot(regular.cases[neighborhood.cases$`7`, ], asp = 1, pch = 16, col = "lightgray", cex = 0.5)
