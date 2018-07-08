@@ -388,6 +388,7 @@ print.walking_path <- function(x, ...) {
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts.
 #' @param unit.interval Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.
+#' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
@@ -397,7 +398,7 @@ print.walking_path <- function(x, ...) {
 #' plot(walkingPath(15), unit.posts = "time")
 
 plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
-  unit.posts = "distance", unit.interval = NULL, ...) {
+  unit.posts = "distance", unit.interval = NULL, alpha.level = 1, ...) {
 
   if (class(x) != "walking_path") {
     stop('"x"\'s class needs to be "walking_path".')
@@ -407,6 +408,10 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     txt1 <- paste("Case", x$origin, "is part of an isolated subgraph.")
     txt2 <- "It (technically) has no neareast pump."
     stop(paste(txt1, txt2))
+  }
+
+  if (isFALSE(alpha.level > 0 | alpha.level <= 1)) {
+    stop('"alpha.level" must be > 0 and <= 1')
   }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
@@ -425,7 +430,12 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
   if (x$type == "case-pump") {
     alter <- nodes[nodes$node == alter.node, "pump"]
-    case.color <- colors[alter]
+
+    if (alpha.level != 1) {
+      case.color <- grDevices::adjustcolor(colors[alter], alpha.f = alpha.level)
+    } else {
+      case.color <- colors[alter]
+    }
 
     if (x$observed) {
       origin.obs <- cholera::fatalities[cholera::fatalities$case == x$origin,

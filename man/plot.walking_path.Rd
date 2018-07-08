@@ -5,7 +5,7 @@
 \title{Plot the walking path between selected cases and/or pumps.}
 \usage{
 \method{plot}{walking_path}(x, zoom = TRUE, radius = 0.5,
-  unit.posts = "distance", unit.interval = NULL, ...)
+  unit.posts = "distance", unit.interval = NULL, alpha.level = 1, ...)
 }
 \arguments{
 \item{x}{An object of class "walking_path" created by walkingPath().}
@@ -17,6 +17,8 @@
 \item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
 
 \item{unit.interval}{Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.}
+
+\item{alpha.level}{Numeric. Alpha level transparency for path: a value in [0, 1].}
 
 \item{...}{Additional plotting parameters.}
 }

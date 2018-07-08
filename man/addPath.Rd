@@ -7,7 +7,7 @@
 addPath(origin, destination = NULL, type = "case-pump", observed = TRUE,
   weighted = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
   walking.speed = 5, zoom = TRUE, radius = 0.5, unit.posts = "distance",
-  unit.interval = NULL)
+  unit.interval = NULL, alpha.level = 1)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
@@ -35,6 +35,8 @@ addPath(origin, destination = NULL, type = "case-pump", observed = TRUE,
 \item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
 
 \item{unit.interval}{Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.}
+
+\item{alpha.level}{Numeric. Alpha level transparency for path: a value in [0, 1].}
 }
 \value{
 An R list with two elements: a character vector of path nodes and a data frame summary.

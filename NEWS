@@ -2,6 +2,7 @@ cholera 0.4.9.9045
 ==================
 
 - update walking neighborhood benchmark timings.
+- add "alpha.level" to walkingPath() and addPath().
 
 
 cholera 0.4.9.9044
