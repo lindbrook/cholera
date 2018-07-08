@@ -1,7 +1,7 @@
 Pump Neighborhoods
 ================
 lindbrook
-2018-07-07
+2018-07-08
 
 Overview
 --------
@@ -100,7 +100,7 @@ plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
 
 <img src="pump.neighborhoods_files/figure-markdown_github/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
-The main virtue of the polygon approach, which is still under development, is that it better lends itself to building graphs at different scales.
+The main virtue of the polygon approach is that it better lends itself to building graphs at different scales. Details about implementation are found in the [lab notes](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) found in this package's GitHub repository.
 
 ``` r
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
