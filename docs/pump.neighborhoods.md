@@ -100,7 +100,7 @@ plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
 
 <img src="pump.neighborhoods_files/figure-markdown_github/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
-The main virtue of the polygon approach is that it better lends itself to building graphs at different scales. Details about the implementation of neighborhood polygons are found in this vignette's lab notes which are avalable [online](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) and in the package's GitHub repository.
+The main virtue of the polygon approach is that it better lends itself to building graphs at different scales. Details about the implementation of neighborhood polygons are found in this vignette's lab notes, which are avalable [online](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) and in the package's GitHub repository.
 
 ``` r
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
