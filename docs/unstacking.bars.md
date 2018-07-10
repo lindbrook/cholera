@@ -1,7 +1,7 @@
 "Unstacking" Bars
 ================
 lindbrook
-2018-06-26
+2018-07-10
 
 Overview
 --------
@@ -116,7 +116,7 @@ With *fatalities.unstacked*, the contours are "tighter" (reflecting lesser uncer
 
 The main roadblock to "unstacking" is that there is no notion of an "address" in the data: bars are merely points and streets are merely line segments.[4] Nothing links a point to a segments. And nothing connects one bar in a stack to another bar. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinates.
 
-To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I use two types of classification. For those interested, the details are found in the accompanying [lab notes](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md) found in this package's GitHub repository.
+To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I use two types of classification. For those interested, the details are found in this vignette's lab notes, which are available [online](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md) and in the package's GitHub repository.
 
 [1] The map was originally published in Snow's 1855 book "On The Mode Of Communication Of Cholera", which was reprinted as John Snow et. al., 1936. *Snow on Cholera: Being a Reprint of Two Papers*. New York: The Common Wealth Fund. You can also find the map online (a high resolution version is available at <http://www.ph.ucla.edu/epi/snow/highressnowmap.html>) and in many books, including Edward Tufte's 1997 "Visual Explanations: Images and Quantities, Evidence and Narrative".
 

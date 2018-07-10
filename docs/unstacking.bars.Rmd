@@ -256,4 +256,5 @@ p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
 
 The main roadblock to "unstacking" is that there is no notion of an "address" in the data: bars are merely points and streets are merely line segments.^[In Friendly's HistData package, these data are called "Snow.deaths" and "Snow.streets".] Nothing links a point to a segments. And nothing connects one bar in a stack to another bar. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinates.
 
-To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I use two types of classification. For those interested, the details are found in the accompanying [lab notes](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md) found in this package's GitHub repository.
+To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I use two types of classification. For those interested, the details are found in this vignette's lab notes, which are available [online](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md) and in the package's GitHub repository.
+
