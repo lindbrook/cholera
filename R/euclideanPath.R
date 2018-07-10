@@ -34,8 +34,6 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
   observed = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
   walking.speed = 5) {
 
-  n.sim.obs <- nrow(cholera::regular.cases)
-
   if (unit %in% c("meter", "yard", "native") == FALSE) {
     stop('"unit" must be "meter", "yard" or "native".')
   }
@@ -47,6 +45,8 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
     stop('"type" must be "case-pump", "cases" or "pumps".')
   }
+
+  n.sim.obs <- nrow(cholera::regular.cases)
 
   if (type == "case-pump") {
     if (observed) {
@@ -277,7 +277,7 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
                  d = out$distance,
                  t = out$time,
                  speed = walking.speed,
-                 summary = out)
+                 data = out)
 
   class(output) <- "euclidean_path"
   output
@@ -298,7 +298,7 @@ print.euclidean_path <- function(x, ...) {
     stop('"x"\'s class needs to be "euclidean_path".')
   }
 
-  print(x[c("ego", "alter", "summary")])
+  print(x[c("ego", "alter", "data")])
 }
 
 #' Plot the path of the Euclidean distance between cases and/or pumps.
@@ -507,7 +507,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
       } else {
         arrows(a.data[i, "x1"], a.data[i, "y1"],
                a.data[i, "x2"], a.data[i, "y2"],
-               length = 0.1, col = case.color, lwd = 2, code = 1)
+               length = 0.075, col = case.color, lwd = 3, code = 1)
       }
     }))
   }

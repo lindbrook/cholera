@@ -59,7 +59,7 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
   nodes <- node.data$nodes
   edges <- node.data$edges
   g <- node.data$g
-  exp.ct <- nrow(cholera::regular.cases)
+  n.sim.obs <- nrow(cholera::regular.cases)
 
   if (type == "case-pump") {
     if (observed) {
@@ -69,9 +69,9 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
         stop(paste(txt1, txt2))
       }
     } else {
-      if (origin %in% 1:exp.ct == FALSE) {
+      if (origin %in% 1:n.sim.obs == FALSE) {
         txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
-        txt2 <- paste('"origin" must be between 1 and', paste0(exp.ct, "."))
+        txt2 <- paste('"origin" must be between 1 and', paste0(n.sim.obs, "."))
         stop(paste(txt1, txt2))
       }
     }
@@ -170,10 +170,10 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
         stop(paste(txt1, txt2))
       }
     } else {
-      if (any(abs(c(origin, destination)) %in% 1:exp.ct == FALSE)) {
+      if (any(abs(c(origin, destination)) %in% 1:n.sim.obs == FALSE)) {
         txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
         txt2 <- 'both "origin" and "destination" must be whole numbers between'
-        txt3 <- paste('1 and', paste0(exp.ct, "."))
+        txt3 <- paste('1 and', paste0(n.sim.obs, "."))
         stop(paste(txt1, txt2, txt3))
       }
     }
@@ -703,7 +703,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       } else {
         arrows(dataB[1, "x"], dataB[1, "y"],
                dataB[2, "x"], dataB[2, "y"],
-               lwd = 2, length = 0.065, col = case.color, code = 2)
+               lwd = 3, length = 0.075, col = case.color, code = 2)
       }
     }))
   }

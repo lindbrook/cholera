@@ -1,7 +1,8 @@
 cholera 0.4.9.9048
 ==================
 
- - copyedit vignettes
+ - copyedit vignettes.
+ - consolidate path functions.
 
 
 cholera 0.4.9.9047

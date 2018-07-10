@@ -24,6 +24,40 @@ addPath <- function(origin, destination = NULL, type = "case-pump",
   time.unit = "second", walking.speed = 5, zoom = TRUE, radius = 0.5,
   unit.posts = "distance", unit.interval = NULL, alpha.level = 1) {
 
+  n.sim.obs <- nrow(cholera::regular.cases)
+
+  if (type == "case-pump") {
+    if (observed) {
+      if (origin %in% 1:578 == FALSE) {
+        txt1 <- 'With type = "case-pump" and "observed" = TRUE,'
+        txt2 <- '"origin" must be between 1 and 578.'
+        stop(paste(txt1, txt2))
+      }
+    } else {
+      if (origin %in% 1:n.sim.obs == FALSE) {
+        txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
+        txt2 <- paste('"origin" must be between 1 and', paste0(n.sim.obs, "."))
+        stop(paste(txt1, txt2))
+      }
+    }
+  }
+
+  if (!is.null(destination)) {
+    if (vestry) {
+      if (any(abs(destination) %in% 1:14 == FALSE)) {
+        txt1 <- 'With type = "case-pump" and "vestry = TRUE",'
+        txt2 <- '1 >= |destination| <= 14.'
+        stop(paste(txt1, txt2))
+      }
+    } else {
+      if (any(abs(destination) %in% 1:13 == FALSE)) {
+        txt1 <- 'With type = "case-pump" and "vestry = FALSE",'
+        txt2 <- '1 >= |destination| <= 13.'
+        stop(paste(txt1, txt2))
+      }
+    }
+  }
+
   arguments <- list(origin = origin,
                     destination = destination,
                     type = type,
@@ -275,13 +309,13 @@ addPath <- function(origin, destination = NULL, type = "case-pump",
                arrow.data[i, "y2"],
                coords[i, "x"],
                coords[i, "y"],
-               lwd = 2, length = 0.075, col = case.color, code = 2)
+               lwd = 3, length = 0.075, col = case.color, code = 2)
       } else if (start[i] == 2) {
         arrows(arrow.data[i, "x1"],
                arrow.data[i, "y1"],
                coords[i, "x"],
                coords[i, "y"],
-               lwd = 2, length = 0.075, col = case.color, code = 2)
+               lwd = 3, length = 0.075, col = case.color, code = 2)
       }
     }))
   }

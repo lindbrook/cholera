@@ -20,8 +20,6 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
   walking.speed = 5, unit.posts = "distance", unit.interval = NULL,
   alpha.level = 1) {
 
-  n.sim.obs <- nrow(cholera::regular.cases)
-
   if (unit %in% c("meter", "yard", "native") == FALSE) {
     stop('"unit" must be "meter", "yard" or "native".')
   }
@@ -37,6 +35,8 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
   if (isFALSE(alpha.level > 0 | alpha.level <= 1)) {
     stop('"alpha.level" must be > 0 and <= 1')
   }
+
+  n.sim.obs <- nrow(cholera::regular.cases)
 
   if (type == "case-pump") {
     if (observed) {
@@ -442,7 +442,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
       } else {
         arrows(a.data[i, "x1"], a.data[i, "y1"],
                a.data[i, "x2"], a.data[i, "y2"],
-               length = 0.065, col = case.color, lwd = 2, code = 1)
+               length = 0.075, col = case.color, lwd = 3, code = 1)
       }
     }))
   }
