@@ -17,7 +17,6 @@ source('~/Documents/Data IV/cholera/R/pearlString.R')
 source('~/Documents/Data IV/cholera/R/walkingAuxillaryFunctions.R')
 
 x <- neighborhoodWalking(case.set = "expected")
-# neighborhood.cases <- x$cases
 
 dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
 edges <- dat$edges
@@ -274,6 +273,6 @@ My workable but mechanical solution does the following. First, I identify points
 Of equal if not greater importance is the density of simulated cases. The algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data can help. As a tradeoff between computational speed and functional robustness, I use 20K simulated cases.
 
 ```{r pearl_string, echo = FALSE}
-plot(regular.cases[neighborhood.cases$`7`, ], asp = 1, pch = 16, col = "lightgray", cex = 0.5)
-polygon(regular.cases[pearlString(periphery.cases$`7`), ], border = "red")
+plot(regular.cases[pearlString(periphery.cases$`7`), ], asp = 1)
+polygon(regular.cases[pearlString(periphery.cases$`7`), ], border = "red", lwd = 2)
 ```
