@@ -1,7 +1,7 @@
 Pump Neighborhoods
 ================
 lindbrook
-2018-07-08
+2018-07-10
 
 Overview
 --------
@@ -100,7 +100,7 @@ plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
 
 <img src="pump.neighborhoods_files/figure-markdown_github/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
-The main virtue of the polygon approach is that it better lends itself to building graphs at different scales. Details about implementation are found in the [lab notes](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) found in this package's GitHub repository.
+The main virtue of the polygon approach is that it better lends itself to building graphs at different scales. Details about the implementation of neighborhood polygons are found in this vignette's lab notes which are avalable [online](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) and in the package's GitHub repository.
 
 ``` r
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
@@ -110,7 +110,7 @@ addNeighborhood()
 
 <img src="pump.neighborhoods_files/figure-markdown_github/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
 
-While easier to "read", both area graphs are potentially more misleading. Conceptually, the problem is that they take the focus away from roads and puts it on regions, which may not be meaningful because they can represent locations where there are no roads or residences. Computationally, the problem is that the shape of a neighborhood is sensitive to how we determines a case's street address. Depending on the implementation, this can produce different results.
+While easier to "read", the area graphs are potentially misleading. Conceptually, the problem is that they take the focus away from roads and puts it on regions, which may not be meaningful because they can represent locations where there are no roads or residences. Computationally, the problem is that the shape of a neighborhood will be sensitive to how we determines a case's street address. Different implementations can produce different results.
 
 ### Exploring scenarios
 
