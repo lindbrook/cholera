@@ -1,3 +1,9 @@
+cholera 0.4.9.9049
+==================
+
+- enable no mileposts via unit.posts = NULL in plot.euclidean_path() and plot.walking_path().
+
+
 cholera 0.4.9.9048
 ==================
 

@@ -385,9 +385,9 @@ print.walking_path <- function(x, ...) {
 #'
 #' @param x An object of class "walking_path" created by walkingPath().
 #' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom.
-#' @param unit.posts Character. "distance" for mileposts; "time" for timeposts.
-#' @param unit.interval Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.
+#' @param radius Numeric. Control the degree of zoom.
+#' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.
+#' @param unit.interval Numeric. Set interval between posts. When "unit.posts" is "distance", "unit.interval" automatically defaults to 50 meters. When "unit.posts" is "time", "unit.interval" automatically defaults to 60 seconds.
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
@@ -565,157 +565,164 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     d.unit <- "yd;"
   }
 
-  if (unit.posts %in% c("distance", "time") == FALSE) {
-    stop('"unit.posts" must be "distance" or "time".')
-  } else {
-    if (is.null(unit.interval)) {
-      if (unit.posts == "distance")  {
-        unit.interval <- 50
-      } else if (unit.posts == "time") {
-        unit.interval <- 60
-      }
+  # mileposts #
+
+  if (is.null(unit.posts) == FALSE) {
+    if (unit.posts %in% c("distance", "time") == FALSE) {
+      stop('If specified, "unit.posts" must be "distance" or "time".')
     } else {
-      if (!is.numeric(unit.interval)) {
-        stop('"unit.interval" must be numeric.')
-      }
-    }
-
-    path <- rev(x$path)
-    path.edge <- data.frame(node1 = path[1:(length(path) - 1)],
-                            node2 = path[2:length(path)],
-                            stringsAsFactors = FALSE)
-
-    edge.data <- identifyEdges(path.edge, edges)
-
-    if (unit.posts == "distance") {
-      cumulative <- cholera::unitMeter(cumsum(edge.data$d), "meter")
-    } else if (unit.posts == "time") {
-      cumulative <- cholera::distanceTime(cumsum(edge.data$d), speed = x$speed)
-    }
-
-    total <- cumulative[length(cumulative)]
-    posts <- seq(0, total, unit.interval)
-
-    if (max(posts) > max(cumulative)) {
-      posts <- posts[-length(posts)]
-    }
-
-    bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
-                       hi = cumulative)
-
-    edge.select <- vapply(posts, function(x) {
-      which(vapply(seq_len(nrow(bins)), function(i) {
-        x >= bins[i, "lo"] & x < bins[i, "hi"]
-      }, logical(1L)))
-    }, integer(1L))
-
-    start.node <- edgeOrder(edge.data, path.edge)
-
-    post.coordinates <- lapply(seq_along(edge.select), function(i) {
-      sel.data <- edge.data[edge.select[i], ]
-
-      if (start.node[edge.select[i]] == 1) {
-        e.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
-                             y = c(sel.data$y1, sel.data$y2))
-      } else if (start.node[edge.select[i]] == 2) {
-        e.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
-                             y = c(sel.data$y2, sel.data$y1))
+      if (is.null(unit.interval)) {
+        if (unit.posts == "distance")  {
+          unit.interval <- 50
+        } else if (unit.posts == "time") {
+          unit.interval <- 60
+        }
+      } else {
+        if (!is.numeric(unit.interval)) {
+          stop('"unit.interval" must be numeric.')
+        }
       }
 
-      ols <- stats::lm(y ~ x, data = e.data)
-      edge.slope <- stats::coef(ols)[2]
-      edge.intercept <- stats::coef(ols)[1]
-      theta <- atan(edge.slope)
+      path <- rev(x$path)
+      path.edge <- data.frame(node1 = path[1:(length(path) - 1)],
+                              node2 = path[2:length(path)],
+                              stringsAsFactors = FALSE)
+
+      edge.data <- identifyEdges(path.edge, edges)
 
       if (unit.posts == "distance") {
-        h <- (posts[i] - bins[edge.select[i], "lo"]) / cholera::unitMeter(1)
+        cumulative <- cholera::unitMeter(cumsum(edge.data$d), "meter")
       } else if (unit.posts == "time") {
-        h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * x$speed / 60^2 /
-          cholera::unitMeter(1)
+        cumulative <- cholera::distanceTime(cumsum(edge.data$d), speed = x$speed)
       }
 
-      delta <- e.data[2, ] - e.data[1, ]
+      total <- cumulative[length(cumulative)]
+      posts <- seq(0, total, unit.interval)
 
-      # Quadrant I
-      if (all(delta > 0)) {
-        post.x <- e.data[1, "x"] + abs(h * cos(theta))
-        post.y <- e.data[1, "y"] + abs(h * sin(theta))
-
-      # Quadrant II
-      } else if (delta[1] < 0 & delta[2] > 0) {
-        post.x <- e.data[1, "x"] - abs(h * cos(theta))
-        post.y <- e.data[1, "y"] + abs(h * sin(theta))
-
-      # Quadrant III
-      } else if (all(delta < 0)) {
-        post.x <- e.data[1, "x"] - abs(h * cos(theta))
-        post.y <- e.data[1, "y"] - abs(h * sin(theta))
-
-      # Quadrant IV
-      } else if (delta[1] > 0 & delta[2] < 0) {
-        post.x <- e.data[1, "x"] + abs(h * cos(theta))
-        post.y <- e.data[1, "y"] - abs(h * sin(theta))
-
-      # I:IV
-      } else if (delta[1] > 0 & delta[2] == 0) {
-        post.x <- e.data[1, "x"] + abs(h * cos(theta))
-        post.y <- e.data[1, "y"]
-
-      # I:II
-      } else if (delta[1] == 0 & delta[2] > 0) {
-        post.x <- e.data[1, "x"]
-        post.y <- e.data[1, "y"] + abs(h * sin(theta))
-
-      # II:III
-      } else if (delta[1] < 0 & delta[2] == 0) {
-        post.x <- e.data[1, "x"] - abs(h * cos(theta))
-        post.y <- e.data[1, "y"]
-
-      # III:IV
-      } else if (delta[1] == 0 & delta[2] < 0) {
-        post.x <- e.data[1, "x"]
-        post.y <- e.data[1, "y"] - abs(h * sin(theta))
+      if (max(posts) > max(cumulative)) {
+        posts <- posts[-length(posts)]
       }
 
-      data.frame(post = posts[i], x = post.x, y = post.y,
-        angle = theta * 180L / pi, row.names = NULL)
-    })
+      bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
+                         hi = cumulative)
 
-    coords <- do.call(rbind, post.coordinates)
-    arrow.data <- edge.data[edge.select, ]
-    start <- start.node[edge.select]
+      edge.select <- vapply(posts, function(x) {
+        which(vapply(seq_len(nrow(bins)), function(i) {
+          x >= bins[i, "lo"] & x < bins[i, "hi"]
+        }, logical(1L)))
+      }, integer(1L))
 
-    invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
-      if (start[i] == 1) {
-        dataB <- data.frame(x = c(arrow.data[i, "x2"], coords[i, "x"]),
-                            y = c(arrow.data[i, "y2"], coords[i, "y"]))
-      } else if (start[i] == 2) {
-        dataB <- data.frame(x = c(arrow.data[i, "x1"], coords[i, "x"]),
-                            y = c(arrow.data[i, "y1"], coords[i, "y"]))
-      }
+      start.node <- edgeOrder(edge.data, path.edge)
 
-      zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 2) == 0
-      zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 2) == 0
+      post.coordinates <- lapply(seq_along(edge.select), function(i) {
+        sel.data <- edge.data[edge.select[i], ]
 
-      if (any(zero.length.x | zero.length.y)) {
-        text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
-          col = case.color, cex = 1.5)
-      } else {
-        arrows(dataB[1, "x"], dataB[1, "y"],
-               dataB[2, "x"], dataB[2, "y"],
-               lwd = 3, length = 0.075, col = case.color, code = 2)
-      }
-    }))
+        if (start.node[edge.select[i]] == 1) {
+          e.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
+                               y = c(sel.data$y1, sel.data$y2))
+        } else if (start.node[edge.select[i]] == 2) {
+          e.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
+                               y = c(sel.data$y2, sel.data$y1))
+        }
+
+        ols <- stats::lm(y ~ x, data = e.data)
+        edge.slope <- stats::coef(ols)[2]
+        edge.intercept <- stats::coef(ols)[1]
+        theta <- atan(edge.slope)
+
+        if (unit.posts == "distance") {
+          h <- (posts[i] - bins[edge.select[i], "lo"]) / cholera::unitMeter(1)
+        } else if (unit.posts == "time") {
+          h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * x$speed / 60^2 /
+            cholera::unitMeter(1)
+        }
+
+        delta <- e.data[2, ] - e.data[1, ]
+
+        # Quadrant I
+        if (all(delta > 0)) {
+          post.x <- e.data[1, "x"] + abs(h * cos(theta))
+          post.y <- e.data[1, "y"] + abs(h * sin(theta))
+
+        # Quadrant II
+        } else if (delta[1] < 0 & delta[2] > 0) {
+          post.x <- e.data[1, "x"] - abs(h * cos(theta))
+          post.y <- e.data[1, "y"] + abs(h * sin(theta))
+
+        # Quadrant III
+        } else if (all(delta < 0)) {
+          post.x <- e.data[1, "x"] - abs(h * cos(theta))
+          post.y <- e.data[1, "y"] - abs(h * sin(theta))
+
+        # Quadrant IV
+        } else if (delta[1] > 0 & delta[2] < 0) {
+          post.x <- e.data[1, "x"] + abs(h * cos(theta))
+          post.y <- e.data[1, "y"] - abs(h * sin(theta))
+
+        # I:IV
+        } else if (delta[1] > 0 & delta[2] == 0) {
+          post.x <- e.data[1, "x"] + abs(h * cos(theta))
+          post.y <- e.data[1, "y"]
+
+        # I:II
+        } else if (delta[1] == 0 & delta[2] > 0) {
+          post.x <- e.data[1, "x"]
+          post.y <- e.data[1, "y"] + abs(h * sin(theta))
+
+        # II:III
+        } else if (delta[1] < 0 & delta[2] == 0) {
+          post.x <- e.data[1, "x"] - abs(h * cos(theta))
+          post.y <- e.data[1, "y"]
+
+        # III:IV
+        } else if (delta[1] == 0 & delta[2] < 0) {
+          post.x <- e.data[1, "x"]
+          post.y <- e.data[1, "y"] - abs(h * sin(theta))
+        }
+
+        data.frame(post = posts[i], x = post.x, y = post.y,
+          angle = theta * 180L / pi, row.names = NULL)
+      })
+
+      coords <- do.call(rbind, post.coordinates)
+      arrow.data <- edge.data[edge.select, ]
+      start <- start.node[edge.select]
+
+      invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
+        if (start[i] == 1) {
+          dataB <- data.frame(x = c(arrow.data[i, "x2"], coords[i, "x"]),
+                              y = c(arrow.data[i, "y2"], coords[i, "y"]))
+        } else if (start[i] == 2) {
+          dataB <- data.frame(x = c(arrow.data[i, "x1"], coords[i, "x"]),
+                              y = c(arrow.data[i, "y1"], coords[i, "y"]))
+        }
+
+        zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 2) == 0
+        zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 2) == 0
+
+        if (any(zero.length.x | zero.length.y)) {
+          text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
+            col = case.color, cex = 1.5)
+        } else {
+          arrows(dataB[1, "x"], dataB[1, "y"],
+                 dataB[2, "x"], dataB[2, "y"],
+                 lwd = 3, length = 0.075, col = case.color, code = 2)
+        }
+      }))
+    }
+
+    if (unit.posts == "distance") {
+      post.info <- paste("posts @", unit.interval, "m intervals")
+    } else if (unit.posts == "time") {
+      post.info <- paste("posts @", unit.interval, "sec intervals")
+    }
+
+    title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
+      x$speed, "km/hr;", post.info))
+  } else {
+    title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
+      x$speed, "km/hr"))
   }
-
-  if (unit.posts == "distance") {
-    post.info <- paste("posts @", unit.interval, "m intervals")
-  } else if (unit.posts == "time") {
-    post.info <- paste("posts @", unit.interval, "sec intervals")
-  }
-
-  title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
-    x$speed, "km/hr;", post.info))
 }
 
 numericNodeCoordinates <- function(x) {

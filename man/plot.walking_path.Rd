@@ -12,11 +12,11 @@
 
 \item{zoom}{Logical.}
 
-\item{radius}{Numeric. Controls the degree of zoom.}
+\item{radius}{Numeric. Control the degree of zoom.}
 
-\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
+\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.}
 
-\item{unit.interval}{Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.}
+\item{unit.interval}{Numeric. Set interval between posts. When "unit.posts" is "distance", "unit.interval" automatically defaults to 50 meters. When "unit.posts" is "time", "unit.interval" automatically defaults to 60 seconds.}
 
 \item{alpha.level}{Numeric. Alpha level transparency for path: a value in [0, 1].}
 

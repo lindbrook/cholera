@@ -14,9 +14,9 @@
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
-\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
+\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.}
 
-\item{unit.interval}{Numeric. Sets interval between posts: for "distance",}
+\item{unit.interval}{Numeric. Set interval between posts. When "unit.posts" is "distance", "unit.interval" automatically defaults to 50 meters. When "unit.posts" is "time", "unit.interval" automatically defaults to 60 seconds.}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -27,5 +27,6 @@ A base R plot.
 Plot the path of the Euclidean distance between cases and/or pumps.
 }
 \examples{
-plot(euclideanPath(1))
+plot(euclideanPath(15))
+plot(euclideanPath(15), unit.posts = "time")
 }
