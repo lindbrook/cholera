@@ -593,7 +593,8 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       if (unit.posts == "distance") {
         cumulative <- cholera::unitMeter(cumsum(edge.data$d), "meter")
       } else if (unit.posts == "time") {
-        cumulative <- cholera::distanceTime(cumsum(edge.data$d), speed = x$speed)
+        cumulative <- cholera::distanceTime(cumsum(edge.data$d),
+          speed = x$speed)
       }
 
       total <- cumulative[length(cumulative)]
@@ -637,51 +638,13 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
             cholera::unitMeter(1)
         }
 
-        delta <- e.data[2, ] - e.data[1, ]
+        p.coords <- quandrantCoordinates(e.data, h, theta)
 
-        # Quadrant I
-        if (all(delta > 0)) {
-          post.x <- e.data[1, "x"] + abs(h * cos(theta))
-          post.y <- e.data[1, "y"] + abs(h * sin(theta))
-
-        # Quadrant II
-        } else if (delta[1] < 0 & delta[2] > 0) {
-          post.x <- e.data[1, "x"] - abs(h * cos(theta))
-          post.y <- e.data[1, "y"] + abs(h * sin(theta))
-
-        # Quadrant III
-        } else if (all(delta < 0)) {
-          post.x <- e.data[1, "x"] - abs(h * cos(theta))
-          post.y <- e.data[1, "y"] - abs(h * sin(theta))
-
-        # Quadrant IV
-        } else if (delta[1] > 0 & delta[2] < 0) {
-          post.x <- e.data[1, "x"] + abs(h * cos(theta))
-          post.y <- e.data[1, "y"] - abs(h * sin(theta))
-
-        # I:IV
-        } else if (delta[1] > 0 & delta[2] == 0) {
-          post.x <- e.data[1, "x"] + abs(h * cos(theta))
-          post.y <- e.data[1, "y"]
-
-        # I:II
-        } else if (delta[1] == 0 & delta[2] > 0) {
-          post.x <- e.data[1, "x"]
-          post.y <- e.data[1, "y"] + abs(h * sin(theta))
-
-        # II:III
-        } else if (delta[1] < 0 & delta[2] == 0) {
-          post.x <- e.data[1, "x"] - abs(h * cos(theta))
-          post.y <- e.data[1, "y"]
-
-        # III:IV
-        } else if (delta[1] == 0 & delta[2] < 0) {
-          post.x <- e.data[1, "x"]
-          post.y <- e.data[1, "y"] - abs(h * sin(theta))
-        }
-
-        data.frame(post = posts[i], x = post.x, y = post.y,
-          angle = theta * 180L / pi, row.names = NULL)
+        data.frame(post = posts[i],
+                   x = p.coords$x,
+                   y = p.coords$y,
+                   angle = theta * 180L / pi,
+                   row.names = NULL)
       })
 
       coords <- do.call(rbind, post.coordinates)
@@ -723,16 +686,4 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
       x$speed, "km/hr"))
   }
-}
-
-numericNodeCoordinates <- function(x) {
-  nodes <- do.call(rbind, (strsplit(x, "-")))
-  data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
-}
-
-drawPath <- function(x, case.color) {
-  dat <- numericNodeCoordinates(x)
-  n1 <- dat[1:(nrow(dat) - 1), ]
-  n2 <- dat[2:nrow(dat), ]
-  segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 3)
 }

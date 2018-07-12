@@ -243,67 +243,85 @@ postCoordinates <- function(dat, unit, interval, walking.speed,
         60^2 / cholera::unitMeter(1, "meter")
     }
 
-    delta <- edge.data[2, ] - edge.data[1, ]
-
-    # Quadrant I
-    if (all(delta > 0)) {
-      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-    # Quadrant II
-    } else if (delta[1] < 0 & delta[2] > 0) {
-      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-    # Quadrant III
-    } else if (all(delta < 0)) {
-      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-
-    # Quadrant IV
-    } else if (delta[1] > 0 & delta[2] < 0) {
-      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-
-    # I:IV
-    } else if (delta[1] > 0 & delta[2] == 0) {
-      post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-      post.y <- edge.data[1, "y"]
-
-    # I:II
-    } else if (delta[1] == 0 & delta[2] > 0) {
-      post.x <- edge.data[1, "x"]
-      post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-    # II:III
-    } else if (delta[1] < 0 & delta[2] == 0) {
-      post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-      post.y <- edge.data[1, "y"]
-
-    # III:IV
-    } else if (delta[1] == 0 & delta[2] < 0) {
-      post.x <- edge.data[1, "x"]
-      post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-    }
+    p.coords <- quandrantCoordinates(edge.data, h, theta)
 
     if (arrow.data) {
       data.frame(post = posts[i],
                  x0 = edge.data[2, "x"],
                  y0 = edge.data[2, "y"],
-                 x = post.x,
-                 y = post.y,
+                 x = p.coords$x,
+                 y = p.coords$y,
                  angle = theta * 180L / pi,
                  row.names = NULL)
     } else {
       data.frame(post = posts[i],
-                 x = post.x,
-                 y = post.y,
+                 x = p.coords$x,
+                 y = p.coords$y,
                  angle = theta * 180L / pi,
                  row.names = NULL)
     }
   })
 
   do.call(rbind, post.coordinates)
+}
+
+quandrantCoordinates <- function(dat, h, theta) {
+  delta <- dat[2, ] - dat[1, ]
+
+  # Quadrant I
+  if (all(delta > 0)) {
+    post.x <- dat[1, "x"] + abs(h * cos(theta))
+    post.y <- dat[1, "y"] + abs(h * sin(theta))
+
+  # Quadrant II
+  } else if (delta[1] < 0 & delta[2] > 0) {
+    post.x <- dat[1, "x"] - abs(h * cos(theta))
+    post.y <- dat[1, "y"] + abs(h * sin(theta))
+
+  # Quadrant III
+  } else if (all(delta < 0)) {
+    post.x <- dat[1, "x"] - abs(h * cos(theta))
+    post.y <- dat[1, "y"] - abs(h * sin(theta))
+
+  # Quadrant IV
+  } else if (delta[1] > 0 & delta[2] < 0) {
+    post.x <- dat[1, "x"] + abs(h * cos(theta))
+    post.y <- dat[1, "y"] - abs(h * sin(theta))
+
+  # I:IV
+  } else if (delta[1] > 0 & delta[2] == 0) {
+    post.x <- dat[1, "x"] + abs(h * cos(theta))
+    post.y <- dat[1, "y"]
+
+  # I:II
+  } else if (delta[1] == 0 & delta[2] > 0) {
+    post.x <- dat[1, "x"]
+    post.y <- dat[1, "y"] + abs(h * sin(theta))
+
+  # II:III
+  } else if (delta[1] < 0 & delta[2] == 0) {
+    post.x <- dat[1, "x"] - abs(h * cos(theta))
+    post.y <- dat[1, "y"]
+
+  # III:IV
+  } else if (delta[1] == 0 & delta[2] < 0) {
+    post.x <- dat[1, "x"]
+    post.y <- dat[1, "y"] - abs(h * sin(theta))
+  }
+
+  data.frame(x = post.x, y = post.y)
+}
+
+numericNodeCoordinates <- function(x) {
+  nodes <- do.call(rbind, (strsplit(x, "-")))
+  data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
+}
+
+drawPath <- function(x, case.color) {
+  dat <- numericNodeCoordinates(x)
+  n1 <- dat[1:(nrow(dat) - 1), ]
+  n2 <- dat[2:nrow(dat), ]
+  segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 3)
 }
 
 edgeOrder <- function(dat, path.edge) {

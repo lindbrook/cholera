@@ -370,7 +370,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
     ego.xy <- origin.xy
   }
 
-  dat <- rbind(ego.xy, alter.xy)
+  dat <- rbind(alter.xy, origin.xy)
 
   if (zoom) {
     x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
@@ -468,51 +468,9 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
       edge.intercept <- stats::coef(ols)[1]
       theta <- atan(edge.slope)
 
-      delta <- dat[2, ] - dat[1, ]
-
-      # Quadrant I
-      if (all(delta > 0)) {
-        post.x <- dat[1, "x"] + abs(h * cos(theta))
-        post.y <- dat[1, "y"] + abs(h * sin(theta))
-
-      # Quadrant II
-      } else if (delta[1] < 0 & delta[2] > 0) {
-        post.x <- dat[1, "x"] - abs(h * cos(theta))
-        post.y <- dat[1, "y"] + abs(h * sin(theta))
-
-      # Quadrant III
-      } else if (all(delta < 0)) {
-        post.x <- dat[1, "x"] - abs(h * cos(theta))
-        post.y <- dat[1, "y"] - abs(h * sin(theta))
-
-      # Quadrant IV
-      } else if (delta[1] > 0 & delta[2] < 0) {
-        post.x <- dat[1, "x"] + abs(h * cos(theta))
-        post.y <- dat[1, "y"] - abs(h * sin(theta))
-
-      # I:IV
-      } else if (delta[1] > 0 & delta[2] == 0) {
-        post.x <- dat[1, "x"] + abs(h * cos(theta))
-        post.y <- dat[1, "y"]
-
-      # I:II
-      } else if (delta[1] == 0 & delta[2] > 0) {
-        post.x <- dat[1, "x"]
-        post.y <- dat[1, "y"] + abs(h * sin(theta))
-
-      # II:III
-      } else if (delta[1] < 0 & delta[2] == 0) {
-        post.x <- dat[1, "x"] - abs(h * cos(theta))
-        post.y <- dat[1, "y"]
-
-      # III:IV
-      } else if (delta[1] == 0 & delta[2] < 0) {
-        post.x <- dat[1, "x"]
-        post.y <- dat[1, "y"] - abs(h * sin(theta))
-      }
-
-      post.data <- data.frame(x = c(post.x, ego.xy$x),
-                              y = c(post.y, ego.xy$y))
+      p.coords <- quandrantCoordinates(dat, h, theta)
+      post.data <- data.frame(x = c(p.coords$x, ego.xy$x),
+                              y = c(p.coords$y, ego.xy$y))
 
       a.data <- cbind(post.data[-nrow(post.data), ], post.data[-1, ])
       a.data <- stats::setNames(a.data, c("x1", "y1", "x2", "y2"))
