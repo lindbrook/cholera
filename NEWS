@@ -1,3 +1,10 @@
+cholera 0.4.9.9050
+==================
+
+- addPath() -> addWalkingPath().
+- use quandrantCoordinates().
+
+
 cholera 0.4.9.9049
 ==================
 
