@@ -19,7 +19,7 @@
 #' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
 
-addPath <- function(origin, destination = NULL, type = "case-pump",
+addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5, zoom = TRUE, radius = 0.5,
   unit.posts = "distance", unit.interval = NULL, alpha.level = 1) {
@@ -252,51 +252,13 @@ addPath <- function(origin, destination = NULL, type = "case-pump",
       h <- (posts[-1][i] - bins[edge.select[i], "lo"]) /
             cholera::unitMeter(1, "meter")
 
-      delta <- edge.data[2, ] - edge.data[1, ]
+      p.coords <- quandrantCoordinates(edge.data, h, theta)
 
-      # Quadrant I
-      if (all(delta > 0)) {
-        post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-        post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-      # Quadrant II
-      } else if (delta[1] < 0 & delta[2] > 0) {
-        post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-        post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-      # Quadrant III
-      } else if (all(delta < 0)) {
-        post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-        post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-
-      # Quadrant IV
-      } else if (delta[1] > 0 & delta[2] < 0) {
-        post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-        post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-
-      # I:IV
-      } else if (delta[1] > 0 & delta[2] == 0) {
-        post.x <- edge.data[1, "x"] + abs(h * cos(theta))
-        post.y <- edge.data[1, "y"]
-
-      # I:II
-      } else if (delta[1] == 0 & delta[2] > 0) {
-        post.x <- edge.data[1, "x"]
-        post.y <- edge.data[1, "y"] + abs(h * sin(theta))
-
-      # II:III
-      } else if (delta[1] < 0 & delta[2] == 0) {
-        post.x <- edge.data[1, "x"] - abs(h * cos(theta))
-        post.y <- edge.data[1, "y"]
-
-      # III:IV
-      } else if (delta[1] == 0 & delta[2] < 0) {
-        post.x <- edge.data[1, "x"]
-        post.y <- edge.data[1, "y"] - abs(h * sin(theta))
-      }
-
-      data.frame(post = posts[-1][i], x = post.x, y = post.y,
-        angle = theta * 180L / pi, row.names = NULL)
+      data.frame(post = posts[-1][i],
+                 x = p.coords$x,
+                 y = p.coords$y,
+                 angle = theta * 180L / pi,
+                 row.names = NULL)
     })
 
     coords <- do.call(rbind, post.coordinates)
