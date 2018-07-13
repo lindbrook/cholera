@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.4.9.9050-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.4.9.9051-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 cholera: amend, augment and aid analysis of John Snow's 1854 cholera map
 ------------------------------------------------------------------------
@@ -71,13 +71,23 @@ plot(neighborhoodWalking(case.set = "expected"))
 
 ![](man/figures/README-expected-1.png)
 
-The second and third color each neighborhood's area by using either points or polygons. The polygon implementation is shown below. It's new, still under development and will for certain configurations throw an error. For exploration, type = "road" (the default shown above) or type = "area.points" is still preferable.
+The second and third color each neighborhood's area by using either points or polygons. The polygon implementation is shown below. For exploration, the other options faster.
 
 ``` r
 plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 ```
 
 ![](man/figures/README-expected_area_polygons-1.png)
+
+The main virtue of the polygon approach is that it better lends itself to building graphs at different scales:
+
+``` r
+streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
+  add.title = FALSE, radius = 0.5)
+addNeighborhood()
+```
+
+<img src="man/figures/README-unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
 
 ### getting started
 
