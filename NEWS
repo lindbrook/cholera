@@ -1,532 +1,77 @@
-cholera 0.4.9.9050
+cholera 0.4.9.9051
 ==================
 
-- addPath() -> addWalkingPath().
-- use quandrantCoordinates().
+# Data Changes #
 
+- regular.cases and sim.ortho.proj:
+  increase number of observations from 5K to 20K.
 
-cholera 0.4.9.9049
-==================
-
-- enable no mileposts via unit.posts = NULL in plot.euclidean_path() and plot.walking_path().
-
-
-cholera 0.4.9.9048
-==================
-
- - copyedit vignettes.
- - consolidate path functions.
-
-
-cholera 0.4.9.9047
-==================
-
-- add addEuclideanPath() prototype.
-
-
-cholera 0.4.9.9046
-==================
-
-- add pump neighborhood lab notes.
-
-
-cholera 0.4.9.9045
-==================
-
-- update walking neighborhood benchmark timings.
-- add "alpha.level" to walkingPath() and addPath().
-
-
-cholera 0.4.9.9044
-==================
-
-- update CRAN comments (win-builder).
-
-
-cholera 0.4.9.9043
-==================
-
-- consolidate auditEdge().
-- add print and plot methods for neighborhoodEuclidean().
-
-
-cholera 0.4.9.9042
-==================
-
-- add "mileposts" to euclideanPath().
-
-
-cholera 0.4.9.9041
-==================
-
-- starPlot() -> neighborhoodEuclidean().
-
-
-cholera 0.4.9.9040
-==================
-
-- fix zero-length arrows for "mileposts" in addNeighborhood().
-
-
-cholera 0.4.9.9039
-==================
-
-- fix time-based "mileposts" in plot.walking_path().
-
-
-cholera 0.4.9.9038
-==================
-
-- plot.walking_path(): add "milepost" at destination.
-
-
-cholera 0.4.9.9037
-==================
-
-- set default observations to 20K in simulateFatalities().
-- re-order arguments in snowMap().
-
-
-cholera 0.4.9.9036
-==================
-
-- implement negative selection in pumpCase.voronoi().
-- add starPlot().
-- remove starGraph() beta.
-
-
-cholera 0.4.9.9035
-==================
-
-- add "euclidean.paths" (star graph) and "voronoi.cells" arguments to plot.voronoi().
-
-
-cholera 0.4.9.9034
-==================
-
-- add starGraph() beta.
-
-
-cholera 0.4.9.9033
-==================
-
-- add "unstacking.bars" lab notes.
-
-
-cholera 0.4.9.9032
-==================
-
-- copyedit vignettes.
-
-
-cholera 0.4.9.9031
-==================
-
-- copyedit function documentation.
-- copyedit vignettes.
-
-
-cholera 0.4.9.9030
-==================
-
-- fix for print.walking() w/ case.set = "expected".
-
-
-cholera 0.4.9.9029
-==================
-
-- copy vignettes to docs folder.
-
-
-cholera 0.4.9.9028
-==================
-
-- use 20K simulated observations.
-- restore all vignettes.
-
-
-cholera 0.4.9.9027
-==================
-
-- setup docs folder.
-
-
-cholera 0.4.9.9026
-==================
-
-- use 40K simulated observations.
-- remove ''"Unstacking" Bars' vignette.
-
-
-cholera 0.4.9.9025
-==================
-
-- set "meter" as default in unitMeter().
-
-
-cholera 0.4.9.9024
-==================
-
-- set expected observation count as variable in walkingDistance() and walkingPath().
-
-
-cholera 0.4.9.9023
-==================
-
-- dontrun{} walkingPath() examples (winbuilder).
-
-
-cholera 0.4.9.9022
-==================
-
-- migrate string of pearl functions to pearlString.R.
-
-
-cholera 0.4.9.9021
-==================
-
-- test 20K simulated "expected" cases.
-- copyedit function documentation.
-
-
-cholera 0.4.9.9020
-==================
-
-- copyedit function documentation.
-
-
-cholera 0.4.9.9019
-==================
-
-- copyedit function documentation.
-
-
-cholera 0.4.9.9018
-==================
-
-- consolidate postCoordinatesB() in postCoordinates().
-- deprecate milePosts().
-
-
-cholera 0.4.9.9017
-==================
-
-- add euclideanPath().
-- consolidate euclideanDistance().
-
-
-cholera 0.4.9.9016
-==================
-
-- add 'observed = FALSE' and fix 'type = "pumps"' in euclideanDistance().
-
-
-cholera 0.4.9.9015
-==================
-
-- fix zero-length arrows in plot.walking_path().
-
-
-cholera 0.4.9.9014
-==================
-
-- adjust figure size and placement in vignettes.
-- fix plot.walking_path() for type = "pumps".
-
-
-cholera 0.4.9.9013
-==================
-
-- add addPath() prototype.
-
-
-cholera 0.4.9.9012
-==================
-
-- 10K simulated observations test.
-
-
-cholera 0.4.9.9011
-==================
-
-- amend regular.cases and sim.ortho.proj data frames with 7500 cases.
-- amend walkingDistance() and walkingPath().
-- amend simulateFatalities() with orthogonal or proximate addresses.
-- amend pearlStringRadius().
-- deprecate simProj() in addNeighborhood(), embedSites(), and plot.walking().
+# Function Changes #
 
+- "alpha.level" argument to control path transparency
+    addEuclideanPath() and addWalkingPath()
 
-cholera 0.4.9.9010
-==================
-
-- set meter as default unit of distance in classifierAudit().
-
-
-cholera 0.4.9.9009
-==================
-
-- adjust zoom range in plot.walking_path().
-
-
-cholera 0.4.9.9008
-==================
-
-- fix zero-length arrows in addMilePosts().
-
-
-cholera 0.4.9.9007
-==================
-
-- update benchmark timings.
-
-
-cholera 0.4.9.9006
-==================
-
-- add addMilePosts() beta.
-
-
-cholera 0.4.9.9005
-==================
-
-- migrate to walkingAuxillaryFunctions.R.
-- consolidate withinRadius() in unstack.R.
-
-
-cholera 0.4.9.9004
-==================
-
-- test migration to walkingAuxillaryFunctions.R.
-
-
-cholera 0.4.9.9003
-==================
-
-- reverse direction of milepost arrows in plot.walking_path().
-
-
-cholera 0.4.9.9002
-==================
-
-- integrate mileposts and timeposts in plot.walking_path().
-
-
-cholera 0.4.9.9001
-==================
-
-- consolidate milePosts() and timePosts() into milePosts().
-- consolidate addMilePosts() and addTimePosts() into addMilePosts().
-
-
-cholera 0.4.9.9000
-==================
-
-- enable distance and time based mileposts in addMilePosts().
-
-
-cholera 0.4.0.9031
-==================
-
-- enable "pump.subset" in addMilePosts().
-
-
-cholera 0.4.0.9030
-==================
-
-- enable plotting in addMilePosts().
-
-
-cholera 0.4.0.9029
-==================
-
-- add new addMilePosts() prototype.
-
-
-cholera 0.4.0.9028
-==================
-
-- specify unit for streetLength().
-
-
-cholera 0.4.0.9027
-==================
-
-- fix "St James's Market" and "Market Street (II)" in road.segments.
-
-
-cholera 0.4.0.9026
-==================
-
-- move multiCore() to its own file multiCore.R.
-- edgeOrderCheck() to edgeOrder() in walkingPath().
-
-
-cholera 0.4.0.9025
-==================
-
-- incorporate mileposts and timeposts in plot.walking_path().
-
-
-cholera 0.4.0.9024
-==================
-
-- add add.mileposts argument to plot.walking_path().
-
-
-cholera 0.4.0.9023
-==================
+- distance and time based "mileposts"
+    addEuclideanPath() and addWalkingPath().
+    plot.euclidean_path() and plot.walking_path().
+    addMilePosts().
 
-- add plot and print methods to walkingPath().
-- remove plot and print methods from walkingDistance().
+- "pump.subset" and "pump.select" arguments
+    addCases(), addKernelDensity(), addMilePosts(), addNeighborhood(),
+    neighborhoodEuclidean(), neighborhoodWalking()
 
+- "walking.speed" argument added to:
+    addMilePosts(), nearestPump(),
+    addEuclideanPath(), euclideanDistance(), euclideanPath(),
+    addWalkingPath(), walkingDistance(), walkingPath()
 
-cholera 0.4.0.9022
-==================
-
-- add walkingPath() prototype.
-
-
-cholera 0.4.0.9021
-==================
-
-- add addMilePosts() and adTimePosts() prototypes.
-
-
-cholera 0.4.0.9020
-==================
-
-- add exception for pump 5 Marlborough Mews in milePosts() and timePosts().
-- set meter as default distance:
-  segmentLength(), segmentLocator(), streetLength(), streetNameLocator().
-
-
-cholera 0.4.0.9019
-==================
-
-- milePosts() and timePosts() return post labels and angles.
-
-
-cholera 0.4.0.9018
-==================
-
-- amend timePosts().
-
-
-cholera 0.4.0.9017
-==================
-
-- amend milePosts().
-
-
-cholera 0.4.0.9016
-==================
-
-- add "text.size" argument to addCases().
-
-
-cholera 0.4.0.9015
-==================
-
-- add "token" argument to addCases().
-- remove "Kernel Density" and "Time Series" vignettes.
-
-
-cholera 0.4.0.9014
-==================
-
-- add pathOrderCheck() and pathOrder().
-
-
-cholera 0.4.0.9013
-==================
-
-- add timePosts() prototype.
+- euclideanDistance() no longer S3.
+    generic S3 functionality moved to euclideanPath().
 
+- multiCore() moved to multiCore.R.
 
-cholera 0.4.0.9012
-==================
-
-- replace networkPeriphery() with milePosts() prototype.
-
-
-cholera 0.4.0.9011
-==================
-
-- set "meter" as default distance for euclideanDistance(), nearestPump() and
-  walkingDistance().
-
-- add "walking.speed" to nearestPump(), plot.euclidean_distance() and
-  plot.walking_distance().
-
-
-cholera 0.4.0.9010
-==================
-
-- add networkPeriphery() prototype.
-
-
-cholera 0.4.0.9009
-==================
-
-- consolidate neighborhoodVoronoi() and plot.voronoi().
-
-
-cholera 0.4.0.9008
-==================
-
-- consolidate walkingDistance() and pumpTokens().
+- neighborhoodVoronoi()
+    plot.voronoi() adds "euclidean.paths" argument for star graph.
 
+- neighborhoodWalking()
+    "area.polygons" related functions for plot_walking() moved to pearlString.R.
 
-cholera 0.4.0.9007
-==================
-
-- add "case.color" to addCases().
-
-
-cholera 0.4.0.9006
-==================
-
-- add "path.color" and "path.width" arguments to addNeighborhood().
-- consolidate streetNameLocator() and streetNumberLocator().
-
-
-cholera 0.4.0.9005
-==================
-
-- use directional arrow in plot.euclidean_distance().
+- simulateFatalities():
+  default is now 20K observations.
+  use proximate in addition to orthogonal distances to find "addresses".
 
+- snowMap() new arguments:
+  "add.cases", "add.pumps", "add.roads".
 
-cholera 0.4.0.9004
-==================
-
-- add distanceTime().
-
-
-cholera 0.4.0.9003
-==================
+- unitMeter() default unit of measurement is now "meter".
 
-- add separate arguments for area polygons and for paths in addNeighborhood().
-- set default to plot all pumps in addPump().
-- add "add.roads" argument to snowMap().
+- walkingAuxillaryFunctions.R:
+    location of walking related helper functions.
 
+- walkingDistance() no longer S3.
+    generic S3 functionality moved to  walkingPath().
 
-cholera 0.4.0.9002
-==================
-
-- add new addNeighborhood() prototype.
-- add "add.cases", "add.pumps" arguments to snowMap().
+# New Functions #
 
+- addCases()
+- addEuclideanPath()
+- addMilePosts()
+- addNeighborhood()
+- addWalkingPath()()
+- distanceTime()
 
-cholera 0.4.0.9001
-==================
+# New S3 Functions #
 
-- add addCases().
+- euclideanPath()
+- walkingPath()
+- neighborhoodEuclidean(): star graphs.
 
-
-cholera 0.4.0.9000
-==================
+# Vignette Changes #
 
-- fix typo in addNeighborhood() documentation.
+- Lab Notes available online and on GitHub:
+  "duplicate.missing.cases.notes"
+  "pump.neighborhoods.notes"
+  "unstacking.bars.notes"
 
 
 cholera 0.4.0
