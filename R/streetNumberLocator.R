@@ -133,24 +133,25 @@ streetNumberLocator <- function(road.number, zoom = FALSE, radius = 1,
     speed = walking.speed)
 
   if (time.unit == "hour") {
-    nominal.time <- paste(round(est.time, 1), "hr.")
+    nominal.time <- paste(round(est.time, 1), "hr")
   } else if (time.unit == "minute") {
-    nominal.time <- paste(round(est.time, 1), "mins.")
+    nominal.time <- paste(round(est.time, 1), "min")
   } else if (time.unit == "second") {
-    nominal.time <- paste(round(est.time, 1), "secs.")
+    nominal.time <- paste(round(est.time, 1), "sec")
   }
 
   if (is.null(unit)) {
    subtitle <- paste(round(street.length, 1), "units;", nominal.time)
   } else if (unit == "meter") {
-   subtitle <- paste(round(street.length, 1), "meters;", nominal.time)
+   subtitle <- paste(round(street.length, 1), "m;", nominal.time)
   } else if (unit == "yard") {
-   subtitle <- paste(round(street.length, 1), "yards;", nominal.time)
+   subtitle <- paste(round(street.length, 1), "yd;", nominal.time)
   }
 
   if (add.title) {
     st.name <- unique(cholera::roads[cholera::roads$street == road.number,
       "name"])
-    title(main = paste0(st.name, ": 'Street' # ", road.number), sub = subtitle)
+    title(main = paste0(st.name, ": 'Street' # ", road.number),
+          sub = paste(subtitle, "@", walking.speed, "km/hr"))
   }
 }
