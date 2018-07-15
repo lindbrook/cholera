@@ -2,23 +2,24 @@
 % Please edit documentation in R/pumpCase.R
 \name{pumpCase}
 \alias{pumpCase}
-\title{Numeric case IDs by pump neighborhood.}
+\title{Extract numeric case IDs by pump neighborhood.}
 \usage{
 pumpCase(obj)
 }
 \arguments{
-\item{obj}{An object created by neighborhoodVoronoi() or neighborhoodWalking().}
+\item{obj}{An object created by neighborhoodEuclidean(), neighborhoodVoronoi() or neighborhoodWalking().}
 }
 \value{
 An R list of numeric ID of cases by pump neighborhoods.
 }
 \description{
-Numeric case IDs by pump neighborhood.
+Extract numeric case IDs by pump neighborhood.
 }
 \examples{
+# pumpCase(neighborhoodEuclidean())
 # pumpCase(neighborhoodVoronoi())
 # pumpCase(neighborhoodWalking())
 }
 \seealso{
-\code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodWalking}},
+\code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodEuclidean}},
 }

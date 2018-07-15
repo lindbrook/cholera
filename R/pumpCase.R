@@ -1,16 +1,30 @@
-#'  Numeric case IDs by pump neighborhood.
+#'  Extract numeric case IDs by pump neighborhood.
 #'
-#' @param obj An object created by neighborhoodVoronoi() or neighborhoodWalking().
-#' @seealso \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodWalking}},
+#' @param obj An object created by neighborhoodEuclidean(), neighborhoodVoronoi() or neighborhoodWalking().
+#' @seealso \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodEuclidean}},
 #' @return An R list of numeric ID of cases by pump neighborhoods.
 #' @export
 #' @examples
+#' # pumpCase(neighborhoodEuclidean())
 #' # pumpCase(neighborhoodVoronoi())
 #' # pumpCase(neighborhoodWalking())
 
 pumpCase <- function(obj) UseMethod("pumpCase", obj)
 
 pumpCase.default <- function(obj) NULL
+
+#' @export
+pumpCase.euclidean <- function(obj) {
+  if (class(obj) != "euclidean") {
+    stop('Input object\'s class needs to be "euclidean".')
+  }
+
+  out <- lapply(sort(unique(obj$nearest.pump)), function(p) {
+    obj$anchors[obj$nearest.pump == p]
+  })
+
+  stats::setNames(out, paste0("p", sort(unique(obj$nearest.pump))))
+}
 
 #' @export
 pumpCase.voronoi <- function(obj) {
