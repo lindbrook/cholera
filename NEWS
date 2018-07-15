@@ -1,4 +1,4 @@
-cholera 0.4.9.9052
+cholera 0.5.0
 ==================
 
 # Data Changes #
@@ -64,7 +64,7 @@ cholera 0.4.9.9052
 
 - euclideanPath()
 - walkingPath()
-- neighborhoodEuclidean(): star graphs.
+- neighborhoodEuclidean().
 
 # Vignette Changes #
 
