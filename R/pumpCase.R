@@ -19,11 +19,12 @@ pumpCase.euclidean <- function(obj) {
     stop('Input object\'s class needs to be "euclidean".')
   }
 
-  out <- lapply(sort(unique(obj$nearest.pump)), function(p) {
+  pumps <- sort(unique(obj$nearest.pump))
+  out <- lapply(pumps, function(p) {
     obj$anchors[obj$nearest.pump == p]
   })
 
-  stats::setNames(out, paste0("p", sort(unique(obj$nearest.pump))))
+  stats::setNames(out, paste0("p", pumps))
 }
 
 #' @export
