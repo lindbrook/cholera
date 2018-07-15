@@ -1,10 +1,10 @@
 #' Add observed cases by walking neighborhood.
 #'
-#' Add cases, as "address" or "fatalties" as points or IDs, to a plot.
+#' Add cases, as "address" or "fatalities" as points or IDs, to a plot.
 #' @param pump.subset Numeric. Vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. NULL selects all pumps.
 #' @param type Character. Type of case: "address" (base of stack) or "fatalities" (entire stack).
-#' @param token Character. Typoe of token to plot: "point" or "id".
+#' @param token Character. Type of token to plot: "point" or "id".
 #' @param text.size Numeric. Size of case ID text.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.

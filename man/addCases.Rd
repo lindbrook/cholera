@@ -15,7 +15,7 @@ addCases(pump.subset = NULL, pump.select = NULL, type = "address",
 
 \item{type}{Character. Type of case: "address" (base of stack) or "fatalities" (entire stack).}
 
-\item{token}{Character. Typoe of token to plot: "point" or "id".}
+\item{token}{Character. Type of token to plot: "point" or "id".}
 
 \item{text.size}{Numeric. Size of case ID text.}
 
@@ -30,7 +30,7 @@ addCases(pump.subset = NULL, pump.select = NULL, type = "address",
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Add cases, as "address" or "fatalties" as points or IDs, to a plot.
+Add cases, as "address" or "fatalities" as points or IDs, to a plot.
 }
 \examples{
 \dontrun{

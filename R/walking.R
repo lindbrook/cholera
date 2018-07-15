@@ -340,7 +340,7 @@ expectedCount <- function(x) {
 #' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when case.set = "expected".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
-#' @note When plotting area graphs with simulated data (i.e., case.set = "exected"), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
+#' @note When plotting area graphs with simulated data (i.e., case.set = "expected"), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
 #' @export
 #' @examples
 #' # plot(neighborhoodWalking())
