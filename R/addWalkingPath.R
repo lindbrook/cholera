@@ -188,8 +188,10 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
     d.unit <- "yd;"
   }
 
+  # mileposts #
+
   if (unit.posts %in% c("distance", "time") == FALSE) {
-    stop('"unit.posts" must be "distance" or "time".')
+    stop('If specified, "unit.posts" must be "distance" or "time".')
   } else {
     if (is.null(unit.interval)) {
       if (unit.posts == "distance")  {
@@ -213,7 +215,8 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
     if (unit.posts == "distance") {
       cumulative <- cholera::unitMeter(cumsum(edge.data$d), "meter")
     } else if (unit.posts == "time") {
-      cumulative <- cholera::distanceTime(cumsum(edge.data$d), speed = x$speed)
+      cumulative <- cholera::distanceTime(cumsum(edge.data$d),
+        speed = x$speed)
     }
 
     total <- cumulative[length(cumulative)]
@@ -226,7 +229,7 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
     bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
                        hi = cumulative)
 
-    edge.select <- vapply(posts[-1], function(x) {
+    edge.select <- vapply(posts, function(x) {
       which(vapply(seq_len(nrow(bins)), function(i) {
         x >= bins[i, "lo"] & x < bins[i, "hi"]
       }, logical(1L)))
@@ -238,23 +241,28 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
       sel.data <- edge.data[edge.select[i], ]
 
       if (start.node[edge.select[i]] == 1) {
-        edge.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
-                                y = c(sel.data$y1, sel.data$y2))
+        e.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
+                             y = c(sel.data$y1, sel.data$y2))
       } else if (start.node[edge.select[i]] == 2) {
-        edge.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
-                                y = c(sel.data$y2, sel.data$y1))
+        e.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
+                             y = c(sel.data$y2, sel.data$y1))
       }
 
-      ols <- stats::lm(y ~ x, data = edge.data)
+      ols <- stats::lm(y ~ x, data = e.data)
       edge.slope <- stats::coef(ols)[2]
       edge.intercept <- stats::coef(ols)[1]
       theta <- atan(edge.slope)
-      h <- (posts[-1][i] - bins[edge.select[i], "lo"]) /
-            cholera::unitMeter(1, "meter")
 
-      p.coords <- quandrantCoordinates(edge.data, h, theta)
+      if (unit.posts == "distance") {
+        h <- (posts[i] - bins[edge.select[i], "lo"]) / cholera::unitMeter(1)
+      } else if (unit.posts == "time") {
+        h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * x$speed / 60^2 /
+          cholera::unitMeter(1)
+      }
 
-      data.frame(post = posts[-1][i],
+      p.coords <- quandrantCoordinates(e.data, h, theta)
+
+      data.frame(post = posts[i],
                  x = p.coords$x,
                  y = p.coords$y,
                  angle = theta * 180L / pi,
@@ -267,16 +275,22 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
 
     invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
       if (start[i] == 1) {
-        arrows(arrow.data[i, "x2"],
-               arrow.data[i, "y2"],
-               coords[i, "x"],
-               coords[i, "y"],
-               lwd = 3, length = 0.075, col = case.color, code = 2)
+        dataB <- data.frame(x = c(arrow.data[i, "x2"], coords[i, "x"]),
+                            y = c(arrow.data[i, "y2"], coords[i, "y"]))
       } else if (start[i] == 2) {
-        arrows(arrow.data[i, "x1"],
-               arrow.data[i, "y1"],
-               coords[i, "x"],
-               coords[i, "y"],
+        dataB <- data.frame(x = c(arrow.data[i, "x1"], coords[i, "x"]),
+                            y = c(arrow.data[i, "y1"], coords[i, "y"]))
+      }
+
+      zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 2) == 0
+      zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 2) == 0
+
+      if (any(zero.length.x | zero.length.y)) {
+        text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
+          col = case.color, cex = 1.5)
+      } else {
+        arrows(dataB[1, "x"], dataB[1, "y"],
+               dataB[2, "x"], dataB[2, "y"],
                lwd = 3, length = 0.075, col = case.color, code = 2)
       }
     }))
