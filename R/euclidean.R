@@ -9,9 +9,11 @@
 #' @return A base R graph.
 #' @export
 #' @examples
+#' \dontrun{
 #' neighborhoodEuclidean()
 #' neighborhoodEuclidean(-6)
 #' neighborhoodEuclidean(pump.select = 6:7)
+#' }
 
 neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, case.set = "observed", multi.core = FALSE) {

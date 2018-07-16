@@ -11,14 +11,14 @@ R 3.5.1 (2018-07-02), x86_64-apple-darwin15.6.0 (64-bit):
 * 0 errors | 0 warnings | 0 notes
 
 
-R-devel: R Under development (2018-07-12 r74955): x86_64-w64-mingw32 (64-bit)
+R-devel: R Under development (2018-07-15 r74966): x86_64-w64-mingw32 (64-bit)
 
-* 0 errors | 0 warnings | 0 note
+* 0 errors | 0 warnings | 0 notes
 
 
 R-release: R 3.5.1 (2018-07-02): x86_64-w64-mingw32 (64-bit)
 
-* 0 errors | 0 warnings | 0 note
+* 0 errors | 0 warnings | 0 notes
 
 
 ### Reverse dependencies
