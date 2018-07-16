@@ -64,7 +64,7 @@ cholera 0.5.0
 
 - euclideanPath()
 - walkingPath()
-- neighborhoodEuclidean().
+- neighborhoodEuclidean()
 
 # Vignette Changes #
 
