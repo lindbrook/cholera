@@ -1,3 +1,9 @@
+cholera 0.5.0.9000
+==================
+
+- isFALSE() -> == FALSE for backward compatibility.
+
+
 cholera 0.5.0
 ==================
 

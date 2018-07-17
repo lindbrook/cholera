@@ -32,7 +32,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
     stop('"type" must be "case-pump", "cases" or "pumps".')
   }
 
-  if (isFALSE(alpha.level > 0 | alpha.level <= 1)) {
+  if ((alpha.level > 0 & alpha.level <= 1) == FALSE) {
     stop('"alpha.level" must be > 0 and <= 1')
   }
 

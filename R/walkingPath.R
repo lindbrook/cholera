@@ -410,7 +410,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     stop(paste(txt1, txt2))
   }
 
-  if (isFALSE(alpha.level > 0 | alpha.level <= 1)) {
+  if ((alpha.level > 0 & alpha.level <= 1) == FALSE) {
     stop('"alpha.level" must be > 0 and <= 1')
   }
 
