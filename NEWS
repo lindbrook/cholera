@@ -1,4 +1,4 @@
-cholera 0.5.0.9000
+cholera 0.5.1
 ==================
 
 - isFALSE() -> == FALSE for backward compatibility & bug fix.
