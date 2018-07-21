@@ -1,7 +1,14 @@
-cholera 0.5.1
+cholera 0.5.0.9001
 ==================
 
-- isFALSE() -> == FALSE for backward compatibility & bug fix.
+- remove hard coding in neighborhoodWalking() and plot.walking()
+
+
+cholera 0.5.0.9000
+==================
+
+- isFALSE() -> == FALSE for backward compatibility & bug fix:
+  addEuclideanPath(), addWalkingPath() and walkingPath().
 
 
 cholera 0.5.0

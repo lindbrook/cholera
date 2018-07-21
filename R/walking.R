@@ -34,12 +34,15 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
       }
     }
     if (vestry) {
-      if (any(abs(pump.select) %in% 1:14 == FALSE)) {
-        stop('With "vestry = TRUE", 1 >= |"pump.select"| <= 14')
+      if (any(abs(pump.select) %in% seq_len(nrow(cholera::pumps.vestry)) ==
+        FALSE)) {
+        stop(paste('With "vestry = TRUE", 1 >= |"pump.select"| <=',
+          nrow(cholera::pumps.vestry)))
       }
     } else {
-      if (any(abs(pump.select) %in% 1:13 == FALSE)) {
-        stop('With "vestry = FALSE", 1 >= |"pump.select"| <= 13')
+      if (any(abs(pump.select) %in% seq_len(nrow(cholera::pumps)) == FALSE)) {
+        stop(paste('With "vestry = FALSE", 1 >= |"pump.select"| <=',
+          nrow(cholera::pumps)))
       }
     }
   }
@@ -250,7 +253,11 @@ expectedCount <- function(x) {
 
   ## ------------ Data Assembly ------------ ##
 
-  if (x$vestry) pumpID <- 1:14 else pumpID <- 1:13
+  if (x$vestry) {
+    pumpID <- seq_len(nrow(cholera::pumps.vestry))
+  } else {
+    pumpID <- seq_len(nrow(cholera::pumps))
+  }
 
   wholes <- lapply(pumpID, function(nm) {
     c(obs.whole[[paste(nm)]],
@@ -513,7 +520,11 @@ plot.walking <- function(x, type = "road", ...) {
 
     ## ------------ Data Assembly ------------ ##
 
-    if (x$vestry) pumpID <- 1:14 else pumpID <- 1:13
+    if (x$vestry) {
+      pumpID <- seq_len(nrow(cholera::pumps.vestry))
+    } else {
+      pumpID <- seq_len(nrow(cholera::pumps))
+    }
 
     wholes <- lapply(pumpID, function(nm) {
       c(obs.whole[[paste(nm)]],
