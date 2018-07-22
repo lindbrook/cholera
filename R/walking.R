@@ -30,20 +30,20 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
       if (pump.select == 2) {
         msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
         msg2 <- " It's an isolate, unreachable for observed fatalities."
-        stop(paste(msg1, msg2))
+        stop(msg1, msg2)
       }
     }
+
     if (vestry) {
-      if (any(abs(pump.select) %in% seq_len(nrow(cholera::pumps.vestry)) ==
-        FALSE)) {
-        stop(paste('With "vestry = TRUE", 1 >= |"pump.select"| <=',
-          nrow(cholera::pumps.vestry)))
-      }
+      p.count <- nrow(cholera::pumps.vestry)
     } else {
-      if (any(abs(pump.select) %in% seq_len(nrow(cholera::pumps)) == FALSE)) {
-        stop(paste('With "vestry = FALSE", 1 >= |"pump.select"| <=',
-          nrow(cholera::pumps)))
-      }
+      p.count <- nrow(cholera::pumps)
+    }
+
+    p.ID <- seq_len(p.count)
+
+    if (any(abs(pump.select) %in% p.ID == FALSE)) {
+      stop('With "vestry = ', vestry, '", 1 >= |"pump.select"| <= ', p.count)
     }
   }
 

@@ -29,35 +29,12 @@
 #' neighborhoodVoronoi(pump.select = -6)
 #' neighborhoodVoronoi(pump.select = -6, polygon.vertices = TRUE)
 #'
-#' # coordinates for vertices also available in returned object.
+#' # coordinates for vertices also available in the returned object.
 #' dat <- neighborhoodVoronoi(pump.select = -6)
 #' dat$coordinates
 
 neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   statistic = NULL, polygon.vertices = FALSE) {
-
-  if (is.null(pump.select) == FALSE) {
-    msg1 <- 'If specified,'
-    msg2 <- '"pump.select" must include at least 2 different pumps.'
-    msg <- paste(msg1, msg2)
-
-    if (vestry) {
-      if (length(unique((1:14)[pump.select])) < 2) {
-        stop(msg)
-      }
-      if (any(abs(pump.select) %in% 1:14 == FALSE)) {
-        stop('With "vestry = TRUE", 1 >= |"pump.select"| <= 14')
-      }
-
-    } else {
-      if (length(unique((1:13)[pump.select])) < 2) {
-        stop(msg)
-      }
-      if (any(abs(pump.select) %in% 1:13 == FALSE)) {
-        stop('With "vestry = FALSE", 1 >= |"pump.select"| <= 13')
-      }
-    }
-  }
 
   if (vestry) {
     pump.data <- cholera::pumps.vestry
@@ -65,10 +42,22 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
     pump.data <- cholera::pumps
   }
 
+  if (is.null(pump.select) == FALSE) {
+    p.count <- nrow(pump.data)
+    p.ID <- seq_len(p.count)
+
+    if (any(abs(pump.select) %in% p.ID == FALSE)) {
+      stop('With "vestry = ', vestry, '", 1 >= |"pump.select"| <= ', p.count)
+    }
+
+    msg1 <- 'If specified,'
+    msg2 <- '"pump.select" must include at least 2 different pumps.'
+    if (length(unique(p.ID[pump.select])) < 2) stop(msg1, msg2)
+  }
+
   if (is.null(statistic) == FALSE) {
     if (all(statistic %in% c("address", "fatality")) == FALSE) {
-      msg <- 'If specified, "statistic" must either be "address" or "fatality".'
-      stop(msg)
+      stop('If specified, "statistic" must either be "address" or "fatality".')
     }
   }
 

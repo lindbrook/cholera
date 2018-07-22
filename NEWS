@@ -1,7 +1,7 @@
 cholera 0.5.0.9001
 ==================
 
-- remove hard coding in neighborhoodWalking() and plot.walking()
+- remove hard coding for pumps.
 
 
 cholera 0.5.0.9000
