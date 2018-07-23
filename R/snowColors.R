@@ -11,11 +11,11 @@ snowColors <- function(vestry = FALSE) {
   if (vestry) {
     out <- c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2],
       colors.dark[5:8], "red", colors.pair[1], "darkorange")
-    names(out) <- paste0("p", 1:14)
+    names(out) <- paste0("p", seq_len(nrow(cholera::pumps.vestry)))
   } else {
     out <- c("dodgerblue", "gray", colors.dark[1:4], colors.pair[2],
       colors.dark[5:8], "red", colors.pair[1])
-    names(out) <- paste0("p", 1:13)
+    names(out) <- paste0("p", seq_len(nrow(cholera::pumps)))
   }
   out
 }

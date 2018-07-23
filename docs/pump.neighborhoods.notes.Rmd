@@ -126,15 +126,19 @@ if (length(unobs.split.segments) > 0) {
 
 ## ------------ Data Assembly ------------ ##
 
-if (x$vestry) pumpID <- 1:14 else pumpID <- 1:13
+if (x$vestry) {
+  p.ID <- seq_len(nrow(cholera::pumps.vestry))
+} else {
+  p.ID <- seq_len(nrow(cholera::pumps))
+}
 
-wholes <- lapply(pumpID, function(nm) {
+wholes <- lapply(p.ID, function(nm) {
   c(obs.whole[[paste(nm)]],
     unobs.whole[[paste(nm)]],
     obs.partial.whole[[paste(nm)]])
 })
 
-names(wholes) <- pumpID
+names(wholes) <- p.ID
 
 # split segments #
 split.test1 <- length(obs.partial.segments)
