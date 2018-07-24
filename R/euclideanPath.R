@@ -466,7 +466,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
       ols <- stats::lm(y ~ x, data = dat)
       edge.slope <- stats::coef(ols)[2]
       edge.intercept <- stats::coef(ols)[1]
-      theta <- atan(edge.slope)
+      theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
 
       p.coords <- quandrantCoordinates(dat, h, theta)
       post.data <- data.frame(x = c(p.coords$x, ego.xy$x),
