@@ -1,3 +1,10 @@
+cholera 0.5.0.9002
+==================
+
+- add drawPath2() for euclideanPath().
+- fix for vertical euclideanPath.
+
+
 cholera 0.5.0.9001
 ==================
 
