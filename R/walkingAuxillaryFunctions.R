@@ -324,6 +324,12 @@ drawPath <- function(x, case.color) {
   segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 3)
 }
 
+drawPath2 <- function(x, case.color) {
+  n1 <- x[1:(nrow(x) - 1), ]
+  n2 <- x[2:nrow(x), ]
+  segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 3)
+}
+
 edgeOrder <- function(dat, path.edge) {
   vapply(seq_len(nrow(dat)), function(i) {
     test1 <- dat[i, "node1"] == path.edge[i, "node1"] &
