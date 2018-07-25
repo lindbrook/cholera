@@ -37,8 +37,10 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
     pump.id <- pump.data$id
     snow.colors <- cholera::snowColors(vestry = TRUE)
   } else {
+    if (is.numeric(pump.select) == FALSE) stop('"pump.select" must be numeric.')
     if (any(abs(pump.select) %in% p.ID) == FALSE) {
-      stop('With "vestry = ', vestry, '", 1 >= |"pump.select"| <= ', p.count)
+      stop('With "vestry = ', vestry, '", 1 >= |"pump.select"| <= ', p.count,
+        ".")
     }
 
     if (all(pump.select > 0)) {
@@ -49,7 +51,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
       pump.id <- pump.data$id[sel]
       snow.colors <- cholera::snowColors(vestry = TRUE)[sel]
     } else {
-      stop('Use all positive or all negative "pump.select"')
+      stop('Use all positive or all negative "pump.select"!')
     }
   }
 
@@ -82,7 +84,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
       nearest.pump.subset <- nearest.pump[unlist(nearest.pump) %in%
         abs(pump.subset) ==- FALSE]
     } else {
-      stop('Use all positive or all negative "pump.subset"!')
+      stop('Use all positive or all negative numbers for "pump.subset"!')
     }
 
     out <- list(pump.data = pump.data,

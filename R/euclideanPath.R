@@ -200,14 +200,15 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
 
   } else if (type == "pumps") {
     if (origin %in% p.ID == FALSE) {
-      stop('With "vestry = ', vestry, '", 1 >= |"origin"| <= ', p.count)
+      stop('With "vestry = ', vestry, '", 1 >= |"origin"| <= ', p.count, ".")
     }
 
     ego <- p.data[p.data$id == origin, ]
 
     if (!is.null(destination)) {
        if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With "vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count)
+        stop('With "vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count,
+             ".")
       } else {
         if (all(destination > 0)) {
           alters <- p.data[destination, ]
