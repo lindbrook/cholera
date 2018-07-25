@@ -7,7 +7,7 @@
 addEuclideanPath(origin, destination = NULL, type = "case-pump",
   observed = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
   walking.speed = 5, unit.posts = "distance", unit.interval = NULL,
-  alpha.level = 1)
+  alpha.level = 1, add.title = FALSE)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
@@ -31,6 +31,8 @@ addEuclideanPath(origin, destination = NULL, type = "case-pump",
 \item{unit.interval}{Numeric. Sets interval between posts: for "distance",}
 
 \item{alpha.level}{Numeric. Alpha level transparency for path: a value in [0, 1].}
+
+\item{add.title}{Logical. Add title.}
 }
 \value{
 An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.

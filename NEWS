@@ -2,7 +2,8 @@ cholera 0.5.0.9002
 ==================
 
 - add drawPath2() for euclideanPath().
-- fix for vertical euclideanPath.
+- fix for vertical Euclidean paths.
+- remove hard coding for pumps in Euclidean path/neighborhood functions.
 
 
 cholera 0.5.0.9001

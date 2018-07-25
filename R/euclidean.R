@@ -30,18 +30,15 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
     pump.data <- cholera::pumps
   }
 
+  p.count <- nrow(pump.data)
+  p.ID <- seq_len(p.count)
+
   if (is.null(pump.select)) {
     pump.id <- pump.data$id
     snow.colors <- cholera::snowColors(vestry = TRUE)
   } else {
-    if (vestry) {
-      if (any(abs(pump.select) %in% 1:14) == FALSE) {
-        stop('With "vestry = TRUE", 1 >= |"pump.select"| <= 14')
-      }
-    } else {
-      if (any(abs(pump.select) %in% 1:13 == FALSE)) {
-        stop('With "vestry = FALSE", 1 >= |"pump.select"| <= 13')
-      }
+    if (any(abs(pump.select) %in% p.ID) == FALSE) {
+      stop('With "vestry = ', vestry, '", 1 >= |"pump.select"| <= ', p.count)
     }
 
     if (all(pump.select > 0)) {

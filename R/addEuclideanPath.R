@@ -11,6 +11,7 @@
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts.
 #' @param unit.interval Numeric. Sets interval between posts: for "distance",
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
+#' @param add.title Logical. Add title.
 #' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime().
 #' @return An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
 #' @export
@@ -18,7 +19,7 @@
 addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
   observed = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
   walking.speed = 5, unit.posts = "distance", unit.interval = NULL,
-  alpha.level = 1) {
+  alpha.level = 1, add.title = FALSE) {
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
     stop('"unit" must be "meter", "yard" or "native".')
@@ -36,46 +37,42 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
     stop('"alpha.level" must be > 0 and <= 1')
   }
 
-  n.sim.obs <- nrow(cholera::regular.cases)
+  obs.ct <- nrow(cholera::fatalities)
+  exp.ct <- nrow(cholera::regular.cases)
+
+  if (observed) ct <- obs.ct else ct <- exp.ct
+
+  if (vestry) {
+    p.data <- cholera::pumps.vestry
+  } else {
+    p.data <- cholera::pumps
+  }
+
+  p.count <- nrow(p.data)
+  p.ID <- seq_len(p.count)
 
   if (type == "case-pump") {
-    if (observed) {
-      if (origin %in% 1:578 == FALSE) {
-        txt1 <- 'With type = "case-pump" and "observed" = TRUE,'
-        txt2 <- '"origin" must be between 1 and 578.'
-        stop(paste(txt1, txt2))
-      }
-    } else {
-      if (origin %in% 1:n.sim.obs == FALSE) {
-        txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
-        txt2 <- '"origin" must be between 1 and'
-        stop(paste(txt1, txt2, n.sim.obs, "."))
-      }
+    if (origin %in% seq_len(ct) == FALSE) {
+      txt1 <- 'With type = "case-pump" and "observed" = '
+      txt2 <- '"origin" must be between 1 and '
+      stop(txt1, observed, ", ", txt2, ct, ".")
     }
 
-    if (!is.null(destination)) {
-      if (vestry) {
-        if (any(abs(destination) %in% 1:14 == FALSE)) {
-          txt1 <- 'With type = "case-pump" and "vestry = TRUE",'
-          txt2 <- '1 >= |destination| <= 14.'
-          stop(paste(txt1, txt2))
-        } else {
-          alters <- cholera::pumps.vestry[destination, ]
-        }
-      } else {
-        if (any(abs(destination) %in% 1:13 == FALSE)) {
-          txt1 <- 'With type = "case-pump" and "vestry = FALSE",'
-          txt2 <- '1 >= |destination| <= 13.'
-          stop(paste(txt1, txt2))
-        } else {
-          alters <- cholera::pumps[destination, ]
-        }
-      }
-    } else {
+    if (is.null(destination)) {
       if (vestry) {
         alters <- cholera::pumps.vestry
       } else {
         alters <- cholera::pumps
+      }
+    } else {
+      if (any(abs(destination) %in% p.ID == FALSE)) {
+        stop('With "vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count)
+      } else {
+        if (vestry) {
+          alters <- cholera::pumps.vestry[destination, ]
+        } else {
+          alters <- cholera::pumps[destination, ]
+        }
       }
     }
 
@@ -102,18 +99,11 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
                       stringsAsFactors = FALSE)
 
   } else if (type == "cases") {
-    if (observed) {
-      if (any(abs(c(origin, destination)) %in% 1:578 == FALSE)) {
-        txt1 <- 'With type = "cases", the absolute value of both "origin"'
-        txt2 <- 'and "destination" must be between 1 and 578.'
-        stop(paste(txt1, txt2))
-      }
-    } else {
-      if (any(abs(c(origin, destination)) %in% 1:n.sim.obs == FALSE)) {
-        txt1 <- 'With type = "cases", the absolute value of both "origin"'
-        txt2 <- 'and "destination" must be between 1 and'
-        stop(paste(txt1, txt2, n.sim.obs, "."))
-      }
+    if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
+      txt1 <- 'With type = "cases" and "observed" = '
+      txt2 <- ', the absolute value of "origin" and "destination" must be '
+      txt3 <- 'between 1 and '
+      stop(txt1, observed, txt2, txt3, ct, ".")
     }
 
     if (observed) {
@@ -159,73 +149,68 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
                         distance = 0,
                         stringsAsFactors = FALSE)
     } else {
-      alters <- cholera::fatalities[cholera::fatalities$case %in% alters.id, ]
-      alters <- alters[alters$case != ego.id, ]
+      vars <- c("x", "y")
 
-      d <- vapply(alters$case, function(i) {
-        dat <- rbind(ego[, c("x", "y")], alters[alters$case == i, c("x", "y")])
-        c(stats::dist(dat))
-      }, numeric(1L))
+      if (observed) {
+        alters <- cholera::fatalities[cholera::fatalities$case %in% alters.id, ]
+        alters <- alters[alters$case != ego.id, ]
+        d <- vapply(alters$case, function(i) {
+          dat <- rbind(ego[, vars], alters[alters$case == i, vars])
+          c(stats::dist(dat))
+        }, numeric(1L))
+      } else {
+        alters <- cholera::regular.cases[alters.id[alters.id != ego.id], ]
+        d <- vapply(seq_len(nrow(alters)), function(i) {
+          dat <- rbind(ego[, vars], alters[i, vars])
+          c(stats::dist(dat))
+        }, numeric(1L))
+      }
 
       sel <- which.min(d)
 
-      if (is.null(destination) | all(destination < 0)) {
+      if (observed) {
         out <- data.frame(caseA = origin,
-                          caseB = alters$case[sel],
+                          caseB = NA,
                           anchorA = ego$case,
                           anchorB = alters$case[sel],
-                          distance = d[which.min(d)],
+                          distance = d[sel],
                           stringsAsFactors = FALSE)
-      } else if (all(destination > 0)) {
-        if (length(destination) == 1) {
-          out <- data.frame(caseA = origin,
-                            caseB = destination,
-                            anchorA = ego$case,
-                            anchorB = alters$case[sel],
-                            distance = d[which.min(d)],
-                            stringsAsFactors = FALSE)
-        } else if (length(destination) > 1) {
-          out <- data.frame(caseA = origin,
-                            caseB = destination[sel],
-                            anchorA = ego$case,
-                            anchorB = alters$case[sel],
-                            distance = d[which.min(d)],
-                            stringsAsFactors = FALSE)
+
+        if (is.null(destination) | all(destination < 0)) {
+          out$caseB <- alters$case[sel]
+        } else if (all(destination > 0)) {
+          out$caseB <- destination[sel]
         }
+      } else {
+        out <- data.frame(caseA = origin,
+                          caseB = destination[sel],
+                          anchorA = origin,
+                          anchorB = destination[sel],
+                          distance = d[sel],
+                          stringsAsFactors = FALSE)
       }
     }
 
   } else if (type == "pumps") {
+    if (origin %in% p.ID == FALSE) {
+      stop('With "vestry = ', vestry, '", 1 >= |"origin"| <= ', p.count)
+    }
+
+    ego <- p.data[p.data$id == origin, ]
+
     if (!is.null(destination)) {
-      if (vestry) {
-        if (any(abs(c(origin, destination)) %in% 1:14 == FALSE)) {
-          txt1 <- 'With type = "pumps" and "vestry = TRUE",'
-          txt2 <- 'origin and destination must be 1 >= |x| <= 14.'
-          stop(paste(txt1, txt2))
-        } else {
-          ego <- cholera::pumps.vestry[cholera::pumps.vestry$id == origin, ]
-          alters <- cholera::pumps.vestry[destination, ]
-          alters <- alters[alters$id != origin, ]
-        }
+       if (any(abs(destination) %in% p.ID == FALSE)) {
+        stop('With "vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count)
       } else {
-        if (any(abs(c(origin, destination)) %in% 1:13 == FALSE)) {
-          txt1 <- 'With type = "pumps" and "vestry = FALSE",'
-          txt2 <- 'origin and destination must be 1 >= |x| <= 13.'
-          stop(paste(txt1, txt2))
-        } else {
-          ego <- cholera::pumps[cholera::pumps$id == origin, ]
-          alters  <- cholera::pumps[destination, ]
-          alters <- alters[alters$id != origin, ]
+        if (all(destination > 0)) {
+          alters <- p.data[destination, ]
+        } else if (all(destination < 0)) {
+          alters <- p.data[p.data$id %in% abs(destination) == FALSE, ]
         }
+        alters <- alters[alters$id != origin, ]
       }
     } else {
-      if (vestry) {
-        ego <- cholera::pumps.vestry[cholera::pumps.vestry$id == origin, ]
-        alters <- cholera::pumps.vestry[cholera::pumps.vestry$id != origin, ]
-      } else {
-        ego <- cholera::pumps[cholera::pumps$id == origin, ]
-        alters <- cholera::pumps[cholera::pumps$id != origin, ]
-      }
+      alters <- p.data[p.data$id != origin, ]
     }
 
     d <- vapply(alters$id, function(i) {
@@ -238,7 +223,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
                       pumpB = alters$id[sel],
                       pump.nameA = ego$street,
                       pump.nameB = alters$street[sel],
-                      distance = d[which.min(d)],
+                      distance = d[sel],
                       stringsAsFactors = FALSE)
   }
 
@@ -283,13 +268,13 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
     end.pump <- x$alters$id[end.sel]
     alter.xy <- pmp[pmp$id == end.pump, c("x", "y")]
   } else if (x$type == "cases") {
-    end.case <- x$alters$case[end.sel]
-
     if (x$observed) {
+      end.case <- x$alters$case[end.sel]
       alter.xy <- cholera::fatalities[cholera::fatalities$case == end.case,
         c("x", "y")]
     } else {
-      alter.xy <- cholera::regular.cases[end.case, c("x", "y")]
+      end.case <- as.numeric(row.names(x$alters[end.sel, ]))
+      alter.xy <- x$alters[end.sel, ]
     }
   }
 
@@ -322,17 +307,26 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
     }
 
     points(origin.xy, col = "red")
-    title(main = paste("Case", x$origin, "to Pump", x$alters$id[end.sel]))
+
+    if (add.title) {
+      title(main = paste("Case", x$origin, "to Pump", x$alters$id[end.sel]))
+    }
   } else if (x$type == "cases") {
     case.color <- "blue"
     points(origin.xy, col = case.color)
     points(alter.xy, col = case.color)
     text(origin.xy, labels = x$origin, pos = 1, col = case.color)
     text(alter.xy, labels = end.case, pos = 1, col = case.color)
-    title(main = paste("Case", x$origin, "to Case", end.case))
+
+    if (add.title) {
+      title(main = paste("Case", x$origin, "to Case", end.case))
+    }
   } else if (x$type == "pumps") {
     case.color <- "blue"
-    title(main = paste("Pump", x$origin, "to Pump", x$alters$id[end.sel]))
+
+    if (add.title) {
+      title(main = paste("Pump", x$origin, "to Pump", x$alters$id[end.sel]))
+    }
   }
 
   if (x$vestry) {
