@@ -26,6 +26,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   weighted = TRUE, case.set = "observed", multi.core = FALSE) {
 
   if (is.null(pump.select) == FALSE) {
+    if (is.numeric(pump.select) == FALSE) stop('"pump.select" must be numeric.')
     if (length(pump.select) == 1) {
       if (pump.select == 2) {
         msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
