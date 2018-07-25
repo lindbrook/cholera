@@ -101,7 +101,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
   } else if (type == "cases") {
     if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
       txt1 <- 'With type = "cases" and "observed" = '
-      txt2 <- ', the absolute value of "origin" and "destination" must be '
+      txt2 <- ', the absolute values of "origin" and of "destination" must be '
       txt3 <- 'between 1 and '
       stop(txt1, observed, txt2, txt3, ct, ".")
     }
