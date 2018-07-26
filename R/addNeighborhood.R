@@ -236,21 +236,13 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
 
   ## ------------ Data Assembly ------------ ##
 
-  if (x$vestry) {
-    wholes <- lapply(1:14, function(nm) {
-      c(obs.whole[[paste(nm)]],
-        unobs.whole[[paste(nm)]],
-        obs.partial.whole[[paste(nm)]])
-    })
-    names(wholes) <- 1:14
-  } else {
-    wholes <- lapply(1:13, function(nm) {
-      c(obs.whole[[paste(nm)]],
-        unobs.whole[[paste(nm)]],
-        obs.partial.whole[[paste(nm)]])
-    })
-    names(wholes) <- 1:13
-  }
+  wholes <- lapply(paste(p.ID), function(nm) {
+    c(obs.whole[[nm]],
+      unobs.whole[[nm]],
+      obs.partial.whole[[nm]])
+  })
+
+  names(wholes) <- p.ID
 
   # split segments #
   split.test1 <- length(obs.partial.segments)
@@ -410,9 +402,7 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
           }
 
         } else if (all(pump.subset < 0)) {
-          if (x$vestry) selected.pumps <- 1:14 else selected.pumps <- 1:13
-          select <- selected.pumps[selected.pumps %in%
-                    abs(pump.subset) == FALSE]
+          select <- p.ID[p.ID %in% abs(pump.subset) == FALSE]
 
           invisible(lapply(paste(select), function(nm) {
             n.edges <- edges[edges$id %in% wholes[[nm]], ]
