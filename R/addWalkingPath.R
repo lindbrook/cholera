@@ -52,29 +52,32 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
 
   if (type == "case-pump") {
     if (origin %in% seq_len(ct) == FALSE) {
-      txt1 <- 'With type = "case-pump" and "observed" = '
-      txt2 <- '"origin" must be between 1 and '
-      stop(txt1, observed, ", ", txt2, ct, ".")
+      txt1 <- 'With type = "'
+      txt2 <- '" and observed = '
+      txt3 <- "'origin' must be between 1 and "
+      stop(txt1, type, txt2, observed, ", ", txt3, ct, ".")
     }
 
     if (is.null(destination) == FALSE) {
       if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count,
+        stop('With vestry = ', vestry, ", 1 >= |'destination'| <= ", p.count,
           ".")
       }
     }
   } else if (type == "cases") {
     if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
-      txt1 <- 'With type = "cases" and "observed" = '
-      txt2 <- ', the absolute value of "origin" and "destination" must be '
-      txt3 <- 'between 1 and '
-      stop(txt1, observed, txt2, txt3, ct, ".")
+      txt1 <- 'With type = "'
+      txt2 <- '" and observed = '
+      txt3 <- ", the absolute value of 'origin' and 'destination' must fall "
+      txt4 <- 'between 1 and '
+      stop(txt1, type, txt2, observed, txt3, txt4, ct, ".")
     }
   } else if (type == "pumps") {
     if (any(abs(c(origin, destination)) %in% p.ID == FALSE)) {
-      txt1 <- 'With type = "pumps" and vestry = '
-      txt2 <- ', "origin" and "destination" must whole numbers 1 >= |x| <= '
-      stop(txt1, vestry, txt2, p.count, ".")
+      txt1 <- 'With type = "'
+      txt2 <- '" and vestry = '
+      txt3 <- ", 'origin' and 'destination' must whole numbers 1 >= |x| <= "
+      stop(txt1, type, txt2, vestry, txt3, p.count, ".")
     }
   }
 
