@@ -126,7 +126,8 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       alter.node <- NA
     } else {
       sel <- which.min(d)
-      alter.id <- nodes[nodes$node %in% names(sel), "pump"]
+      node.sel <- nodes$node %in% names(sel) & nodes$pump != 0
+      alter.id <- nodes[node.sel, "pump"]
       p.name <- p.data[p.data$id == alter.id, "street"]
       alter.node <- names(sel)
     }
@@ -203,7 +204,8 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
       alter.node <- NA
     } else {
       sel <- which.min(d)
-      alter.id <- nodes[nodes$node %in% names(sel), "anchor"]
+      node.sel <- nodes$node %in% names(sel) & nodes$anchor != 0
+      alter.id <- nodes[node.sel, "anchor"]
       alter.node <- names(sel)
     }
 
@@ -395,7 +397,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   dat <- numericNodeCoordinates(x$path)
 
   if (x$type == "case-pump") {
-    alter <- nodes[nodes$node == alter.node, "pump"]
+    alter <- nodes[nodes$node == alter.node & nodes$pump != 0, "pump"]
 
     if (alpha.level != 1) {
       case.color <- grDevices::adjustcolor(colors[alter], alpha.f = alpha.level)
@@ -411,7 +413,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     }
 
   } else if (x$type == "cases") {
-    alter <- nodes[nodes$node == alter.node, "anchor"]
+    alter <- nodes[nodes$node == alter.node & nodes$anchor != 0, "anchor"]
     case.color <- "blue"
 
     if (x$observed) {
@@ -447,7 +449,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       origin.obs <- cholera::pumps[cholera::pumps$id == x$origin, c("x", "y")]
     }
 
-    alter <- nodes[nodes$node == alter.node, "pump"]
+    alter <- nodes[nodes$node == alter.node & nodes$anchor != 0, "anchor"]
     case.color <- "blue"
   }
 

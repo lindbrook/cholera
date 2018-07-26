@@ -122,7 +122,8 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
       alter.node <- NA
     } else {
       sel <- which.min(d)
-      alter.id <- nodes[nodes$node %in% names(sel), "pump"]
+      node.sel <- nodes$node %in% names(sel) & nodes$pump != 0
+      alter.id <- nodes[node.sel, "pump"]
       p.name <- p.data[p.data$id == alter.id, "street"]
       alter.node <- names(sel)
     }
@@ -190,7 +191,8 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
       alter.node <- NA
     } else {
       sel <- which.min(d)
-      alter.id <- nodes[nodes$node %in% names(sel), "anchor"]
+      node.sel <- nodes$node %in% names(sel) & nodes$anchor != 0
+      alter.id <- nodes[node.sel, "anchor"]
       alter.node <- names(sel)
     }
 
