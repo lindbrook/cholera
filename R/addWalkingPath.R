@@ -24,37 +24,57 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
   time.unit = "second", walking.speed = 5, zoom = TRUE, radius = 0.5,
   unit.posts = "distance", unit.interval = NULL, alpha.level = 1) {
 
-  n.sim.obs <- nrow(cholera::regular.cases)
-
-  if (type == "case-pump") {
-    if (observed) {
-      if (origin %in% 1:578 == FALSE) {
-        txt1 <- 'With type = "case-pump" and "observed" = TRUE,'
-        txt2 <- '"origin" must be between 1 and 578.'
-        stop(paste(txt1, txt2))
-      }
-    } else {
-      if (origin %in% 1:n.sim.obs == FALSE) {
-        txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
-        txt2 <- paste('"origin" must be between 1 and', paste0(n.sim.obs, "."))
-        stop(paste(txt1, txt2))
-      }
-    }
+  if (unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('"unit" must be "meter", "yard" or "native".')
   }
 
-  if (!is.null(destination)) {
-    if (vestry) {
-      if (any(abs(destination) %in% 1:14 == FALSE)) {
-        txt1 <- 'With type = "case-pump" and "vestry = TRUE",'
-        txt2 <- '1 >= |destination| <= 14.'
-        stop(paste(txt1, txt2))
+  if (time.unit %in% c("hour", "minute", "second") == FALSE) {
+    stop('"time.unit" must be "hour", "minute" or "second".')
+  }
+
+  if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
+    stop('"type" must be "case-pump", "cases" or "pumps".')
+  }
+
+  obs.ct <- nrow(cholera::fatalities)
+  exp.ct <- nrow(cholera::regular.cases)
+
+  if (observed) ct <- obs.ct else ct <- exp.ct
+
+  if (vestry) {
+    p.data <- cholera::pumps.vestry
+  } else {
+    p.data <- cholera::pumps
+  }
+
+  p.count <- nrow(p.data)
+  p.ID <- seq_len(p.count)
+
+  if (type == "case-pump") {
+    if (origin %in% seq_len(ct) == FALSE) {
+      txt1 <- 'With type = "case-pump" and "observed" = '
+      txt2 <- '"origin" must be between 1 and '
+      stop(txt1, observed, ", ", txt2, ct, ".")
+    }
+
+    if (is.null(destination) == FALSE) {
+      if (any(abs(destination) %in% p.ID == FALSE)) {
+        stop('With vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count,
+          ".")
       }
-    } else {
-      if (any(abs(destination) %in% 1:13 == FALSE)) {
-        txt1 <- 'With type = "case-pump" and "vestry = FALSE",'
-        txt2 <- '1 >= |destination| <= 13.'
-        stop(paste(txt1, txt2))
-      }
+    }
+  } else if (type == "cases") {
+    if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
+      txt1 <- 'With type = "cases" and "observed" = '
+      txt2 <- ', the absolute value of "origin" and "destination" must be '
+      txt3 <- 'between 1 and '
+      stop(txt1, observed, txt2, txt3, ct, ".")
+    }
+  } else if (type == "pumps") {
+    if (any(abs(c(origin, destination)) %in% p.ID == FALSE)) {
+      txt1 <- 'With type = "pumps" and vestry = '
+      txt2 <- ', "origin" and "destination" must whole numbers 1 >= |x| <= '
+      stop(txt1, vestry, txt2, p.count, ".")
     }
   }
 
@@ -73,7 +93,7 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
   if (is.na(x$alter.node)) {
     txt1 <- paste("Case", x$origin, "is part of an isolated subgraph.")
     txt2 <- "It (technically) has no neareast pump."
-    stop(paste(txt1, txt2))
+    stop(txt1, txt2)
   }
 
   if ((alpha.level > 0 & alpha.level <= 1) == FALSE) {

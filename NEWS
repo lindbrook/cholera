@@ -1,7 +1,9 @@
 cholera 0.5.0.9004
 ==================
 
-- remove hard coding for pumps for walkingDistance() and walkingPath().
+- remove hard coding for pumps:
+  addWalkingPath(), walkingDistance() and walkingPath().
+- fix for multiple results in walkingDistance() and walkingPath().
 
 
 cholera 0.5.0.9003
