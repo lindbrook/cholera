@@ -59,46 +59,32 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
   nodes <- node.data$nodes
   edges <- node.data$edges
   g <- node.data$g
-  n.sim.obs <- nrow(cholera::regular.cases)
+
+  obs.ct <- nrow(cholera::fatalities)
+  exp.ct <- nrow(cholera::regular.cases)
+
+  if (observed) ct <- obs.ct else ct <- exp.ct
+
+  if (vestry) {
+    p.data <- cholera::pumps.vestry
+  } else {
+    p.data <- cholera::pumps
+  }
+
+  p.count <- nrow(p.data)
+  p.ID <- seq_len(p.count)
 
   if (type == "case-pump") {
-    if (observed) {
-      if (origin %in% 1:578 == FALSE) {
-        txt1 <- 'With type = "case-pump" and "observed" = TRUE,'
-        txt2 <- '"origin" must be between 1 and 578.'
-        stop(paste(txt1, txt2))
-      }
-    } else {
-      if (origin %in% 1:n.sim.obs == FALSE) {
-        txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
-        txt2 <- paste('"origin" must be between 1 and', paste0(n.sim.obs, "."))
-        stop(paste(txt1, txt2))
-      }
+    if (origin %in% seq_len(ct) == FALSE) {
+      txt1 <- 'With type = "case-pump" and "observed" = '
+      txt2 <- '"origin" must be between 1 and '
+      stop(txt1, observed, ", ", txt2, ct, ".")
     }
 
-    if (!is.null(destination)) {
-      if (vestry) {
-        if (any(abs(destination) %in% 1:14 == FALSE)) {
-          txt1 <- 'With type = "case-pump" and "vestry = TRUE",'
-          txt2 <- '1 >= |destination| <= 14.'
-          stop(paste(txt1, txt2))
-        } else {
-          pumps <- cholera::pumps.vestry[destination, ]
-        }
-      } else {
-        if (any(abs(destination) %in% 1:13 == FALSE)) {
-          txt1 <- 'With type = "case-pump" and "vestry = FALSE",'
-          txt2 <- '1 >= |destination| <= 13.'
-          stop(paste(txt1, txt2))
-        } else {
-          pumps <- cholera::pumps[destination, ]
-        }
-      }
-    } else {
-      if (vestry) {
-        pumps <- cholera::pumps.vestry
-      } else {
-        pumps <- cholera::pumps
+    if (is.null(destination) == FALSE) {
+      if (any(abs(destination) %in% p.ID == FALSE)) {
+        stop('With vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count,
+          ".")
       }
     }
 
@@ -141,7 +127,7 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
     } else {
       sel <- which.min(d)
       alter.id <- nodes[nodes$node %in% names(sel), "pump"]
-      p.name <- pumps[pumps$id == alter.id, "street"]
+      p.name <- p.data[p.data$id == alter.id, "street"]
       alter.node <- names(sel)
     }
 
@@ -163,19 +149,11 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
                                   row.names = NULL))
 
   } else if (type == "cases") {
-    if (observed) {
-      if (any(abs(c(origin, destination)) %in% 1:578 == FALSE)) {
-        txt1 <- 'With type = "cases", the absolute value of both "origin"'
-        txt2 <- 'and "destination" must be a whole number between 1 and 578.'
-        stop(paste(txt1, txt2))
-      }
-    } else {
-      if (any(abs(c(origin, destination)) %in% 1:n.sim.obs == FALSE)) {
-        txt1 <- 'With type = "case-pump" and "observed" = FALSE,'
-        txt2 <- 'both "origin" and "destination" must be whole numbers between'
-        txt3 <- paste('1 and', paste0(n.sim.obs, "."))
-        stop(paste(txt1, txt2, txt3))
-      }
+    if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
+      txt1 <- 'With type = "cases" and "observed" = '
+      txt2 <- ', the absolute value of "origin" and "destination" must be '
+      txt3 <- 'between 1 and '
+      stop(txt1, observed, txt2, txt3, ct, ".")
     }
 
     if (observed) {
@@ -258,22 +236,10 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
     }
 
   } else if (type == "pumps") {
-    if (vestry) {
-      pumps <- cholera::pumps.vestry
-
-      if (any(abs(c(origin, destination)) %in% 1:14 == FALSE)) {
-        txt1 <- 'With type = "pumps" and "vestry = TRUE",'
-        txt2 <- 'origin and destination must whole numbers 1 >= |x| <= 14.'
-        stop(paste(txt1, txt2))
-      }
-    } else {
-      pumps <- cholera::pumps
-
-      if (any(abs(c(origin, destination)) %in% 1:13 == FALSE)) {
-        txt1 <- 'With type = "pumps" and "vestry = FALSE",'
-        txt2 <- 'origin and destination must be whole numbers 1 >= |x| <= 13.'
-        stop(paste(txt1, txt2))
-      }
+    if (any(abs(c(origin, destination)) %in% p.ID == FALSE)) {
+      txt1 <- 'With type = "pumps" and vestry = '
+      txt2 <- ', "origin" and "destination" must whole numbers 1 >= |x| <= '
+      stop(txt1, vestry, txt2, p.count, ".")
     }
 
     ego.node <- nodes[nodes$pump == origin, "node"]
@@ -315,17 +281,17 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
 
     if (weighted) {
       path <- names(unlist(igraph::shortest_paths(g, ego.node, alter.node,
-                                                  weights = edges$d)$vpath))
+        weights = edges$d)$vpath))
     } else {
       path <- names(unlist(igraph::shortest_paths(g, ego.node,
-                                                  alter.node)$vpath))
+        alter.node)$vpath))
     }
 
     out <- list(path = path,
                 data = data.frame(pumpA = A,
-                                  nameA = pumps[pumps$id == A, "street"],
+                                  nameA = p.data[p.data$id == A, "street"],
                                   pumpB = B,
-                                  nameB = pumps[pumps$id == B, "street"],
+                                  nameB = p.data[p.data$id == B, "street"],
                                   distance = d[sel],
                                   stringsAsFactors = FALSE,
                                   row.names = NULL))
@@ -407,11 +373,11 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   if (is.na(x$alter.node)) {
     txt1 <- paste("Case", x$origin, "is part of an isolated subgraph.")
     txt2 <- "It (technically) has no neareast pump."
-    stop(paste(txt1, txt2))
+    stop(txt1, txt2)
   }
 
   if ((alpha.level > 0 & alpha.level <= 1) == FALSE) {
-    stop('"alpha.level" must be > 0 and <= 1')
+    stop('"alpha.level" must be > 0 and <= 1.')
   }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]

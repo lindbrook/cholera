@@ -1,15 +1,20 @@
+cholera 0.5.0.9004
+==================
+
+- remove hard coding for pumps for walkingDistance() and walkingPath().
+
+
 cholera 0.5.0.9003
 ==================
 
 - test new warnings for addNeighborhood().
-- continue removing hard coding for pumps.
 
 
 cholera 0.5.0.9002
 ==================
 
 - add drawPath2() for euclideanPath() in walkingAuxillaryFunctions.R.
-- fix for vertical Euclidean paths.
+- add fix for vertical Euclidean paths.
 
 
 cholera 0.5.0.9001
