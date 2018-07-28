@@ -25,7 +25,7 @@ addCases(pump.subset = NULL, pump.select = NULL, type = "address",
 
 \item{color}{Character. Use a single color for all paths. NULL uses neighborhood colors defined by snowColors().}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.}
 
 \item{...}{Additional plotting parameters.}
 }

@@ -18,7 +18,7 @@ addNeighborhood(pump.subset = NULL, pump.select = NULL,
 
 \item{weighted}{Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Window, only "multi.core = FALSE" is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.}
 
 \item{area}{Logical. Area polygons.}
 
