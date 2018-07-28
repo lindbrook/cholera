@@ -288,7 +288,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
       ego.xy <- addr[addr$anchor.case == ego.id,  c("x", "y")]
     } else {
       origin.xy <- cholera::regular.cases[x$origin, c("x", "y")]
-      ego.id <-  x$origin
+      ego.id <- x$origin
       ego.xy <- origin.xy
     }
 

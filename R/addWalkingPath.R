@@ -140,7 +140,7 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
         destination.obs <- cholera::fatalities[cholera::fatalities$case ==
           alter, c("x", "y")]
       } else {
-        destination.obs <-  cholera::regular.cases[alter, ]
+        destination.obs <- cholera::regular.cases[alter, ]
       }
     } else {
       id <- x$destination[x$sel]

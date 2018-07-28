@@ -428,7 +428,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         destination.obs <- cholera::fatalities[cholera::fatalities$case ==
           alter, c("x", "y")]
       } else {
-        destination.obs <-  cholera::regular.cases[alter, ]
+        destination.obs <- cholera::regular.cases[alter, ]
       }
     } else {
       id <- x$destination[x$sel]
