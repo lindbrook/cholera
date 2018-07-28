@@ -4,9 +4,10 @@
 \alias{addNeighborhood}
 \title{Add expected walking neighborhoods.}
 \usage{
-addNeighborhood(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, multi.core = FALSE, area = TRUE, path = NULL,
-  path.color = NULL, path.width = 3, alpha.level = 0.25, ...)
+addNeighborhood(pump.subset = NULL, pump.select = NULL,
+  vestry = FALSE, weighted = TRUE, multi.core = FALSE, area = TRUE,
+  path = NULL, path.color = NULL, path.width = 3,
+  alpha.level = 0.25, ...)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}

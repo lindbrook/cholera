@@ -5,8 +5,8 @@
 \title{Locate road segment by ID.}
 \usage{
 segmentLocator(id, zoom = FALSE, radius = 0.5, cases = "anchors",
-  unit = "meter", time.unit = "minute", walking.speed = 5, title = TRUE,
-  subtitle = TRUE)
+  unit = "meter", time.unit = "minute", walking.speed = 5,
+  title = TRUE, subtitle = TRUE)
 }
 \arguments{
 \item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}

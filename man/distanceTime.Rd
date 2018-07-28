@@ -4,8 +4,8 @@
 \alias{distanceTime}
 \title{Convert distance to elapsed time.}
 \usage{
-distanceTime(x, unit = "second", meter.unit = cholera::unitMeter(1, unit =
-  "meter"), speed = 5)
+distanceTime(x, unit = "second", meter.unit = cholera::unitMeter(1,
+  unit = "meter"), speed = 5)
 }
 \arguments{
 \item{x}{Numeric. Nominal map distance.}

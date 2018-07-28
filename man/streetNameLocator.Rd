@@ -5,9 +5,9 @@
 \title{Locate road by name.}
 \usage{
 streetNameLocator(road.name, zoom = FALSE, radius = 0.1,
-  cases = "anchors", add.title = TRUE, add.pump = TRUE, vestry = FALSE,
-  highlight = TRUE, unit = "meter", time.unit = "minute",
-  walking.speed = 5)
+  cases = "anchors", add.title = TRUE, add.pump = TRUE,
+  vestry = FALSE, highlight = TRUE, unit = "meter",
+  time.unit = "minute", walking.speed = 5)
 }
 \arguments{
 \item{road.name}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.}

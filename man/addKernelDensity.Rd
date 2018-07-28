@@ -5,8 +5,9 @@
 \title{Add 2D kernel density contours.}
 \usage{
 addKernelDensity(pump.subset = "pooled", pump.select = NULL,
-  neighborhood.type = "walking", obs.unit = "unstacked", bandwidth = 0.5,
-  color = "black", line.type = "solid", multi.core = FALSE, ...)
+  neighborhood.type = "walking", obs.unit = "unstacked",
+  bandwidth = 0.5, color = "black", line.type = "solid",
+  multi.core = FALSE, ...)
 }
 \arguments{
 \item{pump.subset}{Character or Numeric: "pooled", "individual", or numeric vector. "pooled" treats all observations as a single set. "individual" is a shortcut for all individual pump neighborhoods. Use of vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}

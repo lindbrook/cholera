@@ -5,9 +5,9 @@
 \title{Locate road by numerical ID.}
 \usage{
 streetNumberLocator(road.number, zoom = FALSE, radius = 1,
-  cases = "anchors", add.title = TRUE, add.pump = TRUE, vestry = FALSE,
-  highlight = TRUE, unit = "meter", time.unit = "second",
-  walking.speed = 5)
+  cases = "anchors", add.title = TRUE, add.pump = TRUE,
+  vestry = FALSE, highlight = TRUE, unit = "meter",
+  time.unit = "second", walking.speed = 5)
 }
 \arguments{
 \item{road.number}{Numeric or integer. A whole number between 1 and 528.}

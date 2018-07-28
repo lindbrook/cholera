@@ -5,9 +5,9 @@
 \title{Add the path for the Euclidean distance between cases and/or pumps.}
 \usage{
 addEuclideanPath(origin, destination = NULL, type = "case-pump",
-  observed = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
-  walking.speed = 5, unit.posts = "distance", unit.interval = NULL,
-  alpha.level = 1, add.title = FALSE)
+  observed = TRUE, vestry = FALSE, unit = "meter",
+  time.unit = "second", walking.speed = 5, unit.posts = "distance",
+  unit.interval = NULL, alpha.level = 1, add.title = FALSE)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}

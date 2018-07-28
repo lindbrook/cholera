@@ -6,8 +6,9 @@
 \usage{
 addWalkingPath(origin, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
-  time.unit = "second", walking.speed = 5, zoom = TRUE, radius = 0.5,
-  unit.posts = "distance", unit.interval = NULL, alpha.level = 1)
+  time.unit = "second", walking.speed = 5, zoom = TRUE,
+  radius = 0.5, unit.posts = "distance", unit.interval = NULL,
+  alpha.level = 1)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}

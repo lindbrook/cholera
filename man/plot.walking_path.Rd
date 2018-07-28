@@ -5,7 +5,8 @@
 \title{Plot the walking path between selected cases and/or pumps.}
 \usage{
 \method{plot}{walking_path}(x, zoom = TRUE, radius = 0.5,
-  unit.posts = "distance", unit.interval = NULL, alpha.level = 1, ...)
+  unit.posts = "distance", unit.interval = NULL, alpha.level = 1,
+  ...)
 }
 \arguments{
 \item{x}{An object of class "walking_path" created by walkingPath().}

@@ -4,8 +4,8 @@
 \alias{plot.voronoi}
 \title{Plot Voronoi neighborhoods.}
 \usage{
-\method{plot}{voronoi}(x, voronoi.cells = TRUE, euclidean.paths = FALSE,
-  ...)
+\method{plot}{voronoi}(x, voronoi.cells = TRUE,
+  euclidean.paths = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "voronoi" created by neighborhoodVoronoi().}
