@@ -12,7 +12,7 @@
 #' @seealso \code{\link{plot.time_series}}, \code{\link{print.time_series}}, \code{vignette("time.series")}
 #' @export
 #' @examples
-#' timeSeries(vestr = TRUE)
+#' timeSeries(vestry = TRUE)
 #' plot(timeSeries())
 
 timeSeries <- function(vestry = FALSE) {
@@ -75,6 +75,7 @@ timeSeries <- function(vestry = FALSE) {
 #' @examples
 #' plot(timeSeries())
 #' plot(timeSeries(), statistic = "deaths")
+#' plot(timeSeries(), bty = "n", type = "h", lwd = 4)
 
 plot.time_series <- function(x, statistic = "fatal.attacks",
   pump.handle = TRUE, main = "Removal of the Broad Street Pump Handle",

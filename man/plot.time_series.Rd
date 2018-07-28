@@ -27,6 +27,7 @@ Plot aggregate fatality data and indicates the date of the removal of the handle
 \examples{
 plot(timeSeries())
 plot(timeSeries(), statistic = "deaths")
+plot(timeSeries(), bty = "n",  type = "h", lwd = 4)
 }
 \seealso{
 \code{\link{timeSeries}}
