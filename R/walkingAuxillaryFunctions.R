@@ -317,16 +317,10 @@ numericNodeCoordinates <- function(x) {
   data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
 }
 
-drawPath <- function(x, case.color) {
-  dat <- numericNodeCoordinates(x)
+drawPath <- function(x, case.color, compute.coords = TRUE) {
+  if (compute.coords) dat <- numericNodeCoordinates(x) else dat <- x
   n1 <- dat[1:(nrow(dat) - 1), ]
   n2 <- dat[2:nrow(dat), ]
-  segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 3)
-}
-
-drawPath2 <- function(x, case.color) {
-  n1 <- x[1:(nrow(x) - 1), ]
-  n2 <- x[2:nrow(x), ]
   segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 3)
 }
 

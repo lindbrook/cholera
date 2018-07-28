@@ -1,3 +1,10 @@
+cholera 0.5.0.9006
+==================
+
+- walkingAuxillaryFunctions.R:
+  consolidate drawPath() and drawPath2().
+
+
 cholera 0.5.0.9005
 ==================
 

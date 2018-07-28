@@ -466,7 +466,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
         zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 2) == 0
 
         if (any(zero.length.x | zero.length.y)) {
-          drawPath2(dat, case.color)
+          drawPath(dat, case.color, compute.coords = FALSE)
           text(dataB[1, c("x", "y")], labels = ">", srt = theta * 180L / pi,
             col = case.color, cex = 1.5)
         } else {
