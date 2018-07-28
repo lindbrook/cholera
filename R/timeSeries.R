@@ -67,6 +67,8 @@ timeSeries <- function(vestry = FALSE) {
 #' @param x An object of class "time_series" from timeSeries().
 #' @param statistic Character. Fatality measure: either "fatal.attacks", which is the default, or "deaths".
 #' @param pump.handle Logical. Indicate date of removal of Broad Street pump handle.
+#' @param main Character. Title of graph.
+#' @param type Character. R plot type.
 #' @param ... Additional plotting parameters.
 #' @seealso \code{\link{timeSeries}}
 #' @export
@@ -75,7 +77,8 @@ timeSeries <- function(vestry = FALSE) {
 #' plot(timeSeries(), statistic = "deaths")
 
 plot.time_series <- function(x, statistic = "fatal.attacks",
-  pump.handle = TRUE, ...) {
+  pump.handle = TRUE, main = "Removal of the Broad Street Pump Handle",
+  type = "o", ...) {
 
   if (class(x) != "time_series") {
     stop('Input object\'s class needs to be "time_series".')
@@ -87,7 +90,9 @@ plot.time_series <- function(x, statistic = "fatal.attacks",
 
   dat <- x$data
 
-  plot(dat$date, dat[, statistic], type = "o", xlab = "Date", ylab = statistic)
+  plot(dat$date, dat[, statistic], type = type, xlab = "Date",
+    ylab = statistic, ...)
+  title(main = main, ...)
 
   if (pump.handle) pumpHandle()
 }
@@ -115,5 +120,4 @@ pumpHandle <- function() {
   abline(v = as.Date("1854-09-08"), col = "red", lty = "dotted")
   axis(3, at = as.Date("1854-09-08"), labels = "Sep 08", cex.axis = 0.8,
     line = -0.5, col.axis = "red", col.ticks = "red")
-  title(main = "Removal of the Broad Street Pump Handle")
 }

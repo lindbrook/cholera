@@ -5,7 +5,8 @@
 \title{Plot aggregate time series data from Vestry report.}
 \usage{
 \method{plot}{time_series}(x, statistic = "fatal.attacks",
-  pump.handle = TRUE, ...)
+  pump.handle = TRUE, main = "Removal of the Broad Street Pump Handle",
+  type = "o", ...)
 }
 \arguments{
 \item{x}{An object of class "time_series" from timeSeries().}
@@ -13,6 +14,10 @@
 \item{statistic}{Character. Fatality measure: either "fatal.attacks", which is the default, or "deaths".}
 
 \item{pump.handle}{Logical. Indicate date of removal of Broad Street pump handle.}
+
+\item{main}{Character. Title of graph.}
+
+\item{type}{Character. R plot type.}
 
 \item{...}{Additional plotting parameters.}
 }
