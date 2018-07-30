@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{time_series}(x, statistic = "fatal.attacks",
   pump.handle = TRUE, main = "Removal of the Broad Street Pump Handle",
-  type = "o", ...)
+  type = "o", xlab = "Date", ylab = "Fatalities", ...)
 }
 \arguments{
 \item{x}{An object of class "time_series" from timeSeries().}
@@ -18,6 +18,10 @@
 \item{main}{Character. Title of graph.}
 
 \item{type}{Character. R plot type.}
+
+\item{xlab}{Character. x-axis label.}
+
+\item{ylab}{Character. y-axis label.}
 
 \item{...}{Additional plotting parameters.}
 }

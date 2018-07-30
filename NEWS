@@ -1,3 +1,9 @@
+cholera 0.5.0.9007
+==================
+
+- allow custom axes labels in plot.time_series().
+
+
 cholera 0.5.0.9006
 ==================
 
