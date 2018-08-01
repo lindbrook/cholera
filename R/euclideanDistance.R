@@ -31,6 +31,71 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
   observed = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
   walking.speed = 5) {
 
+  if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
+    stop('"type" must be "case-pump", "cases" or "pumps".')
+  }
+
+  if (unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('"unit" must be "meter", "yard" or "native".')
+  }
+
+  if (time.unit %in% c("hour", "minute", "second") == FALSE) {
+    stop('"time.unit" must be "hour", "minute" or "second".')
+  }
+
+
+  obs.ct <- nrow(cholera::fatalities)
+  exp.ct <- nrow(cholera::regular.cases)
+
+  if (observed) ct <- obs.ct else ct <- exp.ct
+
+  if (vestry) {
+    p.data <- cholera::ortho.proj.pump.vestry
+    p.data$street <- cholera::pumps.vestry$street
+  } else {
+    p.data <- cholera::ortho.proj.pump
+    p.data$street <- cholera::pumps$street
+  }
+
+  p.count <- nrow(p.data)
+  p.ID <- seq_len(p.count)
+
+  # ----- #
+
+  if (type == "case-pump") {
+    if (origin %in% seq_len(ct) == FALSE) {
+      txt1 <- 'With type = "case-pump" and "observed" = '
+      txt2 <- '"origin" must be between 1 and '
+      stop(txt1, observed, ", ", txt2, ct, ".")
+    }
+
+    if (is.null(destination) == FALSE) {
+      if (any(abs(destination) %in% p.ID == FALSE)) {
+        stop('With "vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count)
+      }
+    }
+
+  } else if (type == "cases") {
+    if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
+      txt1 <- 'With type = "cases" and "observed" = '
+      txt2 <- ', the absolute values of "origin" and of "destination" must be '
+      txt3 <- 'between 1 and '
+      stop(txt1, observed, txt2, txt3, ct, ".")
+    }
+
+  } else if (type == "pumps") {
+    if (origin %in% p.ID == FALSE) {
+      stop('With "vestry = ', vestry, '", 1 >= |"origin"| <= ', p.count, ".")
+    }
+
+    if (!is.null(destination)) {
+      if (any(abs(destination) %in% p.ID == FALSE)) {
+        stop('With "vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count,
+             ".")
+       }
+     }
+  }
+
   arguments <- list(origin = origin,
                     destination = destination,
                     type = type,
