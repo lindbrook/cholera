@@ -35,16 +35,16 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5) {
 
+  if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
+    stop('"type" must be "case-pump", "cases" or "pumps".')
+  }
+
   if (unit %in% c("meter", "yard", "native") == FALSE) {
     stop('"unit" must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
     stop('"time.unit" must be "hour", "minute" or "second".')
-  }
-
-  if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
-    stop('"type" must be "case-pump", "cases" or "pumps".')
   }
 
   if (observed) {
@@ -84,58 +84,7 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
           ".")
       }
     }
-
-    if (observed) {
-      ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
-        "anchor.case"]
-      ego.node <- nodes[nodes$anchor == ego.id, "node"]
-    } else {
-      ego.id <- origin
-      ego.node <- nodes[nodes$anchor == ego.id, "node"]
-    }
-
-    if (!is.null(destination)) {
-      if (all(destination < 0)) {
-        p.nodes <- nodes[nodes$pump != 0, ]
-        alters <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE, "node"]
-      } else {
-        alters <- nodes[nodes$pump %in% destination, "node"]
-      }
-    } else {
-      alters <- nodes[nodes$pump != 0, "node"]
-    }
-
-    if (weighted) {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x, weights = edges$d)
-      }, numeric(1L))
-    } else {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x)
-      }, numeric(1L))
-    }
-
-    if (all(is.infinite(d))) {
-      sel <- which.min(d)
-      alter.id <- NA
-      p.name <- NA
-      alter.node <- NA
-    } else {
-      sel <- which.min(d)
-      node.sel <- nodes$node %in% names(sel) & nodes$pump != 0
-      alter.id <- nodes[node.sel, "pump"]
-      p.name <- p.data[p.data$id == alter.id, "street"]
-      alter.node <- names(sel)
-    }
-
-    out <- data.frame(case = origin,
-                      anchor = ego.id,
-                      pump = alter.id,
-                      pump.name = p.name,
-                      distance = d[sel],
-                      stringsAsFactors = FALSE,
-                      row.names = NULL)
-
+    
   } else if (type == "cases") {
     if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
       txt1 <- 'With type = "cases" and "observed" = '
@@ -144,149 +93,24 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
       stop(txt1, observed, txt2, txt3, ct, ".")
     }
 
-    if (observed) {
-      ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
-        "anchor.case"]
-      ego.node <- nodes[nodes$anchor == ego.id, "node"]
-    } else {
-      ego.id <- origin
-      ego.node <- nodes[nodes$anchor == ego.id, "node"]
-    }
-
-    if (is.null(destination)) {
-      alters <- nodes[nodes$anchor != 0 & nodes$node != ego.node, "node"]
-    } else {
-      if (observed) {
-        if (all(destination > 0)) {
-          alter.case <- unique(cholera::anchor.case[cholera::anchor.case$case
-            %in% destination, "anchor.case"])
-        } else if (all(destination < 0)) {
-          alter.case <- unique(cholera::anchor.case[cholera::anchor.case$case
-            %in% abs(destination) == FALSE, "anchor.case"])
-        }
-      } else {
-        if (all(destination > 0)) {
-          alter.case <- nodes$anchor[nodes$anchor %in% destination]
-        } else if (all(destination < 0)) {
-          alter.case <- nodes$anchor[nodes$anchor %in% destination == FALSE]
-        }
-      }
-
-      alters <- nodes$node[nodes$anchor %in% alter.case &
-                           nodes$node != ego.node]
-    }
-
-    if (weighted) {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x, weights = edges$d)
-      }, numeric(1L))
-    } else {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x)
-      }, numeric(1L))
-    }
-
-    if (all(is.infinite(d))) {
-      alter.id <- NA
-      alter.node <- NA
-    } else {
-      sel <- which.min(d)
-      node.sel <- nodes$node %in% names(sel) & nodes$anchor != 0
-      alter.id <- nodes[node.sel, "anchor"]
-      alter.node <- names(sel)
-    }
-
-    if (is.null(destination) | all(destination < 0)) {
-      out <- data.frame(caseA = origin,
-                        caseB = alter.id,
-                        anchorA = ego.id,
-                        anchorB = alter.id,
-                        distance = d[which.min(d)],
-                        stringsAsFactors = FALSE,
-                        row.names = NULL)
-    } else if (all(destination > 0)) {
-      if (length(destination) == 1) {
-        out <- data.frame(caseA = origin,
-                          caseB = destination,
-                          anchorA = ego.id,
-                          anchorB = alter.id,
-                          distance = d[which.min(d)],
-                          stringsAsFactors = FALSE,
-                          row.names = NULL)
-      } else if (length(destination) > 1) {
-        out <- data.frame(caseA = origin,
-                          caseB = destination[sel],
-                          anchorA = ego.id,
-                          anchorB = alter.id,
-                          distance = d[which.min(d)],
-                          stringsAsFactors = FALSE,
-                          row.names = NULL)
-      }
-    }
-
   } else if (type == "pumps") {
     if (any(abs(c(origin, destination)) %in% p.ID == FALSE)) {
       txt1 <- 'With type = "pumps" and vestry = '
-      txt2 <- ', "origin" and "destination" must whole numbers 1 >= |x| <= '
+      txt2 <- ', "origin" and "destination" must whole number(s) 1 >= |x| <= '
       stop(txt1, vestry, txt2, p.count, ".")
     }
-
-    ego.node <- nodes[nodes$pump == origin, "node"]
-    p.nodes <- nodes[nodes$pump > 0, ]
-
-    if (is.null(destination)) {
-      alters  <- p.nodes[p.nodes$pump != origin, "node"]
-    } else {
-      if (all(destination > 0)) {
-        alters  <- p.nodes[p.nodes$pump %in% destination &
-                           p.nodes$pump != origin, "node"]
-      } else if (all(destination < 0)) {
-        alters  <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE &
-                           p.nodes$pump != origin, "node"]
-      }
-    }
-
-    if (weighted) {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x, weights = edges$d)
-      }, numeric(1L))
-    } else {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x)
-      }, numeric(1L))
-    }
-
-    A <- p.nodes[p.nodes$node == ego.node, "pump"]
-    ego.node <- p.nodes[p.nodes$node == ego.node, "node"]
-
-    if (all(is.infinite(d))) {
-      B <- NA
-      alter.node <- NA
-    } else {
-      sel <- which.min(d)
-      B <- p.nodes[p.nodes$node == names(sel), "pump"]
-      alter.node <- p.nodes[p.nodes$node == names(sel), "node"]
-    }
-
-    out <- data.frame(pumpA = A,
-                      nameA = p.data[p.data$id == A, "street"],
-                      pumpB = B,
-                      nameB = p.data[p.data$id == B, "street"],
-                      distance = d[sel],
-                      stringsAsFactors = FALSE,
-                      row.names = NULL)
   }
 
-  out$time <- cholera::distanceTime(out$distance, unit = time.unit,
-    speed = walking.speed)
+  arguments <- list(origin = origin,
+                    destination = destination,
+                    type = type,
+                    observed = observed,
+                    weighted = weighted,
+                    vestry = vestry,
+                    unit = unit,
+                    time.unit = "second",
+                    walking.speed = 5)
 
-  if (unit == "meter") {
-    out$distance <- cholera::unitMeter(out$distance, "meter")
-  } else if (unit == "yard") {
-    out$distance <- cholera::unitMeter(out$distance, "yard")
-  } else if (unit == "native") {
-    out$distance <- cholera::unitMeter(out$distance, "native")
-  }
-
-  out
+  x <- do.call(walkingPath, arguments)
+  x$data
 }
