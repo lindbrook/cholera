@@ -123,3 +123,7 @@ neighborhoodWalking() and addNeighborhood() are computationally intensive. Using
 Note that parallelization is currently only available on Linux and Mac.
 
 Also, note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. See vignette("parallel") for details.
+
+### contributing
+
+Contributions to the 'cholera' package are welcome. If interested, please see the suggested [guidelines](https://github.com/lindbrook/cholera/blob/master/CONTRIBUTING.md).

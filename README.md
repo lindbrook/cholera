@@ -1,7 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.0.9010-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.4.9.9011-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 cholera: amend, augment and aid analysis of John Snow's 1854 cholera map
 ------------------------------------------------------------------------
@@ -123,3 +124,7 @@ neighborhoodWalking() and addNeighborhood() are computationally intensive. Using
 Note that parallelization is currently only available on Linux and Mac.
 
 Also, note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. See vignette("parallel") for details.
+
+### contributing
+
+Contributions to the 'cholera' package are welcome. If interested, please see the suggested [guidelines](https://github.com/lindbrook/cholera/blob/master/CONTRIBUTING.md).
