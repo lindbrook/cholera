@@ -74,6 +74,8 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
   p.count <- nrow(p.data)
   p.ID <- seq_len(p.count)
 
+  # ----- #
+
   if (type == "case-pump") {
     if (origin %in% seq_len(ct) == FALSE) {
       txt1 <- 'With type = "case-pump" and "observed" = '
@@ -343,7 +345,7 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
 
 print.walking_path <- function(x, ...) {
   if (class(x) != "walking_path") {
-    stop('"x"\'s class needs to be "walking_path".')
+    stop('"x"\'s class must be "walking_path".')
   }
 
   print(x[c("path", "data")])
@@ -369,7 +371,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   unit.posts = "distance", unit.interval = NULL, alpha.level = 1, ...) {
 
   if (class(x) != "walking_path") {
-    stop('"x"\'s class needs to be "walking_path".')
+    stop('"x"\'s class must be "walking_path".')
   }
 
   if (is.na(x$alter.node)) {

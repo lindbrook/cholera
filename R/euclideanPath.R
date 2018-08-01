@@ -264,7 +264,7 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
 
 print.euclidean_path <- function(x, ...) {
   if (class(x) != "euclidean_path") {
-    stop('"x"\'s class needs to be "euclidean_path".')
+    stop('"x"\'s class must be "euclidean_path".')
   }
 
   print(x[c("ego", "alter", "data")])
@@ -288,7 +288,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
   unit.posts = "distance", unit.interval = NULL, ...) {
 
   if (class(x) != "euclidean_path") {
-    stop('"x"\'s class needs to be "euclidean_path".')
+    stop('"x"\'s class must be "euclidean_path".')
   }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
