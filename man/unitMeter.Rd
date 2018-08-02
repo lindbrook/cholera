@@ -11,9 +11,9 @@ unitMeter(x, unit = "meter", yard.unit = 177/3, meter.unit = 54)
 
 \item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 
-\item{yard.unit}{Numeric. Estimate of yards per map unit: 177 / 3.}
+\item{yard.unit}{Numeric. Estimate of yards per map unit.}
 
-\item{meter.unit}{Numeric. Estimate of meters per map unit: 54.}
+\item{meter.unit}{Numeric. Estimate of meters per map unit:.}
 }
 \description{
 A best guess estimate.
