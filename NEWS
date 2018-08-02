@@ -1,3 +1,9 @@
+cholera 0.5.0.9012
+==================
+
+- enable ellipses and negative selection in addPump().
+
+
 cholera 0.5.0.9011
 ==================
 

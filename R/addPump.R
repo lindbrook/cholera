@@ -1,52 +1,64 @@
 #' Add pump to plot.
 #'
-#' @param id Numeric or Integer. Water pump's numerical ID. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 and 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps. NULL plots all pumps.
+#' @param pump.select Numeric or Integer. Vector of water pump numerical ID(s). With "vestry = TRUE", whole number(s) between 1 and 14. With "vestry = FALSE", whole number(s) between 1 and 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps. NULL plots all pumps. Negative selection allowed.
 #' @param vestry Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.
-#' @param col Character. Color of point.
+#' @param col Character. Color of pump points.
 #' @param pch Numeric. Shape of point character.
 #' @param label Logical. TRUE adds text label.
 #' @param pos Numeric. Position of label.
 #' @param ... Additional plotting parameters.
 #' @export
 
-addPump <- function(id = NULL, vestry = FALSE, col = NULL, pch = 24,
+addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
   label = TRUE, pos = 1, ...) {
 
   if (vestry) {
-    dat <- cholera::pumps.vestry
+    p.data <- cholera::pumps.vestry
   } else {
-    dat <- cholera::pumps
+    p.data <- cholera::pumps
   }
 
-  if (is.null(id) == FALSE) {
-    if (is.numeric(id) == FALSE) {
-      stop('"id" must be numeric.')
+  p.count <- nrow(p.data)
+  p.ID <- seq_len(p.count)
+
+  if (is.null(pump.select) == FALSE) {
+    if (is.numeric(pump.select) == FALSE) {
+      stop('"pump.select" must be numeric.')
     }
 
-    if (vestry == FALSE & id %in% cholera::pumps$id == FALSE) {
-      stop('For original pumps, "id" must be a whole number between 1 and 13.')
+    if (any(abs(pump.select) %in% p.ID == FALSE)) {
+      stop('With "vestry = ', vestry, '", 1 >= |"pump.select"| <= ', p.count,
+        ".")
     }
 
-    if (vestry & id %in% cholera::pumps.vestry$id == FALSE) {
-      stop('For vestry pumps, "id" must lie be a whole number 1 and 14.')
+    if (all(pump.select > 0)) {
+      sel <- p.data$id %in% pump.select
+    } else if (all(pump.select < 0)) {
+      sel <- p.data$id %in% abs(pump.select) == FALSE
     }
 
     if (is.null(col)) {
-      snow.col <- snowColors(vestry)[paste0("p", id)]
-      points(dat[dat$id == id, c("x", "y")], pch = pch, bg = snow.col)
+      sel.col <- snowColors(vestry)[paste0("p", p.ID[sel])]
+      points(p.data[sel, c("x", "y")], pch = pch, col = sel.col, ...)
     } else {
-      points(dat[dat$id == id, c("x", "y")], pch = pch, bg = col)
+      points(p.data[sel, c("x", "y")], pch = pch, col = col, ...)
     }
 
     if (label) {
-      text(dat[dat$id == id, c("x", "y")], pos = pos, labels = paste0("p", id))
+      text(p.data[sel, c("x", "y")], pos = pos, labels = paste0("p", p.ID[sel]),
+        ...)
     }
+
   } else {
-    snow.col <- snowColors(vestry)
-    points(dat[, c("x", "y")], pch = pch, bg = snow.col)
+    if (is.null(col)) {
+      sel.col <- snowColors(vestry)[paste0("p", p.ID)]
+      points(p.data[, c("x", "y")], pch = pch, col = sel.col, ...)
+    } else {
+      points(p.data[, c("x", "y")], pch = pch, col = col, ...)
+    }
 
     if (label) {
-      text(dat[, c("x", "y")], pos = pos, labels = paste0("p", dat$id))
+      text(p.data[, c("x", "y")], pos = pos, labels = paste0("p", p.ID), ...)
     }
   }
 }

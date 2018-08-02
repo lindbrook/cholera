@@ -4,15 +4,15 @@
 \alias{addPump}
 \title{Add pump to plot.}
 \usage{
-addPump(id = NULL, vestry = FALSE, col = NULL, pch = 24,
+addPump(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
   label = TRUE, pos = 1, ...)
 }
 \arguments{
-\item{id}{Numeric or Integer. Water pump's numerical ID. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 and 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps. NULL plots all pumps.}
+\item{pump.select}{Numeric or Integer. Vector of water pump numerical ID(s). With "vestry = TRUE", whole number(s) between 1 and 14. With "vestry = FALSE", whole number(s) between 1 and 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps. NULL plots all pumps. Negative selection allowed.}
 
 \item{vestry}{Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.}
 
-\item{col}{Character. Color of point.}
+\item{col}{Character. Color of pump points.}
 
 \item{pch}{Numeric. Shape of point character.}
 
