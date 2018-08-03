@@ -19,7 +19,8 @@ cholera 0.5.0.9010
 cholera 0.5.0.9009
 ==================
 
-- consolidate addEuclideanPath(), euclideanDistance() and euclideanPath().
+- consolidate addEuclideanPath(), euclideanDistance() and euclideanPath() and
+  use "address" based computation.
 
 
 cholera 0.5.0.9008
