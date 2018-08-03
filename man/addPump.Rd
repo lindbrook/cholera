@@ -2,7 +2,7 @@
 % Please edit documentation in R/addPump.R
 \name{addPump}
 \alias{addPump}
-\title{Add pump to plot.}
+\title{Add selected pump(s) to plot.}
 \usage{
 addPump(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
   label = TRUE, pos = 1, ...)
@@ -23,5 +23,5 @@ addPump(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Add pump to plot.
+Add selected pump(s) to plot.
 }

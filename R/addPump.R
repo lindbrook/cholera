@@ -1,4 +1,4 @@
-#' Add pump to plot.
+#' Add selected pump(s) to plot.
 #'
 #' @param pump.select Numeric or Integer. Vector of water pump numerical ID(s). With "vestry = TRUE", whole number(s) between 1 and 14. With "vestry = FALSE", whole number(s) between 1 and 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps. NULL plots all pumps. Negative selection allowed.
 #' @param vestry Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.
