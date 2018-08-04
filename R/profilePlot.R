@@ -38,7 +38,7 @@ ols <- function(pump = 7, theta = 0, vestry = FALSE) {
 #' @param observed Logical.
 #' @noRd
 
-orthogonalProjection <- function(case, pump = 7, theta = 0, vestry = FALSE,
+orthogonalCoordinates <- function(case, pump = 7, theta = 0, vestry = FALSE,
   observed = TRUE) {
 
   if (vestry) {
@@ -59,8 +59,8 @@ orthogonalProjection <- function(case, pump = 7, theta = 0, vestry = FALSE,
   axis.data <- ols(pump, theta, vestry)
 
   if (theta != 0) {
-    ortho.slope <- -1 / axis.data$slope
-    ortho.intercept <- obs$y - ortho.slope * obs$x
+    ortho.slope <- orthogonalSlope(axis.data$slope)
+    ortho.intercept <- orthogonalIntercept(obs$x, ortho.slope, obs$y)
 
     x.proj <- (ortho.intercept - axis.data$intercept) /
               (axis.data$slope - ortho.slope)
