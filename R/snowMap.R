@@ -25,12 +25,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
   add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE, add.title = TRUE,
   ...) {
 
-  x.range <- range(cholera::roads$x)
-  y.range <- range(cholera::roads$y)
-  borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  roads.list <- split(rd[, c("x", "y")], rd$street)
-  border.list <- split(borders[, c("x", "y")], borders$street)
+  rng <- mapRange()
 
   if (stacked) {
     cases <- cholera::fatalities
@@ -38,34 +33,44 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
     cases <- cholera::fatalities.address
   }
 
-  plot(cases[, c("x", "y")], xlim = x.range, ylim = y.range, pch = NA, asp = 1)
-  invisible(lapply(border.list, lines))
-
-  if (add.roads) {
-    invisible(lapply(roads.list, lines, col = "gray"))
-  }
-
-  if (add.cases) {
-    points(cases[, c("x", "y")], pch = 15, col = "gray", cex = 0.5)
-  }
-
-  if (add.pumps) {
-    if (vestry) {
-      well <- cholera::pumps.vestry
-      points(well[, c("x", "y")], pch = 2, cex = 1, col = "blue")
-      text(well[, c("x", "y")], label = paste0("p", well$id), pos = 1,
-        col = "blue")
-    } else {
-      well <- cholera::pumps
-      points(well[, c("x", "y")], pch = 2, cex = 1, col = "blue")
-      text(well[, c("x", "y")], label = paste0("p", well$id), pos = 1,
-        col = "blue")
-    }
-  }
-
-  if (add.title) {
-    title(main = "Snow's Cholera Map")
-  }
-
+  plot(cases[, c("x", "y")], xlim = rng$x, ylim = rng$y, pch = NA, asp = 1)
+  if (add.roads) addRoads()
+  if (add.cases) points(cases[, c("x", "y")], pch = 15, col = "gray", cex = 0.5)
+  if (add.pumps) addPump(vestry = vestry, col = "blue", pch = 2)
+  if (add.title) title(main = "Snow's Cholera Map")
   if (add.landmarks) addLandmarks()
+  addBorder()
+}
+
+#' Add roads to plot.
+#'
+#' @param col Character. Color
+#' @param ... Additional plotting parameters.
+#' @export
+
+addRoads <- function(col = "gray", ...) {
+  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  roads.list <- split(rd[, c("x", "y")], rd$street)
+  invisible(lapply(roads.list, lines, col = "gray", ...))
+}
+
+#' Add map border to plot.
+#'
+#' @param ... Additional plotting parameters.
+#' @export
+
+addBorder <- function(...) {
+  borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
+  border.list <- split(borders[, c("x", "y")], borders$street)
+  invisible(lapply(border.list, lines, ...))
+}
+
+#' Compute xlim and ylim of Snow's map.
+#'
+#' @export
+
+mapRange <- function() {
+  x.range <- range(cholera::roads$x)
+  y.range <- range(cholera::roads$y)
+  data.frame(x = x.range, y = y.range)
 }
