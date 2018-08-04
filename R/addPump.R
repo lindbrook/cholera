@@ -40,13 +40,16 @@ addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
     if (is.null(col)) {
       sel.col <- snowColors(vestry)[paste0("p", p.ID[sel])]
       points(p.data[sel, c("x", "y")], pch = pch, col = sel.col, ...)
+
+      if (label) {
+        text(p.data[sel, c("x", "y")], pos = pos, labels = paste0("p", p.ID[sel]), col = sel.col, ...)
+      }
     } else {
       points(p.data[sel, c("x", "y")], pch = pch, col = col, ...)
-    }
 
-    if (label) {
-      text(p.data[sel, c("x", "y")], pos = pos, labels = paste0("p", p.ID[sel]),
-        ...)
+      if (label) {
+        text(p.data[sel, c("x", "y")], pos = pos, labels = paste0("p", p.ID[sel]), col = col, ...)
+      }
     }
 
   } else {
@@ -58,7 +61,8 @@ addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
     }
 
     if (label) {
-      text(p.data[, c("x", "y")], pos = pos, labels = paste0("p", p.ID), ...)
+      text(p.data[, c("x", "y")], pos = pos, labels = paste0("p", p.ID),
+        col = col, ...)
     }
   }
 }
