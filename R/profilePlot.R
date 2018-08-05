@@ -58,7 +58,13 @@ orthogonalCoordinates <- function(case, pump = 7, theta = 0, vestry = FALSE,
 
   axis.data <- ols(pump, theta, vestry)
 
-  if (theta != 0) {
+  if (theta == 0) {
+    x.proj <- obs$x
+    y.proj <- axis.focus$y
+  } else if (theta == 90) {
+    x.proj <- axis.focus$x
+    y.proj <- obs$y
+  } else {
     ortho.slope <- orthogonalSlope(axis.data$slope)
     ortho.intercept <- orthogonalIntercept(obs$x, ortho.slope, obs$y)
 
@@ -66,10 +72,6 @@ orthogonalCoordinates <- function(case, pump = 7, theta = 0, vestry = FALSE,
               (axis.data$slope - ortho.slope)
 
     y.proj <- axis.data$slope * x.proj + axis.data$intercept
-
-  } else {
-    x.proj <- obs$x
-    y.proj <- axis.focus$y
   }
 
   data.frame(x = x.proj, y = y.proj, row.names = NULL)
