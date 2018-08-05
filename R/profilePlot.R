@@ -11,7 +11,7 @@ axisIntercept <- function(m, x, y) {
 }
 
 orthogonalSlope <- function(b) -1 / b
-orthogonalIntercept <- function(b, ortho.slope, y) y - ortho.slope + b
+orthogonalIntercept <- function(b, ortho.slope, y) y - ortho.slope * b
 
 #' Intercept and slope of selected axis.
 #' @param pump Numeric. Numeric ID of pump (focal point).
