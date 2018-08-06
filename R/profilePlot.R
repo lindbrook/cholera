@@ -77,7 +77,14 @@ orthogonalCoordinates <- function(case, pump = 7, theta = 0, vestry = FALSE,
   data.frame(x = x.proj, y = y.proj, row.names = NULL)
 }
 
-rescale <- function(output = "inside", pump = 7, theta = 0,
+#' Rescale data along axis.
+#' @param output Character."inside" or "outside".
+#' @param pump Numeric. Selected pump focal point.
+#' @param theta Numeric. Angle of perspective axis in degrees.
+#' @param multi.core Logical.
+#' @export
+
+profilePerspective <- function(output = "inside", pump = 7, theta = 0,
   multi.core = FALSE) {
 
   walk <- nearestPump(multi.core = multi.core)
@@ -119,6 +126,21 @@ rescale <- function(output = "inside", pump = 7, theta = 0,
 
   d <- c(0, d)
 
-  data.frame(x = cumsum(d) - cumsum(d)[which(dat$anchor.case == 0)],
-             y = dat$case.count)
+  out <- data.frame(x = cumsum(d) - cumsum(d)[which(dat$anchor.case == 0)],
+                    y = dat$case.count)
+
+  class(out) <- "profile"
+  out
+}
+
+#' Plot method for profilePerspective().
+#'
+#' @param x An object of class "profile" created by profilePerspective().
+#' @param ... Additional plotting parameters.
+#' @export
+
+plot.profile <- function(x, ...) {
+  if (class(x) != "profile") stop('"x"\'s class needs to be "profile".')
+  plot(x$x, x$y, type = "h")
+  abline(v = 0, col = "red", lty = "dotted")
 }

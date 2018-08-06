@@ -1,7 +1,7 @@
 cholera 0.5.0.9015
 ==================
 
-- add rescale() prototype.
+- add profilePerspective() and plot.profile() prototype.
 
 
 cholera 0.5.0.9014
