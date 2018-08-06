@@ -76,3 +76,49 @@ orthogonalCoordinates <- function(case, pump = 7, theta = 0, vestry = FALSE,
 
   data.frame(x = x.proj, y = y.proj, row.names = NULL)
 }
+
+rescale <- function(output = "inside", pump = 7, theta = 0,
+  multi.core = FALSE) {
+
+  walk <- nearestPump(multi.core = multi.core)
+  neighborhood.select <- walk[walk$pump == pump, ]
+  neighborhood.others <- walk[walk$pump != pump, ]
+
+  if (output == "inside") {
+    cases <- neighborhood.select$case
+
+  } else if (output == "outside") {
+    cases <- neighborhood.others$case
+  } else {
+    stop('output must either be "inside" or "outside".')
+  }
+
+  vars <- c("ortho.x", "ortho.y")
+
+  coords <- lapply(cases, function(x) orthogonalCoordinates(x, theta = theta))
+  coords <- stats::setNames(do.call(rbind, coords), vars)
+
+  dat <- cholera::fatalities.address[cholera::fatalities.address$anchor.case
+    %in% cases, ]
+  dat <- cbind(dat, coords)
+
+  pump.data <- cholera::pumps[cholera::pumps$id == pump, c("x", "y")]
+  pump.data$ortho.x <- pump.data$x
+  pump.data$ortho.y <- pump.data$y
+  pump.data$anchor.case <- 0
+  pump.data$case.count <- 0
+  pump.data <- pump.data[, names(dat)]
+
+  dat <- rbind(pump.data, dat)
+  dat <- dat[order(dat$ortho.x, dat$ortho.y), ]
+  idx <- seq_len(nrow(dat))
+
+  d <- vapply(idx[-length(idx)], function(i) {
+    c(stats::dist(rbind(dat[i, vars], dat[i + 1, vars])))
+  }, numeric(1L))
+
+  d <- c(0, d)
+
+  data.frame(x = cumsum(d) - cumsum(d)[which(dat$anchor.case == 0)],
+             y = dat$case.count)
+}
