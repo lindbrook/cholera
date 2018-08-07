@@ -27,8 +27,7 @@ ols <- function(pump = 7, theta = 0, vestry = FALSE) {
   }
   center <- p.data[p.data$id == pump, ]
   b <- axisSlope(theta)
-  a <- axisIntercept(b, center$x, center$y)
-  data.frame(intercept = a, slope = b)
+  data.frame(intercept = axisIntercept(b, center$x, center$y), slope = b)
 }
 
 #' Coordinate of projection onto axis
@@ -126,8 +125,8 @@ profilePerspective <- function(output = "inside", pump = 7, theta = 0,
 
   d <- c(0, d)
 
-  out <- data.frame(x = cumsum(d) - cumsum(d)[which(dat$anchor.case == 0)],
-                    y = dat$case.count)
+  out <- data.frame(axis = cumsum(d) - cumsum(d)[which(dat$anchor.case == 0)],
+                    count = dat$case.count)
 
   class(out) <- "profile"
   out
@@ -141,6 +140,6 @@ profilePerspective <- function(output = "inside", pump = 7, theta = 0,
 
 plot.profile <- function(x, ...) {
   if (class(x) != "profile") stop('"x"\'s class needs to be "profile".')
-  plot(x$x, x$y, type = "h")
+  plot(x$axis, x$count, type = "h")
   abline(v = 0, col = "red", lty = "dotted")
 }
