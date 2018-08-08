@@ -2,20 +2,23 @@
 #'
 #' @param pump Numeric. Selected pump focal point.
 #' @param theta Numeric. Angle of perspective axis in degrees.
+#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.
 #' @param type Character. "base" or "ggplot2".
 #' @import ggplot2
 #' @export
 
-profilePlot <- function(pump = 7, theta = 0,
-  multi.core = FALSE, type = "base") {
+profilePlot <- function(pump = 7, theta = 0, vestry = FALSE, multi.core = FALSE,
+  type = "base") {
 
   if (type %in% c("base", "ggplot2") == FALSE) {
     stop('type must either be "base" or "ggplot2"')
   }
 
-  a <- profilePerspective("inside", theta = theta, multi.core = multi.core)
-  b <- profilePerspective("outside", theta = theta, multi.core = multi.core)
+  a <- profilePerspective("inside", theta = theta, vestry = vestry,
+    multi.core = multi.core)
+  b <- profilePerspective("outside", theta = theta, vestry = vestry,
+    multi.core = multi.core)
 
   if (type == "base") {
     par(mfrow = c(3, 1))
@@ -137,13 +140,14 @@ utils::globalVariables(c("count", "Location"))
 #' @param output Character."inside" or "outside".
 #' @param pump Numeric. Selected pump focal point.
 #' @param theta Numeric. Angle of perspective axis in degrees.
+#' @param vestry Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.
 #' @export
 
 profilePerspective <- function(output = "inside", pump = 7, theta = 0,
-  multi.core = FALSE) {
+  vestry = FALSE, multi.core = FALSE) {
 
-  walk <- nearestPump(multi.core = multi.core)
+  walk <- nearestPump(vestry = vestry, multi.core = multi.core)
   neighborhood.select <- walk[walk$pump == pump, ]
   neighborhood.others <- walk[walk$pump != pump, ]
 

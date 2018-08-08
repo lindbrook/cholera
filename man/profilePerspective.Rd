@@ -5,7 +5,7 @@
 \title{Rescale data along axis.}
 \usage{
 profilePerspective(output = "inside", pump = 7, theta = 0,
-  multi.core = FALSE)
+  vestry = FALSE, multi.core = FALSE)
 }
 \arguments{
 \item{output}{Character."inside" or "outside".}
@@ -13,6 +13,8 @@ profilePerspective(output = "inside", pump = 7, theta = 0,
 \item{pump}{Numeric. Selected pump focal point.}
 
 \item{theta}{Numeric. Angle of perspective axis in degrees.}
+
+\item{vestry}{Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.}
 
 \item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.}
 }
