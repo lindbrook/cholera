@@ -4,12 +4,9 @@
 \alias{profilePlot}
 \title{Profile Plot.}
 \usage{
-profilePlot(output = "insider", pump = 7, theta = 0,
-  multi.core = FALSE, type = "base")
+profilePlot(pump = 7, theta = 0, multi.core = FALSE, type = "base")
 }
 \arguments{
-\item{output}{Character."inside" or "outside".}
-
 \item{pump}{Numeric. Selected pump focal point.}
 
 \item{theta}{Numeric. Angle of perspective axis in degrees.}
