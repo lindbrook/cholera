@@ -1,8 +1,61 @@
 #' Profile Plot.
 #'
-#' @noRd
+#' @param output Character."inside" or "outside".
+#' @param pump Numeric. Selected pump focal point.
+#' @param theta Numeric. Angle of perspective axis in degrees.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.
+#' @param type Character. "base" or "ggplot2".
+#' @import ggplot2
+#' @export
 
-profilePlot <- function() NULL
+profilePlot <- function(output = "insider", pump = 7, theta = 0,
+  multi.core = FALSE, type = "base") {
+
+  if (type %in% c("base", "ggplot2") == FALSE) {
+    stop('type must either be "base" or "ggplot2"')
+  }
+
+  a <- profilePerspective(theta = theta, multi.core = multi.core)
+  b <- profilePerspective("outside", multi.core = multi.core, theta = theta)
+
+  if (type == "base") {
+    par(mfrow = c(3, 1))
+    x.rng <- range(a$axis, b$axis)
+    y.rng <- range(a$count, b$count)
+    plot(a$axis, a$count, type = "h", xlim = x.rng, ylim = y.rng, col = "red")
+    title(main = paste("Axis angle =", theta))
+    plot(b$axis, b$count, type = "h", xlim = x.rng, ylim = y.rng, col = "blue")
+    plot(b$axis, b$count, type = "h", xlim = x.rng, ylim = y.rng,
+      col = grDevices::adjustcolor("blue", alpha.f = 1/2))
+    points(a$axis, a$count, type = "h",
+      col = grDevices::adjustcolor("red", alpha.f = 1/2))
+    par(mfrow = c(1, 1))
+
+  } else if (type == "ggplot2") {
+    profileA <- data.frame(axis = a$axis, count = a$count)
+    profileB <- data.frame(axis = b$axis, count = b$count)
+    profileA$Location <- "Inside"
+    profileB$Location <- "Outside"
+    profileA$facet <- "Inside"
+    profileB$facet <- "Outside"
+    profileAB <- rbind(profileA, profileB)
+    profileAB$facet <- "In & Out"
+    profile.data <- rbind(profileA, profileB, profileAB)
+    facet <- c("Inside", "Outside", "In & Out")
+    profile.data$facet <- factor(profile.data$facet, levels = facet)
+    p <- ggplot(data = profile.data, aes(x = axis, xend = axis, y = 0,
+                yend = count)) +
+      geom_segment(aes(color = Location)) +
+      scale_colour_manual(values = c("red", "blue")) +
+      theme_bw() +
+      theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            plot.title = element_text(hjust = 0.5)) +
+      facet_wrap(~ facet, nrow = 2) +
+      ggtitle(paste("Axis angle =", theta))
+    p
+  }
+}
 
 axisSlope <- function(theta) tan(pi * theta / 180)
 axisIntercept <- function(m, x, y) {
@@ -14,6 +67,7 @@ orthogonalSlope <- function(b) -1 / b
 orthogonalIntercept <- function(b, ortho.slope, y) y - ortho.slope * b
 
 #' Intercept and slope of selected axis.
+#'
 #' @param pump Numeric. Numeric ID of pump (focal point).
 #' @param theta Numeric. Angle of axis in degrees.
 #' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
@@ -31,6 +85,7 @@ ols <- function(pump = 7, theta = 0, vestry = FALSE) {
 }
 
 #' Coordinate of projection onto axis
+#'
 #' @param case Numeric. Numeric ID of case.
 #' @param theta Numeric. Angle of axis in degrees.
 #' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
@@ -76,11 +131,14 @@ orthogonalCoordinates <- function(case, pump = 7, theta = 0, vestry = FALSE,
   data.frame(x = x.proj, y = y.proj, row.names = NULL)
 }
 
+utils::globalVariables(c("count", "Location"))
+
 #' Rescale data along axis.
+#'
 #' @param output Character."inside" or "outside".
 #' @param pump Numeric. Selected pump focal point.
 #' @param theta Numeric. Angle of perspective axis in degrees.
-#' @param multi.core Logical.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.
 #' @export
 
 profilePerspective <- function(output = "inside", pump = 7, theta = 0,
@@ -92,7 +150,6 @@ profilePerspective <- function(output = "inside", pump = 7, theta = 0,
 
   if (output == "inside") {
     cases <- neighborhood.select$case
-
   } else if (output == "outside") {
     cases <- neighborhood.others$case
   } else {
