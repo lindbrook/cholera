@@ -26,3 +26,4 @@ Imports: deldir (>= 0.0-18),
 Suggests: knitr
 VignetteBuilder: knitr
 RoxygenNote: 6.1.0
+Encoding: UTF-8
