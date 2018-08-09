@@ -53,7 +53,7 @@ profilePlot <- function(pump = 7, theta = 0, vestry = FALSE, multi.core = FALSE,
       theme(panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5)) +
-      facet_wrap(~ facet, nrow = 2) +
+      facet_wrap(~ facet, nrow = 3) +
       ggtitle(paste("Axis angle =", theta))
     p
   }
