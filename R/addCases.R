@@ -14,10 +14,10 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' snowMap()
-#' addCases(pump.susbet = c(6, 10))
+#' snowMap(add.cases = FALSE)
+#' addCases(pump.subset = c(6, 10))
 #'
-#' snowMap()
+#' snowMap(add.cases = FALSE)
 #' addCases(pump.select = c(6, 10))
 #' }
 
