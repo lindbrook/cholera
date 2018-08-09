@@ -5,8 +5,8 @@
 \title{Add observed cases by walking neighborhood.}
 \usage{
 addCases(pump.subset = NULL, pump.select = NULL, type = "address",
-  token = "id", text.size = 0.5, vestry = FALSE, weighted = TRUE,
-  color = NULL, multi.core = FALSE, ...)
+  token = "point", text.size = 0.5, vestry = FALSE,
+  weighted = TRUE, color = NULL, multi.core = FALSE, ...)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}

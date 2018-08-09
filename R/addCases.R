@@ -22,7 +22,7 @@
 #' }
 
 addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
-  token = "id", text.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
+  token = "point", text.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
   multi.core = FALSE, ...) {
 
   if (type %in% c("address", "fatalities") == FALSE) {
