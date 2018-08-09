@@ -1,23 +1,23 @@
 #' Profile Plot.
 #'
 #' @param pump Numeric. Selected pump focal point.
-#' @param theta Numeric. Angle of perspective axis in degrees.
+#' @param angle Numeric. Angle of perspective axis in degrees.
 #' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.
 #' @param type Character. "base" or "ggplot2".
 #' @import ggplot2
 #' @export
 
-profilePlot <- function(pump = 7, theta = 0, vestry = FALSE, multi.core = FALSE,
+profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
   type = "base") {
 
   if (type %in% c("base", "ggplot2") == FALSE) {
     stop('type must either be "base" or "ggplot2"')
   }
 
-  a <- profilePerspective("inside", theta = theta, vestry = vestry,
+  a <- profilePerspective("inside", angle = angle, vestry = vestry,
     multi.core = multi.core)
-  b <- profilePerspective("outside", theta = theta, vestry = vestry,
+  b <- profilePerspective("outside", angle = angle, vestry = vestry,
     multi.core = multi.core)
 
   if (type == "base") {
@@ -25,7 +25,7 @@ profilePlot <- function(pump = 7, theta = 0, vestry = FALSE, multi.core = FALSE,
     x.rng <- range(a$axis, b$axis)
     y.rng <- range(a$count, b$count)
     plot(a$axis, a$count, type = "h", xlim = x.rng, ylim = y.rng, col = "red")
-    title(main = paste("Axis angle =", theta))
+    title(main = paste("Axis angle =", angle))
     plot(b$axis, b$count, type = "h", xlim = x.rng, ylim = y.rng, col = "blue")
     plot(b$axis, b$count, type = "h", xlim = x.rng, ylim = y.rng,
       col = grDevices::adjustcolor("blue", alpha.f = 1/2))
@@ -54,12 +54,12 @@ profilePlot <- function(pump = 7, theta = 0, vestry = FALSE, multi.core = FALSE,
             panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5)) +
       facet_wrap(~ facet, nrow = 3) +
-      ggtitle(paste("Axis angle =", theta))
+      ggtitle(paste("Axis angle =", angle))
     p
   }
 }
 
-axisSlope <- function(theta) tan(pi * theta / 180)
+axisSlope <- function(angle) tan(pi * angle / 180)
 axisIntercept <- function(m, x, y) {
   int <- y - m * x
   ifelse(m * x == 0, y, int)
@@ -71,30 +71,30 @@ orthogonalIntercept <- function(b, ortho.slope, y) y - ortho.slope * b
 #' Intercept and slope of selected axis.
 #'
 #' @param pump Numeric. Numeric ID of pump (focal point).
-#' @param theta Numeric. Angle of axis in degrees.
+#' @param angle Numeric. Angle of axis in degrees.
 #' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @noRd
 
-ols <- function(pump = 7, theta = 0, vestry = FALSE) {
+ols <- function(pump = 7, angle = 0, vestry = FALSE) {
   if (vestry) {
     p.data <- cholera::pumps.vestry
   } else {
     p.data <- cholera::pumps
   }
   center <- p.data[p.data$id == pump, ]
-  b <- axisSlope(theta)
+  b <- axisSlope(angle)
   data.frame(intercept = axisIntercept(b, center$x, center$y), slope = b)
 }
 
 #' Coordinate of projection onto axis
 #'
 #' @param case Numeric. Numeric ID of case.
-#' @param theta Numeric. Angle of axis in degrees.
+#' @param angle Numeric. Angle of axis in degrees.
 #' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
 #' @param observed Logical.
 #' @noRd
 
-orthogonalCoordinates <- function(case, pump = 7, theta = 0, vestry = FALSE,
+orthogonalCoordinates <- function(case, pump = 7, angle = 0, vestry = FALSE,
   observed = TRUE) {
 
   if (vestry) {
@@ -112,12 +112,12 @@ orthogonalCoordinates <- function(case, pump = 7, theta = 0, vestry = FALSE,
     obs <- cholera::regular.cases[case, ]
   }
 
-  axis.data <- ols(pump, theta, vestry)
+  axis.data <- ols(pump, angle, vestry)
 
-  if (theta == 0) {
+  if (angle == 0) {
     x.proj <- obs$x
     y.proj <- axis.focus$y
-  } else if (theta == 90) {
+  } else if (angle == 90) {
     x.proj <- axis.focus$x
     y.proj <- obs$y
   } else {
@@ -139,12 +139,12 @@ utils::globalVariables(c("count", "Location"))
 #'
 #' @param output Character."inside" or "outside".
 #' @param pump Numeric. Selected pump focal point.
-#' @param theta Numeric. Angle of perspective axis in degrees.
+#' @param angle Numeric. Angle of perspective axis in degrees.
 #' @param vestry Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.
 #' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.
 #' @export
 
-profilePerspective <- function(output = "inside", pump = 7, theta = 0,
+profilePerspective <- function(output = "inside", pump = 7, angle = 0,
   vestry = FALSE, multi.core = FALSE) {
 
   walk <- nearestPump(vestry = vestry, multi.core = multi.core)
@@ -161,7 +161,7 @@ profilePerspective <- function(output = "inside", pump = 7, theta = 0,
 
   vars <- c("ortho.x", "ortho.y")
 
-  coords <- lapply(cases, function(x) orthogonalCoordinates(x, theta = theta))
+  coords <- lapply(cases, function(x) orthogonalCoordinates(x, angle = angle))
   coords <- stats::setNames(do.call(rbind, coords), vars)
 
   dat <- cholera::fatalities.address[cholera::fatalities.address$anchor.case

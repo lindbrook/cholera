@@ -4,13 +4,13 @@
 \alias{profilePlot}
 \title{Profile Plot.}
 \usage{
-profilePlot(pump = 7, theta = 0, vestry = FALSE,
+profilePlot(pump = 7, angle = 0, vestry = FALSE,
   multi.core = FALSE, type = "base")
 }
 \arguments{
 \item{pump}{Numeric. Selected pump focal point.}
 
-\item{theta}{Numeric. Angle of perspective axis in degrees.}
+\item{angle}{Numeric. Angle of perspective axis in degrees.}
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 

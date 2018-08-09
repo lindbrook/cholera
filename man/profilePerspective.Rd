@@ -4,7 +4,7 @@
 \alias{profilePerspective}
 \title{Rescale data along axis.}
 \usage{
-profilePerspective(output = "inside", pump = 7, theta = 0,
+profilePerspective(output = "inside", pump = 7, angle = 0,
   vestry = FALSE, multi.core = FALSE)
 }
 \arguments{
@@ -12,7 +12,7 @@ profilePerspective(output = "inside", pump = 7, theta = 0,
 
 \item{pump}{Numeric. Selected pump focal point.}
 
-\item{theta}{Numeric. Angle of perspective axis in degrees.}
+\item{angle}{Numeric. Angle of perspective axis in degrees.}
 
 \item{vestry}{Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.}
 
