@@ -188,7 +188,7 @@ profilePerspective <- function(output = "inside", pump = 7, angle = 0,
   out <- data.frame(axis = cumsum(d) - cumsum(d)[which(dat$anchor.case == 0)],
                     count = dat$case.count)
 
-  class(out) <- "profile_plot"
+  class(out) <- "profile_perspective"
   out
 }
 
@@ -198,11 +198,11 @@ profilePerspective <- function(output = "inside", pump = 7, angle = 0,
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.profile <- function(x, ...) {
-  if (class(x) != "profile_plot") {
-    stop('"x"\'s class needs to be "profile_plot".')
+plot.profile_perspective <- function(x, ...) {
+  if (class(x) != "profile_perspective") {
+    stop('"x"\'s class needs to be "profile_perspective".')
   }
-  
+
   plot(x$axis, x$count, type = "h")
   abline(v = 0, col = "red", lty = "dotted")
 }
