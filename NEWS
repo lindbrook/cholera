@@ -1,3 +1,12 @@
+cholera 0.5.0.9018
+==================
+
+- set "point" as default token in addCases().
+- change "theta" to "angle" in profilePlot().
+- set profilePlot() to "profile_plot".
+- fix typos and formatting.
+
+
 cholera 0.5.0.9017
 ==================
 
