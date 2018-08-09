@@ -95,7 +95,7 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
 
   if (is.na(x$alter.node)) {
     txt1 <- paste("Case", x$origin, "is part of an isolated subgraph.")
-    txt2 <- "It (technically) has no neareast pump."
+    txt2 <- "It (technically) has no nearest pump."
     stop(txt1, txt2)
   }
 

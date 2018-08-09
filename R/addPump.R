@@ -42,13 +42,15 @@ addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
       points(p.data[sel, c("x", "y")], pch = pch, col = sel.col, ...)
 
       if (label) {
-        text(p.data[sel, c("x", "y")], pos = pos, labels = paste0("p", p.ID[sel]), col = sel.col, ...)
+        text(p.data[sel, c("x", "y")], pos = pos,
+          labels = paste0("p", p.ID[sel]), col = sel.col, ...)
       }
     } else {
       points(p.data[sel, c("x", "y")], pch = pch, col = col, ...)
 
       if (label) {
-        text(p.data[sel, c("x", "y")], pos = pos, labels = paste0("p", p.ID[sel]), col = col, ...)
+        text(p.data[sel, c("x", "y")], pos = pos,
+          labels = paste0("p", p.ID[sel]), col = col, ...)
       }
     }
 

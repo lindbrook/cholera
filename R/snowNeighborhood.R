@@ -128,7 +128,7 @@ snowNeighborhood <- function() {
   sim.case.partial <- lapply(seq_along(partial.candidates), classifyCase)
   sim.case.partial <- unlist(sim.case.partial)
 
-  # regular.case 3173 is adjacent to Richmond Mews but othogonal to Wardour
+  # regular.case 3173 is adjacent to Richmond Mews but orthogonal to Wardour
   # Street (188-1); dropped as outlier to Snow neighborhood.
   partial.id <- sim.case.partial[sim.case.partial != 3173]
 

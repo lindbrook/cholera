@@ -135,7 +135,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @param x An object of class "voronoi" created by neighborhoodVoronoi().
 #' @param voronoi.cells Logical. Plot Voronoi tessellation cells.
-#' @param euclidean.paths Logical. Plot all Eucldian paths (star graph).
+#' @param euclidean.paths Logical. Plot all Euclidean paths (star graph).
 #' @param ... Additional plotting parameters.
 #' @return A base R graph.
 #' @seealso

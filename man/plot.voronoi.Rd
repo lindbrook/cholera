@@ -12,7 +12,7 @@
 
 \item{voronoi.cells}{Logical. Plot Voronoi tessellation cells.}
 
-\item{euclidean.paths}{Logical. Plot all Eucldian paths (star graph).}
+\item{euclidean.paths}{Logical. Plot all Euclidean paths (star graph).}
 
 \item{...}{Additional plotting parameters.}
 }

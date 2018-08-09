@@ -229,7 +229,6 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
     ## St James Workhouse: [369] 434, 11, 53, 193 ##
     # move anchor 369 and associated cases to endpoint of St James Workhouse
     # segment
-    # ortho.proj[ortho.proj$case %in% case.select, ]
 
     old.st <- "194-1"
     new.st <- "148-1"
