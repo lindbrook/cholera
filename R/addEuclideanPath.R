@@ -75,7 +75,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
            col = case.color, lwd = 3, length = 0.075)
   } else {
     if (unit.posts %in% c("distance", "time") == FALSE) {
-      stop('If specified, "unit.posts" must be "distance" or "time".')
+      stop('If specified, unit.posts must be "distance" or "time".')
     } else {
       if (is.null(unit.interval)) {
         if (unit.posts == "distance")  {
@@ -85,7 +85,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
         }
       } else {
         if (!is.numeric(unit.interval)) {
-          stop('"unit.interval" must be numeric.')
+          stop('unit.interval must be numeric.')
         }
       }
 
@@ -98,7 +98,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
         h <- seq(0, tot, unit.interval) * 1000 * x$speed / 60^2 /
           cholera::unitMeter(1)
       } else {
-        stop('specify a "unit.posts"')
+        stop('Specify a unit.posts')
       }
 
       ols <- stats::lm(y ~ x, data = dat)

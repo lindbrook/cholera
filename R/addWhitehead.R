@@ -36,7 +36,7 @@ addWhitehead <- function(radius = 210, pump = "Broad Street", color = "black",
     if (is.character(pump)) {
       if (pump %in% cholera::pumps.vestry$street == FALSE) {
         text.a <- "Invalid Vestry pump name."
-        text.b <- "Check spelling or see pumps.vestry$street."
+        text.b <- "Check spelling or see cholera::pumps.vestry$street."
         stop(paste(text.a, text.b))
       } else {
         circumference.x <- cholera::pumps.vestry[cholera::pumps.vestry$street ==
@@ -58,7 +58,7 @@ addWhitehead <- function(radius = 210, pump = "Broad Street", color = "black",
     if (is.character(pump)) {
       if (pump %in% cholera::pumps$street == FALSE) {
         text.a <- "Invalid Snow pump name."
-        text.b <- "Check spelling or see pumps$street."
+        text.b <- "Check spelling or see cholera::pumps$street."
         stop(paste(text.a, text.b))
       } else {
         circumference.x <- cholera::pumps[cholera::pumps$street == pump, "x"] +

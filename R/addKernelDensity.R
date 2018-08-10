@@ -40,11 +40,11 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
   if (!is.null(obs.unit) & !all(obs.unit %in%
       c("unstacked", "address", "fatality"))) {
-    stop('"obs.unit" must be "unstacked", "address" or "fatality".')
+    stop('obs.unit must be "unstacked", "address" or "fatality".')
   }
 
   if (!all(neighborhood.type %in% c("voronoi", "walking"))) {
-    stop('"neighborhood.type" must either be "voronoi" or "walking".')
+    stop('neighborhood.type must either be "voronoi" or "walking".')
   }
 
   cores <- multiCore(multi.core)
@@ -112,7 +112,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
           sel <- names(cases.list) %in% paste0("p", abs(pump.subset)) == FALSE
           cases <- cases.list[sel]
         } else {
-          stop('Use all positive or all negative "pump.subset"!')
+          stop("Use all positive or all negative numbers for pump.subset.")
         }
 
       } else if (neighborhood.type == "voronoi") {

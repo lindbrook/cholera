@@ -16,7 +16,7 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   type = "arrows", multi.core = FALSE) {
 
   if (type %in% c("arrows", "points") == FALSE) {
-    stop('"type" must either be "arrows" or "points"')
+    stop('type must either be "arrows" or "points"')
   }
 
   cores <- multiCore(multi.core)

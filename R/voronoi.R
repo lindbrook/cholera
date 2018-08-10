@@ -43,7 +43,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   }
 
   if (is.null(pump.select) == FALSE) {
-    if (is.numeric(pump.select) == FALSE) stop('"pump.select" must be numeric.')
+    if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
     p.count <- nrow(pump.data)
     p.ID <- seq_len(p.count)
 

@@ -27,11 +27,11 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
   color = NULL, multi.core = FALSE, ...) {
 
   if (type %in% c("address", "fatalities") == FALSE) {
-    stop('"type" must be "address" or "fatalities".')
+    stop('type must be "address" or "fatalities".')
   }
 
   if (token %in% c("id", "point") == FALSE) {
-    stop('"id" must be "id" or "point".')
+    stop('token must be "id" or "point".')
   }
 
   cores <- multiCore(multi.core)
@@ -71,14 +71,14 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
   if (is.null(pump.subset) == FALSE) {
     if (all(pump.subset > 0)) {
       if (all(pump.subset %in% selected.pumps) == FALSE) {
-        stop('"pump.subset" must be a subset of "selected.pumps".')
+        stop("pump.subset must be a subset of selected.pumps.")
       }
     } else if (all(pump.subset < 0)) {
       if (all(abs(pump.subset) %in% selected.pumps) == FALSE) {
-        stop('"|pump.subset|" must be a subset of "selected.pumps".')
+        stop("|pump.subset| must be a subset of selected.pumps.")
       }
     } else {
-      stop('Use all positive or all negative "pump.subset"!')
+      stop("Use all positive or all negative numbers for pump.subset.")
     }
   }
 
@@ -103,7 +103,7 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
       } else if (all(pump.subset < 0)) {
         select <- selected.pumps[selected.pumps %in% abs(pump.subset) == FALSE]
       } else {
-        stop('Use all positive or all negative "pump.subset"!')
+        stop("Use all positive or all negative numbers for pump.subset.")
       }
 
       if (token == "point") {
@@ -140,7 +140,7 @@ addCases <- function(pump.subset = NULL, pump.select = NULL, type = "address",
       } else if (all(pump.subset < 0)) {
         select <- selected.pumps[selected.pumps %in% abs(pump.subset) == FALSE]
       } else {
-        stop('Use all positive or all negative "pump.subset"!')
+        stop("Use all positive or all negative numbers for pump.subset.")
       }
 
       invisible(lapply(select, function(x) {

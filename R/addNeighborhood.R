@@ -34,7 +34,7 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
 
   if (is.null(path) == FALSE) {
     if (path %in% c("expected", "observed") == FALSE) {
-      stop('If specified, "path" must be "expected" or "observed".')
+      stop('If specified, path must be "expected" or "observed".')
     }
   }
 
@@ -49,26 +49,26 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
 
   if (is.null(pump.select) == FALSE) {
     if (any(pump.select %in% p.ID == FALSE)) {
-      stop('If specified, 1 >= |"pump.select"| <= ', p.count,
-        " when vestry = ", vestry, ".")
+      stop('If specified, 1 >= |pump.select| <= ', p.count, " when vestry = ",
+        vestry, ".")
     }
   }
 
   if (is.null(pump.select) & is.null(pump.subset) == FALSE) {
     if (any(abs(pump.subset) %in% p.ID == FALSE)) {
-      stop('If specified, 1 >= |"pump.subset"| <= ', p.count,
-        " when vestry = ", vestry, ".")
+      stop('If specified, 1 >= |pump.subset| <= ', p.count, " when vestry = ",
+        vestry, ".")
     }
   }
 
   if (is.null(pump.subset) == FALSE & is.null(pump.select) == FALSE) {
     if (all(pump.select > 0)) {
       if (any(pump.subset %in% pump.select == FALSE)) {
-        stop('"pump.subset" should be a subset of "pump.select".')
+        stop('pump.subset should be a subset of pump.select.')
       }
     } else if (all(pump.select < 0)) {
       if (any(pump.subset %in% p.ID[pump.select])) {
-        stop('"pump.subset" should be a subset of "pump.select".')
+        stop('pump.subset should be a subset of pump.select.')
       }
     }
   }

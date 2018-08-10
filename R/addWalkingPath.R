@@ -25,15 +25,15 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
   unit.posts = "distance", unit.interval = NULL, alpha.level = 1) {
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('"unit" must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
-    stop('"time.unit" must be "hour", "minute" or "second".')
+    stop('time.unit must be "hour", "minute" or "second".')
   }
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
-    stop('"type" must be "case-pump", "cases" or "pumps".')
+    stop('type must be "case-pump", "cases" or "pumps".')
   }
 
   obs.ct <- nrow(cholera::fatalities)
@@ -54,20 +54,19 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
     if (origin %in% seq_len(ct) == FALSE) {
       txt1 <- 'With type = "'
       txt2 <- '" and observed = '
-      txt3 <- "'origin' must be between 1 and "
-      stop(txt1, type, txt2, observed, ", ", txt3, ct, ".")
+      txt3 <- ", 'origin' must be between 1 and "
+      stop(txt1, type, txt2, observed, txt3, ct, ".")
     }
 
     if (is.null(destination) == FALSE) {
       if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With vestry = ', vestry, ", 1 >= |'destination'| <= ", p.count,
-          ".")
+        stop('With vestry = ', vestry, ", 1 >= |destination| <= ", p.count, ".")
       }
     }
   } else if (type == "cases") {
     if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
-      txt1 <- 'With type = "'
-      txt2 <- '" and observed = '
+      txt1 <- 'With type = '
+      txt2 <- ' and observed = '
       txt3 <- ", the absolute value of 'origin' and 'destination' must fall "
       txt4 <- 'between 1 and '
       stop(txt1, type, txt2, observed, txt3, txt4, ct, ".")
@@ -100,7 +99,7 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
   }
 
   if ((alpha.level > 0 & alpha.level <= 1) == FALSE) {
-    stop('"alpha.level" must be > 0 and <= 1')
+    stop('alpha.level must be > 0 and <= 1')
   }
 
   colors <- cholera::snowColors(x$vestry)
@@ -214,7 +213,7 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
   # mileposts #
 
   if (unit.posts %in% c("distance", "time") == FALSE) {
-    stop('If specified, "unit.posts" must be "distance" or "time".')
+    stop('If specified, unit.posts must be "distance" or "time".')
   } else {
     if (is.null(unit.interval)) {
       if (unit.posts == "distance")  {
@@ -224,7 +223,7 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
       }
     } else {
       if (!is.numeric(unit.interval)) {
-        stop('"unit.interval" must be numeric.')
+        stop('unit.interval must be numeric.')
       }
     }
 
