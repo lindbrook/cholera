@@ -8,7 +8,7 @@ unstackFatalities(multi.core = FALSE, compute = FALSE,
   fatalities = cholera::fixFatalities())
 }
 \arguments{
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores. On Windows, only "multi.core = FALSE" is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores. On Windows, only multi.core = FALSE is available.}
 
 \item{compute}{Logical. TRUE computes data. FALSE uses pre-computed data.}
 

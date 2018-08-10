@@ -16,7 +16,7 @@ fixFatalities <- function() {
 #' Unstack "stacks" in Snow's cholera map.
 #'
 #' Unstacks fatalities data by 1) assigning the coordinates of the base case to all cases in a stack and 2) setting the base case as an "address" and making the number of fatalities an attribute.
-#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores. On Windows, only "multi.core = FALSE" is available.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores. On Windows, only multi.core = FALSE is available.
 #' @param fatalities Corrected fatalities data from cholera::fixFatalities(). For original data, use HistData::Snow.deaths.
 #' @param compute Logical. TRUE computes data. FALSE uses pre-computed data.
 #' @seealso \code{vignette("unstacking.fatalities")}

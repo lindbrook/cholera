@@ -7,7 +7,7 @@
 #' @param interval Numeric. Interval between mileposts: 50 meters for "distance";  60 seconds for "time".
 #' @param walking.speed Numeric. Default walking speed is 5 km/hr.
 #' @param type Character. "arrows" or "points".
-#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.
+#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only multi.core = FALSE is available.
 #' @return R base graphics arrows or points.
 #' @export
 

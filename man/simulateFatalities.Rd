@@ -10,7 +10,7 @@ simulateFatalities(compute = FALSE, multi.core = FALSE,
 \arguments{
 \item{compute}{Logical. TRUE computes data. FALSE uses pre-computed data. For replication of data used in the package, FALSE is the default.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only multi.core = FALSE is available.}
 
 \item{simulated.obs}{Numeric. Number of sample cases. Default is 20,000.}
 }

@@ -86,7 +86,7 @@ cholera 0.5.0.9006
 cholera 0.5.0.9005
 ==================
 
-- implement ellipses in plot.time_series() (Issue #1).
+- implement ellipses in plot.time_series() (#1).
 
 
 cholera 0.5.0.9004

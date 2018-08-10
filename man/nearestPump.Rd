@@ -21,7 +21,7 @@ nearestPump(pump.select = NULL, output = "distance", vestry = FALSE,
 
 \item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is TRUE and "output" is "distance". See \code{vignette("roads")} for information on unit distances.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only "multi.core = FALSE" is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only multi.core = FALSE is available.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 

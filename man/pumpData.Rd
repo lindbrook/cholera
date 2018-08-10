@@ -11,7 +11,7 @@ pumpData(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE)
 
 \item{orthogonal}{Logical. TRUE returns pump "addresses": the coordinates of the orthogonal projection from a pump's location onto the network of roads. FALSE returns pump location coordinates.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only "multi.core = FALSE" is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only multi.core = FALSE is available.}
 }
 \value{
 An R data frame.
