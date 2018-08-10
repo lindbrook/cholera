@@ -14,7 +14,7 @@ profilePlot(pump = 7, angle = 0, vestry = FALSE,
 
 \item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only multi.core = FALSE is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 
 \item{type}{Character. "base" or "ggplot2".}
 }

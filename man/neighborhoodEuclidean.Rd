@@ -8,7 +8,7 @@ neighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, case.set = "observed", multi.core = FALSE)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
+\item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
 
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. NULL selects all pumps.}
 
@@ -16,7 +16,7 @@ neighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 
 \item{case.set}{Character. "observed" or "expected".}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only multi.core = FALSE is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \value{
 A base R graph.

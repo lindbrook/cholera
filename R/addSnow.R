@@ -3,7 +3,7 @@
 #' @param type Character. Type of annotation plot: "area", "boundary" or "street".
 #' @param color Character. Neighborhood color.
 #' @param alpha.level Numeric. Alpha level transparency: a value in [0, 1].
-#' @param line.width Numeric. Line width for "street" and "boundary".
+#' @param line.width Numeric. Line width for \code{type = "street"} and \code{type = "boundary"}.
 #' @param ... Additional plotting parameters.
 #' @seealso \code{\link{snowMap}},
 #' \code{\link{addIndexCase}},

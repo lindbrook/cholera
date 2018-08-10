@@ -1,7 +1,7 @@
 #' Locate water pump by numerical ID.
 #'
 #' Highlight selected water pump.
-#' @param id Numeric or Integer. With "vestry = TRUE", a whole number between 1 and 14. With "vestry = FALSE", a whole number between 1 and 13. See cholera::pumps.vestry and cholera::pumps for IDs and details about specific pumps.
+#' @param id Numeric or Integer. With \code{vestry = TRUE}, a whole number between 1 and 14. With \code{vestry = FALSE}, a whole number between 1 and 13. See \code{cholera::pumps.vestry} and \code{cholera::pumps} for IDs and details about specific pumps.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param vestry Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.

@@ -1,17 +1,17 @@
 #' Add the path for the Euclidean distance between cases and/or pumps.
 #'
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
+#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
-#' @param observed Logical. Use observed or "simulated" expected data.
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
+#' @param observed Logical. Use observed or simulated expected data.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Default is 5 km/hr.
-#' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.
-#' @param unit.interval Numeric. Sets interval between posts: for "distance",
+#' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; \code{NULL} for no posts.
+#' @param unit.interval Numeric. Sets interval between \code{unit.posts}.
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
-#' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime().
+#' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
 #' @return An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
 #' @export
 

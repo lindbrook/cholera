@@ -5,7 +5,7 @@
 #' @param pump Character or Numeric. Name (road name) or numerical ID of selected pump. See \code{pumps} or \code{pumps.vestry}.
 #' @param color Character. Color of circle.
 #' @param line.type Character. Circle line type.
-#' @param vestry Logical. TRUE uses the 14 pumps and locations from Vestry report. FALSE uses original 13 pumps.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps and locations from Vestry report. \code{FALSE} uses original 13 pumps.
 #' @param subtitle Logical. Add subtitle with estimated "walking" time in seconds.
 #' @param walking.speed Numeric. km/hr.
 #' @param ... Additional plotting parameters.

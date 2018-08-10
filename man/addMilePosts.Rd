@@ -9,7 +9,7 @@ addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   type = "arrows", multi.core = FALSE)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of numeric pump IDs to select (subset) from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".}
+\item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
 
 \item{pump.select}{Numeric. Numeric vector of pumps to define possible pump neighborhoods (i.e. the "population"). Negative selection is possible. NULL selects all "observed" pumps (i.e., pumps with at least one case).}
 
@@ -23,7 +23,7 @@ addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 
 \item{type}{Character. "arrows" or "points".}
 
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. You can also specify the number logical cores. On Windows, only multi.core = FALSE is available.}
+\item{multi.core}{Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \value{
 R base graphics arrows or points.
