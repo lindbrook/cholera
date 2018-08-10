@@ -17,6 +17,6 @@ If you're reporting a bug, include a reproducible example: 1) describe what you 
 
 ### pull requests
 
-Submit a 'pull request' to propose a specific "under the hood" fix for problems in the source code.
+Submit a 'pull request' to propose a specific "under the hood" fix for the problem in the source code.
 
 This can include typos or errors (see above), as well as issues of coding or implementation. Please be aware that this package is under development. So while I strive to ensure that the code always works, the implementation may not always be optimal in terms of speed or elegance.
