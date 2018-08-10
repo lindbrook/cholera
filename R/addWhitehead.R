@@ -1,8 +1,8 @@
 #' Add Rev. Henry Whitehead's Broad Street pump neighborhood.
 #'
 #' A circle (polygon), centered around a desired pump with a radius of 210 yards. The Broad Street pump is the default.
-#' @param radius Numeric. Distance from a pump in yards.
 #' @param pump Character or Numeric. Name (road name) or numerical ID of selected pump. See \code{pumps} or \code{pumps.vestry}.
+#' @param radius Numeric. Distance from a pump in yards.
 #' @param color Character. Color of circle.
 #' @param line.type Character. Circle line type.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps and locations from Vestry report. \code{FALSE} uses original 13 pumps.
@@ -24,7 +24,7 @@
 #' snowMap(add.landmarks = FALSE)
 #' addWhitehead()
 
-addWhitehead <- function(radius = 210, pump = "Broad Street", color = "black",
+addWhitehead <- function(pump = "Broad Street", radius = 210, color = "black",
   line.type = "solid", vestry = FALSE, subtitle = FALSE, walking.speed = 5,
   ...) {
 

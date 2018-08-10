@@ -4,14 +4,14 @@
 \alias{addWhitehead}
 \title{Add Rev. Henry Whitehead's Broad Street pump neighborhood.}
 \usage{
-addWhitehead(radius = 210, pump = "Broad Street", color = "black",
+addWhitehead(pump = "Broad Street", radius = 210, color = "black",
   line.type = "solid", vestry = FALSE, subtitle = FALSE,
   walking.speed = 5, ...)
 }
 \arguments{
-\item{radius}{Numeric. Distance from a pump in yards.}
-
 \item{pump}{Character or Numeric. Name (road name) or numerical ID of selected pump. See \code{pumps} or \code{pumps.vestry}.}
+
+\item{radius}{Numeric. Distance from a pump in yards.}
 
 \item{color}{Character. Color of circle.}
 
