@@ -24,6 +24,16 @@ addWalkingPath <- function(origin, destination = NULL, type = "case-pump",
   time.unit = "second", walking.speed = 5, zoom = TRUE, radius = 0.5,
   unit.posts = "distance", unit.interval = NULL, alpha.level = 1) {
 
+  if (is.numeric(origin) == FALSE) {
+    stop('origin must be numeric.')
+  }
+
+  if (is.null(destination) == FALSE) {
+    if (is.numeric(destination) == FALSE) {
+      stop('destination must be numeric.')
+    }
+  }
+
   if (unit %in% c("meter", "yard", "native") == FALSE) {
     stop('unit must be "meter", "yard" or "native".')
   }

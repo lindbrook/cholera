@@ -51,7 +51,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
       pump.id <- pump.data$id[sel]
       snow.colors <- cholera::snowColors(vestry = TRUE)[sel]
     } else {
-      stop('Use all positive or all negative "pump.select"!')
+      stop("Use all positive or all negative numbers for pump.select.")
     }
   }
 
@@ -154,7 +154,7 @@ plot.euclidean <- function(x, ...) {
       nearest.pump.subset <- nearest.pump[nearest.pump %in%
         abs(pump.subset) ==- FALSE]
     } else {
-      stop('Use all positive or all negative "pump.subset"!')
+      stop("Use all positive or all negative numbers for pump.subset.")
     }
 
     invisible(lapply(seq_along(anchors.subset), function(i) {

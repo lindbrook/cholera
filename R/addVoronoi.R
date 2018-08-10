@@ -36,8 +36,7 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE, color = "black",
   } else {
     if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
     if (any(abs(pump.select) %in% p.ID == FALSE)) {
-      stop('With vestry = ', vestry, ", 1 >= |pump.select| <= ", p.count,
-        ".")
+      stop('With vestry = ', vestry, ", 1 >= |pump.select| <= ", p.count, ".")
     }
     pump.data <- cholera::pumps[pump.select, c("x", "y")]
   }

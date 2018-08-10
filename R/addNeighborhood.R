@@ -46,7 +46,6 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
 
   p.ID <- seq_len(p.count)
 
-
   if (is.null(pump.select) == FALSE) {
     if (any(pump.select %in% p.ID == FALSE)) {
       stop('If specified, 1 >= |pump.select| <= ', p.count, " when vestry = ",
@@ -451,7 +450,7 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
             }))
           }
         } else {
-          stop('Use all positive or all negative "pump.subset"!')
+          stop("Use all positive or all negative numbers for pump.subset.")
         }
       }
 
@@ -469,7 +468,7 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
         } else if (all(pump.subset < 0)) {
           sel <- names(n.path.edges) %in% abs(pump.subset) == FALSE
         } else {
-          stop('Use all positive or all negative "pump.subset"!')
+          stop("Use all positive or all negative numbers for pump.subset.")
         }
 
         edge.data <- lapply(n.path.edges[sel], function(x) unique(unlist(x)))

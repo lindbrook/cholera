@@ -27,7 +27,7 @@ addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
     }
 
     if (any(abs(pump.select) %in% p.ID == FALSE)) {
-      stop("With vestry = ", vestry, ",", "1 >= |pump.select| <= ", p.count,
+      stop("With vestry = ", vestry, ", ", "1 >= |pump.select| <= ", p.count,
         ".")
     }
 
