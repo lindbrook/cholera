@@ -9,7 +9,7 @@ snowMap(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
   add.title = TRUE, ...)
 }
 \arguments{
-\item{vestry}{Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
 \item{stacked}{Logical. Use stacked fatalities.}
 
@@ -29,7 +29,10 @@ snowMap(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
 A base R graphics plot.
 }
 \description{
-Uses amended version of Dodson and Tobler's data.
+Plot John Snow's cholera map.
+}
+\note{
+Uses amended version of Dodson and Tobler's data included in this package.
 }
 \examples{
 snowMap()

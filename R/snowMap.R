@@ -1,7 +1,6 @@
 #' Plot John Snow's cholera map.
 #'
-#' Uses amended version of Dodson and Tobler's data.
-#' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param stacked Logical. Use stacked fatalities.
 #' @param add.cases Logical. Add observed cases.
 #' @param add.landmarks Logical. Add landmarks.
@@ -9,6 +8,7 @@
 #' @param add.roads Logical. Add roads.
 #' @param add.title Logical. Add title.
 #' @param ... Additional plotting parameters.
+#' @note Uses amended version of Dodson and Tobler's data included in this package.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{addLandmarks}},
 #' \code{\link{addKernelDensity}},
