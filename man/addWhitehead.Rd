@@ -21,7 +21,7 @@ addWhitehead(pump = "Broad Street", radius = 210, color = "black",
 
 \item{subtitle}{Logical. Add subtitle with estimated "walking" time in seconds.}
 
-\item{walking.speed}{Numeric. km/hr.}
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{...}{Additional plotting parameters.}
 }

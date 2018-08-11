@@ -7,7 +7,7 @@
 #' @param line.type Character. Circle line type.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps and locations from Vestry report. \code{FALSE} uses original 13 pumps.
 #' @param subtitle Logical. Add subtitle with estimated "walking" time in seconds.
-#' @param walking.speed Numeric. km/hr.
+#' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param ... Additional plotting parameters.
 #' @seealso \code{\link{snowMap}},
 #' \code{\link{addIndexCase}},

@@ -12,7 +12,7 @@ distanceTime(x, unit = "second", meter.unit = cholera::unitMeter(1,
 
 \item{unit}{Character. Unit of measurement: "hour", "minute" or "second".}
 
-\item{meter.unit}{Numeric. 1 meter is approximately 54 map units. Set by cholera::unitMeter().}
+\item{meter.unit}{Numeric. 1 meter is approximately 54 map units. Set by \code{cholera::unitMeter()}.}
 
 \item{speed}{Numeric. Walking speed in km/hr.}
 }

@@ -7,7 +7,7 @@
 \method{print}{classifier_audit}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "classifier_audit" created by classifierAudit().}
+\item{x}{An object of class "classifier_audit" created by \code{classifierAudit()}.}
 
 \item{...}{Additional parameters.}
 }

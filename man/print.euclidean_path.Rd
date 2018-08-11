@@ -7,7 +7,7 @@
 \method{print}{euclidean_path}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "euclidean_path" created by euclideanPath().}
+\item{x}{An object of class "euclidean_path" created by \code{euclideanPath()}.}
 
 \item{...}{Additional parameters.}
 }

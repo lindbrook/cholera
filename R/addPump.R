@@ -1,7 +1,7 @@
 #' Add selected pump(s) to plot.
 #'
-#' @param pump.select Numeric or Integer. Vector of water pump numerical ID(s). With \code{vestry = TRUE}, whole number(s) between 1 and 14. With "vestry = FALSE", whole number(s) between 1 and 13. See \code{cholera::pumps.vestry }and \code{cholera::pumps} for IDs and details about specific pumps. NULL plots all pumps. Negative selection allowed.
-#' @param vestry Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.
+#' @param pump.select Numeric or Integer. Vector of water pump numerical ID(s). With \code{vestry = TRUE}, whole number(s) between 1 and 14. With \code{vestry = FALSE}, whole number(s) between 1 and 13. See \code{pumps.vestry} and \code{pumps} for IDs and details about specific pumps. \code{NULL} plots all pumps. Negative selection allowed.
+#' @param vestry Logical. \code{TRUE} for the 14 pumps from Vestry Report. \code{FALSE} for the original 13 pumps.
 #' @param col Character. Color of pump points.
 #' @param pch Numeric. Shape of point character.
 #' @param label Logical. TRUE adds text label.

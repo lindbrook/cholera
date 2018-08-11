@@ -1,11 +1,11 @@
 #' Plot Euclidean path pump neighborhoods.
 #'
 #' Plots star graph from pump to its cases.
-#' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by "pump.select". Negative selection possible. NULL selects all pumps in "pump.select".
-#' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. NULL selects all pumps.
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
+#' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.
+#' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param case.set Character. "observed" or "expected".
-#' @param multi.core Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @return A base R graph.
 #' @export
 #' @examples
@@ -19,7 +19,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, case.set = "observed", multi.core = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
-    stop('"case.set" must be "observed" or "expected".')
+    stop('case.set must be "observed" or "expected".')
   }
 
   cores <- multiCore(multi.core)
@@ -39,8 +39,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   } else {
     if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
     if (any(abs(pump.select) %in% p.ID) == FALSE) {
-      stop('With "vestry = ', vestry, '", 1 >= |"pump.select"| <= ', p.count,
-        ".")
+      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count, ".")
     }
 
     if (all(pump.select > 0)) {
@@ -102,7 +101,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 
 #' Plot method for neighborhoodWalking().
 #'
-#' @param x An object of class "euclidean" created by neighborhoodEuclidean().
+#' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
@@ -184,7 +183,7 @@ plot.euclidean <- function(x, ...) {
 
 #' Print method for neighborhoodWalking().
 #'
-#' @param x An object of class "euclidean" created by neighborhoodEuclidean().
+#' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
 #' @param ... Additional parameters.
 #' @return An R class 'table' vector.
 #' @export

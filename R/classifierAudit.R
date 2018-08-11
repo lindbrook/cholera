@@ -2,11 +2,11 @@
 #'
 #' Diagnostic to check classification of case to a road segment.
 #' @param case Numeric or Integer. Numeric ID of observed case.
-#' @param segment Character. Segment ID. See cholera::road.segments
-#' @param observed Logical. TRUE observed case; FALSE simulated case (cholera::regular.cases).
+#' @param segment Character. Segment ID. See \code{road.segments}.
+#' @param observed Logical. \code{FALSE} observed case; \code{TRUE} simulated case (\code{regular.cases}).
 #' @param coordinates Logical. Orthogonal projection coordinates.
 #' @note This function is a diagnostic. It is not a guarantee of correct classification.
-#' @return Logical TRUE or FALSE
+#' @return Logical \code{TRUE} or \code{FALSE}
 #' @export
 #' @examples
 #' classifierAudit(case = 483, segment = "326-2")
@@ -72,7 +72,7 @@ classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE,
 
 #' Return result of classifierAudit().
 #'
-#' @param x An object of class "classifier_audit" created by classifierAudit().
+#' @param x An object of class "classifier_audit" created by \code{classifierAudit()}.
 #' @param ... Additional parameters.
 #' @return An R data frame.
 #' @export
@@ -91,10 +91,10 @@ print.classifier_audit <- function(x, ...) {
 #' Plot result of classifierAudit().
 #'
 #' Plot case, segment and orthogonal projector.
-#' @param x An object of class "classifier_audit" created by classifierAudit().
+#' @param x An object of class "classifier_audit" created by \code{classifierAudit()}.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param unit Character. Unit of distance: "meter" (the default), "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
+#' @param unit Character. Unit of distance: "meter" (the default), "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.
 #' @param ... Additional parameters.
 #' @return A base R graphic.
 #' @export
@@ -105,7 +105,7 @@ plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = "meter",
   ...) {
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('"unit" must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".')
   }
 
   obs <- x$obs

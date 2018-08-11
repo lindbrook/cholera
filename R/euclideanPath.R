@@ -1,14 +1,14 @@
 #' Compute path of the Euclidean distance between cases and/or pumps.
 #'
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
+#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or "simulated" expected data.
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 pumps from the original map.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Default is 5 km/hr.
-#' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime().
+#' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
 #' @return An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
 #' @export
 #' @examples
@@ -35,15 +35,15 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
   walking.speed = 5) {
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('"unit" must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
-    stop('"time.unit" must be "hour", "minute" or "second".')
+    stop('time.unit must be "hour", "minute" or "second".')
   }
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
-    stop('"type" must be "case-pump", "cases" or "pumps".')
+    stop('type must be "case-pump", "cases" or "pumps".')
   }
 
   obs.ct <- nrow(cholera::fatalities)
@@ -66,8 +66,8 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
 
   if (type == "case-pump") {
     if (origin %in% seq_len(ct) == FALSE) {
-      txt1 <- 'With type = "case-pump" and "observed" = '
-      txt2 <- '"origin" must be between 1 and '
+      txt1 <- 'With type = "case-pump" and observed = '
+      txt2 <- 'origin must be between 1 and '
       stop(txt1, observed, ", ", txt2, ct, ".")
     }
 
@@ -75,7 +75,7 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
       alters <- p.data
     } else {
       if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With "vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count)
+        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count)
       } else {
         if (vestry) {
           alters <- p.data[destination, ]
@@ -115,7 +115,7 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
   } else if (type == "cases") {
     if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
       txt1 <- 'With type = "cases" and "observed" = '
-      txt2 <- ', the absolute values of "origin" and of "destination" must be '
+      txt2 <- ', the absolute values of origin and of destination must be '
       txt3 <- 'between 1 and '
       stop(txt1, observed, txt2, txt3, ct, ".")
     }
@@ -185,15 +185,14 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
 
   } else if (type == "pumps") {
     if (origin %in% p.ID == FALSE) {
-      stop('With "vestry = ', vestry, '", 1 >= |"origin"| <= ', p.count, ".")
+      stop('With vestry = ', vestry, ', 1 >= |origin| <= ', p.count, ".")
     }
 
     ego <- p.data[p.data$pump.id == origin, ]
 
     if (!is.null(destination)) {
       if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With "vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count,
-             ".")
+        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count, ".")
       } else {
         if (all(destination > 0)) {
           alters <- p.data[destination, ]
@@ -254,7 +253,7 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
 
 #' Summary of euclideanPath().
 #'
-#' @param x An object of class "euclidean_path" created by euclideanPath().
+#' @param x An object of class "euclidean_path" created by \code{euclideanPath()}.
 #' @param ... Additional parameters.
 #' @return An R data frame.
 #' @export
@@ -275,8 +274,8 @@ print.euclidean_path <- function(x, ...) {
 #' @param x An object of class "euclidean_path" created by euclideanPath().
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.
-#' @param unit.interval Numeric. Set interval between posts. When "unit.posts" is "distance", "unit.interval" automatically defaults to 50 meters. When "unit.posts" is "time", "unit.interval" automatically defaults to 60 seconds.
+#' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; \code{NULL} for no posts.
+#' @param unit.interval Numeric. Set interval between posts. When \code{unit.posts} is "distance", \code{unit.interval} automatically defaults to 50 meters. When \code{unit.posts} is "time", \code{unit.interval} automatically defaults to 60 seconds.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
@@ -363,7 +362,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
       "km/hr"))
   } else {
     if (unit.posts %in% c("distance", "time") == FALSE) {
-      stop('If specified, "unit.posts" must be "distance" or "time".')
+      stop('If specified, unit.posts must be "distance" or "time".')
     } else {
       if (is.null(unit.interval)) {
         if (unit.posts == "distance")  {
@@ -373,7 +372,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
         }
       } else {
         if (!is.numeric(unit.interval)) {
-          stop('"unit.interval" must be numeric.')
+          stop('unit.interval must be numeric.')
         }
       }
 
@@ -386,7 +385,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
         h <- seq(0, tot, unit.interval) * 1000 * x$speed / 60^2 /
           cholera::unitMeter(1)
       } else {
-        stop('specify a "unit.posts"')
+        stop('Specify unit.posts.')
       }
 
       ols <- stats::lm(y ~ x, data = dat)

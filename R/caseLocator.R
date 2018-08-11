@@ -3,9 +3,9 @@
 #' Highlight selected observed or simulated case and its home road segment.
 #' @param case Numeric or Integer. Whole number between 1 and 578.
 #' @param zoom Logical.
-#' @param observed Logical. TRUE for observed. FALSE for simulated.
+#' @param observed Logical. \code{TRUE} for observed. \code{FALSE} for simulated.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param stacked Logical. TRUE uses \code{fatalities} ("stacked" data); FALSE uses \code{fatalities.address} ("unstacked" data).
+#' @param stacked Logical. \code{TRUE} uses \code{fatalities} ("stacked" data); \code{FALSE} uses \code{fatalities.address} ("unstacked" data).
 #' @return A base R graphics plot.
 #' @seealso \code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}
 #' @import graphics

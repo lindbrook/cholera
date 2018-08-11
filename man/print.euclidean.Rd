@@ -7,7 +7,7 @@
 \method{print}{euclidean}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "euclidean" created by neighborhoodEuclidean().}
+\item{x}{An object of class "euclidean" created by \code{neighborhoodEuclidean()}.}
 
 \item{...}{Additional parameters.}
 }

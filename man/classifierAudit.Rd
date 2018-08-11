@@ -10,14 +10,14 @@ classifierAudit(case = 483, segment = "326-2", observed = TRUE,
 \arguments{
 \item{case}{Numeric or Integer. Numeric ID of observed case.}
 
-\item{segment}{Character. Segment ID. See cholera::road.segments}
+\item{segment}{Character. Segment ID. See \code{road.segments}.}
 
-\item{observed}{Logical. TRUE observed case; FALSE simulated case (cholera::regular.cases).}
+\item{observed}{Logical. \code{FALSE} observed case; \code{TRUE} simulated case (\code{regular.cases}).}
 
 \item{coordinates}{Logical. Orthogonal projection coordinates.}
 }
 \value{
-Logical TRUE or FALSE
+Logical \code{TRUE} or \code{FALSE}
 }
 \description{
 Diagnostic to check classification of case to a road segment.

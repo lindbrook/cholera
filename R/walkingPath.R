@@ -357,7 +357,7 @@ print.walking_path <- function(x, ...) {
 #' @param zoom Logical.
 #' @param radius Numeric. Control the degree of zoom.
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.
-#' @param unit.interval Numeric. Set interval between posts. When "unit.posts" is "distance", "unit.interval" automatically defaults to 50 meters. When "unit.posts" is "time", "unit.interval" automatically defaults to 60 seconds.
+#' @param unit.interval Numeric. Set interval between posts. When \code{unit.posts} is "distance", \code{unit.interval} automatically defaults to 50 meters. When \code{unit.posts} is "time", \code{unit.interval} automatically defaults to 60 seconds.
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
@@ -539,7 +539,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
   if (is.null(unit.posts) == FALSE) {
     if (unit.posts %in% c("distance", "time") == FALSE) {
-      stop('If specified, "unit.posts" must be "distance" or "time".')
+      stop('If specified, unit.posts must be "distance" or "time".')
     } else {
       if (is.null(unit.interval)) {
         if (unit.posts == "distance")  {
@@ -549,7 +549,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         }
       } else {
         if (!is.numeric(unit.interval)) {
-          stop('"unit.interval" must be numeric.')
+          stop('unit.interval must be numeric.')
         }
       }
 

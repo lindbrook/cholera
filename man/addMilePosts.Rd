@@ -23,7 +23,7 @@ addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 
 \item{type}{Character. "arrows" or "points".}
 
-\item{multi.core}{Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \value{
 R base graphics arrows or points.

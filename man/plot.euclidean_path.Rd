@@ -14,9 +14,9 @@
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
-\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.}
+\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts; \code{NULL} for no posts.}
 
-\item{unit.interval}{Numeric. Set interval between posts. When "unit.posts" is "distance", "unit.interval" automatically defaults to 50 meters. When "unit.posts" is "time", "unit.interval" automatically defaults to 60 seconds.}
+\item{unit.interval}{Numeric. Set interval between posts. When \code{unit.posts} is "distance", \code{unit.interval} automatically defaults to 50 meters. When \code{unit.posts} is "time", \code{unit.interval} automatically defaults to 60 seconds.}
 
 \item{...}{Additional plotting parameters.}
 }

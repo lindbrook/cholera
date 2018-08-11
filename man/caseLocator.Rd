@@ -12,11 +12,11 @@ caseLocator(case, zoom = FALSE, observed = TRUE, radius = 2,
 
 \item{zoom}{Logical.}
 
-\item{observed}{Logical. TRUE for observed. FALSE for simulated.}
+\item{observed}{Logical. \code{TRUE} for observed. \code{FALSE} for simulated.}
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
-\item{stacked}{Logical. TRUE uses \code{fatalities} ("stacked" data); FALSE uses \code{fatalities.address} ("unstacked" data).}
+\item{stacked}{Logical. \code{TRUE} uses \code{fatalities} ("stacked" data); \code{FALSE} uses \code{fatalities.address} ("unstacked" data).}
 }
 \value{
 A base R graphics plot.
