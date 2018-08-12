@@ -1,6 +1,6 @@
 #' Aggregate time series fatality data from the Vestry report.
 #'
-#' @param vestry Logical. TRUE returns the data from the Vestry committee (Appendix B, p. 175). FALSE (default) returns John Snow's contribution to the report (p.117).
+#' @param vestry Logical. \code{TRUE} returns the data from the Vestry committee (Appendix B, p. 175). \code{FALSE} returns John Snow's contribution to the report (p.117).
 #' @return A R list with two objects: "data" and "source" ("snow" or "vestry").
 #' \itemize{
 #'   \item{\code{date}: Calendar date.}
@@ -65,7 +65,7 @@ timeSeries <- function(vestry = FALSE) {
 #'
 #' Plot aggregate fatality data and indicates the date of the removal of the handle of the Broad Street pump.
 #' @param x An object of class "time_series" from timeSeries().
-#' @param statistic Character. Fatality measure: either "fatal.attacks", which is the default, or "deaths".
+#' @param statistic Character. Fatality measure: either "fatal.attacks" or "deaths".
 #' @param pump.handle Logical. Indicate date of removal of Broad Street pump handle.
 #' @param main Character. Title of graph.
 #' @param type Character. R plot type.
@@ -84,18 +84,17 @@ plot.time_series <- function(x, statistic = "fatal.attacks",
   type = "o", xlab = "Date", ylab = "Fatalities", ...) {
 
   if (class(x) != "time_series") {
-    stop('Input object\'s class needs to be "time_series".')
+    stop('x\'s class needs to be "time_series".')
   }
 
   if (all(statistic %in% c("deaths", "fatal.attacks")) == FALSE) {
-    stop('"statistic" must either be "deaths" or "fatal.attacks".')
+    stop('statistic must either be "deaths" or "fatal.attacks".')
   }
 
   dat <- x$data
 
   plot(dat$date, dat[, statistic], type = type, xlab = xlab, ylab = ylab, ...)
   title(main = main, ...)
-
   if (pump.handle) pumpHandle()
 }
 
@@ -112,9 +111,8 @@ plot.time_series <- function(x, statistic = "fatal.attacks",
 
 print.time_series <- function(x, ...) {
   if (class(x) != "time_series") {
-    stop('"x"\'s class needs to be "time_series".')
+    stop('x\'s class needs to be "time_series".')
   }
-
   print(x$data)
 }
 

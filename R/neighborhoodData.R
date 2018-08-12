@@ -8,7 +8,7 @@
 
 neighborhoodData <- function(vestry = FALSE, case.set = "observed") {
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
-    stop('"case.set" must be "observed", "expected" or "snow".')
+    stop('case.set must be "observed", "expected" or "snow".')
   }
 
   if (case.set == "expected") {

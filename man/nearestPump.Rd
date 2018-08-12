@@ -9,23 +9,23 @@ nearestPump(pump.select = NULL, output = "distance", vestry = FALSE,
   multi.core = FALSE, time.unit = "second", walking.speed = 5)
 }
 \arguments{
-\item{pump.select}{Numeric. Pump candidates to consider. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
+\item{pump.select}{Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
 
 \item{output}{Character. "distance" or "path".}
 
-\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
-\item{weighted}{Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.}
+\item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 
 \item{case.set}{Character. "observed", "expected", or "snow".}
 
-\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is TRUE and "output" is "distance". See \code{vignette("roads")} for information on unit distances.}
+\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is \code{TRUE} and "output" is "distance". See \code{vignette("roads")} for information on unit distances.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
-\item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 }
 \value{
 An R data frame or list of 'igraph' paths.
@@ -34,5 +34,5 @@ An R data frame or list of 'igraph' paths.
 Compute shortest walking distances or paths.
 }
 \note{
-Time is computed using distanceTime().
+Time is computed using \code{distanceTime()}.
 }

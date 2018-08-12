@@ -11,7 +11,7 @@
 
 segmentLength <- function(id , unit = "meter") {
   if (is.character(id) == FALSE) {
-    stop('"id" type must be character.')
+    stop('id\'s type must be character.')
   }
 
   if (id %in% cholera::road.segments$id == FALSE) {
@@ -19,7 +19,7 @@ segmentLength <- function(id , unit = "meter") {
   }
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('"unit" must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".')
   }
 
   dat <- cholera::road.segments[cholera::road.segments$id == id, ]

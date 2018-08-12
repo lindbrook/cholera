@@ -2,8 +2,8 @@
 #'
 #' @param pump Numeric. Selected pump focal point.
 #' @param angle Numeric. Angle of perspective axis in degrees.
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param multi.core Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param type Character. "base" or "ggplot2".
 #' @import ggplot2
 #' @export
@@ -72,7 +72,7 @@ orthogonalIntercept <- function(b, ortho.slope, y) y - ortho.slope * b
 #'
 #' @param pump Numeric. Numeric ID of pump (focal point).
 #' @param angle Numeric. Angle of axis in degrees.
-#' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @noRd
 
 ols <- function(pump = 7, angle = 0, vestry = FALSE) {
@@ -90,7 +90,7 @@ ols <- function(pump = 7, angle = 0, vestry = FALSE) {
 #'
 #' @param case Numeric. Numeric ID of case.
 #' @param angle Numeric. Angle of axis in degrees.
-#' @param vestry Logical. TRUE uses the 14 pumps from the map in the Vestry Report. FALSE uses the 13 pumps from the original map.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param observed Logical.
 #' @noRd
 
@@ -140,8 +140,8 @@ utils::globalVariables(c("count", "Location"))
 #' @param output Character."inside" or "outside".
 #' @param pump Numeric. Selected pump focal point.
 #' @param angle Numeric. Angle of perspective axis in degrees.
-#' @param vestry Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.
-#' @param multi.core Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param vestry Logical. \code{TRUE} for the 14 pumps from Vestry Report. \code{FALSE} for the original 13 pumps.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @export
 
 profilePerspective <- function(output = "inside", pump = 7, angle = 0,
@@ -194,7 +194,7 @@ profilePerspective <- function(output = "inside", pump = 7, angle = 0,
 
 #' Plot method for profilePerspective().
 #'
-#' @param x An object of class "profile" created by profilePerspective().
+#' @param x An object of class "profile" created by \code{profilePerspective()}.
 #' @param ... Additional plotting parameters.
 #' @export
 

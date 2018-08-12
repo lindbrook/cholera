@@ -1,20 +1,21 @@
 #' Compute the shortest walking path between cases and/or pumps.
 #'
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
+#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or "simulated" expected data.
-#' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of nodes.
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
+#' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of nodes.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
-#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
-#' @note The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
+#' @param walking.speed Numeric. Walking speed in km/hr.
+#' @note The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using \code{distanceTime()}. Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
 #' @return An R list with two elements: a character vector of path nodes and a data frame summary.
 #' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
 #' \dontrun{
+#'
 #' # path from case 1 to nearest pump.
 #' walkingPath(1)
 #'
@@ -39,15 +40,15 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
   time.unit = "second", walking.speed = 5) {
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('"unit" must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
-    stop('"time.unit" must be "hour", "minute" or "second".')
+    stop('time.unit must be "hour", "minute" or "second".')
   }
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
-    stop('"type" must be "case-pump", "cases" or "pumps".')
+    stop('type must be "case-pump", "cases" or "pumps".')
   }
 
   if (observed) {
@@ -78,15 +79,14 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
 
   if (type == "case-pump") {
     if (origin %in% seq_len(ct) == FALSE) {
-      txt1 <- 'With type = "case-pump" and "observed" = '
-      txt2 <- '"origin" must be between 1 and '
+      txt1 <- 'With type = "case-pump" and observed = '
+      txt2 <- 'origin must be between 1 and '
       stop(txt1, observed, ", ", txt2, ct, ".")
     }
 
     if (is.null(destination) == FALSE) {
       if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count,
-          ".")
+        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count, ".")
       }
     }
 
@@ -153,8 +153,8 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
 
   } else if (type == "cases") {
     if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
-      txt1 <- 'With type = "cases" and "observed" = '
-      txt2 <- ', the absolute value of "origin" and "destination" must be '
+      txt1 <- 'With type = "cases" and observed = '
+      txt2 <- ', the absolute value of origin and destination must be '
       txt3 <- 'between 1 and '
       stop(txt1, observed, txt2, txt3, ct, ".")
     }
@@ -242,7 +242,7 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
   } else if (type == "pumps") {
     if (any(abs(c(origin, destination)) %in% p.ID == FALSE)) {
       txt1 <- 'With type = "pumps" and vestry = '
-      txt2 <- ', "origin" and "destination" must whole numbers 1 >= |x| <= '
+      txt2 <- ', origin and destination must whole numbers 1 >= |x| <= '
       stop(txt1, vestry, txt2, p.count, ".")
     }
 
@@ -357,7 +357,7 @@ print.walking_path <- function(x, ...) {
 #' @param zoom Logical.
 #' @param radius Numeric. Control the degree of zoom.
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.
-#' @param unit.interval Numeric. Set interval between posts. When \code{unit.posts} is "distance", \code{unit.interval} automatically defaults to 50 meters. When \code{unit.posts} is "time", \code{unit.interval} automatically defaults to 60 seconds.
+#' @param unit.interval Numeric. Set interval between posts. When \code{unit.posts = "distance"}, \code{unit.interval} defaults to 50 meters. When \code{unit.posts = "time"}, \code{unit.interval} defaults to 60 seconds.
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
@@ -371,7 +371,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   unit.posts = "distance", unit.interval = NULL, alpha.level = 1, ...) {
 
   if (class(x) != "walking_path") {
-    stop('"x"\'s class must be "walking_path".')
+    stop('x\'s class must be "walking_path".')
   }
 
   if (is.na(x$alter.node)) {
@@ -381,7 +381,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   }
 
   if ((alpha.level > 0 & alpha.level <= 1) == FALSE) {
-    stop('"alpha.level" must be > 0 and <= 1.')
+    stop('alpha.level must be > 0 and <= 1.')
   }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]

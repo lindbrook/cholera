@@ -7,9 +7,9 @@
 \method{plot}{walking}(x, type = "road", ...)
 }
 \arguments{
-\item{x}{An object of class "walking" created by neighborhoodWalking().}
+\item{x}{An object of class "walking" created by \code{neighborhoodWalking()}.}
 
-\item{type}{Character. "road", "area.points" or "area.polygons". "area" flavors only valid when case.set = "expected".}
+\item{type}{Character. "road", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -20,11 +20,14 @@ A base R plot.
 Plot method for neighborhoodWalking().
 }
 \note{
-When plotting area graphs with simulated data (i.e., case.set = "expected"), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
+When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
 }
 \examples{
-# plot(neighborhoodWalking())
-# plot(neighborhoodWalking(case.set = "expected"))
-# plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
-# plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
+\dontrun{
+
+plot(neighborhoodWalking())
+plot(neighborhoodWalking(case.set = "expected"))
+plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
+plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
+}
 }

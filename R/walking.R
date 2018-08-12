@@ -1,11 +1,11 @@
 #' Compute walking path pump neighborhoods.
 #'
 #' Group cases into neighborhoods based on walking distance.
-#' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. NULL selects all pumps. Note that you can't just select the pump on Adam and Eve Court (#2) because it's technically an isolate.
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param weighted Logical. TRUE computes shortest path weighted by road length. FALSE computes shortest path in terms of the number of nodes.
+#' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps. Note that you can't just select the pump on Adam and Eve Court (#2) because it's technically an isolate.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
+#' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected" or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
-#' @param multi.core Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @return An R list with 7 objects:
 #' \itemize{
 #'   \item{\code{paths}: list of paths to nearest or selected pump(s).}
@@ -19,8 +19,11 @@
 #' @note This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 5 seconds while doing so for expected paths takes about 28 seconds. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to about 4 and 11 seconds. Note that parallelization is currently only available on Linux and Mac, and that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which \code{neighborhoodWalking()} uses, strongly discourage against using parallelization within a GUI or embedded environment. See vignette("parallel") for details.
 #' @export
 #' @examples
-#' # neighborhoodWalking()
-#' # neighborhoodWalking(pump.select = -6)
+#' \dontrun{
+#'
+#' neighborhoodWalking()
+#' neighborhoodWalking(pump.select = -6)
+#' }
 
 neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   weighted = TRUE, case.set = "observed", multi.core = FALSE) {
@@ -44,12 +47,12 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     p.ID <- seq_len(p.count)
 
     if (any(abs(pump.select) %in% p.ID == FALSE)) {
-      stop('With "vestry = ', vestry, '", 1 >= |"pump.select"| <= ', p.count)
+      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count)
     }
   }
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
-    stop('"case.set" must be "observed", "expected" or "snow".')
+    stop('case.set must be "observed", "expected" or "snow".')
   }
 
   cores <- multiCore(multi.core)
@@ -124,13 +127,16 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' Print method for neighborhoodWalking().
 #'
 #' Return count of paths (anchor cases) by pump neighborhood.
-#' @param x An object of class "walking" created by neighborhoodWalking().
+#' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
 #' @param ... Additional parameters.
 #' @return An R vector.
 #' @export
 #' @examples
-#' # neighborhoodWalking()
-#' # print(neighborhoodWalking())
+#' \dontrun{
+#'
+#' neighborhoodWalking()
+#' print(neighborhoodWalking())
+#' }
 
 print.walking <- function(x, ...) {
   if (class(x) != "walking") {
@@ -344,17 +350,20 @@ expectedCount <- function(x) {
 
 #' Plot method for neighborhoodWalking().
 #'
-#' @param x An object of class "walking" created by neighborhoodWalking().
-#' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when case.set = "expected".
+#' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
+#' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
-#' @note When plotting area graphs with simulated data (i.e., case.set = "expected"), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
+#' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
 #' @export
 #' @examples
-#' # plot(neighborhoodWalking())
-#' # plot(neighborhoodWalking(case.set = "expected"))
-#' # plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
-#' # plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
+#' \dontrun{
+#'
+#' plot(neighborhoodWalking())
+#' plot(neighborhoodWalking(case.set = "expected"))
+#' plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
+#' plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
+#' }
 
 plot.walking <- function(x, type = "road", ...) {
   if (class(x) != "walking") {
@@ -362,7 +371,7 @@ plot.walking <- function(x, type = "road", ...) {
   }
 
   if (type %in% c("road", "area.points", "area.polygons") == FALSE) {
-    stop('"type" must be "road", "area.points", "area.polygons".')
+    stop('type must be "road", "area.points", "area.polygons".')
   }
 
   if (type %in% c("area.points", "area.polygons")) {

@@ -1,20 +1,21 @@
 #' Compute the shortest walking distance between cases and/or pumps.
 #'
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.
+#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or "simulated" expected data.
-#' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of nodes.
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
+#' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of nodes.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
+#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
-#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
-#' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
+#' @param walking.speed Numeric. Walking speed in km/hr.
+#' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}. Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
 #' @return An R data frame.
 #' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
 #' \dontrun{
+#'
 #' # distance from case 1 to nearest pump.
 #' walkingDistance(1)
 #'
@@ -36,15 +37,15 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   time.unit = "second", walking.speed = 5) {
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
-    stop('"type" must be "case-pump", "cases" or "pumps".')
+    stop('type must be "case-pump", "cases" or "pumps".')
   }
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('"unit" must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
-    stop('"time.unit" must be "hour", "minute" or "second".')
+    stop('time.unit must be "hour", "minute" or "second".')
   }
 
   if (observed) {
@@ -73,22 +74,21 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
 
   if (type == "case-pump") {
     if (origin %in% seq_len(ct) == FALSE) {
-      txt1 <- 'With type = "case-pump" and "observed" = '
-      txt2 <- '"origin" must be between 1 and '
+      txt1 <- 'With type = "case-pump" and observed = '
+      txt2 <- 'origin must be between 1 and '
       stop(txt1, observed, ", ", txt2, ct, ".")
     }
 
     if (is.null(destination) == FALSE) {
       if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With vestry = ', vestry, '", 1 >= |"destination"| <= ', p.count,
-          ".")
+        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count, ".")
       }
     }
-    
+
   } else if (type == "cases") {
     if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
-      txt1 <- 'With type = "cases" and "observed" = '
-      txt2 <- ', the absolute value of "origin" and "destination" must be '
+      txt1 <- 'With type = "cases" and observed = '
+      txt2 <- ', the absolute value of origin and destination must be '
       txt3 <- 'between 1 and '
       stop(txt1, observed, txt2, txt3, ct, ".")
     }
@@ -96,7 +96,7 @@ walkingDistance <- function(origin, destination = NULL, type = "case-pump",
   } else if (type == "pumps") {
     if (any(abs(c(origin, destination)) %in% p.ID == FALSE)) {
       txt1 <- 'With type = "pumps" and vestry = '
-      txt2 <- ', "origin" and "destination" must whole number(s) 1 >= |x| <= '
+      txt2 <- ', origin and destination must whole number(s) 1 >= |x| <= '
       stop(txt1, vestry, txt2, p.count, ".")
     }
   }

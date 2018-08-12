@@ -1,9 +1,9 @@
 #' Generate simulated fatalities and their orthogonal projection on road network.
 #'
-#' Places regularly spaced "simulated" or "expected" cases across the face of the map. The function finds the "addresses" of cases on the road network via orthogonal projection (or simple proximity). These data are used to generate "expected" pump neighborhoods. The function relies on sp::spsample() and sp::Polygon().
-#' @param compute Logical. TRUE computes data. FALSE uses pre-computed data. For replication of data used in the package, FALSE is the default.
-#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores (rounds with as.integer()). On Windows, only multi.core = FALSE is available.
-#' @param simulated.obs Numeric. Number of sample cases. Default is 20,000.
+#' Places regularly spaced "simulated" or "expected" cases across the face of the map. The function finds the "addresses" of cases on the road network via orthogonal projection (or simple proximity). These data are used to generate "expected" pump neighborhoods. The function relies on \code{sp::spsample()} and \code{sp::Polygon()}.
+#' @param compute Logical. \code{TRUE} computes data. \code{FALSE} uses pre-computed data. For replication of data used in the package,
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). On Windows, only \code{multi.core = FALSE} is available.
+#' @param simulated.obs Numeric. Number of sample cases.
 #' @return An R list with two elements: \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}
 #' @note This function is computationally intensive. With "simulated.obs" set to 20,000 simulated cases (actually generating 19,993 cases), the function takes about 94 minutes to run on a single core of a 2.3 GHz Intel Core i7 with R version 3.5.1 and 22 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}. The distance between of these simulated cases is approximately 4.2 meters.
 #' @export

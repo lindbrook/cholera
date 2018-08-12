@@ -1,15 +1,15 @@
 #' Compute shortest walking distances or paths.
 #'
-#' @param pump.select Numeric. Pump candidates to consider. Default is NULL: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
+#' @param pump.select Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param output Character. "distance" or "path".
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
-#' @param weighted Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of the number of nodes.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
+#' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected", or "snow".
-#' @param multi.core Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
-#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is TRUE and "output" is "distance". See \code{vignette("roads")} for information on unit distances.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is \code{TRUE} and "output" is "distance". See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
-#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
-#' @note Time is computed using distanceTime().
+#' @param walking.speed Numeric. Walking speed in km/hr.
+#' @note Time is computed using \code{distanceTime()}.
 #' @export
 #' @return An R data frame or list of 'igraph' paths.
 
@@ -18,15 +18,15 @@ nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
   time.unit = "second", walking.speed = 5) {
 
   if (output %in% c("distance", "path") == FALSE) {
-    stop('"output" must be "distance" or "path".')
+    stop('output must be "distance" or "path".')
   }
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
-    stop('"case.set" must be "observed", "expected" or "snow".')
+    stop('case.set must be "observed", "expected" or "snow".')
   }
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('"unit" must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".')
   }
 
   cores <- multiCore(multi.core)

@@ -24,7 +24,7 @@ addNeighborhood(pump.subset = NULL, pump.select = NULL,
 
 \item{path}{Character. "expected" or "observed".}
 
-\item{path.color}{Character. Use a single color for all paths. NULL uses neighborhood colors defined by \code{snowColors()}.}
+\item{path.color}{Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors()}.}
 
 \item{path.width}{Numeric. Set width of paths.}
 
@@ -40,9 +40,11 @@ This function is computationally intensive. On a single core of a 2.3 GHz Intel 
 }
 \examples{
 \dontrun{
+
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
   unit = "meter", cases = NULL)
 addNeighborhood(6:7)
+
 }
 }
 \seealso{

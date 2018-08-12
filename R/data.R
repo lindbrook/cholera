@@ -169,7 +169,10 @@
 #' }
 #' @note \code{\link{neighborhoodWalking}} documents the code for these data. For details, see \code{vignette}("pump.neighborhoods").
 #' @examples
-#' # pumpCase(neighborhoodWalking(case.set = "expected"))
+#' \dontrun{
+#'
+#' pumpCase(neighborhoodWalking(case.set = "expected"))
+#' }
 #' @docType data
 "sim.pump.case"
 

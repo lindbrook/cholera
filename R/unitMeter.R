@@ -9,11 +9,11 @@
 
 unitMeter <- function(x, unit = "meter", yard.unit = 177 / 3, meter.unit = 54) {
   if (is.numeric(x) == FALSE) {
-    stop('"x" must be numeric.')
+    stop('x must be numeric.')
   }
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('"unit" must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".')
   }
 
   if (unit == "meter") {

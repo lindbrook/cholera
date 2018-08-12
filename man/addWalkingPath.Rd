@@ -27,7 +27,7 @@ addWalkingPath(origin, destination = NULL, type = "case-pump",
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
-\item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{zoom}{Logical.}
 

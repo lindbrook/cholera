@@ -15,8 +15,11 @@
 #' @import graphics
 #' @export
 #' @examples
-#' # plot(neighborhoodVoronoi())
-#' # addSnow()
+#' \dontrun{
+#'
+#' plot(neighborhoodVoronoi())
+#' addSnow()
+#' }
 
 addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
   line.width = 2, ...) {

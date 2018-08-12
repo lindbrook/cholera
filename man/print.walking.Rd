@@ -7,7 +7,7 @@
 \method{print}{walking}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "walking" created by neighborhoodWalking().}
+\item{x}{An object of class "walking" created by \code{neighborhoodWalking()}.}
 
 \item{...}{Additional parameters.}
 }
@@ -18,6 +18,9 @@ An R vector.
 Return count of paths (anchor cases) by pump neighborhood.
 }
 \examples{
-# neighborhoodWalking()
-# print(neighborhoodWalking())
+\dontrun{
+
+neighborhoodWalking()
+print(neighborhoodWalking())
+}
 }

@@ -24,7 +24,7 @@ addEuclideanPath(origin, destination = NULL, type = "case-pump",
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
-\item{walking.speed}{Numeric. Default is 5 km/hr.}
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts; \code{NULL} for no posts.}
 

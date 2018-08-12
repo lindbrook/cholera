@@ -7,7 +7,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param area Logical. Area polygons.
 #' @param path Character. "expected" or "observed".
-#' @param path.color Character. Use a single color for all paths. NULL uses neighborhood colors defined by \code{snowColors()}.
+#' @param path.color Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors()}.
 #' @param path.width Numeric. Set width of paths.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @param ... Additional plotting parameters.
@@ -23,9 +23,11 @@
 #' @export
 #' @examples
 #' \dontrun{
+#'
 #' streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
 #'   unit = "meter", cases = NULL)
 #' addNeighborhood(6:7)
+#'
 #' }
 
 addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,

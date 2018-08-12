@@ -24,7 +24,7 @@ addKernelDensity(pump.subset = "pooled", pump.select = NULL,
 
 \item{line.type}{Character. Line type for contour lines.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -38,17 +38,20 @@ Add 2D kernel density contours based on selected sets of observations.
 This function uses KernSmooth::bkde2D().
 }
 \examples{
-# snowMap()
-# addKernelDensity()
+\dontrun{
 
-# snowMap()
-# addKernelDensity("individual")
+snowMap()
+addKernelDensity()
 
-# snowMap()
-# addKernelDensity(c(6, 8))
+snowMap()
+addKernelDensity("individual")
 
-# snowMap()
-# addKernelDensity(pump.select = c(6, 8))
+snowMap()
+addKernelDensity(c(6, 8))
+
+snowMap()
+addKernelDensity(pump.select = c(6, 8))
+}
 }
 \seealso{
 \code{\link{snowMap}},

@@ -2,9 +2,9 @@
 #'
 #' Highlights the selected road segment and its cases.
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.
-#' @param zoom Logical. Default is FALSE.
+#' @param zoom Logical. Default is \code{FALSE}.
 #' @param radius Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.
-#' @param cases Character. Plot cases: NULL, "anchors" or "all".
+#' @param cases Character. Plot cases: \code{NULL}, "anchors" or "all".
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
@@ -25,7 +25,7 @@ segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
   subtitle = TRUE) {
 
   if (is.character(id) == FALSE) {
-    stop('"id" must be a character.')
+    stop('id\'s type must be a character.')
   }
 
   if (id %in% cholera::road.segments$id == FALSE) {
@@ -33,7 +33,7 @@ segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
   }
 
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('"unit" must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".')
   }
 
   st <- cholera::road.segments[cholera::road.segments$id == id, ]

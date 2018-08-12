@@ -14,9 +14,9 @@ profilePerspective(output = "inside", pump = 7, angle = 0,
 
 \item{angle}{Numeric. Angle of perspective axis in degrees.}
 
-\item{vestry}{Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.}
+\item{vestry}{Logical. \code{TRUE} for the 14 pumps from Vestry Report. \code{FALSE} for the original 13 pumps.}
 
-\item{multi.core}{Logical or Numeric. TRUE uses \code{parallel::detectCores()}. FALSE uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \description{
 Rescale data along axis.

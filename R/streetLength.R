@@ -12,7 +12,7 @@
 
 streetLength <- function(road = "Oxford Street", unit = "meter") {
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('"unit" must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".')
   }
 
   if (is.character(road)) {

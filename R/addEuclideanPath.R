@@ -7,7 +7,7 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
-#' @param walking.speed Numeric. Default is 5 km/hr.
+#' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; \code{NULL} for no posts.
 #' @param unit.interval Numeric. Sets interval between \code{unit.posts}.
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].

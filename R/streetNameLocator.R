@@ -4,10 +4,10 @@
 #' @param road.name Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param cases Character. Plot cases: NULL, "anchors" or "all".
+#' @param cases Character. Plot cases: \code{NULL}, "anchors" or "all".
 #' @param add.title Logical. Include title.
 #' @param add.pump Logical. Include nearby pumps.
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param highlight Logical. Highlight selected road.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @param time.unit Character. "hour", "minute", or "second".

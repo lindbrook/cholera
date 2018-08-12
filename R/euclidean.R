@@ -10,6 +10,7 @@
 #' @export
 #' @examples
 #' \dontrun{
+#'
 #' neighborhoodEuclidean()
 #' neighborhoodEuclidean(-6)
 #' neighborhoodEuclidean(pump.select = 6:7)

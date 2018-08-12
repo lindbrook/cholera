@@ -16,27 +16,27 @@ streetNumberLocator(road.number, zoom = FALSE, radius = 1,
 
 \item{radius}{Numeric. Controls the degree of zoom.}
 
-\item{cases}{Character. Plot cases: NULL, "anchors" or "all".}
+\item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
 
 \item{add.title}{Logical. Include title.}
 
 \item{add.pump}{Logical. Include nearby pumps.}
 
-\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
 \item{highlight}{Logical. Highlight selected road.}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.}
+\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is \code{NULL}, which returns the map's native scale.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
-\item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 }
 \value{
 A base R graphics plot.
 }
 \description{
-Highlight a road and its cases. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
+Highlight a road and its cases. See \code{cholera::roads} for numerical IDs and \code{vignette}("road.names") for details.
 }
 \examples{
 streetNumberLocator(243)

@@ -8,14 +8,14 @@ unstackFatalities(multi.core = FALSE, compute = FALSE,
   fatalities = cholera::fixFatalities())
 }
 \arguments{
-\item{multi.core}{Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores. On Windows, only multi.core = FALSE is available.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 
-\item{compute}{Logical. TRUE computes data. FALSE uses pre-computed data.}
+\item{compute}{Logical. \code{TRUE} computes data. \code{FALSE} uses pre-computed data.}
 
-\item{fatalities}{Corrected fatalities data from cholera::fixFatalities(). For original data, use HistData::Snow.deaths.}
+\item{fatalities}{Corrected fatalities data from \code{cholera::fixFatalities()}. For original data, use \code{HistData::Snow.deaths}.}
 }
 \value{
-An R list that includes anchor.case, fatalities.address, fatalities.unstacked and ortho.proj.
+An R list that includes \code{anchor.case}, \code{fatalities.address}, \code{fatalities.unstacked} and \code{ortho.proj}.
 }
 \description{
 Unstacks fatalities data by 1) assigning the coordinates of the base case to all cases in a stack and 2) setting the base case as an "address" and making the number of fatalities an attribute.

@@ -7,7 +7,7 @@
 snowColors(vestry = FALSE)
 }
 \arguments{
-\item{vestry}{Logical. TRUE uses the 14 pumps in the Vestry Report. FALSE uses the original 13.}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps in the Vestry Report. \code{FALSE} uses the original 13.}
 }
 \value{
 A character vector of colors.

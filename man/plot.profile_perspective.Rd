@@ -7,7 +7,7 @@
 \method{plot}{profile_perspective}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "profile" created by profilePerspective().}
+\item{x}{An object of class "profile" created by \code{profilePerspective()}.}
 
 \item{...}{Additional plotting parameters.}
 }

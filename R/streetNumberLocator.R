@@ -1,17 +1,17 @@
 #' Locate road by numerical ID.
 #'
-#' Highlight a road and its cases. See cholera::roads for numerical IDs and \code{vignette}("road.names") for details.
+#' Highlight a road and its cases. See \code{cholera::roads} for numerical IDs and \code{vignette}("road.names") for details.
 #' @param road.number Numeric or integer. A whole number between 1 and 528.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param cases Character. Plot cases: NULL, "anchors" or "all".
+#' @param cases Character. Plot cases: \code{NULL}, "anchors" or "all".
 #' @param add.title Logical. Include title.
 #' @param add.pump Logical. Include nearby pumps.
-#' @param vestry Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param highlight Logical. Highlight selected road.
-#' @param unit Character. Unit of measurement: "meter" or "yard". Default is NULL, which returns the map's native scale.
+#' @param unit Character. Unit of measurement: "meter" or "yard". Default is \code{NULL}, which returns the map's native scale.
 #' @param time.unit Character. "hour", "minute", or "second".
-#' @param walking.speed Numeric. Default walking speed is 5 km/hr.
+#' @param walking.speed Numeric. Walking speed in km/hr.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{vignette("roads")}
 #' @import graphics
@@ -35,18 +35,18 @@ streetNumberLocator <- function(road.number, zoom = FALSE, radius = 1,
 
   if (is.null(cases) == FALSE) {
     if (cases %in% c("anchors", "all") == FALSE) {
-      stop('If specified, "cases" must either be "anchors" or "all".')
+      stop('If specified, cases must either be "anchors" or "all".')
     }
   }
 
   if (is.null(unit) == FALSE) {
     if (unit %in% c("meter", "yard") == FALSE) {
-      stop('If specified, "unit" must either be "meter" or "yard".')
+      stop('If specified, unit must either be "meter" or "yard".')
     }
   }
 
   if (time.unit %in% c("minute", "hour", "second") == FALSE) {
-    stop('"time.unit" must be "hour", "minute" or "second".')
+    stop('time.unit must be "hour", "minute" or "second".')
   }
 
   roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)

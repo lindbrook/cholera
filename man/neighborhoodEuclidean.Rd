@@ -26,6 +26,7 @@ Plots star graph from pump to its cases.
 }
 \examples{
 \dontrun{
+
 neighborhoodEuclidean()
 neighborhoodEuclidean(-6)
 neighborhoodEuclidean(pump.select = 6:7)

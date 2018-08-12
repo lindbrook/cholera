@@ -16,11 +16,11 @@ fixFatalities <- function() {
 #' Unstack "stacks" in Snow's cholera map.
 #'
 #' Unstacks fatalities data by 1) assigning the coordinates of the base case to all cases in a stack and 2) setting the base case as an "address" and making the number of fatalities an attribute.
-#' @param multi.core Logical or Numeric. TRUE uses parallel::detectCores(). FALSE uses one, single core. With Numeric, you specify the number logical cores. On Windows, only multi.core = FALSE is available.
-#' @param fatalities Corrected fatalities data from cholera::fixFatalities(). For original data, use HistData::Snow.deaths.
-#' @param compute Logical. TRUE computes data. FALSE uses pre-computed data.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param fatalities Corrected fatalities data from \code{cholera::fixFatalities()}. For original data, use \code{HistData::Snow.deaths}.
+#' @param compute Logical. \code{TRUE} computes data. \code{FALSE} uses pre-computed data.
 #' @seealso \code{vignette("unstacking.fatalities")}
-#' @return An R list that includes anchor.case, fatalities.address, fatalities.unstacked and ortho.proj.
+#' @return An R list that includes \code{anchor.case}, \code{fatalities.address}, \code{fatalities.unstacked} and \code{ortho.proj}.
 #' @section Notes: This function is computationally intensive. On a 2.3 GHz Intel Core i7, it takes approximately 5 minutes to run on one core and approximately 70 seconds to run on eight logical (four physical) cores. These functions document the code that generates \code{\link{anchor.case}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
 #' @export
 

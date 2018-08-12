@@ -7,7 +7,7 @@
 \method{print}{voronoi}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "voronoi" created by neighborhoodVoronoi().}
+\item{x}{An object of class "voronoi" created by \code{neighborhoodVoronoi()}.}
 
 \item{...}{Additional arguments.}
 }

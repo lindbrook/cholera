@@ -8,7 +8,7 @@
 #' @param color Character. Color of contour lines.
 #' @param line.type Character. Line type for contour lines.
 #' @param obs.unit Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.
-#' @param multi.core Logical or Numeric. TRUE uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param ... Additional plotting parameters.
 #' @return Add contours to a graphics plot.
 #' @seealso \code{\link{snowMap}},
@@ -22,17 +22,20 @@
 #' @note This function uses KernSmooth::bkde2D().
 #' @export
 #' @examples
-#' # snowMap()
-#' # addKernelDensity()
+#' \dontrun{
 #'
-#' # snowMap()
-#' # addKernelDensity("individual")
+#' snowMap()
+#' addKernelDensity()
 #'
-#' # snowMap()
-#' # addKernelDensity(c(6, 8))
+#' snowMap()
+#' addKernelDensity("individual")
 #'
-#' # snowMap()
-#' # addKernelDensity(pump.select = c(6, 8))
+#' snowMap()
+#' addKernelDensity(c(6, 8))
+#'
+#' snowMap()
+#' addKernelDensity(pump.select = c(6, 8))
+#' }
 
 addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
   neighborhood.type = "walking", obs.unit = "unstacked", bandwidth = 0.5,

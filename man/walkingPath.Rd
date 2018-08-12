@@ -11,21 +11,21 @@ walkingPath(origin, destination = NULL, type = "case-pump",
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
 
-\item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is NULL: this returns closest pump or "anchor" case.}
+\item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case.}
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
 \item{observed}{Logical. Use observed or "simulated" expected data.}
 
-\item{weighted}{Logical. TRUE computes shortest path in terms of road length. FALSE computes shortest path in terms of nodes.}
+\item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of nodes.}
 
-\item{vestry}{Logical. TRUE uses the 14 pumps from the Vestry Report. FALSE uses the 13 in the original map.}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
 \item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
-\item{walking.speed}{Numeric. Default walking speed is 5 km/hr.}
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 }
 \value{
 An R list with two elements: a character vector of path nodes and a data frame summary.
@@ -34,10 +34,11 @@ An R list with two elements: a character vector of path nodes and a data frame s
 Compute the shortest walking path between cases and/or pumps.
 }
 \note{
-The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
+The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using \code{distanceTime()}. Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
 }
 \examples{
 \dontrun{
+
 # path from case 1 to nearest pump.
 walkingPath(1)
 

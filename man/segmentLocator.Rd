@@ -11,11 +11,11 @@ segmentLocator(id, zoom = FALSE, radius = 0.5, cases = "anchors",
 \arguments{
 \item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
 
-\item{zoom}{Logical. Default is FALSE.}
+\item{zoom}{Logical. Default is \code{FALSE}.}
 
 \item{radius}{Numeric. Controls the degree of zoom. For values <= 5, the numeric ID of all cases or just the anchor case is plotted.}
 
-\item{cases}{Character. Plot cases: NULL, "anchors" or "all".}
+\item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
 
 \item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 

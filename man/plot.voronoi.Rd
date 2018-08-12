@@ -8,7 +8,7 @@
   euclidean.paths = FALSE, ...)
 }
 \arguments{
-\item{x}{An object of class "voronoi" created by neighborhoodVoronoi().}
+\item{x}{An object of class "voronoi" created by \code{neighborhoodVoronoi()}.}
 
 \item{voronoi.cells}{Logical. Plot Voronoi tessellation cells.}
 

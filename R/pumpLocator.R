@@ -4,7 +4,7 @@
 #' @param id Numeric or Integer. With \code{vestry = TRUE}, a whole number between 1 and 14. With \code{vestry = FALSE}, a whole number between 1 and 13. See \code{cholera::pumps.vestry} and \code{cholera::pumps} for IDs and details about specific pumps.
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
-#' @param vestry Logical. TRUE for the 14 pumps from Vestry Report. FALSE for the original 13 pumps.
+#' @param vestry Logical. \code{TRUE} for the 14 pumps from Vestry Report. \code{FALSE} for the original 13 pumps.
 #' @seealso\code{\link{pumpData}}
 #' @return A base R graphics plot.
 #' @export
@@ -16,15 +16,15 @@
 
 pumpLocator <- function(id, zoom = FALSE, radius = 2, vestry = FALSE) {
   if (is.numeric(id) == FALSE) {
-    stop('"id" must be numeric.')
+    stop('id must be numeric.')
   }
 
   if (!vestry & id %in% cholera::pumps$id == FALSE) {
-    stop('For original pumps, "id" must be a whole number between 1 and 13.')
+    stop('For original pumps, id must be a whole number between 1 and 13.')
   }
 
   if (vestry & id %in% cholera::pumps.vestry$id == FALSE) {
-      stop('For vestry pumps, "id" must lie be a whole number 1 and 14.')
+      stop('For vestry pumps, id must lie be a whole number 1 and 14.')
   }
 
   if (vestry) {

@@ -1,13 +1,16 @@
 #'  Extract numeric case IDs by pump neighborhood.
 #'
-#' @param obj An object created by neighborhoodEuclidean(), neighborhoodVoronoi() or neighborhoodWalking().
+#' @param obj An object created by \code{neighborhoodEuclidean()}, \code{neighborhoodVoronoi()} or \code{neighborhoodWalking()}.
 #' @seealso \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodEuclidean}},
 #' @return An R list of numeric ID of cases by pump neighborhoods.
 #' @export
 #' @examples
-#' # pumpCase(neighborhoodEuclidean())
-#' # pumpCase(neighborhoodVoronoi())
-#' # pumpCase(neighborhoodWalking())
+#' \dontrun{
+#'
+#' pumpCase(neighborhoodEuclidean())
+#' pumpCase(neighborhoodVoronoi())
+#' pumpCase(neighborhoodWalking())
+#' }
 
 pumpCase <- function(obj) UseMethod("pumpCase", obj)
 
@@ -16,7 +19,7 @@ pumpCase.default <- function(obj) NULL
 #' @export
 pumpCase.euclidean <- function(obj) {
   if (class(obj) != "euclidean") {
-    stop('Input object\'s class needs to be "euclidean".')
+    stop('obj\'s class needs to be "euclidean".')
   }
 
   pumps <- sort(unique(obj$nearest.pump))
@@ -30,7 +33,7 @@ pumpCase.euclidean <- function(obj) {
 #' @export
 pumpCase.voronoi <- function(obj) {
   if (class(obj) != "voronoi") {
-    stop('Input object\'s class needs to be "voronoi".')
+    stop('obj\'s class needs to be "voronoi".')
   }
 
   output <- obj$statistic.data
@@ -52,7 +55,7 @@ pumpCase.voronoi <- function(obj) {
 #' @export
 pumpCase.walking <- function(obj) {
   if (class(obj) != "walking") {
-    stop('Input object\'s class needs to be "walking".')
+    stop('obj\'s class needs to be "walking".')
   }
 
   output <- obj$cases

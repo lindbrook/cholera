@@ -11,7 +11,7 @@
 \arguments{
 \item{x}{An object of class "time_series" from timeSeries().}
 
-\item{statistic}{Character. Fatality measure: either "fatal.attacks", which is the default, or "deaths".}
+\item{statistic}{Character. Fatality measure: either "fatal.attacks" or "deaths".}
 
 \item{pump.handle}{Logical. Indicate date of removal of Broad Street pump handle.}
 

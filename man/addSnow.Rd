@@ -22,8 +22,11 @@ addSnow(type = "area", color = "dodgerblue", alpha.level = 0.25,
 Adds Snow's graphical annotation of the Broad Street pump walking neighborhood.
 }
 \examples{
-# plot(neighborhoodVoronoi())
-# addSnow()
+\dontrun{
+
+plot(neighborhoodVoronoi())
+addSnow()
+}
 }
 \seealso{
 \code{\link{snowMap}},
