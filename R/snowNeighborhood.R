@@ -9,19 +9,8 @@ snowNeighborhood <- function() {
   dat <- cholera::neighborhoodData(vestry = snow$vestry)
   edges <- dat$edges
 
-  # Check if walking paths traverse both endpoints of a road segment.
-  edgeAudit <- function(x) {
-    vapply(seq_along(x[-1]), function(i) {
-      ab <- edges$node1 %in% x[i] &
-            edges$node2 %in% x[i + 1]
-      ba <- edges$node2 %in% x[i] &
-            edges$node1 %in% x[i + 1]
-      which(ab | ba)
-    }, numeric(1L))
-  }
-
   n.paths <- lapply(snow$paths, function(neighborhood) {
-    dat <- lapply(neighborhood, edgeAudit)
+    dat <- lapply(neighborhood, auditEdge, edges)
   })
 
   edge.data <- unname(unlist(lapply(n.paths, function(x) unique(unlist(x)))))
@@ -128,7 +117,7 @@ snowNeighborhood <- function() {
   sim.case.partial <- lapply(seq_along(partial.candidates), classifyCase)
   sim.case.partial <- unlist(sim.case.partial)
 
-  # regular.case 3173 is adjacent to Richmond Mews but orthogonal to Wardour
+  # regular.case 3173 is adjacent to Richmond Mews (Richmond Buildings/Mews) but orthogonal to Wardour
   # Street (188-1); dropped as outlier to Snow neighborhood.
   partial.id <- sim.case.partial[sim.case.partial != 3173]
 
