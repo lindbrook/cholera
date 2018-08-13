@@ -10,7 +10,7 @@ fixFatalities()
 An R data frame.
 }
 \description{
-Two apparent coding errors using three misplaced cases.
+Fixes two apparent coding errors using three misplaced cases.
 }
 \seealso{
 \code{vignette("duplicate.missing.cases")}

@@ -12,7 +12,7 @@ cholera: amend, augment and aid analysis of John Snow's 1854 cholera map
 -   Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
 -   "Unstacks" the data in two ways to make analysis and visualization easier and more meaningful.
 -   Computes and visualizes "pump neighborhoods" based on Voronoi tessellation, Euclidean distance, and walking distance.
--   Ability to overlay graphical elements and features like kernel density, Voronoi diagrams, Snow's Broad Street neighborhood, and notable landmarks (John Snow's residence, the Lion Brewery, etc.) via add\*() functions.
+-   Ability to overlay graphical elements and features like kernel density, Voronoi diagrams, Snow's Broad Street neighborhood, and notable landmarks (John Snow's residence, the Lion Brewery, etc.) via `add*()` functions.
 -   Includes a variety of functions to highlight specific cases, roads, pumps and paths.
 -   Appends street names to the roads data set.
 -   Includes the revised pump data used in the second version of Snow's map from the Vestry report, which includes the "correct" location of the Broad Street pump.
@@ -72,7 +72,7 @@ plot(neighborhoodWalking(case.set = "expected"))
 
 ![](man/figures/README-expected-1.png)
 
-The second and third color each neighborhood's area by using either points or polygons. The polygon implementation is shown below. For exploration, the other options faster.
+The second and third color each neighborhood's area by using either points or polygons. The polygon implementation is shown below. For exploration, the first two options are faster.
 
 ``` r
 plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
@@ -119,11 +119,11 @@ They are also available online at the links below:
 
 ### note
 
-neighborhoodWalking() and addNeighborhood() are computationally intensive. Using R version 3.5.1 on a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 5 seconds; doing the same for expected paths takes about 28 seconds. Using the functions' parallel implementation on 4 physical (8 logical) cores, the times fall to about 4 and 11 seconds.
+`neighborhoodWalking()` is computationally intensive. Using R version 3.5.1 on a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 5 seconds; doing the same for expected paths takes about 28 seconds. Using the functions' parallel implementation on 4 physical (8 logical) cores, the times fall to about 4 and 11 seconds.
 
 Note that parallelization is currently only available on Linux and Mac.
 
-Also, note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. See vignette("parallel") for details.
+Also, note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which `neighborhoodWalking()` uses, strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("parallel")` for details.
 
 ### contributing
 

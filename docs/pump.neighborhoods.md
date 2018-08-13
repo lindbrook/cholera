@@ -1,7 +1,7 @@
 Pump Neighborhoods
 ================
 lindbrook
-2018-07-10
+2018-08-13
 
 Overview
 --------
@@ -18,7 +18,7 @@ To help assess whether the map supports Snow's arguments, I provide functions th
 
 Cliff and Haggett (1988) appear to be the first to use Voronoi tessellation[1] to compute pump neighborhoods. In their digitization of Snow's map, Dodson and Tolber (1992) include coordinates for 13 Voronoi cells. These are available in HistData::Snow.polygons. To replicate that effort, I use deldir::deldir(). With the exception of the border between the neighborhoods of the Market Place and the Adam and Eve Court pumps (pumps \#1 and \#2), I find that Dodson and Tobler's computation are otherwise identical to those using the 'deldir' package.
 
-To explore the data using this approach, you can use neighborhoodVoronoi() to create scenarios of different sets neighborhoods based on the pumps you select. The figure below plots the 321 fatality "addresses" and the Voronoi cells for the 13 pumps in the original map.
+To explore the data using this approach, you can use `neighborhoodVoronoi()` to create scenarios of different sets neighborhoods based on the pumps you select. The figure below plots the 321 fatality "addresses" and the Voronoi cells for the 13 pumps in the original map.
 
 ``` r
 plot(neighborhoodVoronoi())
@@ -34,7 +34,7 @@ plot(neighborhoodVoronoi(-7))
 
 <img src="pump.neighborhoods_files/figure-markdown_github/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
 
-In either case, the numerical results can be summarized using the print() method. Note that "Pearson" is "Count" minus "Expected" divided by the square root of "Expected":
+In either case, the numerical results can be summarized using the `print()` method. Note that "Pearson" is "Count" minus "Expected" divided by the square root of "Expected":
 
 ``` r
 # print(neighborhoodVoronoi()) or
@@ -82,7 +82,7 @@ neighborhoodWalking()
 
 ### "Expected" walking neighborhoods
 
-To get a sense of the full extent of a walking neighborhood, I apply the approach above to use "expected" or simulated data. Using sp::spsample() and sp::Polygon(), I place 20,000 regularly spaced points, which lies approximately 6 meters apart, across the map and essentially compute the shortest path to the nearest pump.[3]
+To get a sense of the full extent of a walking neighborhood, I apply the approach above to use "expected" or simulated data. Using `sp::spsample()` and `sp::Polygon()`, I place 20,000 regularly spaced points, which lies approximately 6 meters apart, across the map and essentially compute the shortest path to the nearest pump.[3]
 
 I visualize the results in two ways. In the first, I identify neighborhoods by coloring roads.[4]
 
@@ -122,13 +122,13 @@ plot(neighborhoodWalking(-6))
 
 <img src="pump.neighborhoods_files/figure-markdown_github/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
 
-### Note on neighborhoodWalking()
+### Note on `neighborhoodWalking()`
 
-neighborhoodWalking() and addNeighborhood() are computationally intensive. Using R version 3.5.1 on a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 5 seconds; doing the same for expected paths takes about 28 seconds. Using the functions' parallel implementation on 4 physical (8 logical) cores, the times fall to about 4 and 11 seconds.
+`neighborhoodWalking()` and `addNeighborhood()` are computationally intensive. Using R version 3.5.1 on a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 5 seconds; doing the same for expected paths takes about 28 seconds. Using the functions' parallel implementation on 4 physical (8 logical) cores, the times fall to about 4 and 11 seconds.
 
 Note that parallelization is currently only available on Linux and Mac.
 
-Also, note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. See vignette("parallel") for details.
+Also, note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which `neighborhoodWalking()` uses, strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("parallel")` for details.
 
 [1] <http://www.ams.org/samplings/feature-column/fcarc-voronoi>
 
@@ -138,6 +138,6 @@ Also, note that although some precautions are taken in R.app on macOS, the devel
 
 [4] Shiode (2012) uses this approach.
 
-[5] Mackenzie (N.D) uses this area plot approach. Cliff and Haggett produce an adjusted Voronoi cells that reflect walking distances: "So far we have assumed that access to each pump was determined by 'crow-fly' distances. While the physical effort of carrying water mean that most people visited their nearest pump, recognition must be made of the complex street pattern in this area of London. Therefore in (D), the Thiessen polygons have been adjusted to take into account the patterns of access made possible by the street system shown in diagram (A) (Cliff and Haggett 1988, 53). However, details about how this was done don't appear to be available. Moreover, because the graphic only shows the outline of the polygon and not the streets, comparisons with other approaches is difficult.
+[5] Mackenzie (N.D) uses this area plot approach. Cliff and Haggett produce an adjusted Voronoi cells that reflect walking distances: "So far we have assumed that access to each pump was determined by 'as-the-crow-flies' distances. While the physical effort of carrying water mean that most people visited their nearest pump, recognition must be made of the complex street pattern in this area of London. Therefore in (D), the Thiessen polygons have been adjusted to take into account the patterns of access made possible by the street system shown in diagram (A) (Cliff and Haggett 1988, 53). However, details about how this was done don't appear to be available. Moreover, because the graphic only shows the outline of the polygon and not the streets, comparisons with other approaches is difficult.
 
 [6] Snow writes: "It requires to be stated that the water of the pump in Marlborough Street, at the end of Carnaby Street, was so impure that many persons avoided using it; and I found that the persons who died near this pump, in the beginning of September, had water from the Broad Street pump."
