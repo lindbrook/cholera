@@ -7,7 +7,7 @@
 snowNeighborhood()
 }
 \value{
-An R list of edge IDs and simulated case IDs (sim.ortho.proj).
+An R list of edge IDs and simulated case IDs.
 }
 \description{
 Computes "missing" and split road segments data, and area plot data.

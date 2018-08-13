@@ -1,7 +1,7 @@
 #' Plotting data for Snow's graphical annotation of the Broad Street pump neighborhood.
 #'
 #' Computes "missing" and split road segments data, and area plot data.
-#' @return An R list of edge IDs and simulated case IDs (sim.ortho.proj).
+#' @return An R list of edge IDs and simulated case IDs.
 #' @export
 
 snowNeighborhood <- function() {
@@ -117,11 +117,7 @@ snowNeighborhood <- function() {
   sim.case.partial <- lapply(seq_along(partial.candidates), classifyCase)
   sim.case.partial <- unlist(sim.case.partial)
 
-  # regular.case 3173 is adjacent to Richmond Mews (Richmond Buildings/Mews) but orthogonal to Wardour
-  # Street (188-1); dropped as outlier to Snow neighborhood.
-  partial.id <- sim.case.partial[sim.case.partial != 3173]
-
   list(obs.edges = edge.data,
        other.edges = other.edges,
-       sim.cases = c(whole.id, partial.id))
+       sim.cases = c(whole.id, sim.case.partial))
 }
