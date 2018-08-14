@@ -16,7 +16,7 @@ To help assess whether the map supports Snow's arguments, I provide functions th
 
 ### Voronoi tessellation
 
-Cliff and Haggett (1988) appear to be the first to use Voronoi tessellation[1] to compute pump neighborhoods. In their digitization of Snow's map, Dodson and Tolber (1992) include coordinates for 13 Voronoi cells. These are available in HistData::Snow.polygons. To replicate that effort, I use deldir::deldir(). With the exception of the border between the neighborhoods of the Market Place and the Adam and Eve Court pumps (pumps \#1 and \#2), I find that Dodson and Tobler's computation are otherwise identical to those using the 'deldir' package.
+Cliff and Haggett (1988) appear to be the first to use Voronoi tessellation[1] to compute pump neighborhoods. In their digitization of Snow's map, Dodson and Tolber (1992) include coordinates for 13 Voronoi cells. These are available in `HistData::Snow.polygons`. To replicate that effort, I use `deldir::deldir()`. With the exception of the border between the neighborhoods of the Market Place and the Adam and Eve Court pumps (pumps \#1 and \#2), I find that Dodson and Tobler's computation are otherwise identical to those using the 'deldir' package.
 
 To explore the data using this approach, you can use `neighborhoodVoronoi()` to create scenarios of different sets neighborhoods based on the pumps you select. The figure below plots the 321 fatality "addresses" and the Voronoi cells for the 13 pumps in the original map.
 
@@ -134,10 +134,10 @@ Also, note that although some precautions are taken in R.app on macOS, the devel
 
 [2] The computation of walking distance is by no means new (see Shiode, 2012). Another approach is to use GIS. For applications that don't need to consider the actual historic walking distances, this layers-based approach, which typically relies on current maps, may be sufficient: e.g., <https://www.theguardian.com/news/datablog/2013/mar/15/john-snow-cholera-map>. To reconstruct the roads represented on Snow's map, one might also consider John Mackenzie' approach at <https://www1.udel.edu/johnmack/frec682/cholera/cholera2.html>.
 
-[3] These data are found in cholera::regular.cases.
+[3] These data are found in `regular.cases`.
 
 [4] Shiode (2012) uses this approach.
 
-[5] Mackenzie (N.D) uses this area plot approach. Cliff and Haggett produce an adjusted Voronoi cells that reflect walking distances: "So far we have assumed that access to each pump was determined by 'as-the-crow-flies' distances. While the physical effort of carrying water mean that most people visited their nearest pump, recognition must be made of the complex street pattern in this area of London. Therefore in (D), the Thiessen polygons have been adjusted to take into account the patterns of access made possible by the street system shown in diagram (A) (Cliff and Haggett 1988, 53). However, details about how this was done don't appear to be available. Moreover, because the graphic only shows the outline of the polygon and not the streets, comparisons with other approaches is difficult.
+[5] Mackenzie (N.D) uses this area plot approach. Cliff and Haggett produce an adjusted Voronoi cells that reflect walking distances: "So far we have assumed that access to each pump was determined by 'as-the-crow-flies' distances. While the physical effort of carrying water mean that most people visited their nearest pump, recognition must be made of the complex street pattern in this area of London. Therefore in (D), the Thiessen polygons have been adjusted to take into account the patterns of access made possible by the street system shown in diagram (A)" (Cliff and Haggett 1988, 53). However, details about how this was done don't appear to be available. Moreover, because the graphic only shows the outline of the polygon and not the streets, comparisons with other approaches is difficult.
 
 [6] Snow writes: "It requires to be stated that the water of the pump in Marlborough Street, at the end of Carnaby Street, was so impure that many persons avoided using it; and I found that the persons who died near this pump, in the beginning of September, had water from the Broad Street pump."

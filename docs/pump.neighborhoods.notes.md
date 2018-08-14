@@ -1,20 +1,20 @@
 Lab Notes: Pump Neighborhoods
 ================
 lindbrook
-2018-07-24
+2018-08-13
 
 Area polygons
 -------------
 
 To draw the area polygons for pump neighborhoods, I did the following.
 
-First, using sp::spsample() and sp::Polygon(), I place approximately 20K regularly-spaced points across the face of the map:
+First, using `sp::spsample()` and `sp::Polygon()`, I place approximately 20K regularly-spaced points across the face of the map:
 
 ``` r
 sp::spsample(sp::Polygon(map.frame[, c("x", "y")]), n = 20000, type = "regular")
 ```
 
-For each simulated cases, I compute the closet water pump. This partitions the simulated cases into clusters that reflect the selected pump neighborhoods. The details are in cholera::simulateFatalities(), located in [simulateFatalities.R](https://github.com/lindbrook/cholera/blob/master/R/simulateFatalities.R)
+For each simulated cases, I compute the closet water pump. This partitions the simulated cases into clusters that reflect the selected pump neighborhoods. The details are in `cholera::simulateFatalities()`, located in [simulateFatalities.R](https://github.com/lindbrook/cholera/blob/master/R/simulateFatalities.R)
 
 The figure below plots the 1,709 simulated cases for the Broad Street pump neighborhood (pump \#7).
 

@@ -16,7 +16,7 @@ library(cholera)
 
 ## Overview
 
-By default, the addKernelDensity() function pools all observations:
+By default, the `addKernelDensity()` function pools all observations:
 
 ```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
 snowMap(add.title = FALSE)

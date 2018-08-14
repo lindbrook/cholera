@@ -68,13 +68,13 @@ Sometimes a bar represents the location of a fatality, sometimes it doesn't. Sta
 
 This duality is problematic. Because a map is a visual device that illustrates spatial relationships, it's natural to assume that the position of each element (e.g., a bar) reflects an actual, physical location. When we violate this assumption, we undermine the visual integrity of the map. This can handicap our analysis. This is particularly true given that 44% (257/578) of the bars in Snow's map fall into the second, geographically uninformative category.
 
-To address these problems, I "unstack" Dodson and Tobler's data. I do so in two ways. In the first, I give all all cases in a stack (i.e., at the same "address") the same x-y coordinate. These data are available in _fatalities.unstacked_. In the second, I make the address rather than the the case the unit of observation: each address is a single observation with a single x-y coordinate, and the number of cases observed at that location is an attribute of that address. These data are available in _fatalities.address_.
+To address these problems, I "unstack" Dodson and Tobler's data. I do so in two ways. In the first, I give all all cases in a stack (i.e., at the same "address") the same x-y coordinate. These data are available in `fatalities.unstacked`. In the second, I make the address rather than the the case the unit of observation: each address is a single observation with a single x-y coordinate, and the number of cases observed at that location is an attribute of that address. These data are available in `fatalities.address`.
 
 ## Data details
 
 To illustrate the differences between the two data sets, consider how they handle the largest outlier on Snow's map: the eighteen cases at 38 Broad Street.
 
-With _fatalities_, all members of the stack have different coordinates:
+With `fatalities`, all members of the stack have different coordinates:
 
 ```{r}
 ## The 18 cases at 38 Broad Street ##
@@ -85,13 +85,13 @@ broad38 <- c(239, 12, 310, 398, 562, 397, 421, 190, 290, 61, 174, 547, 523,
 fatalities[fatalities$case %in% broad38, ]
 ```
 
-With _fatalities.unstacked_, all members of the stack have the same coordinate:
+With `fatalities.unstacked`, all members of the stack have the same coordinate:
 
 ```{r}
 fatalities.unstacked[fatalities.unstacked$case %in% broad38, ]
 ```
 
-With _fatalities.address_, the 18 cases are represented by a single observation, case 239, which serves as the "address":
+With `fatalities.address`, the 18 cases are represented by a single observation, case 239, which serves as the "address":
 
 ```{r}
 fatalities.address[136:140, ]
@@ -105,7 +105,7 @@ To illustrate the virtues of "unstacked" data, consider the following.
 
 The graphs below plot the bivariate kernel density contours, of varying bandwidths, on the "stacked" and "unstacked" data. The contours help illustrate the spatial distribution or topography of fatalities, and provide an estimate of the epicenter of the outbreak.
 
-With the "stacked" data, _fatalities_, the contours are looser (reflecting greater uncertainty) and the epicenter is further south than what we might expect given that the Broad Street pump (blue triangle)^[The blue triangle is the "correct" location of the pump as included in the amended, second version of the map that appears in the Vestry report. The empty green triangle is the pump's "wrong" location from the original map.] is the accepted source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward in a southerly direction.
+With the "stacked" data, `fatalities`, the contours are looser (reflecting lower proximity) and the epicenter is further south than what we might expect given that the Broad Street pump (blue triangle)^[The blue triangle is the "correct" location of the pump as included in the amended, second version of the map that appears in the Vestry report. The empty green triangle is the pump's "wrong" location from the original map.] is the accepted source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward in a southerly direction.
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
@@ -204,7 +204,7 @@ p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
 
 ```
 
-With _fatalities.unstacked_, the contours are "tighter" (reflecting lesser uncertainty) and the epicenter is located further north, nearer to the pump and to Broad Street:
+With `fatalities.unstacked`, the contours are "tighter" (reflecting greater proximity) and the epicenter is located further north, nearer to the pump and to Broad Street:
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
 
@@ -258,7 +258,6 @@ p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
 
 ## "Unstacking" via classification
 
-The main roadblock to "unstacking" is that there is no notion of an "address" in the data: bars are merely points and streets are merely line segments.^[In Friendly's HistData package, these data are called "Snow.deaths" and "Snow.streets".] Nothing links a point to a segments. And nothing connects one bar in a stack to another bar. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinates.
+The main roadblock to "unstacking" is that there is no notion of an "address" in the data: bars are merely points and streets are merely line segments.^[In Friendly's 'HistData' package, these data are called `Snow.deaths` and `Snow.streets`.] Nothing links a point to a segments. And nothing connects one bar in a stack to another bar. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinates.
 
 To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I use two types of classification. For those interested, the details are found in this vignette's lab notes, which are available [online](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md) and in the package's GitHub repository.
-

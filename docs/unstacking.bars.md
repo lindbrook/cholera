@@ -1,7 +1,7 @@
 "Unstacking" Bars
 ================
 lindbrook
-2018-07-10
+2018-08-13
 
 Overview
 --------
@@ -20,14 +20,14 @@ Sometimes a bar represents the location of a fatality, sometimes it doesn't. Sta
 
 This duality is problematic. Because a map is a visual device that illustrates spatial relationships, it's natural to assume that the position of each element (e.g., a bar) reflects an actual, physical location. When we violate this assumption, we undermine the visual integrity of the map. This can handicap our analysis. This is particularly true given that 44% (257/578) of the bars in Snow's map fall into the second, geographically uninformative category.
 
-To address these problems, I "unstack" Dodson and Tobler's data. I do so in two ways. In the first, I give all all cases in a stack (i.e., at the same "address") the same x-y coordinate. These data are available in *fatalities.unstacked*. In the second, I make the address rather than the the case the unit of observation: each address is a single observation with a single x-y coordinate, and the number of cases observed at that location is an attribute of that address. These data are available in *fatalities.address*.
+To address these problems, I "unstack" Dodson and Tobler's data. I do so in two ways. In the first, I give all all cases in a stack (i.e., at the same "address") the same x-y coordinate. These data are available in `fatalities.unstacked`. In the second, I make the address rather than the the case the unit of observation: each address is a single observation with a single x-y coordinate, and the number of cases observed at that location is an attribute of that address. These data are available in `fatalities.address`.
 
 Data details
 ------------
 
 To illustrate the differences between the two data sets, consider how they handle the largest outlier on Snow's map: the eighteen cases at 38 Broad Street.
 
-With *fatalities*, all members of the stack have different coordinates:
+With `fatalities`, all members of the stack have different coordinates:
 
 ``` r
 ## The 18 cases at 38 Broad Street ##
@@ -57,7 +57,7 @@ fatalities[fatalities$case %in% broad38, ]
 #> 562  562 12.39045 11.37820
 ```
 
-With *fatalities.unstacked*, all members of the stack have the same coordinate:
+With `fatalities.unstacked`, all members of the stack have the same coordinate:
 
 ``` r
 fatalities.unstacked[fatalities.unstacked$case %in% broad38, ]
@@ -82,7 +82,7 @@ fatalities.unstacked[fatalities.unstacked$case %in% broad38, ]
 #> 562  562 12.31552 11.51159
 ```
 
-With *fatalities.address*, the 18 cases are represented by a single observation, case 239, which serves as the "address":
+With `fatalities.address`, the 18 cases are represented by a single observation, case 239, which serves as the "address":
 
 ``` r
 fatalities.address[136:140, ]
@@ -103,11 +103,11 @@ To illustrate the virtues of "unstacked" data, consider the following.
 
 The graphs below plot the bivariate kernel density contours, of varying bandwidths, on the "stacked" and "unstacked" data. The contours help illustrate the spatial distribution or topography of fatalities, and provide an estimate of the epicenter of the outbreak.
 
-With the "stacked" data, *fatalities*, the contours are looser (reflecting greater uncertainty) and the epicenter is further south than what we might expect given that the Broad Street pump (blue triangle)[3] is the accepted source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward in a southerly direction.
+With the "stacked" data, `fatalities`, the contours are looser (reflecting lower proximity) and the epicenter is further south than what we might expect given that the Broad Street pump (blue triangle)[3] is the accepted source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward in a southerly direction.
 
 <img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
 
-With *fatalities.unstacked*, the contours are "tighter" (reflecting lesser uncertainty) and the epicenter is located further north, nearer to the pump and to Broad Street:
+With `fatalities.unstacked`, the contours are "tighter" (reflecting greater proximity) and the epicenter is located further north, nearer to the pump and to Broad Street:
 
 <img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
@@ -124,4 +124,4 @@ To "unstack" the data, we need to match each bar to a specific road (segment) an
 
 [3] The blue triangle is the "correct" location of the pump as included in the amended, second version of the map that appears in the Vestry report. The empty green triangle is the pump's "wrong" location from the original map.
 
-[4] In Friendly's HistData package, these data are called "Snow.deaths" and "Snow.streets".
+[4] In Friendly's 'HistData' package, these data are called `Snow.deaths` and `Snow.streets`.

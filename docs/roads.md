@@ -1,17 +1,17 @@
 Roads
 ================
 lindbrook
-2018-06-25
+2018-08-13
 
 Overview
 --------
 
-In 1992, Rusty Dodson and Waldo Tobler digitized John Snow's cholera map. Unfortunately, Dodson and Tobler did not include the names of roads (e.g., Broad Street) in their data set. While not strictly necessary for analysis or visualization, having the names will be useful to some. To that end, I append the actual street names, taken from the map itself, to the data. This appended data set is called *roads*.
+In 1992, Rusty Dodson and Waldo Tobler digitized John Snow's cholera map. Unfortunately, they did not include the names of roads (e.g., Broad Street) in their data set. While not strictly necessary for analysis or visualization, having the names will be useful to some. To that end, I append the actual street names, taken from the map itself, to the data. This appended data set is called `roads`.
 
 Roads data
 ----------
 
-Before discussing names, some discussion of the structure of *roads* is warranted. The data contain 1241 pairs of x-y coordinates. These coordinates define the endpoints of the straight line segments used to describe 528 numerically identified "streets".
+Before discussing names, some discussion of the structure of `roads` is warranted. The data contain 1241 pairs of x-y coordinates. These coordinates define the endpoints of the straight line segments used to describe 528 numerically identified "streets".
 
 ``` r
 head(roads)
@@ -48,7 +48,7 @@ Road names
 
 The primary source for road names is Snow's map. A high resolution version is available [here](http://www.ph.ucla.edu/epi/snow/highressnowmap.html). While great effort was made to correctly record and cross-reference names, there may still be errors. Error reports and suggestions for amendments are welcome.
 
-Some roads on the map do not have a name. In those cases, I attached unique labels like "Unknown-C".
+Some roads on the map do not have a name. In those cases, I attach unique labels like "Unknown-C".
 
 Some names appear multiple times even though they lie at different locations. For these, I use Roman numerals to distinguish them (e.g., "King Street (I)" and "King Street (II)").[1]
 
@@ -81,11 +81,11 @@ roads <- roads[order(roads$id), ]
 Finding roads by name, "street" number, or segment ID.
 ------------------------------------------------------
 
-To help locate and visualize streets and road segments (including map frame segments), you can use the *streetNameLocator*(), *streetNumberLocator*(), or *segmentLocator*().
+To help locate and visualize streets and road segments (including map frame segments), you can use the `streetNameLocator()`, `streetNumberLocator()`, or `segmentLocator()`.
 
-Note that *streetNameLocator*() uses the names in the *roads* data set. However, the function tries to corrects for case and removes extraneous spaces: streetNameLocator("Oxford Street") and streetNameLocator("oxford street").
+Note that `streetNameLocator()` uses the names in the `roads` data set. However, the function tries to corrects for case and removes extraneous spaces: `streetNameLocator("Oxford Street")` and `streetNameLocator("oxford street")`.
 
-*segmentLocator*() is for those interested in more granular analysis. It uses individual road segments as the unit of observation.
+`segmentLocator()` is for those interested in more granular analysis. It uses individual road segments as the unit of observation.
 
 List of road names
 ------------------

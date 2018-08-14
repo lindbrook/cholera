@@ -1,7 +1,7 @@
 Lab Notes: "Unstacking" Bars
 ================
 lindbrook
-2018-06-26
+2018-08-13
 
 To match cases to a road and to other cases in stack, I use two methods of classification: orthogonal projection and cluster analysis.
 
@@ -45,7 +45,7 @@ With this information, I can use cluster analysis to identify stacks, or "addres
 
 [2] This is further exacerbated by the fact that the width of roads is not always taken into consideration. This creates instances where cases on one side of the street appear to be closer to the road than those on the other. One particular case of note is Portland Mews. On the map, Portland Mews is a large yard or square. But in Dodson and Tobler's data, it is simply a set of line segments, which possibly corresponds to a roadway through the location. As a result, the three cases there appear to belong to a single cluster instead of two separate ones. I manually chose the more distant road segment on Portland Mews that better reflects the orientation of bars on Snow's map.
 
-[3] Specifically, I use stats::hclust(), which by default employs a "complete" method of agglomerative hierarchical clustering.
+[3] Specifically, I use `stats::hclust()`, which by default employs a "complete" method of agglomerative hierarchical clustering.
 
 [4] What makes this possible is that, by design, "vertical" dispersion, the spread of x-y points along the orthogonal axis, is much greater than the "horizontal" dispersion, the spread of orthogonal points along the road's line segment. In an ideal world, the "horizontal" dispersion would be zero and all points in a stack would be perfectly aligned. In practice, this is not the case.
 

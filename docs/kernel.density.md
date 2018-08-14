@@ -1,12 +1,12 @@
 Kernel Density Plot
 ================
 lindbrook
-2018-08-10
+2018-08-13
 
 Overview
 --------
 
-By default, the addKernelDensity() function pools all observations:
+By default, the `addKernelDensity()` function pools all observations:
 
 ``` r
 snowMap(add.title = FALSE)

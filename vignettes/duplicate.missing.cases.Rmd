@@ -56,6 +56,6 @@ fix <- data.frame(x = c(12.56974, 12.53617, 12.33145), y = c(11.51226, 11.58107,
 fatalities[c(91, 93, 209), c("x", "y")] <- fix
 ```
 
-This fixed data set is available as _fatalities_ in this package and as _Snow.deaths2_ in 'HistData' (>= ver. 0.7-8). For those interested, an explanation of how I arrived at these values can be found in this vignette's lab notes, which are available [online](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md) and in the package's GitHub repository.
+This fixed data set is available as `fatalities` in this package and as `Snow.deaths2` in 'HistData' (>= ver. 0.7-8). For those interested, an explanation of how I arrived at these values can be found in this vignette's lab notes, which are available [online](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md) and in the package's GitHub repository.
 
 ## Notes
