@@ -1,139 +1,23 @@
-cholera 0.5.0.9020
+cholera 0.5.1
 ==================
 
-- remove profilePlot().
-- copyedit vignettes.
+# Fixes #
 
-
-cholera 0.5.0.9019
-==================
-
-- amend function documentation, formatting and warnings.
-
-
-cholera 0.5.0.9018
-==================
-
-- set "point" as default token in addCases().
-- change "theta" to "angle" in profilePlot().
-- set profilePlot() to "profile_plot".
-- fix typos and formatting.
-
-
-cholera 0.5.0.9017
-==================
-
-- add profilePlot() prototype.
-
-
-cholera 0.5.0.9016
-==================
-
-- amend profilePerspective() prototype.
-
-
-cholera 0.5.0.9015
-==================
-
-- add profilePerspective() and plot.profile() prototype.
-
-
-cholera 0.5.0.9014
-==================
-
-- snowMap2() -> snowMap().
-- add addBorder(), addRoads() and mapRange().
-- amend profilePlot() prototype.
-
-
-cholera 0.5.0.9013
-==================
-
-- add snowMap2() prototype.
-- add profilePlot() prototype.
-
-
-cholera 0.5.0.9012
-==================
-
-- enable ellipses and negative selection in addPump().
-
-
-cholera 0.5.0.9011
-==================
-
-- add CONTRIBUTING.
-
-
-cholera 0.5.0.9010
-==================
-
-- consolidate walkingDistance() and walkingPath().
-
-
-cholera 0.5.0.9009
-==================
-
-- consolidate addEuclideanPath(), euclideanDistance() and euclideanPath() and
-  use "address" based computation.
-
-
-cholera 0.5.0.9008
-==================
-
-- add euclideanPath() beta.
-
-
-cholera 0.5.0.9007
-==================
-
-- allow custom axes labels in plot.time_series().
-
-
-cholera 0.5.0.9006
-==================
-
-- walkingAuxillaryFunctions.R: consolidate drawPath() and drawPath2().
-
-
-cholera 0.5.0.9005
-==================
-
-- implement ellipses in plot.time_series() (#1).
-
-
-cholera 0.5.0.9004
-==================
-
-- remove hard coding for pumps:
-  addWalkingPath(), walkingDistance() and walkingPath().
+- backward compatibility (R 3.4.4) related to base::isFALSE() & bug fix.
 - fix for multiple results in walkingDistance() and walkingPath().
 
+# Function Changes #
 
-cholera 0.5.0.9003
-==================
+- enable ellipses (...) in plot.time_series() (#1).
+- enable ellipses and negative selection in addPump().
+- consolidate addEuclideanPath(), euclideanDistance(), euclideanPath(),
+  walkingDistance() and walkingPath()
 
-- test new warnings for addNeighborhood().
+# New Functions #
 
-
-cholera 0.5.0.9002
-==================
-
-- add drawPath2() for euclideanPath() in walkingAuxillaryFunctions.R.
-- add fix for vertical Euclidean paths.
-
-
-cholera 0.5.0.9001
-==================
-
-- remove hard coding for pumps.
-
-
-cholera 0.5.0.9000
-==================
-
-- isFALSE() -> == FALSE for backward compatibility & bug fix:
-  addEuclideanPath(), addWalkingPath() and walkingPath().
+- addBorder()
+- addRoads()
+- mapRange()
 
 
 cholera 0.5.0
