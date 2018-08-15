@@ -6,7 +6,7 @@
 
 ### CRAN Package Check Results for Package 'cholera'
 
-A few functions in 'cholera' 0.5.0 returned an error with R 3.4.4. This was related to the fact that base::isFALSE() was introduced in R 3.5.0. This has been addressed in 'cholera' 0.5.1.
+A few functions in 'cholera' 0.5.0 return an error with R 3.4.4. This is related to the fact that base::isFALSE() was introduced in R 3.5.0. This has been fixed in 'cholera' 0.5.1.
 
 
 ### R CMD check results
