@@ -252,10 +252,10 @@ plot.voronoi <- function(x, voronoi.cells = TRUE,
 
 #' Print method for neighborhoodVoronoi().
 #'
-#' Return summary statistics for Voronoi neighborhoods.
+#' Return counts for Voronoi neighborhoods.
 #' @param x An object of class "voronoi" created by \code{neighborhoodVoronoi()}.
 #' @param ... Additional arguments.
-#' @return A data frame with observed and expected counts, observed percentage, and the Pearson residual, (observed - expected) / sqrt(expected).
+#' @return A vector with observed counts.
 #' @seealso \code{addVoronoi()}
 #' \code{plot.voronoi()}
 #' @export
@@ -264,33 +264,9 @@ plot.voronoi <- function(x, voronoi.cells = TRUE,
 #' print(neighborhoodVoronoi())
 
 print.voronoi <- function(x, ...) {
-  if (class(x) != "voronoi") {
-    stop('x\'s class needs to be "voronoi".')
-  }
-
-  output <- summary(x)
-  print(output)
-}
-
-summary.voronoi <- function(x, ...) {
-  if (class(x) != "voronoi") {
-    stop('x\'s class needs to be "voronoi".')
-  }
-
   census <- x$statistic.data
-  count <- vapply(census, sum, numeric(1L))
+  print(vapply(census, sum, numeric(1L)))
 
-  output <- data.frame(pump.id = as.numeric(names(count)),
-                       Count = count,
-                       Percent = round(100 * count / sum(count), 2))
-
-  output <- merge(output, x$expected.data[, c("pump", "pct")],
-    by.x = "pump.id", by.y = "pump")
-
-  output$Expected <- output$pct * sum(output$Count)
-  output$pct <- NULL
-  output$Pearson <- (output$Count - output$Expected) / sqrt(output$Expected)
-  output
 }
 
 fourCorners <- function() {

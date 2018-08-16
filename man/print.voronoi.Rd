@@ -12,10 +12,10 @@
 \item{...}{Additional arguments.}
 }
 \value{
-A data frame with observed and expected counts, observed percentage, and the Pearson residual, (observed - expected) / sqrt(expected).
+A vector with observed counts.
 }
 \description{
-Return summary statistics for Voronoi neighborhoods.
+Return counts for Voronoi neighborhoods.
 }
 \examples{
 neighborhoodVoronoi()
