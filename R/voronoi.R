@@ -252,7 +252,7 @@ plot.voronoi <- function(x, voronoi.cells = TRUE,
 
 #' Print method for neighborhoodVoronoi().
 #'
-#' Return counts for Voronoi neighborhoods.
+#' Return observed counts for Voronoi neighborhoods.
 #' @param x An object of class "voronoi" created by \code{neighborhoodVoronoi()}.
 #' @param ... Additional arguments.
 #' @return A vector with observed counts.

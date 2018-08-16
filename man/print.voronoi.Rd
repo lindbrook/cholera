@@ -15,7 +15,7 @@
 A vector with observed counts.
 }
 \description{
-Return counts for Voronoi neighborhoods.
+Return observed counts for Voronoi neighborhoods.
 }
 \examples{
 neighborhoodVoronoi()
