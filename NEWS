@@ -1,3 +1,10 @@
+cholera 0.5.1.9001
+==================
+
+- amend print.voronoi().
+- add pearsonResiduals() prototype.
+
+
 cholera 0.5.1.9000
 ==================
 
