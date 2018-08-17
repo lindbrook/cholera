@@ -17,3 +17,11 @@ A base R plot.
 \description{
 Plot method for neighborhoodWalking().
 }
+\examples{
+\dontrun{
+
+plot(neighborhoodEuclidean())
+plot(neighborhoodEuclidean(-6))
+plot(neighborhoodEuclidean(pump.select = 6:7))
+}
+}

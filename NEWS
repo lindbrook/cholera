@@ -1,3 +1,9 @@
+cholera 0.5.1.9002
+==================
+
+- enable case.set = "expected" in neighborhoodEuclidean() and plot.euclidean().
+
+
 cholera 0.5.1.9001
 ==================
 

@@ -55,17 +55,19 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
     }
   }
 
-  anchors <- cholera::fatalities.address$anchor.case
+  if (case.set == "observed") {
+    anchors <- cholera::fatalities.address$anchor.case
+    observed <- TRUE
 
-  if (vestry) {
-    nearest.pump <- parallel::mclapply(anchors, function(x) {
-      cholera::euclideanDistance(x, destination = pump.id, vestry = TRUE)$pump
-    }, mc.cores = cores)
-  } else {
-    nearest.pump <- parallel::mclapply(anchors, function(x) {
-      cholera::euclideanDistance(x, destination = pump.id)$pump
-    }, mc.cores = cores)
+  } else if (case.set == "expected") {
+    anchors <- seq_len(nrow(cholera::regular.cases))
+    observed <- FALSE
   }
+
+  nearest.pump <- parallel::mclapply(anchors, function(x) {
+    cholera::euclideanDistance(x, destination = pump.id,
+      observed = observed, vestry = vestry)$pump
+  }, mc.cores = cores)
 
   if (is.null(pump.subset)) {
     out <- list(pump.data = pump.data,
@@ -73,6 +75,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
                 pump.id = pump.id,
                 snow.colors = snow.colors,
                 anchors = anchors,
+                observed = observed,
                 nearest.pump = unlist(nearest.pump))
   } else {
     if (all(pump.subset > 0)) {
@@ -84,7 +87,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
       nearest.pump.subset <- nearest.pump[unlist(nearest.pump) %in%
         abs(pump.subset) ==- FALSE]
     } else {
-      stop('Use all positive or all negative numbers for "pump.subset"!')
+      stop('Use all positive or all negative numbers for "pump.subset".')
     }
 
     out <- list(pump.data = pump.data,
@@ -106,6 +109,13 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
+#' @examples
+#' \dontrun{
+#'
+#' plot(neighborhoodEuclidean())
+#' plot(neighborhoodEuclidean(-6))
+#' plot(neighborhoodEuclidean(pump.select = 6:7))
+#' }
 
 plot.euclidean <- function(x, ...) {
   if (class(x) != "euclidean") {
@@ -132,17 +142,26 @@ plot.euclidean <- function(x, ...) {
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
 
-  if (is.null(x$pump.subset)) {
-    invisible(lapply(seq_along(x$anchors), function(i) {
+  if (is.null(pump.subset)) {
+    invisible(lapply(seq_along(anchors), function(i) {
       p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
-      sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
-      n.data <- cholera::fatalities.address[sel, ]
       n.color <- snow.colors[paste0("p", nearest.pump[[i]])]
-      lapply(n.data$anchor.case, function(case) {
-        c.data <- n.data[n.data$anchor.case == case, ]
-        segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
-          lwd = 0.5)
-      })
+      if (x$observed) {
+        sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
+        n.data <- cholera::fatalities.address[sel, ]
+        lapply(n.data$anchor.case, function(case) {
+          c.data <- n.data[n.data$anchor.case == case, ]
+          segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
+            lwd = 0.5)
+        })
+      } else {
+        n.data <- cholera::regular.cases[anchors[i], ]
+        lapply(seq_len(nrow(n.data)), function(case) {
+          c.data <- n.data[case, ]
+          segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
+            lwd = 0.5)
+        })
+      }
     }))
   } else {
     if (all(pump.subset > 0)) {
