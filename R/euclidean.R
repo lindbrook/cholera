@@ -36,7 +36,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 
   if (is.null(pump.select)) {
     pump.id <- pump.data$id
-    snow.colors <- cholera::snowColors(vestry = TRUE)
+    snow.colors <- cholera::snowColors(vestry = vestry)
   } else {
     if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
     if (any(abs(pump.select) %in% p.ID) == FALSE) {
@@ -45,11 +45,11 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 
     if (all(pump.select > 0)) {
       pump.id <- pump.data$id[pump.select]
-      snow.colors <- cholera::snowColors(vestry = TRUE)[pump.select]
+      snow.colors <- cholera::snowColors(vestry = vestry)[pump.select]
     } else if (all(pump.select < 0)) {
       sel <- pump.data$id %in% abs(pump.select) == FALSE
       pump.id <- pump.data$id[sel]
-      snow.colors <- cholera::snowColors(vestry = TRUE)[sel]
+      snow.colors <- cholera::snowColors(vestry = vestry)[sel]
     } else {
       stop("Use all positive or all negative numbers for pump.select.")
     }
@@ -58,7 +58,6 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   if (case.set == "observed") {
     anchors <- cholera::fatalities.address$anchor.case
     observed <- TRUE
-
   } else if (case.set == "expected") {
     anchors <- seq_len(nrow(cholera::regular.cases))
     observed <- FALSE
