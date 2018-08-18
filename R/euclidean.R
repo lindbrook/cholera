@@ -95,6 +95,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
                 pump.id = pump.id,
                 snow.colors = snow.colors,
                 anchors = anchors.subset,
+                observed = observed,
                 nearest.pump = unlist(nearest.pump.subset))
   }
 
