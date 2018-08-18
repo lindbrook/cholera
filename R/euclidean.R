@@ -142,52 +142,26 @@ plot.euclidean <- function(x, ...) {
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
 
-  if (is.null(pump.subset)) {
-    invisible(lapply(seq_along(anchors), function(i) {
-      p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
-      n.color <- snow.colors[paste0("p", nearest.pump[[i]])]
-      if (x$observed) {
-        sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
-        n.data <- cholera::fatalities.address[sel, ]
-        lapply(n.data$anchor.case, function(case) {
-          c.data <- n.data[n.data$anchor.case == case, ]
-          segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
-            lwd = 0.5)
-        })
-      } else {
-        n.data <- cholera::regular.cases[anchors[i], ]
-        lapply(seq_len(nrow(n.data)), function(case) {
-          c.data <- n.data[case, ]
-          segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
-            lwd = 0.5)
-        })
-      }
-    }))
-  } else {
-    if (all(pump.subset > 0)) {
-      anchors.subset <- anchors[nearest.pump %in% pump.subset]
-      nearest.pump.subset <- nearest.pump[nearest.pump %in% pump.subset]
-    } else if (all(x$pump.subset < 0)) {
-      anchors.subset <- anchors[nearest.pump %in%
-        abs(pump.subset) == FALSE]
-      nearest.pump.subset <- nearest.pump[nearest.pump %in%
-        abs(pump.subset) ==- FALSE]
-    } else {
-      stop("Use all positive or all negative numbers for pump.subset.")
-    }
-
-    invisible(lapply(seq_along(anchors.subset), function(i) {
-      p.data <- pump.data[pump.data$id == nearest.pump.subset[[i]], ]
-      sel <- cholera::fatalities.address$anchor.case %in% anchors.subset[i]
+  invisible(lapply(seq_along(anchors), function(i) {
+    p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
+    n.color <- snow.colors[paste0("p", nearest.pump[[i]])]
+    if (x$observed) {
+      sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
       n.data <- cholera::fatalities.address[sel, ]
-      n.color <- snow.colors[paste0("p", nearest.pump.subset[[i]])]
       lapply(n.data$anchor.case, function(case) {
         c.data <- n.data[n.data$anchor.case == case, ]
         segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
           lwd = 0.5)
       })
-    }))
-  }
+    } else {
+      n.data <- cholera::regular.cases[anchors[i], ]
+      lapply(seq_len(nrow(n.data)), function(case) {
+        c.data <- n.data[case, ]
+        segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
+          lwd = 0.5)
+      })
+    }
+  }))
 
   if (is.null(pump.select)) {
     points(pump.data[, c("x", "y")], pch = ". ")
