@@ -8,7 +8,7 @@ Authors@R: person(
   )
 Description: Amends errors, augments data and aids analysis of John Snow's map
     of the 1854 London cholera outbreak.
-URL: https://github.com/lindbrook/cholera
+URL: https://github.com/lindbrook/cholera#readme
 BugReports: https://github.com/lindbrook/cholera/issues
 License: GPL (>= 2)
 LazyData: true
