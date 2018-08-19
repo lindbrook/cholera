@@ -33,10 +33,10 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 
   p.count <- nrow(pump.data)
   p.ID <- seq_len(p.count)
+  snow.colors <- cholera::snowColors(vestry = vestry)
 
   if (is.null(pump.select)) {
     pump.id <- pump.data$id
-    snow.colors <- cholera::snowColors(vestry = vestry)
   } else {
     if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
     if (any(abs(pump.select) %in% p.ID) == FALSE) {
@@ -45,11 +45,11 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 
     if (all(pump.select > 0)) {
       pump.id <- pump.data$id[pump.select]
-      snow.colors <- cholera::snowColors(vestry = vestry)[pump.select]
+      snow.colors <- snow.colors[pump.select]
     } else if (all(pump.select < 0)) {
       sel <- pump.data$id %in% abs(pump.select) == FALSE
-      pump.id <- pump.data$id[sel]
-      snow.colors <- cholera::snowColors(vestry = vestry)[sel]
+      pump.id <- snow.colors[sel]
+      snow.colors <- snow.colors[sel]
     } else {
       stop("Use all positive or all negative numbers for pump.select.")
     }
@@ -131,7 +131,6 @@ plot.euclidean <- function(x, ...) {
 
   pump.data <- x$pump.data
   pump.id <- x$pump.id
-  snow.colors <- x$snow.colors
   anchors <- x$anchors
   pump.select <- x$pump.select
   pump.subset <- x$pump.subset
@@ -144,7 +143,7 @@ plot.euclidean <- function(x, ...) {
 
   invisible(lapply(seq_along(anchors), function(i) {
     p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
-    n.color <- snow.colors[paste0("p", nearest.pump[[i]])]
+    n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
     if (x$observed) {
       sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
       n.data <- cholera::fatalities.address[sel, ]

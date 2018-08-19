@@ -65,17 +65,18 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   x.rng <- range(cholera::roads$x)
   y.rng <- range(cholera::roads$y)
 
+  snow.colors <- cholera::snowColors(vestry = vestry)
+
   if (is.null(pump.select)) {
     pump.id <- pump.data$id
     voronoi <- deldir::deldir(pump.data[, c("x", "y")], rw = c(x.rng, y.rng),
       suppressMsge = TRUE)
-    snow.colors <- cholera::snowColors(vestry = TRUE)
     select.string <- NULL
   } else {
     pump.id <- pump.data$id[pump.select]
     voronoi <- deldir::deldir(pump.data[pump.select, c("x", "y")],
       rw = c(x.rng, y.rng), suppressMsge = TRUE)
-    snow.colors <- cholera::snowColors(vestry = TRUE)[pump.select]
+    snow.colors <- snow.colors[pump.select]
     select.string <- paste(sort(pump.select), collapse = ", ")
   }
 
