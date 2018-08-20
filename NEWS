@@ -3,6 +3,7 @@ cholera 0.5.1.9003
 
 - use main for title in snowMap().
 - test snow.colors.
+- add pearsonResiduals.euclidean() prototype.
 
 
 cholera 0.5.1.9002

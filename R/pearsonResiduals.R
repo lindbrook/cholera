@@ -17,7 +17,24 @@ pearsonResiduals <- function(x) UseMethod("pearsonResiduals", x)
 pearsonResiduals.default <- function(x) NULL
 
 #' @export
-pearsonResiduals.euclidean <- function(x) NULL
+pearsonResiduals.euclidean <- function(x) {
+  obs <- unclass(table(x$nearest.pump))
+  exp <- unclass(table(cholera::neighborhoodEuclidean(pump.select = x$pump.id,
+    case.set = "expected", multi.core = x$cores)$nearest.pump))
+
+  exp.data <- data.frame(pump.id = as.numeric(names(exp)),
+                       exp.ct = exp,
+                       Percent = round(100 * exp / sum(exp), 2))
+
+  obs.data <- data.frame(pump.id = as.numeric(names(obs)),
+                         Count = obs)
+
+  output <- merge(obs.data, exp.data, by = "pump.id")
+  output$Expected <- sum(output$Count) * output$Percent / 100
+  output$Pearson <- (output$Count - output$Expected) / sqrt(output$Expected)
+  output$exp.ct <- NULL
+  output
+}
 
 #' @export
 pearsonResiduals.voronoi <- function(x) {
