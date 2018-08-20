@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclidean.R
 \name{plot.euclidean}
 \alias{plot.euclidean}
-\title{Plot method for neighborhoodWalking().}
+\title{Plot method for neighborhoodEuclidean().}
 \usage{
 \method{plot}{euclidean}(x, ...)
 }
@@ -15,7 +15,7 @@
 A base R plot.
 }
 \description{
-Plot method for neighborhoodWalking().
+Plot method for neighborhoodEuclidean().
 }
 \examples{
 \dontrun{

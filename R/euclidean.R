@@ -6,7 +6,7 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param case.set Character. "observed" or "expected".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
-#' @return A base R graph.
+#' @return An R vector.
 #' @export
 #' @examples
 #' \dontrun{
@@ -75,7 +75,8 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
                 snow.colors = snow.colors,
                 anchors = anchors,
                 observed = observed,
-                nearest.pump = unlist(nearest.pump))
+                nearest.pump = unlist(nearest.pump),
+                cores = cores)
   } else {
     if (all(pump.subset > 0)) {
       anchors.subset <- anchors[unlist(nearest.pump) %in% pump.subset]
@@ -96,14 +97,15 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
                 snow.colors = snow.colors,
                 anchors = anchors.subset,
                 observed = observed,
-                nearest.pump = unlist(nearest.pump.subset))
+                nearest.pump = unlist(nearest.pump.subset),
+                cores = cores)
   }
 
   class(out) <- "euclidean"
   out
 }
 
-#' Plot method for neighborhoodWalking().
+#' Plot method for neighborhoodEuclidean().
 #'
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
 #' @param ... Additional plotting parameters.
@@ -174,7 +176,7 @@ plot.euclidean <- function(x, ...) {
   }
 }
 
-#' Print method for neighborhoodWalking().
+#' Print method for neighborhoodEuclidean().
 #'
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
 #' @param ... Additional parameters.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclidean.R
 \name{print.euclidean}
 \alias{print.euclidean}
-\title{Print method for neighborhoodWalking().}
+\title{Print method for neighborhoodEuclidean().}
 \usage{
 \method{print}{euclidean}(x, ...)
 }
@@ -15,5 +15,5 @@
 An R class 'table' vector.
 }
 \description{
-Print method for neighborhoodWalking().
+Print method for neighborhoodEuclidean().
 }
