@@ -23,16 +23,16 @@ pearsonResiduals.euclidean <- function(x) {
     case.set = "expected", multi.core = x$cores)$nearest.pump))
 
   exp.data <- data.frame(pump.id = as.numeric(names(exp)),
-                       exp.ct = exp,
-                       Percent = round(100 * exp / sum(exp), 2))
+                         exp.ct = exp,
+                         Percent = round(100 * exp / sum(exp), 2))
 
   obs.data <- data.frame(pump.id = as.numeric(names(obs)),
                          Count = obs)
 
   output <- merge(obs.data, exp.data, by = "pump.id")
-  output$Expected <- sum(output$Count) * output$Percent / 100
-  output$Pearson <- (output$Count - output$Expected) / sqrt(output$Expected)
   output$exp.ct <- NULL
+  output$Expected <- sum(output$Count) * output$Percent / 100
+  output$Pearson <- pearson(output)
   output
 }
 
@@ -47,9 +47,13 @@ pearsonResiduals.voronoi <- function(x) {
     by.x = "pump.id", by.y = "pump")
   output$Expected <- output$pct * sum(output$Count)
   output$pct <- NULL
-  output$Pearson <- (output$Count - output$Expected) / sqrt(output$Expected)
+  output$Pearson <- pearson(output)
   output
 }
 
 #' @export
 pearsonResiduals.walking <- function(x) NULL
+
+pearson <- function(x) {
+  (x$Count - x$Expected) / sqrt(x$Expected)
+}
