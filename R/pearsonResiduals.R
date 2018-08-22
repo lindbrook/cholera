@@ -52,7 +52,23 @@ pearsonResiduals.voronoi <- function(x) {
 }
 
 #' @export
-pearsonResiduals.walking <- function(x) NULL
+pearsonResiduals.walking <- function(x) {
+  dat <- expectedWalkingLength(x)
+  obs <- dat$obs
+  exp <- dat$exp
+  exp.data <- data.frame(pump.id = as.numeric(names(exp)),
+                         exp.ct = exp,
+                         Percent = round(100 * exp / sum(exp), 2))
+
+  obs.data <- data.frame(pump.id = as.numeric(names(obs)),
+                         Count = obs)
+
+  output <- merge(obs.data, exp.data, by = "pump.id")
+  output$exp.ct <- NULL
+  output$Expected <- sum(output$Count) * output$Percent / 100
+  output$Pearson <- pearson(output)
+  output
+}
 
 pearson <- function(x) {
   (x$Count - x$Expected) / sqrt(x$Expected)
