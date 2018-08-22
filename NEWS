@@ -1,3 +1,10 @@
+cholera 0.5.1.9005
+==================
+
+- amend expectedWalkingLength() prototype.
+- add pearsonResiduals.walking() prototype.
+
+
 cholera 0.5.1.9004
 ==================
 
