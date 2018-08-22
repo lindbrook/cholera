@@ -77,7 +77,8 @@ pearson <- function(x) {
 #' Compute Total Length of Roads by Neighborhood (prototype)
 #'
 #' @param x An object created by \code{neighborhoodWalking()}.
-#' @export
+#' @noRd
+
 expectedWalkingLength <- function(x) {
   if (class(x) != "walking") {
     stop('"x"\'s class needs to be "walking".')
@@ -105,6 +106,7 @@ expectedWalkingLength <- function(x) {
   }, mc.cores = x$cores)
 
   ##
+
   obs.segment.count <- lapply(n.path.edges, function(x) {
     table(edges[unique(unlist(x)), "id"])
   })
@@ -194,39 +196,30 @@ expectedWalkingLength <- function(x) {
     pumpID <- seq_len(nrow(cholera::pumps))
   }
 
-  wholes <- lapply(pumpID, function(nm) {
-    c(obs.whole[[paste(nm)]],
-      unobs.whole[[paste(nm)]],
-      obs.partial.whole[[paste(nm)]])
+  ## --- observed --- ##
+
+  # wholes #
+
+  observed.wholes <- lapply(pumpID, function(nm) {
+    c(obs.whole[[paste(nm)]], obs.partial.whole[[paste(nm)]])
   })
 
-  names(wholes) <- pumpID
+  names(observed.wholes) <- pumpID
 
-  total.whole.road.length <- lapply(wholes, function(x) {
+  observed.wholes.total.length <- lapply(observed.wholes, function(x) {
     sum(vapply(x, segmentLength, numeric(1L)))
   })
 
-  #
+  # splits #
 
-  # split segments #
-  split.test1 <- length(obs.partial.segments)
-  split.test2 <- length(unobs.split.segments)
+  obs.split.test <- length(obs.partial.segments)
 
-  if (split.test1 > 0 & split.test2 == 0) {
+  if (obs.split.test > 0) {
     splits <- obs.partial.split
     splits.pump <- obs.partial.split.pump
-    split.segs <- obs.partial.segments
-  } else if (split.test1 == 0 & split.test2 > 0) {
-    splits <- unobs.split
-    splits.pump <- unobs.split.pump
-    split.segs <- unobs.split.segments
-  } else if (split.test1 > 0 & split.test2 > 0) {
-    splits <- c(obs.partial.split, unobs.split)
-    splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
-    split.segs <- c(obs.partial.segments, unobs.split.segments)
   }
 
-  split.road.length <- lapply(seq_along(splits), function(i) {
+  observed.splits.total.length <- lapply(seq_along(splits), function(i) {
     dat <- splits[[i]]
     lst <- list(rbind(dat[1, c("x", "y")], dat[2, c("x", "y")]),
                 rbind(dat[3, c("x", "y")], dat[4, c("x", "y")]))
@@ -234,20 +227,85 @@ expectedWalkingLength <- function(x) {
                pump = splits.pump[[i]])
   })
 
-  split.road.length <- do.call(rbind, split.road.length)
-  split.pumps <- unique(split.road.length$pump)
+  observed.splits.lengths <- do.call(rbind, observed.splits.total.length)
+  observed.splits.pumps <- sort(unique(observed.splits.lengths$pump))
 
-  total.split.road.length <- lapply(split.pumps, function(p) {
-     sum(split.road.length[split.road.length$pump == p, "dist"])
+  observed.splits.total.length <- lapply(observed.splits.pumps, function(p) {
+    sum(observed.splits.lengths[observed.splits.lengths$pump == p, "dist"])
   })
 
-  names(total.split.road.length) <- split.pumps
+  names(observed.splits.total.length) <- observed.splits.pumps
 
-  vapply(names(total.whole.road.length), function(nm) {
-    if (nm %in% names(total.split.road.length)) {
-      total.whole.road.length[[nm]] + total.split.road.length[[nm]]
+  # total #
+
+  neighs <- names(observed.wholes.total.length)
+
+  observed.total.length <- vapply(neighs, function(nm) {
+    if (nm %in% names(observed.splits.total.length)) {
+      observed.wholes.total.length[[nm]] + observed.splits.total.length[[nm]]
     } else {
-      total.whole.road.length[[nm]]
+      observed.wholes.total.length[[nm]]
     }
   }, numeric(1L))
+
+  ## --- expected --- ##
+
+  # wholes #
+
+  expected.wholes <- lapply(pumpID, function(nm) {
+    c(observed.wholes[[nm]], unobs.whole[[paste(nm)]])
+  })
+
+  names(expected.wholes) <- pumpID
+
+  expected.wholes.total.length <- lapply(expected.wholes, function(x) {
+    sum(vapply(x, segmentLength, numeric(1L)))
+  })
+
+  # splits #
+
+  obs.split.test <- length(obs.partial.segments)
+  unobs.split.test <- length(unobs.split.segments)
+
+  if (obs.split.test > 0 & unobs.split.test == 0) {
+    splits <- obs.partial.split
+    splits.pump <- obs.partial.split.pump
+  } else if (obs.split.test == 0 & unobs.split.test > 0) {
+    splits <- unobs.split
+    splits.pump <- unobs.split.pump
+  } else if (obs.split.test > 0 & unobs.split.test > 0) {
+    splits <- c(obs.partial.split, unobs.split)
+    splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
+  }
+
+  expected.splits.total.length <- lapply(seq_along(splits), function(i) {
+    dat <- splits[[i]]
+    lst <- list(rbind(dat[1, c("x", "y")], dat[2, c("x", "y")]),
+                rbind(dat[3, c("x", "y")], dat[4, c("x", "y")]))
+    data.frame(dist = vapply(lst, stats::dist, numeric(1L)),
+               pump = splits.pump[[i]])
+  })
+
+  expected.splits.lengths <- do.call(rbind, expected.splits.total.length)
+  expected.splits.pumps <- sort(unique(expected.splits.lengths$pump))
+
+  expected.splits.total.length <- lapply(expected.splits.pumps, function(p) {
+     sum(expected.splits.lengths[expected.splits.lengths$pump == p, "dist"])
+  })
+
+  names(expected.splits.total.length) <- expected.splits.pumps
+
+  # total #
+
+  neighs <- names(expected.wholes.total.length)
+
+  expected.total.length <- vapply(neighs, function(nm) {
+    if (nm %in% names(expected.splits.total.length)) {
+      expected.wholes.total.length[[nm]] + expected.splits.total.length[[nm]]
+    } else {
+      expected.wholes.total.length[[nm]]
+    }
+  }, numeric(1L))
+
+  list(obs = observed.total.length, exp = expected.total.length)
 }
