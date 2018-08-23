@@ -67,7 +67,7 @@ pearsonResiduals.walking <- function(x) {
   output$exp.ct <- NULL
   output$Expected <- sum(output$Count) * output$Percent / 100
   output$Pearson <- pearson(output)
-  output
+  output[!is.na(output$Pearson), ]
 }
 
 pearson <- function(x) {
