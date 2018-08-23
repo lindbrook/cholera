@@ -1,3 +1,11 @@
+cholera 0.5.1.9006
+==================
+
+- amend expectedWalkingLength() prototype.
+- amend pearsonResiduals.walking().
+- add observedExpected() to walkingAuxillaryFunctions.R
+
+
 cholera 0.5.1.9005
 ==================
 
