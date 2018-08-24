@@ -515,3 +515,36 @@ observedExpected <- function(x) {
        exp.splits.pump = exp.splits.pump,
        exp.splits.segs = exp.splits.segs)
 }
+
+neighborhoodPathData <- function(x) {
+  if (class(x) != "walking") {
+    stop('"x"\'s class needs to be "walking".')
+  }
+
+  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
+  edges <- dat$edges
+  p.data <- dat$nodes.pump
+
+  if (is.null(x$pump.select)) {
+    p.node <- p.data$node
+    p.name <- p.data$pump
+  } else {
+    if (all(x$pump.select > 0)) {
+      p.data <- p.data[p.data$pump %in% x$pump.select, ]
+    } else if (all(x$pump.select < 0)) {
+      p.data <- p.data[p.data$pump %in% abs(x$pump.select) == FALSE, ]
+    }
+    p.node <- p.data$node
+    p.name <- p.data$pump
+  }
+
+  neighborhood.path.edges <- parallel::mclapply(x$paths, function(neigh) {
+    lapply(neigh, auditEdge, edges)
+  }, mc.cores = x$cores)
+
+  list(dat = dat,
+       edges = edges,
+       p.node = p.node,
+       p.name = p.name,
+       neighborhood.path.edges = neighborhood.path.edges)
+}
