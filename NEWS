@@ -1,7 +1,16 @@
+cholera 0.5.1.9007
+==================
+
+- add neighborhoodPathData() to walkingAuxillaryFunctions.R.
+- amend expectedCount() for print.walking().
+- amend observedExpected().
+- use neighborhoodPathData in plot.walking()
+
+
 cholera 0.5.1.9006
 ==================
 
-- amend expectedWalkingLength() prototype.
+- amend expectedWalkingLength().
 - amend pearsonResiduals.walking().
 - add observedExpected() to walkingAuxillaryFunctions.R
 
