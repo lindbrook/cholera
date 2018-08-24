@@ -362,36 +362,19 @@ areaPointsData <- function(sim.proj.segs, wholes, snow.colors, sim.proj,
        sim.proj.splits = sim.proj.splits)
 }
 
-##
 
+# for neighborhoodWalking():expectedCount() and pearsonResiduals.walking()
 observedExpected <- function(x) {
   if (class(x) != "walking") {
     stop('"x"\'s class needs to be "walking".')
   }
 
-  ## ----- neighborhood path edges ----- ##
-
-  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
-  edges <- dat$edges
-  p.data <- dat$nodes.pump
-
-  if (is.null(x$pump.select)) {
-    p.node <- p.data$node
-    p.name <- p.data$pump
-  } else {
-    if (all(x$pump.select > 0)) {
-      p.data <- p.data[p.data$pump %in% x$pump.select, ]
-    } else if (all(x$pump.select < 0)) {
-      p.data <- p.data[p.data$pump %in% abs(x$pump.select) == FALSE, ]
-    }
-    p.node <- p.data$node
-    p.name <- p.data$pump
-  }
-
-  neighborhood.path.edges <- parallel::mclapply(x$paths, function(neigh) {
-    lapply(neigh, auditEdge, edges)
-  }, mc.cores = x$cores)
-
+  n.data <- neighborhoodPathData(x)
+  dat <- n.data$dat
+  edges <- n.data$edges
+  neighborhood.path.edges <- n.data$neighborhood.path.edges
+  p.node <- n.data$p.node
+  p.name <- n.data$p.name
 
   ## ----- segment audit ----- ##
 
@@ -504,8 +487,6 @@ observedExpected <- function(x) {
 
   names(expected.wholes) <- pumpID
 
-  #
-
   # obs.split.test <- length(obs.partial.segments)
   unobs.split.test <- length(unobs.split.segments)
 
@@ -525,6 +506,8 @@ observedExpected <- function(x) {
 
   list(observed.wholes = observed.wholes,
        expected.wholes = expected.wholes,
+       obs.split.test = obs.split.test,
+       unobs.split.test = unobs.split.test,
        obs.splits = exp.splits,
        obs.splits.pump = exp.splits.pump,
        obs.splits.segs = exp.splits.segs,
