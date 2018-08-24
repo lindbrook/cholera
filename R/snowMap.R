@@ -22,8 +22,7 @@
 #' snowMap(vestry = TRUE, stacked = FALSE)
 
 snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
-  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE,
-  main = "Snow's Cholera Map", ...) {
+  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE, main = NA, ...) {
 
   rng <- mapRange()
 

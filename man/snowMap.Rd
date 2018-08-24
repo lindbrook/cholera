@@ -6,7 +6,7 @@
 \usage{
 snowMap(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
   add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE,
-  main = "Snow's Cholera Map", ...)
+  main = NA, ...)
 }
 \arguments{
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}

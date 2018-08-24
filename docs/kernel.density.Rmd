@@ -15,7 +15,7 @@ library(cholera)
 By default, the `addKernelDensity()` function pools all observations:
 
 ```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
-snowMap(add.title = FALSE)
+snowMap()
 addKernelDensity()
 ```
 
@@ -24,13 +24,13 @@ However, with this function you can also specify which pumps should be considere
 ## Selecting a subset of observed neighborhoods:
 
 ```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
-snowMap(add.title = FALSE)
+snowMap()
 addKernelDensity(pump.subset = c(6, 8))
 ```
 
 ## Defining the set of observed pump neighborhoods:
 
 ```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
-snowMap(add.title = FALSE)
+snowMap()
 addKernelDensity(pump.select = c(6, 8))
 ```

@@ -241,7 +241,7 @@ For each simulated cases, I compute the closet water pump. This partitions the s
 The figure below plots the 1,709 simulated cases for the Broad Street pump neighborhood (pump #7).
 
 ```{r cloud, echo = FALSE}
-snowMap(add.cases = FALSE, add.pumps = FALSE, add.title = FALSE)
+snowMap(add.cases = FALSE, add.pumps = FALSE)
 points(regular.cases[neighborhood.cases$`7`, ], pch = 16, col = snowColors()["p7"], cex = 1/4)
 ```
 
