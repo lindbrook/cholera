@@ -17,27 +17,12 @@ source('~/Documents/Data IV/cholera/R/pearlString.R')
 source('~/Documents/Data IV/cholera/R/walkingAuxillaryFunctions.R')
 
 x <- neighborhoodWalking(case.set = "expected")
-
-dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
-edges <- dat$edges
-p.data <- dat$nodes.pump
-
-if (is.null(x$pump.select)) {
-  p.node <- p.data$node
-  p.name <- p.data$pump
-} else {
-  if (all(x$pump.select > 0)) {
-    p.data <- p.data[p.data$pump %in% x$pump.select, ]
-  } else if (all(x$pump.select < 0)) {
-    p.data <- p.data[p.data$pump %in% abs(x$pump.select) == FALSE, ]
-  }
-  p.node <- p.data$node
-  p.name <- p.data$pump
-}
-
-n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
-  lapply(neighborhood, auditEdge, edges)
-}, mc.cores = x$cores)
+n.data <- neighborhoodPathData(x)
+dat <- n.data$dat
+edges <- n.data$edges
+n.path.edges <- n.data$neighborhood.path.edges
+p.node <- n.data$p.node
+p.name <- n.data$p.name
 
 snow.colors <- cholera::snowColors(x$vestry)
 

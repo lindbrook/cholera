@@ -130,29 +130,12 @@ addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
       names(snow.colors))
   }
 
-  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
-  edges <- dat$edges
-  nodes <- dat$nodes
-  p.data <- dat$nodes.pump
-
-  if (is.null(x$pump.select)) {
-    p.node <- p.data$node
-    p.name <- p.data$pump
-  } else {
-    if (all(x$pump.select > 0)) {
-      p.data <- p.data[p.data$pump %in% x$pump.select, ]
-    } else if (all(x$pump.select < 0)) {
-      p.data <- p.data[p.data$pump %in% abs(x$pump.select) == FALSE, ]
-    }
-    p.node <- p.data$node
-    p.name <- p.data$pump
-  }
-
-  n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
-    lapply(neighborhood, auditEdge, edges)
-  }, mc.cores = x$cores)
-
-  ##
+  n.data <- neighborhoodPathData(neighborhoodWalking(vestry = x$vestry))
+  dat <- n.data$dat
+  edges <- n.data$edges
+  n.path.edges <- n.data$neighborhood.path.edges
+  p.node <- n.data$p.node
+  p.name <- n.data$p.name
 
   obs.segment.count <- lapply(n.path.edges, function(x) {
     table(edges[unique(unlist(x)), "id"])
