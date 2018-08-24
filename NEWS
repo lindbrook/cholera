@@ -1,3 +1,10 @@
+cholera 0.5.1.9008
+==================
+
+- set snowMap() title to NA.
+- use neighborhoodPathData() in addNeighborhood() & pump neighborhood lab notes.
+
+
 cholera 0.5.1.9007
 ==================
 
