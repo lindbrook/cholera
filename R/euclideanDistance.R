@@ -43,7 +43,6 @@ euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
     stop('time.unit must be "hour", "minute" or "second".')
   }
 
-
   obs.ct <- nrow(cholera::fatalities)
   exp.ct <- nrow(cholera::regular.cases)
 

@@ -318,7 +318,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
     destination.pump <- row.names(x$alter)
     case.color <- colors[paste0("p", destination.pump)]
     points(origin.xy, col = "red")
-    pumpToken(x, case.color, destination.pump)
+    pumpTokensEuclidean(x, case.color, destination.pump)
     title(main = paste("Case", x$origin, "to Pump", row.names(x$alter)))
   } else if (x$type == "cases" | x$type == "pumps") {
     case.color <- "blue"
@@ -430,7 +430,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
   }
 }
 
-pumpToken <- function(x, case.color, destination.pump) {
+pumpTokensEuclidean <- function(x, case.color, destination.pump) {
   if (x$vestry) {
     obs.pump <- cholera::pumps.vestry
     ortho.pump <- cholera::ortho.proj.pump.vestry

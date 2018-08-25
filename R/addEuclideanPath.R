@@ -51,7 +51,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
     destination.pump <- row.names(x$alter)
     case.color <- colors[paste0("p", destination.pump)]
     points(origin.xy, col = "red")
-    pumpToken(x, case.color, destination.pump)
+    pumpTokensEuclidean(x, case.color, destination.pump)
   } else if (x$type == "cases" | x$type == "pumps") {
     case.color <- "blue"
     destination.case <- row.names(x$alter)
