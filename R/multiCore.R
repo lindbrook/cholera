@@ -22,7 +22,8 @@ multiCore <- function(x) {
   } else if (is.numeric(x)) {
     obs.cores <- parallel::detectCores()
     if (x > obs.cores) {
-      stop(paste0('For your system, x must be <= ', obs.cores, "."))
+      msg <- 'If specified, the number of cores for your system must be <= '
+      stop(paste0(msg, obs.cores, "."))
     }
     if (is.integer(x)) {
       cores <- x
