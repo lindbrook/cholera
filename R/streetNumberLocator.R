@@ -6,6 +6,7 @@
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param cases Character. Plot cases: \code{NULL}, "anchors" or "all".
 #' @param add.title Logical. Include title.
+#' @param add.subtitle Logical. Include subtitle with road information.
 #' @param add.pump Logical. Include nearby pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param highlight Logical. Highlight selected road.
@@ -22,8 +23,9 @@
 #' streetNumberLocator(243, zoom = TRUE, radius = 0)
 
 streetNumberLocator <- function(road.number, zoom = FALSE, radius = 1,
-  cases = "anchors", add.title = TRUE, add.pump = TRUE, vestry = FALSE,
-  highlight = TRUE, unit = "meter", time.unit = "second", walking.speed = 5) {
+  cases = "anchors", add.title = TRUE, add.subtitle = TRUE, add.pump = TRUE,
+  vestry = FALSE, highlight = TRUE, unit = "meter", time.unit = "second",
+  walking.speed = 5) {
 
   if (is.numeric(road.number) == FALSE) {
     stop("road.number must be numeric.")
@@ -126,32 +128,34 @@ streetNumberLocator <- function(road.number, zoom = FALSE, radius = 1,
       lwd = 3))
   }
 
-  street.length <- cholera::streetLength(road.number, unit)
-
-  native.street.length <- cholera::streetLength(road.number, unit = "native")
-  est.time <- cholera::distanceTime(native.street.length, unit = time.unit,
-    speed = walking.speed)
-
-  if (time.unit == "hour") {
-    nominal.time <- paste(round(est.time, 1), "hr")
-  } else if (time.unit == "minute") {
-    nominal.time <- paste(round(est.time, 1), "min")
-  } else if (time.unit == "second") {
-    nominal.time <- paste(round(est.time, 1), "sec")
-  }
-
-  if (is.null(unit)) {
-   subtitle <- paste(round(street.length, 1), "units;", nominal.time)
-  } else if (unit == "meter") {
-   subtitle <- paste(round(street.length, 1), "m;", nominal.time)
-  } else if (unit == "yard") {
-   subtitle <- paste(round(street.length, 1), "yd;", nominal.time)
-  }
-
   if (add.title) {
     st.name <- unique(cholera::roads[cholera::roads$street == road.number,
       "name"])
-    title(main = paste0(st.name, ": 'Street' # ", road.number),
-          sub = paste(subtitle, "@", walking.speed, "km/hr"))
+    title(main = paste0(st.name, ": 'Street' # ", road.number))
+  }
+
+  if (add.subtitle) {
+    street.length <- cholera::streetLength(road.number, unit)
+    native.street.length <- cholera::streetLength(road.number, unit = "native")
+    est.time <- cholera::distanceTime(native.street.length, unit = time.unit,
+      speed = walking.speed)
+
+    if (time.unit == "hour") {
+      nominal.time <- paste(round(est.time, 1), "hr")
+    } else if (time.unit == "minute") {
+      nominal.time <- paste(round(est.time, 1), "min")
+    } else if (time.unit == "second") {
+      nominal.time <- paste(round(est.time, 1), "sec")
+    }
+
+    if (is.null(unit)) {
+     subtitle <- paste(round(street.length, 1), "units;", nominal.time)
+    } else if (unit == "meter") {
+     subtitle <- paste(round(street.length, 1), "m;", nominal.time)
+    } else if (unit == "yard") {
+     subtitle <- paste(round(street.length, 1), "yd;", nominal.time)
+    }
+
+    title(sub = paste(subtitle, "@", walking.speed, "km/hr"))
   }
 }
