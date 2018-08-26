@@ -1,7 +1,7 @@
 Lab Notes: "Unstacking" Bars
 ================
 lindbrook
-2018-08-13
+2018-08-26
 
 To match cases to a road and to other cases in stack, I use two methods of classification: orthogonal projection and cluster analysis.
 
@@ -40,6 +40,8 @@ In general, for roads with positive slopes (e.g., Broad Street), the differences
 With this information, I can use cluster analysis to identify stacks, or "addresses", on each side of a candidate road segment. Since we expect the distances between cases in a stack or "address" to be small, I use an arbitrarily low but reasonable cutoff "height" of 0.05. The two dendrograms below represent the North and South sides of Broad Street. We can see that this procedure correctly classifies the 8 different groups or stacks that can be seen in the figure above and that can be verified by looking at Snow's map.
 
 <img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /><img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-5-2.png" style="display: block; margin: auto;" />
+
+### Notes
 
 [1] To reduce computation, I only consider road segments with at least one endpoint within approximately 27 meters of the bar (i.e., a distance of 0.5 on the map's scale).
 
