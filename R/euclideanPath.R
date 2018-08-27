@@ -366,9 +366,9 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
     } else {
       if (is.null(unit.interval)) {
         if (unit.posts == "distance")  {
-          unit.interval <- 50
+          unit.interval <- 50 * x$speed / 5
         } else if (unit.posts == "time") {
-          unit.interval <- 60
+          unit.interval <- 60 * x$speed / 5
         }
       } else {
         if (!is.numeric(unit.interval)) {
