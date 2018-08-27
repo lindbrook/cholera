@@ -81,21 +81,23 @@ addLandmarks <- function(text.size = 0.5) {
   nm <- c("x", "y")
 
   # Marlborough Mews: Earl of Aberdeen
-  # NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-  #   "116-2", c("x2", "y2")], nm)
-  # NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-  #   "144-1", c("x2", "y2")], nm)
-  # SW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-  #   "161-1", c("x2", "y2")], nm)
-  # SE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-  #   "161-1", c("x1", "y1")], nm)
-  #
-  # aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
-  #                                 NE$x, NE$y, SW$x, SW$y)
-  #
-  # points(aberdeen$x, aberdeen$y, pch = 15, cex = 1/3)
-  # text(aberdeen$x, aberdeen$y, labels = "Earl of\nAberdeen",
-    # cex = text.size)
+  # https://www.british-history.ac.uk/survey-london/vols31-2/pt2/pp250-267
+  # https://www.british-history.ac.uk/old-new-london/vol4/pp235-246
+  NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "116-2", c("x2", "y2")], nm)
+  NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "144-1", c("x2", "y2")], nm)
+  SW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "161-1", c("x2", "y2")], nm)
+  SE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "161-1", c("x1", "y1")], nm)
+
+  aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
+                                  NE$x, NE$y, SW$x, SW$y)
+
+  points(aberdeen$x, aberdeen$y, pch = 15, cex = 1/3)
+  text(aberdeen$x, aberdeen$y, labels = "Earl of\nAberdeen",
+    cex = text.size)
 
   # 1) Marlborough Mews: Police Station
 
