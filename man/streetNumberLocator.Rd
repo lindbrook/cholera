@@ -5,9 +5,9 @@
 \title{Locate road by numerical ID.}
 \usage{
 streetNumberLocator(road.number, zoom = FALSE, radius = 1,
-  cases = "anchors", add.title = TRUE, add.pump = TRUE,
-  vestry = FALSE, highlight = TRUE, unit = "meter",
-  time.unit = "second", walking.speed = 5)
+  cases = "anchors", add.title = TRUE, add.subtitle = TRUE,
+  add.pump = TRUE, vestry = FALSE, highlight = TRUE,
+  unit = "meter", time.unit = "second", walking.speed = 5)
 }
 \arguments{
 \item{road.number}{Numeric or integer. A whole number between 1 and 528.}
@@ -19,6 +19,8 @@ streetNumberLocator(road.number, zoom = FALSE, radius = 1,
 \item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
 
 \item{add.title}{Logical. Include title.}
+
+\item{add.subtitle}{Logical. Include subtitle with road information.}
 
 \item{add.pump}{Logical. Include nearby pumps.}
 
