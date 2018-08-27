@@ -6,6 +6,8 @@
 #' @param observed Logical. \code{TRUE} for observed. \code{FALSE} for simulated.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param stacked Logical. \code{TRUE} uses \code{fatalities} ("stacked" data); \code{FALSE} uses \code{fatalities.address} ("unstacked" data).
+#' @param add.title Logical. Include title.
+#' @param highlight.segment Logical. Highlight case's segment.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}
 #' @import graphics
@@ -17,8 +19,8 @@
 #' caseLocator(290, zoom = TRUE, stacked = FALSE)
 #' caseLocator(290, observed = FALSE)
 
-caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 2,
-  stacked = TRUE) {
+caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 1,
+  stacked = TRUE, add.title = TRUE, highlight.segment = TRUE) {
 
   if (!is.numeric(case)) {
     stop("case must be numeric.")
@@ -67,13 +69,21 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 2,
         pos = 1)
       points(cholera::fatalities[cholera::fatalities$case == case, c("x", "y")],
         col = "red", lwd = 2)
-      case.seg <- cholera::ortho.proj[cholera::ortho.proj$case == case,
-        "road.segment"]
-      seg.data <- cholera::road.segments[cholera::road.segments$id ==
-        case.seg, ]
-      segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2, col = "red",
-        lwd = 2)
-      title(main = paste("Observed Case #", case, "Segment ID", seg.data$id))
+
+      if (highlight.segment) {
+        case.seg <- cholera::ortho.proj[cholera::ortho.proj$case == case,
+          "road.segment"]
+        seg.data <- cholera::road.segments[cholera::road.segments$id ==
+          case.seg, ]
+        segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2,
+          col = "red", lwd = 2)
+      }
+
+      if (add.title) {
+        title(main = paste("Observed Case #", case, "Segment ID",
+          seg.data$id))
+      }
+
     } else {
       case.b <- cholera::anchor.case[cholera::anchor.case$case == case,
         "anchor.case"]
@@ -86,14 +96,21 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 2,
         pos = 1)
       points(cholera::fatalities.address[cholera::fatalities.address$anchor.case
         == case.b, c("x", "y")], col = "red", lwd = 2)
-      case.seg <- cholera::ortho.proj[cholera::ortho.proj$case == case.b,
-        "road.segment"]
-      seg.data <- cholera::road.segments[cholera::road.segments$id ==
-        case.seg, ]
-      segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2, col = "red",
-        lwd = 2)
-      title(main = paste("Observed Case #", case, "Segment", seg.data$id))
+
+      if (highlight.segment) {
+        case.seg <- cholera::ortho.proj[cholera::ortho.proj$case == case.b,
+          "road.segment"]
+        seg.data <- cholera::road.segments[cholera::road.segments$id ==
+          case.seg, ]
+        segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2,
+          col = "red", lwd = 2)
+      }
+
+      if (add.title) {
+        title(main = paste("Observed Case #", case, "Segment", seg.data$id))
+      }
     }
+
   } else {
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = 15, cex = 0.5, col = "gray", asp = 1)
@@ -103,11 +120,18 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 2,
       pos = 1)
     points(cholera::regular.cases[case, c("x", "y")],
       col = "red", lwd = 2)
-    case.seg <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == case,
-      "road.segment"]
-    seg.data <- cholera::road.segments[cholera::road.segments$id == case.seg, ]
-    segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2, col = "red",
-      lwd = 2)
-    title(main = paste("Simulated Case #", case, "Segment ID", seg.data$id))
+
+    if (highlight.segment) {
+      case.seg <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == case,
+        "road.segment"]
+      seg.data <- cholera::road.segments[cholera::road.segments$id ==
+        case.seg, ]
+      segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2, col = "red",
+        lwd = 2)
+    }
+
+    if (add.title) {
+      title(main = paste("Simulated Case #", case, "Segment ID", seg.data$id))
+    }
   }
 }
