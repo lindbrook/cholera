@@ -4,7 +4,8 @@
 \alias{pumpLocator}
 \title{Locate water pump by numerical ID.}
 \usage{
-pumpLocator(id, zoom = FALSE, radius = 2, vestry = FALSE)
+pumpLocator(id = 7, zoom = FALSE, radius = 1, vestry = FALSE,
+  add.title = TRUE, highlight.segment = TRUE)
 }
 \arguments{
 \item{id}{Numeric or Integer. With \code{vestry = TRUE}, a whole number between 1 and 14. With \code{vestry = FALSE}, a whole number between 1 and 13. See \code{cholera::pumps.vestry} and \code{cholera::pumps} for IDs and details about specific pumps.}
@@ -14,6 +15,10 @@ pumpLocator(id, zoom = FALSE, radius = 2, vestry = FALSE)
 \item{radius}{Numeric. Controls the degree of zoom.}
 
 \item{vestry}{Logical. \code{TRUE} for the 14 pumps from Vestry Report. \code{FALSE} for the original 13 pumps.}
+
+\item{add.title}{Logical. Include title.}
+
+\item{highlight.segment}{Logical. Highlight case's segment.}
 }
 \value{
 A base R graphics plot.

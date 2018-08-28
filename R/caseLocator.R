@@ -32,7 +32,7 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 1,
     }
   } else {
     if (case %in% seq_len(nrow(cholera::regular.cases)) == FALSE) {
-      stop("Simulated case must be a whole number between 1 and 4993.")
+      stop("Simulated case must be a whole number between 1 and 19,993.")
     }
   }
 
@@ -70,18 +70,24 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 1,
       points(cholera::fatalities[cholera::fatalities$case == case, c("x", "y")],
         col = "red", lwd = 2)
 
-      if (highlight.segment) {
-        case.seg <- cholera::ortho.proj[cholera::ortho.proj$case == case,
-          "road.segment"]
-        seg.data <- cholera::road.segments[cholera::road.segments$id ==
-          case.seg, ]
-        segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2,
-          col = "red", lwd = 2)
-      }
+      case.seg <- cholera::ortho.proj[cholera::ortho.proj$case == case,
+        "road.segment"]
+      seg.data <- cholera::road.segments[cholera::road.segments$id ==
+        case.seg, ]
 
-      if (add.title) {
-        title(main = paste("Observed Case #", case, "Segment ID",
-          seg.data$id))
+      if (zoom) {
+        if (highlight.segment) {
+          segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2,
+            col = "red", lwd = 2)
+        }
+        if (add.title) {
+          title(main = paste0("Observed Case #", case, "; ", seg.data$name,
+            " ", seg.data$id))
+        }
+      } else {
+        if (add.title) {
+          title(main = paste0("Observed Case #", case, "; ", seg.data$name))
+        }
       }
 
     } else {
@@ -97,17 +103,24 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 1,
       points(cholera::fatalities.address[cholera::fatalities.address$anchor.case
         == case.b, c("x", "y")], col = "red", lwd = 2)
 
-      if (highlight.segment) {
-        case.seg <- cholera::ortho.proj[cholera::ortho.proj$case == case.b,
-          "road.segment"]
-        seg.data <- cholera::road.segments[cholera::road.segments$id ==
-          case.seg, ]
-        segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2,
-          col = "red", lwd = 2)
-      }
+      case.seg <- cholera::ortho.proj[cholera::ortho.proj$case == case.b,
+        "road.segment"]
+      seg.data <- cholera::road.segments[cholera::road.segments$id ==
+        case.seg, ]
 
-      if (add.title) {
-        title(main = paste("Observed Case #", case, "Segment", seg.data$id))
+      if (zoom) {
+        if (highlight.segment) {
+          segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2,
+            col = "red", lwd = 2)
+        }
+        if (add.title) {
+          title(main = paste0("Observed Case #", case, "; ", seg.data$name,
+            " ", seg.data$id))
+        }
+      } else {
+        if (add.title) {
+          title(main = paste0("Observed Case #", case, "; ", seg.data$name))
+        }
       }
     }
 
@@ -121,17 +134,23 @@ caseLocator <- function(case, zoom = FALSE, observed = TRUE, radius = 1,
     points(cholera::regular.cases[case, c("x", "y")],
       col = "red", lwd = 2)
 
-    if (highlight.segment) {
-      case.seg <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == case,
-        "road.segment"]
-      seg.data <- cholera::road.segments[cholera::road.segments$id ==
-        case.seg, ]
-      segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2, col = "red",
-        lwd = 2)
-    }
+    case.seg <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == case,
+      "road.segment"]
+    seg.data <- cholera::road.segments[cholera::road.segments$id == case.seg, ]
 
-    if (add.title) {
-      title(main = paste("Simulated Case #", case, "Segment ID", seg.data$id))
+    if (zoom) {
+      if (highlight.segment) {
+        segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2,
+          col = "red", lwd = 2)
+      }
+      if (add.title) {
+        title(main = paste0("Simulated Case #", case, "; ", seg.data$name,
+          " ", seg.data$id))
+      }
+    } else {
+      if (add.title) {
+        title(main = paste0("Simulated Case #", case, "; ", seg.data$name))
+      }
     }
   }
 }

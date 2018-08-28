@@ -5,6 +5,8 @@
 #' @param zoom Logical.
 #' @param radius Numeric. Controls the degree of zoom.
 #' @param vestry Logical. \code{TRUE} for the 14 pumps from Vestry Report. \code{FALSE} for the original 13 pumps.
+#' @param add.title Logical. Include title.
+#' @param highlight.segment Logical. Highlight case's segment.
 #' @seealso\code{\link{pumpData}}
 #' @return A base R graphics plot.
 #' @export
@@ -14,7 +16,9 @@
 #' pumpLocator(7, zoom = TRUE, radius = 1)
 #' pumpLocator(14, vestry = TRUE, zoom = TRUE, radius = 1)
 
-pumpLocator <- function(id, zoom = FALSE, radius = 2, vestry = FALSE) {
+pumpLocator <- function(id = 7, zoom = FALSE, radius = 1, vestry = FALSE,
+  add.title = TRUE, highlight.segment = TRUE) {
+
   if (is.numeric(id) == FALSE) {
     stop('id must be numeric.')
   }
@@ -28,44 +32,66 @@ pumpLocator <- function(id, zoom = FALSE, radius = 2, vestry = FALSE) {
   }
 
   if (vestry) {
-    well <- cholera::pumps.vestry
-    title <- "Vestry Water Pumps"
+    p.data <- cholera::pumps.vestry
+    ortho.data <- cholera::ortho.proj.pump.vestry
   } else {
-    well <- cholera::pumps
-    title <- "Water Pumps"
+    p.data <- cholera::pumps
+    ortho.data <- cholera::ortho.proj.pump
   }
 
-  road <- cholera::roads
-  death <- cholera::fatalities
-  roads.list <- split(road[, c("x", "y")], road$street)
+  roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)
+  p.seg <- ortho.data[ortho.data$pump.id == id, "road.segment"]
+  seg.data <- cholera::road.segments[cholera::road.segments$id == p.seg, ]
 
   if (zoom) {
-    x.rng <- c(well[well$id == id, "x"] - radius,
-               well[well$id == id, "x"] + radius)
-    y.rng <- c(well[well$id == id, "y"] - radius,
-               well[well$id == id, "y"] + radius)
+    x.rng <- c(p.data[p.data$id == id, "x"] - radius,
+               p.data[p.data$id == id, "x"] + radius)
+    y.rng <- c(p.data[p.data$id == id, "y"] - radius,
+               p.data[p.data$id == id, "y"] + radius)
 
-    plot(death[, c("x", "y")], xlim = x.rng, ylim = y.rng, pch = 15, cex = 0.5,
-      col = "lightgray", asp = 1)
-    invisible(lapply(roads.list, lines, col = "gray"))
-    points(well[well$id != id, c("x", "y")], pch = 2, cex = 1,
-      col = "blue")
-    points(well[well$id == id, c("x", "y")], pch = 17, cex = 1,
-      col = "red")
-    text(well[well$id == id, c("x", "y")],
-      label = well$id[well$id == id], pos = 1, col = "red")
-    title(main = title)
-
-  } else {
-    plot(death[, c("x", "y")], xlim = range(road$x), ylim = range(road$y),
+    plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = 15, cex = 0.5, col = "lightgray", asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
-    points(well[well$id != id, c("x", "y")], pch = 2, cex = 1,
+    points(p.data[p.data$id != id, c("x", "y")], pch = 2, cex = 1,
       col = "blue")
-    points(well[well$id == id, c("x", "y")], pch = 17, cex = 1,
+    points(p.data[p.data$id == id, c("x", "y")], pch = 17, cex = 1,
       col = "red")
-    text(well[well$id == id, c("x", "y")],
-      label = well$id[well$id == id], pos = 1, col = "red")
-    title(main = title)
+    text(p.data[p.data$id == id, c("x", "y")],
+      label = p.data$id[p.data$id == id], pos = 1, col = "red")
+
+    if (highlight.segment) {
+      segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2, col = "red",
+        lwd = 2)
+    }
+
+  } else {
+    plot(cholera::fatalities[, c("x", "y")], xlim = range(cholera::roads$x),
+      ylim = range(cholera::roads$y), pch = 15, cex = 0.5, col = "lightgray",
+      asp = 1)
+    invisible(lapply(roads.list, lines, col = "gray"))
+    points(p.data[p.data$id != id, c("x", "y")], pch = 2, cex = 1,
+      col = "blue")
+    points(p.data[p.data$id == id, c("x", "y")], pch = 17, cex = 1,
+      col = "red")
+    text(p.data[p.data$id == id, c("x", "y")],
+      label = p.data$id[p.data$id == id], pos = 1, col = "red")
+  }
+
+  if (add.title) {
+    if (vestry) {
+      if (zoom) {
+        title(main = paste0("Vestry Pump #", id, "; ", seg.data$name, " ",
+          seg.data$id))
+      } else {
+        title(main = paste0("Vestry Pump #", id, "; ", seg.data$name))
+      }
+    } else {
+      if (zoom) {
+        title(main = paste0("Pump #", id, "; ", seg.data$name, " ",
+          seg.data$id))
+      } else {
+        title(main = paste0("Pump #", id, "; ", seg.data$name))
+      }
+    }
   }
 }
