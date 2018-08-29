@@ -4,7 +4,7 @@
 \name{sim.ortho.proj}
 \alias{sim.ortho.proj}
 \title{Road "address" of simulated (i.e., "expected") cases.}
-\format{A data frame with 6 variables that records the "address" of 20007 simulate cases along the network of roads.
+\format{A data frame with 6 variables that records the "address" of 19,993 simulate cases along the network of roads.
 \describe{
     \item{\code{road.segment}}{"address" road segment}
     \item{\code{x.proj}}{x-coordinate}

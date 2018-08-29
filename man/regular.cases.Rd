@@ -4,7 +4,7 @@
 \name{regular.cases}
 \alias{regular.cases}
 \title{"Expected" cases.}
-\format{A data frame with 2 variable that records the position of 20007 "expected" cases fitted by sp::spsample().
+\format{A data frame with 2 variable that records the position of 19,993 "expected" cases fitted by sp::spsample().
  \describe{
     \item{\code{x}}{x-coordinate}
     \item{\code{y}}{y-coordinate}
@@ -13,7 +13,7 @@
 regular.cases
 }
 \description{
-The result of using sp::spsample() and sp::Polygon() to generate 20007 regularly spaced simulated cases within the map's borders.
+The result of using sp::spsample() and sp::Polygon() to generate 19,993 regularly spaced simulated cases within the map's borders.
 }
 \note{
 \code{\link{simulateFatalities}} documents the code for these data.
