@@ -1,7 +1,7 @@
 cholera 0.5.1.9012
 ==================
 
-- match output of caseLocator() and pumpLocator().
+- match caseLocator() and pumpLocator().
 
 
 cholera 0.5.1.9011
