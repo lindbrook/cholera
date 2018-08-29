@@ -3,25 +3,28 @@
 #' Assembles cases, pumps and road into a network graph.
 #' @param vestry Logical. Use Vestry Report pump data.
 #' @param case.set Character. "observed" or "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
+#' @param embed Logical. Embed cases and pumps into road network.
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
-neighborhoodData <- function(vestry = FALSE, case.set = "observed") {
+neighborhoodData <- function(vestry = FALSE, case.set = "observed",
+  embed = TRUE) {
+
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
     stop('case.set must be "observed", "expected" or "snow".')
   }
 
   if (case.set == "expected") {
     if (vestry) {
-      node.data <- nodeData(vestry = TRUE, observed = FALSE)
+      node.data <- nodeData(embed = embed, vestry = TRUE, observed = FALSE)
     } else {
-      node.data <- nodeData(observed = FALSE)
+      node.data <- nodeData(embed = embed, observed = FALSE)
     }
   } else {
     if (vestry) {
-      node.data <- nodeData(vestry = TRUE)
+      node.data <- nodeData(embed = embed, vestry = TRUE)
     } else {
-      node.data <- nodeData()
+      node.data <- nodeData(embed = embed)
     }
   }
 
