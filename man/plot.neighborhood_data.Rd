@@ -12,10 +12,10 @@
 \item{...}{Additional plotting parameters.}
 }
 \value{
-A base R plot of road network (with or without cases and pumps) using igraph::plot.igraph().
+A base R plot.
 }
 \description{
-Plot method for neighborhoodData().
+Visualize underlying road network (with or without cases and pumps).
 }
 \examples{
 \dontrun{

@@ -40,9 +40,10 @@ neighborhoodData <- function(vestry = FALSE, case.set = "observed",
 
 #' Plot method for neighborhoodData().
 #'
+#' Visualize underlying road network (with or without cases and pumps).
 #' @param x An 'igraph' object of class "neighborhood_data" created by \code{neighborhoodData()}.
 #' @param ... Additional plotting parameters.
-#' @return A base R plot of road network (with or without cases and pumps) using igraph::plot.igraph().
+#' @return A base R plot.
 #' @export
 #' @examples
 #' \dontrun{
