@@ -107,3 +107,5 @@ plot(neighborhoodWalking(-6))
 Note that parallelization is currently only available on Linux and Mac.
 
 Also, note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which `neighborhoodWalking()` uses, strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("parallel")` for details.
+
+## Notes

@@ -1,7 +1,7 @@
 Time Series
 ================
 lindbrook
-2018-08-13
+2018-08-30
 
 Overview
 --------
@@ -18,4 +18,7 @@ plot(timeSeries())
 
 <img src="time.series_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
 
-[1] <https://www.cdc.gov/mmwr/preview/mmwrhtml/mm5334a1.htm>; <https://www.nytimes.com/2017/02/06/health/cholera-vaccine-bangladesh.html>
+Notes
+-----
+
+[1] See <https://www.cdc.gov/mmwr/preview/mmwrhtml/mm5334a1.htm> and <https://www.nytimes.com/2017/02/06/health/cholera-vaccine-bangladesh.html>

@@ -1,7 +1,7 @@
 Pump Neighborhoods
 ================
 lindbrook
-2018-08-13
+2018-08-30
 
 Overview
 --------
@@ -41,20 +41,8 @@ In either case, the numerical results can be summarized using the `print()` meth
 neighborhoodVoronoi()
 ```
 
-    ##    pump.id Count Percent  Expected    Pearson
-    ## 1        1     0    0.00 19.491634 -4.4149330
-    ## 2        2     1    0.31  6.234668 -2.0964402
-    ## 3        3    10    3.12 13.983773 -1.0653256
-    ## 4        4    13    4.05 30.413400 -3.1575562
-    ## 5        5     3    0.93 26.463696 -4.5611166
-    ## 6        6    39   12.15 39.860757 -0.1363352
-    ## 7        7   182   56.70 27.189136 29.6895576
-    ## 8        8    12    3.74 22.112172 -2.1504470
-    ## 9        9    17    5.30 15.531287  0.3726776
-    ## 10      10    38   11.84 18.976903  4.3668529
-    ## 11      11     2    0.62 24.627339 -4.5595790
-    ## 12      12     2    0.62 29.671129 -5.0799548
-    ## 13      13     2    0.62 46.444106 -6.5215206
+    ##   1   2   3   4   5   6   7   8   9  10  11  12  13 
+    ##   0   1  10  13   3  39 182  12  17  38   2   2   2
 
 ### Walking distance
 
@@ -129,6 +117,9 @@ plot(neighborhoodWalking(-6))
 Note that parallelization is currently only available on Linux and Mac.
 
 Also, note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which `neighborhoodWalking()` uses, strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("parallel")` for details.
+
+Notes
+-----
 
 [1] <http://www.ams.org/samplings/feature-column/fcarc-voronoi>
 

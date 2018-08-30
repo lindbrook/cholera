@@ -2,6 +2,7 @@ cholera 0.5.1.9014
 ==================
 
 - add plot.neighborhood_data() to visualize road network.
+- copyedit pump neighborhoods and time series docs and vignettes.
 
 
 cholera 0.5.1.9013
