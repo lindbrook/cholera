@@ -33,7 +33,26 @@ neighborhoodData <- function(vestry = FALSE, case.set = "observed",
   g <- node.data$g
   nodes.pump <- nodes[nodes$pump != 0, ]
   nodes.pump <- nodes.pump[order(nodes.pump$pump), c("pump", "node")]
-  list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
+  out <- list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
+  class(out) <- "neighborhood_data"
+  out
+}
+
+#' Plot method for neighborhoodData().
+#'
+#' @param x An 'igraph' object of class "neighborhood_data" created by \code{neighborhoodData()}.
+#' @param ... Additional plotting parameters.
+#' @return A base R plot of road network (with or without cases and pumps) using igraph::plot.igraph().
+#' @export
+#' @examples
+#' \dontrun{
+#'
+#' plot(neighborhoodData())
+#' plot(neighborhoodData(embed = FALSE))
+#' }
+
+plot.neighborhood_data <- function(x, ...) {
+  plot(x$g, vertex.label = NA, vertex.size = 2)
 }
 
 nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
