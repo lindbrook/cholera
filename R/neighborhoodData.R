@@ -53,7 +53,7 @@ neighborhoodData <- function(vestry = FALSE, case.set = "observed",
 #' }
 
 plot.neighborhood_data <- function(x, ...) {
-  plot(x$g, vertex.label = NA, vertex.size = 2)
+  plot(x$g, vertex.label = NA, vertex.size = 2, ...)
 }
 
 nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
