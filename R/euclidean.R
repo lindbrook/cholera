@@ -71,6 +71,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   if (is.null(pump.subset)) {
     out <- list(pump.data = pump.data,
                 pump.select = pump.select,
+                case.set = case.set,
                 pump.id = pump.id,
                 snow.colors = snow.colors,
                 anchors = anchors,
@@ -93,6 +94,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
     out <- list(pump.data = pump.data,
                 pump.subset = pump.subset,
                 pump.select = pump.select,
+                case.set = case.set,
                 pump.id = pump.id,
                 snow.colors = snow.colors,
                 anchors = anchors.subset,
@@ -108,6 +110,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 #' Plot method for neighborhoodEuclidean().
 #'
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
+#' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
@@ -119,9 +122,15 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 #' plot(neighborhoodEuclidean(pump.select = 6:7))
 #' }
 
-plot.euclidean <- function(x, ...) {
+plot.euclidean <- function(x, type = "star", ...) {
   if (class(x) != "euclidean") {
     stop('"x"\'s class needs to be "euclidean".')
+  }
+
+  if (type %in% c("area.points", "area.polygons")) {
+    if (x$case.set != "expected") {
+      stop('area plots valid only when case.set = "expected".')
+    }
   }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
@@ -143,26 +152,67 @@ plot.euclidean <- function(x, ...) {
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
 
-  invisible(lapply(seq_along(anchors), function(i) {
-    p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
-    n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
-    if (x$observed) {
-      sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
-      n.data <- cholera::fatalities.address[sel, ]
-      lapply(n.data$anchor.case, function(case) {
-        c.data <- n.data[n.data$anchor.case == case, ]
-        segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
-          lwd = 0.5)
-      })
-    } else {
-      n.data <- cholera::regular.cases[anchors[i], ]
-      lapply(seq_len(nrow(n.data)), function(case) {
-        c.data <- n.data[case, ]
-        segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
-          lwd = 0.5)
-      })
-    }
-  }))
+  if (type == "star") {
+    invisible(lapply(seq_along(anchors), function(i) {
+      p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
+      n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
+      if (x$observed) {
+        sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
+        n.data <- cholera::fatalities.address[sel, ]
+        lapply(n.data$anchor.case, function(case) {
+          c.data <- n.data[n.data$anchor.case == case, ]
+          segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
+            lwd = 0.5)
+        })
+      } else {
+        n.data <- cholera::regular.cases[anchors[i], ]
+        lapply(seq_len(nrow(n.data)), function(case) {
+          c.data <- n.data[case, ]
+          segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
+            lwd = 0.5)
+        })
+      }
+    }))
+
+  } else if (type == "area.points") {
+    invisible(lapply(seq_along(anchors), function(i) {
+      # p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
+      n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
+      if (x$observed) {
+        sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
+        n.data <- cholera::fatalities.address[sel, ]
+        lapply(n.data$anchor.case, function(case) {
+          c.data <- n.data[n.data$anchor.case == case, ]
+          points(c.data$x, c.data$y, col = n.color, pch = 15, cex = 1.25)
+        })
+      } else {
+        n.data <- cholera::regular.cases[anchors[i], ]
+        lapply(seq_len(nrow(n.data)), function(case) {
+          c.data <- n.data[case, ]
+          points(c.data$x, c.data$y, col = n.color, pch = 15, cex = 1.25)
+        })
+      }
+    }))
+
+  } else if (type == "area.polygons") {
+    p.num <- sort(unique(nearest.pump))
+
+    neighborhood.cases <- lapply(p.num, function(n) {
+      which(nearest.pump == n)
+    })
+
+    periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
+      mc.cores = x$cores)
+    pearl.string <- parallel::mclapply(periphery.cases, pearlString,
+      mc.cores = x$cores)
+    names(pearl.string) <- p.num
+
+    invisible(lapply(names(pearl.string), function(nm) {
+      sel <- paste0("p", nm)
+      polygon(cholera::regular.cases[pearl.string[[nm]], ],
+        col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = 2/3))
+    }))
+  }
 
   if (is.null(pump.select)) {
     points(pump.data[, c("x", "y")], pch = ". ")

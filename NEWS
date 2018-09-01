@@ -1,3 +1,9 @@
+cholera 0.5.1.9016
+==================
+
+- add prototype "area.points" and "area.polygons" types to plot.euclidean().
+
+
 cholera 0.5.1.9015
 ==================
 
