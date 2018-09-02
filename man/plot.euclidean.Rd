@@ -25,5 +25,7 @@ Plot method for neighborhoodEuclidean().
 plot(neighborhoodEuclidean())
 plot(neighborhoodEuclidean(-6))
 plot(neighborhoodEuclidean(pump.select = 6:7))
+plot(neighborhoodEuclidean(case.set = "expected"), type = "area.points")
+plot(neighborhoodEuclidean(case.set = "expected"), type = "area.polygons")
 }
 }

@@ -24,6 +24,9 @@ An R vector.
 \description{
 Plots star graph from pump to its cases.
 }
+\note{
+This function is computationally intensive when case.set = "expected."
+}
 \examples{
 \dontrun{
 

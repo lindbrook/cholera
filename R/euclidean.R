@@ -7,6 +7,7 @@
 #' @param case.set Character. "observed" or "expected".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @return An R vector.
+#' @note This function is computationally intensive when case.set = "expected."
 #' @export
 #' @examples
 #' \dontrun{
@@ -71,6 +72,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   if (is.null(pump.subset)) {
     out <- list(pump.data = pump.data,
                 pump.select = pump.select,
+                vestry = vestry,
                 case.set = case.set,
                 pump.id = pump.id,
                 snow.colors = snow.colors,
@@ -94,6 +96,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
     out <- list(pump.data = pump.data,
                 pump.subset = pump.subset,
                 pump.select = pump.select,
+                vestry = vestry,
                 case.set = case.set,
                 pump.id = pump.id,
                 snow.colors = snow.colors,
@@ -120,6 +123,8 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 #' plot(neighborhoodEuclidean())
 #' plot(neighborhoodEuclidean(-6))
 #' plot(neighborhoodEuclidean(pump.select = 6:7))
+#' plot(neighborhoodEuclidean(case.set = "expected"), type = "area.points")
+#' plot(neighborhoodEuclidean(case.set = "expected"), type = "area.polygons")
 #' }
 
 plot.euclidean <- function(x, type = "star", ...) {
@@ -133,9 +138,13 @@ plot.euclidean <- function(x, type = "star", ...) {
     }
   }
 
+  if (type == "area.polygons") {
+    warning("In progress: some configuartions may not work!")
+  }
+
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-  roads.list <- split(rd[, c("x", "y")], rd$street)
+  road.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
   x.rng <- range(cholera::roads$x)
   y.rng <- range(cholera::roads$y)
@@ -149,7 +158,7 @@ plot.euclidean <- function(x, type = "star", ...) {
 
   plot(cholera::fatalities.address[, c("x", "y")], xlim = x.rng,
     ylim = y.rng, pch = NA, asp = 1)
-  invisible(lapply(roads.list, lines, col = "lightgray"))
+  invisible(lapply(road.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
 
   if (type == "star") {
@@ -176,8 +185,8 @@ plot.euclidean <- function(x, type = "star", ...) {
 
   } else if (type == "area.points") {
     invisible(lapply(seq_along(anchors), function(i) {
-      # p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
       n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
+
       if (x$observed) {
         sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
         n.data <- cholera::fatalities.address[sel, ]
@@ -194,7 +203,10 @@ plot.euclidean <- function(x, type = "star", ...) {
       }
     }))
 
+    invisible(lapply(road.list, lines))
+
   } else if (type == "area.polygons") {
+    invisible(lapply(road.list, lines))
     p.num <- sort(unique(nearest.pump))
 
     neighborhood.cases <- lapply(p.num, function(n) {
