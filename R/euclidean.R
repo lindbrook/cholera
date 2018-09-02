@@ -214,16 +214,8 @@ plot.euclidean <- function(x, type = "star", ...) {
     }))
   }
 
-  if (is.null(pump.select)) {
-    points(pump.data[, c("x", "y")], pch = ". ")
-    text(pump.data[, c("x", "y")], label = paste0("p", pump.id))
-    title(main = "Pump Neighborhoods: Euclidean Paths (address)")
-  } else {
-    points(pump.data[pump.select, c("x", "y")], pch = ".")
-    text(pump.data[pump.select, c("x", "y")], label = paste0("p", pump.id))
-    title(main = paste0("Pump Neighborhoods: Euclidean Paths (address)", "\n",
-      "Pumps ", paste(sort(pump.select), collapse = ", ")))
-  }
+  pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
+  title(main = "Pump Neighborhoods: Euclidean")
 }
 
 #' Print method for neighborhoodEuclidean().
