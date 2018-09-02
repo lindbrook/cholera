@@ -15,7 +15,7 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
     stop('type must either be "base", "ggplot2" or "threejs"')
   }
 
-  if (type == "threejs") {
+  if (type == "threejs" & Sys.getenv("RSTUDIO") != "1") {
     stop('Currently, type = "threejs" only works in RStudio.')
   }
 
