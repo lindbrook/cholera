@@ -80,7 +80,7 @@ addLandmarks <- function(text.size = 0.5) {
 
   nm <- c("x", "y")
 
-  # Marlborough Mews: Earl of Aberdeen
+  # Argyll House: Earl of Aberdeen
   # https://www.british-history.ac.uk/survey-london/vols31-2/pt2/pp250-267
   # https://www.british-history.ac.uk/old-new-london/vol4/pp235-246
   NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
