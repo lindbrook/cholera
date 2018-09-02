@@ -1,3 +1,11 @@
+cholera 0.5.1.9017
+==================
+
+- move pumpTokens() to pumpTokens.R.
+- add "area.polygons" prototype warning to plot.euclidean().
+- note Argyll House.
+- amend neighborhoodEuclidean() and plot.euclidean().
+
 cholera 0.5.1.9016
 ==================
 
