@@ -4,15 +4,19 @@
 #' @param angle Numeric. Angle of perspective axis in degrees.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
-#' @param type Character. "base" or "ggplot2".
+#' @param type Character. "base", "ggplot2", or "threejs".
 #' @import ggplot2
 #' @export
 
 profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
-  type = "base") {
+  type = "threejs") {
 
-  if (type %in% c("base", "ggplot2") == FALSE) {
-    stop('type must either be "base" or "ggplot2"')
+  if (type %in% c("base", "ggplot2", "threejs") == FALSE) {
+    stop('type must either be "base", "ggplot2" or "threejs"')
+  }
+
+  if (type == "threejs") {
+    stop('Currently, type = "threejs" only works in RStudio.')
   }
 
   a <- profilePerspective("inside", angle = angle, vestry = vestry,
@@ -56,10 +60,17 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
       facet_wrap(~ facet, nrow = 3) +
       ggtitle(paste("Axis angle =", angle))
     p
+
+  } else if (type == "threejs") {
+    x <- cholera::fatalities.address$x
+    y <- cholera::fatalities.address$y
+    z <- cholera::fatalities.address$case.count
+    threejs::scatterplot3js(x, y, z, cex = 0.25)
   }
 }
 
 axisSlope <- function(angle) tan(pi * angle / 180)
+
 axisIntercept <- function(m, x, y) {
   int <- y - m * x
   ifelse(m * x == 0, y, int)

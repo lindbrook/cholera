@@ -23,7 +23,8 @@ Imports: deldir (>= 0.0-18),
          RColorBrewer,
          scales,
          sp,
-         stats
+         stats,
+         threejs
 Suggests: knitr
 VignetteBuilder: knitr
 RoxygenNote: 6.1.0

@@ -5,7 +5,7 @@
 \title{Profile Plot.}
 \usage{
 profilePlot(pump = 7, angle = 0, vestry = FALSE,
-  multi.core = FALSE, type = "base")
+  multi.core = FALSE, type = "threejs")
 }
 \arguments{
 \item{pump}{Numeric. Selected pump focal point.}
@@ -16,7 +16,7 @@ profilePlot(pump = 7, angle = 0, vestry = FALSE,
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 
-\item{type}{Character. "base" or "ggplot2".}
+\item{type}{Character. "base", "ggplot2", or "threejs".}
 }
 \description{
 Profile Plot.

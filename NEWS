@@ -5,6 +5,8 @@ cholera 0.5.1.9017
 - add "area.polygons" prototype warning to plot.euclidean().
 - note Argyll House.
 - amend neighborhoodEuclidean() and plot.euclidean().
+- add 'threejs' prototype to profilePlot().
+
 
 cholera 0.5.1.9016
 ==================
