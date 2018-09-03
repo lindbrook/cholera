@@ -19,6 +19,8 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
     stop('Currently, type = "threejs" only works in RStudio.')
   }
 
+  cores <- multiCore(multi.core)
+
   a <- profilePerspective("inside", angle = angle, vestry = vestry,
     multi.core = multi.core)
   b <- profilePerspective("outside", angle = angle, vestry = vestry,
@@ -65,7 +67,17 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
     x <- cholera::fatalities.address$x
     y <- cholera::fatalities.address$y
     z <- cholera::fatalities.address$case.count
-    threejs::scatterplot3js(x, y, z, cex = 0.25)
+    nearest.pump <- cholera::nearestPump(multi.core = cores)
+    snow.colors <- cholera::snowColors()
+    address.colors <- snow.colors[paste0("p", nearest.pump$pump)]
+
+    if (is.null(pump) == FALSE) {
+      alters <- names(address.colors) %in% paste0("p", pump) == FALSE
+      address.colors[alters] <- "gray"
+    }
+
+    address.colors <- unname(address.colors)
+    threejs::scatterplot3js(x, y, z, cex = 0.25, color = address.colors)
   }
 }
 
