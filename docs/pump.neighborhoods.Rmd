@@ -16,7 +16,7 @@ John Snow published two versions of the cholera map. The first, which appeared i
 ![](fig12-6.png)
 
 By identifying the pump's neighborhood, Snow sets limits on where we should and
-where we should _not_ find fatalities. Ideally, this would help support his claims that cholera is a waterborne disease and that the Broad Street pump is the source of the outbreak. Looking at the second map Snow writes: "it will be observed that the deaths either very much diminish, or cease altogether, at every point where it becomes decidedly nearer to send to another pump that to the one in Broad street" (Snow 1855b, 109).
+where we should _not_ find fatalities. Ideally, this would help support his claims that cholera is a waterborne disease and that the Broad Street pump is the source of the outbreak. Looking at the second map Snow writes: "it will be observed that the deaths either very much diminish, or cease altogether, at every point where it becomes decidedly nearer to send to another pump than to the one in Broad street" (Snow 1855b, 109).
 
 To help assess whether the map supports Snow's arguments, I provide functions that allow you to analyze and visualize two flavors of pump neighborhoods: Voronoi tessellation, which is based on the Euclidean distance between pumps, and walking distance, which is based on the paths travelled along the network of roads. In either case, the guiding principle is the same. All else being equal, people will choose the closest pump.
 
