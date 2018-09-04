@@ -72,8 +72,9 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
       address.colors[alters] <- "gray"
     }
 
-    address.colors <- unname(address.colors)
-    threejs::scatterplot3js(x, y, z, cex = 0.25, color = address.colors)
+    address.colors <- grDevices::adjustcolor(unname(address.colors),
+      alpha.f = 0.8)
+    threejs::scatterplot3js(x, y, z, cex = 0.5, color = address.colors)
   }
 }
 
