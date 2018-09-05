@@ -1,8 +1,8 @@
 Package: cholera
 Type: Package
 Title: Amend, Augment and Aid Analysis of John Snow's Cholera Map
-Version: 0.5.1.9019
-Date: 2018-09-04
+Version: 0.5.1.9020
+Date: 2018-09-05
 Authors@R: person(
   "lindbrook", email = "lindbrook@gmail.com", role = c("aut", "cre")
   )

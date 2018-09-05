@@ -1,3 +1,10 @@
+cholera 0.5.1.9020
+==================
+
+- rename addCases() to addNeighborhoodCases().
+- add new addCases().
+
+
 cholera 0.5.1.9019
 ==================
 
