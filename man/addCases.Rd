@@ -4,28 +4,17 @@
 \alias{addCases}
 \title{Add observed cases by walking neighborhood.}
 \usage{
-addCases(pump.subset = NULL, pump.select = NULL, type = "address",
-  token = "point", text.size = 0.5, vestry = FALSE,
-  weighted = TRUE, color = NULL, multi.core = FALSE, ...)
+addCases(case = 1, type = "observed", token = "both",
+  text.size = 0.5, ...)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
+\item{case}{Numeric. Vector of case ID(s).}
 
-\item{pump.select}{Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.}
+\item{type}{Character. Type of case: "observed" or "expected".}
 
-\item{type}{Character. Type of case: "address" (base of stack) or "fatalities" (entire stack).}
-
-\item{token}{Character. Type of token to plot: "point" or "id".}
+\item{token}{Character. Type of token to plot: "point", "id" or "both".}
 
 \item{text.size}{Numeric. Size of case ID text.}
-
-\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
-
-\item{weighted}{Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
-
-\item{color}{Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}}
-
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -36,9 +25,9 @@ Add cases, as "address" or "fatalities" as points or IDs, to a plot.
 \dontrun{
 
 snowMap(add.cases = FALSE)
-addCases(pump.subset = c(6, 10))
+addCase(1)
 
 snowMap(add.cases = FALSE)
-addCases(pump.select = c(6, 10))
+addCase(100)
 }
 }
