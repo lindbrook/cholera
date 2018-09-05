@@ -158,10 +158,11 @@ plot.euclidean <- function(x, type = "star", ...) {
 
   plot(cholera::fatalities.address[, c("x", "y")], xlim = x.rng,
     ylim = y.rng, pch = NA, asp = 1)
-  invisible(lapply(road.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
 
   if (type == "star") {
+    invisible(lapply(road.list, lines, col = "lightgray"))
+
     invisible(lapply(seq_along(anchors), function(i) {
       p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
       n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
