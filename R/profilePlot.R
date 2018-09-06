@@ -12,15 +12,28 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
   type = "threejs") {
 
   if (type %in% c("base", "ggplot2", "threejs") == FALSE) {
-    stop('type must either be "base", "ggplot2" or "threejs"')
+    stop('type must be "base", "ggplot2" or "threejs"')
+  }
+
+  if (vestry) pump.id <- cholera::pumps.vestry$id
+  else pump.id <- cholera::pumps.vestry$id
+
+  if (is.null(pump) == FALSE) {
+    if (any(abs(pump) %in% pump.id == FALSE)) {
+      stop('For vestry = ', vestry, ', 1 >= |pump| <= ', max(pump.id))
+    }
+  }
+
+  if (type %in% c("base", "ggplot2")) {
+    if (length(pump) != 1) stop('For type = ', type, ', select one pump.')
   }
 
   cores <- multiCore(multi.core)
 
-  a <- profilePerspective("inside", angle = angle, vestry = vestry,
+  a <- profilePerspective("inside", pump = pump, angle = angle, vestry = vestry,
     multi.core = multi.core)
-  b <- profilePerspective("outside", angle = angle, vestry = vestry,
-    multi.core = multi.core)
+  b <- profilePerspective("outside", pump = pump, angle = angle,
+    vestry = vestry, multi.core = multi.core)
 
   if (type == "base") {
     par(mfrow = c(3, 1))
