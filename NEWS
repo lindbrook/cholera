@@ -1,3 +1,11 @@
+cholera 0.5.1.9021
+==================
+
+- add highlightStreet().
+- allow negative selection for 'threejs' profilePlot().
+- allow pump selection for 'base' and 'ggplot2' profilePlot().
+
+
 cholera 0.5.1.9020
 ==================
 
