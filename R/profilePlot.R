@@ -67,9 +67,10 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
     facet <- c("Inside", "Outside", "In & Out")
     profile.data$facet <- factor(profile.data$facet, levels = facet)
     p <- ggplot(data = profile.data, aes(x = axis, xend = axis, y = 0,
-                yend = count)) +
-      geom_segment(aes(color = Location)) +
-      scale_colour_manual(values = c("red", "blue")) +
+                yend = profile.data$count)) +
+      geom_segment(aes(color = profile.data$Location)) +
+      scale_colour_manual(values = c("red", "blue"),
+                          guide = guide_legend(title = "Location")) +
       theme_bw() +
       theme(panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
@@ -185,8 +186,6 @@ orthogonalCoordinates <- function(case, pump = 7, angle = 0, vestry = FALSE,
 
   data.frame(x = x.proj, y = y.proj, row.names = NULL)
 }
-
-utils::globalVariables(c("count", "Location"))
 
 #' Rescale data along axis.
 #'
