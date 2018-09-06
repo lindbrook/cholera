@@ -5,11 +5,12 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param type Character. "base", "ggplot2", or "threejs".
+#' @param drop Logical. Drop negative selection.
 #' @import ggplot2
 #' @export
 
 profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
-  type = "threejs") {
+  type = "threejs", drop = TRUE) {
 
   if (type %in% c("base", "ggplot2", "threejs") == FALSE) {
     stop('type must be "base", "ggplot2" or "threejs"')
@@ -81,8 +82,22 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
     address.colors <- snow.colors[paste0("p", nearest.pump$pump)]
 
     if (is.null(pump) == FALSE) {
-      alters <- names(address.colors) %in% paste0("p", pump) == FALSE
-      address.colors[alters] <- "lightgray"
+      if (all(pump < 0)) {
+        neg.selection <- pump.id[pump.id %in% abs(pump) == FALSE]
+        alters <- names(address.colors) %in% paste0("p", neg.selection)
+        if (drop == FALSE) {
+          address.colors[names(address.colors) %in%
+            paste0("p", abs(pump))] <- "lightgray"
+        } else {
+          x <- x[alters]
+          y <- y[alters]
+          z <- z[alters]
+          address.colors <- address.colors[alters]
+        }
+      } else if (all(pump > 0)) {
+        alters <- names(address.colors) %in% paste0("p", pump) == FALSE
+        address.colors[alters] <- "lightgray"
+      }
     }
 
     address.colors <- grDevices::adjustcolor(unname(address.colors),
