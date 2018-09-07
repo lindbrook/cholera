@@ -113,7 +113,6 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
 }
 
 axisSlope <- function(angle) tan(pi * angle / 180)
-
 axisIntercept <- function(m, x, y) {
   int <- y - m * x
   ifelse(m * x == 0, y, int)
@@ -194,7 +193,7 @@ orthogonalCoordinates <- function(case, pump = 7, angle = 0, vestry = FALSE,
 #' @param angle Numeric. Angle of perspective axis in degrees.
 #' @param vestry Logical. \code{TRUE} for the 14 pumps from Vestry Report. \code{FALSE} for the original 13 pumps.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
-#' @export
+#' @noRd
 
 profilePerspective <- function(output = "inside", pump = 7, angle = 0,
   vestry = FALSE, multi.core = FALSE) {
