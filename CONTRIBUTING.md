@@ -1,6 +1,10 @@
 contributing
 ================
 
+### development version
+
+If possible, first check if the issue or problem is not "fixed" in the current [development/GitHub version](https://github.com/lindbrook/cholera#getting-started). If not, contact me or consider ...
+
 ### issues
 
 Open an 'issue' for a bug report, error or feature request (i.e., user-facing issues).
