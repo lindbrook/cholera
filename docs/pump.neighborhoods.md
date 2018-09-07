@@ -1,12 +1,12 @@
 Pump Neighborhoods
 ================
 lindbrook
-2018-09-04
+2018-09-07
 
 Overview
 --------
 
-John Snow published two versions of the cholera map. The first, which appeared in *On The Mode Of Communication Of Cholera* (Snow 1855a), is the more famous. The second, which appeared in the *Report On The Cholera Outbreak In The Parish Of St. James, Westminster, During The Autumn Of 1854* (Snow 1855b), is the more important. What makes it so is that Snow adds a graphical annotation that outlines the neighborhood around the Broad Street pump, the set of addresses that he contends is most likely to use the pump:
+John Snow published two versions of the cholera map. The first, which appeared in *On The Mode Of Communication Of Cholera* (Snow 1855a), is more famous. The second, which appeared in the *Report On The Cholera Outbreak In The Parish Of St. James, Westminster, During The Autumn Of 1854* (Snow 1855b), is more important. What makes it so is that Snow adds a graphical annotation that outlines the neighborhood around the Broad Street pump, the set of addresses that he contends is most likely to use the pump:
 
 ![](fig12-6.png)
 
