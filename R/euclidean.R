@@ -49,7 +49,7 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
       snow.colors <- snow.colors[pump.select]
     } else if (all(pump.select < 0)) {
       sel <- pump.data$id %in% abs(pump.select) == FALSE
-      pump.id <- snow.colors[sel]
+      pump.id <- pump.data$id[pump.select]
       snow.colors <- snow.colors[sel]
     } else {
       stop("Use all positive or all negative numbers for pump.select.")
