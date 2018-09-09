@@ -5,7 +5,7 @@
 \title{Add observed cases by walking neighborhood.}
 \usage{
 addCases(case = 1, type = "observed", token = "both",
-  text.size = 0.5, ...)
+  text.size = 0.5, col = "red", ...)
 }
 \arguments{
 \item{case}{Numeric. Vector of case ID(s).}
@@ -15,6 +15,8 @@ addCases(case = 1, type = "observed", token = "both",
 \item{token}{Character. Type of token to plot: "point", "id" or "both".}
 
 \item{text.size}{Numeric. Size of case ID text.}
+
+\item{col}{Character. Color.}
 
 \item{...}{Additional plotting parameters.}
 }
