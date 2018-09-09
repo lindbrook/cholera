@@ -4,12 +4,10 @@
 \alias{neighborhoodEuclidean}
 \title{Plot Euclidean path pump neighborhoods.}
 \usage{
-neighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
-  vestry = FALSE, case.set = "observed", multi.core = FALSE)
+neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
+  case.set = "observed", multi.core = FALSE)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.}
-
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}

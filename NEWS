@@ -1,3 +1,9 @@
+cholera 0.5.1.9023
+==================
+
+- remove pump.subset from neighborhoodEuclidean().
+
+
 cholera 0.5.1.9022
 ==================
 

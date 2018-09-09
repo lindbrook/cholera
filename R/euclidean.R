@@ -1,7 +1,6 @@
 #' Plot Euclidean path pump neighborhoods.
 #'
 #' Plots star graph from pump to its cases.
-#' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param case.set Character. "observed" or "expected".
@@ -17,8 +16,8 @@
 #' neighborhoodEuclidean(pump.select = 6:7)
 #' }
 
-neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
-  vestry = FALSE, case.set = "observed", multi.core = FALSE) {
+neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
+  case.set = "observed", multi.core = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".')
@@ -69,42 +68,16 @@ neighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
       observed = observed, vestry = vestry)$pump
   }, mc.cores = cores)
 
-  if (is.null(pump.subset)) {
-    out <- list(pump.data = pump.data,
-                pump.select = pump.select,
-                vestry = vestry,
-                case.set = case.set,
-                pump.id = pump.id,
-                snow.colors = snow.colors,
-                anchors = anchors,
-                observed = observed,
-                nearest.pump = unlist(nearest.pump),
-                cores = cores)
-  } else {
-    if (all(pump.subset > 0)) {
-      anchors.subset <- anchors[unlist(nearest.pump) %in% pump.subset]
-      nearest.pump.subset <- nearest.pump[unlist(nearest.pump) %in% pump.subset]
-    } else if (all(pump.subset < 0)) {
-      anchors.subset <- anchors[unlist(nearest.pump) %in%
-        abs(pump.subset) == FALSE]
-      nearest.pump.subset <- nearest.pump[unlist(nearest.pump) %in%
-        abs(pump.subset) ==- FALSE]
-    } else {
-      stop('Use all positive or all negative numbers for "pump.subset".')
-    }
-
-    out <- list(pump.data = pump.data,
-                pump.subset = pump.subset,
-                pump.select = pump.select,
-                vestry = vestry,
-                case.set = case.set,
-                pump.id = pump.id,
-                snow.colors = snow.colors,
-                anchors = anchors.subset,
-                observed = observed,
-                nearest.pump = unlist(nearest.pump.subset),
-                cores = cores)
-  }
+  out <- list(pump.data = pump.data,
+              pump.select = pump.select,
+              vestry = vestry,
+              case.set = case.set,
+              pump.id = pump.id,
+              snow.colors = snow.colors,
+              anchors = anchors,
+              observed = observed,
+              nearest.pump = unlist(nearest.pump),
+              cores = cores)
 
   class(out) <- "euclidean"
   out
@@ -153,7 +126,6 @@ plot.euclidean <- function(x, type = "star", ...) {
   pump.id <- x$pump.id
   anchors <- x$anchors
   pump.select <- x$pump.select
-  pump.subset <- x$pump.subset
   nearest.pump <- x$nearest.pump
 
   plot(cholera::fatalities.address[, c("x", "y")], xlim = x.rng,
