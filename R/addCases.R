@@ -35,7 +35,7 @@ addCases <- function(case = 1, type = "observed", token = "both",
   }
 
   if (any(case %in% seq_len(nrow(dat)) == FALSE)) {
-    stop('With type ==', type, ', case must be between 1 and ', nrow(dat), ".")
+    stop('With type = ', type, ', case must be between 1 and ', nrow(dat), ".")
   } else {
 
     if (token == "point") {
