@@ -1,11 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.1.9024-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
-cholera: amend, augment and aid analysis of John Snow's 1854 cholera map
-------------------------------------------------------------------------
+cholera: amend, augment and aid analysis of Snow's cholera map
+--------------------------------------------------------------
 
 ### package features
 
@@ -26,9 +25,9 @@ John Snow's map of the 1854 cholera outbreak in London is one of the best known 
 
 By plotting the number and location of fatalities on a map, Snow was able to do something that is easily taken for granted today: the ability to create and disseminate a visualization of a spatial distribution. To our modern eye, the pattern is unmistakable. It seems self-evident that the map elegantly supports Snow's claims that cholera is a waterborne disease and that the pump on Broad Street is the source of the outbreak. And yet, despite its virtues, the map failed to convince both the authorities and Snow's colleagues in the medical and scientific communities.
 
-Beyond considerations of time and place, there are "scientific" reasons for this failure. The map shows a concentration of cases around the Broad Street pump, but that alone should not convince us that Snow is right. The map doesn't refute the primary rival explanation, miasma theory: the pattern we se is not unlike what airborne transmission might look like. And while the presence of a pump near or at the epicenter of the distribution of fatalities is strong circumstantial evidence, it is still circumstantial. There are a host of rival explanations that the map doesn't consider and cannot rule out: location of sewer grates, elevation, weather patterns, etc..
+Beyond considerations of time and place, there are "scientific" reasons for this failure. The map shows a concentration of cases around the Broad Street pump, but that alone should not convince us that Snow is right. The map doesn't refute the primary rival explanation, miasma theory: the pattern we see is not unlike what airborne transmission might look like. And while the presence of a pump near or at the epicenter of the distribution of fatalities is strong circumstantial evidence, it is still circumstantial. There are a host of rival explanations that the map doesn't consider and cannot rule out: location of sewer grates, elevation, weather patterns, etc..
 
-Arguably, this may be one reason why Snow added a graphical annotation in the second, lesser-known version of the map that was published in the official report on the outbreak (*Report On The Cholera Outbreak In The Parish Of St. James, Westminster, During The Autumn Of 1854*):
+Arguably, this may be one reason why Snow added a graphical annotation to the second, lesser-known version of the map that was published in the official report on the outbreak (*Report On The Cholera Outbreak In The Parish Of St. James, Westminster, During The Autumn Of 1854*):
 
 ![](vignettes/fig12-6.png)
 
@@ -36,9 +35,9 @@ Arguably, this may be one reason why Snow added a graphical annotation in the se
 
 The annotation outlines what we might call the Broad Street *pump neighborhood*: the set of addresses that are, according to Snow, within "close" walking distance to the pump. The notion of a pump neighborhood is important because it provides a prediction about where we should and should *not* expect to find cases. If water is cholera's mode of transmission and if water pumps are the primary source of drinking water, then most, if not all, fatalities should be found *within* the pump neighborhood. The disease should stop at the neighborhood's borders.
 
-Creating this annotation is not a trivial matter. To identify the neighborhood of the Broad Street pump, you actually need to identify the neighborhoods of surrounding pumps. Snow writes: "The inner dotted line on the map shews \[sic\] the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps ..." (Ibid., p. 109.).
+Creating this annotation is not a trivial matter. To identify the neighborhood of the Broad Street pump, you need to identify the neighborhoods of surrounding pumps. Snow writes: "The inner dotted line on the map shews \[sic\] the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps ..." (Ibid., p. 109.).
 
-I build on Snow's efforts by writing functions that allow you to compute two flavors of pump neighborhoods. The first is based on Voronoi tessellation. It works by computing the Euclidean distances between pumps. It's easy to compute and has been a popular choice for analysts of Snow's map. However, it has two drawbacks: 1) roads and buildings play no role in determining neighborhoods (it assumes that people walk directly, "as the crow flies", to their preferred pump); and 2) it's not what Snow has in mind. For that, you'll need to consider the second type of neighborhood.
+I build on Snow's efforts by writing functions that allow you to compute three flavors of pump neighborhoods. The first is based on Voronoi tessellation. It works by using the Euclidean distances between pumps. It's easy to compute and has been a popular choice for analysts of Snow's map. However, it has two drawbacks: 1) roads and buildings play no role in determining neighborhoods (it assumes that people walk directly, "as the crow flies", to their preferred pump); and 2) it's not what Snow has in mind. For that, you'll need to consider the second type of neighborhood.
 
 ``` r
 plot(neighborhoodVoronoi())
@@ -46,7 +45,15 @@ plot(neighborhoodVoronoi())
 
 ![](man/figures/README-voronoi-1.png)
 
-The second flavor is based on the walking distance along the roads on the map. While more accurate, it's computationally more demanding. To compute these distances, I transform the roads on the map into a network graph and turn the computation of walking distance into a graph theory problem. For each case (observed or simulated), I compute the shortest path, weighted by the length of roads, to the nearest pump. Then, "rinse and repeat" and the different pump neighborhoods emerge:
+The second flavor is based on the Euclidean distances between cases and pumps. This serves as a check on the Voronoi-based method, as a more granular estimate of Euclidean distance based neighborhoods, and provides a more flexible way to visualize Euclidean distance based neighborhoods.
+
+``` r
+plot(neighborhoodEuclidean())
+```
+
+![](man/figures/README-euclidean-1.png)
+
+The third and final flavor is based on the walking distance along the roads on the map. While more accurate, it's computationally more demanding. To compute these distances, I transform the roads on the map into a network graph and turn the computation of walking distance into a graph theory problem. For each case (observed or simulated), I compute the shortest path, weighted by the length of roads (edges), to the nearest pump. "Rinse and repeat" and the different pump neighborhoods emerge:
 
 ``` r
 plot(neighborhoodWalking())
@@ -54,7 +61,7 @@ plot(neighborhoodWalking())
 
 ![](man/figures/README-walk-1.png)
 
-To explore the data, you can consider a variety of scenarios by computing neighborhoods based on any subset of pumps. Here's the result excluding the Broad Street pump.
+To explore the data, you can consider a variety of scenarios by computing different sets of neighborhoods. Here's the result excluding the Broad Street pump.
 
 ``` r
 plot(neighborhoodWalking(-7))
@@ -85,10 +92,10 @@ The main virtue of the polygon approach is that it better lends itself to buildi
 ``` r
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
   add.title = FALSE, radius = 0.5)
-addNeighborhood()
+addNeighborhoodWalking()
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-virtue-1.png" style="display: block; margin: auto;" />
 
 ### getting started
 
