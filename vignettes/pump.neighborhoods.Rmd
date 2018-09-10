@@ -87,7 +87,7 @@ The main virtue of the polygon approach is that it better lends itself to buildi
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
   add.title = FALSE, radius = 0.5)
-addNeighborhood()
+addNeighborhoodWalking()
 ```
 
 While easier to "read", the area graphs are potentially misleading. Conceptually, the problem is that they take the focus away from roads and puts it on regions, which may not be meaningful because they can represent locations where there are no roads or residences. Computationally, the problem is that the shape of a neighborhood will be sensitive to how we determines a case's street address. Different implementations can produce different results.

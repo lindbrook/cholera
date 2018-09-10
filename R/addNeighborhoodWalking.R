@@ -26,11 +26,11 @@
 #'
 #' streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
 #'   unit = "meter", cases = NULL)
-#' addNeighborhood(6:7)
+#' addNeighborhoodWalking(6:7)
 #'
 #' }
 
-addNeighborhood <- function(pump.subset = NULL, pump.select = NULL,
+addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, weighted = TRUE, multi.core = FALSE, area = TRUE,
   path = NULL, path.color = NULL, path.width = 3, alpha.level = 0.25, ...) {
 

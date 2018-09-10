@@ -1,3 +1,9 @@
+cholera 0.5.1.9024
+==================
+
+- addNeighborhood() -> addNeighborhoodWalking().
+
+
 cholera 0.5.1.9023
 ==================
 

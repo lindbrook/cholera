@@ -1,7 +1,7 @@
 Pump Neighborhoods
 ================
 lindbrook
-2018-09-07
+2018-09-10
 
 Overview
 --------
@@ -93,7 +93,7 @@ The main virtue of the polygon approach is that it better lends itself to buildi
 ``` r
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
   add.title = FALSE, radius = 0.5)
-addNeighborhood()
+addNeighborhoodWalking()
 ```
 
 <img src="pump.neighborhoods_files/figure-markdown_github/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
