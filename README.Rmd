@@ -90,8 +90,7 @@ plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 The main virtue of the polygon approach is that it better lends itself to building graphs at different scales:
 
 ```{r virtue, fig.width = 6, fig.height = 6, fig.align = "center", message = FALSE}
-streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
-  add.title = FALSE, radius = 0.5)
+streetNameLocator("marshall street", zoom = TRUE, radius = 0.5)
 addNeighborhoodWalking()
 ```
 
