@@ -41,10 +41,8 @@ This function is computationally intensive. On a single core of a 2.3 GHz Intel 
 \examples{
 \dontrun{
 
-streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE,
-  unit = "meter", cases = NULL)
-addNeighborhoodWalking(6:7)
-
+streetNameLocator("marshall street", zoom = TRUE, radius = 0.5)
+addNeighborhoodWalking()
 }
 }
 \seealso{
