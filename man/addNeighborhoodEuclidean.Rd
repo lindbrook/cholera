@@ -25,7 +25,7 @@ addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 R graphic elements.
 }
 \description{
-Plots star graph from pump to its cases.
+Add Euclidean pump neighborhoods.
 }
 \examples{
 \dontrun{
