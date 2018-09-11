@@ -91,7 +91,7 @@ addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
       anchors.subset <- anchors[unlist(nearest.pump) %in%
         abs(pump.subset) == FALSE]
       nearest.pump.subset <- nearest.pump[unlist(nearest.pump) %in%
-        abs(pump.subset) ==- FALSE]
+        abs(pump.subset) == FALSE]
     } else {
       stop('Use all positive or all negative numbers for "pump.subset".')
     }
