@@ -2,6 +2,7 @@ cholera 0.5.1.9025
 ==================
 
 - add addNeighborhoodEuclidean() prototype.
+- add landmarkData() prototype.
 
 
 cholera 0.5.1.9024

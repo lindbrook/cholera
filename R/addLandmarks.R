@@ -18,7 +18,7 @@
 
 addLandmarks <- function(text.size = 0.5) {
   # 28 Dean Street
-  marx <- data.frame(x = 17.3855, y = 13.371 )
+  marx <- data.frame(x = 17.3855, y = 13.371)
   text(marx$x, marx$y, labels = "Karl\nMarx", cex = text.size)
   points(marx$x, marx$y, pch = 15, cex = 1/3)
 
