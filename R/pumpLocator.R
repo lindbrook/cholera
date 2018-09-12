@@ -28,7 +28,7 @@ pumpLocator <- function(id = 7, zoom = FALSE, radius = 1, vestry = FALSE,
   }
 
   if (vestry & id %in% cholera::pumps.vestry$id == FALSE) {
-      stop('For vestry pumps, id must lie be a whole number 1 and 14.')
+    stop('For vestry pumps, id must lie be a whole number 1 and 14.')
   }
 
   if (vestry) {
