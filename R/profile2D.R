@@ -1,19 +1,19 @@
-#' Profile Plot.
+#' 2D Profile Plot.
 #'
-#' @param pump Numeric. Selected pump focal point.
+#' @param pump Numeric. Select pump as focal point.
 #' @param angle Numeric. Angle of perspective axis in degrees.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
-#' @param type Character. "base", "ggplot2", or "threejs".
+#' @param type Character. "base" or "ggplot2".
 #' @param drop Logical. Drop negative selection.
 #' @import ggplot2
 #' @export
 
-profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
-  type = "threejs", drop = TRUE) {
+profile2D <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
+  type = "base", drop = TRUE) {
 
-  if (type %in% c("base", "ggplot2", "threejs") == FALSE) {
-    stop('type must be "base", "ggplot2" or "threejs"')
+  if (type %in% c("base", "ggplot2") == FALSE) {
+    stop('type must be "base" or "ggplot2".')
   }
 
   if (vestry) {
@@ -30,16 +30,14 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
 
   cores <- multiCore(multi.core)
 
-  if (type %in% c("base", "ggplot2")) {
-    if (length(pump) != 1) {
-      stop('For type = ', type, ', select one pump.')
-    }
-
-    a <- profilePerspective("inside", pump = pump, angle = angle,
-      vestry = vestry, multi.core = cores)
-    b <- profilePerspective("outside", pump = pump, angle = angle,
-      vestry = vestry, multi.core = cores)
+  if (length(pump) != 1) {
+    stop('For type = ', type, ', select one pump.')
   }
+
+  a <- profilePerspective("inside", pump = pump, angle = angle,
+    vestry = vestry, multi.core = cores)
+  b <- profilePerspective("outside", pump = pump, angle = angle,
+    vestry = vestry, multi.core = cores)
 
   if (type == "base") {
     par(mfrow = c(3, 1))
@@ -71,44 +69,13 @@ profilePlot <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
       geom_segment(aes(color = profile.data$Location)) +
       scale_colour_manual(values = c("red", "blue"),
                           guide = guide_legend(title = "Location")) +
+      facet_wrap(~ facet, nrow = 3) +
+      ggtitle(paste("Axis angle =", angle)) +
       theme_bw() +
       theme(panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
-            plot.title = element_text(hjust = 0.5)) +
-      facet_wrap(~ facet, nrow = 3) +
-      ggtitle(paste("Axis angle =", angle))
+            plot.title = element_text(hjust = 0.5))
     p
-
-  } else if (type == "threejs") {
-    x <- cholera::fatalities.address$x
-    y <- cholera::fatalities.address$y
-    z <- cholera::fatalities.address$case.count
-    nearest.pump <- cholera::nearestPump(multi.core = cores)
-    snow.colors <- cholera::snowColors()
-    address.colors <- snow.colors[paste0("p", nearest.pump$pump)]
-
-    if (is.null(pump) == FALSE) {
-      if (all(pump < 0)) {
-        neg.selection <- pump.id[pump.id %in% abs(pump) == FALSE]
-        alters <- names(address.colors) %in% paste0("p", neg.selection)
-        if (drop == FALSE) {
-          address.colors[names(address.colors) %in%
-            paste0("p", abs(pump))] <- "lightgray"
-        } else {
-          x <- x[alters]
-          y <- y[alters]
-          z <- z[alters]
-          address.colors <- address.colors[alters]
-        }
-      } else if (all(pump > 0)) {
-        alters <- names(address.colors) %in% paste0("p", pump) == FALSE
-        address.colors[alters] <- "lightgray"
-      }
-    }
-
-    address.colors <- grDevices::adjustcolor(unname(address.colors),
-      alpha.f = 2/3)
-    threejs::scatterplot3js(x, y, z, cex = 0.5, color = address.colors)
   }
 }
 
