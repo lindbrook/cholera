@@ -239,7 +239,8 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
 ## diagnostic plots ##
 
 peripheryAudit <- function(i) {
-  points(cholera::regular.cases[periphery.cases[[i]], ], pch = 16, cex = 0.5, col = snowColors()[i])
+  points(cholera::regular.cases[periphery.cases[[i]], ], pch = 16, cex = 0.5,
+    col = snowColors()[i])
 }
 
 polygonAudit <- function(i) {
