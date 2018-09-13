@@ -43,7 +43,10 @@ profile3D <- function(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 
   snow.colors <- cholera::snowColors()[paste0("p", nearest.pump$pump)]
 
-  if (is.null(pump.subset) == FALSE) {
+  if (is.null(pump.subset)) {
+    threejs::scatterplot3js(x, y, z, cex = 0.5,
+      color = grDevices::adjustcolor(unname(snow.colors), alpha.f = 2/3))
+  } else {
     if (!all(abs(pump.subset) %in% pump.id)) {
       stop("pump.subset must be a subset of pump.select.")
     }
@@ -63,8 +66,5 @@ profile3D <- function(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
       threejs::scatterplot3js(x, y, z, cex = 0.5,
         color = grDevices::adjustcolor(unname(snow.colors), alpha.f = 2/3))
     }
-  } else {
-    threejs::scatterplot3js(x, y, z, cex = 0.5,
-      color = grDevices::adjustcolor(unname(snow.colors), alpha.f = 2/3))
   }
 }
