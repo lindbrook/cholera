@@ -5,7 +5,7 @@
 \title{3D Profile Plot.}
 \usage{
 profile3D(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
-  drop = FALSE, multi.core = FALSE)
+  drop.neg.selection = FALSE, multi.core = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.}
@@ -14,7 +14,7 @@ profile3D(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
-\item{drop}{Logical. Drop negative selection.}
+\item{drop.neg.selection}{Logical. Drop negative selection.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }

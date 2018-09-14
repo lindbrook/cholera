@@ -3,12 +3,12 @@
 #' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
-#' @param drop Logical. Drop negative selection.
+#' @param drop.neg.selection Logical. Drop negative selection.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @export
 
 profile3D <- function(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
-  drop = FALSE, multi.core = FALSE) {
+  drop.neg.selection = FALSE, multi.core = FALSE) {
 
   if (vestry) {
     pump.id <- cholera::pumps.vestry$id
@@ -58,7 +58,7 @@ profile3D <- function(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
       sel <- names(snow.colors) %in% paste0("p", pump.subset) == FALSE
     }
 
-    if (drop) {
+    if (drop.neg.selection) {
       threejs::scatterplot3js(x[sel], y[sel], z[sel], cex = 0.5,
         color = grDevices::adjustcolor(unname(snow.colors[sel]), alpha.f = 2/3))
     } else {
