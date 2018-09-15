@@ -41,7 +41,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
   addBorder()
 }
 
-#' Add roads to plot.
+#' Add all streets and roads to plot.
 #'
 #' @param col Character. Color
 #' @param ... Additional plotting parameters.

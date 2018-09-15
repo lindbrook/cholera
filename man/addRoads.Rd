@@ -2,7 +2,7 @@
 % Please edit documentation in R/snowMap.R
 \name{addRoads}
 \alias{addRoads}
-\title{Add roads to plot.}
+\title{Add all streets and roads to plot.}
 \usage{
 addRoads(col = "gray", ...)
 }
@@ -12,5 +12,5 @@ addRoads(col = "gray", ...)
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Add roads to plot.
+Add all streets and roads to plot.
 }
