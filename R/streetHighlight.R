@@ -3,8 +3,11 @@
 #' @param road.name Character vector. The functions tries to correct for case and to remove extra spaces.
 #' @return A base R graphics segment(s).
 #' @export
+#' @examples
+#' snowMap()
+#' streetHighlight("Broad Street")
 
-highlightStreet <- function(road.name) {
+streetHighlight <- function(road.name) {
   real.road.names <- unique(cholera::roads$name)
   roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)
 
