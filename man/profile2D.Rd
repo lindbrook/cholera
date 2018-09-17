@@ -5,7 +5,7 @@
 \title{2D Profile Plot.}
 \usage{
 profile2D(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
-  type = "base", drop = TRUE)
+  type = "base")
 }
 \arguments{
 \item{pump}{Numeric. Select pump as focal point.}
@@ -17,8 +17,6 @@ profile2D(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 
 \item{type}{Character. "base" or "ggplot2".}
-
-\item{drop}{Logical. Drop negative selection.}
 }
 \description{
 2D Profile Plot.

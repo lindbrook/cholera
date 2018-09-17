@@ -5,16 +5,17 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param type Character. "base" or "ggplot2".
-#' @param drop Logical. Drop negative selection.
 #' @import ggplot2
 #' @export
 
 profile2D <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
-  type = "base", drop = TRUE) {
+  type = "base") {
 
   if (type %in% c("base", "ggplot2") == FALSE) {
     stop('type must be "base" or "ggplot2".')
   }
+
+  if (angle < 0 | angle > 360) stop("Use 0 >= angle <= 360.")
 
   if (vestry) {
     pump.id <- cholera::pumps.vestry$id
@@ -79,14 +80,28 @@ profile2D <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
   }
 }
 
-axisSlope <- function(angle) tan(pi * angle / 180)
+axisSlope <- function(angle) {
+  theta090 <- tan(pi * signif(90) / 180)
+  theta180 <- tan(pi * signif(180) / 180)
+  theta270 <- tan(pi * signif(270) / 180)
+  theta <- tan(pi * signif(angle) / 180)
+  if (theta == theta090 | theta == theta270) Inf
+  else if (theta == theta180) 0
+  else tan(pi * signif(angle) / 180)
+}
+
 axisIntercept <- function(m, x, y) {
-  int <- y - m * x
-  ifelse(m * x == 0, y, int)
+  if (m == 0) y
+  else if (is.infinite(m)) NA
+  else y - m * x
 }
 
 orthogonalSlope <- function(b) -1 / b
-orthogonalIntercept <- function(b, ortho.slope, y) y - ortho.slope * b
+
+orthogonalIntercept <- function(b, ortho.slope, y) {
+  if (is.infinite(ortho.slope)) NA
+  else y - ortho.slope * b
+}
 
 #' Intercept and slope of selected axis.
 #'
@@ -134,10 +149,10 @@ orthogonalCoordinates <- function(case, pump = 7, angle = 0, vestry = FALSE,
 
   axis.data <- ols(pump, angle, vestry)
 
-  if (angle == 0) {
+  if (angle == 0 | angle == 180) {
     x.proj <- obs$x
     y.proj <- axis.focus$y
-  } else if (angle == 90) {
+  } else if (angle == 90 | angle == 270) {
     x.proj <- axis.focus$x
     y.proj <- obs$y
   } else {
