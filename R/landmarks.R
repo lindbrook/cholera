@@ -4,34 +4,23 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 
 landmarkData <- function(multi.core = FALSE) {
-  cores <- multiCore(multi.core)
-
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
   soho.sq <- data.frame(x = 18.07044, y = 15.85703)
   golden.sq <- data.frame(x = 11.90927, y = 8.239483)
   huggins.brewery <- data.frame(x = 13.9022, y = 11.87315)
-  pantheon.bazaar <- stats::setNames(cholera::road.segments[cholera::road.segments$name ==
-    "Winsley Street", c("x2", "y2")], c("x", "y"))
 
-  ## St. James Workhouse ##
+  pantheon.bazaar <- cholera::road.segments[cholera::road.segments$name ==
+    "Winsley Street", c("x2", "y2")]
+  names(pantheon.bazaar) <- c("x", "y")
 
-  # right <- cholera::road.segments[cholera::road.segments$name ==
-  #   "St James Workhouse", c("x1", "y1")]
-  # left <- cholera::road.segments[cholera::road.segments$id == "201-1",
-  #   c("x2", "y2")]
-  # dat <- stats::setNames(data.frame(rbind(unlist(right), unlist(left))),
-  #   c("x", "y"))
-  # h <- c(stats::dist(dat))
-  # ols <- stats::lm(y ~ x, dat)
-  # segment.slope <- stats::coef(ols)[2]
-  # theta <- atan(segment.slope)
-  # delta.x <- (h / 2) * cos(theta)
-  # delta.y <- (h / 2) * sin(theta)
-  # x.new <- left$x2 + delta.x
-  # y.new <- left$y2 + delta.y
-  # st.james.workhouse <- data.frame(x = x.new, y = y.new)
+  st.james.workhouse <- cholera::road.segments[cholera::road.segments$name ==
+    "St James Workhouse", c("id", "x1", "y1", "name")]
+  names(st.james.workhouse)[1:3] <- c("road.segment", "x.proj", "y.proj")
+  st.james.workhouse$ortho.dist <- 0
+  vars <- c("road.segment", "x.proj", "y.proj", "ortho.dist", "name")
+  st.james.workhouse <- st.james.workhouse[, vars]
 
   ## Argyll House ##
 
@@ -49,10 +38,15 @@ landmarkData <- function(multi.core = FALSE) {
   landmarks <- list(marx, snow, st.lukes.church, soho.sq, golden.sq,
     huggins.brewery, pantheon.bazaar)
 
+  landmark.names <- c("Karl Marx", "John Snow", "St Luke's Church",
+    "Soho Square", "Golden Square", "Lion Brewery", "The Pantheon")
+
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
   roads.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
+
+  cores <- multiCore(multi.core)
 
   road.segments <- parallel::mclapply(unique(rd$street), function(i) {
     dat <- rd[rd$street == i, ]
@@ -127,5 +121,8 @@ landmarkData <- function(multi.core = FALSE) {
 
   ortho.proj <- do.call(rbind, orthogonal.projection)
   row.names(ortho.proj) <- NULL
-  cbind(ortho.proj, do.call(rbind, landmarks))
+  out <- data.frame(ortho.proj, name = landmark.names)
+  out <- rbind(out, st.james.workhouse)
+  row.names(out) <- NULL
+  out
 }
