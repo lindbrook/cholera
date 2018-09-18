@@ -7,8 +7,8 @@ landmarkData <- function(multi.core = FALSE) {
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
-  soho.sq <- data.frame(x = 18.07044, y = 15.85703)
-  golden.sq <- data.frame(x = 11.90927, y = 8.239483)
+  # soho.sq <- data.frame(x = 18.07044, y = 15.85703)
+  # golden.sq <- data.frame(x = 11.90927, y = 8.239483)
   huggins.brewery <- data.frame(x = 13.9022, y = 11.87315)
 
   pantheon.bazaar <- cholera::road.segments[cholera::road.segments$name ==
@@ -35,11 +35,17 @@ landmarkData <- function(multi.core = FALSE) {
   # aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
   # argyll.house <- data(x = aberdeen$x, y = aberdeen$y)
 
-  landmarks <- list(marx, snow, st.lukes.church, soho.sq, golden.sq,
-    huggins.brewery, pantheon.bazaar)
+  # landmarks <- list(marx, snow, st.lukes.church, soho.sq, golden.sq,
+  #   huggins.brewery, pantheon.bazaar)
+  #
+  # landmark.names <- c("Karl Marx", "John Snow", "St Luke's Church",
+  #   "Soho Square", "Golden Square", "Lion Brewery", "The Pantheon")
+
+  landmarks <- list(marx, snow, st.lukes.church, huggins.brewery,
+    pantheon.bazaar)
 
   landmark.names <- c("Karl Marx", "John Snow", "St Luke's Church",
-    "Soho Square", "Golden Square", "Lion Brewery", "The Pantheon")
+    "Lion Brewery", "The Pantheon")
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
