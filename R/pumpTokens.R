@@ -19,8 +19,7 @@ pumpTokens <- function(pump.select, vestry, case.set, snow.colors, type) {
       } else if (all(pump.select < 0)) {
         sel <- dat$id %in% abs(pump.select) == FALSE
       }
-      points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25,
-        col = snow.colors[sel])
+      points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25, col = snow.colors)
       text(dat[sel, c("x", "y")], pos = 1, cex = 0.9,
         labels = paste0("p", dat$id[sel]))
     }
@@ -37,8 +36,7 @@ pumpTokens <- function(pump.select, vestry, case.set, snow.colors, type) {
         } else if (all(pump.select < 0)) {
           sel <- dat$id %in% abs(pump.select) == FALSE
         }
-        points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25,
-          bg = snow.colors[sel])
+        points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25, bg = snow.colors)
         text(dat[sel, c("x", "y")], pos = 1, cex = 0.9,
           labels = paste0("p", dat$id[sel]))
       }
@@ -55,8 +53,8 @@ pumpTokens <- function(pump.select, vestry, case.set, snow.colors, type) {
         } else if (all(pump.select < 0)) {
           sel <- dat$id %in% abs(pump.select) == FALSE
         }
-        points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25,
-          col = "white", bg = snow.colors[sel])
+        points(dat[sel, c("x", "y")], pch = 24, lwd = 1.25, col = "white",
+          bg = snow.colors)
         text(dat[sel, c("x", "y")], pos = 1, cex = 0.9,
           labels = paste0("p", dat$id[sel]))
       }
