@@ -50,6 +50,12 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
     stop('neighborhood.type must either be "voronoi" or "walking".')
   }
 
+  if (is.character(pump.subset)) {
+    if (pump.subset %in% c("individual", "pooled") == FALSE) {
+      stop("If not numeric, pump.subset must either be 'individual' or 'pooled'.")
+    }
+  }
+
   cores <- multiCore(multi.core)
 
   bw <- rep(bandwidth, 2)
