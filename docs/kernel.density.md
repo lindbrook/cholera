@@ -32,7 +32,7 @@ addKernelDensity(pump.select = c(6, 8))
 Selecting a subset of observed neighborhoods
 --------------------------------------------
 
-By using the `pump.subset` argument, you can specify which subset of selected neighborhoods will be plotted.
+By using the `pump.subset` argument, you can specify which individual neighborhoods, defined by `pump.select`, will be plotted.
 
 ``` r
 snowMap()
