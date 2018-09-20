@@ -14,7 +14,7 @@ streetNumberLocator(road.number, zoom = FALSE, radius = 1,
 
 \item{zoom}{Logical.}
 
-\item{radius}{Numeric. Controls the degree of zoom.}
+\item{radius}{Numeric.  Control the degree of zoom. Use negative values to zoom in beyond range determined by selected street.}
 
 \item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
 

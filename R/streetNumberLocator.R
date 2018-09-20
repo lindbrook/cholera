@@ -3,7 +3,7 @@
 #' Highlight a road and its cases. See \code{cholera::roads} for numerical IDs and \code{vignette}("road.names") for details.
 #' @param road.number Numeric or integer. A whole number between 1 and 528.
 #' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom.
+#' @param radius Numeric.  Control the degree of zoom. Use negative values to zoom in beyond range determined by selected street.
 #' @param cases Character. Plot cases: \code{NULL}, "anchors" or "all".
 #' @param add.title Logical. Include title.
 #' @param add.subtitle Logical. Include subtitle with road information.
