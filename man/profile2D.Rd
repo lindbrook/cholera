@@ -4,13 +4,13 @@
 \alias{profile2D}
 \title{2D Profile Plot.}
 \usage{
-profile2D(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
+profile2D(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE,
   type = "base")
 }
 \arguments{
-\item{pump}{Numeric. Select pump as focal point.}
-
 \item{angle}{Numeric. Angle of perspective axis in degrees.}
+
+\item{pump}{Numeric. Select pump as focal point.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 

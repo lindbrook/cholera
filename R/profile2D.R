@@ -1,27 +1,17 @@
 #' 2D Profile Plot.
 #'
-#' @param pump Numeric. Select pump as focal point.
 #' @param angle Numeric. Angle of perspective axis in degrees.
+#' @param pump Numeric. Select pump as focal point.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param type Character. "base" or "ggplot2".
 #' @import ggplot2
 #' @export
 
-profile2D <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
+profile2D <- function(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE,
   type = "base") {
 
-  if (type %in% c("base", "ggplot2") == FALSE) {
-    stop('type must be "base" or "ggplot2".')
-  }
-
   if (angle < 0 | angle > 360) stop("Use 0 >= angle <= 360.")
-
-  if (vestry) {
-    pump.id <- cholera::pumps.vestry$id
-  } else {
-    pump.id <- cholera::pumps$id
-  }
 
   if (is.null(pump) == FALSE) {
     if (any(abs(pump) %in% pump.id == FALSE)) {
@@ -29,7 +19,17 @@ profile2D <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
     }
   }
 
+  if (vestry) {
+    pump.id <- cholera::pumps.vestry$id
+  } else {
+    pump.id <- cholera::pumps$id
+  }
+
   cores <- multiCore(multi.core)
+
+  if (type %in% c("base", "ggplot2") == FALSE) {
+    stop('type must be "base" or "ggplot2".')
+  }
 
   if (length(pump) != 1) {
     stop('For type = ', type, ', select one pump.')
@@ -81,9 +81,9 @@ profile2D <- function(pump = 7, angle = 0, vestry = FALSE, multi.core = FALSE,
 }
 
 axisSlope <- function(angle) {
-  theta090 <- tan(pi * signif(90) / 180)
-  theta180 <- tan(pi * signif(180) / 180)
-  theta270 <- tan(pi * signif(270) / 180)
+  theta090 <- tan(pi * 90 / 180)
+  theta180 <- tan(pi * 180 / 180)
+  theta270 <- tan(pi * 270 / 180)
   theta <- tan(pi * signif(angle) / 180)
   if (theta == theta090 | theta == theta270) Inf
   else if (theta == theta180) 0
