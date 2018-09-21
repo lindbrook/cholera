@@ -13,16 +13,16 @@ profile2D <- function(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE,
 
   if (angle < 0 | angle > 360) stop("Use 0 >= angle <= 360.")
 
-  if (is.null(pump) == FALSE) {
-    if (any(abs(pump) %in% pump.id == FALSE)) {
-      stop('For vestry = ', vestry, ', 1 >= |pump| <= ', max(pump.id))
-    }
-  }
-
   if (vestry) {
     pump.id <- cholera::pumps.vestry$id
   } else {
     pump.id <- cholera::pumps$id
+  }
+
+  if (is.null(pump) == FALSE) {
+    if (any(abs(pump) %in% pump.id == FALSE)) {
+      stop('For vestry = ', vestry, ', 1 >= |pump| <= ', max(pump.id))
+    }
   }
 
   cores <- multiCore(multi.core)
