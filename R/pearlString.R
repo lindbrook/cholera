@@ -238,12 +238,43 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
 
 ## diagnostic plots ##
 
-peripheryAudit <- function(i) {
+#' Plot periphery cases.
+#'
+#' @param x Object Neighborhood data.
+#' @param i Numeric. Neighborhood ID.
+#' @export
+
+peripheryAudit <- function(x, i = 1) {
+  nearest.pump <- x$nearest.pump
+  p.num <- sort(unique(nearest.pump))
+  neighborhood.cases <- lapply(p.num, function(n) {
+    which(nearest.pump == n)
+  })
+
+  periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
+    mc.cores = x$cores)
   points(cholera::regular.cases[periphery.cases[[i]], ], pch = 16, cex = 0.5,
     col = snowColors()[i])
 }
 
-polygonAudit <- function(i) {
+#' Plot neighborhood polygon.
+#'
+#' @param x Object Neighborhood data.
+#' @param i Numeric. Neighborhood ID.
+#' @export
+
+polygonAudit <- function(x, i = 1) {
+  nearest.pump <- x$nearest.pump
+  p.num <- sort(unique(nearest.pump))
+  neighborhood.cases <- lapply(p.num, function(n) {
+    which(nearest.pump == n)
+  })
+
+  periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
+    mc.cores = x$cores)
+  pearl.string <- parallel::mclapply(periphery.cases, pearlString,
+    mc.cores = x$cores)
+  names(pearl.string) <- p.num
   polygon(cholera::regular.cases[pearlString(periphery.cases[[i]]), ],
     col = grDevices::adjustcolor(snowColors()[i], alpha.f = 2/3))
 }

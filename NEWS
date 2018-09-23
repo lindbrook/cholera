@@ -5,6 +5,7 @@ cholera 0.5.1.9027
 - amend landmarkData().
 - fix snow.colors in pumpTokens().
 - document negative radius in streetNameLocator() and streetNumberLocator().
+- amend peripheryAudit() and polygonAudit().
 
 
 cholera 0.5.1.9026
