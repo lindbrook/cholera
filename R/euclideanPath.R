@@ -251,8 +251,9 @@ euclideanPath <- function(origin, destination = NULL, type = "case-pump",
   output
 }
 
-#' Summary of euclideanPath().
+#' Print method for euclideanPath().
 #'
+#' Summary output.
 #' @param x An object of class "euclidean_path" created by \code{euclideanPath()}.
 #' @param ... Additional parameters.
 #' @return An R data frame.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclideanPath.R
 \name{print.euclidean_path}
 \alias{print.euclidean_path}
-\title{Summary of euclideanPath().}
+\title{Print method for euclideanPath().}
 \usage{
 \method{print}{euclidean_path}(x, ...)
 }
@@ -15,7 +15,7 @@
 An R data frame.
 }
 \description{
-Summary of euclideanPath().
+Summary output.
 }
 \examples{
 euclideanPath(1)

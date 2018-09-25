@@ -2,7 +2,7 @@
 % Please edit documentation in R/walkingPath.R
 \name{print.walking_path}
 \alias{print.walking_path}
-\title{Print summary output for walkingPath().}
+\title{Print method for walkingPath().}
 \usage{
 \method{print}{walking_path}(x, ...)
 }
@@ -15,7 +15,7 @@
 An R data frame.
 }
 \description{
-Print summary output for walkingPath().
+Summary output.
 }
 \examples{
 walkingPath(1)

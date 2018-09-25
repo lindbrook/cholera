@@ -333,8 +333,9 @@ walkingPath <- function(origin, destination = NULL, type = "case-pump",
   output
 }
 
-#' Print summary output for walkingPath().
+#' Print method for walkingPath().
 #'
+#' Summary output.
 #' @param x An object of class "walking_path" created by walkingPath().
 #' @param ... Additional parameters.
 #' @return An R data frame.
