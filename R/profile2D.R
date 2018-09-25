@@ -1,16 +1,12 @@
-#' 2D Profile Plot.
+#' 2D Profile .
 #'
 #' @param angle Numeric. Angle of perspective axis in degrees.
 #' @param pump Numeric. Select pump as focal point.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
-#' @param type Character. "base" or "ggplot2".
-#' @import ggplot2
 #' @export
 
-profile2D <- function(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE,
-  type = "base") {
-
+profile2D <- function(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE) {
   if (angle < 0 | angle > 360) stop("Use 0 >= angle <= 360.")
 
   if (vestry) {
@@ -27,35 +23,49 @@ profile2D <- function(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE,
 
   cores <- multiCore(multi.core)
 
-  if (type %in% c("base", "ggplot2") == FALSE) {
-    stop('type must be "base" or "ggplot2".')
-  }
-
   if (length(pump) != 1) {
-    stop('For type = ', type, ', select one pump.')
+    stop('Select one pump.')
   }
 
-  a <- profilePerspective("inside", pump = pump, angle = angle,
+  inside <- profilePerspective("inside", pump = pump, angle = angle,
     vestry = vestry, multi.core = cores)
-  b <- profilePerspective("outside", pump = pump, angle = angle,
+  outside <- profilePerspective("outside", pump = pump, angle = angle,
     vestry = vestry, multi.core = cores)
+  profile <- list(inside = inside, outside = outside, angle = angle)
+  class(profile) <- "profile2D"
+  profile
+}
+
+#' Plot method for profile2D().
+#'
+#' @param x An object of class "profile2D" created by \code{profile2D()}.
+#' @param type Character. Type of graphic: "base" or "ggplot2".
+#' @param ... Additional plotting parameters.
+#' @import ggplot2
+#' @export
+
+plot.profile2D <- function(x, type = "base", ...) {
+  inside <- x$inside
+  outside <- x$outside
 
   if (type == "base") {
     par(mfrow = c(3, 1))
-    x.rng <- range(a$axis, b$axis)
-    y.rng <- range(a$count, b$count)
-    plot(a$axis, a$count, type = "h", xlim = x.rng, ylim = y.rng, col = "red")
-    title(main = paste("Axis angle =", angle))
-    plot(b$axis, b$count, type = "h", xlim = x.rng, ylim = y.rng, col = "blue")
-    plot(b$axis, b$count, type = "h", xlim = x.rng, ylim = y.rng,
+    x.rng <- range(inside$axis, outside$axis)
+    y.rng <- range(inside$count, outside$count)
+    plot(inside$axis, inside$count, type = "h", xlim = x.rng, ylim = y.rng,
+      col = "red")
+    title(main = paste("Axis angle =", x$angle))
+    plot(outside$axis, outside$count, type = "h", xlim = x.rng, ylim = y.rng,
+      col = "blue")
+    plot(outside$axis, outside$count, type = "h", xlim = x.rng, ylim = y.rng,
       col = grDevices::adjustcolor("blue", alpha.f = 1/2))
-    points(a$axis, a$count, type = "h",
+    points(inside$axis, inside$count, type = "h",
       col = grDevices::adjustcolor("red", alpha.f = 1/2))
     par(mfrow = c(1, 1))
 
   } else if (type == "ggplot2") {
-    profileA <- data.frame(axis = a$axis, count = a$count)
-    profileB <- data.frame(axis = b$axis, count = b$count)
+    profileA <- data.frame(axis = inside$axis, count = inside$count)
+    profileB <- data.frame(axis = outside$axis, count = outside$count)
     profileA$Location <- "Inside"
     profileB$Location <- "Outside"
     profileA$facet <- "Inside"
@@ -71,13 +81,31 @@ profile2D <- function(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE,
       scale_colour_manual(values = c("red", "blue"),
                           guide = guide_legend(title = "Location")) +
       facet_wrap(~ facet, nrow = 3) +
-      ggtitle(paste("Axis angle =", angle)) +
+      ggtitle(paste("Axis angle =", x$angle)) +
       theme_bw() +
       theme(panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             plot.title = element_text(hjust = 0.5))
     p
+
+  } else {
+    if (type %in% c("base", "ggplot2") == FALSE) {
+      stop('type must be "base" or "ggplot2".')
+    }
   }
+}
+
+#' Print method for profile2D().
+#'
+#' Count of cases.
+#' @param x An object of class "profile2D" created by \code{profile2D()}.
+#' @param ... Additional plotting parameters.
+#' @export
+
+print.profile2D <- function(x, ...) {
+  profile <- data.frame(inside = sum(x$inside$count),
+                        outside = sum(x$outside$count))
+  print(profile)
 }
 
 axisSlope <- function(angle) {

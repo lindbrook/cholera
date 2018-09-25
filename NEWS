@@ -1,3 +1,9 @@
+cholera 0.5.1.9028
+==================
+
+- implement S3 versions of profile2D() and profile3D().
+
+
 cholera 0.5.1.9027
 ==================
 

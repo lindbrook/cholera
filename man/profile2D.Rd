@@ -2,10 +2,9 @@
 % Please edit documentation in R/profile2D.R
 \name{profile2D}
 \alias{profile2D}
-\title{2D Profile Plot.}
+\title{2D Profile .}
 \usage{
-profile2D(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE,
-  type = "base")
+profile2D(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE)
 }
 \arguments{
 \item{angle}{Numeric. Angle of perspective axis in degrees.}
@@ -15,9 +14,7 @@ profile2D(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE,
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
-
-\item{type}{Character. "base" or "ggplot2".}
 }
 \description{
-2D Profile Plot.
+2D Profile .
 }
