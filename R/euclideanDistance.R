@@ -27,9 +27,9 @@
 #' # path from pump 1 to pump 6.
 #' euclideanDistance(1, 6, type = "pumps")
 
-euclideanDistance <- function(origin, destination = NULL, type = "case-pump",
-  observed = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
-  walking.speed = 5) {
+euclideanDistance <- function(origin = 1, destination = NULL,
+  type = "case-pump", observed = TRUE, vestry = FALSE, unit = "meter",
+  time.unit = "second", walking.speed = 5) {
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
     stop('type must be "case-pump", "cases" or "pumps".')

@@ -30,7 +30,7 @@
 #' # Plot result
 #' plot(euclideanPath(1))
 
-euclideanPath <- function(origin, destination = NULL, type = "case-pump",
+euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, vestry = FALSE, unit = "meter", time.unit = "second",
   walking.speed = 5) {
 

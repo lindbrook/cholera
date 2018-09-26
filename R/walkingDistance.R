@@ -32,7 +32,7 @@
 #' walkingDistance(1, 6, type = "pumps")
 #' }
 
-walkingDistance <- function(origin, destination = NULL, type = "case-pump",
+walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5) {
 
