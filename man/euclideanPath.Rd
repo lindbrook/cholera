@@ -4,7 +4,7 @@
 \alias{euclideanPath}
 \title{Compute path of the Euclidean distance between cases and/or pumps.}
 \usage{
-euclideanPath(origin, destination = NULL, type = "case-pump",
+euclideanPath(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5)
 }

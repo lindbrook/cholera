@@ -4,7 +4,7 @@
 \alias{walkingPath}
 \title{Compute the shortest walking path between cases and/or pumps.}
 \usage{
-walkingPath(origin, destination = NULL, type = "case-pump",
+walkingPath(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5)
 }

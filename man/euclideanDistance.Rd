@@ -4,7 +4,7 @@
 \alias{euclideanDistance}
 \title{Compute the Euclidean distance between cases and/or pumps.}
 \usage{
-euclideanDistance(origin, destination = NULL, type = "case-pump",
+euclideanDistance(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5)
 }

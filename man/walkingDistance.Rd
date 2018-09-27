@@ -4,7 +4,7 @@
 \alias{walkingDistance}
 \title{Compute the shortest walking distance between cases and/or pumps.}
 \usage{
-walkingDistance(origin, destination = NULL, type = "case-pump",
+walkingDistance(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5)
 }
