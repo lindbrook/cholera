@@ -3,6 +3,7 @@ cholera 0.5.1.9029
 
 - landmarkData() -> landmarks() (prototype)
 - add ortho.proj.landmarks (prototype)
+- add ortho.proj.landmarks$case (pseudo case #)
 
 
 cholera 0.5.1.9028
