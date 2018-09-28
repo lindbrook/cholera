@@ -158,6 +158,7 @@
 #'     \item{\code{x.proj}}{x-coordinate}
 #'     \item{\code{y.proj}}{y-coordinate}
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+#'     \item{\code{name}}{name}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
 #' @note \code{\link{landmarks}} documents the code for these data.
