@@ -6,6 +6,7 @@
 
 # ortho.proj.landmarks <- landmarks()
 # devtools::use_data(ortho.proj.landmarks)
+# devtools::use_data(ortho.proj.landmarks, overwrite = TRUE)
 
 landmarks <- function(multi.core = FALSE) {
   marx <- data.frame(x = 17.3855, y = 13.371)
@@ -134,5 +135,6 @@ landmarks <- function(multi.core = FALSE) {
   out <- data.frame(ortho.proj, name = landmark.names)
   out <- rbind(out, st.james.workhouse)
   row.names(out) <- NULL
+  out$case <- seq(1001, 1000 + nrow(out))
   out
 }
