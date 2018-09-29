@@ -135,6 +135,6 @@ landmarks <- function(multi.core = FALSE) {
   out <- data.frame(ortho.proj, name = landmark.names)
   out <- rbind(out, st.james.workhouse)
   row.names(out) <- NULL
-  out$case <- seq(1001, 1000 + nrow(out))
+  out$case <- seq(20001, 20000 + nrow(out))
   out
 }
