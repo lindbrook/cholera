@@ -30,7 +30,7 @@ nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
   }
 
   cores <- multiCore(multi.core)
-  dat <- cholera::neighborhoodData(vestry, case.set)
+  dat <- neighborhoodData(vestry, case.set)
   path.data <- pathData(dat, weighted, case.set, cores)
   distances <- path.data$distances
   paths <- path.data$paths
@@ -75,15 +75,15 @@ nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
 
     out <- out[, c("case", "pump", "pump.name", "distance")]
 
-    out$time <- cholera::distanceTime(out$distance, unit = time.unit,
+    out$time <- distanceTime(out$distance, unit = time.unit,
       speed = walking.speed)
 
     if (unit == "meter") {
-      out$distance <- cholera::unitMeter(out$distance, "meter")
+      out$distance <- unitMeter(out$distance, "meter")
     } else if (unit == "yard") {
-      out$distance <- cholera::unitMeter(out$distance, "yard")
+      out$distance <- unitMeter(out$distance, "yard")
     } else if (unit == "native") {
-      out$distance <- cholera::unitMeter(out$distance, "native")
+      out$distance <- unitMeter(out$distance, "native")
     }
 
     out
