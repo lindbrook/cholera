@@ -4,27 +4,33 @@
 #' @param vestry Logical. Use Vestry Report pump data.
 #' @param case.set Character. "observed" or "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
 #' @param embed Logical. Embed cases and pumps into road network.
+#' @param embed.landmarks Logical. Embed landmarks into road network.
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
 neighborhoodData <- function(vestry = FALSE, case.set = "observed",
-  embed = TRUE) {
+  embed = TRUE, embed.landmarks = FALSE) {
 
-  if (case.set %in% c("observed", "expected", "snow") == FALSE) {
-    stop('case.set must be "observed", "expected" or "snow".')
+  # if (case.set %in% c("observed", "expected", "snow") == FALSE) {
+    # stop('case.set must be "observed", "expected" or "snow".')
+  if (case.set %in% c("observed", "expected") == FALSE) {
+    stop('case.set must be "observed" or "expected".')
   }
 
   if (case.set == "expected") {
     if (vestry) {
-      node.data <- nodeData(embed = embed, vestry = TRUE, observed = FALSE)
+      node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
+        vestry = TRUE, observed = FALSE)
     } else {
-      node.data <- nodeData(embed = embed, observed = FALSE)
+      node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
+        observed = FALSE)
     }
-  } else {
+  } else if (case.set == "observed") {
     if (vestry) {
-      node.data <- nodeData(embed = embed, vestry = TRUE)
+      node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
+        vestry = TRUE)
     } else {
-      node.data <- nodeData(embed = embed)
+      node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks)
     }
   }
 
@@ -56,15 +62,10 @@ plot.neighborhood_data <- function(x, ...) {
   plot(x$g, vertex.label = NA, vertex.size = 2, ...)
 }
 
-nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
-  if (observed) {
-    sel <- cholera::ortho.proj$case %in% cholera::fatalities.address$anchor.case
-    case.segments <- unique(cholera::ortho.proj[sel, "road.segment"])
-  } else {
-    sim.proj <- cholera::sim.ortho.proj
-    case.segments <- unique(sim.proj$road.segment)
-    case.segments <- case.segments[is.na(case.segments) == FALSE]
-  }
+## auxilliary functions ##
+
+nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
+  observed = TRUE) {
 
   if (embed) {
     if (vestry) {
@@ -73,10 +74,27 @@ nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
       ortho.pump <- cholera::ortho.proj.pump
     }
 
-    case.pump <- intersect(ortho.pump$road.segment, case.segments)
-    case.no_pump <- setdiff(case.segments, ortho.pump$road.segment)
-    no_case.pump <- setdiff(ortho.pump$road.segment, case.segments)
-    edits <- c(case.pump, case.no_pump, no_case.pump)
+    if (observed) {
+      sel <- cholera::ortho.proj$case %in%
+             cholera::fatalities.address$anchor.case
+      case.segments <- unique(cholera::ortho.proj[sel, "road.segment"])
+    } else {
+      sim.proj <- cholera::sim.ortho.proj
+      case.segments <- unique(sim.proj$road.segment)
+      case.segments <- case.segments[is.na(case.segments) == FALSE]
+    }
+
+    if (embed.landmarks) {
+      landmark.segments <- cholera::ortho.proj.landmarks$road.segment
+      site.segments <- unique(c(case.segments, landmark.segments))
+    } else {
+      site.segments <- case.segments
+    }
+
+    site.pump <- intersect(ortho.pump$road.segment, site.segments)
+    site.no_pump <- setdiff(site.segments, ortho.pump$road.segment)
+    no_site.pump <- setdiff(ortho.pump$road.segment, site.segments)
+    edits <- c(site.pump, site.no_pump, no_site.pump)
 
     if (observed) {
       if (vestry) {
@@ -88,9 +106,9 @@ nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
       }
     } else {
       if (vestry) {
-        nodes <- lapply(edits, embedSites, vestry = TRUE, observed = FALSE)
-        edges <- lapply(edits, embedSites, type = "edges", vestry = TRUE,
-          observed = FALSE)
+        nodes <- lapply(edits, embedSites, observed = FALSE, vestry = TRUE)
+        edges <- lapply(edits, embedSites, type = "edges", observed = FALSE,
+          vestry = TRUE)
       } else {
         nodes <- lapply(edits, embedSites, observed = FALSE)
         edges <- lapply(edits, embedSites, type = "edges", observed = FALSE)
@@ -179,39 +197,54 @@ nodeData <- function(embed = TRUE, vestry = FALSE, observed = TRUE) {
   }
 }
 
-embedSites <- function(id, type = "nodes", vestry = FALSE, observed = TRUE) {
-  if (id %in% cholera::road.segments$id == FALSE) {
-    stop('See cholera::road.segments$id for valid "id" values.')
+embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
+  if (vestry) {
+    ortho.pump <- cholera::ortho.proj.pump.vestry
+  } else {
+    ortho.pump <- cholera::ortho.proj.pump
   }
 
   road.data <- cholera::road.segments[cholera::road.segments$id == id, ]
 
-  if (observed) {
-    if (road.data$id %in% cholera::ortho.proj$road.segment) {
-      sel <- cholera::ortho.proj$road.segment %in% road.data$id
-      road.fatalities <- cholera::ortho.proj[sel, ]
+  ## embed filters ##
 
+  CaseObs <- id %in% cholera::ortho.proj$road.segment
+  Landmark <- id %in% cholera::ortho.proj.landmarks$road.segment
+  Pump <- id %in% ortho.pump$road.segment
+
+  if (observed == FALSE) {
+    sim.proj <- cholera::sim.ortho.proj
+    CaseExp <- id %in% sim.proj $road.segment
+  }
+
+  if (observed) {
+    if (CaseObs) {
+      sel <- cholera::ortho.proj$road.segment %in% id
+      road.fatalities <- cholera::ortho.proj[sel, ]
       sel <- road.fatalities$case %in% cholera::fatalities.address$anchor.case
       cases <- road.fatalities[sel, "case"]
-
       road.address <- road.fatalities[road.fatalities$case %in% cases, ]
-      rds <- data.frame(road.address[, c("x.proj", "y.proj")],
+      case.data <- data.frame(road.address[, c("x.proj", "y.proj")],
                         anchor = road.address$case,
                         pump = 0)
     }
   } else {
-    sim.proj <- cholera::sim.ortho.proj
-
-    if (road.data$id %in% sim.proj$road.segment) {
-      road.fatalities <- sim.proj[sim.proj$road.segment %in% road.data$id, ]
-
+    if (CaseExp) {
+      road.fatalities <- sim.proj[sim.proj$road.segment %in% id, ]
       sel <- road.fatalities$case[road.fatalities$case %in% sim.proj$case]
       road.address <- road.fatalities[road.fatalities$case %in% sel, ]
-
-      rds <- data.frame(road.address[, c("x.proj", "y.proj")],
+      case.data <- data.frame(road.address[, c("x.proj", "y.proj")],
                         anchor = road.address$case,
                         pump = 0)
     }
+  }
+
+  if (Landmark) {
+    sel <- cholera::ortho.proj.landmarks$road.segment %in% id
+    road.landmarks <- cholera::ortho.proj.landmarks[sel, ]
+    landmark.data <- data.frame(road.landmarks[, c("x.proj", "y.proj")],
+                      anchor = road.landmarks$case,
+                      pump = 0)
   }
 
   endptA <- data.frame(x.proj = road.data$x1,
@@ -224,37 +257,56 @@ embedSites <- function(id, type = "nodes", vestry = FALSE, observed = TRUE) {
                        anchor = 0,
                        pump = 0)
 
-  if (vestry) {
-    pumps <- cholera::ortho.proj.pump.vestry
-  } else {
-    pumps <- cholera::ortho.proj.pump
-  }
-
   if (observed) {
-    case.seg <- road.data$id %in% cholera::ortho.proj$road.segment
+    if (CaseObs & Landmark) {
+      site.seg <- CaseObs & Landmark
+      rds <- rbind(case.data, landmark.data)
+
+    } else if (CaseObs & !Landmark) {
+      site.seg <- CaseObs
+      rds <- case.data
+
+    } else if (!CaseObs & Landmark) {
+      site.seg <- Landmark
+      rds <- landmark.data
+
+    } else site.seg <- FALSE
   } else {
-    case.seg <- road.data$id %in% sim.proj$road.segment
+    if (CaseExp & Landmark) {
+      site.seg <- CaseExp & Landmark
+      rds <- rbind(case.data, landmark.data)
+
+    } else if (CaseExp & !Landmark) {
+      site.seg <- CaseExp
+      rds <- case.data
+
+    } else if (!CaseExp & Landmark) {
+      site.seg <- Landmark
+      rds <- landmark.data
+
+    } else site.seg <- FALSE
   }
 
-  pump.seg <- id %in% pumps$road.segment
-
-  if (pump.seg) {
-     pump.data <- pumps[pumps$road.segment == id, ]
+  if (Pump) {
+     pump.data <- ortho.pump[ortho.pump$road.segment == id, ]
      ps <- data.frame(pump.data[, c("x.proj", "y.proj")],
                       anchor = 0,
                       pump = pump.data$pump.id)
   }
 
-  if (case.seg & pump.seg) {
+  if (site.seg & Pump) {
     dat <- rbind(rds, ps)
     nodes <- rbind(endptA, dat, endptB)
     nodes <- nodes[order(nodes$x.proj), ]
-  } else if (case.seg & !pump.seg) {
+
+  } else if (site.seg & !Pump) {
     nodes <- rbind(endptA, rds, endptB)
     nodes <- nodes[order(nodes$x.proj), ]
-  } else if (!case.seg & pump.seg) {
+
+  } else if (!site.seg & Pump) {
     nodes <- rbind(endptA, ps, endptB)
     nodes <- nodes[order(nodes$x.proj), ]
+
   } else {
     nodes <- rbind(endptA, endptB)
     nodes <- nodes[order(nodes$x.proj), ]

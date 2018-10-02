@@ -4,7 +4,8 @@
 \alias{neighborhoodData}
 \title{Compute network graph of roads, cases and pumps.}
 \usage{
-neighborhoodData(vestry = FALSE, case.set = "observed", embed = TRUE)
+neighborhoodData(vestry = FALSE, case.set = "observed", embed = TRUE,
+  embed.landmarks = FALSE)
 }
 \arguments{
 \item{vestry}{Logical. Use Vestry Report pump data.}
@@ -12,6 +13,8 @@ neighborhoodData(vestry = FALSE, case.set = "observed", embed = TRUE)
 \item{case.set}{Character. "observed" or "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.}
 
 \item{embed}{Logical. Embed cases and pumps into road network.}
+
+\item{embed.landmarks}{Logical. Embed landmarks into road network.}
 }
 \value{
 An R list of nodes, edges and an 'igraph' network graph.
