@@ -1,3 +1,9 @@
+cholera 0.5.1.9030
+==================
+
+- add type = "expected" to addNeighborhoodCases().
+
+
 cholera 0.5.1.9029
 ==================
 

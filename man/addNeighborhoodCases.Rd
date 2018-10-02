@@ -14,7 +14,7 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 
 \item{pump.select}{Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.}
 
-\item{type}{Character. Type of case: "address" (base of stack) or "fatalities" (entire stack).}
+\item{type}{Character. Type of case: "address" (base of stack), "fatalities" (entire stack), or "expected" for simulated data.}
 
 \item{token}{Character. Type of token to plot: "point" or "id".}
 
