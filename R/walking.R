@@ -56,6 +56,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   }
 
   cores <- multiCore(multi.core)
+  snow.colors <- cholera::snowColors(vestry)
 
   if (case.set == "expected") {
     arguments <- list(pump.select = pump.select,
@@ -117,6 +118,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
               weighted = weighted,
               case.set = case.set,
               pump.select = pump.select,
+              snow.colors = snow.colors,
               cores = cores,
               metric = 1 / cholera::unitMeter(1, "meter"))
 
@@ -250,8 +252,6 @@ plot.walking <- function(x, type = "road", ...) {
   p.node <- n.data$p.node
   p.name <- n.data$p.name
 
-  snow.colors <- cholera::snowColors(x$vestry)
-
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
   road.list <- split(rd[, c("x", "y")], rd$street)
@@ -270,13 +270,13 @@ plot.walking <- function(x, type = "road", ...) {
     invisible(lapply(names(edge.data), function(nm) {
       n.edges <- edges[edge.data[[nm]], ]
       segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 2,
-        col = snow.colors[paste0("p", nm)])
+        col = x$snow.colors[paste0("p", nm)])
     }))
 
     invisible(lapply(names(x$cases), function(nm) {
       sel <- cholera::fatalities.address$anchor.case %in% x$cases[[nm]]
       points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-        cex = 0.75, col = snow.colors[paste0("p", nm)])
+        cex = 0.75, col = x$snow.colors[paste0("p", nm)])
     }))
 
   } else if (x$case.set == "snow") {
@@ -289,7 +289,7 @@ plot.walking <- function(x, type = "road", ...) {
     invisible(lapply(names(obs.whole.edges), function(nm) {
       n.edges <- edges[edges$id2 %in% obs.whole.edges[[nm]], ]
       segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
-        col = snow.colors[paste0("p", nm)])
+        col = x$snow.colors[paste0("p", nm)])
     }))
 
   } else if (x$case.set == "expected") {
@@ -337,7 +337,7 @@ plot.walking <- function(x, type = "road", ...) {
     }
 
     if (type == "area.points") {
-      ap <- areaPointsData(sim.proj.segs, wholes, snow.colors, sim.proj,
+      ap <- areaPointsData(sim.proj.segs, wholes, x$snow.colors, sim.proj,
         split.cases)
       points(cholera::regular.cases[ap$sim.proj.wholes$case, ],
         col = ap$sim.proj.wholes$color, pch = 15, cex = 1.25)
@@ -379,7 +379,7 @@ plot.walking <- function(x, type = "road", ...) {
       invisible(lapply(names(pearl.string), function(nm) {
         sel <- paste0("p", nm)
         polygon(cholera::regular.cases[pearl.string[[nm]], ],
-          col = grDevices::adjustcolor(snow.colors[sel], alpha.f = 2/3))
+          col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = 2/3))
       }))
 
     } else {
@@ -388,14 +388,14 @@ plot.walking <- function(x, type = "road", ...) {
       invisible(lapply(names(wholes), function(nm) {
         n.edges <- edges[edges$id %in% wholes[[nm]], ]
         segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 3,
-          col = snow.colors[paste0("p", nm)])
+          col = x$snow.colors[paste0("p", nm)])
       }))
 
       if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
         invisible(lapply(seq_along(splits), function(i) {
           dat <- splits[[i]]
           ps <- splits.pump[[i]]
-          ps.col <- snow.colors[paste0("p", ps)]
+          ps.col <- x$snow.colors[paste0("p", ps)]
           segments(dat[1, "x"], dat[1, "y"], dat[2, "x"], dat[2, "y"], lwd = 3,
             col = ps.col[1])
           segments(dat[3, "x"], dat[3, "y"], dat[4, "x"], dat[4, "y"], lwd = 3,
@@ -405,6 +405,6 @@ plot.walking <- function(x, type = "road", ...) {
     }
   }
 
-  pumpTokens(x$pump.select, x$vestry, x$case.set, snow.colors, type)
+  pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
   title(main = "Pump Neighborhoods: Walking")
 }
