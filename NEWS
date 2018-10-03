@@ -3,6 +3,7 @@ cholera 0.5.1.9031
 
 - add new neighborhoodData() prototype.
 - fix pumpTokens().
+- add case.col argument to snowMap().
 
 
 cholera 0.5.1.9030

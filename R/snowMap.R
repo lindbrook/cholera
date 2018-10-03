@@ -7,6 +7,7 @@
 #' @param add.pumps Logical. Add pumps.
 #' @param add.roads Logical. Add roads.
 #' @param main Character. Title of graph.
+#' @param case.col Character. Color of fatalities.
 #' @param ... Additional plotting parameters.
 #' @note Uses amended version of Dodson and Tobler's data included in this package.
 #' @return A base R graphics plot.
@@ -22,7 +23,8 @@
 #' snowMap(vestry = TRUE, stacked = FALSE)
 
 snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
-  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE, main = NA, ...) {
+  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE, main = NA,
+  case.col = "gray", ...) {
 
   rng <- mapRange()
 
@@ -35,7 +37,8 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
   plot(cases[, c("x", "y")], xlim = rng$x, ylim = rng$y, pch = NA, asp = 1,
     main = main, ...)
   if (add.roads) addRoads()
-  if (add.cases) points(cases[, c("x", "y")], pch = 15, col = "gray", cex = 0.5)
+  if (add.cases) points(cases[, c("x", "y")], pch = 15, col = case.col,
+    cex = 0.5)
   if (add.pumps) addPump(vestry = vestry, col = "blue", pch = 2)
   if (add.landmarks) addLandmarks()
   addBorder()
