@@ -2,6 +2,7 @@ cholera 0.5.1.9031
 ==================
 
 - add new neighborhoodData() prototype.
+- fix pumpTokens().
 
 
 cholera 0.5.1.9030
@@ -13,9 +14,9 @@ cholera 0.5.1.9030
 cholera 0.5.1.9029
 ==================
 
-- landmarkData() -> landmarks() (prototype)
-- add ortho.proj.landmarks (prototype)
-- add ortho.proj.landmarks$case (pseudo case #)
+- landmarkData() -> landmarks() (prototype).
+- add ortho.proj.landmarks (prototype).
+- add ortho.proj.landmarks$case (pseudo case #).
 
 
 cholera 0.5.1.9028
