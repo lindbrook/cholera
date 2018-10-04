@@ -4,15 +4,28 @@
 \alias{profile3D}
 \title{3D Profile.}
 \usage{
-profile3D(pump.select = NULL, vestry = FALSE, multi.core = FALSE)
+profile3D(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
+  drop.neg.subset = FALSE, multi.core = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
 
+\item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.}
+
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
+
+\item{drop.neg.subset}{Logical. Drop negative subset selection}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \description{
 3D Profile.
+}
+\examples{
+\dontrun{
+
+profile3D(pump.select = 6:7)
+profile3D(pump.subset = -7)
+profile3D(pump.subset = -7, drop.neg.subset = TRUE)
+}
 }

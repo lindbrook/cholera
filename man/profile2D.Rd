@@ -4,7 +4,8 @@
 \alias{profile2D}
 \title{2D Profile .}
 \usage{
-profile2D(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE)
+profile2D(angle = 0, pump = 7, vestry = FALSE, type = "base",
+  multi.core = FALSE)
 }
 \arguments{
 \item{angle}{Numeric. Angle of perspective axis in degrees.}
@@ -13,8 +14,17 @@ profile2D(angle = 0, pump = 7, vestry = FALSE, multi.core = FALSE)
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
+\item{type}{Character. Type of graphic: "base" or "ggplot2".}
+
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \description{
 2D Profile .
+}
+\examples{
+\dontrun{
+
+profile2D(angle = 30)
+profile2D(angle = 30, type = "ggplot2")
+}
 }
