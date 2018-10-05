@@ -11,10 +11,8 @@
 neighborhoodData <- function(vestry = FALSE, case.set = "observed",
   embed = TRUE, embed.landmarks = FALSE) {
 
-  # if (case.set %in% c("observed", "expected", "snow") == FALSE) {
-    # stop('case.set must be "observed", "expected" or "snow".')
-  if (case.set %in% c("observed", "expected") == FALSE) {
-    stop('case.set must be "observed" or "expected".')
+  if (case.set %in% c("observed", "expected", "snow") == FALSE) {
+    stop('case.set must be "observed", "expected" or "snow".')
   }
 
   if (case.set == "expected") {
@@ -25,7 +23,7 @@ neighborhoodData <- function(vestry = FALSE, case.set = "observed",
       node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
         observed = FALSE)
     }
-  } else if (case.set == "observed") {
+  } else {
     if (vestry) {
       node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
         vestry = TRUE)
