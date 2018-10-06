@@ -5,9 +5,10 @@
 \title{Locate road by name.}
 \usage{
 streetNameLocator(road.name, zoom = FALSE, radius = 0.1,
-  cases = "anchors", add.title = TRUE, add.subtitle = TRUE,
-  add.pump = TRUE, vestry = FALSE, highlight = TRUE,
-  unit = "meter", time.unit = "minute", walking.speed = 5)
+  cases = "anchors", token = "id", add.title = TRUE,
+  add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE,
+  highlight = TRUE, unit = "meter", time.unit = "minute",
+  walking.speed = 5)
 }
 \arguments{
 \item{road.name}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.}
@@ -17,6 +18,8 @@ streetNameLocator(road.name, zoom = FALSE, radius = 0.1,
 \item{radius}{Numeric. Control the degree of zoom. Use negative values to zoom in beyond range determined by selected street.}
 
 \item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
+
+\item{token}{Character. "id" or "point".}
 
 \item{add.title}{Logical. Include title.}
 

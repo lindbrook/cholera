@@ -1,3 +1,9 @@
+cholera 0.5.1.9034
+==================
+
+- add token argument to streetNameLocator () and streetNumberLocator().
+
+
 cholera 0.5.1.9033
 ==================
 
