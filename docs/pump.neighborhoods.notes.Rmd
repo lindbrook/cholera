@@ -225,28 +225,28 @@ For each simulated cases, I compute the closet water pump. This partitions the s
 
 The figure below plots the 1,709 simulated cases for the Broad Street pump neighborhood (pump #7).
 
-```{r cloud, echo = FALSE}
+```{r cloud, fig.width = 5, fig.height = 5, echo = FALSE}
 snowMap(add.cases = FALSE, add.pumps = FALSE)
 points(regular.cases[neighborhood.cases$`7`, ], pch = 16, col = snowColors()["p7"], cex = 1/4)
 ```
 
 Second, I find the points that fall along the periphery of the cluster.
 
-```{r perimeter, echo = FALSE}
+```{r perimeter, fig.width = 5, fig.height = 5, echo = FALSE}
 plot(regular.cases[neighborhood.cases$`7`, ], asp = 1, pch = 16, col = "lightgray", cex = 0.5)
 points(regular.cases[periphery.cases$`7`, ], col = "red")
 ```
 
 This is what allow me to use graphics::polygon() to create plots like the Marshall Street example in the vignette:
 
-```{r marshall, echo = FALSE}
+```{r marshall, fig.width = 5, fig.height = 5, echo = FALSE}
 streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE, add.title = FALSE, radius = 0.5)
-addNeighborhood()
+addNeighborhoodWalking()
 ```
 
 Doing this, however, is easier said than done. While the convex hull of neighborhood's points gets us close, it's not a good general solution. This is because the convex hull will create a polygon based on the most outlying points. As a result, when there are concavities, points outside the neighborhood will fall within the resulting polygon.
 
-```{r hull, echo = FALSE}
+```{r hull, fig.width = 5, fig.height = 5, echo = FALSE}
 plot(regular.cases[neighborhood.cases$`7`, ], asp = 1, pch = 16, col = "lightgray", cex = 0.5)
 ndata <- regular.cases[neighborhood.cases$`7`, ]
 points(ndata[chull(ndata), ], col = "dodgerblue")
@@ -261,7 +261,7 @@ My workable but mechanical solution, found in [pearlString.R](https://github.com
 
 Of equal if not greater importance is the density of simulated cases. The algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data can help. As a tradeoff between computational speed and functional robustness, I use 20K simulated cases.
 
-```{r pearl_string, echo = FALSE}
+```{r pearl_string, fig.width = 5, fig.height = 5, echo = FALSE}
 plot(regular.cases[pearlString(periphery.cases$`7`), ], asp = 1)
 polygon(regular.cases[pearlString(periphery.cases$`7`), ], border = "red", lwd = 2)
 ```
