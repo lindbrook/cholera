@@ -47,7 +47,7 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   p.ID <- seq_len(p.count)
 
   if (is.null(pump.select) == FALSE) {
-    if (any(pump.select %in% p.ID == FALSE)) {
+    if (any(abs(pump.select) %in% p.ID == FALSE)) {
       stop('If specified, 1 >= |pump.select| <= ', p.count, " when vestry = ",
         vestry, ".")
     }
@@ -128,7 +128,10 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
       names(snow.colors))
   }
 
-  n.data <- neighborhoodPathData(neighborhoodWalking(vestry = x$vestry))
+
+  n.walk <- neighborhoodWalking(pump.select = x$pump.select, vestry = x$vestry,
+    case.set = x$case.set, multi.core = x$cores)
+  n.data <- neighborhoodPathData(n.walk)
   dat <- n.data$dat
   edges <- n.data$edges
   n.path.edges <- n.data$neighborhood.path.edges

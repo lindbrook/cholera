@@ -1,3 +1,9 @@
+cholera 0.5.1.9035
+==================
+
+- fix negative selection in addNeighborhoodWalking().
+
+
 cholera 0.5.1.9034
 ==================
 
