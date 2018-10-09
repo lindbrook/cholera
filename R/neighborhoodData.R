@@ -9,7 +9,7 @@
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
 neighborhoodData <- function(vestry = FALSE, case.set = "observed",
-  embed = TRUE, embed.landmarks = FALSE) {
+  embed = TRUE, embed.landmarks = TRUE) {
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
     stop('case.set must be "observed", "expected" or "snow".')
