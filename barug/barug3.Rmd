@@ -1,0 +1,708 @@
+---
+title: "An introduction to the 'cholera' package"
+author:
+date: "Bay Area R Users Group | 2018-October-09 | Peter Li"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(cholera)
+```
+
+## Dr. John Snow
+![](296px-John_Snow.jpg)
+
+
+# map version 1.0
+
+
+##
+![](msu-snows-mapB.jpg)
+
+
+## two claims
+- cholera is waterborne disease
+
+- the Broad Street pump is the source of the outbreak
+
+
+##
+```{r kde, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+snowMap(); addKernelDensity(obs.unit = "fatality")
+```
+
+
+# take a second look
+
+##
+![](msu-snows-mapB.jpg)
+
+
+## questions
+- does the map support his claims?
+
+##
+```{r unstacked, fig.align = "center", fig.width = 6, fig.height = 6, echo = FALSE}
+snowMap(case.col = "red")
+```
+
+
+## more questions
+> - what would waterborne transmission look like?
+> - what would airborne transmission (miasma) look like?
+> - does the map help us to distinguish the two?
+
+
+# map version 2.0
+
+
+##
+![](fig12-6.png)
+
+
+## Snow's says ...
+"The inner dotted line on the map shews [sic] the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps ..."
+
+"... it will be observed that the deaths either very much diminish, or cease altogether, at every point where it becomes decidedly nearer to send to another pump than to the one in Broad Street".
+
+- Report On The Cholera Outbreak In The Parish Of St. James, Westminster, During The Autumn Of 1854, p. 109.
+
+
+## why the annotation?
+> - if cholera is waterborne & ...
+> - if pumps are the source of water,
+> - then the extent of outbreak is limited by a pump's reach
+
+
+## a pump neighborhood
+> - the set of homes defined by proximity to a pump
+> - where _TO_ find cases (inside)
+> - where _NOT_ to find cases (outside)
+
+
+## intuition and justification
+> - proximity matters
+> - fetching water from a well is a chore
+> - so choose the nearest pump
+> - (rival explanations)
+
+
+## pump neighborhoods
+> - "choose the nearest" implies choice
+> - other pumps shape a pump's neighborhood
+
+
+##
+![](fig12-6.png)
+
+
+## a method to the madness?
+> - hand drawn, eyeballed quality
+
+
+## explanatory fit
+```{r snow_fit, fig.align = "center", fig.width = 5, fig.height = 5, echo = FALSE}
+snowMap(stacked = FALSE, case.col = "black"); addSnow(alpha.level = 0.5, col = "red")
+```
+
+
+## quality of effort
+```{r snow_quality, fig.align = "center", fig.width = 5, fig.height = 5, echo = FALSE}
+streetNameLocator("broad street", zoom = TRUE, radius = 2.5, cases = "anchors", highlight = FALSE, add.subtitle = FALSE, add.title = FALSE, token = "point")
+addNeighborhoodWalking(7, multi.core = TRUE, alpha.level = 0.5)
+addSnow(alpha.level = 0.5, color = "red")
+```
+
+
+## limitations
+> - what about other neighborhoods?
+> - what about hypothetical/counterfactual neighborhoods?
+
+
+# Voronoi neighborhoods
+Cliff and Haggett (1988)
+
+'deldir' and 'sp'
+
+
+##
+```{r pump_data, eval = TRUE, echo = TRUE}
+pumps
+```
+
+
+## 'deldir'
+```{r deldir, fig.align = "center", fig.width = 5, fig.height = 5, eval = FALSE, echo = TRUE}
+deldir::deldir(pumps[, c("x", "y")])
+```
+
+
+## Delaunay triangulation and Voronoi tessellation
+```{r deldir_plot, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(deldir::deldir(pumps[, c("x", "y")], suppressMsge = TRUE))
+```
+
+
+## points in polygon via 'sp'
+```{r points_in_polygon, eval = FALSE, echo = TRUE}
+sp::point.in.polygon(cholera::fatalities.address$x,
+  cholera::fatalities.address$y, cell$x, cell$y)
+```
+
+##
+```{r voronoi0, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(neighborhoodVoronoi())
+```
+
+
+# scenarios
+
+
+##
+```{r voronoi, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(neighborhoodVoronoi())
+```
+
+##
+```{r voronoi_2, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(neighborhoodVoronoi(-6))
+```
+
+##
+```{r voronoi_3, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(neighborhoodVoronoi(-7))
+```
+
+##
+```{r voronoi_4, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(neighborhoodVoronoi(6:7))
+```
+
+
+## pros
+- fast (uses only location of pumps)
+
+
+## cons
+- doesn't quite match Snow's annotation
+
+
+##
+```{r snow_voronoi, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+plot(neighborhoodVoronoi()); addSnow()
+```
+
+
+## cons (more)
+> - uses only location of pumps
+> - Euclidean distance (Snow implies walking distance)
+> - network of roads and streets don't matter
+> - walk through walls
+
+
+##
+```{r Euclidean, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+plot(neighborhoodEuclidean(case.set = "observed")); addVoronoi()
+```
+
+
+# walking neighborhoods
+
+address
+
+road network
+
+paths -> neighborhoods
+
+'stats', 'igraph', 'sp' and 'parallel'
+
+
+## tasks: walking neighborhoods
+> - compute and plot the path between case and pump ...
+
+> - do so along roads and streets of on the map ...
+
+> - rinse and repeat -> pump neighborhood
+
+
+##
+```{r path1, fig.align = "center", fig.width = 5, fig.height = 5, echo = FALSE}
+streetNameLocator("broad street", zoom = TRUE, radius = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE)
+addWalkingPath(1)
+```
+
+##
+```{r path2, fig.align = "center", fig.width = 5, fig.height = 5, echo = FALSE}
+streetNameLocator("broad street", zoom = TRUE, radius = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE)
+addWalkingPath(1)
+addWalkingPath(191)
+```
+
+##
+```{r path3, fig.align = "center", fig.width = 5, fig.height = 5, echo = FALSE}
+streetNameLocator("broad street", zoom = TRUE, radius = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE)
+addWalkingPath(1)
+addWalkingPath(191)
+addWalkingPath(46)
+```
+
+##
+```{r path4, fig.align = "center", fig.width = 5, fig.height = 5, echo = FALSE}
+streetNameLocator("broad street", zoom = TRUE, radius = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE)
+addWalkingPath(1)
+addWalkingPath(191)
+addWalkingPath(46)
+addWalkingPath(363)
+```
+
+##
+```{r path5, fig.align = "center", fig.width = 5, fig.height = 5, echo = FALSE}
+streetNameLocator("broad street", zoom = TRUE, radius = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE)
+addWalkingPath(1)
+addWalkingPath(191)
+addWalkingPath(46)
+addWalkingPath(363)
+addWalkingPath(85)
+```
+
+##
+```{r obs_paths, fig.align = "center", fig.width = 5, fig.height = 5, echo = FALSE}
+plot(neighborhoodWalking(7))
+```
+
+# address
+
+orthogonal projection
+
+hierarchical cluster analysis
+
+
+## Data
+- Dodson and Tobler (1992)
+    - GIS exercise
+
+- bars (cases) and pumps are points
+    - x-y coordinate
+- streets are approximated by straight line segments
+    - x-y coordinates of segment endpoints
+
+
+## lost in translation
+- relationship between case and road ("address")
+- relationship between cases in stack
+
+
+## address: horizontal bars
+![](broad.street.B.png)
+
+
+## orthogonal projection & classification
+![](orthogonal.png)
+
+
+## orthogonal projection
+```{r orthogonal, eval = FALSE, echo = TRUE}
+orthogonal.slope <- -1 / segment.slope
+
+orthogonal.intercept <- case$y - orthogonal.slope * case$x
+
+x.proj <- (orthogonal.intercept - segment.intercept) /
+          (segment.slope - orthogonal.slope)
+
+y.proj <- segment.slope * x.proj + segment.intercept
+```
+
+
+## "unstacking" bars
+![](orthogonal_Broad_St.png)
+
+
+## hierarchical cluster analysis via 'stats'
+- label/group cases as a stack
+
+```{r hca, eval = FALSE, echo = TRUE}
+stats::hclust()
+stats::cutree()
+```
+
+## North side
+![](hca_north.png)
+
+
+## South side
+![](hca_south.png)
+
+
+# road network
+
+"network" -> network
+
+
+## network of roads
+> - roads -> edges
+> - street intersections -> nodes (vertices)
+
+
+## edge list (roads) {.smaller}
+```{r edge_list, echo = TRUE }
+head(neighborhoodData(embed = FALSE)$edges)
+```
+
+
+## road network
+```{r no_embed, fig.align = "center", echo = TRUE}
+plot(neighborhoodData(embed = FALSE))
+```
+
+
+## edge list (roads + addresses) {.smaller}
+```{r edge_list2, echo = TRUE }
+head(neighborhoodData(embed = TRUE)$edges)
+```
+
+
+## road network + "addresses"
+```{r embed, fig.align = "center", echo = TRUE}
+plot(neighborhoodData(embed = TRUE))
+```
+
+
+# S3 Object Oriented Programming
+generic functions
+
+
+## object
+```{r S3_class, eval = FALSE, echo = TRUE}
+neighborhoodData <- function(vestry = FALSE, case.set = "observed",
+  embed = TRUE, embed.landmarks = FALSE) {
+
+  node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks)
+  nodes <- node.data$nodes
+  edges <- node.data$edges
+  g <- node.data$g
+  nodes.pump <- nodes[nodes$pump != 0, ]
+  nodes.pump <- nodes.pump[order(nodes.pump$pump), c("pump", "node")]
+  out <- list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
+  class(out) <- "neighborhood_data"
+  out
+}
+```
+
+
+## method
+```{r neighborhood_data_plot, eval = FALSE, echo = TRUE}
+plot.neighborhood_data <- function(x, ...) {
+  plot(x$g, vertex.label = NA, vertex.size = 2, ...)
+}
+```
+
+
+## road network + "addresses"
+```{r redux, fig.align = "center", echo = TRUE}
+plot(neighborhoodData())
+```
+
+
+# paths in network
+
+
+## tasks: network path
+> - find _nodal_ path between case and pump
+> - many possible paths
+> - use the "shortest" path
+> - translate _nodal_ path -> _walking_ path
+
+
+## graph theory: shortest path
+```{r shortest_path, eval = FALSE, echo = TRUE}
+# breadth first algorithm
+igraph::shortest_paths(g, ego.node, alter.node)
+```
+
+##
+```{r walking_path_nodes, echo = TRUE}
+walkingPath(447, weighted = FALSE)$path
+```
+
+
+##
+```{r shortest_path_example, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(walkingPath(447, weighted = FALSE), zoom = FALSE, unit.posts = NULL)
+```
+
+
+## graph theory: shortest _weighted_ path
+```{r wtd_shortest_path, eval = FALSE, echo = TRUE}
+# Dijkstra algorithm
+igraph::shortest_paths(g, ego.node, alter.node, weights = edges$d)
+```
+
+
+## edge list {.smaller}
+```{r edge_list3, echo = TRUE }
+head(neighborhoodData(embed = TRUE)$edges)
+```
+
+
+## {.smaller}
+```{r wtd_shortest_path_nodes, echo = TRUE}
+walkingPath(447, weighted = TRUE)$path
+```
+
+
+##
+```{r wtd_shortest_path_example, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(walkingPath(447, weighted = TRUE), zoom = FALSE, unit.posts = NULL)
+```
+
+# observed walking network
+rinse & repeat
+
+##
+```{r walk_neighborhood, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(neighborhoodWalking())
+```
+
+
+# scenarios
+
+
+##
+```{r walk_neighborhood0, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(neighborhoodWalking())
+```
+
+##
+```{r walk_neighborhoodB, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(neighborhoodWalking(-6))
+```
+
+
+##
+```{r walk_neighborhoodA, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(neighborhoodWalking(-7))
+```
+
+
+##
+```{r walk_neighborhoodC, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE}
+plot(neighborhoodWalking(6:7))
+```
+
+# expected walking neighborhoods
+observed paths -> expected paths
+
+roads, points & polygons
+
+
+## roads
+> - segment endpoints & ...
+> - endpoints of split segments
+      - cut points via base::rle()
+
+
+##
+```{r area_roads, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+plot(neighborhoodWalking(case.set = "expected"), type = "road")
+```
+
+
+## area points & area polygons
+> - observed paths -> expected areas
+> - 20K simulated cases (points)
+
+
+## simulated cases via 'sp'
+```{r sp, eval = FALSE, echo = TRUE}
+sp::spsample(sp::Polygon(map.frame[, c("x", "y")]), n = 20000,
+  type = "regular")
+```
+
+
+##
+```{r frame, fig.align = "center", fig.width = 5, fig.height = 5, echo = FALSE}
+snowMap(add.roads = FALSE, add.cases = FALSE)
+# points(regular.cases[, c("x", "y")], pch = ".", cex = 1, col = "red")
+```
+
+
+##
+```{r regular, fig.align = "center", fig.width = 5, fig.height = 5, echo = FALSE}
+streetNameLocator("broad street", zoom = TRUE, radius = 0, cases = NULL, highlight = FALSE, add.subtitle = FALSE)
+points(regular.cases[, c("x", "y")], pch = 0, cex = 1, col = "red")
+```
+
+
+# embarrassingly parallel problems
+'parallel' package
+
+
+## lapply() -> mclapply()
+```{r lapply, eval = FALSE, echo = TRUE}
+lapply(list, function)
+```
+
+```{r mclapply, eval = FALSE, echo = TRUE}
+mclapply(list, function)
+```
+
+## roads data
+```{r roads, echo = TRUE}
+head(roads[roads$name != "Map Frame", ])
+```
+
+
+## road.segments data
+```{r, echo = TRUE}
+head(road.segments)
+```
+
+
+##
+```{r parallel, eval = FALSE, echo = TRUE}
+road.segments <- parallel::mclapply(unique(rd$street), function(i) {
+  dat <- rd[rd$street == i, ]
+  names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
+  seg.data <- dat[-1, c("x1", "y1")]
+  names(seg.data) <- c("x2", "y2")
+  dat <- cbind(dat[-nrow(dat), ], seg.data)
+  dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
+  dat
+}, mc.cores = cores)
+
+road.segments <- do.call(rbind, road.segments)
+```
+
+
+## simulated cases: single thread
+```{r sim, eval = FALSE, echo = TRUE}
+simulateFatalities(compute = TRUE, multi.core = FALSE)
+```
+
+
+## single thread - Activity Monitor
+![](activity-monitor.png)
+
+
+## single thread - CPU History
+![](cpu-history.png)
+
+
+## simulated cases: parallel threads
+```{r sim_multi, eval = FALSE, echo = TRUE}
+simulateFatalities(compute = TRUE, multi.core = TRUE)
+```
+
+
+## parallel threads - Activity Monitor
+![](activity-monitor-epp.png)
+
+
+## Parallel Threads - CPU History
+![](cpu-history-epp.png)
+
+
+##
+```{r area_points, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
+```
+
+
+##
+```{r area_polygons, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
+```
+
+## why polygons?
+> - vector graphics
+
+
+##
+```{r marshall_points, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+streetNameLocator("marshall street", zoom = TRUE)
+addNeighborhoodCases(type = "expected")
+```
+
+
+##
+```{r marshall_polygons, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+streetNameLocator("marshall street", zoom = TRUE)
+addNeighborhoodWalking()
+```
+
+
+# computing polygons
+
+
+## Broad Street simulated cases
+![](cloud-1.png)
+
+
+## convex hull
+![](hull-1.png)
+
+
+## identify points on perimeter
+![](perimeter-1.png)
+
+
+## connect the dots to form polygon
+![](pearl_string-1.png)
+
+
+# scenarios
+
+##
+```{r all, fig.align = "center", fig.width = 6, fig.height = 6, echo = FALSE, eval = TRUE}
+snowMap(add.cases = FALSE, add.pumps = FALSE)
+addNeighborhoodWalking(multi.core = TRUE)
+addNeighborhoodCases(multi.core = TRUE)
+addPump(col = "black")
+```
+
+##
+```{r not_6, fig.align = "center", fig.width = 6, fig.height = 6, echo = FALSE, eval = TRUE}
+snowMap(add.cases = FALSE, add.pumps = FALSE)
+addNeighborhoodWalking(pump.select = -6, multi.core = TRUE)
+addNeighborhoodCases(pump.select = -6, multi.core = TRUE)
+addPump(pump.select = -6, col = "black")
+```
+
+##
+```{r not_6_10, fig.align = "center", fig.width = 6, fig.height = 6, echo = FALSE, eval = TRUE}
+snowMap(add.cases = FALSE, add.pumps = FALSE)
+addNeighborhoodWalking(pump.select = c(-6, -10), multi.core = TRUE)
+addNeighborhoodCases(pump.select = c(-6, -10), multi.core = TRUE)
+addPump(pump.select = c(-6, -10), col = "black")
+```
+
+##
+```{r not_6_9_10, fig.align = "center", fig.width = 6, fig.height = 6, echo = FALSE, eval = TRUE}
+snowMap(add.cases = FALSE, add.pumps = FALSE)
+addNeighborhoodWalking(pump.select = c(-6, -9, -10), multi.core = TRUE)
+addNeighborhoodCases(pump.select = c(-6, -9, -10), multi.core = TRUE)
+addPump(pump.select = c(-6, -9, -10), col = "black")
+```
+
+##
+```{r not_6_8_9_10, fig.align = "center", fig.width = 6, fig.height = 6, echo = FALSE, eval = TRUE}
+snowMap(add.cases = FALSE, add.pumps = FALSE)
+addNeighborhoodWalking(pump.select = c(-6, -8, -9, -10), multi.core = TRUE)
+addNeighborhoodCases(pump.select = c(-6, -8, -9, -10), multi.core = TRUE)
+addPump(pump.select = c(-6, -8, -9, -10), col = "black")
+```
+
+##
+```{r not_6_8_9_10B, fig.align = "center", fig.width = 6, fig.height = 6, echo = FALSE, eval = TRUE}
+snowMap(add.cases = FALSE, add.pumps = FALSE)
+addNeighborhoodWalking(pump.select = c(-6, -8, -9, -10), multi.core = TRUE)
+addNeighborhoodCases(pump.select = c(-6, -8, -9, -10), multi.core = TRUE)
+addPump(pump.select = c(-6, -8, -9, -10), col = "black")
+addLandmarks()
+```
+
+#
+CRAN: https://CRAN.R-project.org/package=cholera/
+
+GitHub: https://github.com/lindbrook/cholera/
