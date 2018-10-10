@@ -4,11 +4,11 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @export
 
-# ortho.proj.landmarks <- landmarks()
-# devtools::use_data(ortho.proj.landmarks)
-# devtools::use_data(ortho.proj.landmarks, overwrite = TRUE)
+# landmarks <- orthoProjLandmarks()
+# devtools::use_data(landmarks)
+# devtools::use_data(landmarks, overwrite = TRUE)
 
-landmarks <- function(multi.core = FALSE) {
+orthoProjLandmarks <- function(multi.core = FALSE) {
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
