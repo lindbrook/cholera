@@ -132,7 +132,7 @@ landmarks <- function(multi.core = FALSE) {
 
   ortho.proj <- do.call(rbind, orthogonal.projection)
   row.names(ortho.proj) <- NULL
-  out <- data.frame(ortho.proj, name = landmark.names)
+  out <- data.frame(ortho.proj, name = landmark.names, stringsAsFactors = FALSE)
   out <- rbind(out, st.james.workhouse)
   row.names(out) <- NULL
   out$case <- seq(20001, 20000 + nrow(out))
