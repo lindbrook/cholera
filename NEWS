@@ -1,3 +1,11 @@
+cholera 0.5.1.9037
+==================
+
+- ortho.proj.landmarks -> landmarks.
+- landmarks() -> orthoProjLandmarks().
+- add draft sources/bibliography vignette.
+
+
 cholera 0.5.1.9036
 ==================
 
