@@ -161,9 +161,9 @@
 #'     \item{\code{name}}{name}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @note \code{\link{landmarks}} documents the code for these data.
+#' @note \code{\link{orthoProjLandmarks}} documents the code for these data.
 #' @docType data
-"ortho.proj.landmarks"
+"landmarks"
 
 #' Plague pit coordinates.
 #'

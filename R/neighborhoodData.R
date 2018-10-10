@@ -83,7 +83,7 @@ nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
     }
 
     if (embed.landmarks) {
-      landmark.segments <- cholera::ortho.proj.landmarks$road.segment
+      landmark.segments <- cholera::landmarks$road.segment
       site.segments <- unique(c(case.segments, landmark.segments))
     } else {
       site.segments <- case.segments
@@ -207,7 +207,7 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
   ## embed filters ##
 
   CaseObs <- id %in% cholera::ortho.proj$road.segment
-  Landmark <- id %in% cholera::ortho.proj.landmarks$road.segment
+  Landmark <- id %in% cholera::landmarks$road.segment
   Pump <- id %in% ortho.pump$road.segment
 
   if (observed == FALSE) {
@@ -238,8 +238,8 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
   }
 
   if (Landmark) {
-    sel <- cholera::ortho.proj.landmarks$road.segment %in% id
-    road.landmarks <- cholera::ortho.proj.landmarks[sel, ]
+    sel <- cholera::landmarks$road.segment %in% id
+    road.landmarks <- cholera::landmarks[sel, ]
     landmark.data <- data.frame(road.landmarks[, c("x.proj", "y.proj")],
                       anchor = road.landmarks$case,
                       pump = 0)
