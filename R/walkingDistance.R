@@ -73,10 +73,16 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
   p.ID <- seq_len(p.count)
 
   if (type == "case-pump") {
-    if (origin %in% seq_len(ct) == FALSE) {
-      txt1 <- 'With type = "case-pump" and observed = '
-      txt2 <- 'origin must be between 1 and '
-      stop(txt1, observed, ", ", txt2, ct, ".")
+    if (is.numeric(origin)) {
+      if (origin %in% seq_len(ct) == FALSE) {
+        txt1 <- 'With type = "case-pump" and observed = '
+        txt2 <- 'origin must be between 1 and '
+        stop(txt1, observed, ", ", txt2, ct, ".")
+      }
+    } else if (is.character(origin)) {
+      if (origin %in% cholera::landmarks$name == FALSE) {
+        stop('Use a valid landmark name.')
+      }
     }
 
     if (is.null(destination) == FALSE) {

@@ -78,12 +78,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   # ----- #
 
   if (type == "case-pump") {
-    if (origin %in% seq_len(ct) == FALSE) {
-      txt1 <- 'With type = "case-pump" and observed = '
-      txt2 <- 'origin must be between 1 and '
-      stop(txt1, observed, ", ", txt2, ct, ".")
-    }
-
     if (is.null(destination) == FALSE) {
       if (any(abs(destination) %in% p.ID == FALSE)) {
         stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count, ".")
@@ -91,13 +85,27 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }
 
     if (observed) {
-      ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
-        "anchor.case"]
-      ego.node <- nodes[nodes$anchor == ego.id, "node"]
+      if (is.numeric(origin)) {
+        if (origin < nrow(cholera::fatalities)) {
+          ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
+            "anchor.case"]
+        } else stop('1 >= |origin| <= ', nrow(cholera::fatalities), "!")
+
+      } else if (is.character(origin)) {
+        origin <- caseAndSpace(origin)
+        if (origin %in% cholera::landmarks$name) {
+          ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
+            "case"]
+        } else stop('Use a valid landmark name.')
+      }
+
     } else {
-      ego.id <- origin
-      ego.node <- nodes[nodes$anchor == ego.id, "node"]
+      if (origin <= nrow(cholera::regular.cases)) {
+        ego.id <- origin
+      } else stop('1 >= |origin| <= ', nrow(cholera::regular.cases), "!")
     }
+
+    ego.node <- nodes[nodes$anchor == ego.id, "node"]
 
     if (!is.null(destination)) {
       if (all(destination < 0)) {
@@ -409,8 +417,14 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     }
 
     if (x$observed) {
-      origin.obs <- cholera::fatalities[cholera::fatalities$case == x$origin,
-        c("x", "y")]
+      if (is.numeric(x$origin)) {
+        origin.obs <- cholera::fatalities[cholera::fatalities$case == x$origin,
+          c("x", "y")]
+      } else if (is.character(x$origin)) {
+        origin.obs <- cholera::landmarks[cholera::landmarks$name == x$origin,
+          c("x.proj", "y.proj")]
+        names(origin.obs) <- c("x", "y")
+      }
     } else {
       origin.obs <- cholera::regular.cases[x$origin, ]
     }
@@ -487,7 +501,11 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   }
 
   if (x$type == "case-pump") {
-    title(main = paste("Case", x$origin, "to Pump", alter))
+    if (is.numeric(x$origin)) {
+      title(main = paste("Case", x$origin, "to Pump", alter))
+    } else if (is.character(x$origin)) {
+      title(main = paste(x$origin, "to Pump", alter))
+    }
   } else if (x$type == "cases") {
     points(destination.obs, col = "red")
     title(main = paste("Case", x$origin, "to Case", alter))
@@ -501,8 +519,14 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   if (x$type %in% c("case-pump", "cases")) {
     if (zoom) {
       if (x$observed) {
-        text(cholera::fatalities[cholera::fatalities$case == x$origin,
-          c("x", "y")], labels = x$origin, pos = 1, col = "red")
+        if (is.numeric(x$origin)) {
+          text(cholera::fatalities[cholera::fatalities$case == x$origin,
+            c("x", "y")], labels = x$origin, pos = 1, col = "red")
+        } else if (is.character(x$origin)) {
+          text(cholera::landmarks[cholera::landmarks$name == x$origin,
+            c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
+        }
+
         if (x$type == "cases") {
           text(cholera::fatalities[cholera::fatalities$case == x$data$caseB,
             c("x", "y")], labels = x$data$caseB, pos = 1, col = "red")
