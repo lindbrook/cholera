@@ -16,20 +16,11 @@ neighborhoodData <- function(vestry = FALSE, case.set = "observed",
   }
 
   if (case.set == "expected") {
-    if (vestry) {
-      node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
-        vestry = TRUE, observed = FALSE)
-    } else {
-      node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
-        observed = FALSE)
-    }
+    node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
+      vestry = vestry, observed = FALSE)
   } else {
-    if (vestry) {
-      node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
-        vestry = TRUE)
-    } else {
-      node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks)
-    }
+    node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
+      vestry = vestry)
   }
 
   nodes <- node.data$nodes
