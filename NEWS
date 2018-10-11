@@ -1,3 +1,10 @@
+cholera 0.5.1.9038
+==================
+
+- consolidate neighborhoodData().
+- add walkingDistance() and walkingPath() prototypes.
+
+
 cholera 0.5.1.9037
 ==================
 
