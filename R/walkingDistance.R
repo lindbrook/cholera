@@ -1,7 +1,7 @@
 #' Compute the shortest walking distance between cases and/or pumps.
 #'
-#' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case.
+#' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
+#' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or "simulated" expected data.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of nodes.
@@ -80,23 +80,32 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
         stop(txt1, observed, ", ", txt2, ct, ".")
       }
     } else if (is.character(origin)) {
+      origin <- caseAndSpace(origin)
       if (origin %in% cholera::landmarks$name == FALSE) {
         stop('Use a valid landmark name.')
       }
     }
 
-    if (is.null(destination) == FALSE) {
-      if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count, ".")
+    if (!is.null(destination)) {
+      if (is.numeric(destination)) {
+        if (any(abs(destination) %in% p.ID == FALSE)) {
+          txt1 <- 'With type = "case-pump" and vestry = '
+          txt2 <- ', destination must whole numbers 1 >= |x| <= '
+          stop(txt1, vestry, txt2, p.count, ".")
+        }
       }
     }
 
   } else if (type == "cases") {
-    if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
-      txt1 <- 'With type = "cases" and observed = '
-      txt2 <- ', the absolute value of origin and destination must be '
-      txt3 <- 'between 1 and '
-      stop(txt1, observed, txt2, txt3, ct, ".")
+    if (is.null(destination) == FALSE) {
+      if (is.numeric(origin) & is.numeric(destination)) {
+        if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
+          txt1 <- 'With type = "cases" and observed = '
+          txt2 <- ', the absolute value of origin and destination must be '
+          txt3 <- 'between 1 and '
+          stop(txt1, observed, txt2, txt3, ct, ".")
+        }
+      }
     }
 
   } else if (type == "pumps") {

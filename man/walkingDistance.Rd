@@ -9,9 +9,9 @@ walkingDistance(origin = 1, destination = NULL, type = "case-pump",
   time.unit = "second", walking.speed = 5)
 }
 \arguments{
-\item{origin}{Numeric or Integer. Numeric ID of case or pump.}
+\item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
 
-\item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case.}
+\item{destination}{Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.}
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
