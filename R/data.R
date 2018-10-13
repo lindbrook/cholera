@@ -91,6 +91,21 @@
 #' @docType data
 "fatalities.unstacked"
 
+#' Orthogonal projection of landmarks onto road network.
+#'
+#' @format A data frame with 6 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
+#'  \describe{
+#'     \item{\code{road.segment}}{"address" road segment}
+#'     \item{\code{x.proj}}{x-coordinate}
+#'     \item{\code{y.proj}}{y-coordinate}
+#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+#'     \item{\code{name}}{landmark name}
+#'     \item{\code{case}}{numeric case ID}
+#'  }
+#' @note \code{\link{orthoProjLandmarks}} documents the code for these data.
+#' @docType data
+"landmarks"
+
 #' Orthogonal projection of observed cases onto road network.
 #'
 #' @format A data frame with 5 variables that records the position of the orthogonal projection of the 578 cases onto the network of roads.

@@ -12,8 +12,8 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
-  # soho.sq <- data.frame(x = 18.07044, y = 15.85703)
-  # golden.sq <- data.frame(x = 11.90927, y = 8.239483)
+  soho.sq <- data.frame(x = 18.07044, y = 15.85703)
+  golden.sq <- data.frame(x = 11.90927, y = 8.239483)
   huggins.brewery <- data.frame(x = 13.9022, y = 11.87315)
 
   pantheon.bazaar <- cholera::road.segments[cholera::road.segments$name ==
@@ -27,30 +27,73 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
   vars <- c("road.segment", "x.proj", "y.proj", "ortho.dist", "name")
   st.james.workhouse <- st.james.workhouse[, vars]
 
-  ## Argyll House ##
+  ## Argyll House : Lord Aberdeen ##
 
-  # NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-  #   "116-2", c("x2", "y2")], nm)
-  # NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-  #   "144-1", c("x2", "y2")], nm)
-  # SW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-  #   "161-1", c("x2", "y2")], nm)
-  # SE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-  #   "161-1", c("x1", "y1")], nm)
-  # aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
-  # argyll.house <- data(x = aberdeen$x, y = aberdeen$y)
+  nm <- c("x", "y")
 
-  # landmarks <- list(marx, snow, st.lukes.church, soho.sq, golden.sq,
-  #   huggins.brewery, pantheon.bazaar)
-  #
-  # landmark.names <- c("Karl Marx", "John Snow", "St Luke's Church",
-  #   "Soho Square", "Golden Square", "Lion Brewery", "The Pantheon")
+  NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "116-2", c("x2", "y2")], nm)
+  NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "144-1", c("x2", "y2")], nm)
+  SW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "161-1", c("x2", "y2")], nm)
+  SE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
+    "161-1", c("x1", "y1")], nm)
 
-  landmarks <- list(marx, snow, st.lukes.church, huggins.brewery,
-    pantheon.bazaar)
+  aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y,
+    SW$x, SW$y)
+  argyll.house <- data.frame(x = aberdeen$x, y = aberdeen$y)
+
+
+  ## Model Lodging ##
+
+  sel <- cholera::road.segments$name == "Cock Court"
+  rd.data <- cholera::road.segments[sel, c("x2", "y2")]
+  NW <- stats::setNames(rd.data, nm)
+
+  sel <- cholera::road.segments$name == "Cock Court"
+  rd.data <- cholera::road.segments[sel, c("x1", "y1")]
+  NE <- stats::setNames(rd.data, nm)
+
+  sel <- cholera::road.segments$id == "259-1"
+  rd.data <- cholera::road.segments[sel, c("x2", "y2")]
+  SW <- stats::setNames(rd.data, nm)
+
+  sel <- cholera::road.segments$id == "259-1"
+  rd.data <- cholera::road.segments[sel, c("x1", "y1")]
+  SE <- stats::setNames(rd.data, nm)
+
+  model.lodging <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
+                                       NE$x, NE$y, SW$x, SW$y)
+
+
+  ## Craven Chapel (Wesleyan) ##
+
+  ep1 <- cholera::road.segments[cholera::road.segments$name == "Lowndes Court",
+    c("x2", "y2")]
+  ep2 <- cholera::road.segments[cholera::road.segments$id == "201-1",
+    c("x2", "y2")]
+  dat <- stats::setNames(rbind(ep1, ep2), nm)
+  h <- c(stats::dist(dat))
+  ols <- stats::lm(y ~ x, dat)
+  segment.slope <- stats::coef(ols)[2]
+  theta <- atan(segment.slope)
+  delta.x <- (h / 2) * cos(theta)
+  delta.y <- (h / 2) * sin(theta)
+  x.new <- dat[1, "x"] + delta.x
+  y.new <- dat[1, "y"] + delta.y
+  craven.chapel <- data.frame(x = x.new, y = y.new)
+
+  ##
+
+
+  landmarks <- list(marx, snow, st.lukes.church, soho.sq, golden.sq,
+    huggins.brewery, pantheon.bazaar, st.james.workhouse, argyll.house,
+    model.lodging, craven.chapel)
 
   landmark.names <- c("Karl Marx", "John Snow", "St Luke's Church",
-    "Lion Brewery", "The Pantheon")
+    "Soho Square", "Golden Square", "Lion Brewery", "The Pantheon",
+    "St James Workhouse", "Argyll House", "Model Lodging", "Craven Chapel")
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]

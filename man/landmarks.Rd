@@ -4,22 +4,28 @@
 \name{landmarks}
 \alias{landmarks}
 \title{Orthogonal projection of landmarks onto road network.}
-\format{A data frame with 5 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
+\format{A data frame with 6 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
  \describe{
     \item{\code{road.segment}}{"address" road segment}
     \item{\code{x.proj}}{x-coordinate}
     \item{\code{y.proj}}{y-coordinate}
     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
-    \item{\code{name}}{name}
+    \item{\code{name}}{landmark name}
     \item{\code{case}}{numeric case ID}
  }}
 \usage{
 landmarks
+
+landmarks
 }
 \description{
 Orthogonal projection of landmarks onto road network.
+
+Orthogonal projection of landmarks onto road network.
 }
 \note{
+\code{\link{orthoProjLandmarks}} documents the code for these data.
+
 \code{\link{orthoProjLandmarks}} documents the code for these data.
 }
 \keyword{datasets}
