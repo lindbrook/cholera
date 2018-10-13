@@ -24,8 +24,9 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
     "St James Workhouse", c("id", "x1", "y1", "name")]
   names(st.james.workhouse)[1:3] <- c("road.segment", "x.proj", "y.proj")
   st.james.workhouse$ortho.dist <- 0
-  vars <- c("road.segment", "x.proj", "y.proj", "ortho.dist", "name")
-  st.james.workhouse <- st.james.workhouse[, vars]
+  # vars <- c("road.segment", "x.proj", "y.proj", "ortho.dist", "name")
+  vars <- c("x.proj", "y.proj")
+  st.james.workhouse <- stats::setNames(st.james.workhouse[, vars], c("x", "y"))
 
   ## Argyll House : Lord Aberdeen ##
 
@@ -85,7 +86,6 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
   craven.chapel <- data.frame(x = x.new, y = y.new)
 
   ##
-
 
   landmarks <- list(marx, snow, st.lukes.church, soho.sq, golden.sq,
     huggins.brewery, pantheon.bazaar, st.james.workhouse, argyll.house,
@@ -176,7 +176,6 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
   ortho.proj <- do.call(rbind, orthogonal.projection)
   row.names(ortho.proj) <- NULL
   out <- data.frame(ortho.proj, name = landmark.names, stringsAsFactors = FALSE)
-  out <- rbind(out, st.james.workhouse)
   row.names(out) <- NULL
   out$case <- seq(20001, 20000 + nrow(out))
   out
