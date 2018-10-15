@@ -125,7 +125,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         destination <- caseAndSpace(destination)
         landmark.case <- cholera::landmarks[cholera::landmarks$name ==
           destination, "case"]
-        alters <- nodes[nodes$anchor %in% landmark.case, "node"]
+        sel <- nodes$anchor %in% landmark.case & nodes$anchor >= 20000
+        alters <- nodes[sel, "node"]
       }
 
     } else {
@@ -262,7 +263,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         node.sel <- nodes$node %in% names(sel)
         alter.id <- nodes[node.sel, "anchor"]
       } else if (is.character(destination)) {
-        landmark.case <- nodes[nodes$node %in% names(sel), "anchor"]
+        landmark.case <- nodes[nodes$node %in% names(sel) &
+                               nodes$anchor >= 20000, "anchor"]
         alter.id <- cholera::landmarks[cholera::landmarks$case ==
           landmark.case, "name"]
       }
@@ -573,14 +575,15 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   } else if (x$type == "cases") {
     points(destination.obs, col = "red")
 
-    if (is.numeric(c(x$origin, x$destination))) {
+    if (is.numeric(c(x$origin, x$destination)) | is.null(x$destination)) {
       title(main = paste("Case", x$origin, "to Case", alter))
-    } else if (is.character(x$origin) & is.numeric(x$destination)) {
+    } else if ((is.character(x$origin) & is.numeric(x$destination)) |
+                is.null(x$destination)) {
       title(main = paste(x$origin, "to Case", alter))
     } else if (is.numeric(x$origin) & is.character(x$destination)) {
-      title(main = paste("Case", x$origin, "to", alter))
-    } else if (is.character(c(x$origin, x$destination))) {
-      title(main = paste(x$origin, "to", alter))
+      title(main = paste("Case", x$origin, "to", x$destination))
+    } else if (is.character(x$origin) & is.character(x$destination)) {
+      title(main = paste(x$origin, "to", x$destination))
     }
 
   } else if (x$type == "pumps") {
