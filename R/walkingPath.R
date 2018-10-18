@@ -84,7 +84,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   if (type == "case-pump") {
     if (observed) {
       if (is.numeric(origin)) {
-        if (origin < nrow(cholera::fatalities)) {
+        if (origin <= nrow(cholera::fatalities)) {
           ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
             "anchor.case"]
         } else stop('1 >= |origin| <= ', nrow(cholera::fatalities), "!")
@@ -109,7 +109,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       if (is.numeric(destination)) {
         if (any(abs(destination) %in% p.ID == FALSE)) {
           txt1 <- 'With type = "case-pump" and vestry = '
-          txt2 <- ', destination must whole numbers 1 >= |x| <= '
+          txt2 <- ', 1 >= |destination| <= '
           stop(txt1, vestry, txt2, p.count, ".")
         } else {
           if (all(destination < 0)) {
@@ -120,7 +120,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
             alters <- nodes[nodes$pump %in% destination, "node"]
           }
         }
-
       } else if (is.character(destination)) {
         destination <- caseAndSpace(destination)
         landmark.case <- cholera::landmarks[cholera::landmarks$name ==
@@ -189,7 +188,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
     if (observed) {
       if (is.numeric(origin)) {
-        if (origin < nrow(cholera::fatalities)) {
+        if (origin <= nrow(cholera::fatalities)) {
           ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
             "anchor.case"]
         } else stop('1 >= |origin| <= ', nrow(cholera::fatalities), "!")
