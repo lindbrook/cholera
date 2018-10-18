@@ -574,10 +574,11 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   } else if (x$type == "cases") {
     points(destination.obs, col = "red")
 
-    if (is.numeric(c(x$origin, x$destination)) | is.null(x$destination)) {
+    if (is.numeric(x$origin) & (is.numeric(x$destination) |
+      is.null(x$destination))) {
       title(main = paste("Case", x$origin, "to Case", alter))
-    } else if ((is.character(x$origin) & is.numeric(x$destination)) |
-                is.null(x$destination)) {
+    } else if (is.character(x$origin) & (is.numeric(x$destination) |
+      is.null(x$destination))) {
       title(main = paste(x$origin, "to Case", alter))
     } else if (is.numeric(x$origin) & is.character(x$destination)) {
       title(main = paste("Case", x$origin, "to", x$destination))

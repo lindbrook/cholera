@@ -1,3 +1,9 @@
+cholera 0.5.1.9042
+==================
+
+- add new euclideanDistance(), euclideanPath() and walkingPath() prototypes.
+
+
 cholera 0.5.1.9041
 ==================
 

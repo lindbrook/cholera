@@ -1,7 +1,7 @@
 #' Compute the Euclidean distance between cases and/or pumps.
 #'
-#' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case.
+#' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
+#' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or "simulated" expected data.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
@@ -62,24 +62,27 @@ euclideanDistance <- function(origin = 1, destination = NULL,
   # ----- #
 
   if (type == "case-pump") {
-    if (origin %in% seq_len(ct) == FALSE) {
-      txt1 <- 'With type = "case-pump" and observed = '
-      txt2 <- 'origin must be between 1 and '
-      stop(txt1, observed, ", ", txt2, ct, ".")
-    }
-
     if (is.null(destination) == FALSE) {
-      if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count)
+      if (is.numeric(origin) & is.numeric(destination)) {
+        if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
+          txt1 <- 'With type = "cases" and observed = '
+          txt2 <- ', the absolute value of origin and destination must be '
+          txt3 <- 'between 1 and '
+          stop(txt1, observed, txt2, txt3, ct, ".")
+        }
       }
     }
 
   } else if (type == "cases") {
-    if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
-      txt1 <- 'With type = "cases" and observed = '
-      txt2 <- ', the absolute values of origin and of destination must be '
-      txt3 <- 'between 1 and '
-      stop(txt1, observed, txt2, txt3, ct, ".")
+    if (is.null(destination) == FALSE) {
+      if (is.numeric(origin) & is.numeric(destination)) {
+        if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
+          txt1 <- 'With type = "cases" and observed = '
+          txt2 <- ', the absolute value of origin and destination must be '
+          txt3 <- 'between 1 and '
+          stop(txt1, observed, txt2, txt3, ct, ".")
+        }
+      }
     }
 
   } else if (type == "pumps") {

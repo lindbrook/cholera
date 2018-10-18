@@ -1,7 +1,7 @@
 #' Compute path of the Euclidean distance between cases and/or pumps.
 #'
-#' @param origin Numeric or Integer. Numeric ID of case or pump.
-#' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case.
+#' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
+#' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or "simulated" expected data.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
@@ -46,6 +46,10 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('type must be "case-pump", "cases" or "pumps".')
   }
 
+  if (is.character(destination)) {
+    if (type != "cases") stop('type must be "cases".')
+  }
+
   obs.ct <- nrow(cholera::fatalities)
   exp.ct <- nrow(cholera::regular.cases)
 
@@ -65,10 +69,15 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   # ----- #
 
   if (type == "case-pump") {
-    if (origin %in% seq_len(ct) == FALSE) {
-      txt1 <- 'With type = "case-pump" and observed = '
-      txt2 <- 'origin must be between 1 and '
-      stop(txt1, observed, ", ", txt2, ct, ".")
+    if (is.null(destination) == FALSE) {
+      if (is.numeric(origin) & is.numeric(destination)) {
+        if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
+          txt1 <- 'With type = "cases" and observed = '
+          txt2 <- ', the absolute value of origin and destination must be '
+          txt3 <- 'between 1 and '
+          stop(txt1, observed, txt2, txt3, ct, ".")
+        }
+      }
     }
 
     if (is.null(destination)) {
@@ -88,10 +97,20 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }
 
     if (observed) {
-      ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
-        "anchor.case"]
-      ego <- cholera::ortho.proj[cholera::ortho.proj$case == ego.id,
-        c("x.proj", "y.proj")]
+      if (is.numeric(origin)) {
+        ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
+          "anchor.case"]
+        ego <- cholera::ortho.proj[cholera::ortho.proj$case == ego.id,
+          c("x.proj", "y.proj")]
+      } else if (is.character(origin)) {
+        origin <- caseAndSpace(origin)
+        ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
+          "case"]
+        ego <- cholera::landmarks[cholera::landmarks$case == ego.id,
+          c("x.proj", "y.proj")]
+      }
+
+
     } else {
       ego.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == origin,
         "case"]
@@ -105,6 +124,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }, numeric(1L))
 
     sel <- which.min(d)
+
     out <- data.frame(case = origin,
                       anchor = ego.id,
                       pump = alters[sel, "pump.id"],
@@ -113,29 +133,57 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
                       stringsAsFactors = FALSE)
 
   } else if (type == "cases") {
-    if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
-      txt1 <- 'With type = "cases" and observed = '
-      txt2 <- ', the absolute values of origin and of destination must be '
-      txt3 <- 'between 1 and '
-      stop(txt1, observed, txt2, txt3, ct, ".")
+    if (is.null(destination) == FALSE) {
+      if (is.numeric(origin) & is.numeric(destination)) {
+        if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
+          txt1 <- 'With type = "cases" and observed = '
+          txt2 <- ', the absolute value of origin and destination must be '
+          txt3 <- 'between 1 and '
+          stop(txt1, observed, txt2, txt3, ct, ".")
+        }
+      }
     }
 
     if (observed) {
-      ego.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
-        origin, "anchor.case"])
-      ego <- cholera::ortho.proj[cholera::ortho.proj$case == ego.id, ]
+      if (is.numeric(origin)) {
+        if (origin <= nrow(cholera::fatalities)) {
+          ego.id <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
+            origin, "anchor.case"])
+          ego <- cholera::ortho.proj[cholera::ortho.proj$case == ego.id, ]
+        } else stop('1 >= |origin| <= ', nrow(cholera::fatalities), "!")
+
+      } else if (is.character(origin)) {
+        origin <- caseAndSpace(origin)
+        if (origin %in% cholera::landmarks$name) {
+          ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
+            "case"]
+          ego <- cholera::landmarks[cholera::landmarks$case == ego.id, ]
+        } else stop('Use a valid landmark name for origin.')
+      }
+
 
       if (is.null(destination)) {
         alters.id <- cholera::fatalities.address$anchor.case
       } else {
-        if (all(destination > 0)) {
-          alters.id <- unique(cholera::ortho.proj[cholera::ortho.proj$case
-            %in% destination, "case"])
-        } else if (all(destination < 0)) {
-          alters.id <- unique(cholera::ortho.proj[cholera::ortho.proj$case
-            %in% abs(destination) == FALSE, "case"])
+        if (is.numeric(destination)) {
+          if (all(destination > 0)) {
+            alters.id <- unique(cholera::ortho.proj[cholera::ortho.proj$case
+              %in% destination, "case"])
+          } else if (all(destination < 0)) {
+            alters.id <- unique(cholera::ortho.proj[cholera::ortho.proj$case
+              %in% abs(destination) == FALSE, "case"])
+          }
+
+        } else if (is.character(destination)) {
+          destination <- caseAndSpace(destination)
+          if (destination %in% cholera::landmarks$name) {
+            alters.id <- cholera::landmarks[cholera::landmarks$name ==
+              destination, "case"]
+          } else stop('Use a valid landmark name for destination.')
         }
       }
+
+
     } else {
       ego.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == origin,
         "case"]
@@ -164,8 +212,13 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     } else {
       vars <- c("x.proj", "y.proj")
 
-      alters <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case %in%
-        alters.id, ]
+      if (is.character(destination)) {
+        alters <- cholera::landmarks[cholera::landmarks$case %in% alters.id, ]
+      } else {
+        alters <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case %in%
+          alters.id, ]
+      }
+
       alters <- alters[alters$case != ego.id, ]
 
       d <- vapply(alters$case, function(i) {
@@ -175,12 +228,28 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       sel <- which.min(d)
 
-      out <- data.frame(caseA = origin,
-                        caseB = alters$case[sel],
-                        anchorA = ego$case,
-                        anchorB = alters$case[sel],
-                        distance = d[sel],
-                        stringsAsFactors = FALSE)
+      if (is.character(origin)) {
+        out <- data.frame(caseA = origin,
+                          caseB = alters$case[sel],
+                          anchorA = ego.id,
+                          anchorB = alters$case[sel],
+                          distance = d[sel],
+                          stringsAsFactors = FALSE)
+      } else if (is.character(destination)) {
+        out <- data.frame(caseA = origin,
+                          caseB = alters$name,
+                          anchorA = ego.id,
+                          anchorB = alters.id,
+                          distance = d,
+                          stringsAsFactors = FALSE)
+      } else if (!is.character(origin) & !is.character(destination)) {
+        out <- data.frame(caseA = origin,
+                          caseB = alters$case[sel],
+                          anchorA = ego$case,
+                          anchorB = alters$case[sel],
+                          distance = d[sel],
+                          stringsAsFactors = FALSE)
+      }
     }
 
   } else if (type == "pumps") {
@@ -320,18 +389,36 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
     case.color <- colors[paste0("p", destination.pump)]
     points(origin.xy, col = "red")
     pumpTokensEuclidean(x, case.color, destination.pump)
-    title(main = paste("Case", x$origin, "to Pump", row.names(x$alter)))
+
   } else if (x$type == "cases" | x$type == "pumps") {
     case.color <- "blue"
     destination.case <- row.names(x$alter)
     points(origin.xy, col = case.color)
     points(alter.xy, col = case.color)
     text(origin.xy, labels = x$origin, pos = 1, col = case.color)
-    text(alter.xy, labels = destination.case, pos = 1, col = case.color)
+
+    if (is.character(x$destination)) {
+      text(alter.xy, labels = x$destination, pos = 1, col = case.color)
+    } else {
+      text(alter.xy, labels = destination.case, pos = 1, col = case.color)
+    }
   }
 
   if (x$type == "cases") {
-    title(main = paste("Case", x$origin, "to Case", destination.case))
+
+
+    if (is.numeric(x$origin) & (is.numeric(x$destination) |
+      is.null(x$destination))) {
+      title(main = paste("Case", x$origin, "to Case", x$alter))
+    } else if (is.character(x$origin) & (is.numeric(x$destination) |
+      is.null(x$destination))) {
+      title(main = paste(x$origin, "to Case", destination.case))
+    } else if (is.numeric(x$origin) & is.character(x$destination)) {
+      title(main = paste("Case", x$origin, "to", x$destination))
+    } else if (is.character(x$origin) & is.character(x$destination)) {
+      title(main = paste(x$origin, "to", x$destination))
+    }
+
   } else if (x$type == "pumps") {
     title(main = paste("Pump", x$origin, "to Pump", destination.case))
   }
