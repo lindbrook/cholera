@@ -405,11 +405,9 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
   }
 
   if (x$type == "cases") {
-
-
-    if (is.numeric(x$origin) & (is.numeric(x$destination) |
-      is.null(x$destination))) {
-      title(main = paste("Case", x$origin, "to Case", x$alter))
+    if (is.numeric(x$origin) &
+      (is.numeric(x$destination) | is.null(x$destination))) {
+      title(main = paste("Case", x$origin, "to Case", destination.case))
     } else if (is.character(x$origin) & (is.numeric(x$destination) |
       is.null(x$destination))) {
       title(main = paste(x$origin, "to Case", destination.case))
