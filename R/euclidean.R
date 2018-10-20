@@ -115,6 +115,8 @@ plot.euclidean <- function(x, type = "star", ...) {
     warning("In progress: some configuartions may not work!")
   }
 
+  message("Working...")
+
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
   road.list <- split(rd[, c("x", "y")], rd$street)
@@ -201,6 +203,7 @@ plot.euclidean <- function(x, type = "star", ...) {
 
   pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
   title(main = "Pump Neighborhoods: Euclidean")
+  message("Done!")
 }
 
 #' Print method for neighborhoodEuclidean().

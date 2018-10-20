@@ -245,6 +245,8 @@ plot.walking <- function(x, type = "road", ...) {
     }
   }
 
+  message("Working...")
+  
   n.data <- neighborhoodPathData(x)
   dat <- n.data$dat
   edges <- n.data$edges
@@ -407,4 +409,5 @@ plot.walking <- function(x, type = "road", ...) {
 
   pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
   title(main = "Pump Neighborhoods: Walking")
+  message("Done!")
 }
