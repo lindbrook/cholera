@@ -45,11 +45,9 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 
     if (all(pump.select > 0)) {
       pump.id <- pump.data$id[pump.select]
-      snow.colors <- snow.colors[pump.select]
     } else if (all(pump.select < 0)) {
       sel <- pump.data$id %in% abs(pump.select) == FALSE
       pump.id <- pump.data$id[pump.select]
-      snow.colors <- snow.colors[sel]
     } else {
       stop("Use all positive or all negative numbers for pump.select.")
     }
