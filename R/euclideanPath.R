@@ -110,7 +110,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
           c("x.proj", "y.proj")]
       }
 
-
     } else {
       ego.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == origin,
         "case"]
@@ -161,7 +160,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         } else stop('Use a valid landmark name for origin.')
       }
 
-
       if (is.null(destination)) {
         alters.id <- cholera::fatalities.address$anchor.case
       } else {
@@ -182,7 +180,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
           } else stop('Use a valid landmark name for destination.')
         }
       }
-
 
     } else {
       ego.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == origin,
@@ -389,7 +386,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
     case.color <- colors[paste0("p", destination.pump)]
     points(origin.xy, col = "red")
     pumpTokensEuclidean(x, case.color, destination.pump)
-
+    text(origin.xy, labels = x$origin, pos = 1)
   } else if (x$type == "cases" | x$type == "pumps") {
     case.color <- "blue"
     destination.case <- row.names(x$alter)
@@ -404,7 +401,13 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
     }
   }
 
-  if (x$type == "cases") {
+  if (x$type == "case-pump") {
+    if (is.numeric(x$origin)) {
+      title(main = paste("Case", x$origin, "to Pump", destination.pump))
+    } else if (is.character(x$origin)) {
+      title(main = paste(x$origin, "to Pump", destination.pump))
+    }
+  } else if (x$type == "cases") {
     if (is.numeric(x$origin) &
       (is.numeric(x$destination) | is.null(x$destination))) {
       title(main = paste("Case", x$origin, "to Case", destination.case))
@@ -416,7 +419,6 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
     } else if (is.character(x$origin) & is.character(x$destination)) {
       title(main = paste(x$origin, "to", x$destination))
     }
-
   } else if (x$type == "pumps") {
     title(main = paste("Pump", x$origin, "to Pump", destination.case))
   }
