@@ -107,6 +107,8 @@ To install the development version of 'cholera' from GitHub:
 ```{r, eval = FALSE}
 # Note that you may need to install the 'devtools' package:
 # install.packages("devtools")
+
+# For 'devtools' (>= 2.0.0)
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 

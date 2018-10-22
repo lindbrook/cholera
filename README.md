@@ -109,6 +109,8 @@ To install the development version of 'cholera' from GitHub:
 ``` r
 # Note that you may need to install the 'devtools' package:
 # install.packages("devtools")
+
+# For 'devtools' (>= 2.0.0)
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 
@@ -116,8 +118,8 @@ Read the package vignettes (and the lab notes, if interested). They expand on th
 
 They are also available online at the links below:
 
-[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)   
-[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)    
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)    
 ["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
 [Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
 [Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)   
