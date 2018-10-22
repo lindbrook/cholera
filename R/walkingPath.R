@@ -326,7 +326,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     } else {
       if (all(destination > 0)) {
         alters <- p.nodes[p.nodes$pump %in% destination &
-                           p.nodes$pump != origin, "node"]
+                          p.nodes$pump != origin, "node"]
       } else if (all(destination < 0)) {
         alters <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE &
                           p.nodes$pump != origin, "node"]
