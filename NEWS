@@ -1,3 +1,10 @@
+cholera 0.5.1.9043
+==================
+
+- fix title in euclideanPath(type = "case-pump").
+- fix destination label for walkingPath(destination = NULL).
+
+
 cholera 0.5.1.9042
 ==================
 
