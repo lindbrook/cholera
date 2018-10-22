@@ -88,7 +88,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
           ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
             "anchor.case"]
         } else stop('1 >= |origin| <= ', nrow(cholera::fatalities), "!")
-
       } else if (is.character(origin)) {
         origin <- caseAndSpace(origin)
         if (origin %in% cholera::landmarks$name) {
@@ -96,7 +95,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
             "case"]
         } else stop('Use a valid landmark name.')
       }
-
     } else {
       if (origin <= nrow(cholera::regular.cases)) {
         ego.id <- origin
@@ -127,7 +125,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         sel <- nodes$anchor %in% landmark.case & nodes$anchor >= 20000
         alters <- nodes[sel, "node"]
       }
-
     } else {
       alters <- nodes[nodes$pump != 0, "node"]
     }
@@ -192,7 +189,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
           ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
             "anchor.case"]
         } else stop('1 >= |origin| <= ', nrow(cholera::fatalities), "!")
-
       } else if (is.character(origin)) {
         origin <- caseAndSpace(origin)
         if (origin %in% cholera::landmarks$name) {
@@ -200,7 +196,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
             "case"]
         } else stop('Use a valid landmark name for origin.')
       }
-
     } else {
       if (origin <= nrow(cholera::regular.cases)) {
         ego.id <- origin
@@ -221,7 +216,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
             alter.case <- unique(cholera::anchor.case[cholera::anchor.case$case
               %in% abs(destination) == FALSE, "anchor.case"])
           }
-
         } else if (is.character(destination)) {
           destination <- caseAndSpace(destination)
           if (destination %in% cholera::landmarks$name) {
@@ -229,7 +223,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
               destination, "case"]
           } else stop('Use a valid landmark name for destination.')
         }
-
       } else {
         if (all(destination > 0)) {
           alter.case <- nodes$anchor[nodes$anchor %in% destination]
@@ -237,7 +230,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
           alter.case <- nodes$anchor[nodes$anchor %in% destination == FALSE]
         }
       }
-
       alters <- nodes$node[nodes$anchor %in% alter.case &
                            nodes$node != ego.node]
     }
@@ -570,10 +562,8 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     } else if (is.character(x$origin)) {
       title(main = paste(x$origin, "to Pump", alter))
     }
-
   } else if (x$type == "cases") {
     points(destination.obs, col = "red")
-
     if (is.numeric(x$origin) &
       (is.numeric(x$destination) | is.null(x$destination))) {
       title(main = paste("Case", x$origin, "to Case", alter))
@@ -585,7 +575,6 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     } else if (is.character(x$origin) & is.character(x$destination)) {
       title(main = paste(x$origin, "to", x$destination))
     }
-
   } else if (x$type == "pumps") {
     title(main = paste("Pump", x$origin, "to Pump", alter))
   }
@@ -605,7 +594,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         }
 
         if (x$type == "cases") {
-          if (is.numeric(x$destination)) {
+          if (is.null(x$destination) | is.numeric(x$destination)) {
             text(cholera::fatalities[cholera::fatalities$case == x$data$caseB,
               c("x", "y")], labels = x$data$caseB, pos = 1, col = "red")
           } else if (is.character(x$destination)) {
@@ -690,9 +679,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       total <- cumulative[length(cumulative)]
       posts <- seq(0, total, unit.interval)
 
-      if (max(posts) > max(cumulative)) {
-        posts <- posts[-length(posts)]
-      }
+      if (max(posts) > max(cumulative)) posts <- posts[-length(posts)]
 
       bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
                          hi = cumulative)
