@@ -16,6 +16,28 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
   golden.sq <- data.frame(x = 11.90927, y = 8.239483)
   huggins.brewery <- data.frame(x = 13.9022, y = 11.87315)
 
+  ## Golden Square ##
+
+  squareExits <- function(nm = "Golden Square") {
+    dat <- road.segments[road.segments$name == nm, ]
+
+    pasteCoords <- function(var1 = "x1", var2 = "y1") {
+      vapply(seq_len(nrow(dat)), function(i) {
+        paste(dat[i, c(var1, var2)], collapse = "-")
+      }, character(1L))
+    }
+
+    left <- pasteCoords()
+    right <- pasteCoords("x2", "y2")
+    mat <- do.call(rbind, lapply(strsplit(union(left, right), "-"), as.numeric))
+    data.frame(x = mat[, 1], y = mat[, 2])
+  }
+
+  golden.square <- squareExits()
+  golden.square$name <- c("W", "E", "S", "N")
+
+  ## ##
+
   pantheon.bazaar <- cholera::road.segments[cholera::road.segments$name ==
     "Winsley Street", c("x2", "y2")]
   names(pantheon.bazaar) <- c("x", "y")
