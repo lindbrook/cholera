@@ -16,7 +16,7 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
   golden.sq <- data.frame(x = 11.90927, y = 8.239483)
   huggins.brewery <- data.frame(x = 13.9022, y = 11.87315)
 
-  ## Golden Square ##
+  ## Squares ##
 
   squareExits <- function(nm = "Golden Square") {
     dat <- road.segments[road.segments$name == nm, ]
@@ -35,6 +35,11 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
 
   golden.square <- squareExits()
   golden.square$name <- c("W", "E", "S", "N")
+
+  soho.square <- squareExits("Soho Square")
+  soho.square$name <- c("E", "NE", "N", "NW", "S3", "SE", "S2", "S1", "W", "SW")
+  soho.square$name <- soho.square[soho.square$name %in%
+    c("NE",  "NW", "SE", "SW") == FALSE, ]
 
   ## ##
 
