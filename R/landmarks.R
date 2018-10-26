@@ -5,15 +5,15 @@
 #' @export
 
 # landmarks <- orthoProjLandmarks()
-# devtools::use_data(landmarks)
-# devtools::use_data(landmarks, overwrite = TRUE)
+# usethis::use_data(landmarks)
+# usethis::use_data(landmarks, overwrite = TRUE)
 
 orthoProjLandmarks <- function(multi.core = FALSE) {
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
-  soho.sq <- data.frame(x = 18.07044, y = 15.85703)
-  golden.sq <- data.frame(x = 11.90927, y = 8.239483)
+  # soho.sq <- data.frame(x = 18.07044, y = 15.85703)
+  # golden.sq <- data.frame(x = 11.90927, y = 8.239483)
   huggins.brewery <- data.frame(x = 13.9022, y = 11.87315)
 
   ## Squares ##
@@ -38,8 +38,8 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
 
   soho.square <- squareExits("Soho Square")
   soho.square$name <- c("E", "NE", "N", "NW", "S3", "SE", "S2", "S1", "W", "SW")
-  soho.square$name <- soho.square[soho.square$name %in%
-    c("NE",  "NW", "SE", "SW") == FALSE, ]
+  soho.square <- soho.square[soho.square$name %in%
+    c("NE", "NW", "SE", "SW") == FALSE, ]
 
   ## ##
 
@@ -114,13 +114,24 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
 
   ##
 
-  landmarks <- list(marx, snow, st.lukes.church, soho.sq, golden.sq,
-    huggins.brewery, pantheon.bazaar, st.james.workhouse, argyll.house,
-    model.lodging, craven.chapel)
+  soho <- lapply(soho.square$name, function(nm) {
+    soho.square[soho.square$name == nm, c("x", "y")]
+  })
+
+  golden <- lapply(golden.square$name, function(nm) {
+    golden.square[golden.square$name == nm, c("x", "y")]
+  })
+
+  landmarks <- list(marx, snow, st.lukes.church,  huggins.brewery,
+    pantheon.bazaar, st.james.workhouse, argyll.house, model.lodging,
+    craven.chapel)
+  landmarks <- append(landmarks, soho)
+  landmarks <- append(landmarks, golden)
 
   landmark.names <- c("Karl Marx", "John Snow", "St Luke's Church",
-    "Soho Square", "Golden Square", "Lion Brewery", "The Pantheon",
-    "St James Workhouse", "Argyll House", "Model Lodging", "Craven Chapel")
+    "Lion Brewery", "The Pantheon", "St James Workhouse", "Argyll House",
+    "Model Lodging", "Craven Chapel", paste0("Soho Square-", soho.square$name),
+    paste0("Golden Square-", golden.square$name))
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
