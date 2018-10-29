@@ -65,10 +65,11 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   edges <- node.data$edges
   g <- node.data$g
 
-  obs.ct <- nrow(cholera::fatalities)
-  exp.ct <- nrow(cholera::regular.cases)
-
-  if (observed) ct <- obs.ct else ct <- exp.ct
+  if (observed) {
+    ct <- nrow(cholera::fatalities)
+  } else {
+    ct <- nrow(cholera::regular.cases)
+  }
 
   if (vestry) {
     p.data <- cholera::pumps.vestry
@@ -90,7 +91,11 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         } else stop('1 >= |origin| <= ', nrow(cholera::fatalities), "!")
       } else if (is.character(origin)) {
         origin <- caseAndSpace(origin)
-        if (origin %in% cholera::landmarks$name) {
+
+        if (grepl("Square", origin)) {
+         ego.id <- cholera::landmarks[grep(origin, cholera::landmarks$name),
+           "case"]
+        } else if (origin %in% cholera::landmarks$name) {
           ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
             "case"]
         } else stop('Use a valid landmark name.')
@@ -101,7 +106,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       } else stop('1 >= |origin| <= ', nrow(cholera::regular.cases), "!")
     }
 
-    ego.node <- nodes[nodes$anchor == ego.id, "node"]
+    ego.node <- nodes[nodes$anchor %in% ego.id, "node"]
 
     if (!is.null(destination)) {
       if (is.numeric(destination)) {
@@ -118,58 +123,103 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
             alters <- nodes[nodes$pump %in% destination, "node"]
           }
         }
-      } else if (is.character(destination)) {
-        destination <- caseAndSpace(destination)
-        landmark.case <- cholera::landmarks[cholera::landmarks$name ==
-          destination, "case"]
-        sel <- nodes$anchor %in% landmark.case & nodes$anchor >= 20000
-        alters <- nodes[sel, "node"]
       }
-    } else {
-      alters <- nodes[nodes$pump != 0, "node"]
-    }
+    } else alters <- nodes[nodes$pump != 0, "node"]
 
-    if (weighted) {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x, weights = edges$d)
-      }, numeric(1L))
+    if (length(ego.node) > 1) {
+      if (weighted) {
+        c.square <- lapply(ego.node, function(e) {
+          d <- vapply(alters, function(x) {
+            igraph::distances(g, e, x, weights = edges$d)
+          }, numeric(1L))
+          out <- data.frame(origin = e,
+                            pump = nodes[nodes$node == names(which.min(d)),
+                              "pump"],
+                            distance = d[which.min(d)],
+                            stringsAsFactors = FALSE)
+          row.names(out) <- NULL
+          out
+        })
+      } else {
+        c.square <- lapply(ego.node, function(e) {
+          d <- vapply(alters, function(x) {
+            igraph::distances(g, e, x)
+          }, numeric(1L))
 
-    } else {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x)
-      }, numeric(1L))
-    }
+          out <- data.frame(origin = e,
+                            pump = nodes[nodes$node == names(which.min(d)),
+                              "pump"],
+                            distance = d[which.min(d)],
+                            stringsAsFactors = FALSE)
+          row.names(out) <- NULL
+          out
+        })
+      }
 
-    if (all(is.infinite(d))) {
-      sel <- which.min(d)
-      alter.id <- NA
-      p.name <- NA
-      alter.node <- NA
-    } else {
-      sel <- which.min(d)
-      node.sel <- nodes$node %in% names(sel) & nodes$pump != 0
-      alter.id <- nodes[node.sel, "pump"]
+      c.square <- do.call(rbind, c.square)
+      nr.pair <- which.min(c.square$distance)
+      sel <- nodes$node == c.square[nr.pair, "origin"] &
+             nodes$anchor != 0
+      ego.node <- nodes[sel, "node"]
+
+      alter.id <- c.square[nr.pair, "pump"]
       p.name <- p.data[p.data$id == alter.id, "street"]
-    }
+      alter.node <- nodes[nodes$pump == alter.id, "node"]
 
-    alter.node <- names(sel)
+    } else if (length(ego.id) == 1) {
+      if (weighted) {
+        d <- vapply(alters, function(x) {
+          igraph::distances(g, ego.node, x, weights = edges$d)
+        }, numeric(1L))
+      } else {
+        d <- vapply(alters, function(x) {
+          igraph::distances(g, ego.node, x)
+        }, numeric(1L))
+      }
+
+      if (all(is.infinite(d))) {
+        sel <- which.min(d)
+        alter.id <- NA
+        p.name <- NA
+        alter.node <- NA
+      } else {
+        sel <- which.min(d)
+        node.sel <- nodes$node %in% names(sel) & nodes$pump != 0
+        alter.id <- nodes[node.sel, "pump"]
+        p.name <- p.data[p.data$id == alter.id, "street"]
+      }
+
+      alter.node <- names(sel)
+    }
 
     if (weighted) {
       path <- names(unlist(igraph::shortest_paths(g, ego.node, alter.node,
-                                                  weights = edges$d)$vpath))
+        weights = edges$d)$vpath))
     } else {
       path <- names(unlist(igraph::shortest_paths(g, ego.node,
-                                                  alter.node)$vpath))
+        alter.node)$vpath))
     }
 
-    out <- list(path = path,
-                data = data.frame(case = origin,
-                                  anchor = ego.id,
-                                  pump = alter.id,
-                                  pump.name = p.name,
-                                  distance = d[sel],
-                                  stringsAsFactors = FALSE,
-                                  row.names = NULL))
+    if (grepl("Square", origin)) {
+      out <- list(path = path,
+                  data = data.frame(case = origin,
+                                    anchor = nodes[nodes$node == ego.node &
+                                             nodes$anchor != 0, "anchor"],
+                                    pump = alter.id,
+                                    pump.name = p.name,
+                                    distance = c.square[nr.pair, "distance"],
+                                    stringsAsFactors = FALSE,
+                                    row.names = NULL))
+    } else {
+      out <- list(path = path,
+                  data = data.frame(case = origin,
+                                    anchor = ego.id,
+                                    pump = alter.id,
+                                    pump.name = p.name,
+                                    distance = d[sel],
+                                    stringsAsFactors = FALSE,
+                                    row.names = NULL))
+    }
 
   } else if (type == "cases") {
     if (is.null(destination) == FALSE) {
@@ -589,8 +639,17 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
           text(cholera::fatalities[cholera::fatalities$case == x$origin,
             c("x", "y")], labels = x$origin, pos = 1, col = "red")
         } else if (is.character(x$origin)) {
-          text(cholera::landmarks[cholera::landmarks$name == x$origin,
-            c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
+          if (grepl("Square", x$origin)) {
+            sel <- nodes$node == x$ego.node & nodes$anchor != 0
+            nodes[sel, "anchor"]
+            nm <- cholera::landmarks[cholera::landmarks$case ==
+              nodes[sel, "anchor"], "name"]
+            text(cholera::landmarks[cholera::landmarks$name == nm,
+              c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
+          } else {
+            text(cholera::landmarks[cholera::landmarks$name == x$origin,
+              c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
+          }
         }
 
         if (x$type == "cases") {

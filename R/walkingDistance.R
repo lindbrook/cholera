@@ -58,10 +58,11 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
   edges <- node.data$edges
   g <- node.data$g
 
-  obs.ct <- nrow(cholera::fatalities)
-  exp.ct <- nrow(cholera::regular.cases)
-
-  if (observed) ct <- obs.ct else ct <- exp.ct
+  if (observed) {
+    ct <- nrow(cholera::fatalities)
+  } else {
+    ct <- nrow(cholera::regular.cases)
+  }
 
   if (vestry) {
     p.data <- cholera::pumps.vestry
@@ -81,9 +82,14 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
       }
     } else if (is.character(origin)) {
       origin <- caseAndSpace(origin)
-      if (origin %in% cholera::landmarks$name == FALSE) {
-        stop('Use a valid landmark name.')
-      }
+
+      if (grepl("Square", origin)) {
+       ego.id <- cholera::landmarks[grep(origin, cholera::landmarks$name),
+         "case"]
+      } else if (origin %in% cholera::landmarks$name) {
+        ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
+          "case"]
+      } else stop('Use a valid landmark name.')
     }
 
     if (!is.null(destination)) {

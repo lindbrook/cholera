@@ -1,3 +1,9 @@
+cholera 0.5.1.9045
+==================
+
+- add landmarks to type = "case-pump" in walkingDistance() and walkingPath().
+
+
 cholera 0.5.1.9044
 ==================
 
