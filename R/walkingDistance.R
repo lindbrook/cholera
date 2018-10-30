@@ -82,7 +82,6 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
       }
     } else if (is.character(origin)) {
       origin <- caseAndSpace(origin)
-
       if (grepl("Square", origin)) {
        ego.id <- cholera::landmarks[grep(origin, cholera::landmarks$name),
          "case"]

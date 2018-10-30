@@ -2,6 +2,7 @@ cholera 0.5.1.9045
 ==================
 
 - add landmarks to type = "case-pump" in walkingDistance() and walkingPath().
+- tweak zoom for Golden and Soho Squares in plot.walking_path().
 
 
 cholera 0.5.1.9044

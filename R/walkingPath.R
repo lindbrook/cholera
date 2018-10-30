@@ -1,4 +1,4 @@
-#' Compute the shortest walking path between cases and/or pumps.
+#' Compute the shortest walking path between cases and/or pumps (Prototype).
 #'
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case. Character landmark name.
@@ -91,7 +91,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         } else stop('1 >= |origin| <= ', nrow(cholera::fatalities), "!")
       } else if (is.character(origin)) {
         origin <- caseAndSpace(origin)
-
         if (grepl("Square", origin)) {
          ego.id <- cholera::landmarks[grep(origin, cholera::landmarks$name),
            "case"]
@@ -100,6 +99,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
             "case"]
         } else stop('Use a valid landmark name.')
       }
+
     } else {
       if (origin <= nrow(cholera::regular.cases)) {
         ego.id <- origin
@@ -527,6 +527,22 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         origin.obs <- cholera::fatalities[cholera::fatalities$case == x$origin,
           c("x", "y")]
       } else if (is.character(x$origin)) {
+        sel <- nodes$node == x$ego.node & nodes$anchor != 0
+        nm <- cholera::landmarks[cholera::landmarks$case ==
+          nodes[sel, "anchor"], "name"]
+        origin.obs <- cholera::landmarks[cholera::landmarks$name == nm,
+          c("x.proj", "y.proj")]
+        names(origin.obs) <- c("x", "y")
+
+        if (grepl("Square", x$origin)) {
+          if (x$origin == "Soho Square") {
+            square.center <- data.frame(x = 18.07044, y = 15.85703)
+          } else if (x$origin == "Golden Square") {
+            square.center <- data.frame(x = 11.90927, y = 8.239483)
+          }
+        } else stop("error")
+
+      } else {
         origin.obs <- cholera::landmarks[cholera::landmarks$name == x$origin,
           c("x.proj", "y.proj")]
         names(origin.obs) <- c("x", "y")
@@ -576,7 +592,11 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     case.color <- "blue"
   }
 
-  dat.plus.origin <- rbind(dat, origin.obs)
+  if (grepl("Square", x$origin)) {
+    dat.plus.origin <- rbind(dat, origin.obs, square.center)
+  } else {
+    dat.plus.origin <- rbind(dat, origin.obs)
+  }
 
   if (zoom) {
     x.rng <- c(min(dat.plus.origin$x) - radius, max(dat.plus.origin$x) + radius)
@@ -639,13 +659,12 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
           text(cholera::fatalities[cholera::fatalities$case == x$origin,
             c("x", "y")], labels = x$origin, pos = 1, col = "red")
         } else if (is.character(x$origin)) {
-          if (grepl("Square", x$origin)) {
-            sel <- nodes$node == x$ego.node & nodes$anchor != 0
-            nodes[sel, "anchor"]
-            nm <- cholera::landmarks[cholera::landmarks$case ==
-              nodes[sel, "anchor"], "name"]
-            text(cholera::landmarks[cholera::landmarks$name == nm,
-              c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
+          if (x$origin == "Soho Square") {
+            text(square.center$x, square.center$y,
+              labels = "Soho\nSquare", col = "red", cex = 0.8)
+          } else if (x$origin == "Golden Square") {
+            text(square.center$x, square.center$y,
+              labels = "Golden\nSquare", col = "red", cex = 0.8)
           } else {
             text(cholera::landmarks[cholera::landmarks$name == x$origin,
               c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
