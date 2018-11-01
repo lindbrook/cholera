@@ -902,3 +902,66 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       x$speed, "km/hr"))
   }
 }
+
+##
+
+citySquare <- function(ego.node, alters, g, nodes, edges, weighted, type) {
+  if (type == "case-pump") {
+    if (weighted) {
+      c.square <- lapply(ego.node, function(e) {
+        d <- vapply(alters, function(x) {
+          igraph::distances(g, e, x, weights = edges$d)
+        }, numeric(1L))
+        out <- data.frame(
+          origin = e,
+          pump = nodes[nodes$node == names(which.min(d)), "pump"],
+          distance = d[which.min(d)],
+          stringsAsFactors = FALSE)
+        row.names(out) <- NULL
+        out
+      })
+    } else {
+      c.square <- lapply(ego.node, function(e) {
+        d <- vapply(alters, function(x) {
+          igraph::distances(g, e, x)
+        }, numeric(1L))
+        out <- data.frame(
+          origin = e,
+          pump = nodes[nodes$node == names(which.min(d)), "pump"],
+          distance = d[which.min(d)],
+          stringsAsFactors = FALSE)
+        row.names(out) <- NULL
+        out
+      })
+    }
+  } else if (type == "cases") {
+    if (weighted) {
+      c.square <- lapply(ego.node, function(e) {
+        d <- vapply(alters, function(x) {
+          igraph::distances(g, e, x, weights = edges$d)
+        }, numeric(1L))
+        out <- data.frame(
+          origin = e,
+          destination = nodes[nodes$node == names(which.min(d)), "anchor"],
+          distance = d[which.min(d)],
+          stringsAsFactors = FALSE)
+        row.names(out) <- NULL
+        out
+      })
+    } else {
+      c.square <- lapply(ego.node, function(e) {
+        d <- vapply(alters, function(x) {
+          igraph::distances(g, e, x)
+        }, numeric(1L))
+        out <- data.frame(
+          origin = e,
+          destination = nodes[nodes$node == names(which.min(d)), "anchor"],
+          distance = d[which.min(d)],
+          stringsAsFactors = FALSE)
+        row.names(out) <- NULL
+        out
+      })
+    }
+  }
+  do.call(rbind, c.square)
+}
