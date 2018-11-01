@@ -1,4 +1,4 @@
-#' Compute the shortest walking path between cases and/or pumps (Prototype).
+#' Compute the shortest walking path between cases and/or pumps (Beta).
 #'
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case. Character landmark name.
@@ -291,11 +291,9 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         alter.id <- NA
         alter.node <- NA
       } else {
-        # if (is.null(destination) | is.numeric(destination)) {
-          alter.node <- names(which.min(d))
-          node.sel <- nodes$node %in% alter.node & nodes$anchor != 0
-          alter.id <- nodes[node.sel, "anchor"]
-        # }
+        alter.node <- names(which.min(d))
+        node.sel <- nodes$node %in% alter.node & nodes$anchor != 0
+        alter.id <- nodes[node.sel, "anchor"]
       }
     }
 
@@ -940,11 +938,11 @@ citySquare <- function(ego.node, alters, g, nodes, edges, weighted, type) {
         d <- vapply(alters, function(x) {
           igraph::distances(g, e, x, weights = edges$d)
         }, numeric(1L))
-        out <- data.frame(
-          origin = e,
-          destination = nodes[nodes$node == names(which.min(d)), "anchor"],
-          distance = d[which.min(d)],
-          stringsAsFactors = FALSE)
+        sel <- nodes$node == names(which.min(d)) & nodes$anchor != 0
+        out <- data.frame(origin = e,
+                          destination = nodes[sel, "anchor"],
+                          distance = d[which.min(d)],
+                          stringsAsFactors = FALSE)
         row.names(out) <- NULL
         out
       })
@@ -953,11 +951,11 @@ citySquare <- function(ego.node, alters, g, nodes, edges, weighted, type) {
         d <- vapply(alters, function(x) {
           igraph::distances(g, e, x)
         }, numeric(1L))
-        out <- data.frame(
-          origin = e,
-          destination = nodes[nodes$node == names(which.min(d)), "anchor"],
-          distance = d[which.min(d)],
-          stringsAsFactors = FALSE)
+        sel <- nodes$node == names(which.min(d)) & nodes$anchor != 0
+        out <- data.frame(origin = e,
+                          destination = nodes[sel, "anchor"],
+                          distance = d[which.min(d)],
+                          stringsAsFactors = FALSE)
         row.names(out) <- NULL
         out
       })
