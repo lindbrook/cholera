@@ -1,3 +1,10 @@
+cholera 0.5.1.9046
+==================
+
+- add landmarks to type = "cases" in walkingDistance() and walkingPath().
+- add citySquare().
+
+
 cholera 0.5.1.9045
 ==================
 
