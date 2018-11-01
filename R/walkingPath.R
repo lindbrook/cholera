@@ -127,39 +127,10 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     } else alters <- nodes[nodes$pump != 0, "node"]
 
     if (length(ego.node) > 1) {
-      if (weighted) {
-        c.square <- lapply(ego.node, function(e) {
-          d <- vapply(alters, function(x) {
-            igraph::distances(g, e, x, weights = edges$d)
-          }, numeric(1L))
-          out <- data.frame(origin = e,
-                            pump = nodes[nodes$node == names(which.min(d)),
-                              "pump"],
-                            distance = d[which.min(d)],
-                            stringsAsFactors = FALSE)
-          row.names(out) <- NULL
-          out
-        })
-      } else {
-        c.square <- lapply(ego.node, function(e) {
-          d <- vapply(alters, function(x) {
-            igraph::distances(g, e, x)
-          }, numeric(1L))
-
-          out <- data.frame(origin = e,
-                            pump = nodes[nodes$node == names(which.min(d)),
-                              "pump"],
-                            distance = d[which.min(d)],
-                            stringsAsFactors = FALSE)
-          row.names(out) <- NULL
-          out
-        })
-      }
-
-      c.square <- do.call(rbind, c.square)
+      c.square <- citySquare(ego.node, alters, g, nodes, edges, weighted, type)
       nr.pair <- which.min(c.square$distance)
-      sel <- nodes$node == c.square[nr.pair, "origin"] &
-             nodes$anchor != 0
+
+      sel <- nodes$node == c.square[nr.pair, "origin"] & nodes$anchor != 0
       ego.node <- nodes[sel, "node"]
 
       alter.id <- c.square[nr.pair, "pump"]
@@ -221,6 +192,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
                                     row.names = NULL))
     }
 
+  # ----- #
+
   } else if (type == "cases") {
     if (is.null(destination) == FALSE) {
       if (is.numeric(origin) & is.numeric(destination)) {
@@ -241,7 +214,10 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         } else stop('1 >= |origin| <= ', nrow(cholera::fatalities), "!")
       } else if (is.character(origin)) {
         origin <- caseAndSpace(origin)
-        if (origin %in% cholera::landmarks$name) {
+        if (grepl("Square", origin)) {
+         ego.id <- cholera::landmarks[grep(origin, cholera::landmarks$name),
+           "case"]
+        } else if (origin %in% cholera::landmarks$name) {
           ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
             "case"]
         } else stop('Use a valid landmark name for origin.')
@@ -252,10 +228,11 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       } else stop('1 >= |origin| <= ', nrow(cholera::regular.cases), "!")
     }
 
-    ego.node <- nodes[nodes$anchor == ego.id, "node"]
+    ego.node <- nodes[nodes$anchor %in% ego.id, "node"]
 
     if (is.null(destination)) {
-      alters <- nodes[nodes$anchor != 0 & nodes$node != ego.node, "node"]
+      alters <- nodes[nodes$anchor != 0 & nodes$node %in% ego.node == FALSE,
+        "node"]
     } else {
       if (observed) {
         if (is.numeric(destination)) {
@@ -268,10 +245,13 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
           }
         } else if (is.character(destination)) {
           destination <- caseAndSpace(destination)
-          if (destination %in% cholera::landmarks$name) {
-            alter.case <- cholera::landmarks[cholera::landmarks$name ==
-              destination, "case"]
-          } else stop('Use a valid landmark name for destination.')
+          if (grepl("Square", destination)) {
+           alter.case <- cholera::landmarks[grep(destination,
+             cholera::landmarks$name), "case"]
+          } else if (destination %in% cholera::landmarks$name) {
+            sel <- cholera::landmarks$name == destination
+            alter.case <- cholera::landmarks[sel, "case"]
+          }
         }
       } else {
         if (all(destination > 0)) {
@@ -280,49 +260,73 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
           alter.case <- nodes$anchor[nodes$anchor %in% destination == FALSE]
         }
       }
+
       alters <- nodes$node[nodes$anchor %in% alter.case &
-                           nodes$node != ego.node]
+                           nodes$node %in% ego.node == FALSE]
     }
 
-    if (weighted) {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x, weights = edges$d)
-      }, numeric(1L))
-    } else {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x)
-      }, numeric(1L))
-    }
+    if (length(ego.node) > 1) {
+      c.square <- citySquare(ego.node, alters, g, nodes, edges, weighted, type)
+      nr.pair <- which.min(c.square$distance)
 
-    if (all(is.infinite(d))) {
-      alter.id <- NA
-      alter.node <- NA
-    } else {
-      sel <- which.min(d)
+      sel <- nodes$node == c.square[nr.pair, "origin"] &
+             nodes$anchor != 0
+      ego.node <- nodes[sel, "node"]
 
-      if (is.null(destination) | is.numeric(destination)) {
-        node.sel <- nodes$node %in% names(sel)
-        alter.id <- nodes[node.sel, "anchor"]
-      } else if (is.character(destination)) {
-        landmark.case <- nodes[nodes$node %in% names(sel) &
-                               nodes$anchor >= 20000, "anchor"]
-        alter.id <- cholera::landmarks[cholera::landmarks$case ==
-          landmark.case, "name"]
+      alter.id <- c.square[nr.pair, "destination"]
+      alter.node <- nodes[nodes$anchor == alter.id, "node"]
+
+    } else if (length(ego.id) == 1) {
+      if (weighted) {
+        d <- vapply(alters, function(x) {
+          igraph::distances(g, ego.node, x, weights = edges$d)
+        }, numeric(1L))
+      } else {
+        d <- vapply(alters, function(x) {
+          igraph::distances(g, ego.node, x)
+        }, numeric(1L))
       }
 
-      alter.node <- names(sel)
+      if (all(is.infinite(d))) {
+        alter.id <- NA
+        alter.node <- NA
+      } else {
+        # if (is.null(destination) | is.numeric(destination)) {
+          alter.node <- names(which.min(d))
+          node.sel <- nodes$node %in% alter.node & nodes$anchor != 0
+          alter.id <- nodes[node.sel, "anchor"]
+        # }
+      }
     }
 
     if (weighted) {
-      path <- names(unlist(igraph::shortest_paths(g, ego.node, alter.node,
-                                                  weights = edges$d)$vpath))
+      pth <- igraph::shortest_paths(g, ego.node, alter.node, weights = edges$d)
     } else {
-      path <- names(unlist(igraph::shortest_paths(g, ego.node,
-                                                  alter.node)$vpath))
+      pth <- igraph::shortest_paths(g, ego.node, alter.node)
     }
 
-    if (is.null(destination) | is.numeric(destination)) {
-        out <- list(path = path,
+    if (is.character(origin)) {
+      if (grepl("Square", origin)) {
+        sel <- nodes$node %in% c.square[nr.pair, "origin"] & nodes$anchor != 0
+        sq.origin.id <- nodes[sel, "anchor"]
+        sq.origin <- cholera::landmarks[cholera::landmarks$case ==
+          sq.origin.id, "name"]
+      } else {
+        origin.id <- cholera::landmarks[cholera::landmarks$name ==
+          origin, "case"]
+      }
+    }
+
+    if (is.character(destination)) {
+      if (grepl("Square", destination)) {
+        sq.destination <- cholera::landmarks[cholera::landmarks$case ==
+          alter.id, "name"]
+      }
+    }
+
+    if (is.numeric(origin) &
+       (is.null(destination) | is.numeric(destination))) {
+        out <- list(path = names(unlist(pth$vpath)),
                     data = data.frame(caseA = origin,
                                       caseB = alter.id,
                                       anchorA = ego.id,
@@ -331,15 +335,69 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
                                       stringsAsFactors = FALSE,
                                       row.names = NULL))
 
-    } else if (is.character(destination)) {
-      out <- list(path = path,
-                  data = data.frame(caseA = origin,
-                                    caseB = alter.id,
-                                    anchorA = ego.id,
-                                    anchorB = landmark.case,
-                                    distance = d[which.min(d)],
-                                    stringsAsFactors = FALSE,
-                                    row.names = NULL))
+    } else if (is.numeric(origin) & is.character(destination)) {
+      if (grepl("Square", destination)) {
+        out <- list(path = names(unlist(pth$vpath)),
+                    data = data.frame(caseA = origin,
+                                      caseB = sq.destination,
+                                      anchorA = ego.id,
+                                      anchorB = alter.id,
+                                      distance = d[which.min(d)],
+                                      stringsAsFactors = FALSE,
+                                      row.names = NULL))
+      } else {
+        out <- list(path = names(unlist(pth$vpath)),
+                    data = data.frame(caseA = origin,
+                                      caseB = destination,
+                                      anchorA = ego.id,
+                                      anchorB = alter.id,
+                                      distance = d[which.min(d)],
+                                      stringsAsFactors = FALSE,
+                                      row.names = NULL))
+      }
+
+    } else if (is.character(origin) &
+              (is.null(destination) | is.numeric(destination))) {
+      if (grepl("Square", origin)) {
+        out <- list(path = names(unlist(pth$vpath)),
+                   data = data.frame(caseA = sq.origin,
+                                     caseB = alter.id,
+                                     anchorA = sq.origin.id,
+                                     anchorB = alter.id,
+                                     distance = c.square[nr.pair, "distance"],
+                                     stringsAsFactors = FALSE,
+                                     row.names = NULL))
+      } else {
+        out <- list(path = names(unlist(pth$vpath)),
+                   data = data.frame(caseA = origin,
+                                     caseB = alter.id,
+                                     anchorA = origin.id,
+                                     anchorB = alter.id,
+                                     distance = d[which.min(d)],
+                                     stringsAsFactors = FALSE,
+                                     row.names = NULL))
+      }
+
+    } else if (is.character(origin) & is.character(destination)) {
+      if (grepl("Square", origin)) {
+        out <- list(path = names(unlist(pth$vpath)),
+                    data = data.frame(caseA = origin,
+                                      caseB = destination,
+                                      anchorA = sq.origin.id,
+                                      anchorB = alter.id,
+                                      distance = c.square[nr.pair, "distance"],
+                                      stringsAsFactors = FALSE,
+                                      row.names = NULL))
+      } else {
+        out <- list(path = names(unlist(pth$vpath)),
+                    data = data.frame(caseA = origin,
+                                      caseB = destination,
+                                      anchorA = ego.id,
+                                      anchorB = alter.id,
+                                      distance = d[which.min(d)],
+                                      stringsAsFactors = FALSE,
+                                      row.names = NULL))
+      }
     }
 
     if (is.null(destination) | all(destination < 0)) {
@@ -352,6 +410,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       }
       out
     }
+
+  # ----- #
 
   } else if (type == "pumps") {
     if (any(abs(c(origin, destination)) %in% p.ID == FALSE)) {
