@@ -571,6 +571,24 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
   dat <- numericNodeCoordinates(x$path)
 
+  if (grepl("Square", x$origin)) {
+    if (x$origin == "Soho Square") {
+      sq.center.origin <- data.frame(x = 18.07044, y = 15.85703)
+    } else if (x$origin == "Golden Square") {
+      sq.center.origin <- data.frame(x = 11.90927, y = 8.239483)
+    }
+  }
+
+  if (is.null(x$destination) == FALSE) {
+    if (grepl("Square", x$destination)) {
+      if (x$destination == "Soho Square") {
+        sq.center.destination <- data.frame(x = 18.07044, y = 15.85703)
+      } else if (x$destination == "Golden Square") {
+        sq.center.destination <- data.frame(x = 11.90927, y = 8.239483)
+      }
+    }
+  }
+
   if (x$type == "case-pump") {
     alter <- nodes[nodes$node == alter.node & nodes$pump != 0, "pump"]
 
@@ -591,15 +609,6 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         origin.obs <- cholera::landmarks[cholera::landmarks$name == nm,
           c("x.proj", "y.proj")]
         names(origin.obs) <- c("x", "y")
-
-        if (grepl("Square", x$origin)) {
-          if (x$origin == "Soho Square") {
-            square.center <- data.frame(x = 18.07044, y = 15.85703)
-          } else if (x$origin == "Golden Square") {
-            square.center <- data.frame(x = 11.90927, y = 8.239483)
-          }
-        } else stop("error")
-
       } else {
         origin.obs <- cholera::landmarks[cholera::landmarks$name == x$origin,
           c("x.proj", "y.proj")]
@@ -651,9 +660,33 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   }
 
   if (grepl("Square", x$origin)) {
-    dat.plus.origin <- rbind(dat, origin.obs, square.center)
+    sel <- grep(x$origin, cholera::landmarks$name)
+    sq.origin <- cholera::landmarks[sel, c("x.proj", "y.proj")]
+    names(sq.origin) <- c("x", "y")
+  }
+
+  if (is.null(x$destination) == FALSE) {
+    if (grepl("Square", x$destination)) {
+      sel <- grep(x$destination, cholera::landmarks$name)
+      sq.destination <- cholera::landmarks[sel, c("x.proj", "y.proj")]
+      names(sq.destination) <- c("x", "y")
+    }
+  }
+
+  dat.plus.origin <- rbind(dat, origin.obs)
+
+  if (is.null(x$destination) == FALSE) {
+    if (grepl("Square", x$origin) & grepl("Square", x$destination)) {
+      dat.plus.origin <- rbind(dat.plus.origin, sq.origin, sq.destination)
+    } else if (grepl("Square", x$origin) & !grepl("Square", x$destination)) {
+      dat.plus.origin <- rbind(dat.plus.origin, sq.origin)
+    } else if (!grepl("Square", x$origin) & grepl("Square", x$destination)) {
+      dat.plus.origin <- rbind(dat.plus.origin, sq.destination)
+    }
   } else {
-    dat.plus.origin <- rbind(dat, origin.obs)
+    if (grepl("Square", x$origin)) {
+      dat.plus.origin <- rbind(dat.plus.origin, sq.origin)
+    }
   }
 
   if (zoom) {
@@ -718,14 +751,30 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
             c("x", "y")], labels = x$origin, pos = 1, col = "red")
         } else if (is.character(x$origin)) {
           if (x$origin == "Soho Square") {
-            text(square.center$x, square.center$y,
+            text(sq.center.origin$x, sq.center.origin$y,
               labels = "Soho\nSquare", col = "red", cex = 0.8)
           } else if (x$origin == "Golden Square") {
-            text(square.center$x, square.center$y,
+            text(sq.center.origin$x, sq.center.origin$y,
               labels = "Golden\nSquare", col = "red", cex = 0.8)
           } else {
             text(cholera::landmarks[cholera::landmarks$name == x$origin,
               c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
+          }
+        }
+
+        if (is.null(x$destination) == FALSE) {
+          if (is.character(x$destination)) {
+            if (x$destination == "Soho Square") {
+              text(sq.center.destination$x, sq.center.destination$y,
+                labels = "Soho\nSquare", col = "red", cex = 0.8)
+            } else if (x$destination == "Golden Square") {
+              text(sq.center.destination$x, sq.center.destination$y,
+                labels = "Golden\nSquare", col = "red", cex = 0.8)
+            } else {
+              text(cholera::landmarks[cholera::landmarks$name == x$destination,
+                c("x.proj", "y.proj")], labels = x$destination, pos = 1,
+                col = "red")
+            }
           }
         }
 
@@ -734,9 +783,11 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
             text(cholera::fatalities[cholera::fatalities$case == x$data$caseB,
               c("x", "y")], labels = x$data$caseB, pos = 1, col = "red")
           } else if (is.character(x$destination)) {
-            text(cholera::landmarks[cholera::landmarks$name == x$destination,
-              c("x.proj", "y.proj")], labels = x$destination, pos = 1,
-              col = "red")
+            if (grepl("Square", x$destination) == FALSE) {
+              text(cholera::landmarks[cholera::landmarks$case == x$data$anchorB,
+                c("x.proj", "y.proj")], labels = x$data$caseB, pos = 1,
+                col = "red")
+            }
           }
         }
 
@@ -900,8 +951,6 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       x$speed, "km/hr"))
   }
 }
-
-##
 
 citySquare <- function(ego.node, alters, g, nodes, edges, weighted, type) {
   if (type == "case-pump") {
