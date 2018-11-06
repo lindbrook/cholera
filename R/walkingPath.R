@@ -928,8 +928,13 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 2) == 0
 
         if (any(zero.length.x | zero.length.y)) {
-          text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
-            col = case.color, cex = 1.5)
+          if (coords[i, "angle"] < 0) {
+            text(dataB[1, c("x", "y")], labels = "<", srt = coords[i, "angle"],
+              col = case.color, cex = 1.25)
+          } else {
+            text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
+              col = case.color, cex = 1.25)
+          }
         } else {
           arrows(dataB[1, "x"], dataB[1, "y"],
                  dataB[2, "x"], dataB[2, "y"],

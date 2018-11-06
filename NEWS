@@ -1,3 +1,9 @@
+cholera 0.5.1.9048
+==================
+
+- fix zero-length arrows in plot.walking_path().
+
+
 cholera 0.5.1.9047
 ==================
 
