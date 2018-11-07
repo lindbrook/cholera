@@ -55,6 +55,20 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     if (type != "cases") stop('type must be "cases".')
   }
 
+  if (type == "pumps") {
+    if (origin == 2) {
+      stop ('Pump 2 is a technical isolate. Choose another.')
+    }
+  }
+
+  if (type %in% c("case-pump", "pumps")) {
+    if (is.null(destination) == FALSE) {
+      if (destination == 2) {
+        stop ('Pump 2 is a technical isolate. Choose another.')
+      }
+    }
+  }
+
   if (observed) {
     node.data <- cholera::neighborhoodData(vestry)
   } else {
