@@ -880,7 +880,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       total <- cumulative[length(cumulative)]
       posts <- seq(0, total, unit.interval)
 
-      if (max(posts) > max(cumulative)) posts <- posts[-length(posts)]
+      if (max(posts) > total) posts <- posts[-length(posts)]
 
       bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
                          hi = cumulative)
@@ -891,18 +891,26 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         }, logical(1L)))
       }, integer(1L))
 
-      start.node <- edgeOrder(edge.data, path.edge)
+      post.nodes <- path.edge[edge.select, ]
 
       post.coordinates <- lapply(seq_along(edge.select), function(i) {
+        node1.node2 <-
+        edge.data[edge.select[i], "node1"] == post.nodes[i, "node1"] &
+        edge.data[edge.select[i], "node2"] == post.nodes[i, "node2"]
+
+        node2.node1 <-
+        edge.data[edge.select[i], "node1"] == post.nodes[i, "node2"] &
+        edge.data[edge.select[i], "node2"] == post.nodes[i, "node1"]
+
         sel.data <- edge.data[edge.select[i], ]
 
-        if (start.node[edge.select[i]] == 1) {
+        if (any(node1.node2)) {
           e.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
                                y = c(sel.data$y1, sel.data$y2))
-        } else if (start.node[edge.select[i]] == 2) {
+        } else if (any(node2.node1)) {
           e.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
                                y = c(sel.data$y2, sel.data$y1))
-        }
+        } else stop("Post error.")
 
         ols <- stats::lm(y ~ x, data = e.data)
         edge.slope <- stats::coef(ols)[2]
@@ -918,16 +926,17 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
         p.coords <- quandrantCoordinates(e.data, h, theta)
 
-        data.frame(post = posts[i],
+        data.frame(post = i,
                    x = p.coords$x,
                    y = p.coords$y,
                    angle = theta * 180L / pi,
+                   start = ifelse(node1.node2, 1, ifelse(node2.node1, 2, 0)),
                    row.names = NULL)
       })
 
       coords <- do.call(rbind, post.coordinates)
       arrow.data <- edge.data[edge.select, ]
-      start <- start.node[edge.select]
+      start <- coords$start
 
       invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
         if (start[i] == 1) {
@@ -942,13 +951,13 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 2) == 0
 
         if (any(zero.length.x | zero.length.y)) {
-          if (coords[i, "angle"] < 0) {
+          if (start[i] == 1) {
             text(dataB[1, c("x", "y")], labels = "<", srt = coords[i, "angle"],
               col = case.color, cex = 1.25)
-          } else {
+          } else if (start[i] == 2) {
             text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
               col = case.color, cex = 1.25)
-          }
+          } else stop("Draw error.")
         } else {
           arrows(dataB[1, "x"], dataB[1, "y"],
                  dataB[2, "x"], dataB[2, "y"],
