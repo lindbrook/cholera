@@ -13,7 +13,7 @@ addWalkingPath(origin = 1, destination = NULL, type = "case-pump",
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
 
-\item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case.}
+\item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case. Character landmark name (case insensitive).}
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
@@ -47,6 +47,10 @@ Add the shortest walking path between a selected cases or pumps.
 }
 \note{
 The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using cholera::distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of \code{Inf}. Arrow points represent mileposts or timeposts to the destination.
+}
+\examples{
+streetNameLocator("broad street", zoom = TRUE, highlight = FALSE, add.subtitle = FALSE)
+addWalkingPath(447)
 }
 \seealso{
 \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
