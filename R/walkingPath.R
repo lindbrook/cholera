@@ -1,7 +1,7 @@
-#' Compute the shortest walking path between cases and/or pumps (Beta).
+#' Compute the shortest walking path between cases and/or pumps.
 #'
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
-#' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case. Character landmark name.
+#' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case. Character landmark name (case insensitive).
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or "simulated" expected data.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of nodes.
@@ -33,6 +33,9 @@
 #'
 #' # path from case 1 to nearest pump.
 #' plot(walkingPath(1))
+#'
+#' # path from John Snow's residence to Broad Street pump.
+#' plot(walkingPath("John Snow", 7))
 #' }
 
 walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
@@ -549,7 +552,7 @@ print.walking_path <- function(x, ...) {
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
-#' @section Note: Arrow represent mileposts or timeposts to the destination.
+#' @section Note: Arrows represent mileposts or timeposts to the destination.
 #' @examples
 #' plot(walkingPath(15))
 #' plot(walkingPath(15), unit.posts = "time")

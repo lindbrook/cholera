@@ -2,7 +2,7 @@
 % Please edit documentation in R/walkingPath.R
 \name{walkingPath}
 \alias{walkingPath}
-\title{Compute the shortest walking path between cases and/or pumps (Beta).}
+\title{Compute the shortest walking path between cases and/or pumps.}
 \usage{
 walkingPath(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
@@ -11,7 +11,7 @@ walkingPath(origin = 1, destination = NULL, type = "case-pump",
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
 
-\item{destination}{Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case. Character landmark name.}
+\item{destination}{Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case. Character landmark name (case insensitive).}
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
@@ -31,7 +31,7 @@ walkingPath(origin = 1, destination = NULL, type = "case-pump",
 An R list with two elements: a character vector of path nodes and a data frame summary.
 }
 \description{
-Compute the shortest walking path between cases and/or pumps (Beta).
+Compute the shortest walking path between cases and/or pumps.
 }
 \note{
 The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using \code{distanceTime()}. Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
@@ -56,6 +56,9 @@ walkingPath(1, 6, type = "pumps")
 
 # path from case 1 to nearest pump.
 plot(walkingPath(1))
+
+# path from John Snow's residence to Broad Street pump.
+plot(walkingPath("John Snow", 7))
 }
 }
 \seealso{
