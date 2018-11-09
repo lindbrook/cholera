@@ -39,10 +39,6 @@ addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   x <- do.call("walkingPath", arguments)
 
-  if (class(x) != "walking_path") {
-    stop('x\'s class must be "walking_path".')
-  }
-
   if (is.na(x$alter.node)) {
     txt1 <- paste("Case", x$origin, "is part of an isolated subgraph.")
     txt2 <- "It (technically) has no nearest pump."
