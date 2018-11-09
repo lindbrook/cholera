@@ -4,7 +4,7 @@
 \alias{addWalkingPath}
 \title{Add the shortest walking path between a selected cases or pumps.}
 \usage{
-addWalkingPath(origin, destination = NULL, type = "case-pump",
+addWalkingPath(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5, zoom = TRUE,
   radius = 0.5, unit.posts = "distance", unit.interval = NULL,
