@@ -106,6 +106,18 @@
 #' @docType data
 "landmarks"
 
+#' Centers of City Square.
+#'
+#' @format A data frame with 6 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
+#'  \describe{
+#'     \item{\code{name}}{squre name}
+#'     \item{\code{x.proj}}{x-coordinate}
+#'     \item{\code{y.proj}}{y-coordinate}
+#'     \item{\code{case}}{numeric case ID}
+#'  }
+#' @docType data
+"landmarks.squares"
+
 #' Orthogonal projection of observed cases onto road network.
 #'
 #' @format A data frame with 5 variables that records the position of the orthogonal projection of the 578 cases onto the network of roads.

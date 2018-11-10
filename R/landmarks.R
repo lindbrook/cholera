@@ -2,13 +2,15 @@
 #'
 #' Nominal and orthogonal coordinates
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
-#' @export
-
-# landmarks <- orthoProjLandmarks()
-# usethis::use_data(landmarks)
-# usethis::use_data(landmarks, overwrite = TRUE)
 
 orthoProjLandmarks <- function(multi.core = FALSE) {
+  # landmarks <- orthoProjLandmarks()
+  # landmarks.squares <- landmarksSquares()
+  # usethis::use_data(landmarks)
+  # usethis::use_data(landmarks.squares)
+  # usethis::use_data(landmarks, overwrite = TRUE)
+  # usethis::use_data(landmarks.squares, overwrite = TRUE)
+
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
@@ -216,5 +218,17 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
   out <- data.frame(ortho.proj, name = landmark.names, stringsAsFactors = FALSE)
   row.names(out) <- NULL
   out$case <- seq(20001, 20000 + nrow(out))
+  out
+}
+
+landmarksSquares <- function() {
+  golden.sq <- data.frame(name = "Golden Square", x.proj = 11.90927,
+    y.proj = 8.239483)
+  soho.sq <- data.frame(name = "Soho Square", x.proj = 18.07044,
+    y.proj = 15.85703)
+  out <- rbind(golden.sq, soho.sq)
+  start <- max(cholera::landmarks$case) + 1
+  stop <- start + nrow(out) - 1
+  out$case <- seq(start, stop)
   out
 }
