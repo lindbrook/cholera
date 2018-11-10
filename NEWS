@@ -1,3 +1,10 @@
+cholera 0.5.1.9050
+==================
+
+- add landmarksSquares() and landmarks.squares.
+- add landmarks to euclideanPath().
+
+
 cholera 0.5.1.9049
 ==================
 
