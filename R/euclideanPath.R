@@ -1,4 +1,4 @@
-#' Compute path of the Euclidean distance between cases and/or pumps.
+#' Compute path of the Euclidean distance between cases and/or pumps (Beta).
 #'
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
@@ -48,6 +48,20 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   if (is.character(destination)) {
     if (type != "cases") stop('type must be "cases".')
+  }
+
+  if (type == "pumps") {
+    if (origin == 2) {
+      stop ('Pump 2 is a technical isolate. Choose another.')
+    }
+  }
+
+  if (type %in% c("case-pump", "pumps")) {
+    if (is.null(destination) == FALSE) {
+      if (destination == 2) {
+        stop ('Pump 2 is a technical isolate. Choose another.')
+      }
+    }
   }
 
   obs.ct <- nrow(cholera::fatalities)
@@ -104,12 +118,18 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
           c("x.proj", "y.proj")]
       } else if (is.character(origin)) {
         origin <- caseAndSpace(origin)
-        ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
-          "case"]
-        ego <- cholera::landmarks[cholera::landmarks$case == ego.id,
-          c("x.proj", "y.proj")]
-      }
 
+        if (grepl("Square", origin)) {
+          sel <- cholera::landmarks.squares$name == origin
+          ego.id <- cholera::landmarks.squares[sel, "case"]
+          ego <- cholera::landmarks.squares[sel, c("x.proj", "y.proj")]
+        } else if (origin %in% cholera::landmarks$name) {
+          ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
+            "case"]
+          ego <- cholera::landmarks[cholera::landmarks$case == ego.id,
+            c("x.proj", "y.proj")]
+        } else stop('Use a valid landmark name.')
+      }
     } else {
       ego.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == origin,
         "case"]
@@ -153,7 +173,12 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       } else if (is.character(origin)) {
         origin <- caseAndSpace(origin)
-        if (origin %in% cholera::landmarks$name) {
+
+        if (grepl("Square", origin)) {
+          sel <- cholera::landmarks.squares$name == origin
+          ego.id <- cholera::landmarks.squares[sel, "case"]
+          ego <- cholera::landmarks.squares[sel, ]
+        } else if (origin %in% cholera::landmarks$name) {
           ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
             "case"]
           ego <- cholera::landmarks[cholera::landmarks$case == ego.id, ]
@@ -162,6 +187,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       if (is.null(destination)) {
         alters.id <- cholera::fatalities.address$anchor.case
+        alters <- cholera::ortho.proj[cholera::ortho.proj$case %in% alters.id, ]
       } else {
         if (is.numeric(destination)) {
           if (all(destination > 0)) {
@@ -172,29 +198,77 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
               %in% abs(destination) == FALSE, "case"])
           }
 
+          alters <- cholera::ortho.proj[cholera::ortho.proj$case %in%
+            alters.id, ]
         } else if (is.character(destination)) {
           destination <- caseAndSpace(destination)
-          if (destination %in% cholera::landmarks$name) {
+
+          if (grepl("Square", destination)) {
+            sel <- cholera::landmarks.squares$name == destination
+            alters.id <- cholera::landmarks.squares[sel, "case"]
+            alters <- cholera::landmarks.squares[sel, ]
+          } else if (destination %in% cholera::landmarks$name) {
             alters.id <- cholera::landmarks[cholera::landmarks$name ==
               destination, "case"]
+            alters <- cholera::landmarks[cholera::landmarks$case == alters.id, ]
           } else stop('Use a valid landmark name for destination.')
         }
       }
 
     } else {
-      ego.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == origin,
-        "case"]
-      ego <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == origin, ]
+      if (is.numeric(origin)) {
+        if (origin <= nrow(cholera::sim.ortho.proj)) {
+          ego.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case ==
+            origin, "case"]
+          ego <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case ==
+            origin, ]
+        } else stop('1 >= |origin| <= ', nrow(cholera::sim.ortho.proj), "!")
+      } else if (is.character(origin)) {
+        origin <- caseAndSpace(origin)
+
+        if (grepl("Square", origin)) {
+          sel <- cholera::landmarks.squares$name == origin
+          ego.id <- cholera::landmarks.squares[sel, "case"]
+          ego <- cholera::landmarks.squares[sel, ]
+        } else if (origin %in% cholera::landmarks$name) {
+          ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
+            "case"]
+          ego <- cholera::landmarks[cholera::landmarks$case == ego.id, ]
+        } else stop('Use a valid landmark name for origin.')
+      }
+
 
       if (is.null(destination)) {
-        alters.id <- cholera::sim.ortho.proj$case
-      } else {
-        if (all(destination > 0)) {
-          alters.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case %in%
-            destination, "case"]
-        } else if (all(destination < 0)) {
-          alters.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case %in%
-            abs(destination) == FALSE, "case"]
+        if (is.numeric(destination)) {
+          if (origin <= nrow(cholera::sim.ortho.proj)) {
+            alters.id <- cholera::sim.ortho.proj$case
+          } else {
+            stop('1 >= |destination| <= ', nrow(cholera::sim.ortho.proj), "!")
+          }
+
+          if (all(destination > 0)) {
+            alters.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case
+              %in% destination, "case"]
+          } else if (all(destination < 0)) {
+            alters.id <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case
+              %in% abs(destination) == FALSE, "case"]
+          }
+
+          alters <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case %in%
+            alters.id, ]
+
+        } else if (is.character(destination)) {
+          destination <- caseAndSpace(destination)
+
+          if (grepl("Square", destination)) {
+            sel <- cholera::landmarks.squares$name == destination
+            ego.id <- cholera::landmarks.squares[sel, "case"]
+            ego <- cholera::landmarks.squares[sel, ]
+          } else if (destination %in% cholera::landmarks$name) {
+            ego.id <- cholera::landmarks[cholera::landmarks$name == destination,
+              "case"]
+            ego <- cholera::landmarks[cholera::landmarks$case == ego.id, ]
+          } else stop('Use a valid landmark name for destination.')
         }
       }
     }
@@ -208,14 +282,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
                         stringsAsFactors = FALSE)
     } else {
       vars <- c("x.proj", "y.proj")
-
-      if (is.character(destination)) {
-        alters <- cholera::landmarks[cholera::landmarks$case %in% alters.id, ]
-      } else {
-        alters <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case %in%
-          alters.id, ]
-      }
-
       alters <- alters[alters$case != ego.id, ]
 
       d <- vapply(alters$case, function(i) {
