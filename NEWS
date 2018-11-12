@@ -1,3 +1,9 @@
+cholera 0.5.1.9051
+==================
+
+- fix euclideanPath(type = "cases") output.
+
+
 cholera 0.5.1.9050
 ==================
 

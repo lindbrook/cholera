@@ -291,19 +291,26 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       sel <- which.min(d)
 
-      if (is.character(origin)) {
+      if (is.character(origin) & is.character(destination)) {
+        out <- data.frame(caseA = origin,
+                          caseB = destination,
+                          anchorA = ego.id,
+                          anchorB = alters$case[sel],
+                          distance = d[sel],
+                          stringsAsFactors = FALSE)
+      } else if (!is.character(origin) & is.character(destination)) {
+        out <- data.frame(caseA = origin,
+                          caseB = destination,
+                          anchorA = ego.id,
+                          anchorB = alters.id,
+                          distance = d,
+                          stringsAsFactors = FALSE)
+      } else if (is.character(origin) & !is.character(destination)) {
         out <- data.frame(caseA = origin,
                           caseB = alters$case[sel],
                           anchorA = ego.id,
                           anchorB = alters$case[sel],
                           distance = d[sel],
-                          stringsAsFactors = FALSE)
-      } else if (is.character(destination)) {
-        out <- data.frame(caseA = origin,
-                          caseB = alters$name,
-                          anchorA = ego.id,
-                          anchorB = alters.id,
-                          distance = d,
                           stringsAsFactors = FALSE)
       } else if (!is.character(origin) & !is.character(destination)) {
         out <- data.frame(caseA = origin,
