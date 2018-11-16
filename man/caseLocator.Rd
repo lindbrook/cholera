@@ -5,7 +5,8 @@
 \title{Locate case by numerical ID.}
 \usage{
 caseLocator(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
-  add.title = TRUE, highlight.segment = TRUE, data = FALSE)
+  add.title = TRUE, highlight.segment = TRUE, data = FALSE,
+  add = TRUE)
 }
 \arguments{
 \item{case}{Numeric or Integer. Whole number between 1 and 578.}
@@ -21,6 +22,8 @@ caseLocator(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
 \item{highlight.segment}{Logical. Highlight case's segment.}
 
 \item{data}{Logical. Output data.}
+
+\item{add}{Logical. Add to existing plot or separate plot.}
 }
 \value{
 A base R graphics plot.
