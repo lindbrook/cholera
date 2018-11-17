@@ -56,14 +56,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }
   }
 
-  if (type %in% c("case-pump", "pumps")) {
-    if (is.null(destination) == FALSE) {
-      if (destination == 2) {
-        stop ('Pump 2 is a technical isolate. Choose another.')
-      }
-    }
-  }
-
   obs.ct <- nrow(cholera::fatalities)
   exp.ct <- nrow(cholera::regular.cases)
 
