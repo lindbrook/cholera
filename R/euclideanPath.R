@@ -50,15 +50,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     if (type != "cases") stop('type must be "cases".')
   }
 
-  if (type == "pumps") {
-    if (origin == 2) {
-      stop ('Pump 2 is a technical isolate. Choose another.')
-    }
-  }
-
   obs.ct <- nrow(cholera::fatalities)
   exp.ct <- nrow(cholera::regular.cases)
-
   if (observed) ct <- obs.ct else ct <- exp.ct
 
   if (vestry) {
