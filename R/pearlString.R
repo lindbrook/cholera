@@ -45,8 +45,7 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
   for (j in 2:length(pearl.string)) {
     added.pearls <- pearl.string[pearl.string != ""]
     ego.case <- added.pearls[length(added.pearls)]
-    alter.sel <- row.names(dat) %in% added.pearls == FALSE
-    alters <- dat[alter.sel, ]
+    alters <- dat[row.names(dat) %in% added.pearls == FALSE, ]
 
     N  <- signif(alters$x) == signif(dat[ego.case, "x"]) &
           signif(alters$y) == signif(dat[ego.case, "y"] + radius)

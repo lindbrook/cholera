@@ -128,8 +128,8 @@ plot.euclidean <- function(x, type = "star", ...) {
   pump.select <- x$pump.select
   nearest.pump <- x$nearest.pump
 
-  plot(cholera::fatalities.address[, c("x", "y")], xlim = x.rng,
-    ylim = y.rng, pch = NA, asp = 1)
+  plot(cholera::fatalities.address[, c("x", "y")], xlim = x.rng, ylim = y.rng,
+    pch = NA, asp = 1)
   invisible(lapply(border.list, lines))
 
   if (type == "star") {
