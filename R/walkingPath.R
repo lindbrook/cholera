@@ -1,4 +1,4 @@
-#' Compute the shortest walking path between cases and/or pumps.
+#' Compute the shortest walking path between cases and/or pumps (Beta).
 #'
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case. Character landmark name (case insensitive).
@@ -82,11 +82,9 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   edges <- node.data$edges
   g <- node.data$g
 
-  if (observed) {
-    ct <- nrow(cholera::fatalities)
-  } else {
-    ct <- nrow(cholera::regular.cases)
-  }
+  obs.ct <- nrow(cholera::fatalities)
+  exp.ct <- nrow(cholera::regular.cases)
+  if (observed) ct <- obs.ct else ct <- exp.ct
 
   if (vestry) {
     p.data <- cholera::pumps.vestry
@@ -102,10 +100,15 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   if (type == "case-pump") {
     if (observed) {
       if (is.numeric(origin)) {
-        if (origin <= nrow(cholera::fatalities)) {
+        if (abs(origin) %in% seq_len(ct)) {
           ego.id <- cholera::anchor.case[cholera::anchor.case$case == origin,
             "anchor.case"]
-        } else stop('1 >= |origin| <= ', nrow(cholera::fatalities), "!")
+        } else {
+          txt1 <- 'With observed = '
+          txt2 <- ', 1 >= |origin| <= '
+          stop(txt1, observed, txt2, ct, ".")
+        }
+
       } else if (is.character(origin)) {
         origin <- caseAndSpace(origin)
         if (grepl("Square", origin)) {
@@ -118,9 +121,13 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       }
 
     } else {
-      if (origin <= nrow(cholera::regular.cases)) {
+      if (abs(origin) %in% seq_len(ct)) {
         ego.id <- origin
-      } else stop('1 >= |origin| <= ', nrow(cholera::regular.cases), "!")
+      } else {
+        txt1 <- 'With observed = '
+        txt2 <- ', 1 >= |origin| <= '
+        stop(txt1, observed, txt2, ct, ".")
+      }
     }
 
     ego.node <- nodes[nodes$anchor %in% ego.id, "node"]

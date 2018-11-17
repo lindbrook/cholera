@@ -2,7 +2,7 @@
 % Please edit documentation in R/walkingPath.R
 \name{walkingPath}
 \alias{walkingPath}
-\title{Compute the shortest walking path between cases and/or pumps.}
+\title{Compute the shortest walking path between cases and/or pumps (Beta).}
 \usage{
 walkingPath(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
@@ -31,7 +31,7 @@ walkingPath(origin = 1, destination = NULL, type = "case-pump",
 An R list with two elements: a character vector of path nodes and a data frame summary.
 }
 \description{
-Compute the shortest walking path between cases and/or pumps.
+Compute the shortest walking path between cases and/or pumps (Beta).
 }
 \note{
 The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using \code{distanceTime()}. Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
