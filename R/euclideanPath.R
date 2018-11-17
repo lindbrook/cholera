@@ -70,10 +70,9 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   if (type == "case-pump") {
     if (is.numeric(origin)) {
       if (abs(origin) %in% seq_len(ct) == FALSE) {
-        txt1 <- 'With type = "cases" and observed = '
-        txt2 <- ', the absolute value of origin must be '
-        txt3 <- 'between 1 and '
-        stop(txt1, observed, txt2, txt3, ct, ".")
+        txt1 <- 'With observed = '
+        txt2 <- ', 1 >= |origin| <= '
+        stop(txt1, observed, txt2, ct, ".")
       }
     }
 
