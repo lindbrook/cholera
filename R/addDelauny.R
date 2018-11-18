@@ -1,25 +1,18 @@
-#' Add Voronoi cells.
+#' Add Delauny triangles.
 #'
 #' @param pump.select Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6).
 #' @param vestry Logical. \code{FALSE} for original 13 pumps. TRUE for 14 pumps in Vestry Report.
-#' @param color Character. Color of cell edges.
-#' @param line.type Character. Type of line for cell edges.
+#' @param color Character. Color of triangle edges.
+#' @param line.type Character. Type of line for triangle edges.
 #' @param ... Additional plotting parameters.
-#' @seealso \code{\link{snowMap}},
-#' \code{\link{addIndexCase}},
-#' \code{\link{addKernelDensity}},
-#' \code{\link{addLandmarks}},
-#' \code{\link{addPlaguePit}},
-#' \code{\link{addSnow}},
-#' \code{\link{addWhitehead}}
 #' @note This function uses deldir::deldir().
 #' @import graphics
 #' @export
 #' @examples
 #' snowMap()
-#' addVoronoi()
+#' addDelauny()
 
-addVoronoi <- function(pump.select = NULL, vestry = FALSE, color = "black",
+addDelauny <- function(pump.select = NULL, vestry = FALSE, color = "black",
   line.type = "solid", ...) {
 
   if (vestry) {
@@ -44,6 +37,6 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE, color = "black",
   dat <- deldir::deldir(pump.data, rw = c(range(cholera::roads$x),
     range(cholera::roads$y)), suppressMsge = TRUE)
 
-  plot(dat, add = TRUE, wline = "tess", wpoints = "none", col = color,
+  plot(dat, add = TRUE, wline = "triang", wpoints = "none", col = color,
     lty = line.type)
 }

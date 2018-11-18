@@ -1,3 +1,9 @@
+cholera 0.5.1.9053
+==================
+
+- add addDelauny() and plot(neighborhoodVoronoi(), delauny.triangles = FALSE).
+
+
 cholera 0.5.1.9052
 ==================
 

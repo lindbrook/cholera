@@ -5,12 +5,14 @@
 \title{Plot Voronoi neighborhoods.}
 \usage{
 \method{plot}{voronoi}(x, voronoi.cells = TRUE,
-  euclidean.paths = FALSE, ...)
+  delauny.triangles = FALSE, euclidean.paths = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "voronoi" created by \code{neighborhoodVoronoi()}.}
 
 \item{voronoi.cells}{Logical. Plot Voronoi tessellation cells.}
+
+\item{delauny.triangles}{Logical. Plot Delauny trinagles.}
 
 \item{euclidean.paths}{Logical. Plot all Euclidean paths (star graph).}
 

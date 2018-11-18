@@ -136,6 +136,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @param x An object of class "voronoi" created by \code{neighborhoodVoronoi()}.
 #' @param voronoi.cells Logical. Plot Voronoi tessellation cells.
+#' @param delauny.triangles Logical. Plot Delauny trinagles.
 #' @param euclidean.paths Logical. Plot all Euclidean paths (star graph).
 #' @param ... Additional plotting parameters.
 #' @return A base R graph.
@@ -149,7 +150,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #' @examples
 #' plot(neighborhoodVoronoi())
 
-plot.voronoi <- function(x, voronoi.cells = TRUE,
+plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
   euclidean.paths = FALSE, ...) {
 
   if (class(x) != "voronoi") {
@@ -189,6 +190,10 @@ plot.voronoi <- function(x, voronoi.cells = TRUE,
     if (voronoi.cells) {
       plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none",
         lty = "solid")
+    }
+
+    if (delauny.triangles) {
+      plot(x$voronoi, add = TRUE, wline = "triang", wpoints = "none")
     }
 
     voronoi.case.id <- cholera::pumpCase(x)
