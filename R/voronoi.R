@@ -86,14 +86,15 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   pump.sel <- pump.data$id
 
   if (is.null(pump.select)) {
-    expected.data <- data.frame(pump = pump.sel[voronoi.order],
-                                area = voronoi$summary$dir.area)
+    pump.number <- pump.sel[voronoi.order]
   } else {
-    expected.data <- data.frame(pump = pump.sel[pump.select][voronoi.order],
-                                area = voronoi$summary$dir.area)
+    pump.number <- pump.sel[pump.select][voronoi.order]
   }
 
-  expected.data$pct <- expected.data$area / sum(expected.data$area)
+  expected.data <- data.frame(pump = pump.number,
+                              area = voronoi$summary$dir.area,
+                              pct = voronoi$summary$dir.wts)
+
   coordinates <- polygonCoordinates(pump.id, cell.data, vestry)
 
   if (is.null(statistic)) {
@@ -272,7 +273,6 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
 print.voronoi <- function(x, ...) {
   census <- x$statistic.data
   print(vapply(census, sum, numeric(1L)))
-
 }
 
 fourCorners <- function() {
