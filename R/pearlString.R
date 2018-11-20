@@ -241,9 +241,11 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
 #'
 #' @param x Object Neighborhood data.
 #' @param i Numeric. Neighborhood ID.
+#' @param pch Numeric.
+#' @param cex Numeric.
 #' @export
 
-peripheryAudit <- function(x, i = 1) {
+peripheryAudit <- function(x, i = 1, pch = 16, cex = 0.5) {
   nearest.pump <- x$nearest.pump
   p.num <- sort(unique(nearest.pump))
   neighborhood.cases <- lapply(p.num, function(n) {
@@ -252,7 +254,7 @@ peripheryAudit <- function(x, i = 1) {
 
   periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
     mc.cores = x$cores)
-  points(cholera::regular.cases[periphery.cases[[i]], ], pch = 16, cex = 0.5,
+  points(cholera::regular.cases[periphery.cases[[i]], ], pch = pch, cex = cex,
     col = snowColors()[i])
 }
 
