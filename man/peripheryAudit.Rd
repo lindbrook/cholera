@@ -4,12 +4,16 @@
 \alias{peripheryAudit}
 \title{Plot periphery cases.}
 \usage{
-peripheryAudit(x, i = 1)
+peripheryAudit(x, i = 1, pch = 16, cex = 0.5)
 }
 \arguments{
 \item{x}{Object Neighborhood data.}
 
 \item{i}{Numeric. Neighborhood ID.}
+
+\item{pch}{Numeric.}
+
+\item{cex}{Numeric.}
 }
 \description{
 Plot periphery cases.
