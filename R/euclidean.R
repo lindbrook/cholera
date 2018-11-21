@@ -133,8 +133,6 @@ plot.euclidean <- function(x, type = "star", ...) {
   invisible(lapply(border.list, lines))
 
   if (type == "star") {
-    invisible(lapply(road.list, lines, col = "lightgray"))
-
     invisible(lapply(seq_along(anchors), function(i) {
       p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
       n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
@@ -155,6 +153,8 @@ plot.euclidean <- function(x, type = "star", ...) {
         })
       }
     }))
+
+    invisible(lapply(road.list, lines, col = "gray"))
 
   } else if (type == "area.points") {
     invisible(lapply(seq_along(anchors), function(i) {
