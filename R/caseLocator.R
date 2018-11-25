@@ -9,6 +9,7 @@
 #' @param highlight.segment Logical. Highlight case's segment.
 #' @param data Logical. Output data.
 #' @param add Logical. Add to existing plot or separate plot.
+#' @param col Character. Point color.
 #' @return A base R graphics plot.
 #' @seealso \code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}
 #' @import graphics
@@ -19,7 +20,8 @@
 #' caseLocator(290, observed = FALSE)
 
 caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
-  add.title = TRUE, highlight.segment = TRUE, data = FALSE, add = TRUE) {
+  add.title = TRUE, highlight.segment = TRUE, data = FALSE, add = TRUE,
+  col = "red") {
 
   if (!is.numeric(case)) {
     stop("case must be numeric.")
@@ -38,10 +40,10 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
   if (add == TRUE) {
     if (observed) {
       points(cholera::fatalities[cholera::fatalities$case == case,
-        c("x", "y")], col = "red", lwd = 2)
+        c("x", "y")], col = col, lwd = 2)
     } else {
       points(cholera::regular.cases[case, c("x", "y")],
-        col = "red", lwd = 2)
+        col = col, lwd = 2)
     }
   } else {
     if (observed) {
@@ -59,14 +61,12 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
     if (data == FALSE) {
       if (zoom) {
         if (observed) {
-          x.rng <- c(cholera::fatalities[cholera::fatalities$case == case, "x"] -
-                       radius,
-                     cholera::fatalities[cholera::fatalities$case == case, "x"] +
-                       radius)
-          y.rng <- c(cholera::fatalities[cholera::fatalities$case == case, "y"] -
-                       radius,
-                     cholera::fatalities[cholera::fatalities$case == case, "y"] +
-                       radius)
+          x.rng <- c(
+            cholera::fatalities[cholera::fatalities$case == case, "x"] - radius,
+            cholera::fatalities[cholera::fatalities$case == case, "x"] + radius)
+          y.rng <- c(
+            cholera::fatalities[cholera::fatalities$case == case, "y"] - radius,
+            cholera::fatalities[cholera::fatalities$case == case, "y"] + radius)
         } else {
           x.rng <- c(cholera::regular.cases[case, "x"] - radius,
                      cholera::regular.cases[case, "x"] + radius)
@@ -89,7 +89,7 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
 
       if (observed) {
         points(cholera::fatalities[cholera::fatalities$case == case,
-          c("x", "y")], col = "red", lwd = 2)
+          c("x", "y")], col = col, lwd = 2)
 
         if (zoom) {
           if (highlight.segment) {
@@ -108,7 +108,7 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
 
       } else {
         points(cholera::regular.cases[case, c("x", "y")],
-          col = "red", lwd = 2)
+          col = col, lwd = 2)
 
         if (zoom) {
           if (highlight.segment) {

@@ -6,7 +6,7 @@
 \usage{
 caseLocator(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
   add.title = TRUE, highlight.segment = TRUE, data = FALSE,
-  add = TRUE)
+  add = TRUE, col = "red")
 }
 \arguments{
 \item{case}{Numeric or Integer. Whole number between 1 and 578.}
@@ -24,6 +24,8 @@ caseLocator(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
 \item{data}{Logical. Output data.}
 
 \item{add}{Logical. Add to existing plot or separate plot.}
+
+\item{col}{Character. Point color.}
 }
 \value{
 A base R graphics plot.
