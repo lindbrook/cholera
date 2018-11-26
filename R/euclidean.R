@@ -154,7 +154,7 @@ plot.euclidean <- function(x, type = "star", ...) {
       }
     }))
 
-    invisible(lapply(road.list, lines))
+    invisible(lapply(road.list, lines, col = "gray"))
 
   } else if (type == "area.points") {
     invisible(lapply(seq_along(anchors), function(i) {
