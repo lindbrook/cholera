@@ -6,6 +6,7 @@
 #' @param case.set Character. "observed" or "expected".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param type Character. Type of plot: "star", "area.points" or "area.polygons".
+#' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @return R graphic elements.
 #' @export
 #' @examples
@@ -17,7 +18,8 @@
 #' }
 
 addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
-  vestry = FALSE, case.set = "observed", multi.core = FALSE, type = "star") {
+  vestry = FALSE, case.set = "observed", multi.core = FALSE, type = "star",
+  alpha.level = 0.25) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".')
@@ -178,7 +180,7 @@ addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
     invisible(lapply(names(pearl.string), function(nm) {
       sel <- paste0("p", nm)
       polygon(cholera::regular.cases[pearl.string[[nm]], ],
-        col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = 2/3))
+        col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = alpha.level))
     }))
   }
 }

@@ -6,7 +6,7 @@
 \usage{
 addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, case.set = "observed", multi.core = FALSE,
-  type = "star")
+  type = "star", alpha.level = 0.25)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.}
@@ -20,6 +20,8 @@ addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 
 \item{type}{Character. Type of plot: "star", "area.points" or "area.polygons".}
+
+\item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 }
 \value{
 R graphic elements.

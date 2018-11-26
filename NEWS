@@ -3,6 +3,7 @@ cholera 0.5.1.9055
 
 - add pearlString2() beta.
 - test traveling salesman solution for addNeighborhoodEuclidean() and neighborhoodEuclidean().
+- add addNeighborhoodEuclidean(alpha.level = 0.25).
 
 
 cholera 0.5.1.9054
