@@ -15,15 +15,14 @@ Depends: R (>= 2.10)
 Imports: deldir (>= 0.0-18),
          HistData (>= 0.7-8),
          ggplot2,
-         grDevices,
          igraph,
          KernSmooth,
          pracma,
          RColorBrewer,
          scales,
          sp,
-         stats,
-         threejs
+         threejs,
+         TSP
 Suggests: knitr
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
