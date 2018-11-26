@@ -110,7 +110,7 @@ plot.euclidean <- function(x, type = "star", ...) {
   }
 
   if (type == "area.polygons") {
-    warning("In progress: some configuartions may not work!")
+    warning("In progress: some configurations may not work!")
   }
 
   if (x$case.set == "expected") message("Working...")

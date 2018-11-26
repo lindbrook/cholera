@@ -24,7 +24,7 @@ addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   }
 
   if (type == "area.polygons") {
-    warning("In progress: some configuartions may not work!")
+    warning("In progress: some configurations may not work!")
   }
 
   cores <- multiCore(multi.core)
@@ -115,10 +115,6 @@ addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
     if (x$case.set != "expected") {
       stop('area plots valid only when case.set = "expected".')
     }
-  }
-
-  if (type == "area.polygons") {
-    warning("In progress: some configuartions may not work!")
   }
 
   anchors <- x$anchors
