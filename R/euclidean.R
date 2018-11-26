@@ -188,7 +188,7 @@ plot.euclidean <- function(x, type = "star", ...) {
 
     periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
       mc.cores = x$cores)
-    pearl.string <- parallel::mclapply(periphery.cases, pearlString,
+    pearl.string <- parallel::mclapply(periphery.cases, pearlString2,
       mc.cores = x$cores)
     names(pearl.string) <- p.num
 

@@ -235,6 +235,24 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
   pearl.string
 }
 
+#' Compute polygon vertices via 'TSP' package.
+#'
+#' @param vertices Object Polygon vertices candidates.
+#' @param method Character. Traveling saleman algorithm.
+#' @noRd
+
+pearlString2 <- function(vertices, method = "repetitive_nn") {
+  d <- stats::dist(cholera::regular.cases[vertices, ])
+  distances <- data.frame(t(utils::combn(vertices, 2)), c(d),
+    stringsAsFactors = FALSE)
+  names(distances) <- c("a", "b", "dist")
+  distances$pathID <- paste0(distances$a, "-", distances$b)
+  distances$rev.pathID <- paste0(distances$b, "-", distances$a)
+  tsp <- TSP::TSP(d, labels = vertices)
+  soln <- TSP::solve_TSP(tsp, method = method)
+  names(soln)
+}
+
 ## diagnostic plots ##
 
 #' Plot periphery cases.
