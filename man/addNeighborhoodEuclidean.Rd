@@ -2,7 +2,7 @@
 % Please edit documentation in R/addNeighborhoodEuclidean.R
 \name{addNeighborhoodEuclidean}
 \alias{addNeighborhoodEuclidean}
-\title{Add Euclidean pump neighborhoods.}
+\title{Add Euclidean pump neighborhoods (beta).}
 \usage{
 addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, case.set = "observed", multi.core = FALSE,
@@ -27,7 +27,10 @@ addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 R graphic elements.
 }
 \description{
-Add Euclidean pump neighborhoods.
+Add Euclidean pump neighborhoods (beta).
+}
+\note{
+This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
 }
 \examples{
 \dontrun{

@@ -1,4 +1,4 @@
-#' Plot Euclidean path pump neighborhoods.
+#' Plot Euclidean path pump neighborhoods (Beta).
 #'
 #' Plots star graph from pump to its cases.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
@@ -87,6 +87,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
+#' @note This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
 #' @export
 #' @examples
 #' \dontrun{
@@ -107,10 +108,6 @@ plot.euclidean <- function(x, type = "star", ...) {
     if (x$case.set != "expected") {
       stop('area plots valid only when case.set = "expected".')
     }
-  }
-
-  if (type == "area.polygons") {
-    warning("In progress: some configurations may not work!")
   }
 
   if (x$case.set == "expected") message("Working...")

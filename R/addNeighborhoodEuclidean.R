@@ -1,4 +1,4 @@
-#' Add Euclidean pump neighborhoods.
+#' Add Euclidean pump neighborhoods (beta).
 #'
 #' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
@@ -8,6 +8,7 @@
 #' @param type Character. Type of plot: "star", "area.points" or "area.polygons".
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @return R graphic elements.
+#' @note This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
 #' @export
 #' @examples
 #' \dontrun{
@@ -23,10 +24,6 @@ addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".')
-  }
-
-  if (type == "area.polygons") {
-    warning("In progress: some configurations may not work!")
   }
 
   cores <- multiCore(multi.core)

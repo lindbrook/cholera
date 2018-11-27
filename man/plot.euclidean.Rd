@@ -19,6 +19,9 @@ A base R plot.
 \description{
 Plot method for neighborhoodEuclidean().
 }
+\note{
+This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
+}
 \examples{
 \dontrun{
 

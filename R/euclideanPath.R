@@ -1,4 +1,4 @@
-#' Compute path of the Euclidean distance between cases and/or pumps (Beta).
+#' Compute path of the Euclidean distance between cases and/or pumps.
 #'
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
