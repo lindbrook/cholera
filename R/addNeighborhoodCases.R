@@ -1,13 +1,14 @@
-#' Add observed cases by walking neighborhood.
+#' Add observed cases by neighborhood.
 #'
 #' Add cases to a plot as "address" or "fatalities" and as points or IDs.
 #' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.
 #' @param pump.select Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.
-#' @param type Character. Type of case: "address" (base of stack), "fatalities" (entire stack), or "expected" for simulated data.
+#' @param metric Character. Type of neighborhood: "euclidean" or "walking".
+#' @param type Character. Type of case: "address" (base of stack), or "fatalities" (entire stack).
 #' @param token Character. Type of token to plot: "point" or "id".
 #' @param text.size Numeric. Size of case ID text.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
-#' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
+#' @param weighted Logical. \code{TRUE} computes shortest walking path weighted by road length. \code{FALSE} computes shortest walking path in terms of the number of nodes.
 #' @param color Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param ... Additional plotting parameters.
@@ -23,11 +24,15 @@
 #' }
 
 addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
-  type = "address", token = "point", text.size = 0.5, vestry = FALSE,
-  weighted = TRUE, color = NULL, multi.core = FALSE, ...) {
+  metric = "walking", type = "address", token = "point", text.size = 0.5,
+  vestry = FALSE, weighted = TRUE, color = NULL, multi.core = FALSE, ...) {
+
+  if (metric %in% c("euclidean", "walking") == FALSE) {
+    stop('metric must be "euclidean" or "walking".')
+  }
 
   if (type %in% c("address", "fatalities", "expected") == FALSE) {
-    stop('type must be "address", "fatalities" or "expected".')
+    stop('type must be "address" or "fatalities".')
   }
 
   if (token %in% c("id", "point") == FALSE) {
@@ -36,28 +41,39 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
 
   cores <- multiCore(multi.core)
 
-  arguments <- list(pump.select = pump.select,
-                    vestry = vestry,
-                    weighted = weighted,
-                    case.set = "observed",
-                    multi.core = cores)
+  if (metric == "euclidean") {
+    anchors <- cholera::fatalities.address$anchor.case
 
-  nearest.path <- do.call("nearestPump", c(arguments, output = "path"))
+    nearest.pump <- parallel::mclapply(anchors, function(x) {
+      euclideanDistance(x, destination = pump.select, vestry = vestry)$pump
+    }, mc.cores = cores)
 
-  if (vestry) {
-    nearest.pump <- vapply(nearest.path, function(paths) {
-      sel <- cholera::ortho.proj.pump.vestry$node %in% paths[length(paths)]
-      cholera::ortho.proj.pump.vestry[sel, "pump.id"]
-    }, numeric(1L))
-  } else {
-    nearest.pump <- vapply(nearest.path, function(paths) {
-      sel <- cholera::ortho.proj.pump$node %in% paths[length(paths)]
-      cholera::ortho.proj.pump[sel, "pump.id"]
-    }, numeric(1L))
+    nearest.pump <- data.frame(case = anchors, pump = unlist(nearest.pump))
+
+  } else if (metric == "walking") {
+    arguments <- list(pump.select = pump.select,
+                      vestry = vestry,
+                      weighted = weighted,
+                      case.set = "observed",
+                      multi.core = cores)
+
+    nearest.path <- do.call("nearestPump", c(arguments, output = "path"))
+
+    if (vestry) {
+      nearest.pump <- vapply(nearest.path, function(paths) {
+        sel <- cholera::ortho.proj.pump.vestry$node %in% paths[length(paths)]
+        cholera::ortho.proj.pump.vestry[sel, "pump.id"]
+      }, numeric(1L))
+    } else {
+      nearest.pump <- vapply(nearest.path, function(paths) {
+        sel <- cholera::ortho.proj.pump$node %in% paths[length(paths)]
+        cholera::ortho.proj.pump[sel, "pump.id"]
+      }, numeric(1L))
+    }
+
+    nearest.pump <- data.frame(case = cholera::fatalities.address$anchor.case,
+                               pump = nearest.pump)
   }
-
-  nearest.pump <- data.frame(case = cholera::fatalities.address$anchor.case,
-                             pump = nearest.pump)
 
   snow.colors <- cholera::snowColors(vestry)
 
@@ -152,59 +168,5 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
           cex = 0.75, col = snow.colors[paste0("p", x)])
       }))
     }
-
-  } else if (type == "expected") {
-    x <- neighborhoodWalking(pump.select = pump.select, vestry = vestry)
-    OE <- observedExpected(x)
-    wholes <- OE$expected.wholes
-    splits <- OE$exp.splits
-    splits.pump <- OE$exp.splits.pump
-    splits.segs <- OE$exp.splits.segs
-
-    sim.proj <- cholera::sim.ortho.proj
-    sim.proj.segs <- unique(sim.proj$road.segment)
-
-    if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
-      split.outcome <- parallel::mclapply(seq_along(splits.segs), function(i) {
-        id <- sim.proj$road.segment == splits.segs[i] &
-              is.na(sim.proj$road.segment) == FALSE
-
-        sim.data <- sim.proj[id, ]
-        split.data <- splits[[i]]
-
-        sel <- vapply(seq_len(nrow(sim.data)), function(j) {
-          obs <- sim.data[j, c("x.proj", "y.proj")]
-          distance <- vapply(seq_len(nrow(split.data)), function(k) {
-            stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
-          }, numeric(1L))
-
-          test1 <- signif(sum(distance[1:2])) ==
-            signif(c(stats::dist(split.data[c(1, 2), ])))
-          test2 <- signif(sum(distance[3:4])) ==
-            signif(c(stats::dist(split.data[c(3, 4), ])))
-
-          ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
-        }, integer(1L))
-
-        data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-      }, mc.cores = x$cores)
-
-      split.outcome <- do.call(rbind, split.outcome)
-      split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
-      split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
-        split.outcome[split.outcome$pump == p, "case"]
-      })
-
-      names(split.cases) <- sort(unique(split.outcome$pump))
-    }
-
-    ap <- areaPointsData(sim.proj.segs, wholes, snow.colors, sim.proj,
-      split.cases)
-    points(cholera::regular.cases[ap$sim.proj.wholes$case, ],
-      col = grDevices::adjustcolor(ap$sim.proj.wholes$color, alpha.f = 1/2),
-      pch = 15, cex = 1.25)
-    points(cholera::regular.cases[ap$sim.proj.splits$case, ],
-      col = grDevices::adjustcolor(ap$sim.proj.splits$color, alpha.f = 1/2),
-      pch = 15, cex = 1.25)
   }
 }

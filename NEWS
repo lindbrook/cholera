@@ -1,7 +1,13 @@
+cholera 0.5.9.9001
+==================
+
+- add addNeighborhoodCases(metric = "euclidean").
+
+
 cholera 0.5.9.9000
 ==================
 
-- CRAN release candidate. 
+- CRAN release candidate.
 
 
 cholera 0.5.1.9055
