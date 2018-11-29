@@ -126,93 +126,6 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   out
 }
 
-#' Print method for neighborhoodWalking().
-#'
-#' Return count of paths (anchor cases) by pump neighborhood.
-#' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
-#' @param ... Additional parameters.
-#' @return An R vector.
-#' @export
-#' @examples
-#' \dontrun{
-#'
-#' neighborhoodWalking()
-#' print(neighborhoodWalking())
-#' }
-
-print.walking <- function(x, ...) {
-  if (class(x) != "walking") {
-    stop('"x"\'s class needs to be "walking".')
-  }
-
-  if (x$case.set == "observed" | x$case.set == "snow") {
-    out <- vapply(x$paths, length, numeric(1L))
-  } else if (x$case.set == "expected") {
-    out <- expectedCount(x)
-  }
-  print(out)
-}
-
-expectedCount <- function(x) {
-  OE <- observedExpected(x)
-  splits <- OE$exp.splits
-  splits.pump <- OE$exp.splits.pump
-  splits.segs <- OE$exp.splits.segs
-  wholes <- OE$expected.wholes
-
-  sim.proj <- cholera::sim.ortho.proj
-  sim.proj.segs <- unique(sim.proj$road.segment)
-
-  snow.colors <- cholera::snowColors(x$vestry)
-
-  if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
-    split.outcome <- parallel::mclapply(seq_along(splits.segs), function(i) {
-      id <- sim.proj$road.segment == splits.segs[i] &
-            is.na(sim.proj$road.segment) == FALSE
-      sim.data <- sim.proj[id, ]
-      split.data <- splits[[i]]
-
-      sel <- vapply(seq_len(nrow(sim.data)), function(j) {
-        obs <- sim.data[j, c("x.proj", "y.proj")]
-        distance <- vapply(seq_len(nrow(split.data)), function(k) {
-          stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
-        }, numeric(1L))
-        test1 <- signif(sum(distance[1:2])) ==
-          signif(c(stats::dist(split.data[c(1, 2), ])))
-        test2 <- signif(sum(distance[3:4])) ==
-          signif(c(stats::dist(split.data[c(3, 4), ])))
-        ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
-      }, integer(1L))
-
-      data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-    }, mc.cores = x$cores)
-
-    split.outcome <- do.call(rbind, split.outcome)
-    split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
-    split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
-      split.outcome[split.outcome$pump == p, "case"]
-    })
-    names(split.cases) <- sort(unique(split.outcome$pump))
-  } else stop("error!")
-
-  ap <- areaPointsData(sim.proj.segs, wholes, snow.colors, sim.proj,
-    split.cases)
-
-  split.count <- table(ap$sim.proj.splits$pump)
-  whole.count <- table(ap$sim.proj.wholes$pump)
-
-  split.count <- data.frame(pump = as.numeric(names(split.count)),
-                            count = unclass(split.count),
-                            stringsAsFactors = FALSE)
-  whole.count <- data.frame(pump = as.numeric(names(whole.count)),
-                            count = unclass(whole.count),
-                            stringsAsFactors = FALSE)
-
-  count.data <- merge(whole.count, split.count, by = "pump", all.x = TRUE)
-  count.data[is.na(count.data)] <- 0
-  stats::setNames(count.data$count.x + count.data$count.y, count.data$pump)
-}
-
 #' Plot method for neighborhoodWalking().
 #'
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
@@ -421,4 +334,91 @@ plot.walking <- function(x, type = "road", polygon.method = "pearl.string",
   pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
   title(main = "Pump Neighborhoods: Walking")
   message("Done!")
+}
+
+#' Print method for neighborhoodWalking().
+#'
+#' Return count of paths (anchor cases) by pump neighborhood.
+#' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
+#' @param ... Additional parameters.
+#' @return An R vector.
+#' @export
+#' @examples
+#' \dontrun{
+#'
+#' neighborhoodWalking()
+#' print(neighborhoodWalking())
+#' }
+
+print.walking <- function(x, ...) {
+  if (class(x) != "walking") {
+    stop('"x"\'s class needs to be "walking".')
+  }
+
+  if (x$case.set == "observed" | x$case.set == "snow") {
+    out <- vapply(x$paths, length, numeric(1L))
+  } else if (x$case.set == "expected") {
+    out <- expectedCount(x)
+  }
+  print(out)
+}
+
+expectedCount <- function(x) {
+  OE <- observedExpected(x)
+  splits <- OE$exp.splits
+  splits.pump <- OE$exp.splits.pump
+  splits.segs <- OE$exp.splits.segs
+  wholes <- OE$expected.wholes
+
+  sim.proj <- cholera::sim.ortho.proj
+  sim.proj.segs <- unique(sim.proj$road.segment)
+
+  snow.colors <- cholera::snowColors(x$vestry)
+
+  if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
+    split.outcome <- parallel::mclapply(seq_along(splits.segs), function(i) {
+      id <- sim.proj$road.segment == splits.segs[i] &
+            is.na(sim.proj$road.segment) == FALSE
+      sim.data <- sim.proj[id, ]
+      split.data <- splits[[i]]
+
+      sel <- vapply(seq_len(nrow(sim.data)), function(j) {
+        obs <- sim.data[j, c("x.proj", "y.proj")]
+        distance <- vapply(seq_len(nrow(split.data)), function(k) {
+          stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
+        }, numeric(1L))
+        test1 <- signif(sum(distance[1:2])) ==
+          signif(c(stats::dist(split.data[c(1, 2), ])))
+        test2 <- signif(sum(distance[3:4])) ==
+          signif(c(stats::dist(split.data[c(3, 4), ])))
+        ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
+      }, integer(1L))
+
+      data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
+    }, mc.cores = x$cores)
+
+    split.outcome <- do.call(rbind, split.outcome)
+    split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
+    split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
+      split.outcome[split.outcome$pump == p, "case"]
+    })
+    names(split.cases) <- sort(unique(split.outcome$pump))
+  } else stop("error!")
+
+  ap <- areaPointsData(sim.proj.segs, wholes, snow.colors, sim.proj,
+    split.cases)
+
+  split.count <- table(ap$sim.proj.splits$pump)
+  whole.count <- table(ap$sim.proj.wholes$pump)
+
+  split.count <- data.frame(pump = as.numeric(names(split.count)),
+                            count = unclass(split.count),
+                            stringsAsFactors = FALSE)
+  whole.count <- data.frame(pump = as.numeric(names(whole.count)),
+                            count = unclass(whole.count),
+                            stringsAsFactors = FALSE)
+
+  count.data <- merge(whole.count, split.count, by = "pump", all.x = TRUE)
+  count.data[is.na(count.data)] <- 0
+  stats::setNames(count.data$count.x + count.data$count.y, count.data$pump)
 }
