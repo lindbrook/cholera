@@ -1,3 +1,10 @@
+cholera 0.5.9.9002
+==================
+
+- pearlString2() -> travelingSalesman().
+- add polygon.method argument to addNeighborhoodEuclidean(), addNeighborhoodWalking(), plot.euclidean() and plot.walking().
+
+
 cholera 0.5.9.9001
 ==================
 
