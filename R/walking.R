@@ -217,6 +217,7 @@ expectedCount <- function(x) {
 #'
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
 #' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
+#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
@@ -230,7 +231,9 @@ expectedCount <- function(x) {
 #' plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.walking <- function(x, type = "road", ...) {
+plot.walking <- function(x, type = "road", polygon.method = "pearl.string",
+  ...) {
+
   if (class(x) != "walking") {
     stop('"x"\'s class needs to be "walking".')
   }
@@ -243,10 +246,18 @@ plot.walking <- function(x, type = "road", ...) {
     if (x$case.set != "expected") {
       stop('area plots valid only when case.set = "expected".')
     }
+
+    if (polygon.method == "pearl.string") {
+      verticesFn <- pearlString
+    } else if (polygon.method == "traveling.saleman") {
+      verticesFn <- travelingSalesman
+    } else {
+      stop('polygon.method must be "pearl.string" or "traveling.saleman".')
+    }
   }
 
   message("Working...")
-  
+
   n.data <- neighborhoodPathData(x)
   dat <- n.data$dat
   edges <- n.data$edges
@@ -375,7 +386,7 @@ plot.walking <- function(x, type = "road", ...) {
 
       periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
         mc.cores = x$cores)
-      pearl.string <- parallel::mclapply(periphery.cases, pearlString,
+      pearl.string <- parallel::mclapply(periphery.cases, verticesFn,
         mc.cores = x$cores)
 
       invisible(lapply(names(pearl.string), function(nm) {

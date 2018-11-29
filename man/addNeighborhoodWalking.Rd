@@ -5,9 +5,9 @@
 \title{Add expected walking neighborhoods.}
 \usage{
 addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
-  vestry = FALSE, weighted = TRUE, multi.core = FALSE, area = TRUE,
-  path = NULL, path.color = NULL, path.width = 3,
-  alpha.level = 0.25, ...)
+  vestry = FALSE, weighted = TRUE, polygon.method = "pearl.string",
+  multi.core = FALSE, area = TRUE, path = NULL, path.color = NULL,
+  path.width = 3, alpha.level = 0.25, ...)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -17,6 +17,8 @@ addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
 \item{weighted}{Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
+
+\item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 

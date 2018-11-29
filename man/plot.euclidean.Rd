@@ -4,12 +4,15 @@
 \alias{plot.euclidean}
 \title{Plot method for neighborhoodEuclidean().}
 \usage{
-\method{plot}{euclidean}(x, type = "star", ...)
+\method{plot}{euclidean}(x, type = "star",
+  polygon.method = "traveling.saleman", ...)
 }
 \arguments{
 \item{x}{An object of class "euclidean" created by \code{neighborhoodEuclidean()}.}
 
 \item{type}{Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
+
+\item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".}
 
 \item{...}{Additional plotting parameters.}
 }

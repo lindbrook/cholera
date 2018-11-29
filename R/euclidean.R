@@ -1,4 +1,4 @@
-#' Plot Euclidean path pump neighborhoods (Beta).
+#' Plot Euclidean path pump neighborhoods.
 #'
 #' Plots star graph from pump to its cases.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
@@ -85,6 +85,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
+#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @note This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
@@ -99,7 +100,9 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' plot(neighborhoodEuclidean(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.euclidean <- function(x, type = "star", ...) {
+plot.euclidean <- function(x, type = "star",
+  polygon.method = "traveling.saleman", ...) {
+
   if (class(x) != "euclidean") {
     stop('"x"\'s class needs to be "euclidean".')
   }
@@ -107,6 +110,14 @@ plot.euclidean <- function(x, type = "star", ...) {
   if (type %in% c("area.points", "area.polygons")) {
     if (x$case.set != "expected") {
       stop('area plots valid only when case.set = "expected".')
+    }
+
+    if (polygon.method == "pearl.string") {
+      verticesFn <- pearlString
+    } else if (polygon.method == "traveling.saleman") {
+      verticesFn <- travelingSalesman
+    } else {
+      stop('polygon.method must be "pearl.string" or "traveling.saleman".')
     }
   }
 
@@ -185,7 +196,7 @@ plot.euclidean <- function(x, type = "star", ...) {
 
     periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
       mc.cores = x$cores)
-    pearl.string <- parallel::mclapply(periphery.cases, pearlString2,
+    pearl.string <- parallel::mclapply(periphery.cases, verticesFn,
       mc.cores = x$cores)
     names(pearl.string) <- p.num
 

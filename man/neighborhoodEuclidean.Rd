@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclidean.R
 \name{neighborhoodEuclidean}
 \alias{neighborhoodEuclidean}
-\title{Plot Euclidean path pump neighborhoods (Beta).}
+\title{Plot Euclidean path pump neighborhoods.}
 \usage{
 neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
   case.set = "observed", multi.core = FALSE)
