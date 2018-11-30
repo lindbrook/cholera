@@ -16,7 +16,7 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 
 \item{metric}{Character. Type of neighborhood: "euclidean" or "walking".}
 
-\item{type}{Character. Type of case: "address" (base of stack), or "fatalities" (entire stack).}
+\item{type}{Character. Type of case: "address" (base of stack), or "fatalities" (entire stack) or "expected".}
 
 \item{token}{Character. Type of token to plot: "point" or "id".}
 

@@ -4,7 +4,7 @@
 #' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.
 #' @param pump.select Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param metric Character. Type of neighborhood: "euclidean" or "walking".
-#' @param type Character. Type of case: "address" (base of stack), or "fatalities" (entire stack).
+#' @param type Character. Type of case: "address" (base of stack), or "fatalities" (entire stack) or "expected".
 #' @param token Character. Type of token to plot: "point" or "id".
 #' @param text.size Numeric. Size of case ID text.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
@@ -168,5 +168,59 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
           cex = 0.75, col = snow.colors[paste0("p", x)])
       }))
     }
+
+  } else if (type == "expected") {
+    x <- neighborhoodWalking(pump.select = pump.select, vestry = vestry)
+    OE <- observedExpected(x)
+    wholes <- OE$expected.wholes
+    splits <- OE$exp.splits
+    splits.pump <- OE$exp.splits.pump
+    splits.segs <- OE$exp.splits.segs
+
+    sim.proj <- cholera::sim.ortho.proj
+    sim.proj.segs <- unique(sim.proj$road.segment)
+
+    if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
+      split.outcome <- parallel::mclapply(seq_along(splits.segs), function(i) {
+        id <- sim.proj$road.segment == splits.segs[i] &
+              is.na(sim.proj$road.segment) == FALSE
+
+        sim.data <- sim.proj[id, ]
+        split.data <- splits[[i]]
+
+        sel <- vapply(seq_len(nrow(sim.data)), function(j) {
+          obs <- sim.data[j, c("x.proj", "y.proj")]
+          distance <- vapply(seq_len(nrow(split.data)), function(k) {
+            stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
+          }, numeric(1L))
+
+          test1 <- signif(sum(distance[1:2])) ==
+            signif(c(stats::dist(split.data[c(1, 2), ])))
+          test2 <- signif(sum(distance[3:4])) ==
+            signif(c(stats::dist(split.data[c(3, 4), ])))
+
+          ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
+        }, integer(1L))
+
+        data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
+      }, mc.cores = x$cores)
+
+      split.outcome <- do.call(rbind, split.outcome)
+      split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
+      split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
+        split.outcome[split.outcome$pump == p, "case"]
+      })
+
+      names(split.cases) <- sort(unique(split.outcome$pump))
+    }
+
+    ap <- areaPointsData(sim.proj.segs, wholes, snow.colors, sim.proj,
+      split.cases)
+    points(cholera::regular.cases[ap$sim.proj.wholes$case, ],
+      col = grDevices::adjustcolor(ap$sim.proj.wholes$color, alpha.f = 1/2),
+      pch = 15, cex = 1.25)
+    points(cholera::regular.cases[ap$sim.proj.splits$case, ],
+      col = grDevices::adjustcolor(ap$sim.proj.splits$color, alpha.f = 1/2),
+      pch = 15, cex = 1.25)
   }
 }
