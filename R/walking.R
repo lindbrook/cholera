@@ -131,6 +131,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
 #' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".
+#' @param msg Logical. Toggle in-progress messages.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
@@ -145,7 +146,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' }
 
 plot.walking <- function(x, type = "road", polygon.method = "pearl.string",
-  ...) {
+  msg = FALSE, ...) {
 
   if (class(x) != "walking") {
     stop('"x"\'s class needs to be "walking".')
@@ -169,7 +170,9 @@ plot.walking <- function(x, type = "road", polygon.method = "pearl.string",
     }
   }
 
-  message("Working...")
+  if (msg) {
+    if (x$case.set == "expected") message("Working...")
+  }
 
   n.data <- neighborhoodPathData(x)
   dat <- n.data$dat
@@ -333,7 +336,10 @@ plot.walking <- function(x, type = "road", polygon.method = "pearl.string",
 
   pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
   title(main = "Pump Neighborhoods: Walking")
-  message("Done!")
+
+  if (msg) {
+    if (x$case.set == "expected") message("Done!")
+  }
 }
 
 #' Print method for neighborhoodWalking().

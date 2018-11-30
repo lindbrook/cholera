@@ -86,6 +86,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".
+#' @param msg Logical. Toggle in-progress messages.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @note This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
@@ -101,7 +102,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' }
 
 plot.euclidean <- function(x, type = "star",
-  polygon.method = "traveling.saleman", ...) {
+  polygon.method = "traveling.saleman", msg = FALSE, ...) {
 
   if (class(x) != "euclidean") {
     stop('"x"\'s class needs to be "euclidean".')
@@ -121,7 +122,9 @@ plot.euclidean <- function(x, type = "star",
     }
   }
 
-  if (x$case.set == "expected") message("Working...")
+  if (msg) {
+    if (x$case.set == "expected") message("Working...")
+  }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
@@ -209,7 +212,10 @@ plot.euclidean <- function(x, type = "star",
 
   pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
   title(main = "Pump Neighborhoods: Euclidean")
-  if (x$case.set == "expected") message("Done!")
+
+  if (msg) {
+    if (x$case.set == "expected") message("Done!")
+  }
 }
 
 #' Print method for neighborhoodEuclidean().
