@@ -1,0 +1,77 @@
+---
+title: "Pearl Strings to Polygons"
+author: "lindbrook"
+date: "`r Sys.Date()`"
+output: github_document
+vignette: >
+  %\VignetteIndexEntry{Pearl Strings to Polygons}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(cholera)
+```
+
+## Overview
+
+Two flavors of "expected" area plots: points and polygons
+
+##
+```{r area_points, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
+```
+
+
+##
+```{r area_polygons, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
+```
+
+## why polygons?
+
+The virtues of vector graphics.
+
+##
+```{r marshall_points, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+streetNameLocator("marshall street", zoom = TRUE)
+addNeighborhoodCases(type = "expected")
+```
+
+
+##
+```{r marshall_polygons, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+streetNameLocator("marshall street", zoom = TRUE)
+addNeighborhoodWalking()
+```
+
+## computing polygons
+
+
+### Broad Street simulated cases
+![](cloud-1.png)
+
+
+### convex hull
+![](hull-1.png)
+
+
+### identify points on perimeter
+![](perimeter-1.png)
+
+
+### connect the dots to form polygon
+![](pearl_string-1.png)
+
+## two algorithms
+
+pearlString() : cycle + reverse epicycles
+
+travelingSalesman() : 'TSP' package based solution using repetitive nearest neighbor.
+
+
