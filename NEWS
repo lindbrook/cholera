@@ -1,3 +1,10 @@
+cholera 0.5.9.9003
+==================
+
+- add draft "pearl strings to polygons" lab note.
+- set in-progress messages plot.euclidean() and plot.walking() to FALSE.
+
+
 cholera 0.5.9.9002
 ==================
 

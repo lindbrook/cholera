@@ -126,6 +126,10 @@ They are also available online at the links below:
 [Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)
 [Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)
 
+In addition, there is a (draft) note about the computation of polygon-based area plots available online:
+
+[Pearl Strings to Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pearl.strings.md)
+
 ### note
 
 `neighborhoodWalking()` is computationally intensive. Using R version 3.5.1 on a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 5 seconds; doing the same for expected paths takes about 28 seconds. Using the functions' parallel implementation on 4 physical (8 logical) cores, the times fall to about 4 and 11 seconds.
