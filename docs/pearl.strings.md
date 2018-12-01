@@ -1,7 +1,7 @@
 Pearl Strings to Polygons
 ================
 lindbrook
-2018-11-30
+2018-12-01
 
 Overview
 --------
@@ -42,25 +42,41 @@ addNeighborhoodWalking()
 computing polygons
 ------------------
 
-### Broad Street simulated cases
+These are the simulated cases within the Broad Street pump neighborhood:
 
 ![](cloud-1.png)
 
-### convex hull
+The convex hull of those cases:
 
 ![](hull-1.png)
 
-### identify points on perimeter
+To find the points on the perimeter, the candidate points for the vertices of the polygon, I select the point that *do not* have neighbors at each of the four cardinal directions. See peripheryCases().
 
 ![](perimeter-1.png)
 
-### connect the dots to form polygon
+To connect the dots, we add pearls to a string to form polygon
 
 ![](pearl_string-1.png)
 
 two algorithms
 --------------
 
-pearlString() : cycle + reverse epicycles
+pearlString() cycles through the candidate points and uses reverse epicycles to find the next point to add to the string of pearls. This is the default for walking neighborhoods.
 
-travelingSalesman() : 'TSP' package based solution using repetitive nearest neighbor.
+travelingSalesman() uses the 'TSP' package and its implementation of repetitive nearest neighbors to compute the string of pearls. This is the defaul for euclidean neighbors.
+
+``` r
+neighborhood <- neighborhoodEuclidean(-6, case.set = "expected", vestry = TRUE)
+
+plot(neighborhood, type = "area.polygons", method = "pearl.string")
+```
+
+<img src="pearl.strings_files/figure-markdown_github/pearl_string-1.png" style="display: block; margin: auto;" />
+
+``` r
+neighborhood <- neighborhoodEuclidean(-6, case.set = "expected", vestry = TRUE)
+
+plot(neighborhood, type = "area.polygons", method = "traveling.salesman")
+```
+
+<img src="pearl.strings_files/figure-markdown_github/traveling-1.png" style="display: block; margin: auto;" />
