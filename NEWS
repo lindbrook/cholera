@@ -1,3 +1,9 @@
+cholera 0.5.9.9004
+==================
+
+- pass line.width argument to addSnow(type = "perimeter").
+
+
 cholera 0.5.9.9003
 ==================
 

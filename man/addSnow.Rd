@@ -8,13 +8,13 @@ addSnow(type = "area", color = "dodgerblue", alpha.level = 0.25,
   line.width = 2, ...)
 }
 \arguments{
-\item{type}{Character. Type of annotation plot: "area", "boundary" or "street".}
+\item{type}{Character. Type of annotation plot: "area", "perimeter" or "street".}
 
 \item{color}{Character. Neighborhood color.}
 
 \item{alpha.level}{Numeric. Alpha level transparency: a value in [0, 1].}
 
-\item{line.width}{Numeric. Line width for \code{type = "street"} and \code{type = "boundary"}.}
+\item{line.width}{Numeric. Line width for \code{type = "street"} and \code{type = "perimeter"}.}
 
 \item{...}{Additional plotting parameters.}
 }
