@@ -238,10 +238,17 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
 #' Compute polygon vertices via 'TSP' package.
 #'
 #' @param vertices Object Polygon vertices candidates.
-#' @param method Character. Traveling saleman algorithm. See TSP::solve_TSP() for details.
+#' @param method Character. Traveling saleman algorithm. See TSP::solve_TSP() for details. Default is repetitive nearest neighbor.
 #' @noRd
 
 travelingSalesman <- function(vertices, method = "repetitive_nn") {
+  methods <- c("identity", "random", "nearest_insertion", "farthest_insertion",
+    "cheapest_insertion", "arbitrary_insertion", "nn", "repetitive_nn")
+
+  if (method %in% methods) {
+    stop('method must be "identity", "random", "nearest_insertion", "farthest_insertion", "cheapest_insertion", "arbitrary_insertion", "nn", or "repetitive_nn".')
+  }
+
   d <- stats::dist(cholera::regular.cases[vertices, ])
   distances <- data.frame(t(utils::combn(vertices, 2)), c(d),
     stringsAsFactors = FALSE)
