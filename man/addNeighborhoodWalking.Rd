@@ -7,7 +7,8 @@
 addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, weighted = TRUE, polygon.method = "pearl.string",
   multi.core = FALSE, area = TRUE, path = NULL, path.color = NULL,
-  path.width = 3, alpha.level = 0.25, ...)
+  path.width = 3, alpha.level = 0.25, polygon.type = "area",
+  polygon.col = NULL, polygon.lwd = 2, ...)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -31,6 +32,12 @@ addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
 \item{path.width}{Numeric. Set width of paths.}
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
+
+\item{polygon.type}{Character. "perimeter" or "area".}
+
+\item{polygon.col}{Character.}
+
+\item{polygon.lwd}{Numeric.}
 
 \item{...}{Additional plotting parameters.}
 }

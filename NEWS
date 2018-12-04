@@ -1,3 +1,9 @@
+cholera 0.5.9.9006
+==================
+
+- use alpha transparency for polygon periphery in addSnow() and addNeighborhoodWalking().
+
+
 cholera 0.5.9.9005
 ==================
 

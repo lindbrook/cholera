@@ -11,6 +11,9 @@
 #' @param path.color Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors()}.
 #' @param path.width Numeric. Set width of paths.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
+#' @param polygon.type Character. "perimeter" or "area".
+#' @param polygon.col Character.
+#' @param polygon.lwd Numeric.
 #' @param ... Additional plotting parameters.
 #' @seealso \code{\link{snowMap}},
 #' \code{\link{addIndexCase}},
@@ -32,7 +35,8 @@
 addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, weighted = TRUE, polygon.method = "pearl.string",
   multi.core = FALSE, area = TRUE, path = NULL, path.color = NULL,
-  path.width = 3, alpha.level = 0.25, ...) {
+  path.width = 3, alpha.level = 0.25, polygon.type = "area",
+  polygon.col = NULL, polygon.lwd = 2, ...) {
 
   if (is.null(path) == FALSE) {
     if (path %in% c("expected", "observed") == FALSE) {
@@ -322,22 +326,49 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
 
     periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
       mc.cores = x$cores)
-
     pearl.string <- parallel::mclapply(periphery.cases, verticesFn,
       mc.cores = x$cores)
 
     if (is.null(pump.subset)) {
       invisible(lapply(names(pearl.string), function(nm) {
         sel <- paste0("p", nm)
-        polygon(cholera::regular.cases[pearl.string[[nm]], ],
-          col = grDevices::adjustcolor(snow.colors[sel], alpha.f = alpha.level))
+
+        if (is.null(polygon.col)) {
+          polygon.col <- grDevices::adjustcolor(snow.colors[sel],
+            alpha.f = alpha.level)
+        } else {
+          polygon.col <- grDevices::adjustcolor(polygon.col,
+            alpha.f = alpha.level)
+        }
+
+        if (polygon.type == "perimeter") {
+          polygon(cholera::regular.cases[pearl.string[[nm]], ],
+            border = polygon.col, lwd = polygon.lwd)
+        } else if (polygon.type == "area") {
+          polygon(cholera::regular.cases[pearl.string[[nm]], ],
+            col = polygon.col)
+        }
       }))
     } else {
       n.subset <- pearl.string[pump.subset]
       invisible(lapply(names(n.subset), function(nm) {
         sel <- paste0("p", nm)
-        polygon(cholera::regular.cases[pearl.string[[nm]], ],
-          col = grDevices::adjustcolor(snow.colors[sel], alpha.f = alpha.level))
+
+        if (is.null(polygon.col)) {
+          polygon.col <- grDevices::adjustcolor(snow.colors[sel],
+            alpha.f = alpha.level)
+        } else {
+          polygon.col <- grDevices::adjustcolor(polygon.col,
+            alpha.f = alpha.level)
+        }
+
+        if (polygon.type == "perimeter") {
+          polygon(cholera::regular.cases[pearl.string[[nm]], ],
+            border = polygon.col, lwd = polygon.lwd)
+        } else if (polygon.type == "area") {
+          polygon(cholera::regular.cases[pearl.string[[nm]], ],
+            col = polygon.col)
+        }
       }))
     }
   }

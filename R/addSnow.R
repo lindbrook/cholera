@@ -28,6 +28,7 @@ addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
     stop('type must be "area", "perimeter" or "street".')
   }
 
+  snow.col <- grDevices::adjustcolor(color, alpha.f = alpha.level)
   edges <- cholera::neighborhoodData(case.set = "snow")$edges
   snow <- cholera::snowNeighborhood()
 
@@ -44,11 +45,11 @@ addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
     pearl.string <- pearlString(periphery.cases, pearlStringRadius())
 
     if (type == "perimeter") {
-      polygon(cholera::regular.cases[pearl.string, ], border = color, col = NA,
+      polygon(cholera::regular.cases[pearl.string, ], border = snow.col,
         lwd = line.width)
     } else if (type == "area") {
       polygon(cholera::regular.cases[pearl.string, ], border = "black",
-        col = grDevices::adjustcolor(color, alpha.f = alpha.level))
+        col = snow.col)
     }
   }
 }
