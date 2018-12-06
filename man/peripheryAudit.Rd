@@ -7,7 +7,7 @@
 peripheryAudit(x, i = 1, pch = 16, cex = 0.5)
 }
 \arguments{
-\item{x}{Object Neighborhood data.}
+\item{x}{Object. Neighborhood data.}
 
 \item{i}{Numeric. Neighborhood ID.}
 

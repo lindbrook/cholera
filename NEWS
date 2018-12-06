@@ -1,7 +1,7 @@
 cholera 0.5.9.9007
 ==================
 
-- use tsp.method argument for travelingSaleman()
+- use tsp.method argument for travelingSalesman()
 
 
 cholera 0.5.9.9006

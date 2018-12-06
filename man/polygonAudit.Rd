@@ -7,7 +7,7 @@
 polygonAudit(x, i = 1)
 }
 \arguments{
-\item{x}{Object Neighborhood data.}
+\item{x}{Object. Neighborhood data.}
 
 \item{i}{Numeric. Neighborhood ID.}
 }

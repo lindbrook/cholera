@@ -238,7 +238,7 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
 
 #' Compute polygon vertices via 'TSP' package.
 #'
-#' @param vertices Object Polygon vertices candidates.
+#' @param vertices Object. Polygon vertices candidates.
 #' @param tsp.method Character. Traveling saleman algorithm. See TSP::solve_TSP() for details. Default method is repetitive nearest neighbor: "repetitive_nn".
 #' @note Default method for neighborhoodEuclidean().
 #' @noRd
@@ -268,7 +268,7 @@ travelingSalesman <- function(vertices, tsp.method = "repetitive_nn") {
 
 #' Plot periphery cases.
 #'
-#' @param x Object Neighborhood data.
+#' @param x Object. Neighborhood data.
 #' @param i Numeric. Neighborhood ID.
 #' @param pch Numeric.
 #' @param cex Numeric.
@@ -289,7 +289,7 @@ peripheryAudit <- function(x, i = 1, pch = 16, cex = 0.5) {
 
 #' Plot neighborhood polygon.
 #'
-#' @param x Object Neighborhood data.
+#' @param x Object. Neighborhood data.
 #' @param i Numeric. Neighborhood ID.
 #' @export
 
