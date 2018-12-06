@@ -32,7 +32,8 @@ peripheryCases <- function(n.points, radius = pearlStringRadius()) {
   row.names(n.area[which(periphery.test == FALSE), ])
 }
 
-# sort points on periphery to form a "concave" hull
+# Add pearls to string to form a closed, non-intersecting polygon.
+# Default method of neighborhoodWalking().
 pearlString <- function(vertices, radius = pearlStringRadius(),
   orientation = "clockwise") {
 
@@ -238,7 +239,8 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
 #' Compute polygon vertices via 'TSP' package.
 #'
 #' @param vertices Object Polygon vertices candidates.
-#' @param method Character. Traveling saleman algorithm. See TSP::solve_TSP() for details. Default is repetitive nearest neighbor.
+#' @param method Character. Traveling saleman algorithm. See TSP::solve_TSP() for details. Default method is repetitive nearest neighbor: "repetitive_nn".
+#' @note Default method for neighborhoodEuclidean().
 #' @noRd
 
 travelingSalesman <- function(vertices, method = "repetitive_nn") {
