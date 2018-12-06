@@ -85,7 +85,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
-#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".
+#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".
 #' @param msg Logical. Toggle in-progress messages.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
@@ -102,7 +102,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' }
 
 plot.euclidean <- function(x, type = "star",
-  polygon.method = "traveling.saleman", msg = FALSE, ...) {
+  polygon.method = "traveling.salesman", msg = FALSE, ...) {
 
   if (class(x) != "euclidean") {
     stop('"x"\'s class needs to be "euclidean".')
@@ -115,10 +115,10 @@ plot.euclidean <- function(x, type = "star",
 
     if (polygon.method == "pearl.string") {
       verticesFn <- pearlString
-    } else if (polygon.method == "traveling.saleman") {
+    } else if (polygon.method == "traveling.salesman") {
       verticesFn <- travelingSalesman
     } else {
-      stop('polygon.method must be "pearl.string" or "traveling.saleman".')
+      stop('polygon.method must be "pearl.string" or "traveling.salesman".')
     }
   }
 

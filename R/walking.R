@@ -130,7 +130,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
 #' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
-#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".
+#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".
 #' @param msg Logical. Toggle in-progress messages.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
@@ -163,10 +163,10 @@ plot.walking <- function(x, type = "road", polygon.method = "pearl.string",
 
     if (polygon.method == "pearl.string") {
       verticesFn <- pearlString
-    } else if (polygon.method == "traveling.saleman") {
+    } else if (polygon.method == "traveling.salesman") {
       verticesFn <- travelingSalesman
     } else {
-      stop('polygon.method must be "pearl.string" or "traveling.saleman".')
+      stop('polygon.method must be "pearl.string" or "traveling.salesman".')
     }
   }
 

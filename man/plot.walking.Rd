@@ -12,7 +12,7 @@
 
 \item{type}{Character. "road", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
 
-\item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".}
+\item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".}
 
 \item{msg}{Logical. Toggle in-progress messages.}
 
