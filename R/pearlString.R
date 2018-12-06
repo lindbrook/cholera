@@ -239,16 +239,18 @@ pearlString <- function(vertices, radius = pearlStringRadius(),
 #' Compute polygon vertices via 'TSP' package.
 #'
 #' @param vertices Object Polygon vertices candidates.
-#' @param method Character. Traveling saleman algorithm. See TSP::solve_TSP() for details. Default method is repetitive nearest neighbor: "repetitive_nn".
+#' @param tsp.method Character. Traveling saleman algorithm. See TSP::solve_TSP() for details. Default method is repetitive nearest neighbor: "repetitive_nn".
 #' @note Default method for neighborhoodEuclidean().
 #' @noRd
 
-travelingSalesman <- function(vertices, method = "repetitive_nn") {
+travelingSalesman <- function(vertices, tsp.method = "repetitive_nn") {
   methods <- c("identity", "random", "nearest_insertion", "farthest_insertion",
     "cheapest_insertion", "arbitrary_insertion", "nn", "repetitive_nn")
 
-  if (method %in% methods) {
-    stop('method must be "identity", "random", "nearest_insertion", "farthest_insertion", "cheapest_insertion", "arbitrary_insertion", "nn", or "repetitive_nn".')
+  if (tsp.method %in% methods == FALSE) {
+    stop('tsp.method must be "identity", "random", "nearest_insertion",
+         "farthest_insertion", "cheapest_insertion", "arbitrary_insertion",
+         "nn", or "repetitive_nn".')
   }
 
   d <- stats::dist(cholera::regular.cases[vertices, ])
@@ -258,7 +260,7 @@ travelingSalesman <- function(vertices, method = "repetitive_nn") {
   distances$pathID <- paste0(distances$a, "-", distances$b)
   distances$rev.pathID <- paste0(distances$b, "-", distances$a)
   tsp <- TSP::TSP(d, labels = vertices)
-  soln <- TSP::solve_TSP(tsp, method = method)
+  soln <- TSP::solve_TSP(tsp, method = tsp.method)
   names(soln)
 }
 
