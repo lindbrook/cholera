@@ -275,14 +275,6 @@ print.voronoi <- function(x, ...) {
   print(vapply(census, sum, numeric(1L)))
 }
 
-# fourCorners <- function() {
-#   nw <- cholera::roads[cholera::roads$id == 69, c("x", "y")]
-#   ne <- cholera::roads[cholera::roads$id == 28, c("x", "y")]
-#   se <- cholera::roads[cholera::roads$id == 1137, c("x", "y")]
-#   sw <- cholera::roads[cholera::roads$id == 1211, c("x", "y")]
-#   list(northwest = nw, northeast = ne, southeast = se, southwest = sw)
-# }
-
 # coordinates of Voronoi cell polygons for sp::point.in.polygon()
 polygonCoordinates <- function(pump.id, cell.data, vestry, x.rng, y.rng) {
   four.corners <- list(nw = data.frame(x = min(x.rng), y = max(y.rng)),
