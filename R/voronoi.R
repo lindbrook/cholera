@@ -95,7 +95,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
                               area = voronoi$summary$dir.area,
                               pct = voronoi$summary$dir.wts)
 
-  coordinates <- polygonCoordinates(pump.id, cell.data, vestry)
+  coordinates <- polygonCoordinates(pump.id, cell.data, vestry, x.rng, y.rng)
 
   if (is.null(statistic)) {
     statistic.data <- lapply(coordinates, function(cell) {
@@ -275,17 +275,20 @@ print.voronoi <- function(x, ...) {
   print(vapply(census, sum, numeric(1L)))
 }
 
-fourCorners <- function() {
-  nw <- cholera::roads[cholera::roads$id == 69, c("x", "y")]
-  ne <- cholera::roads[cholera::roads$id == 28, c("x", "y")]
-  se <- cholera::roads[cholera::roads$id == 1137, c("x", "y")]
-  sw <- cholera::roads[cholera::roads$id == 1211, c("x", "y")]
-  list(northwest = nw, northeast = ne, southeast = se, southwest = sw)
-}
+# fourCorners <- function() {
+#   nw <- cholera::roads[cholera::roads$id == 69, c("x", "y")]
+#   ne <- cholera::roads[cholera::roads$id == 28, c("x", "y")]
+#   se <- cholera::roads[cholera::roads$id == 1137, c("x", "y")]
+#   sw <- cholera::roads[cholera::roads$id == 1211, c("x", "y")]
+#   list(northwest = nw, northeast = ne, southeast = se, southwest = sw)
+# }
 
 # coordinates of Voronoi cell polygons for sp::point.in.polygon()
-polygonCoordinates <- function(pump.id, cell.data, vestry,
-  four.corners = fourCorners()) {
+polygonCoordinates <- function(pump.id, cell.data, vestry, x.rng, y.rng) {
+  four.corners <- list(nw = data.frame(x = min(x.rng), y = max(y.rng)),
+                       ne = data.frame(x = max(x.rng), y = max(y.rng)),
+                       se = data.frame(x = max(x.rng), y = min(y.rng)),
+                       sw = data.frame(x = min(x.rng), y = min(y.rng)))
 
   coordinates <- lapply(pump.id, function(i) {
     if (vestry) {

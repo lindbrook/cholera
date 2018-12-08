@@ -2,6 +2,7 @@ cholera 0.5.9.9008
 ==================
 
 - note unitMeter(dist(regular.cases[1:2, ])) in pump neighborhood vignette.
+- remove fourCorners().
 
 
 cholera 0.5.9.9007
