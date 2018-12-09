@@ -70,7 +70,7 @@ neighborhoodWalking()
 
 ### "Expected" walking neighborhoods
 
-To get a sense of the full extent of a walking neighborhood, I apply the approach above to use "expected" or simulated data. Using `sp::spsample()` and `sp::Polygon()`, I place 20,000 regularly spaced points, which lies approximately 6 meters apart, `unitMeter(dist(regular.cases[1:2, ]))`, across the map and essentially compute the shortest path to the nearest pump.[3]
+To get a sense of the full extent of a walking neighborhood, I apply the approach above to use "expected" or simulated data. Using `sp::spsample()` and `sp::Polygon()`, I place 20,000 regularly spaced points, which lie approximately 6 meters apart, `unitMeter(dist(regular.cases[1:2, ]))`, across the map and essentially compute the shortest path to the nearest pump.[3]
 
 I visualize the results in two ways. In the first, I identify neighborhoods by coloring roads.[4]
 
