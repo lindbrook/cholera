@@ -45,5 +45,5 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE, color = "black",
     range(cholera::roads$y)), suppressMsge = TRUE)
 
   plot(dat, add = TRUE, wline = "tess", wpoints = "none", col = color,
-    lty = line.type)
+    lty = line.type, ...)
 }
