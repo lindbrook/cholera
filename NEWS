@@ -1,4 +1,10 @@
-cholera 0.5.9.9008
+cholera 0.5.9.9010
+==================
+
+- use voronoiPolygons() in neighborhoodVornoi().
+
+
+cholera 0.5.9.9009
 ==================
 
 - add voronoiPolygons().
