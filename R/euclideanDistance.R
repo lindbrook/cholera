@@ -4,6 +4,7 @@
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or "simulated" expected data.
+#' @param case.location Character. For observed = FALSE: "address" or "regular". "regular" is the x-y coordinate of \code{regular.cases}.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
@@ -28,8 +29,8 @@
 #' euclideanDistance(1, 6, type = "pumps")
 
 euclideanDistance <- function(origin = 1, destination = NULL,
-  type = "case-pump", observed = TRUE, vestry = FALSE, unit = "meter",
-  time.unit = "second", walking.speed = 5) {
+  type = "case-pump", observed = TRUE, case.location = "address",
+  vestry = FALSE, unit = "meter", time.unit = "second", walking.speed = 5) {
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
     stop('type must be "case-pump", "cases" or "pumps".')
@@ -41,6 +42,10 @@ euclideanDistance <- function(origin = 1, destination = NULL,
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
     stop('time.unit must be "hour", "minute" or "second".')
+  }
+
+  if (case.location %in% c("address", "regular") == FALSE) {
+    stop('case.location must be "address" or "regular".')
   }
 
   obs.ct <- nrow(cholera::fatalities)
@@ -102,6 +107,7 @@ euclideanDistance <- function(origin = 1, destination = NULL,
                     destination = destination,
                     type = type,
                     observed = observed,
+                    case.location = case.location,
                     vestry = vestry,
                     unit = unit,
                     time.unit = "second",

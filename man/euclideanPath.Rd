@@ -2,11 +2,11 @@
 % Please edit documentation in R/euclideanPath.R
 \name{euclideanPath}
 \alias{euclideanPath}
-\title{Compute path of the Euclidean distance between cases and/or pumps.}
+\title{Compute path of the Euclidean distance between cases and/or pumps (Beta).}
 \usage{
 euclideanPath(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, vestry = FALSE, unit = "meter",
-  time.unit = "second", walking.speed = 5)
+  observed = TRUE, case.location = "address", vestry = FALSE,
+  unit = "meter", time.unit = "second", walking.speed = 5)
 }
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
@@ -16,6 +16,8 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
 \item{observed}{Logical. Use observed or "simulated" expected data.}
+
+\item{case.location}{Character. For observed = FALSE: "address" or "regular". "regular" is the x-y coordinate of \code{regular.cases}.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
@@ -29,7 +31,7 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
 }
 \description{
-Compute path of the Euclidean distance between cases and/or pumps.
+Compute path of the Euclidean distance between cases and/or pumps (Beta).
 }
 \note{
 The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
