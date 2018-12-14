@@ -1,7 +1,8 @@
 cholera 0.5.9.9011
 ==================
 
-- add case.location argument for "address" or "regular" in euclideanDistance(), euclideanPath() and neighborhoodEuclidean() for Voronoi diagrams.
+- add case.location argument for "address" or "regular" in euclideanDistance(),
+  euclideanPath() and neighborhoodEuclidean() for Voronoi diagrams.
 
 
 cholera 0.5.9.9010
