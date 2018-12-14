@@ -1,7 +1,7 @@
 cholera 0.5.9.9011
 ==================
 
-- Voronoi test via euclideanPathB().
+- test and remove euclideanPathB() for Voronoi audit.
 
 
 cholera 0.5.9.9010
