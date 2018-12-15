@@ -18,7 +18,7 @@
 #' }
 
 neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
-  case.set = "observed", case.location = "address", multi.core = FALSE) {
+  case.set = "observed", case.location = "nominal", multi.core = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".')

@@ -5,7 +5,7 @@
 \title{Plot Euclidean path pump neighborhoods.}
 \usage{
 neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
-  case.set = "observed", case.location = "address",
+  case.set = "observed", case.location = "nominal",
   multi.core = FALSE)
 }
 \arguments{
