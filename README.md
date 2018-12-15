@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.9.9012-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)   
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.9.9013-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 cholera: amend, augment and aid analysis of Snow's cholera map
 --------------------------------------------------------------
 
@@ -47,7 +47,7 @@ plot(neighborhoodVoronoi())
 The second flavor is based on the Euclidean distances between cases and pumps. This serves as a check on the Voronoi-based method, as a more granular estimate of Euclidean distance based neighborhoods, and provides a more flexible way to visualize Euclidean distance based neighborhoods.
 
 ``` r
-plot(neighborhoodEuclidean())
+plot(neighborhoodEuclidean(case.location = "nominal"))
 ```
 
 ![](man/figures/README-euclidean-1.png)
@@ -116,20 +116,23 @@ devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 devtools::install_github("lindbrook/cholera", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
-Read the package vignettes (and the lab notes, if interested). They expand on the concept of a "pump neighborhood", and go into greater detail on how the data was "fixed" and on the methods used to compute walking distances and pump neighborhoods.
+Read the package vignettes and the lab notes. They expand on the concept of a "pump neighborhood", and go into greater detail on how I "fix" the data were "fixed" and how I compute walking distances and walking neighborhoods.
 
-They are also available online at the links below:
+Besides the package itself, the vignettes are also available online at the links below:
 
-[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)   
-[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
-["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md) [+ lab notes](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)   
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)   
+["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)   
 [Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
 [Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)   
-[Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)
+[Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)   
 
-In addition, there is a (draft) note about the computation of polygon-based area plots available online:
+The lab notes, which are only available online, go into greater detail about implementation:
 
-[Pearl Strings to Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pearl.strings.md)
+[Lab Notes: Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)   
+[Lab Notes: Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
+[Lab Notes: "Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
+[Lab Notes: Pearl Strings to Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pearl.strings.md)
 
 ### note
 
