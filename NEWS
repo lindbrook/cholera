@@ -9,7 +9,7 @@ cholera 0.5.9.9012
 cholera 0.5.9.9011
 ==================
 
-- add case.location argument for "address" or "nominal" for cases in
+- add case.location argument for "address" or "regular" for cases in
   addVoronoi(), euclideanDistance(), euclideanPath() and
   neighborhoodEuclidean().
 
