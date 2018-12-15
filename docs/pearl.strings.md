@@ -66,7 +66,7 @@ pearlString() cycles through the candidate points and uses reverse epicycles to 
 travelingSalesman() uses the 'TSP' package and its implementation of repetitive nearest neighbors to compute the string of pearls. This is the defaul for euclidean neighbors.
 
 ``` r
-neighborhood <- neighborhoodEuclidean(-6, case.set = "expected", vestry = TRUE)
+neighborhood <- neighborhoodWalking(-6, case.set = "expected", vestry = TRUE)
 
 plot(neighborhood, type = "area.polygons", method = "pearl.string")
 ```
@@ -74,7 +74,7 @@ plot(neighborhood, type = "area.polygons", method = "pearl.string")
 <img src="pearl.strings_files/figure-markdown_github/pearl_string-1.png" style="display: block; margin: auto;" />
 
 ``` r
-neighborhood <- neighborhoodEuclidean(-6, case.set = "expected", vestry = TRUE)
+neighborhood <- neighborhoodWalking(-6, case.set = "expected", vestry = TRUE)
 
 plot(neighborhood, type = "area.polygons", method = "traveling.salesman")
 ```
