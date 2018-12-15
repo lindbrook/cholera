@@ -176,20 +176,20 @@ plot.euclidean <- function(x, type = "star",
     invisible(lapply(seq_along(anchors), function(i) {
       n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
 
-      if (x$observed) {
-        sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
-        n.data <- cholera::fatalities.address[sel, ]
-        lapply(n.data$anchor.case, function(case) {
-          c.data <- n.data[n.data$anchor.case == case, ]
-          points(c.data$x, c.data$y, col = n.color, pch = 15, cex = 1.25)
-        })
-      } else {
+      # if (x$observed) {
+      #   sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
+      #   n.data <- cholera::fatalities.address[sel, ]
+      #   lapply(n.data$anchor.case, function(case) {
+      #     c.data <- n.data[n.data$anchor.case == case, ]
+      #     points(c.data$x, c.data$y, col = n.color, pch = 15, cex = 1.25)
+      #   })
+      # } else {
         n.data <- cholera::regular.cases[anchors[i], ]
         lapply(seq_len(nrow(n.data)), function(case) {
           c.data <- n.data[case, ]
           points(c.data$x, c.data$y, col = n.color, pch = 15, cex = 1.25)
         })
-      }
+      # }
     }))
 
     invisible(lapply(road.list, lines))

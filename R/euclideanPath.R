@@ -1,4 +1,4 @@
-#' Compute path of the Euclidean distance between cases and/or pumps (Beta).
+#' Compute path of the Euclidean distance between cases and/or pumps.
 #'
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
@@ -465,25 +465,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   output
 }
 
-#' Print method for euclideanPath().
-#'
-#' Summary output.
-#' @param x An object of class "euclidean_path" created by \code{euclideanPath()}.
-#' @param ... Additional parameters.
-#' @return An R data frame.
-#' @export
-#' @examples
-#' euclideanPath(1)
-#' print(euclideanPath(1))
-
-print.euclidean_path <- function(x, ...) {
-  if (class(x) != "euclidean_path") {
-    stop('"x"\'s class must be "euclidean_path".')
-  }
-
-  print(x[c("ego", "alter", "data")])
-}
-
 #' Plot the path of the Euclidean distance between cases and/or pumps.
 #'
 #' @param x An object of class "euclidean_path" created by euclideanPath().
@@ -661,6 +642,25 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
     title(sub = paste(round(x$d, 1), d.unit, nominal.time, "@", x$speed,
       "km/hr;", post.info))
   }
+}
+
+#' Print method for euclideanPath().
+#'
+#' Summary output.
+#' @param x An object of class "euclidean_path" created by \code{euclideanPath()}.
+#' @param ... Additional parameters.
+#' @return An R data frame.
+#' @export
+#' @examples
+#' euclideanPath(1)
+#' print(euclideanPath(1))
+
+print.euclidean_path <- function(x, ...) {
+  if (class(x) != "euclidean_path") {
+    stop('"x"\'s class must be "euclidean_path".')
+  }
+
+  print(x[c("ego", "alter", "data")])
 }
 
 pumpTokensEuclidean <- function(x, case.color, destination.pump) {
