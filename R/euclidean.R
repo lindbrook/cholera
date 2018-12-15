@@ -4,7 +4,7 @@
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param case.set Character. "observed" or "expected".
-#' @param case.location Character. For observed = FALSE: "address" or "regular". "regular" is the x-y coordinate of \code{regular.cases}.
+#' @param case.location Character. For observed = FALSE: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @return An R vector.
 #' @note This function is computationally intensive when case.set = "expected."
@@ -24,8 +24,8 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
     stop('case.set must be "observed" or "expected".')
   }
 
-  if (case.location %in% c("address", "regular") == FALSE) {
-    stop('case.location must be "address" or "regular".')
+  if (case.location %in% c("address", "nominal") == FALSE) {
+    stop('case.location must be "address" or "nominal".')
   }
 
   cores <- multiCore(multi.core)

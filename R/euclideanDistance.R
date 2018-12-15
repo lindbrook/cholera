@@ -4,7 +4,7 @@
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or "simulated" expected data.
-#' @param case.location Character. For observed = FALSE: "address" or "regular". "regular" is the x-y coordinate of \code{regular.cases}.
+#' @param case.location Character. For observed = FALSE: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
@@ -44,8 +44,8 @@ euclideanDistance <- function(origin = 1, destination = NULL,
     stop('time.unit must be "hour", "minute" or "second".')
   }
 
-  if (case.location %in% c("address", "regular") == FALSE) {
-    stop('case.location must be "address" or "regular".')
+  if (case.location %in% c("address", "nominal") == FALSE) {
+    stop('case.location must be "address" or "nominal".')
   }
 
   obs.ct <- nrow(cholera::fatalities)

@@ -4,13 +4,16 @@
 \alias{addVoronoi}
 \title{Add Voronoi cells.}
 \usage{
-addVoronoi(pump.select = NULL, vestry = FALSE, color = "black",
-  line.type = "solid", ...)
+addVoronoi(pump.select = NULL, vestry = FALSE,
+  case.location = "address", color = "black", line.type = "solid",
+  ...)
 }
 \arguments{
 \item{pump.select}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6).}
 
 \item{vestry}{Logical. \code{FALSE} for original 13 pumps. TRUE for 14 pumps in Vestry Report.}
+
+\item{case.location}{Character. For observed = FALSE: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
 
 \item{color}{Character. Color of cell edges.}
 
