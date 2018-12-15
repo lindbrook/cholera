@@ -1,5 +1,5 @@
 ---
-title: "Pearl Strings to Polygons"
+title: "Lab Notes: Pearl Strings to Polygons"
 author: "lindbrook"
 date: "`r Sys.Date()`"
 output: github_document

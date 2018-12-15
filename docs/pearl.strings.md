@@ -1,7 +1,7 @@
-Pearl Strings to Polygons
+Lab Notes: Pearl Strings to Polygons
 ================
 lindbrook
-2018-12-01
+2018-12-15
 
 Overview
 --------
