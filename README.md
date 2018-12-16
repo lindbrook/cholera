@@ -82,7 +82,7 @@ plot(neighborhoodWalking(case.set = "expected"))
 The second colors the expected area of neighborhoods using points().
 
 ``` r
-plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
+plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
 ```
 
 ![](man/figures/README-expected_area_points-1.png)
@@ -90,7 +90,7 @@ plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 The third colors the expected area of neighborhoods using polygon().
 
 ``` r
-plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
+plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 ```
 
 ![](man/figures/README-expected_area_polygons-1.png)
@@ -122,8 +122,10 @@ Read the package vignettes and the lab notes. They expand on the concept of a "p
 
 The vignettes are available in the package and also online at the links below:
 
-[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)    [Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)   
-["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)    [Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)   
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)   
+["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)   
+[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
 [Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)   
 [Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)
 

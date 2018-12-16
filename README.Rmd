@@ -84,13 +84,13 @@ plot(neighborhoodWalking(case.set = "expected"))
 The second colors the expected area of neighborhoods using points().
 
 ```{r expected_area_points, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
+plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
 ```
 
 The third colors the expected area of neighborhoods using polygon().
 
 ```{r expected_area_polygons, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
+plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 ```
 
 For exploration, the first two options are faster.
