@@ -1,6 +1,7 @@
 cholera 0.5.9.9014
 ==================
 
+- update README.
 - add case.location argument for "address" or "nominal" for cases and pumps in
   addNeighborhoodEuclidean().
 

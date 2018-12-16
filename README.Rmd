@@ -81,18 +81,19 @@ You can also explore "expected" neighborhoods. Currently, you can do so in three
 plot(neighborhoodWalking(case.set = "expected"))
 ```
 
-The second and third color each neighborhood's area by using either points or polygons. The polygon implementation is shown below. For exploration, the first two options are faster.
+The second colors the expected area of neighborhoods using points().
 
-```{r expected_area_polygons, fig.width = 6, fig.height = 6, message = FALSE}
+```{r expected_area_points, fig.width = 6, fig.height = 6, message = FALSE}
 plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 ```
 
-The main virtue of the polygon approach is that it better lends itself to building graphs at different scales:
+The third colors the expected area of neighborhoods using polygon().
 
-```{r virtue, fig.width = 6, fig.height = 6, fig.align = "center", message = FALSE}
-streetNameLocator("marshall street", zoom = TRUE, radius = 0.5)
-addNeighborhoodWalking()
+```{r expected_area_polygons, fig.width = 6, fig.height = 6, message = FALSE}
+plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
 ```
+
+For exploration, the first two options are faster.
 
 ### getting started
 
@@ -117,20 +118,20 @@ devtools::install_github("lindbrook/cholera", build_opts = c("--no-resave-data",
 
 Read the package vignettes and the lab notes. They expand on the concept of a "pump neighborhood", and go into greater detail on how I "fix" the data were "fixed" and how I compute walking distances and walking neighborhoods.
 
-Besides the package itself, the vignettes are also available online at the links below:
+The vignettes are available in the package and also online at the links below:
 
-[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)   
-[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)   
-["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)   
-[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
-[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)   
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)
+["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)
+[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)
+[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)
 [Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)
 
 The lab notes, which are only available online, go into greater detail about implementation:
 
-[Lab Notes: Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)   
-[Lab Notes: Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
-[Lab Notes: "Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
+[Lab Notes: Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)
+[Lab Notes: Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)
+[Lab Notes: "Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)
 [Lab Notes: Pearl Strings to Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pearl.strings.md)
 
 ### note
