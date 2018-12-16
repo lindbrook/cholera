@@ -5,7 +5,7 @@
 \title{Add Euclidean pump neighborhoods (beta).}
 \usage{
 addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
-  vestry = FALSE, case.set = "observed",
+  vestry = FALSE, case.set = "observed", case.location = "nominal",
   polygon.method = "traveling.saleman", multi.core = FALSE,
   type = "star", alpha.level = 0.25)
 }
@@ -17,6 +17,8 @@ addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
 \item{case.set}{Character. "observed" or "expected".}
+
+\item{case.location}{Character. For observed = FALSE: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
 
 \item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".}
 
