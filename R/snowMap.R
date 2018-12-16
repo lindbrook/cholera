@@ -6,6 +6,7 @@
 #' @param add.landmarks Logical. Add landmarks.
 #' @param add.pumps Logical. Add pumps.
 #' @param add.roads Logical. Add roads.
+#' @param add.frame Logical. Add map frame.
 #' @param main Character. Title of graph.
 #' @param case.col Character. Color of fatalities.
 #' @param ... Additional plotting parameters.
@@ -23,8 +24,8 @@
 #' snowMap(vestry = TRUE, stacked = FALSE)
 
 snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
-  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE, main = NA,
-  case.col = "gray", ...) {
+  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE, add.frame = TRUE,
+  main = NA, case.col = "gray", ...) {
 
   rng <- mapRange()
 
@@ -41,7 +42,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
     cex = 0.5)
   if (add.pumps) addPump(vestry = vestry, col = "blue", pch = 2)
   if (add.landmarks) addLandmarks()
-  addBorder()
+  if (add.frame) addFrame()
 }
 
 #' Add all streets and roads to plot.
@@ -61,7 +62,7 @@ addRoads <- function(col = "gray", ...) {
 #' @param ... Additional plotting parameters.
 #' @export
 
-addBorder <- function(...) {
+addFrame <- function(...) {
   borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
   border.list <- split(borders[, c("x", "y")], borders$street)
   invisible(lapply(border.list, lines, ...))
