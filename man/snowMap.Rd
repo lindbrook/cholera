@@ -6,7 +6,7 @@
 \usage{
 snowMap(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
   add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE,
-  main = NA, case.col = "gray", ...)
+  add.frame = TRUE, main = NA, case.col = "gray", ...)
 }
 \arguments{
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
@@ -20,6 +20,8 @@ snowMap(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
 \item{add.pumps}{Logical. Add pumps.}
 
 \item{add.roads}{Logical. Add roads.}
+
+\item{add.frame}{Logical. Add map frame.}
 
 \item{main}{Character. Title of graph.}
 
