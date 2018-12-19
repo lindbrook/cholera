@@ -34,4 +34,7 @@ cholera::addVoronoi(case.location = "nominal", color = "white", lwd = 2)
 
 ![](euclidean.voronoi_files/figure-markdown_github/nominal-1.png)
 
+notes
+-----
+
 [1] Steven Fortune. 1987. "A Sweepline Algorithm for Voronoi Diagrams". *Algorithmica*. 2:153-174.
