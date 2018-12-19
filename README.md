@@ -131,8 +131,11 @@ The vignettes are available in the package and also online at the links below:
 
 The lab notes, which are only available online, go into greater detail about implementation:
 
-[Lab Notes: Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) [Lab Notes: Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md) [Lab Notes: "Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)
-[Lab Notes: Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/euclidean.voronoi.md) [Lab Notes: Voronoi tiles to polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md)
+[Lab Notes: Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)   
+[Lab Notes: Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
+[Lab Notes: "Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
+[Lab Notes: Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/euclidean.voronoi.md)   
+[Lab Notes: Voronoi tiles to polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md)
 
 ### note
 
