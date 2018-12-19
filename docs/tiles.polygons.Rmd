@@ -1,0 +1,59 @@
+---
+title: "Lab Notes: Voronoi tiles to polygons"
+author: "lindbrook"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(cholera)
+```
+
+## Voronoi tiles to polygons
+
+Using just the locations of sites or landmarks, Voronoi tessellation partitions a space into cells or tiles that represent those sites' neighborhoods (i.e., their catchment or service areas).
+
+To make tasks like coloring tiles or counting cases within tiles easier, I wrote voronoiPolygons() function. It converts 'deldir' Voronoi tessellation tiles into polygons (a list of data frames of vertices).
+
+## Coloring Polygons
+
+```{r coloring, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+# compute vertices of Voronoi tiles
+polygon.vertices <- voronoiPolygons(sites = cholera::pumps,
+  rw.data = cholera::roads)
+
+# define colors, plot map, and color code fatalities
+snow.colors <- grDevices::adjustcolor(cholera::snowColors(), alpha.f = 1/3)
+cholera::snowMap(add.cases = FALSE)
+cholera::addNeighborhoodCases(metric = "euclidean")
+
+# plot color coded polygons
+invisible(lapply(seq_along(polygon.vertices), function(i) {
+  polygon(polygon.vertices[[i]], col = snow.colors[[i]])
+}))
+```
+
+## Counting Observations in Polygons
+
+To count the number of cases within each neighborhood, we can use sp::point.in.polygon().
+
+```{r counting, echo = TRUE, eval = TRUE}
+# compute vertices of Voronoi tiles
+polygon.vertices <- voronoiPolygons(sites = cholera::pumps,
+  rw.data = cholera::roads)
+
+# locations of the 578 fatalities in Soho
+cases <- cholera::fatalities.unstacked
+
+# count fatalities within each polygon (neigborhood)
+census <- lapply(polygon.vertices, function(tile) {
+  sp::point.in.polygon(cases$x, cases$y, tile$x, tile$y)
+})
+
+# ID the 13 water pumps
+names(census) <- paste0("p", cholera::pumps$id)
+
+# count of fatalities by neighborhood
+vapply(census, sum, integer(1L))
+```
