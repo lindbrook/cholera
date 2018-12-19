@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.9.9014-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.9.9015-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 cholera: amend, augment and aid analysis of Snow's cholera map
 --------------------------------------------------------------
@@ -133,8 +133,7 @@ The lab notes, which are only available online, go into greater detail about imp
 
 [Lab Notes: Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)   
 [Lab Notes: Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
-[Lab Notes: "Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
-[Lab Notes: Pearl Strings to Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pearl.strings.md)
+[Lab Notes: "Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)
 
 ### note
 

@@ -132,7 +132,6 @@ The lab notes, which are only available online, go into greater detail about imp
 [Lab Notes: Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)
 [Lab Notes: Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)
 [Lab Notes: "Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)
-[Lab Notes: Pearl Strings to Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pearl.strings.md)
 
 ### note
 

@@ -1,44 +1,107 @@
 Lab Notes: Pump Neighborhoods
 ================
 lindbrook
-2018-10-07
+2018-12-18
 
-Area polygons
--------------
+overview
+--------
 
-To draw the area polygons for pump neighborhoods, I did the following.
+There are two types of "expected" pump neighborhood area plots. The first is based on graphics::points(); the second is based on graphics::polygon().
 
-First, using `sp::spsample()` and `sp::Polygon()`, I place approximately 20K regularly-spaced points across the face of the map:
+``` r
+plot(neighborhoodWalking(vestry = TRUE, case.set = "expected"),
+  type = "area.points")
+```
+
+<img src="pump.neighborhoods.notes_files/figure-markdown_github/area_points-1.png" style="display: block; margin: auto;" />
+
+``` r
+plot(neighborhoodWalking(vestry = TRUE, case.set = "expected"),
+  type = "area.polygons")
+```
+
+<img src="pump.neighborhoods.notes_files/figure-markdown_github/area_polygons-1.png" style="display: block; margin: auto;" />
+
+why two types?
+--------------
+
+The reason for two is that while the points() based approach is computationally faster, the polygon() approach has vector graphics on its side. In certain applications, when you zoom in you'll see the granularity of the points() based approach:
+
+``` r
+streetNameLocator("marshall street", zoom = TRUE)
+addNeighborhoodCases(type = "expected")
+```
+
+<img src="pump.neighborhoods.notes_files/figure-markdown_github/marshall_points-1.png" style="display: block; margin: auto;" />
+
+``` r
+streetNameLocator("marshall street", zoom = TRUE)
+addNeighborhoodWalking()
+```
+
+<img src="pump.neighborhoods.notes_files/figure-markdown_github/marshall_polygons-1.png" style="display: block; margin: auto;" />
+
+how to compute neighborhood area plots
+--------------------------------------
+
+For both area plots, I use "expected" data to compute the expected neighborhood area. Using `sp::spsample()` and `sp::Polygon()`, I place 20K regularly-spaced points across the face of the map (in the "real world", points are approximately 6 meters apart.).[1]
 
 ``` r
 sp::spsample(sp::Polygon(map.frame[, c("x", "y")]), n = 20000, type = "regular")
 ```
 
-For each simulated cases, I compute the closet water pump. This partitions the simulated cases into clusters that reflect the selected pump neighborhoods. The details are in `cholera::simulateFatalities()`, located in [simulateFatalities.R](https://github.com/lindbrook/cholera/blob/master/R/simulateFatalities.R)
+For each simulated case, I compute the closet water pump using Euclidean and walking distances. The details are in `cholera::simulateFatalities()`, located in [simulateFatalities.R](https://github.com/lindbrook/cholera/blob/master/R/simulateFatalities.R).
 
-The figure below plots the 1,709 simulated cases for the Broad Street pump neighborhood (pump \#7).
+This classifies the "expected" or simulated cases by pump neighborhood. By coloring the points by "their" pump, the different pump neighborhoods will emerge.
 
-![](pump.neighborhoods.notes_files/figure-markdown_github/cloud-1.png)
+how to compute polygon vertices
+-------------------------------
 
-Second, I find the points that fall along the periphery of the cluster.
+To use polygon(), we need the vertices. To my knowledge, this is not a simple, straightforward task.
 
-![](pump.neighborhoods.notes_files/figure-markdown_github/perimeter-1.png)
+Using the case of pump the Broad Street pump (\#7) and walking distance as the measure of proximity, I illustrate my approach. By my calculation, 1,709 of the simulated cases fall within the Broad Street pump neighborhood:
 
-This is what allow me to use graphics::polygon() to create plots like the Marshall Street example in the vignette:
+![](cloud-1.png)
 
-![](pump.neighborhoods.notes_files/figure-markdown_github/marshall-1.png)
+While the convex hull may be the first thing that comes to mind, it's not a good general solution. This is because the convex hull creates a polygon based on the most outlying points. As a result, when there are concavities, points outside the neighborhood will fall within the resulting polygon:
 
-Doing this, however, is easier said than done. While the convex hull of neighborhood's points gets us close, it's not a good general solution. This is because the convex hull will create a polygon based on the most outlying points. As a result, when there are concavities, points outside the neighborhood will fall within the resulting polygon.
+![](hull-1.png)
 
-![](pump.neighborhoods.notes_files/figure-markdown_github/hull-1.png)
+To find the vertices of the pump neighborhood polygon, I'd argue that we want the points along the perimeter to serve as the vertices of the polygon. To identify these points, I select the point that *do not* have neighbors at each of the four cardinal directions (i.e., North, South, East and West). See peripheryCases().
 
-Another possibility, which I used in an earlier version of 'cholera', is to use the 'alphahull' package. But that not only requires tweaking a parameter, it also has an ACM license that generates a warning on CRAN Package Check.
+![](perimeter-1.png)
 
-String of pearls
-----------------
+The final task is to connect the dots in the right order. Essentially, we want to add pearls to a string to form the polygon.
 
-My workable but mechanical solution, found in [pearlString.R](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R), does the following. First, I identify points along the periphery by eliminating simulated cases that have immediate neighbors at each of the 4 cardinal directions (i.e., North, South, East and West). I then try to connect the dots in the "right" order by using [epicycles](https://en.wikipedia.org/wiki/Deferent_and_epicycle). This works as a double loop. The outer loop, which moves around the perimeter in clockwise fashion, assembles the vertices of the polygon (i.e., add the pearls on the string). The inner loop, which finds the next vertex, moves counterclockwise epicycles. Doing so capture concavities in the polygon.
+![](pearl_string-1.png)
 
-Of equal if not greater importance is the density of simulated cases. The algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data can help. As a tradeoff between computational speed and functional robustness, I use 20K simulated cases.
+String of pearls algorithms
+---------------------------
 
-![](pump.neighborhoods.notes_files/figure-markdown_github/pearl_string-1.png)
+I have coded two workable solutions that aim to connect the dots in the "right" order.[2] The first, [pearlString()](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R), cycles through the candidate points and uses reverse [epicycles](https://en.wikipedia.org/wiki/Deferent_and_epicycle) to find the next point to add to the string of pearls. This is the default for walking neighborhoods. The second, [travelingSalesman()](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R), uses the 'TSP' package and its implementation of repetitive nearest neighbors to compute the string of pearls. This is the default for Euclidean neighborhoods.
+
+``` r
+neighborhood <- neighborhoodWalking(-6, case.set = "expected", vestry = TRUE)
+plot(neighborhood, type = "area.polygons", method = "pearl.string")
+```
+
+<img src="pump.neighborhoods.notes_files/figure-markdown_github/pearl_string-1.png" style="display: block; margin: auto;" />
+
+``` r
+neighborhood <- neighborhoodWalking(-6, case.set = "expected", vestry = TRUE)
+plot(neighborhood, type = "area.polygons", method = "traveling.salesman")
+```
+
+<img src="pump.neighborhoods.notes_files/figure-markdown_github/traveling-1.png" style="display: block; margin: auto;" />
+
+why 20K observations?
+---------------------
+
+Of equal, if not greater importance is the density of simulated cases. As far as pearlString() is concerned, I found that the algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data helps. As a tradeoff between computational speed and functional robustness, I ended up using 20K simulated cases.
+
+footnotes
+---------
+
+[1] Because the map frame is not rectangular, the actual number of points is 19,993.
+
+[2] Originally, I used the 'alphahull' package. But doing so not only requires tweaking a parameter, it also has a license, ACM, that generates a warning on CRAN Package Check.

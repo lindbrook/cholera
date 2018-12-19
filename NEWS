@@ -1,10 +1,17 @@
+cholera 0.5.9.9015
+==================
+
+- consolidate "Lab Notes: Pump Neighborhoods" and "Lab Notes: Pearl Strings to
+  Polygons"
+
+
 cholera 0.5.9.9014
 ==================
 
 - update README.
 - add case.location argument for "address" or "nominal" for cases and pumps in
   addNeighborhoodEuclidean().
-- rename add.border to add.frame in snowMap().  
+- rename add.border to add.frame in snowMap().
 
 
 cholera 0.5.9.9013

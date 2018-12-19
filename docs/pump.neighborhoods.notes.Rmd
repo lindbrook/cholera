@@ -10,258 +10,83 @@ knitr::opts_chunk$set(echo = TRUE)
 library(cholera)
 ```
 
-## Area polygons
+## overview
 
-```{r data, echo = FALSE}
-source('~/Documents/Data IV/cholera/R/pearlString.R')
-source('~/Documents/Data IV/cholera/R/walkingAuxillaryFunctions.R')
+There are two types of "expected" pump neighborhood area plots. The first is based on graphics::points(); the second is based on graphics::polygon().
 
-x <- neighborhoodWalking(case.set = "expected")
-n.data <- neighborhoodPathData(x)
-dat <- n.data$dat
-edges <- n.data$edges
-n.path.edges <- n.data$neighborhood.path.edges
-p.node <- n.data$p.node
-p.name <- n.data$p.name
-
-snow.colors <- cholera::snowColors(x$vestry)
-
-##
-
-obs.segment.count <- lapply(n.path.edges, function(x) {
-  table(edges[unique(unlist(x)), "id"])
-})
-
-edge.count <- table(edges$id)
-
-segment.audit <- lapply(obs.segment.count, function(neighborhood) {
-  whole.id <- vapply(names(neighborhood), function(nm) {
-    identical(neighborhood[nm], edge.count[nm])
-  }, logical(1L))
-
-  list(whole = names(neighborhood[whole.id]),
-       partial = names(neighborhood[!whole.id]))
-})
-
-## ------------ Observed ------------ ##
-
-# list of whole traversed segments
-obs.whole <- lapply(segment.audit, function(x) x$`whole`)
-
-# list of partially traversed segments
-obs.partial <- lapply(segment.audit, function(x) x$`partial`)
-partial.segs <- unname(unlist(obs.partial))
-obs.partial.whole <- wholeSegments(partial.segs, dat, edges, p.name,
-  p.node, x)
-
-# list of of split segments (lead to different pumps)
-# the cutpoint is found using appox. 1 meter increments via cutpointValues()
-obs.partial.segments <- setdiff(partial.segs, unlist(obs.partial.whole))
-
-if (length(obs.partial.segments) > 0) {
-  obs.partial.split.data <- parallel::mclapply(obs.partial.segments,
-    splitSegments, edges, p.name, p.node, x, mc.cores = x$cores)
-  cutpoints <- cutpointValues(obs.partial.split.data)
-  obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
-    unique(x$pump))
-  obs.partial.split <- splitData(obs.partial.segments, cutpoints, edges)
-}
-
-## ------------ Unobserved ------------ ##
-
-# list of edges that are wholly or partially traversed
-obs.segments <- lapply(n.path.edges, function(x) {
-  unique(edges[unique(unlist(x)), "id"])
-})
-
-# list of edges that are untouched by any path
-unobs.segments <- setdiff(cholera::road.segments$id, unlist(obs.segments))
-
-falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
-unobs.segments <- unobs.segments[unobs.segments %in%
-  falconberg.ct.mews == FALSE]
-
-# Exclude segment if A&E pump is not among selected.
-if (is.null(x$pump.select) == FALSE) {
-  sel <- "Adam and Eve Court"
-  AE.pump <- cholera::pumps[cholera::pumps$street == sel, "id"]
-  AE <- cholera::road.segments[cholera::road.segments$name == sel, "id"]
-
-  if (all(x$pump.select > 0)) {
-    if (AE.pump %in% x$pump.select == FALSE) {
-      unobs.segments <- unobs.segments[unobs.segments %in% AE == FALSE]
-    }
-  } else if (all(x$pump < 0)) {
-    if (AE.pump %in% abs(x$pump.select)) {
-      unobs.segments <- unobs.segments[unobs.segments %in% AE == FALSE]
-    }
-  }
-}
-
-unobs.whole <- wholeSegments(unobs.segments, dat, edges, p.name, p.node, x)
-unobs.split.segments <- setdiff(unobs.segments, unlist(unobs.whole))
-
-if (length(unobs.split.segments) > 0) {
-  unobs.split.data <- parallel::mclapply(unobs.split.segments,
-    splitSegments, edges, p.name, p.node, x, mc.cores = x$cores)
-  cutpoints <- cutpointValues(unobs.split.data)
-  unobs.split.pump <- lapply(unobs.split.data, function(x) unique(x$pump))
-  unobs.split <- splitData(unobs.split.segments, cutpoints, edges)
-}
-
-## ------------ Data Assembly ------------ ##
-
-if (x$vestry) {
-  p.ID <- seq_len(nrow(cholera::pumps.vestry))
-} else {
-  p.ID <- seq_len(nrow(cholera::pumps))
-}
-
-wholes <- lapply(p.ID, function(nm) {
-  c(obs.whole[[paste(nm)]],
-    unobs.whole[[paste(nm)]],
-    obs.partial.whole[[paste(nm)]])
-})
-
-names(wholes) <- p.ID
-
-# split segments #
-split.test1 <- length(obs.partial.segments)
-split.test2 <- length(unobs.split.segments)
-
-if (split.test1 > 0 & split.test2 == 0) {
-  splits <- obs.partial.split
-  splits.pump <- obs.partial.split.pump
-  split.segs <- obs.partial.segments
-} else if (split.test1 == 0 & split.test2 > 0) {
-  splits <- unobs.split
-  splits.pump <- unobs.split.pump
-  split.segs <- unobs.split.segments
-} else if (split.test1 > 0 & split.test2 > 0) {
-  splits <- c(obs.partial.split, unobs.split)
-  splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
-  split.segs <- c(obs.partial.segments, unobs.split.segments)
-}
-
-sim.proj <- cholera::sim.ortho.proj
-sim.proj.segs <- unique(sim.proj$road.segment)
-
-if (split.test1 > 0 | split.test2 > 0) {
-  split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
-    id <- sim.proj$road.segment == split.segs[i] &
-          is.na(sim.proj$road.segment) == FALSE
-
-    sim.data <- sim.proj[id, ]
-    split.data <- splits[[i]]
-
-    sel <- vapply(seq_len(nrow(sim.data)), function(j) {
-      obs <- sim.data[j, c("x.proj", "y.proj")]
-      ds <- vapply(seq_len(nrow(split.data)), function(k) {
-        stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
-      }, numeric(1L))
-
-      test1 <- signif(sum(ds[1:2])) ==
-        signif(c(stats::dist(split.data[c(1, 2), ])))
-      test2 <- signif(sum(ds[3:4])) ==
-        signif(c(stats::dist(split.data[c(3, 4), ])))
-
-      ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
-    }, integer(1L))
-
-    data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-  }, mc.cores = x$cores)
-
-  split.outcome <- do.call(rbind, split.outcome)
-  split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
-  split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
-    split.outcome[split.outcome$pump == p, "case"]
-  })
-
-  names(split.cases) <- sort(unique(split.outcome$pump))
-}
-
-## area polygons ##
-
-# wholes #
-whole.cases <- lapply(names(wholes), function(nm) {
-  sel <- sim.proj$road.segment %in% wholes[[nm]]
-  cases <- sim.proj[sel, "case"]
-  as.numeric(row.names(cholera::regular.cases[cases, ]))
-})
-
-names(whole.cases) <- names(wholes)
-
-pearl.neighborhood <- vapply(whole.cases, length, integer(1L))
-pearl.neighborhood <- names(pearl.neighborhood[pearl.neighborhood != 0])
-
-if (split.test1 | split.test2) {
-  neighborhood.cases <- lapply(pearl.neighborhood, function(nm) {
-    c(whole.cases[[nm]], split.cases[[nm]])
-  })
-} else {
-  neighborhood.cases <- lapply(pearl.neighborhood, function(nm) {
-    whole.cases[[nm]]
-  })
-}
-
-names(neighborhood.cases) <- pearl.neighborhood
-
-periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
-  mc.cores = x$cores)
-
-pearl.string <- parallel::mclapply(periphery.cases, pearlString,
-  mc.cores = x$cores)
+```{r area_points, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+plot(neighborhoodWalking(vestry = TRUE, case.set = "expected"),
+  type = "area.points")
 ```
 
-To draw the area polygons for pump neighborhoods, I did the following.
+```{r area_polygons, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+plot(neighborhoodWalking(vestry = TRUE, case.set = "expected"),
+  type = "area.polygons")
+```
 
-First, using `sp::spsample()` and `sp::Polygon()`, I place approximately 20K regularly-spaced points across the face of the map:
+## why two types?
+
+The reason for two is that while the points() based approach is computationally faster, the polygon() approach has vector graphics on its side. In certain applications, when you zoom in you'll see the granularity of the points() based approach:
+
+
+```{r marshall_points, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+streetNameLocator("marshall street", zoom = TRUE)
+addNeighborhoodCases(type = "expected")
+```
+
+```{r marshall_polygons, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+streetNameLocator("marshall street", zoom = TRUE)
+addNeighborhoodWalking()
+```
+
+## how to compute neighborhood area plots
+
+For both area plots, I use "expected" data to compute the expected neighborhood area. Using `sp::spsample()` and `sp::Polygon()`, I place 20K regularly-spaced points across the face of the map (in the "real world", points are approximately 6 meters apart.).^[Because the map frame is not rectangular, the actual number of points is 19,993.]
 
 ```{r, regular_cases, eval = FALSE}
 sp::spsample(sp::Polygon(map.frame[, c("x", "y")]), n = 20000, type = "regular")
 ```
 
-For each simulated cases, I compute the closet water pump. This partitions the simulated cases into clusters that reflect the selected pump neighborhoods. The details are in `cholera::simulateFatalities()`, located in [simulateFatalities.R](https://github.com/lindbrook/cholera/blob/master/R/simulateFatalities.R)
+For each simulated case, I compute the closet water pump using Euclidean and walking distances. The details are in `cholera::simulateFatalities()`, located in [simulateFatalities.R](https://github.com/lindbrook/cholera/blob/master/R/simulateFatalities.R).
 
-The figure below plots the 1,709 simulated cases for the Broad Street pump neighborhood (pump #7).
+This classifies the "expected" or simulated cases by pump neighborhood. By coloring the points by "their" pump, the different pump neighborhoods will emerge.
 
-```{r cloud, fig.width = 5, fig.height = 5, echo = FALSE}
-snowMap(add.cases = FALSE, add.pumps = FALSE)
-points(regular.cases[neighborhood.cases$`7`, ], pch = 16, col = snowColors()["p7"], cex = 1/4)
+## how to compute polygon vertices
+
+To use polygon(), we need the vertices. To my knowledge, this is not a simple, straightforward task.
+
+Using the case of pump the Broad Street pump (#7) and walking distance as the measure of proximity, I illustrate my approach. By my calculation, 1,709 of the simulated cases fall within the Broad Street pump neighborhood:
+
+![](cloud-1.png)
+
+While the convex hull may be the first thing that comes to mind, it's not a good general solution. This is because the convex hull creates a polygon based on the most outlying points. As a result, when there are concavities, points outside the neighborhood will fall within the resulting polygon:
+
+![](hull-1.png)
+
+To find the vertices of the pump neighborhood polygon, I'd argue that we want the points along the perimeter to serve as the vertices of the polygon. To identify these points, I select the point that _do not_ have neighbors at each of the four cardinal directions (i.e., North, South, East and West). See peripheryCases().
+
+![](perimeter-1.png)
+
+The final task is to connect the dots in the right order. Essentially, we want to add pearls to a string to form the polygon.
+
+![](pearl_string-1.png)
+
+## String of pearls algorithms
+
+I have coded two workable solutions that aim to connect the dots in the "right" order.^[Originally, I used the 'alphahull' package. But doing so not only requires tweaking a parameter, it also has a license, ACM, that generates a warning on CRAN Package Check.] The first, [pearlString()](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R), cycles through the candidate points and uses reverse [epicycles](https://en.wikipedia.org/wiki/Deferent_and_epicycle) to find the next point to add to the string of pearls. This is the default for walking neighborhoods. The second, [travelingSalesman()](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R), uses the 'TSP' package and its implementation of repetitive nearest neighbors to compute the string of pearls. This is the default for Euclidean neighborhoods.
+
+```{r pearl_string, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+neighborhood <- neighborhoodWalking(-6, case.set = "expected", vestry = TRUE)
+plot(neighborhood, type = "area.polygons", method = "pearl.string")
 ```
 
-Second, I find the points that fall along the periphery of the cluster.
-
-```{r perimeter, fig.width = 5, fig.height = 5, echo = FALSE}
-plot(regular.cases[neighborhood.cases$`7`, ], asp = 1, pch = 16, col = "lightgray", cex = 0.5)
-points(regular.cases[periphery.cases$`7`, ], col = "red")
+```{r traveling, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+neighborhood <- neighborhoodWalking(-6, case.set = "expected", vestry = TRUE)
+plot(neighborhood, type = "area.polygons", method = "traveling.salesman")
 ```
 
-This is what allow me to use graphics::polygon() to create plots like the Marshall Street example in the vignette:
+## why 20K observations?
 
-```{r marshall, fig.width = 5, fig.height = 5, echo = FALSE}
-streetNameLocator("marshall street", zoom = TRUE, highlight = FALSE, add.title = FALSE, radius = 0.5)
-addNeighborhoodWalking()
-```
+Of equal, if not greater importance is the density of simulated cases. As far as pearlString() is concerned, I found that the algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data  helps. As a tradeoff between computational speed and functional robustness, I ended up using 20K simulated cases.
 
-Doing this, however, is easier said than done. While the convex hull of neighborhood's points gets us close, it's not a good general solution. This is because the convex hull will create a polygon based on the most outlying points. As a result, when there are concavities, points outside the neighborhood will fall within the resulting polygon.
-
-```{r hull, fig.width = 5, fig.height = 5, echo = FALSE}
-plot(regular.cases[neighborhood.cases$`7`, ], asp = 1, pch = 16, col = "lightgray", cex = 0.5)
-ndata <- regular.cases[neighborhood.cases$`7`, ]
-points(ndata[chull(ndata), ], col = "dodgerblue")
-polygon(ndata[chull(ndata), ], border = "dodgerblue")
-```
-
-Another possibility, which I used in an earlier version of 'cholera', is to use the 'alphahull' package. But that not only requires tweaking a parameter, it also has an ACM license that generates a warning on CRAN Package Check.
-
-## String of pearls
-
-My workable but mechanical solution, found in [pearlString.R](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R), does the following. First, I identify points along the periphery by eliminating simulated cases that have immediate neighbors at each of the 4 cardinal directions (i.e., North, South, East and West). I then try to connect the dots in the "right" order by using [epicycles](https://en.wikipedia.org/wiki/Deferent_and_epicycle). This works as a double loop. The outer loop, which moves around the perimeter in clockwise fashion, assembles the vertices of the polygon (i.e., add the pearls on the string). The inner loop, which finds the next vertex, moves counterclockwise epicycles. Doing so capture concavities in the polygon.
-
-Of equal if not greater importance is the density of simulated cases. The algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data can help. As a tradeoff between computational speed and functional robustness, I use 20K simulated cases.
-
-```{r pearl_string, fig.width = 5, fig.height = 5, echo = FALSE}
-plot(regular.cases[pearlString(periphery.cases$`7`), ], asp = 1)
-polygon(regular.cases[pearlString(periphery.cases$`7`), ], border = "red", lwd = 2)
-```
+## footnotes
