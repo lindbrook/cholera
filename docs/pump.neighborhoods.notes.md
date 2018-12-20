@@ -1,7 +1,7 @@
 Lab Notes: Pump Neighborhoods
 ================
 lindbrook
-2018-12-18
+2018-12-20
 
 overview
 --------
@@ -99,8 +99,8 @@ why 20K observations?
 
 Of equal, if not greater importance is the density of simulated cases. As far as pearlString() is concerned, I found that the algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data helps. As a tradeoff between computational speed and functional robustness, I ended up using 20K simulated cases.
 
-footnotes
----------
+notes
+-----
 
 [1] Because the map frame is not rectangular, the actual number of points is 19,993.
 

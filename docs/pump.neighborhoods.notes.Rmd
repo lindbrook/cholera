@@ -89,4 +89,4 @@ plot(neighborhood, type = "area.polygons", method = "traveling.salesman")
 
 Of equal, if not greater importance is the density of simulated cases. As far as pearlString() is concerned, I found that the algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data  helps. As a tradeoff between computational speed and functional robustness, I ended up using 20K simulated cases.
 
-## footnotes
+## notes

@@ -18,7 +18,7 @@ To make tasks like coloring tiles or counting cases within tiles easier, I wrote
 
 ## Coloring Polygons
 
-```{r coloring, fig.align = "center", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+```{r coloring, fig.align = "left", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
 # compute vertices of Voronoi tiles
 polygon.vertices <- voronoiPolygons(sites = cholera::pumps,
   rw.data = cholera::roads)
