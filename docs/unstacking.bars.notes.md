@@ -1,7 +1,7 @@
 Lab Notes: "Unstacking" Bars
 ================
 lindbrook
-2018-08-26
+2018-12-21
 
 To match cases to a road and to other cases in stack, I use two methods of classification: orthogonal projection and cluster analysis.
 
@@ -11,11 +11,11 @@ The first method uses orthogonal projection. For each bar, the algorithm draws a
 
 To illustrate, consider this stylized example. For case 12, there are three possible "home" road segments: the solid blue, solid red and the solid green segments. Of the three, only *red* and *green* are candidates. The problem with *blue* is that its orthogonal projector (the blue arrow) does not intersect the solid blue segment. Of the two remaining candidates, *red* is chosen because it is closer to case 12 than *green*: the red arrow is shorter than the green one.
 
-<img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-1-1.png" style="display: block; margin: auto;" />
+<img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto auto auto 0;" />
 
 This procedure correctly classifies 508 of 578 cases, an error rate of 12.1%. Errors occur due to ambiguities surrounding a case's "home" segment. Unlike Snow's map where a bar's "horizontal" orientation reflects its "home" road segment, Dodson and Tobler only record a case's x-y coordinate. This can lead to problems at street intersections, where a point may be closer to the "wrong" segment, and at addresses with many cases.[2] The problem with multiple cases is that stacking can push cases away from their "home" segment. Consider the figure below. Even though visual inspection (the alignment of the stack) would lead us to choose *black*, the algorithm chooses *red*. The reason is that stacking pushes the case so far from *black* that it falls outside of the range of consideration. I corrected such errors by manually classifying them.
 
-<img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
+<img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-3-1.png" style="display: block; margin: auto auto auto 0;" />
 
 ### Cluster analysis
 
@@ -23,7 +23,7 @@ To link a bar to a stack, I use hierarchical cluster analysis.[3] To make this t
 
 To illustrate, the graph below plots the cases and their orthogonal projectors along a segment of Broad Street. Linking a bar to a stack and identifying a stack, boils down to identifying distinct clusters of points along the road segment. For the case at hand, visual inspection leads us to expect that we should find 8 different clusters: 4 on the north side, 4 on the south.
 
-<img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
+<img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-4-1.png" style="display: block; margin: auto auto auto 0;" />
 
 One can be confirm the results by examining Snow's map:[5]
 
@@ -33,13 +33,13 @@ The one fly in the ointment is that addresses directly opposite one another will
 
 For example, consider cases 321 and 239. They lie on opposite sides of Broad Street. In the figure below, 321's coordinates are shown in blue while 239's are shown in red. When we take the signs of the differences, we get (-, +) for 321 and (+, -) for 239. This distinguishes cases on the north side from those on the south side.
 
-<img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
+<img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-5-1.png" style="display: block; margin: auto auto auto 0;" />
 
 In general, for roads with positive slopes (e.g., Broad Street), the differences for cases on the north/west side will be (-, +) while those on the south/east side will be (+, -); for roads with negative slopes (e.g., Cambridge Street), the differences for cases on the north/east side will be (-, -) while those on the south/west side will be (+, +).[6]
 
 With this information, I can use cluster analysis to identify stacks, or "addresses", on each side of a candidate road segment. Since we expect the distances between cases in a stack or "address" to be small, I use an arbitrarily low but reasonable cutoff "height" of 0.05. The two dendrograms below represent the North and South sides of Broad Street. We can see that this procedure correctly classifies the 8 different groups or stacks that can be seen in the figure above and that can be verified by looking at Snow's map.
 
-<img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /><img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-5-2.png" style="display: block; margin: auto;" />
+<img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-6-1.png" style="display: block; margin: auto auto auto 0;" /><img src="unstacking.bars.notes_files/figure-markdown_github/unnamed-chunk-6-2.png" style="display: block; margin: auto auto auto 0;" />
 
 ### Notes
 

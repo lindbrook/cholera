@@ -6,7 +6,7 @@ output: rmarkdown::github_document
 ---
 
 ```{r, echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(collapse = TRUE, comment = ">")
 library(cholera)
 library(HistData)
 ```
@@ -15,7 +15,7 @@ library(HistData)
 
 The three pairs of duplicates lie at two different locations on opposite sides of Cambridge Street:
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "left", echo = FALSE}
 duplicates <- HistData::Snow.deaths[(duplicated(HistData::Snow.deaths[,
   c("x", "y")])), ]
 
@@ -107,7 +107,7 @@ Snow's map shows four "bars" or cases:
 
 But Dodson and Tobler's data show only two, cases 32 and 122. Furthermore, the two cases also appear to be farther apart than what we see in nearby stacks:
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "left", echo = FALSE}
 
 broad.40 <- c(32, 122)
 
@@ -154,7 +154,7 @@ Snow's map shows three cases at the end of Noel Street:
 
 But Dodson and Tobler's data shows only two cases: 282 and 422. They also appear to be farther apart than what we see in nearby stacks:
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "left", echo = FALSE}
 
 # Noel Street #
 street.name <- "Noel Street"
@@ -279,7 +279,7 @@ interpolatedPoints <- function(case1, case2, segment = sel, multiplier = 0.5) {
 
 ```
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "left", echo = FALSE}
 
 sel <- "216"  # street list element, one with 2 endpoints
 
@@ -351,7 +351,7 @@ To explain how I got these coordinates, I illustrate the computation of the _uni
 
 I use 40 Broad Street as the example. I rotate the data so that the stack lies along a single (horizontal) dimension. To fit one "missing" case between cases 32 and 122, I set the _unit_ distance between the two observed cases to 2:
 
-```{r, fig.width = 5, fig.height = 3.5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 3.5, fig.align = "left", echo = FALSE}
 
 plot(0:3, rep(0, 4), xlim = c(0, 3.6), ylim = c(0, 1), pch = NA, xaxt = "n",
      yaxt = "n", bty = "n", ann = FALSE)
@@ -368,7 +368,7 @@ title(main = "Broad Street Unit Distance")
 
 I then place one "missing" case 1 _unit_ away from 32:
 
-```{r, fig.width = 5, fig.height = 3.5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 3.5, fig.align = "left", echo = FALSE}
 plot(0:3, rep(0, 4), xlim = c(0, 3.6), ylim = c(0, 1), pch = NA, xaxt = "n",
      yaxt = "n", bty = "n", ann = FALSE)
 axis(1, seq(0.3, 3.3, 1), labels = 0:3)
@@ -385,7 +385,7 @@ title(main = "Location for One Missing Case")
 
 And place the other "missing" case three _units_ away:
 
-```{r, fig.width = 5, fig.height = 3.5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 5, fig.height = 3.5, fig.align = "left", echo = FALSE}
 plot(0:3, rep(0, 4), xlim = c(0, 3.6), ylim = c(0, 1), pch = NA, xaxt = "n",
      yaxt = "n", bty = "n", ann = FALSE)
 axis(1, seq(0.3, 3.3, 1), labels = 0:3)
@@ -463,7 +463,7 @@ meterB <- function(x, y, radius = 0.025) {
 
 ```
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "left", echo = FALSE}
 
 center <- Snow.deaths[32, c("x", "y")]
 delta <- 0.1
@@ -507,7 +507,7 @@ What makes the line complicated is that the bars in the stacks in Dodson and Tob
 
 As a consequence, the line drawn through the stack's axis will pass through the circle's center:
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "left", echo = FALSE}
 plot(Snow.deaths[, c("x", "y")], xlim = c(center$x - delta, center$x + delta),
      ylim = c(center$y - delta, center$y + delta),
      pch = NA, col = "blue", asp = 1)
@@ -541,7 +541,7 @@ abline(ols)
 
 There will always be two points of intersection (red squares):
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "left", echo = FALSE}
 plot(Snow.deaths[, c("x", "y")], xlim = c(center$x - delta, center$x + delta),
      ylim = c(center$y - delta, center$y + delta),
      pch = NA, col = "blue", asp = 1)
@@ -584,7 +584,7 @@ abline(ols)
 
 So, finding the coordinates of the "missing" observations boils down to solving a quadratic equation and picking the appropriate solution.
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "left", echo = FALSE}
 
 plot(Snow.deaths[, c("x", "y")], xlim = c(center$x - delta, center$x + delta),
      ylim = c(center$y - delta, center$y + delta),
@@ -676,7 +676,7 @@ interpolatedPoints <- function(case1, case2, segment, multiplier = 0.5) {
 
 Using this approach, I get the following results. For the two "missing" cases at 40 Broad Street, I move two duplicates, cases 91 and 93, from Cambridge Street:
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "left", echo = FALSE}
 
 sel <- "216"  # street list element, one with 2 endpoints
 
@@ -794,7 +794,7 @@ text(broad.x, broad.y, "Broad St", srt = broad.angle)
 
 For the missing case at 15 Noel Street, I move the remaining duplicate, case 209, from Cambridge Street:
 
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE}
+```{r, fig.width = 6, fig.height = 6, fig.align = "left", echo = FALSE}
 
 noel.street <- c(282, 422)
 

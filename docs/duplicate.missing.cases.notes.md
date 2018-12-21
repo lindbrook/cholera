@@ -1,14 +1,14 @@
 Lab Notes: Duplicate and Missing Cases
 ================
 lindbrook
-2018-08-13
+2018-12-21
 
 Duplicate Cases: Cambridge Street
 ---------------------------------
 
 The three pairs of duplicates lie at two different locations on opposite sides of Cambridge Street:
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto auto auto 0;" />
 
 Missing Cases: Broad Street
 ---------------------------
@@ -21,7 +21,7 @@ Snow's map shows four "bars" or cases:
 
 But Dodson and Tobler's data show only two, cases 32 and 122. Furthermore, the two cases also appear to be farther apart than what we see in nearby stacks:
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-3-1.png" style="display: block; margin: auto auto auto 0;" />
 
 Missing Cases: Noel Street
 --------------------------
@@ -34,7 +34,7 @@ Snow's map shows three cases at the end of Noel Street:
 
 But Dodson and Tobler's data shows only two cases: 282 and 422. They also appear to be farther apart than what we see in nearby stacks:
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-4-1.png" style="display: block; margin: auto auto auto 0;" />
 
 A Solution
 ----------
@@ -49,7 +49,7 @@ Consider 40 Broad Street. On Snow's map, there are four cases but in Dodson and 
 
 The proposed coordinates are illustrated below:
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-6-1.png" style="display: block; margin: auto auto auto 0;" />
 
 Geometric interpolation: *unit* distance
 ----------------------------------------
@@ -58,15 +58,15 @@ To explain how I got these coordinates, I illustrate the computation of the *uni
 
 I use 40 Broad Street as the example. I rotate the data so that the stack lies along a single (horizontal) dimension. To fit one "missing" case between cases 32 and 122, I set the *unit* distance between the two observed cases to 2:
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto auto auto 0;" />
 
 I then place one "missing" case 1 *unit* away from 32:
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-8-1.png" style="display: block; margin: auto auto auto 0;" />
 
 And place the other "missing" case three *units* away:
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-9-1.png" style="display: block; margin: auto auto auto 0;" />
 
 Geometric interpolation: in 2 dimensions
 ----------------------------------------
@@ -75,7 +75,7 @@ Because stacks lie in two dimensional space and because we need to respect geogr
 
 Consider the example of the "missing" observation that lies between cases 32 and 122. Just as with the one dimensional example, the "missing" observation should be located one *unit* away from case 32. The difference in two dimensions is that it needs to be located one *unit* away from case 32 (at the red "x") as measured along the line that runs through the stack's axis (black dotted line).
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-11-1.png" style="display: block; margin: auto auto auto 0;" />
 
 To compute the coordinates for the "missing" case, I find the points of intersection between a circle and line. The circle is simple: its center is the case or reference point (case 32), and its radius is the desired multiple of the *unit* distance, which is 1 in this example. The line is more complicated: it's the line that runs through the stack's axis.
 
@@ -83,15 +83,15 @@ What makes the line complicated is that the bars in the stacks in Dodson and Tob
 
 As a consequence, the line drawn through the stack's axis will pass through the circle's center:
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-12-1.png" style="display: block; margin: auto auto auto 0;" />
 
 There will always be two points of intersection (red squares):
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-13-1.png" style="display: block; margin: auto auto auto 0;" />
 
 So, finding the coordinates of the "missing" observations boils down to solving a quadratic equation and picking the appropriate solution.
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-14-1.png" style="display: block; margin: auto auto auto 0;" />
 
 I do so using with the formulas below:
 
@@ -146,11 +146,11 @@ Proposed coordinates
 
 Using this approach, I get the following results. For the two "missing" cases at 40 Broad Street, I move two duplicates, cases 91 and 93, from Cambridge Street:
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-16-1.png" style="display: block; margin: auto auto auto 0;" />
 
 For the missing case at 15 Noel Street, I move the remaining duplicate, case 209, from Cambridge Street:
 
-<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
+<img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-17-1.png" style="display: block; margin: auto auto auto 0;" />
 
 Notes
 -----

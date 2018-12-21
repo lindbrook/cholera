@@ -1,14 +1,12 @@
 Lab Notes: Euclidean v. Voronoi neighborhoods
 ================
 lindbrook
-2018-12-20
+2018-12-21
 
 overview
 --------
 
-"The Voronoi region of a site ***s*** is the set of points in the plane for which ***s*** is the closest site among all the sites."[1]
-
-Given this definition, you might wonder why there's both a neighborhoodEuclidean() and a neighborhoodVoronoi() function. First, by definition, you need at least two sites to create a Voronoi diagram so neighborhoodVoronoi(7) will return an error but neighorhoodEuclidean() will not. This also means that you can create a star plots that are centered on a single pump.
+"The Voronoi region of a site ***s*** is the set of points in the plane for which ***s*** is the closest site among all the sites."[1] Given this definition, you might wonder why there's both a neighborhoodEuclidean() and a neighborhoodVoronoi() function. First, by definition, you need at least two sites to create a Voronoi diagram so neighborhoodVoronoi(7) will return an error but neighorhoodEuclidean() will not. This also means that you can create a star plots that are centered on a single pump.
 
 ``` r
 plot(neighborhoodEuclidean(7))

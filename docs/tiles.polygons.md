@@ -1,7 +1,7 @@
 Lab Notes: Voronoi tiles to polygons
 ================
 lindbrook
-2018-12-20
+2018-12-21
 
 Voronoi tiles to polygons
 -------------------------
@@ -29,7 +29,7 @@ invisible(lapply(seq_along(polygon.vertices), function(i) {
 }))
 ```
 
-<img src="tiles.polygons_files/figure-markdown_github/coloring-1.png" style="display: block; margin: auto;" />
+<img src="tiles.polygons_files/figure-markdown_github/coloring-1.png" style="display: block; margin: auto auto auto 0;" />
 
 Counting Observations in Polygons
 ---------------------------------
@@ -56,5 +56,5 @@ names(census) <- paste0("p", cholera::pumps$id)
 vapply(census, sum, integer(1L))
 ```
 
-    ##  p1  p2  p3  p4  p5  p6  p7  p8  p9 p10 p11 p12 p13 
-    ##   0   1  13  23   6  61 361  16  27  62   2   2   4
+    >  p1  p2  p3  p4  p5  p6  p7  p8  p9 p10 p11 p12 p13 
+    >   0   1  13  23   6  61 361  16  27  62   2   2   4
