@@ -1,5 +1,5 @@
 ---
-title: "Lab Notes: Euclidean v. Voronoi neighborhoods"
+title: "Euclidean v. Voronoi neighborhoods"
 author: "lindbrook"
 date: "`r Sys.Date()`"
 output: github_document

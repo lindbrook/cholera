@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.9.9017-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.9.9018-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 cholera: amend, augment and aid analysis of Snow's cholera map
 --------------------------------------------------------------
@@ -131,11 +131,11 @@ The vignettes are available in the package and also online at the links below:
 
 The lab notes, which are only available online, go into greater detail about implementation:
 
-[Lab Notes: Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)   
-[Lab Notes: Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
-[Lab Notes: "Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
-[Lab Notes: Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/euclidean.voronoi.md)   
-[Lab Notes: Voronoi tiles to polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md)
+[Expected Neighborhoods: Points v. Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)   
+[Notes on Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
+["Unstacking" Bars and Addressess](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
+[Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/euclidean.voronoi.md)   
+[From Tiles and Triangles to Polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md)
 
 ### note
 

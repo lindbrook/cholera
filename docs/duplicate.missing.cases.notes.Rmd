@@ -1,5 +1,5 @@
 ---
-title: "Lab Notes: Duplicate and Missing Cases"
+title: "Notes on Duplicate and Missing Cases"
 author: "lindbrook"
 date: "`r Sys.Date()`"
 output: rmarkdown::github_document

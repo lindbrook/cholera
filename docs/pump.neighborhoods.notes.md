@@ -1,7 +1,7 @@
-Lab Notes: Pump Neighborhoods
+Expected Neighborhoods: Points v. Polygons
 ================
 lindbrook
-2018-12-21
+2018-12-22
 
 overview
 --------

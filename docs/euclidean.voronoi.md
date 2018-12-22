@@ -1,7 +1,7 @@
-Lab Notes: Euclidean v. Voronoi neighborhoods
+Euclidean v. Voronoi neighborhoods
 ================
 lindbrook
-2018-12-21
+2018-12-22
 
 overview
 --------

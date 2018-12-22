@@ -1,7 +1,7 @@
-Lab Notes: "Unstacking" Bars
+"Unstacking" Bars and Addresses
 ================
 lindbrook
-2018-12-21
+2018-12-22
 
 To match cases to a road and to other cases in stack, I use two methods of classification: orthogonal projection and cluster analysis.
 

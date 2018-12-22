@@ -1,5 +1,5 @@
 ---
-title: "Lab Notes: Pump Neighborhoods"
+title: "Expected Neighborhoods: Points v. Polygons"
 author: "lindbrook"
 date: "`r Sys.Date()`"
 output: github_document
