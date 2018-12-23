@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.9.9018-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.9.9019-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 
 cholera: amend, augment and aid analysis of Snow's cholera map
 --------------------------------------------------------------
@@ -118,24 +118,24 @@ devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 devtools::install_github("lindbrook/cholera", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
-Read the package vignettes and the lab notes. They expand on the concept of a "pump neighborhood", and go into greater detail on how I "fix" the data were "fixed" and how I compute walking distances and walking neighborhoods.
+The vignettes and notes expand on the concept of a "pump neighborhood", and go into greater detail on how I "fixed" the data and how I computed walking distances and walking neighborhoods.
 
-The vignettes are available in the package and also online at the links below:
+The vignettes are available in the package and online at the links below:
 
-[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)   
-[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)   
-["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)   
-[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
-[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)   
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)
+["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)
+[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)
+[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)
 [Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)
+[Tiles, Triangles and Polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md)
 
-The lab notes, which are only available online, go into greater detail about implementation:
+Additional documentation, which are only available online, go into greater detail about various issues and topics:
 
-[Expected Neighborhoods: Points v. Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md)   
-[Notes on Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md)   
-["Unstacking" Bars and Addressess](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md)   
-[Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/euclidean.voronoi.md)   
-[From Tiles and Triangles to Polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md)
+[Points v. Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) discusses the tradeoff between using points() and polygon() to plot "expected" neighborhoods and how the polygon vertices were computed.
+[Note on Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md) documents how I "fixed" two apparent coding errors and three misplaced case in Dodson and Tobler's data.
+[Computing Street Addressess](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md) discusses how orthogonal projection and hierarchical cluster analysis is used to "unstack" bars and provide each stack an "address".
+[Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/euclidean.voronoi.md) disusses why there are separate functions for `neighborhoodEuclidean()` and `neighborhoodVoronoi()`.
 
 ### note
 

@@ -1,0 +1,81 @@
+---
+title: "Tiles, Triangles and Polygons"
+author: "lindbrook"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Kernel Density Plot}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = ">")
+library(cholera)
+```
+
+deldirPolygons() converts 'deldir' Delauny triangles and Dirichelet (Voronoi) tiles into polygons^[It returns a list of data frames of vertices]. This makes tasks like coloring tiles or triangles or counting cases within tiles or triangles easier.
+
+## Coloring Tiles
+
+```{r coloring, fig.align = "left", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
+# compute vertices of Voronoi tiles
+vertices <- deldirPolygons(sites = cholera::pumps, rw.data = cholera::roads)
+
+# define colors, plot map, and color code fatalities
+snow.colors <- grDevices::adjustcolor(cholera::snowColors(), alpha.f = 1/3)
+cholera::snowMap(add.cases = FALSE)
+cholera::addNeighborhoodCases(metric = "euclidean")
+
+# plot color coded polygons
+invisible(lapply(seq_along(vertices), function(i) {
+  polygon(vertices[[i]], col = snow.colors[[i]])
+}))
+```
+
+## Counting Observations in Tiles
+
+To count the number of cases within each neighborhood, we can use sp::point.in.polygon().
+
+```{r counting, echo = TRUE, eval = TRUE}
+# compute vertices of Voronoi tiles
+vertices <- deldirPolygons(sites = cholera::pumps, rw.data = cholera::roads)
+
+# locations of the 578 fatalities in Soho
+cases <- cholera::fatalities.unstacked
+
+# count fatalities within each polygon (neigborhood)
+census <- lapply(vertices, function(tile) {
+  sp::point.in.polygon(cases$x, cases$y, tile$x, tile$y)
+})
+
+# ID the 13 water pumps
+names(census) <- paste0("p", cholera::pumps$id)
+
+# count of fatalities by neighborhood
+vapply(census, sum, integer(1L))
+```
+
+## Counting Observations in Triangles
+
+To count the number of cases within each triangle:
+
+```{r counting_triangles, echo = TRUE, eval = TRUE}
+# compute vertices of Delauny triangles
+vertices <- deldirPolygons(sites = cholera::pumps,
+  rw.data = cholera::roads, type = "triangles")
+
+# locations of the 578 fatalities in Soho
+cases <- cholera::fatalities.unstacked
+
+# count fatalities within each triangle
+census <- lapply(vertices, function(tile) {
+  sp::point.in.polygon(cases$x, cases$y, tile$x, tile$y)
+})
+
+# ID triangles
+names(census) <- paste0("t", seq_along(vertices))
+
+# count of fatalities by triangle
+vapply(census, sum, integer(1L))
+```

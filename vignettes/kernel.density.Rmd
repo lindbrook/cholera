@@ -23,20 +23,17 @@ snowMap()
 addKernelDensity()
 ```
 
-However, the function allows you to explore different scenarios.
+However, the function provided two ways to explore different hypothetical scenarios.
 
-## Defining the set of observed pump neighborhoods
+You can define the "population" of pump neighborhoods by using the `pump.select` argument to specify the pumps to be considered.
 
-By using the `pump.select` argument you can specify which pumps should be considered (i.e., define the "population" of pump neighborhoods).
 
 ```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
 snowMap()
 addKernelDensity(pump.select = c(6, 8))
 ```
 
-## Selecting a subset of observed neighborhoods
-
-By using the `pump.subset` argument, you can specify which individual neighborhoods, defined by `pump.select`, will be plotted.
+You can define the subset of the "population" to consider by using the `pump.subset` argument, 
 
 ```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
 snowMap()
