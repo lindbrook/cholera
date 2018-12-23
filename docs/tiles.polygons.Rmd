@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = ">")
 library(cholera)
 ```
 
-deldirPolygons() converts 'deldir' Delauny triangles and Dirichelet (Voronoi) tiles into polygons^[It returns a list of data frames of vertices]. This makes tasks like coloring tiles or triangles or counting cases within tiles or triangles easier.
+`deldirPolygons()` converts 'deldir' Delauny triangles and Dirichelet (Voronoi) tiles into polygons^[It returns a list of data frames of vertices]. This makes tasks like coloring tiles or triangles or counting cases within tiles or triangles easier.
 
 ## Coloring Tiles
 

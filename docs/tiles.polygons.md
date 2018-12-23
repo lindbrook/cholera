@@ -3,7 +3,7 @@ Tiles, Triangles and Polygons
 lindbrook
 2018-12-23
 
-deldirPolygons() converts 'deldir' Delauny triangles and Dirichelet (Voronoi) tiles into polygons[1]. This makes tasks like coloring tiles or triangles or counting cases within tiles or triangles easier.
+`deldirPolygons()` converts 'deldir' Delauny triangles and Dirichelet (Voronoi) tiles into polygons[1]. This makes tasks like coloring tiles or triangles or counting cases within tiles or triangles easier.
 
 Coloring Tiles
 --------------
