@@ -1,10 +1,7 @@
-Expected Neighborhoods: Points v. Polygons
+Points v. Polygons
 ================
 lindbrook
-2018-12-22
-
-overview
---------
+2018-12-23
 
 There are two types of "expected" pump neighborhood area plots. The first is based on graphics::points(); the second is based on graphics::polygon().
 

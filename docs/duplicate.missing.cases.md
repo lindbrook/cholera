@@ -1,7 +1,7 @@
 Duplicate and Missing Cases
 ================
 lindbrook
-2018-08-13
+2018-12-23
 
 John Snow's map of the 1854 cholera outbreak in London is a canonical example of data visualization:[1]
 
@@ -45,7 +45,7 @@ fix <- data.frame(x = c(12.56974, 12.53617, 12.33145), y = c(11.51226, 11.58107,
 fatalities[c(91, 93, 209), c("x", "y")] <- fix
 ```
 
-This fixed data set is available as `fatalities` in this package and as `Snow.deaths2` in 'HistData' (&gt;= ver. 0.7-8). For those interested, an explanation of how I arrived at these values can be found in this vignette's lab notes, which are available [online](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md) and in the package's GitHub repository.
+This fixed data set is available as `fatalities` in this package and as `Snow.deaths2` in 'HistData' (&gt;= ver. 0.7-8). For those interested, detail about how I arrived at these values can be found in `fixFatalities()` and in the "Note on Duplicate and Missing Cases", which is available [online](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md), which is in this package's GitHub repository.
 
 Notes
 -----

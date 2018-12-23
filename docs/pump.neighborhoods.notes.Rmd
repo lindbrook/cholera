@@ -1,5 +1,5 @@
 ---
-title: "Expected Neighborhoods: Points v. Polygons"
+title: "Points v. Polygons"
 author: "lindbrook"
 date: "`r Sys.Date()`"
 output: github_document
@@ -9,8 +9,6 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE, comment = ">")
 library(cholera)
 ```
-
-## overview
 
 There are two types of "expected" pump neighborhood area plots. The first is based on graphics::points(); the second is based on graphics::polygon().
 

@@ -1,9 +1,9 @@
-From Tiles and Triangles to Polygons
+Tiles, Triangles and Polygons
 ================
 lindbrook
-2018-12-22
+2018-12-23
 
-deldirPolygons() converts 'deldir' Delauny triangles and Dirichelet (Voronoi) tiles into polygons (a list of data frames of vertices). This makes tasks like coloring tiles (or triangles) or counting cases within tiles (or triangles) easier.
+deldirPolygons() converts 'deldir' Delauny triangles and Dirichelet (Voronoi) tiles into polygons[1]. This makes tasks like coloring tiles or triangles or counting cases within tiles or triangles easier.
 
 Coloring Tiles
 --------------
@@ -79,3 +79,5 @@ vapply(census, sum, integer(1L))
 
     >  t1  t2  t3  t4  t5  t6  t7  t8  t9 t10 t11 t12 t13 t14 t15 t16 t17 
     >   1   0   1  11  43 179  35   2  18 138  15  22  97   0   0   4   1
+
+[1] It returns a list of data frames of vertices
