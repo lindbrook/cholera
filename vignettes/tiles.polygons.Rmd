@@ -4,7 +4,7 @@ author: "lindbrook"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Tiles, Triangles and Polygont}
+  %\VignetteIndexEntry{Tiles, Triangles and Polygons}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
