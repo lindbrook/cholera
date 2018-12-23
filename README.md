@@ -122,19 +122,19 @@ The vignettes and notes expand on the concept of a "pump neighborhood", and go i
 
 The vignettes are available in the package and online at the links below:
 
-[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)
-[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)
-["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)
-[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)
-[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)
-[Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)   
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)   
+["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)   
+[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
+[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)   
+[Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)   
 [Tiles, Triangles and Polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md)
 
 Additional documentation, which are only available online, go into greater detail about various issues and topics:
 
-[Points v. Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) discusses the tradeoff between using points() and polygon() to plot "expected" neighborhoods and how the polygon vertices were computed.
-[Note on Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md) documents how I "fixed" two apparent coding errors and three misplaced case in Dodson and Tobler's data.
-[Computing Street Addressess](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md) discusses how orthogonal projection and hierarchical cluster analysis is used to "unstack" bars and provide each stack an "address".
+[Points v. Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) discusses the tradeoff between using points() and polygon() to plot "expected" neighborhoods and how the polygon vertices were computed.   
+[Note on Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md) documents how I "fixed" two apparent coding errors and three misplaced case in Dodson and Tobler's data.   
+[Computing Street Addressess](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md) discusses how orthogonal projection and hierarchical cluster analysis is used to "unstack" bars and provide each stack an "address".   
 [Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/euclidean.voronoi.md) disusses why there are separate functions for `neighborhoodEuclidean()` and `neighborhoodVoronoi()`.
 
 ### note
