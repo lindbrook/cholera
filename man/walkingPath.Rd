@@ -61,6 +61,3 @@ plot(walkingPath(1))
 plot(walkingPath("John Snow", 7))
 }
 }
-\seealso{
-\code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
-}

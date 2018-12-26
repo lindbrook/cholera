@@ -12,12 +12,6 @@
 #' @param ... Additional plotting parameters.
 #' @note Uses amended version of Dodson and Tobler's data included in this package.
 #' @return A base R graphics plot.
-#' @seealso \code{\link{addLandmarks}},
-#' \code{\link{addKernelDensity}},
-#' \code{\link{addLandmarks}},
-#' \code{\link{addPlaguePit}},
-#' \code{\link{addVoronoi}}.
-#' \code{\link{addWhitehead}}
 #' @export
 #' @examples
 #' snowMap()

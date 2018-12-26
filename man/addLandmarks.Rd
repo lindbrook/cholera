@@ -22,12 +22,3 @@ The location of 18 Sackville Street and 28 Dean Street are approximate. Falconbe
 snowMap(add.landmarks = FALSE)
 addLandmarks()
 }
-\seealso{
-\code{\link{snowMap}},
-\code{\link{addIndexCase}},
-\code{\link{addKernelDensity}},
-\code{\link{addPlaguePit}},
-\code{\link{addSnow}},
-\code{\link{addVoronoi}},
-\code{\link{addWhitehead}}
-}

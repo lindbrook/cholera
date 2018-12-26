@@ -54,12 +54,3 @@ streetNameLocator("marshall street", zoom = TRUE, radius = 0.5)
 addNeighborhoodWalking()
 }
 }
-\seealso{
-\code{\link{snowMap}},
-\code{\link{addIndexCase}},
-\code{\link{addKernelDensity}},
-\code{\link{addLandmarks}},
-\code{\link{addPlaguePit}},
-\code{\link{addVoronoi}},
-\code{\link{addWhitehead}}
-}

@@ -28,12 +28,3 @@ plot(neighborhoodVoronoi())
 addSnow()
 }
 }
-\seealso{
-\code{\link{snowMap}},
-\code{\link{addIndexCase}},
-\code{\link{addKernelDensity}},
-\code{\link{addLandmarks}},
-\code{\link{addPlaguePit}},
-\code{\link{addVoronoi}},
-\code{\link{addWhitehead}}
-}

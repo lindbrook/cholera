@@ -9,15 +9,7 @@
 #' @param subtitle Logical. Add subtitle with estimated "walking" time in seconds.
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param ... Additional plotting parameters.
-#' @seealso \code{\link{snowMap}},
-#' \code{\link{addIndexCase}},
-#' \code{\link{addKernelDensity}},
-#' \code{\link{addLandmarks}},
-#' \code{\link{addPlaguePit}},
-#' \code{\link{addSnow}},
-#' \code{\link{addVoronoi}}
 #' @return Adds a circle (polygon) to a graphics plot.
-#' @seealso \code{\link{addLandmarks}}
 #' @import graphics
 #' @export
 #' @examples

@@ -38,6 +38,3 @@ caseLocator(290)
 caseLocator(290, zoom = TRUE)
 caseLocator(290, observed = FALSE)
 }
-\seealso{
-\code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}
-}

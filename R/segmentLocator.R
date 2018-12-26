@@ -10,7 +10,6 @@
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param title Logical. Print title.
 #' @param subtitle Logical. Print subtitle.
-#' @seealso \code{\link{road.segments}}
 #' @return A base R graphics plot.
 #' @import graphics
 #' @note With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2").  See cholera::road.segments.

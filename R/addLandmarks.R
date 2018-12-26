@@ -2,13 +2,6 @@
 #'
 #' @param text.size Numeric. cex for text labels.
 #' @note The location of 18 Sackville Street and 28 Dean Street are approximate. Falconberg Court & Mews form an isolate: they are not part of the network of roads and are technically unreachable. Adam and Eve Court and its pump also form an isolate.
-#' @seealso \code{\link{snowMap}},
-#' \code{\link{addIndexCase}},
-#' \code{\link{addKernelDensity}},
-#' \code{\link{addPlaguePit}},
-#' \code{\link{addSnow}},
-#' \code{\link{addVoronoi}},
-#' \code{\link{addWhitehead}}
 #' @return Base R points and text.
 #' @import graphics
 #' @export

@@ -6,13 +6,6 @@
 #' @param color Character. Color of cell edges.
 #' @param line.type Character. Type of line for cell edges.
 #' @param ... Additional plotting parameters.
-#' @seealso \code{\link{snowMap}},
-#' \code{\link{addIndexCase}},
-#' \code{\link{addKernelDensity}},
-#' \code{\link{addLandmarks}},
-#' \code{\link{addPlaguePit}},
-#' \code{\link{addSnow}},
-#' \code{\link{addWhitehead}}
 #' @note This function uses deldir::deldir().
 #' @import graphics
 #' @export

@@ -48,5 +48,5 @@ dat <- neighborhoodVoronoi(pump.select = -6)
 dat$coordinates
 }
 \seealso{
-\code{\link{addVoronoi}}, \code{\link{plot.voronoi}}, \code{\link{print.voronoi}}, \code{vignette("pump.neighborhoods")}
+\code{\link{addVoronoi}}, \code{vignette("pump.neighborhoods")}
 }

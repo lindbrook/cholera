@@ -48,6 +48,3 @@ streetNumberLocator(243)
 streetNumberLocator(243, zoom = TRUE)
 streetNumberLocator(243, zoom = TRUE, radius = 0)
 }
-\seealso{
-\code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{vignette("roads")}
-}

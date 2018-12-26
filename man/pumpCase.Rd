@@ -23,6 +23,3 @@ pumpCase(neighborhoodVoronoi())
 pumpCase(neighborhoodWalking())
 }
 }
-\seealso{
-\code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodEuclidean}},
-}

@@ -55,6 +55,3 @@ walkingDistance(1, 6, type = "cases")
 walkingDistance(1, 6, type = "pumps")
 }
 }
-\seealso{
-\code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
-}

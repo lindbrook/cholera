@@ -16,7 +16,6 @@
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @note The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using cholera::distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of \code{Inf}. Arrow points represent mileposts or timeposts to the destination.
 #' @return An R list with two elements: a character vector of path nodes and a data frame summary.
-#' @seealso \code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
 #' @export
 #' @examples
 #' streetNameLocator("broad street", zoom = TRUE, highlight = FALSE, add.subtitle = FALSE)

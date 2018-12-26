@@ -5,13 +5,6 @@
 #' @param line.type Character. Polygon line type.
 #' @param ... Additional plotting parameters.
 #' @return Adds a polygon to a graphics plot.
-#' @seealso \code{\link{snowMap}},
-#' \code{\link{addIndexCase}},
-#' \code{\link{addKernelDensity}},
-#' \code{\link{addLandmarks}},
-#' \code{\link{addSnow}},
-#' \code{\link{addVoronoi}},
-#' \code{\link{addWhitehead}}
 #' @note In progress.
 #' @import graphics
 #' @export

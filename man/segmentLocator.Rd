@@ -41,6 +41,3 @@ segmentLocator("190-1")
 segmentLocator("216-1")
 segmentLocator("216-1", unit = "yard")
 }
-\seealso{
-\code{\link{road.segments}}
-}

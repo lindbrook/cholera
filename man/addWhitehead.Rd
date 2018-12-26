@@ -35,14 +35,3 @@ A circle (polygon), centered around a desired pump with a radius of 210 yards. T
 snowMap(add.landmarks = FALSE)
 addWhitehead()
 }
-\seealso{
-\code{\link{snowMap}},
-\code{\link{addIndexCase}},
-\code{\link{addKernelDensity}},
-\code{\link{addLandmarks}},
-\code{\link{addPlaguePit}},
-\code{\link{addSnow}},
-\code{\link{addVoronoi}}
-
-\code{\link{addLandmarks}}
-}

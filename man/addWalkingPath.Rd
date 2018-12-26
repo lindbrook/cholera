@@ -52,6 +52,3 @@ The function uses a case's "address" (i.e., a stack's "anchor" case) to compute 
 streetNameLocator("broad street", zoom = TRUE, highlight = FALSE, add.subtitle = FALSE)
 addWalkingPath(447)
 }
-\seealso{
-\code{\link{fatalities}}, \code{vignette("pump.neighborhoods")}
-}

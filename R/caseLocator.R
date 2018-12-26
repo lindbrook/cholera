@@ -11,7 +11,6 @@
 #' @param add Logical. Add to existing plot or separate plot.
 #' @param col Character. Point color.
 #' @return A base R graphics plot.
-#' @seealso \code{\link{fatalities}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}}
 #' @import graphics
 #' @export
 #' @examples

@@ -23,6 +23,3 @@ pearsonResiduals(neighborhoodVoronoi())
 pearsonResiduals(neighborhoodWalking())
 }
 }
-\seealso{
-\code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodEuclidean}},
-}

@@ -42,11 +42,3 @@ Uses amended version of Dodson and Tobler's data included in this package.
 snowMap()
 snowMap(vestry = TRUE, stacked = FALSE)
 }
-\seealso{
-\code{\link{addLandmarks}},
-\code{\link{addKernelDensity}},
-\code{\link{addLandmarks}},
-\code{\link{addPlaguePit}},
-\code{\link{addVoronoi}}.
-\code{\link{addWhitehead}}
-}

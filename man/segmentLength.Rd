@@ -21,6 +21,3 @@ Compute length of road segment.
 segmentLength("242-1")
 segmentLength("242-1", unit = "yard")
 }
-\seealso{
-\code{\link{roads}}, \code{\link{road.segments}}, \code{\link{streetNameLocator}}, \code{\link{streetNumberLocator}}, \code{vignette("roads")}
-}

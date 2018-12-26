@@ -5,13 +5,6 @@
 #' @param alpha.level Numeric. Alpha level transparency: a value in [0, 1].
 #' @param line.width Numeric. Line width for \code{type = "street"} and \code{type = "perimeter"}.
 #' @param ... Additional plotting parameters.
-#' @seealso \code{\link{snowMap}},
-#' \code{\link{addIndexCase}},
-#' \code{\link{addKernelDensity}},
-#' \code{\link{addLandmarks}},
-#' \code{\link{addPlaguePit}},
-#' \code{\link{addVoronoi}},
-#' \code{\link{addWhitehead}}
 #' @import graphics
 #' @export
 #' @examples

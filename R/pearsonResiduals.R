@@ -1,7 +1,6 @@
 #' Compute Pearson Residuals (prototype)
 #'
 #' @param x An object created by \code{neighborhoodEuclidean()}, \code{neighborhoodVoronoi()} or \code{neighborhoodWalking()}.
-#' @seealso \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodVoronoi}}, \code{\link{neighborhoodEuclidean}},
 #' @return An R vector.
 #' @export
 #' @examples
