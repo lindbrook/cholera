@@ -18,7 +18,7 @@ addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 
 \item{case.set}{Character. "observed" or "expected".}
 
-\item{case.location}{Character. For observed = FALSE: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
+\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
 
 \item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".}
 

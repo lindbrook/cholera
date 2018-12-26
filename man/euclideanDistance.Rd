@@ -17,7 +17,7 @@ euclideanDistance(origin = 1, destination = NULL, type = "case-pump",
 
 \item{observed}{Logical. Use observed or "simulated" expected data.}
 
-\item{case.location}{Character. For observed = FALSE: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
+\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
