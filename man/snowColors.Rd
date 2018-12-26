@@ -13,5 +13,5 @@ snowColors(vestry = FALSE)
 A character vector of colors.
 }
 \description{
-Uses RColorBrewer::brewer.pal().
+Uses \code{RColorBrewer::brewer.pal()}.
 }

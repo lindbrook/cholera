@@ -3,7 +3,7 @@
 #' For use with functions that use polygons.
 #' @param sites Object. Data frame of sites to compute Delauny triangulation and Dirichelet (Voronoi) tessellation with variables "x" and "y".
 #' @param rw.data Object. Data frame of secondary source of data to set the rectangular window or bounding box: observations, cases, etc. with variables "x" and "y".
-#' @param rw Numeric. Vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax. For deldir::deldir().
+#' @param rw Numeric. Vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax. For \code{deldir::deldir()}.
 #' @param type Character. Soure of polygons: "tiles" or "triangles".
 #' @export
 #' @examples

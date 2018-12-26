@@ -12,7 +12,7 @@
 #' @param ... Additional plotting parameters.
 #' @return Add contours to a graphics plot.
 #' @import graphics
-#' @note This function uses KernSmooth::bkde2D().
+#' @note This function uses \code{KernSmooth::bkde2D()}.
 #' @export
 #' @examples
 #' \dontrun{

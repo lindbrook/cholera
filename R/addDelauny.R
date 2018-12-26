@@ -5,7 +5,7 @@
 #' @param color Character. Color of triangle edges.
 #' @param line.type Character. Type of line for triangle edges.
 #' @param ... Additional plotting parameters.
-#' @note This function uses deldir::deldir().
+#' @note This function uses \code{deldir::deldir()}.
 #' @import graphics
 #' @export
 #' @examples

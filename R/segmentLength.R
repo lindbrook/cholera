@@ -2,7 +2,7 @@
 #'
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number used to identify the sub-segments.
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
-#' @return  An R vector of length one.
+#' @return An R vector of length one.
 #' @export
 #' @examples
 #' segmentLength("242-1")

@@ -22,7 +22,7 @@ addDelauny(pump.select = NULL, vestry = FALSE, color = "black",
 Add Delauny triangles.
 }
 \note{
-This function uses deldir::deldir().
+This function uses \code{deldir::deldir()}.
 }
 \examples{
 snowMap()

@@ -47,6 +47,3 @@ neighborhoodVoronoi(pump.select = -6, polygon.vertices = TRUE)
 dat <- neighborhoodVoronoi(pump.select = -6)
 dat$coordinates
 }
-\seealso{
-\code{\link{addVoronoi}}, \code{vignette("pump.neighborhoods")}
-}

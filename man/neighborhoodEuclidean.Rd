@@ -26,7 +26,7 @@ An R vector.
 Plots star graph from pump to its cases.
 }
 \note{
-This function is computationally intensive when case.set = "expected."
+This function is computationally intensive when \code{case.set = "expected}."
 }
 \examples{
 \dontrun{

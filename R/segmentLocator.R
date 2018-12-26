@@ -12,7 +12,7 @@
 #' @param subtitle Logical. Print subtitle.
 #' @return A base R graphics plot.
 #' @import graphics
-#' @note With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2").  See cholera::road.segments.
+#' @note With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2").  See \code{cholera::road.segments}.
 #' @export
 #' @examples
 #' segmentLocator("190-1")
