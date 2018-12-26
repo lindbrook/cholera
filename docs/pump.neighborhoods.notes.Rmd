@@ -87,4 +87,12 @@ plot(neighborhood, type = "area.polygons", method = "traveling.salesman")
 
 Of equal, if not greater importance is the density of simulated cases. As far as pearlString() is concerned, I found that the algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data  helps. As a tradeoff between computational speed and functional robustness, I ended up using 20K simulated cases.
 
+## Expected areas v. expected roads.
+
+```{r roads, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
+plot(neighborhoodWalking(case.set = "expected"))
+```
+
+While easier to "read", the area plots are potentially misleading. Conceptually, the problem is that they take the focus away from roads and puts it on regions, which may not be meaningful because they can represent locations where there are no roads or residences. Computationally, the problem is that the shape of a neighborhood will be sensitive to how we determines a case's street address. Different implementations can produce different results.
+
 ## notes

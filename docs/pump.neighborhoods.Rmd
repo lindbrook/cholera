@@ -78,15 +78,6 @@ In the second, I identify neighborhoods by coloring regions using points or poly
 plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
 ```
 
-The main virtue of the polygon approach is that it better lends itself to building graphs at different scales. Details about the implementation of neighborhood polygons are found in "Points v. Polygons", which is avalable [online](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) in this package's GitHub repository.
-
-```{r, fig.width = 5, fig.height = 5, fig.align = "center", message = FALSE}
-streetNameLocator("marshall street", zoom = TRUE, radius = 0.5)
-addNeighborhoodWalking()
-```
-
-While easier to "read", the area graphs are potentially misleading. Conceptually, the problem is that they take the focus away from roads and puts it on regions, which may not be meaningful because they can represent locations where there are no roads or residences. Computationally, the problem is that the shape of a neighborhood will be sensitive to how we determines a case's street address. Different implementations can produce different results.
-
 ### Exploring scenarios
 
 Beyond comparing methods (e.g., walking v. Euclidean distance), this package also allows you to explore different scenarios. For example, Snow argues that residents found the water from the Carnaby and Little Marlborough Street pump (#6) to be of low quality and actually preferred to go to the Broad Street pump (#7).^[Snow writes: "It requires to be stated that the water of the pump in Marlborough Street, at the end of Carnaby Street, was so impure that many persons avoided using it; and I found that the persons who died near this pump, in the beginning of September, had water from the Broad Street pump."] Using this package, you can explore this by selecting or excluding pumps:

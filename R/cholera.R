@@ -18,20 +18,19 @@
 #'
 #' To learn more, see the vignettes:
 #'
-#' \code{vignette("pump.neighborhoods")}
-#'
 #' \code{vignette("duplicate.missing.cases")}
 #'
-#' \code{vignette("unstacking.bars")}
+#' \code{vignette("kernel.density")}
+#'
+#' \code{vignette("pump.neighborhoods")}
 #'
 #' \code{vignette("roads")}
 #'
 #' \code{vignette("tiles.polygons")}
 #'
-#' \code{vignette("kernel.density")}
-#'
 #' \code{vignette("time.series")}
 #'
+#' \code{vignette("unstacking.bars")}
 #'
 #' @docType package
 #' @name cholera-package

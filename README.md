@@ -120,17 +120,17 @@ devtools::install_github("lindbrook/cholera", build_opts = c("--no-resave-data",
 
 The vignettes and notes expand on the concept of a "pump neighborhood", and go into greater detail on how I "fixed" the data and how I computed walking distances and walking neighborhoods.
 
-The vignettes are available in the package and online at the links below:
+The vignettes are included in the package and available online at the links below:
 
-[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md)   
-[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md)   
-["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md)   
-[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md)   
-[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md)   
-[Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md)   
-[Tiles, Triangles and Polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md)
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md) briefly outline the two coding errors and three misplaced cases I find in Dodson and Tobler's (1992) digitization of Snow's map. Details of the fix are in "Note on Duplicate and Missing Cases", discussed below.   
+[Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md) discusses the the syntax of `addKernelDensity()`, which allows you to define "populations" and subsets of pumps. This syntax is used in many of the functions in 'cholera'.   
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md) discusses the notion of a pump neighborhood and describes the two flavors of neighborhoods, which are based on Euclidean (i.e., `neighborhoodEuclidean()` and `neighborhoodVoronoi`) and walking distance (i.e., `neighborhoodWalking()`).   
+[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md) covers road related issues. This includes discussion of the structure of the `roads` data frame, the list of "valid" road names, and the back of the envelope translation from the map's nominal scale to meters (and yards).   
+[Tiles, Triangles and Polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md) focuses on the `deldirPolygons()`, which extracts the vertices of triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi tessellation) from `deldir::deldir()` for use with polygon based functions.   
+[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md) discusses functions and data related to fatalities time series data and the effect of the removal of the handle from the Broad Street pump.   
+["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md) discusses the inferential and visual importance of "unstacking" the bars in Snow's map.
 
-Additional documentation, which are only available online, go into greater detail about various issues and topics:
+Additional notes, which are only available online, go into greater detail about various issues:
 
 [Points v. Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) discusses the tradeoff between using points() and polygon() to plot "expected" neighborhoods and how the polygon vertices were computed.   
 [Note on Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md) documents how I "fixed" two apparent coding errors and three misplaced case in Dodson and Tobler's data.   
