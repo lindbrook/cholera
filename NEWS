@@ -4,6 +4,7 @@ cholera 0.5.9.9021
 - copyedit function documentation.
 - copyedit notes, README and vignettes.
 - fix typos.
+- run devtools::release() diagnostics.
 
 
 cholera 0.5.9.9020
