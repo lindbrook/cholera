@@ -560,8 +560,11 @@ print.walking_path <- function(x, ...) {
 #' @export
 #' @section Note: Arrows represent mileposts or timeposts to the destination.
 #' @examples
+#' \dontrun{
+#'
 #' plot(walkingPath(15))
 #' plot(walkingPath(15), unit.posts = "time")
+#' }
 
 plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   unit.posts = "distance", unit.interval = NULL, alpha.level = 1, ...) {
