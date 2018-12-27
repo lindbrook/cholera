@@ -19,7 +19,7 @@ addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
 
 \item{weighted}{Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 
-\item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".}
+\item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 

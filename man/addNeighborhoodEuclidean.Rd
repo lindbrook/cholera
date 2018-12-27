@@ -6,7 +6,7 @@
 \usage{
 addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, case.set = "observed", case.location = "nominal",
-  polygon.method = "traveling.saleman", multi.core = FALSE,
+  polygon.method = "traveling.salesman", multi.core = FALSE,
   type = "star", alpha.level = 0.25)
 }
 \arguments{
@@ -20,7 +20,7 @@ addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 
 \item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
 
-\item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".}
+\item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 

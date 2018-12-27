@@ -13,7 +13,7 @@ deldirPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles")
 
 \item{rw}{Numeric. Vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax. For \code{deldir::deldir()}.}
 
-\item{type}{Character. Soure of polygons: "tiles" or "triangles".}
+\item{type}{Character. Source of polygons: "tiles" or "triangles".}
 }
 \description{
 For use with functions that use polygons.

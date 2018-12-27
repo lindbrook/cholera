@@ -34,6 +34,9 @@ Plot the walking path between selected cases and/or pumps.
 }
 
 \examples{
+\dontrun{
+
 plot(walkingPath(15))
 plot(walkingPath(15), unit.posts = "time")
+}
 }
