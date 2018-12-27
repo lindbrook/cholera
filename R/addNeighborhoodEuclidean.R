@@ -5,7 +5,7 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param case.set Character. "observed" or "expected".
 #' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.
-#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.saleman".
+#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param type Character. Type of plot: "star", "area.points" or "area.polygons".
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
@@ -26,7 +26,7 @@
 
 addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, case.set = "observed", case.location = "nominal",
-  polygon.method = "traveling.saleman", multi.core = FALSE, type = "star",
+  polygon.method = "traveling.salesman", multi.core = FALSE, type = "star",
   alpha.level = 0.25) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
@@ -40,10 +40,10 @@ addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   if (type == "area.polygons") {
     if (polygon.method == "pearl.string") {
       verticesFn <- pearlString
-    } else if (polygon.method == "traveling.saleman") {
+    } else if (polygon.method == "traveling.salesman") {
       verticesFn <- travelingSalesman
     } else {
-      stop('polygon.method must be "pearl.string" or "traveling.saleman".')
+      stop('polygon.method must be "pearl.string" or "traveling.salesman".')
     }
   }
 

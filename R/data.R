@@ -110,7 +110,7 @@
 #'
 #' @format A data frame with 6 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
 #'  \describe{
-#'     \item{\code{name}}{squre name}
+#'     \item{\code{name}}{square name}
 #'     \item{\code{x.proj}}{x-coordinate}
 #'     \item{\code{y.proj}}{y-coordinate}
 #'     \item{\code{case}}{numeric case ID}

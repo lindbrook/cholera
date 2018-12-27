@@ -1,8 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.9.9021-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
-
 cholera: amend, augment and aid analysis of Snow's cholera map
 --------------------------------------------------------------
 
@@ -120,20 +117,20 @@ devtools::install_github("lindbrook/cholera", build_opts = c("--no-resave-data",
 
 The vignettes and notes expand on the concept of a "pump neighborhood", and go into greater detail on how I fixed the data and how I computed walking distances and walking neighborhoods. The vignettes are included in the package and available online at the links below:
 
-[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md) briefly outline the two coding errors and three misplaced cases I find in Dodson and Tobler's (1992) digitization of Snow's map. Details of the fix are in "Note on Duplicate and Missing Cases", discussed below.   
-[Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md) discusses the the syntax of `addKernelDensity()`, which allows you to define "populations" and subsets of pumps. This syntax is used in many of the functions in 'cholera'.   
-[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md) discusses the notion of a pump neighborhood and describes the two flavors of neighborhoods, which are based on Euclidean (i.e., `neighborhoodEuclidean()` and `neighborhoodVoronoi`) and walking distance (i.e., `neighborhoodWalking()`).   
-[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md) covers road related issues. This includes discussion of the structure of the `roads` data frame, the list of "valid" road names, and the back of the envelope translation from the map's nominal scale to meters (and yards).   
-[Tiles, Triangles and Polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md) focuses on the `deldirPolygons()`, which extracts the vertices of triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi tessellation) from `deldir::deldir()` for use with polygon based functions.   
-[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md) discusses functions and data related to fatalities time series data and the effect of the removal of the handle from the Broad Street pump.   
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md) briefly outline the two coding errors and three misplaced cases I find in Dodson and Tobler's (1992) digitization of Snow's map. Details of the fix are in "Note on Duplicate and Missing Cases", discussed below.
+[Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md) discusses the the syntax of `addKernelDensity()`, which allows you to define "populations" and subsets of pumps. This syntax is used in many of the functions in 'cholera'.
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md) discusses the notion of a pump neighborhood and describes the two flavors of neighborhoods, which are based on Euclidean (i.e., `neighborhoodEuclidean()` and `neighborhoodVoronoi`) and walking distance (i.e., `neighborhoodWalking()`).
+[Roads](https://github.com/lindbrook/cholera/blob/master/docs/roads.md) covers road related issues. This includes discussion of the structure of the `roads` data frame, the list of "valid" road names, and the back of the envelope translation from the map's nominal scale to meters (and yards).
+[Tiles, Triangles and Polygons](https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md) focuses on the `deldirPolygons()`, which extracts the vertices of triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi tessellation) from `deldir::deldir()` for use with polygon based functions.
+[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/time.series.md) discusses functions and data related to fatalities time series data and the effect of the removal of the handle from the Broad Street pump.
 ["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md) discusses the inferential and visual importance of "unstacking" the bars in Snow's map.
 
 The notes, which go into greater detail about various issues, are only available online:
 
-[Points v. Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) discusses the tradeoff between using points() and polygon() to plot "expected" neighborhoods and how the polygon vertices were computed.   
-[Note on Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md) documents how I "fixed" two apparent coding errors and three misplaced case in Dodson and Tobler's data.   
-[Computing Street Addressess](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md) discusses how orthogonal projection and hierarchical cluster analysis is used to "unstack" bars and provide each stack an "address".   
-[Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/euclidean.voronoi.md) disusses why there are separate functions for `neighborhoodEuclidean()` and `neighborhoodVoronoi()`.
+[Points v. Polygons](https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md) discusses the tradeoff between using points() and polygon() to plot "expected" neighborhoods and how the polygon vertices were computed.
+[Note on Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md) documents how I "fixed" two apparent coding errors and three misplaced case in Dodson and Tobler's data.
+[Computing Street Addresses](https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md) discusses how orthogonal projection and hierarchical cluster analysis is used to "unstack" bars and provide each stack an "address".
+[Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/euclidean.voronoi.md) discusses why there are separate functions for `neighborhoodEuclidean()` and `neighborhoodVoronoi()`.
 
 ### note
 
