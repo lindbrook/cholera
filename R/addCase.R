@@ -1,6 +1,6 @@
-#' Add observed cases by walking neighborhood.
+#' Add observed case(s).
 #'
-#' Add cases, as "address" or "fatalities" as points or IDs, to a plot.
+#' Add case(s), as "address" or "fatalities" as points or IDs, to a plot.
 #' @param case Numeric. Vector of case ID(s).
 #' @param type Character. Type of case: "observed" or "expected".
 #' @param token Character. Type of token to plot: "point", "id" or "both".
@@ -18,7 +18,7 @@
 #' addCase(100)
 #' }
 
-addCases <- function(case = 1, type = "observed", token = "both",
+addCase <- function(case = 1, type = "observed", token = "both",
   text.size = 0.5, col = "red", ...) {
 
   if (type %in% c("observed", "expected") == FALSE) {
