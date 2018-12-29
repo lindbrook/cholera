@@ -14,7 +14,11 @@
 #' addVoronoi()
 
 addVoronoi <- function(pump.select = NULL, vestry = FALSE,
-  case.location = "address", color = "black", line.type = "solid", ...) {
+  case.location = "nominal", color = "black", line.type = "solid", ...) {
+
+  if (case.location %in% c("address", "nominal") == FALSE) {
+    stop('case.location must be "address" or "nominal".')
+  }
 
   if (case.location == "address") {
     if (vestry) {

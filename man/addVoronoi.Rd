@@ -5,7 +5,7 @@
 \title{Add Voronoi cells.}
 \usage{
 addVoronoi(pump.select = NULL, vestry = FALSE,
-  case.location = "address", color = "black", line.type = "solid",
+  case.location = "nominal", color = "black", line.type = "solid",
   ...)
 }
 \arguments{
