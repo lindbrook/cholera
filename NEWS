@@ -6,16 +6,13 @@ cholera 0.6.0
 - fix title in euclideanPath(type = "case-pump").
 - fix destination label for walkingPath(destination = NULL)
 
-
 # Data Changes #
 
 - add Earl of Aberdeen residence (Argyll House).
 
-
 # Function Changes #
 
 - addNeighborhood() -> addNeighborhoodWalking()
-
 
 # Function Changes - new arguments #
 
@@ -27,7 +24,6 @@ cholera 0.6.0
 - streetNameLocator(add.subtitle = TRUE, token = id)
 - streetNumberLocator(add.subtitle = TRUE, token = id)
 
-
 # Function Changes - polygon.method argument #
 
 - addNeighborhoodEuclidean(polygon.method = "traveling.salesman")
@@ -36,14 +32,12 @@ cholera 0.6.0
 - addNeighborhoodWalking(polygon.method = "pearl.string")
 - plot.walking(polygon.method = "pearl.string")
 
-
 # Function Changes - landmarks as origin and/or destination (treated as cases)
 
 - euclideanDistance()
 - euclideanPath()
 - walkingDistance()
 - walkingPath()
-
 
 # Function Changes - case.location argument: "address" or "nominal"
 
@@ -62,12 +56,10 @@ cholera 0.6.0
 - profile3D()
 - streetHighlight()
 
-
 # New S3 Function #
 
 - pearsonResiduals()
 - plot.neighborhood_data()
-
 
 # New Vignette #
 
