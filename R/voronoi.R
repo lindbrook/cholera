@@ -3,6 +3,7 @@
 #' Group cases into neighborhoods using Voronoi tessellation.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
+#' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.
 #' @param statistic Character. \code{NULL}, the default, makes no summary computation. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.
 #' @param polygon.vertices Logical. \code{TRUE} returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for \code{sp::point.in.polygon()} as used in \code{print.voronoi()} method.
 #' @return An R list with 12 objects.
@@ -33,12 +34,30 @@
 #' dat$coordinates
 
 neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
-  statistic = NULL, polygon.vertices = FALSE) {
+  case.location = "nominal", statistic = NULL, polygon.vertices = FALSE) {
 
-  if (vestry) {
-    pump.data <- cholera::pumps.vestry
-  } else {
-    pump.data <- cholera::pumps
+  if (case.location %in% c("address", "nominal") == FALSE) {
+    stop('case.location must be "address" or "nominal".')
+  }
+
+  if (case.location == "address") {
+    if (vestry) {
+      pump.data <- cholera::ortho.proj.pump.vestry
+      pump.data$street <- cholera::pumps.vestry$street
+      names(pump.data)[names(pump.data) %in%
+        c("x.proj", "y.proj", "pump.id")] <- c("x", "y", "id")
+    } else {
+      pump.data <- cholera::ortho.proj.pump
+      pump.data$street <- cholera::pumps$street
+      names(pump.data)[names(pump.data) %in%
+        c("x.proj", "y.proj", "pump.id")] <- c("x", "y", "id")
+    }
+  } else if (case.location == "nominal") {
+    if (vestry) {
+      pump.data <- cholera::pumps.vestry
+    } else {
+      pump.data <- cholera::pumps
+    }
   }
 
   if (is.null(pump.select) == FALSE) {
@@ -121,8 +140,8 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   }
 
   output <- list(pump.id = pump.id, voronoi = voronoi,
-    snow.colors = snow.colors, x.rng = x.rng, y.rng = y.rng,
-    select.string = select.string, expected.data = expected.data,
+    case.location = case.location, snow.colors = snow.colors, x.rng = x.rng,
+    y.rng = y.rng, select.string = select.string, expected.data = expected.data,
     coordinates = coordinates, statistic.data = statistic.data,
     pump.select = pump.select, vestry = vestry, statistic = statistic)
 
@@ -145,7 +164,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #' @return A base R graph.
 #' @seealso
 #'
-#' \code{neighborhoodVornoi()}
+#' \code{neighborhoodVoronoi()}
 #'
 #' \code{addVoronoi()}
 #'
@@ -180,14 +199,25 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
     if (is.null(x$pump.select)) {
       points(pump.data[, c("x", "y")], pch = 2, col = x$snow.colors)
       text(pump.data[, c("x", "y")], pos = 1, label = paste0("p", x$pump.id))
-      title(main = "Pump Neighborhoods: Voronoi (address)")
+
+      if (x$case.location == "address") {
+        title(main = "Pump Neighborhoods: Voronoi (address)")
+      } else if (x$case.location == "nominal") {
+        title(main = "Pump Neighborhoods: Voronoi (nominal)")
+      }
     } else {
       points(pump.data[x$pump.select, c("x", "y")], pch = 2,
         col = x$snow.colors)
       text(pump.data[x$pump.select, c("x", "y")],
         label = paste0("p", x$pump.id), pos = 1)
-      title(main = paste0("Pump Neighborhoods: Voronoi (address)", "\n",
-        "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+
+      if (x$case.location == "address") {
+        title(main = paste0("Pump Neighborhoods: Voronoi (address)", "\n",
+          "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+      } else if (x$case.location == "nominal") {
+        title(main = paste0("Pump Neighborhoods: Voronoi (nominal)", "\n",
+          "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+      }
     }
 
     if (voronoi.cells) {

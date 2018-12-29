@@ -28,7 +28,7 @@ Plot Voronoi neighborhoods.
 plot(neighborhoodVoronoi())
 }
 \seealso{
-\code{neighborhoodVornoi()}
+\code{neighborhoodVoronoi()}
 
 \code{addVoronoi()}
 }

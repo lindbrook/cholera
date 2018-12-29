@@ -1,3 +1,9 @@
+cholera 0.5.9.9023
+==================
+
+- implement case.location in neighborhoodVoronoi().
+
+
 cholera 0.5.9.9022
 ==================
 
@@ -86,7 +92,7 @@ cholera 0.5.9.9011
 cholera 0.5.9.9010
 ==================
 
-- use voronoiPolygons() in neighborhoodVornoi().
+- use voronoiPolygons() in neighborhoodVoronoi().
 
 
 cholera 0.5.9.9009
