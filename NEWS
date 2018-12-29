@@ -4,7 +4,7 @@ cholera 0.6.0
 # Fixes #
 
 - fix title in euclideanPath(type = "case-pump").
-- fix destination label for walkingPath(destination = NULL)
+- fix destination label for walkingPath(destination = NULL).
 
 # Data Changes #
 
