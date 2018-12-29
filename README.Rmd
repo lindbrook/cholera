@@ -58,7 +58,7 @@ plot(neighborhoodVoronoi())
 The second flavor is based on the Euclidean distances between cases and pumps. This serves as a check on the Voronoi-based method, as a more granular estimate of Euclidean distance based neighborhoods, and provides a more flexible way to visualize Euclidean distance based neighborhoods.
 
 ```{r euclidean, fig.width = 6, fig.height = 6, message = FALSE}
-plot(neighborhoodEuclidean(case.location = "nominal"))
+plot(neighborhoodEuclidean())
 ```
 
 The third and final flavor is based on the walking distance along the roads on the map. While more accurate, it's computationally more demanding. To compute these distances, I transform the roads on the map into a network graph and turn the computation of walking distance into a graph theory problem. For each case (observed or simulated), I compute the shortest path, weighted by the length of roads (edges), to the nearest pump. "Rinse and repeat" and the different pump neighborhoods emerge:
