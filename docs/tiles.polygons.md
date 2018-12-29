@@ -1,7 +1,7 @@
-Tiles, Triangles and Polygons
+deldirPolygons(): Tiles, Triangles and Polygons
 ================
 lindbrook
-2018-12-24
+2018-12-29
 
 `deldirPolygons()` is a wrapper function that extracts the vertices of 'deldir' Delauny triangles and Dirichelet (Voronoi) tiles for use with functions that rely on polygons. The function returns a list of data frames of vertices. This makes tasks like coloring tiles or triangles or counting cases within tiles or triangles easier.
 

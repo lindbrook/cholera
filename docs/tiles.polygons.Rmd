@@ -1,5 +1,5 @@
 ---
-title: "Tiles, Triangles and Polygons"
+title: "deldirPolygons(): Tiles, Triangles and Polygons"
 author: "lindbrook"
 date: "`r Sys.Date()`"
 output: github_document
