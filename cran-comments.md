@@ -8,13 +8,13 @@
 
 1 Note:
 
-Version: 0.5.1
-Check: installed package size
-Result: NOTE
-     installed size is 5.0Mb
-     sub-directories of 1Mb or more:
-     doc 2.6Mb
-     help 1.2Mb
+Version: 0.5.1   
+Check: installed package size   
+Result: NOTE   
+     installed size is 5.0Mb   
+     sub-directories of 1Mb or more:   
+     doc 2.6Mb   
+     help 1.2Mb   
 Flavor: r-patched-solaris-x86
 
 
