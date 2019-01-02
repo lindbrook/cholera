@@ -4,10 +4,12 @@
 \alias{snowColors}
 \title{Create a set of colors for pump neighborhoods.}
 \usage{
-snowColors(vestry = FALSE)
+snowColors(vestry = FALSE, palette = "RColorBrewer")
 }
 \arguments{
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps in the Vestry Report. \code{FALSE} uses the original 13.}
+
+\item{palette}{Character. "RColorBrewer" or "viridis".}
 }
 \value{
 A character vector of colors.

@@ -6,6 +6,7 @@
 #' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.
 #' @param statistic Character. \code{NULL}, the default, makes no summary computation. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.
 #' @param polygon.vertices Logical. \code{TRUE} returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for \code{sp::point.in.polygon()} as used in \code{print.voronoi()} method.
+#' @param palette Character. "RColorBrewer" or "viridis".
 #' @return An R list with 12 objects.
 #' \itemize{
 #'   \item{\code{pump.id}: vector of selected pumps}
@@ -34,7 +35,12 @@
 #' dat$coordinates
 
 neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
-  case.location = "nominal", statistic = NULL, polygon.vertices = FALSE) {
+  case.location = "nominal", statistic = NULL, polygon.vertices = FALSE,
+  palette = "RColorBrewer") {
+
+  if (palette %in% c("RColorBrewer", "viridis") == FALSE) {
+    stop('palette must be "RColorBrewer" or "viridis".')
+  }
 
   if (case.location %in% c("address", "nominal") == FALSE) {
     stop('case.location must be "address" or "nominal".')
@@ -83,7 +89,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   x.rng <- range(cholera::roads$x)
   y.rng <- range(cholera::roads$y)
 
-  snow.colors <- cholera::snowColors(vestry = vestry)
+  snow.colors <- cholera::snowColors(vestry = vestry, palette = palette)
 
   if (is.null(pump.select)) {
     pump.id <- pump.data$id

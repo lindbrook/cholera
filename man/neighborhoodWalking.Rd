@@ -5,7 +5,8 @@
 \title{Compute walking path pump neighborhoods.}
 \usage{
 neighborhoodWalking(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, case.set = "observed", multi.core = FALSE)
+  weighted = TRUE, case.set = "observed", multi.core = FALSE,
+  palette = "RColorBrewer")
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps. Note that you can't just select the pump on Adam and Eve Court (#2) because it's technically an isolate.}
@@ -17,6 +18,8 @@ neighborhoodWalking(pump.select = NULL, vestry = FALSE,
 \item{case.set}{Character. "observed", "expected" or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+
+\item{palette}{Character. "RColorBrewer" or "viridis".}
 }
 \value{
 An R list with 7 objects:
