@@ -17,3 +17,6 @@ A character vector of colors.
 \description{
 Uses \code{RColorBrewer::brewer.pal()}.
 }
+\note{
+Built with 'RColorBrewer' package.
+}

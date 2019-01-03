@@ -6,7 +6,7 @@
 \usage{
 neighborhoodVoronoi(pump.select = NULL, vestry = FALSE,
   case.location = "nominal", statistic = NULL,
-  polygon.vertices = FALSE, palette = "RColorBrewer")
+  polygon.vertices = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
@@ -18,8 +18,6 @@ neighborhoodVoronoi(pump.select = NULL, vestry = FALSE,
 \item{statistic}{Character. \code{NULL}, the default, makes no summary computation. "address" computes the number of addresses in each selected pump neighborhood. "fatality" computes the number of fatalities in pump neighborhoods.}
 
 \item{polygon.vertices}{Logical. \code{TRUE} returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for \code{sp::point.in.polygon()} as used in \code{print.voronoi()} method.}
-
-\item{palette}{Character. "RColorBrewer" or "viridis".}
 }
 \value{
 An R list with 12 objects.

@@ -4,6 +4,7 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps in the Vestry Report. \code{FALSE} uses the original 13.
 #' @param palette Character. "RColorBrewer" or "viridis".
 #' @return A character vector of colors.
+#' @note Built with 'RColorBrewer' package.
 #' @export
 
 snowColors <- function(vestry = FALSE, palette = "RColorBrewer") {

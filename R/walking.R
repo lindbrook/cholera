@@ -6,7 +6,6 @@
 #' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected" or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
-#' @param palette Character. "RColorBrewer" or "viridis".
 #' @return An R list with 7 objects:
 #' \itemize{
 #'   \item{\code{paths}: list of paths to nearest or selected pump(s).}
@@ -27,12 +26,7 @@
 #' }
 
 neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, case.set = "observed", multi.core = FALSE,
-  palette = "RColorBrewer") {
-
-  if (palette %in% c("RColorBrewer", "viridis") == FALSE) {
-    stop('palette must be "RColorBrewer" or "viridis".')
-  }
+  weighted = TRUE, case.set = "observed", multi.core = FALSE) {
 
   if (is.null(pump.select) == FALSE) {
     if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
@@ -62,7 +56,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   }
 
   cores <- multiCore(multi.core)
-  snow.colors <- cholera::snowColors(vestry = vestry, palette = palette)
+  snow.colors <- cholera::snowColors(vestry = vestry)
 
   if (case.set == "expected") {
     arguments <- list(pump.select = pump.select,
