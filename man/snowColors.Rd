@@ -4,12 +4,10 @@
 \alias{snowColors}
 \title{Create a set of colors for pump neighborhoods.}
 \usage{
-snowColors(vestry = FALSE, palette = "RColorBrewer")
+snowColors(vestry = FALSE)
 }
 \arguments{
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps in the Vestry Report. \code{FALSE} uses the original 13.}
-
-\item{palette}{Character. "RColorBrewer" or "viridis".}
 }
 \value{
 A character vector of colors.
@@ -18,5 +16,5 @@ A character vector of colors.
 Uses \code{RColorBrewer::brewer.pal()}.
 }
 \note{
-Built with 'RColorBrewer' package.
+Built with 'RColorBrewer' package's color blind friendly palettes.
 }
