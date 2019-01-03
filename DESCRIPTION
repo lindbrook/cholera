@@ -22,8 +22,7 @@ Imports: deldir (>= 0.0-18),
          scales,
          sp,
          threejs,
-         TSP,
-         viridis
+         TSP
 Suggests: knitr,
           rmarkdown
 VignetteBuilder: knitr
