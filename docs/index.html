@@ -91,6 +91,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -115,7 +118,6 @@
     
     
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <div id="cholera-amend-augment-and-aid-analysis-of-snows-cholera-map" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cholera-amend-augment-and-aid-analysis-of-snows-cholera-map" class="anchor"></a>cholera: amend, augment and aid analysis of Snow’s cholera map</h2>
@@ -194,30 +196,9 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <span class="co"># For 'devtools' (&gt;= 2.0.0)</span>
 devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"lindbrook/cholera"</span>, <span class="dt">build_opts =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span>))</code></pre></div>
 </div>
-<div id="vignettes" class="section level3">
+<div id="note-on-neighborhoodwalking" class="section level3">
 <h3 class="hasAnchor">
-<a href="#vignettes" class="anchor"></a>vignettes</h3>
-<p>The vignettes expand on the concept of a “pump neighborhood”, and go into greater detail on how I fix the data and compute walking distances and walking neighborhoods. They are included in the package and available online at the links below:</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.md">Duplicate and Missing Cases</a> briefly outline the two coding errors and three misplaced cases I find in Dodson and Tobler’s (1992) digitization of Snow’s map. Details of the fix are in “Note on Duplicate and Missing Cases”, discussed below.</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/kernel.density.md">Kernel Density Plot</a> discusses the the syntax of <code><a href="reference/addKernelDensity.html">addKernelDensity()</a></code>, which allows you to define “populations” and subsets of pumps. This syntax is used in many of the functions in ‘cholera’.</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.md">Pump Neighborhoods</a> discusses the notion of a pump neighborhood and describes the two flavors of neighborhoods, which are based on Euclidean (i.e., <code><a href="reference/neighborhoodEuclidean.html">neighborhoodEuclidean()</a></code> and <code>neighborhoodVoronoi</code>) and walking distance (i.e., <code><a href="reference/neighborhoodWalking.html">neighborhoodWalking()</a></code>).</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/roads.md">Roads</a> covers road related issues. This includes discussion of the structure of the <code>roads</code> data frame, the list of “valid” road names, and the back of the envelope translation from the map’s nominal scale to meters (and yards).</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/tiles.polygons.md">deldirPolygons(): Tiles, Triangles and Polygons</a> focuses on the <code><a href="reference/deldirPolygons.html">deldirPolygons()</a></code>, which might be of use beyond this package. The function extracts the vertices of triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi tessellation) from <code><a href="https://www.rdocumentation.org/packages/deldir/topics/deldir">deldir::deldir()</a></code> for use with polygon based functions.</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/time.series.md">Time Series</a> discusses functions and data related to fatalities time series data and the effect of the removal of the handle from the Broad Street pump.</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.md">“Unstacking” Bars</a> discusses the inferential and visual importance of “unstacking” the bars in Snow’s map.</p>
-</div>
-<div id="notes" class="section level3">
-<h3 class="hasAnchor">
-<a href="#notes" class="anchor"></a>notes</h3>
-<p>The notes below, which are only available online, go into greater detail about various issues and topics:</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/pump.neighborhoods.notes.md">* points v. polygons</a> discusses the tradeoff between using points() and polygon() to plot “expected” neighborhoods and how the polygon vertices were computed.</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/duplicate.missing.cases.notes.md">* note on duplicate and missing cases</a> documents the specifics of how I “fixed” two apparent coding errors and three misplaced case in Dodson and Tobler’s data.</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/unstacking.bars.notes.md">* computing street addressess</a> discusses how orthogonal projection and hierarchical cluster analysis is used to “unstack” bars and provide each stack an “address”.</p>
-<p><a href="https://github.com/lindbrook/cholera/blob/master/docs/euclidean.voronoi.md">* Euclidean v. Voronoi neighborhoods</a> discusses why there are separate functions for <code><a href="reference/neighborhoodEuclidean.html">neighborhoodEuclidean()</a></code> and <code><a href="reference/neighborhoodVoronoi.html">neighborhoodVoronoi()</a></code>.</p>
-</div>
-<div id="note-on-computating-of-neighborhoodwalking" class="section level3">
-<h3 class="hasAnchor">
-<a href="#note-on-computating-of-neighborhoodwalking" class="anchor"></a>note on computating of <code><a href="reference/neighborhoodWalking.html">neighborhoodWalking()</a></code>
+<a href="#note-on-neighborhoodwalking" class="anchor"></a>note on <code><a href="reference/neighborhoodWalking.html">neighborhoodWalking()</a></code>
 </h3>
 <p><code><a href="reference/neighborhoodWalking.html">neighborhoodWalking()</a></code> is computationally intensive. Using R version 3.5.1 on a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 5 seconds; doing the same for expected paths takes about 28 seconds. Using the functions’ parallel implementation on 4 physical (8 logical) cores, the times fall to about 4 and 11 seconds.</p>
 <p>Note that parallelization is currently only available on Linux and Mac.</p>
@@ -256,14 +237,7 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 </ul>
 </div>
 
-      <div class="dev-status">
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=cholera"><img src="http://www.r-pkg.org/badges/version/cholera" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://github.com/lindbrook/cholera/blob/master/NEWS"><img src="https://img.shields.io/badge/GitHub-0.5.9.9024-red.svg" alt="GitHub_Status_Badge"></a></li>
-</ul>
-</div>
-</div>
+      </div>
 
 </div>
 
