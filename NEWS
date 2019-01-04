@@ -537,3 +537,212 @@ cholera 0.5.1.9000
 ==================
 
 - restore profilePlot().
+
+
+cholera 0.5.1
+==================
+
+# Fixes #
+
+- backward compatibility (R 3.4.4) related to base::isFALSE() & bug fix.
+- fix for multiple results in walkingDistance() and walkingPath().
+
+# Function Changes #
+
+- enable ellipses (...) in plot.time_series() (#1).
+- enable ellipses and negative selection in addPump().
+- consolidate addEuclideanPath(), euclideanDistance(), euclideanPath(),
+  walkingDistance() and walkingPath()
+
+# New Functions #
+
+- addBorder()
+- addRoads()
+- mapRange()
+
+
+cholera 0.5.0
+==================
+
+# Data Changes #
+
+- regular.cases and sim.ortho.proj:
+  increase number of observations from 5K to 20K.
+
+# Function Changes #
+
+- "alpha.level" argument to control path transparency
+    addEuclideanPath() and addWalkingPath()
+
+- distance and time based "mileposts"
+    addEuclideanPath() and addWalkingPath().
+    plot.euclidean_path() and plot.walking_path().
+    addMilePosts().
+
+- "pump.subset" and "pump.select" arguments
+    addCases(), addKernelDensity(), addMilePosts(), addNeighborhood(),
+    neighborhoodEuclidean(), neighborhoodWalking()
+
+- "walking.speed" argument added to:
+    addMilePosts(), nearestPump(),
+    addEuclideanPath(), euclideanDistance(), euclideanPath(),
+    addWalkingPath(), walkingDistance(), walkingPath()
+
+- euclideanDistance() no longer S3.
+    generic S3 functionality moved to euclideanPath().
+
+- multiCore() moved to multiCore.R.
+
+- neighborhoodVoronoi()
+    plot.voronoi() adds "euclidean.paths" argument for star graph.
+
+- neighborhoodWalking()
+    "area.polygons" related functions for plot_walking() moved to pearlString.R.
+
+- simulateFatalities():
+  default is now 20K observations.
+  use proximate in addition to orthogonal distances to find "addresses".
+
+- snowMap() new arguments:
+  "add.cases", "add.pumps", "add.roads".
+
+- unitMeter() default unit of measurement is now "meter".
+
+- walkingAuxillaryFunctions.R:
+    location of walking related helper functions.
+
+- walkingDistance() no longer S3.
+    generic S3 functionality moved to  walkingPath().
+
+# New Functions #
+
+- addCases()
+- addEuclideanPath()
+- addMilePosts()
+- addNeighborhood()
+- addWalkingPath()()
+- distanceTime()
+
+# New S3 Functions #
+
+- euclideanPath()
+- walkingPath()
+- neighborhoodEuclidean()
+
+# Vignette Changes #
+
+- Lab Notes available online and on GitHub:
+  "duplicate.missing.cases.notes"
+  "pump.neighborhoods.notes"
+  "unstacking.bars.notes"
+
+
+cholera 0.4.0
+==================
+
+# Data Changes #
+
+- ortho.proj.pump and ortho.proj.pump.vestry now include node ID.
+
+- roads and road.segments amend street names:
+    "Unknown-B" to "Tent Court" (Edmund Cooper's map).
+    "Unknown-D" to "St James's Market" (https://maps.nls.uk).
+    "Unknown-E" to "Market Street (II)" (https://maps.nls.uk).
+
+# Function Changes #
+
+- addKernelDensity()
+  uses "pump.subset" and "pump.select" arguments.
+
+- addLandmarks()
+  add landmarks from Edmund Cooper's map.
+
+- classifierAudit() can return coordinates of address.
+
+- nearestPump() now incorporates nearestPath().
+
+- neighborhoodWalking()
+  segment and sub-segment implementation.
+
+- pumpData()
+  returns node ID.
+
+- timeSeries()
+  includes day of the week.
+
+- walkingDistance()
+  add "simulated" expected cases.
+
+# New Functions #
+
+- addNeighborhood()
+
+# New S3 Implementations #
+
+- plot.walking
+  type = "area.points" and type = "area-polygons".
+  type = "area-polygons" via pearlString() replaces alphahull::ashape().
+
+- print.walking() uses expectedCount().
+
+# Vignette Changes #
+
+- add "Kernel Density Plot".
+- update "Pump Neighborhoods" with discussion of area plots.
+
+
+cholera 0.3.0
+==================
+
+# Data Changes #
+
+- ortho.proj:
+    reclassify case 483:
+      Pulteney Court (I) ("242-1") -> Little Windmill Street ("326-2").
+    reclassify cases 369, 434, 11, 53, 193:
+      Poland Street ("194-1") -> St James Workhouse ("148-1").
+
+# Function Changes #
+
+- addSnow()
+    "area", "street" and "boundary" graphical annotation.
+
+- caseLocator()
+    highlight home road segment.
+
+- neighborhoodWalking()
+    "case-set" argument: "observed", "expected" and "snow".
+    updated implementation and improved performance.
+    pre-computed configurations from version 0.2.1 removed.
+
+- segmentLocator(), streetNameLocator() and streetNumberLocator()
+    highlight segment or street cases.
+    option to plot all cases, anchor cases or no cases.
+
+# New S3 Implementations #
+
+- timeSeries()
+- walkingDistance()
+    incorporates and deprecates walkingPath().
+
+# New Functions #
+
+- addIndexCase()
+- nearestPath()
+- nearestPump()
+- nodeData()
+- segmentLength()
+- snowNeighborhood()
+- streetLength()
+- unitMeter()
+
+# New S3 Functions #
+
+- classifierAudit()
+- euclideanDistance()
+
+
+cholera 0.2.1
+=============
+
+- Initial CRAN release.
