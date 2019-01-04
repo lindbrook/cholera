@@ -1,0 +1,49 @@
+---
+title: "* References"
+author: "lindbrook"
+date: "`r Sys.Date()`"
+output: rmarkdown::github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = ">"
+)
+```
+
+John Broich. 2013. _London: Water and the Making of the Modern City_. Pittsburgh: University of Pittsburgh Press.
+
+Muriel E. Chamberlain. 1983. _Lord Aberdeen: A political biography_. New York: Longman.
+
+The Cholera Inquiry Committee. 1855. _Report On The Cholera Outbreak In The Parish Of St. James, Westminster, During The Autumn Of 1854_. London: John Churchill.
+
+Michael Durey. 1979. _The Return of the Plague: British Society and the Cholera 1831-2_. London: Gill and Macmillan Huanities Press.
+
+Judith Flanders. 2012. _The Victorian City: Everyday Life in Dickens's London_. London: Atlantic Books.
+
+David Freedman. 1999. "From Association to Causation: Some Remarks on the History of Statistics". _Statistical Science_. 14(3): 243-258.
+
+Ruth Goodman. 2015. _How to Be a Victorian: A Dawn-to-Dusk Guide to Victorian Life_. New York: Liveright.
+
+Brian Harrison. 1997. _Drink and the Victorians_. Edinburgh: Edinburgh University Press.
+
+Arthur Hill Hassall. 1876, _Food: Its Adulterations, and the Methods for their Detection_. London: Longmans, Green, and Co.
+
+Steven Johnson. 2006. _The Ghost Map: The Story of London's Most Terrifying Epidemic – and How it Changed Science, Cities and the Modern World_. New York: Liveright.
+
+R. J. Morris. 1976. _Cholera 1832: The Social Response to An Epidemic_. New York: Holmes & Meier.
+
+Margaret Pelling. 1978. _Cholera, Fever and English Medicine: 1825-1865_. Oxford: Oxford University Press.
+
+Liza Picard. 2006. _Victorian London: The Life of A City, 1840-1870_. New York: St Martin's Press.
+
+John Snow. 1855. _On The Mode Of Communication Of Cholera_. London: John Churchill.
+
+Amanda J. Thomas. 2015. _Cholera: The Victorian Plague_. South Yorkshire: Pen and Sword History.
+
+Tom Vanderbilt. 2008. _Traffic: Why We Drive the Way We Do (and What It Says About Us)_. New York: Knopf.
+
+Peter Vinten-Johansen, et al. .2003. _Cholera, Chloroform, and the Science of Medicine: A Life of John Snow_. Oxford: Oxford University Press.
+
+Bee Wilson. 2008. _Swindled: The Dark History of Food Fraud, From Poisoned Candy to Counterfeit Coffee_. Princeton: Princeton University Press.

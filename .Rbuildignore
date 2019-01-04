@@ -6,3 +6,4 @@
 ^docs$
 ^CONTRIBUTING\.md$
 ^CONTRIBUTING\.Rmd$
+^vignettes/notes/$

@@ -1,0 +1,57 @@
+pandoc: 1.19.2.1
+pkgdown: 1.3.0
+pkgdown_sha: ~
+articles:
+  duplicate.missing.cases: duplicate.missing.cases.html
+  kernel.density: kernel.density.html
+  duplicate.missing.cases.notes: notes/duplicate.missing.cases.notes.html
+  euclidean.voronoi: notes/euclidean.voronoi.html
+  pump.neighborhoods.notes: notes/pump.neighborhoods.notes.html
+  references: notes/references.html
+  unstacking.bars.notes: notes/unstacking.bars.notes.html
+  pump.neighborhoods: pump.neighborhoods.html
+  roads: roads.html
+  tiles.polygons: tiles.polygons.html
+  time.series: time.series.html
+  unstacking.bars: unstacking.bars.html
+
+navbar:
+  type: default
+  left:
+  - text: Articles
+    menu:
+    - text: Duplicate and Missing Cases
+      href: articles/duplicate.missing.cases.html
+
+    - text: Kernel Density Plot
+      href: articles/kernel.density.html
+
+    - text: Pump Neighborhoods
+      href: articles/pump.neighborhoods.html
+
+    - text: Roads
+      href: articles/roads.html
+
+    - text: deldirPolygons(): Tiles, Triangles and Polygons
+      href: articles/tiles.polygons.html
+
+    - text: Time Series
+      href: articles/time.series.html
+
+    - text: "Unstacking" Bars
+      href: articles/unstacking.bars.html
+
+    - text: computing street addressess
+      href: articles/notes/unstacking.bars.notes.html
+
+    - text: note on duplicate and missing cases
+      href: articles/notes/duplicate.missing.cases.notes.html
+
+    - text: Euclidean v. Voronoi neighborhoods
+      href: articles/notes/euclidean.voronoi.html
+
+    - text: points v. polygons
+      href: articles/notes/pump.neighborhoods.notes.html
+
+    - text: references
+      href: articles/notes/references.html
