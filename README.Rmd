@@ -116,6 +116,38 @@ devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 devtools::install_github("lindbrook/cholera", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
+### vignettes
+
+The package's vignettes, go into detail on a variety of topics. They are also available online at the links below.
+
+[Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/pump.neighborhoods.md) expands on the notion of a pump neighborhood and describes the two flavors of neighborhoods: one based on Euclidean (i.e., `neighborhoodEuclidean()` and `neighborhoodVoronoi`) and one based on walking distance (i.e., `neighborhoodWalking()`).
+
+[Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/duplicate.missing.cases.md) describes the two coding errors and three misplaced cases I find in Dodson and Tobler's (1992) digitization of Snow's map. Details of the fix are in "Note on Duplicate and Missing Cases", discussed below.
+
+["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/unstacking.bars.md) discusses the inferential and visual importance of "unstacking" the bars in Snow's map and the two "unstacked" data sets, which use "fatalities" and "addresses" as the units of observation.
+
+[Kernel Density Plot](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/kernel.density.md) discusses the the syntax of `addKernelDensity()`, which allows you to define "populations" and subsets of pumps. This syntax is used in many of the functions in 'cholera'.
+
+[Roads](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/roads.md) covers  road related issues. This includes discussion of the structure of the `roads` data frame, the list of "valid" road names, and the back of the envelope translation from the map's nominal scale to meters (and yards).
+
+[Time Series](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/time.series.md) discusses functions and data related to fatalities time series data and the effect of the removal of the handle from the Broad Street pump.
+
+[deldirPolygons(): Tiles, Triangles and Polygons](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/tiles.polygons.md) focuses on the `deldirPolygons()`, which might be of use beyond this package. The function extracts the vertices of triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi tessellation) from `deldir::deldir()` for use with polygon based functions.
+
+### notes
+
+The notes below, which are only available online, go into greater detail about issues and topics discussed in the vignettes:
+
+[points v. polygons](https://github.com/lindbrook/cholera/blob/master/docs/notes/pump.neighborhoods.notes.md) discusses the tradeoff between using points() and polygon() to plot "expected" neighborhoods and how the polygon vertices were computed.
+
+[note on duplicate and missing cases](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md) documents the specifics of how I "fixed" two apparent coding errors and three misplaced case in Dodson and Tobler's data.
+
+[computing street addressess](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md) discusses how orthogonal projection and hierarchical cluster analysis is used to "unstack" bars and provide each stack an "address".
+
+[Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/notes/euclidean.voronoi.md) discusses why there are separate functions for `neighborhoodEuclidean()` and `neighborhoodVoronoi()`.
+
+[references](https://github.com/lindbrook/cholera/blob/master/docs/notes/references.md) lists articles and books about cholera, John Snow and the 1854 outbreak.
+
 ### note on `neighborhoodWalking()`
 
 `neighborhoodWalking()` is computationally intensive. Using R version 3.5.1 on a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 5 seconds; doing the same for expected paths takes about 28 seconds. Using the functions' parallel implementation on 4 physical (8 logical) cores, the times fall to about 4 and 11 seconds.
