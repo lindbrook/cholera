@@ -43,7 +43,7 @@ I build on Snow's efforts by writing functions that allow you to compute three f
 plot(neighborhoodVoronoi())
 ```
 
-<img src="man/figures/README-voronoi-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-voronoi-1.png" style="display: block; margin: auto auto auto 0;" />
 
 The second flavor is based on the Euclidean distances between cases and pumps. This serves as a check on the Voronoi-based method, as a more granular estimate of Euclidean distance based neighborhoods, and provides a more flexible way to visualize Euclidean distance based neighborhoods.
 
@@ -51,7 +51,7 @@ The second flavor is based on the Euclidean distances between cases and pumps. T
 plot(neighborhoodEuclidean())
 ```
 
-<img src="man/figures/README-euclidean-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-euclidean-1.png" style="display: block; margin: auto auto auto 0;" />
 
 The third and final flavor is based on the walking distance along the roads on the map. While more accurate, it's computationally more demanding. To compute these distances, I transform the roads on the map into a network graph and turn the computation of walking distance into a graph theory problem. For each case (observed or simulated), I compute the shortest path, weighted by the length of roads (edges), to the nearest pump. "Rinse and repeat" and the different pump neighborhoods emerge:
 
@@ -59,7 +59,7 @@ The third and final flavor is based on the walking distance along the roads on t
 plot(neighborhoodWalking())
 ```
 
-<img src="man/figures/README-walk-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-walk-1.png" style="display: block; margin: auto auto auto 0;" />
 
 To explore the data, you can consider a variety of scenarios by computing different sets of neighborhoods. Here's the result excluding the Broad Street pump.
 
@@ -67,7 +67,7 @@ To explore the data, you can consider a variety of scenarios by computing differ
 plot(neighborhoodWalking(-7))
 ```
 
-<img src="man/figures/README-walk7-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-walk7-1.png" style="display: block; margin: auto auto auto 0;" />
 
 ### "expected" pump neighborhoods
 
@@ -77,7 +77,7 @@ You can also explore "expected" neighborhoods. Currently, you can do so in three
 plot(neighborhoodWalking(case.set = "expected"))
 ```
 
-<img src="man/figures/README-expected-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-expected-1.png" style="display: block; margin: auto auto auto 0;" />
 
 The second colors the expected area of neighborhoods using points().
 
@@ -85,7 +85,7 @@ The second colors the expected area of neighborhoods using points().
 plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
 ```
 
-<img src="man/figures/README-expected_area_points-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-expected_area_points-1.png" style="display: block; margin: auto auto auto 0;" />
 
 The third colors the expected area of neighborhoods using polygon().
 
@@ -93,7 +93,7 @@ The third colors the expected area of neighborhoods using polygon().
 plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 ```
 
-<img src="man/figures/README-expected_area_polygons-1.png" style="display: block; margin: auto;" />
+<img src="man/figures/README-expected_area_polygons-1.png" style="display: block; margin: auto auto auto 0;" />
 
 For exploration, the first two options are faster.
 
