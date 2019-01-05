@@ -53,10 +53,9 @@ names(census) <- paste0("p", cholera::pumps$id)
 
 # count of fatalities by neighborhood
 vapply(census, sum, integer(1L))
+>  p1  p2  p3  p4  p5  p6  p7  p8  p9 p10 p11 p12 p13 
+>   0   1  13  23   6  61 361  16  27  62   2   2   4
 ```
-
-    >  p1  p2  p3  p4  p5  p6  p7  p8  p9 p10 p11 p12 p13 
-    >   0   1  13  23   6  61 361  16  27  62   2   2   4
 
 Counting Observations in Triangles
 ----------------------------------
@@ -81,7 +80,6 @@ names(census) <- paste0("t", seq_along(vertices))
 
 # count of fatalities by triangle
 vapply(census, sum, integer(1L))
+>  t1  t2  t3  t4  t5  t6  t7  t8  t9 t10 t11 t12 t13 t14 t15 t16 t17 
+>   1   0   1  11  43 179  35   2  18 138  15  22  97   0   0   4   1
 ```
-
-    >  t1  t2  t3  t4  t5  t6  t7  t8  t9 t10 t11 t12 t13 t14 t15 t16 t17 
-    >   1   0   1  11  43 179  35   2  18 138  15  22  97   0   0   4   1

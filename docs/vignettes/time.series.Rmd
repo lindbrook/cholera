@@ -2,11 +2,11 @@
 title: "Time Series"
 author: "lindbrook"
 date: "`r Sys.Date()`"
-output: rmarkdown::github_document
+output: github_document
 ---
 
 ```{r, echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(collapse = TRUE, comment = ">")
 library(cholera)
 ```
 

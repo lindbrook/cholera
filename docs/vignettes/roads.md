@@ -15,17 +15,17 @@ Before discussing names, some discussion of the structure of `roads` is warrante
 
 ``` r
 head(roads)
-  street n        x        y id      name
-1      1 2 16.73800 18.69600  1 Map Frame
-2      1 2 17.66000 18.71200  2 Map Frame
-3      2 2 14.46200 18.65500  3 Map Frame
-4      2 2 16.73800 18.69600  4 Map Frame
-5      3 2 12.79388 18.61613  5 Map Frame
-6      3 2 14.46200 18.65500  6 Map Frame
+>   street n        x        y id      name
+> 1      1 2 16.73800 18.69600  1 Map Frame
+> 2      1 2 17.66000 18.71200  2 Map Frame
+> 3      2 2 14.46200 18.65500  3 Map Frame
+> 4      2 2 16.73800 18.69600  4 Map Frame
+> 5      3 2 12.79388 18.61613  5 Map Frame
+> 6      3 2 14.46200 18.65500  6 Map Frame
 nrow(roads)
-[1] 1241
+> [1] 1241
 length(unique(roads$street))
-[1] 528
+> [1] 528
 ```
 
 These 528 "streets" do not correspond to real-world streets. Excluding the 50 "streets" used to describe the map's frame, the remaining 478 "streets" describe 206 "real-world" roads (e.g., Oxford Street, Regent Street). This discrepancy emerges because 40% of "real-world" roads are composed of multiple "street" segments. For example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
@@ -40,7 +40,7 @@ left <- c(31, 79, 114, 285, 348, 397, 469)
 border <- sort(c(bottom, left, top, right))
 
 length(border)
-[1] 50
+> [1] 50
 ```
 
 Road names

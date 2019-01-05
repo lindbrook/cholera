@@ -39,9 +39,8 @@ In either case, the numerical results can be summarized using the `print()` meth
 ``` r
 # print(neighborhoodVoronoi()) or
 neighborhoodVoronoi()
+>  [1]   0   1  10  13   3  39 182  12  17  38   2   2   2
 ```
-
-    ##  [1]   0   1  10  13   3  39 182  12  17  38   2   2   2
 
 ### Walking distance
 
@@ -62,10 +61,9 @@ The summary results are:
 ``` r
 # print(neighborhoodWalking()) or
 neighborhoodWalking()
+>   3   4   5   6   7   8   9  10  11  12 
+>  12   6   1  44 189  14  32  20   2   1
 ```
-
-    ##   3   4   5   6   7   8   9  10  11  12 
-    ##  12   6   1  44 189  14  32  20   2   1
 
 ### "Expected" walking neighborhoods
 

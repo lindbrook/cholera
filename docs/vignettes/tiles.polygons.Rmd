@@ -2,11 +2,11 @@
 title: "deldirPolygons(): Tiles, Triangles and Polygons"
 author: "lindbrook"
 date: "`r Sys.Date()`"
-output: rmarkdown::github_document
+output: github_document
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, comment = ">")
+knitr::opts_chunk$set(collapse = TRUE, comment = ">")
 library(cholera)
 ```
 
