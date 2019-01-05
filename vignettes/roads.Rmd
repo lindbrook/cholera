@@ -87,7 +87,9 @@ Note that `streetNameLocator()` uses the names in the `roads` data set. However,
 ## List of road names
 
 There are 206 "valid" road names; 207, if we include "Map Frame":
-
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "")
+```
 ```{r, echo = FALSE}
 road.names <- sort(unique(roads$name))
 road.names <- road.names[road.names != "Map Frame"]
