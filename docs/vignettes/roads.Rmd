@@ -1,0 +1,101 @@
+---
+title: "Roads"
+author: "lindbrook"
+date: "`r Sys.Date()`"
+output: rmarkdown::github_document
+---
+
+```{r, echo = FALSE, message = FALSE}
+# knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+knitr::opts_chunk$set(collapse = TRUE, comment = "")
+library(cholera)
+```
+
+## Overview
+
+In 1992, Rusty Dodson and Waldo Tobler digitized John Snow's cholera map. Unfortunately, they did not include the names of roads (e.g., Broad Street) in their data set. While not strictly necessary for analysis or visualization, having the names will be useful to some. To that end, I append the actual street names, taken from the map itself, to the data. This appended data set is called `roads`.
+
+## Roads data
+
+Before discussing names, some discussion of the structure of `roads` is warranted. The data contain 1241 pairs of x-y coordinates. These coordinates define the endpoints of the straight line segments used to describe 528 numerically identified "streets".
+
+```{r}
+head(roads)
+nrow(roads)
+length(unique(roads$street))
+```
+
+These 528 "streets" do not correspond to real-world streets. Excluding the 50 "streets" used to describe the map's frame, the remaining 478 "streets" describe 206 "real-world" roads (e.g., Oxford Street, Regent Street). This discrepancy emerges because 40% of "real-world" roads are composed of multiple "street" segments. For example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
+
+```{r}
+# Map Border "Streets" #
+
+top <- c(1:12, 14)
+right <- c(37, 62, 74, 142, 147, 205, 240, 248, 280, 360, 405, 419, 465)
+bottom <- c(483, seq(487, 495, 2), 498, 500, seq(503, 519, 2))
+left <- c(31, 79, 114, 285, 348, 397, 469)
+border <- sort(c(bottom, left, top, right))
+
+length(border)
+
+```
+
+## Road names
+
+The primary source for road names is Snow's map. A high resolution version is available [here](http://www.ph.ucla.edu/epi/snow/highressnowmap.html). While great effort was made to correctly record and cross-reference names, there may still be errors. Error reports and suggestions for amendments are welcome.
+
+Some roads on the map do not have a name. In those cases, I attach unique labels like "Unknown-C".
+
+Some names appear multiple times even though they lie at different locations. For these, I use Roman numerals to distinguish them (e.g., "King Street (I)" and "King Street (II)").^[Streets with the same name were not an unusual occurrence. See Judith Flanders. 2012. _The Victorian City: everyday life in Dickens' London_. New York: St. Martin's Press, 57-58.]
+
+## Queen Street (I) and Marlborough Mews
+
+There is one apparent coding error in Dodson and Tobler's road data. Queen Street (I) extends too far: the water pump (#5) that is clearly located on Marlborough Mews (see [map](http://www.ph.ucla.edu/epi/snow/highressnowmap.html), cited above), ends up on Queen Street (I).
+
+I amend this by moving the end point of Queen Street (I) westward so that the street only runs north-south. I do so by reassigning the segment that runs east-west to be part of Marlborough Mews.
+
+```{r, eval = FALSE}
+snow.streets <- HistData::Snow.streets
+snow.streets$id <- seq_len(nrow(snow.streets))
+
+# Data frame of road names
+road.data <- read.csv("~/Documents/Data IV/Snow/road3b.csv",
+  stringsAsFactors = FALSE)
+
+roads <- merge(snow.streets, road.data, by = "street", all.x = TRUE)
+roads[is.na(roads$name), "name"] <- "Map Frame"
+
+roads[roads$id == 277, "street"] <- 116
+roads[roads$id == 277, "name"] <- "Marlborough Mews"
+roads[roads$id == 277, c("x", "y")] <- roads[roads$id == 276, c("x", "y")]
+roads[roads$name == "Queen Street (I)", "n"] <- 4
+roads[roads$name == "Marlborough Mews", "n"] <- 3
+roads <- roads[order(roads$id), ]
+```
+
+## Finding roads by name, "street" number, or segment ID.
+
+To help locate and visualize streets and road segments (including map frame segments), you can use the `streetNameLocator()`, `streetNumberLocator()`, or  `segmentLocator()`.
+
+Note that `streetNameLocator()` uses the names in the `roads` data set. However, the function tries to corrects for case and removes extraneous spaces: `streetNameLocator("Oxford Street")` and `streetNameLocator("oxford street")`.
+
+`segmentLocator()` is for those interested in more granular analysis. It uses individual road segments as the unit of observation.
+
+## List of road names
+
+There are 206 "valid" road names; 207, if we include "Map Frame":
+
+```{r, echo = FALSE}
+road.names <- sort(unique(roads$name))
+road.names <- road.names[road.names != "Map Frame"]
+road.names <- stats::setNames(data.frame(matrix(road.names, ncol = 2)), NULL)
+print(road.names, right = FALSE)
+```
+
+## Coordinate unit
+
+The original map is 14.5 x 15.5 inches with a stated nominal scale of 30 inches per mile.
+
+Dodson and Tobler write that "The scale of the source map is approx. 1:2000. Coordinate units are meters." By my calculation one unit on the map is approximately 177 feet or 54 meters per unit.^[According to Dodson and Tobler's street data, the length of Carnaby Street from its intersection with Great Marlborough to its intersection with Silver Street is 2.61 units. According to Google Maps, the approximate analog of that segment is the distance along parts of Great Marlborough Street and Carnaby Street between 19-21 Great Marlborough Street and 43 Carnaby Street (at Ganton Street): 463 ft. This translates into approximately 177 feet/unit or 54 meters/unit.]
+
+## Notes
