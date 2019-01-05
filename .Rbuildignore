@@ -6,5 +6,4 @@
 ^docs$
 ^CONTRIBUTING\.md$
 ^CONTRIBUTING\.Rmd$
-^vignettes/notes/$
 ^NEWS\.md$
