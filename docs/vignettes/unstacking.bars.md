@@ -116,7 +116,7 @@ With `fatalities.unstacked`, the contours are "tighter" (reflecting greater prox
 
 The main roadblock to "unstacking" is that there is no notion of an "address" in the data: bars are merely points and streets are merely line segments.[4] Nothing links a point to a segments. And nothing connects one bar in a stack to another bar. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinates.
 
-To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I use two types of classification. For those interested, the details are found in "computing street addressess", which is available [online](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md) in this package's GitHub repository.
+To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I use two types of classification. For those interested, the details are found in "computing street addresses", which is available [online](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md) in this package's GitHub repository.
 
 Notes
 -----

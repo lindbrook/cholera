@@ -1,5 +1,5 @@
 ---
-title: 'computing street addressess'
+title: 'computing street addresses'
 author: "lindbrook"
 date: "`r Sys.Date()`"
 output: github_document

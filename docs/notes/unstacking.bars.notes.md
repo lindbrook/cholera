@@ -1,4 +1,4 @@
-computing street addressess
+computing street addresses
 ================
 lindbrook
 2019-01-05
