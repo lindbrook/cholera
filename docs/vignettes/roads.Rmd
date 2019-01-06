@@ -20,7 +20,9 @@ Before discussing names, some discussion of the structure of `roads` is warrante
 
 ```{r}
 head(roads)
+
 nrow(roads)
+
 length(unique(roads$street))
 ```
 
