@@ -1,548 +1,69 @@
-cholera 0.5.9.9025
+cholera 0.6.0
 ==================
 
-- return to GitHub markdown.
-
-
-cholera 0.5.9.9024
-==================
-
-- remove viridis color test.
-
-
-cholera 0.5.9.9023
-==================
-
-- viridis color test.
-
-
-cholera 0.5.9.9022
-==================
-
-- addCases() -> addCase().
-
-cholera 0.5.9.9021
-==================
-
-- copyedit function documentation.
-- copyedit notes, README and vignettes.
-- fix typos.
-- run devtools::release() diagnostics.
-
-
-cholera 0.5.9.9020
-==================
-
-- copyedit "Tiles, Triangles and Polygons".
-
-
-cholera 0.5.9.9019
-==================
-
-- re-organize README and vignettes.
-
-
-cholera 0.5.9.9018
-==================
-
-- re-organize lab notes.
-
-
-cholera 0.5.9.9017
-==================
-
-- replace voronoiPolygons() with deldirPolygons().
-- move segmentIntersection() to landmarks.R.
-
-
-cholera 0.5.9.9016
-==================
-
-- add draft lab notes on "Euclidean v. Voronoi neighborhoods" and
-  "Voronoi tiles to polygons"
-
-
-cholera 0.5.9.9015
-==================
-
-- consolidate "Lab Notes: Pump Neighborhoods" and "Lab Notes: Pearl Strings to
-  Polygons"
-
-
-cholera 0.5.9.9014
-==================
-
-- update README.
-- add case.location argument for "address" or "nominal" for cases and pumps in
-  addNeighborhoodEuclidean().
-- rename add.border to add.frame in snowMap().
-
-
-cholera 0.5.9.9013
-==================
-
-- begin revising documentation.
-
-
-cholera 0.5.9.9012
-==================
-
-- add case.location argument for "address" or "nominal" for cases and pumps in
-  addVoronoi(), euclideanDistance(), euclideanPath() and
-  neighborhoodEuclidean().
-
-
-cholera 0.5.9.9011
-==================
-
-- add case.location argument for "address" or "regular" for cases in
-  addVoronoi(), euclideanDistance(), euclideanPath() and
-  neighborhoodEuclidean().
-
-
-cholera 0.5.9.9010
-==================
-
-- use voronoiPolygons() in neighborhoodVornoi().
-
-
-cholera 0.5.9.9009
-==================
-
-- add voronoiPolygons().
-
-
-cholera 0.5.9.9008
-==================
-
-- note unitMeter(dist(regular.cases[1:2, ])) in pump neighborhood vignette.
-- remove fourCorners().
-
-
-cholera 0.5.9.9007
-==================
-
-- use tsp.method argument for travelingSalesman().
-
-
-cholera 0.5.9.9006
-==================
-
-- use alpha transparency for polygon periphery in addSnow() and addNeighborhoodWalking().
-
-
-cholera 0.5.9.9005
-==================
-
-- add warning about valid methods for travelingSalesman().
-
-
-cholera 0.5.9.9004
-==================
-
-- pass line.width argument to addSnow(type = "perimeter").
-
-
-cholera 0.5.9.9003
-==================
-
-- add draft note "pearl strings to polygons".
-- set in-progress messages plot.euclidean() and plot.walking() to FALSE.
-
-
-cholera 0.5.9.9002
-==================
-
-- pearlString2() -> travelingSalesman().
-- add polygon.method argument to addNeighborhoodEuclidean(), addNeighborhoodWalking(), plot.euclidean() and plot.walking().
-
-
-cholera 0.5.9.9001
-==================
-
-- add addNeighborhoodCases(metric = "euclidean").
-
-
-cholera 0.5.9.9000
-==================
-
-- CRAN release candidate.
-
-
-cholera 0.5.1.9055
-==================
-
-- add pearlString2() beta.
-- use traveling salesman solution for addNeighborhoodEuclidean() and neighborhoodEuclidean().
-- add addNeighborhoodEuclidean(alpha.level = 0.25).
-
-
-cholera 0.5.1.9054
-==================
-
-- add col argument to caseLocator().
-
-
-cholera 0.5.1.9053
-==================
-
-- add addDelauny() and plot(neighborhoodVoronoi(), delauny.triangles = FALSE).
-
-
-cholera 0.5.1.9052
-==================
-
-- add caseLocator(add = TRUE).
-
-
-cholera 0.5.1.9051
-==================
-
-- fix euclideanPath(type = "cases") output.
-
-
-cholera 0.5.1.9050
-==================
-
-- add landmarksSquares() and landmarks.squares.
-- add landmarks to euclideanPath().
-
-
-cholera 0.5.1.9049
-==================
-
-- consolidate addWalkingPath().
-
-
-cholera 0.5.1.9048
-==================
-
-- fix zero-length arrows in plot.walking_path() and addWalkingPath().
-
-
-cholera 0.5.1.9047
-==================
-
-- re-tweak zoom for Golden and Soho Squares in plot.walking_path().
-
-
-cholera 0.5.1.9046
-==================
-
-- add landmarks to type = "cases" in walkingDistance() and walkingPath().
-- add citySquare().
-
-
-cholera 0.5.1.9045
-==================
-
-- add landmarks to type = "case-pump" in walkingDistance() and walkingPath().
-- tweak zoom for Golden and Soho Squares in plot.walking_path().
-
-
-cholera 0.5.1.9044
-==================
-
-- add new landmarks and orthoProjLandmarks() prototypes.
-
-
-cholera 0.5.1.9043
-==================
+# Fixes #
 
 - fix title in euclideanPath(type = "case-pump").
 - fix destination label for walkingPath(destination = NULL).
 
+# Data Changes #
 
-cholera 0.5.1.9042
-==================
+- add Earl of Aberdeen residence (Argyll House).
 
-- add new euclideanDistance(), euclideanPath() and walkingPath() prototypes.
+# Function Changes #
 
+- addNeighborhood() -> addNeighborhoodWalking()
 
-cholera 0.5.1.9041
-==================
+# Function Changes - new arguments #
 
-- amend "<" to "<=" in walkingPath().
+- addSnow(type = "perimeter", line.width = 2)
+- neighborhoodData(embed = TRUE, embed.landmarks = TRUE)
+- neighborhoodEuclidean(case.set = "expected")
+- plot.voronoi(voronoi.cells = TRUE, delauny.triangles = FALSE)
+- snowMap(...)
+- streetNameLocator(add.subtitle = TRUE, token = id)
+- streetNumberLocator(add.subtitle = TRUE, token = id)
 
+# Function Changes - polygon.method argument #
 
-cholera 0.5.1.9040
-==================
+- addNeighborhoodEuclidean(polygon.method = "traveling.salesman")
+- plot.euclidean(polygon.method = "traveling.salesman")
 
-- test amended landmarks and orthoProjLandmarks().
-- fix walkingPath() landmark destinations.
+- addNeighborhoodWalking(polygon.method = "pearl.string")
+- plot.walking(polygon.method = "pearl.string")
 
+# Function Changes - landmarks as origin and/or destination (treated as cases) #
 
-cholera 0.5.1.9039
-==================
+- euclideanDistance()
+- euclideanPath()
+- walkingDistance()
+- walkingPath()
 
-- add new walkingDistance() and walkingPath() prototypes.
+# Function Changes - case.location argument: "address" or "nominal" #
 
+- addVoronoi(case.location = "nominal")
+- euclideanDistance(case.location = "nominal")
+- euclideanPath(case.location = "nominal")
+- neighborhoodEuclidean(case.location = "nominal")
 
-cholera 0.5.1.9038
-==================
+# New Functions #
 
-- consolidate neighborhoodData().
-- add walkingDistance() and walkingPath() prototypes.
+- addCase()
+- addDelauny()
+- addNeighborhoodCases()
+- deldirPolygons()
+- profile2D()
+- profile3D()
+- streetHighlight()
 
+# New S3 Function #
 
-cholera 0.5.1.9037
-==================
+- pearsonResiduals()
+- plot.neighborhood_data()
 
-- ortho.proj.landmarks -> landmarks.
-- landmarks() -> orthoProjLandmarks().
-- add draft sources/bibliography vignette.
+# New Vignette #
 
-
-cholera 0.5.1.9036
-==================
-
-- set embed.landmarks = TRUE in neighborhoodData().
-
-
-cholera 0.5.1.9035
-==================
-
-- fix negative selection in addNeighborhoodWalking().
-
-
-cholera 0.5.1.9034
-==================
-
-- add token argument to streetNameLocator () and streetNumberLocator().
-
-
-cholera 0.5.1.9033
-==================
-
-- re-enable "snow" neighborhood.
-
-
-cholera 0.5.1.9032
-==================
-
-- revert profile2D() and profile3D() to non-S3 implementation.
-
-
-cholera 0.5.1.9031
-==================
-
-- add new neighborhoodData() prototype.
-- fix pumpTokens().
-- add case.col argument to snowMap().
-
-
-cholera 0.5.1.9030
-==================
-
-- add type = "expected" to addNeighborhoodCases().
-
-
-cholera 0.5.1.9029
-==================
-
-- landmarkData() -> landmarks() (prototype).
-- add ortho.proj.landmarks (prototype).
-- add ortho.proj.landmarks$case (pseudo case #).
-
-
-cholera 0.5.1.9028
-==================
-
-- implement S3 versions of profile2D() and profile3D().
-
-
-cholera 0.5.1.9027
-==================
-
-- amend profile2D().
-- amend landmarkData().
-- fix snow.colors in pumpTokens().
-- document negative radius in streetNameLocator() and streetNumberLocator().
-- amend peripheryAudit() and polygonAudit().
-
-
-cholera 0.5.1.9026
-==================
-
-- profilePlot() -> profile2D() and profile3D().
-- highlightStree() -> streetHighlight().
-
-
-cholera 0.5.1.9025
-==================
-
-- add addNeighborhoodEuclidean() prototype.
-- add landmarkData() prototype.
-
-
-cholera 0.5.1.9024
-==================
-
-- addNeighborhood() -> addNeighborhoodWalking().
-- copyedit READMEs.
-
-
-cholera 0.5.1.9023
-==================
-
-- remove pump.subset from neighborhoodEuclidean().
-
-
-cholera 0.5.1.9022
-==================
-
-- un-export profilePerspective().
-
-
-cholera 0.5.1.9021
-==================
-
-- add highlightStreet().
-- allow negative selection for 'threejs' profilePlot().
-- allow pump selection for 'base' and 'ggplot2' profilePlot().
-
-
-cholera 0.5.1.9020
-==================
-
-- rename addCases() to addNeighborhoodCases().
-- add new addCases().
-
-
-cholera 0.5.1.9019
-==================
-
-- add alpha transparency to 'threejs' profilePlot().
-
-
-cholera 0.5.1.9018
-==================
-
-- color points by neighborhood in profilePlot().
-
-
-cholera 0.5.1.9017
-==================
-
-- move pumpTokens() to pumpTokens.R.
-- add "area.polygons" prototype warning to plot.euclidean().
-- note Argyll House.
-- amend neighborhoodEuclidean() and plot.euclidean().
-- add 'threejs' prototype to profilePlot().
-
-
-cholera 0.5.1.9016
-==================
-
-- add prototype "area.points" and "area.polygons" types to plot.euclidean().
-
-
-cholera 0.5.1.9015
-==================
-
-- add ellipsis to plot.neighborhood_data().
-
-
-cholera 0.5.1.9014
-==================
-
-- add plot.neighborhood_data() to visualize road network.
-- copyedit pump neighborhoods and time series docs and vignettes.
-
-
-cholera 0.5.1.9013
-==================
-
-- add embed argument to neighborhoodData().
-
-
-cholera 0.5.1.9012
-==================
-
-- match caseLocator() and pumpLocator().
-
-
-cholera 0.5.1.9011
-==================
-
-- provisionally add Earl of Aberdeen residence.
-- fix euclideanPath() and walkingPath() subtitles.
-
-
-cholera 0.5.1.9010
-==================
-
-- add add.subtitle argument to streetNameLocator() and streetNumberLocator().
-
-
-cholera 0.5.1.9009
-==================
-
-- pumpToken() -> pumpTokenEuclidean()
-
-
-cholera 0.5.1.9008
-==================
-
-- set snowMap() title to NA.
-- use neighborhoodPathData() in addNeighborhood() & pump neighborhood lab notes.
-
-
-cholera 0.5.1.9007
-==================
-
-- add neighborhoodPathData() to walkingAuxillaryFunctions.R.
-- amend expectedCount() for print.walking().
-- amend observedExpected().
-- use neighborhoodPathData() in plot.walking()
-
-
-cholera 0.5.1.9006
-==================
-
-- amend expectedWalkingLength().
-- amend pearsonResiduals.walking().
-- add observedExpected() to walkingAuxillaryFunctions.R
-
-
-cholera 0.5.1.9005
-==================
-
-- amend expectedWalkingLength() prototype.
-- add pearsonResiduals.walking() prototype.
-
-
-cholera 0.5.1.9004
-==================
-
-- add expectedWalkingLength() prototype.
-
-
-cholera 0.5.1.9003
-==================
-
-- use main for title in snowMap().
-- test snow.colors.
-- add pearsonResiduals.euclidean() prototype.
-
-
-cholera 0.5.1.9002
-==================
-
-- enable case.set = "expected" in neighborhoodEuclidean() and plot.euclidean().
-
-
-cholera 0.5.1.9001
-==================
-
-- amend print.voronoi().
-- add pearsonResiduals() prototype.
-
-
-cholera 0.5.1.9000
-==================
-
-- restore profilePlot().
+- "tiles.polygons": Tiles, Triangles and Polygons
 
 
 cholera 0.5.1
@@ -586,7 +107,7 @@ cholera 0.5.0
     addMilePosts().
 
 - "pump.subset" and "pump.select" arguments
-    addCases(), addKernelDensity(), addMilePosts(), addNeighborhood(),
+    addCase(), addKernelDensity(), addMilePosts(), addNeighborhood(),
     neighborhoodEuclidean(), neighborhoodWalking()
 
 - "walking.speed" argument added to:
@@ -622,7 +143,7 @@ cholera 0.5.0
 
 # New Functions #
 
-- addCases()
+- addCase()
 - addEuclideanPath()
 - addMilePosts()
 - addNeighborhood()
