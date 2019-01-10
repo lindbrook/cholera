@@ -126,7 +126,7 @@ The package's vignettes, are also available online at the links below, go into d
 
 [Pump Neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/pump.neighborhoods.md) expands on the notion of a pump neighborhood and describes the two flavors of neighborhoods: two based on Euclidean (i.e., `neighborhoodEuclidean()` and `neighborhoodVoronoi`) and one based on walking distance (i.e., `neighborhoodWalking()`).
 
-[Roads](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/roads.md) covers issues related to roads. This includes discussion of the structure of the `roads` data set, "valid" road names, and the back of the envelope translation from the map's nominal scale to meters (and yards).
+[Roads](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/roads.md) covers issues related to roads. This includes discussion of how and why I move pump #5 from Queen Street (I) to Marlborough Mews, the overall structure of the `roads` data set, "valid" road names, and my back of the envelope translation from the map's nominal scale to meters (and yards).
 
 [deldirPolygons(): Tiles, Triangles and Polygons](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/tiles.polygons.md) focuses on the `deldirPolygons()`, which extracts the vertices of triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi tessellation) from `deldir::deldir()` for use with polygon based functions.
 
