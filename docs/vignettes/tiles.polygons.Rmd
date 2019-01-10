@@ -16,7 +16,7 @@ library(cholera)
 deldirPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles")
 ```
 
-The functions has four arguments. `sites` is the data frame of the sites or focal points used to do the triangulation or tessellation. `rw.data` (rw = 'rectangular window')is the data frame of secondary data (e.g., fatalities, customers, etc.). It is useful when the range of secondary data exceeds that of the site data. `rw` is a vector of the corners of the rectangular window: xmin, xmax, ymin, ymax. `type` is "tiles" or "triangles".
+The functions has four arguments. `sites` is the data frame of the sites or focal points used to do the triangulation or tessellation. `rw.data` (rw = 'rectangular window')is the data frame of a secondary source data (e.g., fatalities, customers, etc.). This argument is useful when the range of secondary data exceeds that of the sites data. `rw` is an alternative way to specify the range of data which uses a vector of the corners of the rectangular window: xmin, xmax, ymin, ymax. `type` is "tiles" or "triangles".
 
 ## Coloring Tiles
 

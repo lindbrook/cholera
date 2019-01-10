@@ -1,7 +1,7 @@
 deldirPolygons(): Tiles, Triangles and Polygons
 ================
 lindbrook
-2019-01-05
+2019-01-10
 
 `deldirPolygons()` is a wrapper function that extracts the vertices of 'deldir' Delauny triangles and Dirichelet (Voronoi) tiles for use with functions that rely on polygons. The function returns a list of data frames of vertices. This makes tasks like coloring tiles or triangles or counting cases within tiles or triangles easier.
 
@@ -9,7 +9,7 @@ lindbrook
 deldirPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles")
 ```
 
-The functions has four arguments. `sites` is the data frame of the sites or focal points used to do the triangulation or tessellation. `rw.data` (rw = 'rectangular window')is the data frame of secondary data (e.g., fatalities, customers, etc.). It is useful when the range of secondary data exceeds that of the site data. `rw` is a vector of the corners of the rectangular window: xmin, xmax, ymin, ymax. `type` is "tiles" or "triangles".
+The functions has four arguments. `sites` is the data frame of the sites or focal points used to do the triangulation or tessellation. `rw.data` (rw = 'rectangular window')is the data frame of a secondary source data (e.g., fatalities, customers, etc.). This argument is useful when the range of secondary data exceeds that of the sites data. `rw` is an alternative way to specify the range of data which uses a vector of the corners of the rectangular window: xmin, xmax, ymin, ymax. `type` is "tiles" or "triangles".
 
 Coloring Tiles
 --------------
