@@ -1,7 +1,7 @@
 "Unstacking" Bars
 ================
 lindbrook
-2019-01-05
+2019-01-10
 
 Overview
 --------
@@ -12,20 +12,20 @@ In his map of the 1854 cholera outbreak in London, John Snow uses stacks of bars
 
 In 1992, Rusty Dodson and Waldo Tobler digitized the map. Each bar and pump is assigned a unique x-y coordinate. Each road is translated into a series of straight line segments, defined by the segment's endpoints. While the original data are no longer available,[2] they are preserved in Michael Friendly's 'HistData' package. The data are plotted below:
 
-<img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
+<img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto auto auto 0;" />
 
 Despite its appeal, I would argue that stacked bars are visually and computationally problematic. The reason, simply put, is that not all bars are created equal. Even though they are identical in terms of their appearance and the only thing that appears to distinguish them is their location, bars can actually play different roles.
 
-Sometimes a bar represents the location of a fatality, sometimes it doesn't. Standalone bars, a stack with a single bar (i.e., an addresses with one fatality), or the bar at the base of a stack represent a location. Bars above the base case do not. They exist only to create the stacking effect to visually represent the number of fatalities at the address.
+Sometimes a bar represents the location of a fatality, sometimes it doesn't. Standalone bars, a stack with a single bar (i.e., an addresses with one fatality), or the bar at the base of a stack represent a location and a count. Bars above the base case do not. They exist only to create the stacking effect to visually represent the number of fatalities at the address.
 
-This duality is problematic. Because a map is a visual device that illustrates spatial relationships, it's natural to assume that the position of each element (e.g., a bar) reflects an actual, physical location. When we violate this assumption, we undermine the visual integrity of the map. This can handicap our analysis. This is particularly true given that 44% (257/578) of the bars in Snow's map fall into the second, geographically uninformative category.
+This duality is problematic. Because a map is a visual device that illustrates spatial relationships, it's natural to assume that the position of each element (e.g., each bar) reflects an actual, physical location. When we violate this assumption, we undermine the visual integrity of the map. This can handicap our analysis. This is particularly true given that 44% (257/578) of the bars in Snow's map fall into this second, geographically uninformative category.
 
 To address these problems, I "unstack" Dodson and Tobler's data. I do so in two ways. In the first, I give all all cases in a stack (i.e., at the same "address") the same x-y coordinate. These data are available in `fatalities.unstacked`. In the second, I make the address rather than the the case the unit of observation: each address is a single observation with a single x-y coordinate, and the number of cases observed at that location is an attribute of that address. These data are available in `fatalities.address`.
 
 Data details
 ------------
 
-To illustrate the differences between the two data sets, consider how they handle the largest outlier on Snow's map: the eighteen cases at 38 Broad Street.
+To illustrate the differences between these two data sets, consider how they handle the largest outlier on Snow's map: the eighteen cases at 38 Broad Street.
 
 With `fatalities`, all members of the stack have different coordinates:
 
@@ -103,18 +103,18 @@ To illustrate the virtues of "unstacked" data, consider the following.
 
 The graphs below plot the bivariate kernel density contours, of varying bandwidths, on the "stacked" and "unstacked" data. The contours help illustrate the spatial distribution or topography of fatalities, and provide an estimate of the epicenter of the outbreak.
 
-With the "stacked" data, `fatalities`, the contours are looser (reflecting lower proximity) and the epicenter is further south than what we might expect given that the Broad Street pump (blue triangle)[3] is the accepted source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward in a southerly direction.
+With the "stacked" data, `fatalities`, the contours are looser (reflecting lower proximity) and the epicenter is further south than we might expect given that the Broad Street pump (blue triangle)[3] is the accepted source of the outbreak. The problem is that the "vertical" stack of 18 cases (west of the pump at 38 Broad Street) and the "horizontal" stack of 5 cases (south of the pump at 10 Cambridge Street) pull the fit downward in a southerly direction.
 
-<img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
+<img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-6-1.png" style="display: block; margin: auto auto auto 0;" />
 
 With `fatalities.unstacked`, the contours are "tighter" (reflecting greater proximity) and the epicenter is located further north, nearer to the pump and to Broad Street:
 
-<img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="unstacking.bars_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto auto auto 0;" />
 
 "Unstacking" via classification
 -------------------------------
 
-The main roadblock to "unstacking" is that there is no notion of an "address" in the data: bars are merely points and streets are merely line segments.[4] Nothing links a point to a segments. And nothing connects one bar in a stack to another bar. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have overlapping x-y coordinates.
+The main roadblock to "unstacking" is that there is no notion of an "address" in the data: bars are merely points and the streets are merely line segments.[4] Nothing links a point to a segment. And nothing connects one bar in a stack to another bar in the same stack. All elements exist independently of one another. The only reason why the map "works" is that the fatalities and roads data have proximate x-y coordinates.
 
 To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I use two types of classification. For those interested, the details are found in "computing street addresses", which is available [online](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md) in this package's GitHub repository.
 
