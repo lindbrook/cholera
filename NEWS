@@ -63,7 +63,7 @@ cholera 0.6.0
 
 # New Vignette #
 
-- "tiles.polygons": Tiles, Triangles and Polygons
+- "deldirPolygons(): Tiles, Triangles and Polygons"
 
 
 cholera 0.5.1
