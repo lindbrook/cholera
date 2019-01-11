@@ -140,7 +140,7 @@ The lab notes, which are only available online, go into greater detail about som
 
 [note on duplicate and missing cases](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md) documents the specifics of how I "fixed" two apparent coding errors and three misplaced case in Dodson and Tobler's data.
 
-[computing street addressess](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md) discusses how I use orthogonal projection and hierarchical cluster analysis to "unstack" bars and compute a stack's "address".
+[computing street addresses](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md) discusses how I use orthogonal projection and hierarchical cluster analysis to "unstack" bars and compute a stack's "address".
 
 [Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/notes/euclidean.voronoi.md) discusses why there are separate functions for `neighborhoodEuclidean()` and `neighborhoodVoronoi()`.
 
