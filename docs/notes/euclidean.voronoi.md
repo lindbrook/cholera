@@ -1,12 +1,12 @@
 Euclidean v. Voronoi neighborhoods
 ================
 lindbrook
-2019-01-05
+2019-01-10
 
 overview
 --------
 
-"The Voronoi region of a site ***s*** is the set of points in the plane for which ***s*** is the closest site among all the sites."[1] Given this definition, you might wonder why there's both a neighborhoodEuclidean() and a neighborhoodVoronoi() function. First, by definition, you need at least two sites to create a Voronoi diagram so neighborhoodVoronoi(7) will return an error but neighorhoodEuclidean() will not. This also means that you can create a star plots that are centered on a single pump.
+"The Voronoi region of a site ***s*** is the set of points in the plane for which ***s*** is the closest site among all the sites."[1] Given this definition, you might wonder why there's both a neighborhoodEuclidean() and a neighborhoodVoronoi() function. First, by definition, you need at least two sites to create a Voronoi diagram so `neighborhoodVoronoi(7)` will return an error but `neighorhoodEuclidean()` will not. This also what allows you to create star plots that are centered on a single pump.
 
 ``` r
 plot(neighborhoodEuclidean(7))
@@ -14,9 +14,9 @@ plot(neighborhoodEuclidean(7))
 
 ![](euclidean.voronoi_files/figure-markdown_github/star-1.png)
 
-Second, neighborhoodEuclidean() allows you to add a small dose of "realism". With Voronoi tessellation, all that matters is the location of the pumps. All other data, be it buildings, roads or the location of fatalities, simply do not matter.
+Second, neighborhoodEuclidean() allows you to add a small dose of "realism". With Voronoi tessellation, all that matters is the location of the pumps. All other data, be it buildings, roads or the location of fatalities, simply do not matter. But with neighborhoodEuclidean(case.set = "expected"), we can use case.location = "nominal" or case.location = "address".
 
-But with neighborhoodEuclidean(), when case.set = "expected" we can use case.location = "nominal" or case.location = "address". The former uses nominal coordinates of the expected or simulated cases in regular.cases and effectively replicates the Voronoi diagram:
+The former uses the nominal coordinates of the expected or simulated cases from regular.cases. Doing so effectively replicates the Voronoi diagram:
 
 ``` r
 plot(cholera::neighborhoodEuclidean(case.set = "expected",
