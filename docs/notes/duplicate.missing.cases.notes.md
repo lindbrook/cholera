@@ -1,38 +1,38 @@
 note on duplicate and missing cases
 ================
 lindbrook
-2019-01-05
+2019-01-10
 
 Duplicate Cases: Cambridge Street
 ---------------------------------
 
-The three pairs of duplicates lie at two different locations on opposite sides of Cambridge Street:
+The three pairs of case with duplicate coordinates lie at two different locations on opposite sides of Cambridge Street (91 and 241; 209 and 429; 93 and 214):
 
 <img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto auto auto 0;" />
 
 Missing Cases: Broad Street
 ---------------------------
 
-40 Broad Street, which lies just southwest (below and to the left) of the Broad Street Pump, is the location of two of the "missing" cases.
+Two of the "missing" cases are located at 40 Broad Street, which lies just southwest (below and to the left) of the Broad Street Pump.
 
-Snow's map shows four "bars" or cases:
+While Snow's map shows four "bars" or cases,
 
 ![](broad.street.A.png)
 
-But Dodson and Tobler's data show only two, cases 32 and 122. Furthermore, the two cases also appear to be farther apart than what we see in nearby stacks:
+Dodson and Tobler's data show only two, cases 32 and 122. Furthermore, the two cases also appear to be farther apart than is seen in nearby stacks:
 
 <img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-3-1.png" style="display: block; margin: auto auto auto 0;" />
 
-Missing Cases: Noel Street
---------------------------
+Missing Case: Noel Street
+-------------------------
 
-15 Noel Street, which lies north of Broad Street one block south of Oxford Street at the intersection with Berwick Street, is the location of the third "missing" case.
+The third "missing" case is located at 15 Noel Street, which lies north of Broad Street one block south of Oxford Street at the intersection with Berwick Street.
 
 Snow's map shows three cases at the end of Noel Street:
 
 ![](noel.street.png)
 
-But Dodson and Tobler's data shows only two cases: 282 and 422. They also appear to be farther apart than what we see in nearby stacks:
+But Dodson and Tobler's data shows only two: 282 and 422. Like the cases on Broad Street, the pair also appears to be farther apart than what is seen in nearby stacks:
 
 <img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-4-1.png" style="display: block; margin: auto auto auto 0;" />
 
@@ -41,11 +41,11 @@ A Solution
 
 One solution to these problems is to use the three duplicate observations from Cambridge Street to fill in for the three "missing" observations on Broad and Noel Streets. This is both plausible and reasonable.
 
-What makes it plausible is that with the exception of the x-y coordinate of the case at the base of a stack, the remaining coordinates, which make up 44% (257/578) of all bars and which include the proposed locations for the three "missing" observations, do not represent the location of a case. They only serve to align bars within a stack. For this reason, there should be no objections to moving this class of bars.
+What makes it plausible is that with the exception of the x-y coordinate of the case at the base of a stack, the remaining coordinates, which make up 44% (257/578) of all bars and which include the proposed locations for the three "missing" observations, do not represent the location of cases. They only serve to align bars within a stack. For this reason, there should be no objections to moving this class of bars.
 
-What makes it reasonable is that I do not relocate bars by hand. Instead, I use simple geometric interpolation. I use existing observations in a stack to determine the "standard" *unit* distance between bars and then use multiples of that *unit* distance to position "missing" observations.
+What makes it reasonable is that I do not relocate bars by hand. Instead, I use simple geometric interpolation: I use the existing observations in a stack to determine the "standard" *unit* distance between bars and then use multiples of that *unit* distance to position the "missing" observations.
 
-Consider 40 Broad Street. On Snow's map, there are four cases but in Dodson and Tobler there are just two. Visual inspection leads me to make three claims: 1) the distance between the two observed cases, 32 and 122, is greater than that at neighboring stacks; 2) there appears to be room for one "missing" case between 32 and 122; and 3) the other "missing" case should be located just beyond case 122.
+Consider 40 Broad Street. On Snow's map, there are four cases but on Dodson and Tobler's there are just two. Visual inspection leads me to make three claims: 1) the distance between the two observed cases, 32 and 122, is greater than that at neighboring stacks; 2) there appears to be room for one "missing" case between 32 and 122; and 3) the other "missing" case could be located just beyond case 122.
 
 The proposed coordinates are illustrated below:
 
@@ -54,9 +54,7 @@ The proposed coordinates are illustrated below:
 Geometric interpolation: *unit* distance
 ----------------------------------------
 
-To explain how I got these coordinates, I illustrate the computation of the *unit* distance in one dimension and then move to the two dimensional case.
-
-I use 40 Broad Street as the example. I rotate the data so that the stack lies along a single (horizontal) dimension. To fit one "missing" case between cases 32 and 122, I set the *unit* distance between the two observed cases to 2:
+To explain how I arrived at these coordinates, I use 40 Broad Street as an example to illustrate the computation of the *unit* distance in one dimension and then move on to the computation of the two dimensional case. Note that I rotate the data so that the stack lies along a single (horizontal) dimension. To fit one "missing" case between cases 32 and 122, I set the *unit* distance between the two observed cases to 2:
 
 <img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto auto auto 0;" />
 
@@ -71,25 +69,29 @@ And place the other "missing" case three *units* away:
 Geometric interpolation: in 2 dimensions
 ----------------------------------------
 
-Because stacks lie in two dimensional space and because we need to respect geographical features like roads, the actual interpolation is a bit more complicated.
+Because the stacks lie in two dimensional space and because we need to respect geographical features like roads, the actual interpolation is a bit more complicated.
 
-Consider the example of the "missing" observation that lies between cases 32 and 122. Just as with the one dimensional example, the "missing" observation should be located one *unit* away from case 32. The difference in two dimensions is that it needs to be located one *unit* away from case 32 (at the red "x") as measured along the line that runs through the stack's axis (black dotted line).
+Consider the example of the "missing" observation that lies between cases 32 and 122. Just as in the one dimensional example, the "missing" observation should be located one *unit* away from case 32. The difference in two dimensions is that it needs to be located one *unit* away from case 32 (at the red "x") as measured along the line that runs through the stack's axis (black dotted line).
 
 <img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-11-1.png" style="display: block; margin: auto auto auto 0;" />
 
-To compute the coordinates for the "missing" case, I find the points of intersection between a circle and line. The circle is simple: its center is the case or reference point (case 32), and its radius is the desired multiple of the *unit* distance, which is 1 in this example. The line is more complicated: it's the line that runs through the stack's axis.
+To compute the coordinates for the "missing" case, I'm literally computing the points of intersection between a circle and line.
 
-What makes the line complicated is that the bars in the stacks in Dodson and Tobler are generally *not* perfectly aligned. To ensure that there is only one unique axis for any stack, I impose two constraints: 1) a stack must lie along an axis that is orthogonal to the road (line segment) where the stack is located[1]; and 2) the axis must pass through the reference point, the bar at the base of the stack (i.e., the bar closest to the stack's home road segment).
+The circle is simple: it's center is the case serving as the reference point (case 32); its radius is the desired multiple of the *unit* distance, which is 1 in this example.
+
+The line is equally simple, in theory: it's the line that runs through the stack's axis.
+
+In practice, computing the line is little complicated because the bars in the stacks are generally *not* perfectly aligned. To ensure that there is one, unique axis for each stack, I impose two constraints: 1) a stack must lie along the axis that is orthogonal to the road (line segment) where the stack is located[1]; and 2) the axis must pass through the bar at the base of the stack (i.e., the bar closest to the stack's home road segment).
 
 As a consequence, the line drawn through the stack's axis will pass through the circle's center:
 
 <img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-12-1.png" style="display: block; margin: auto auto auto 0;" />
 
-There will always be two points of intersection (red squares):
+There will, of course, be two points of intersection (red squares):
 
 <img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-13-1.png" style="display: block; margin: auto auto auto 0;" />
 
-So, finding the coordinates of the "missing" observations boils down to solving a quadratic equation and picking the appropriate solution.
+Finding the coordinates of the "missing" observations boils down to solving a quadratic equation and picking the appropriate solution.
 
 <img src="duplicate.missing.cases.notes_files/figure-markdown_github/unnamed-chunk-14-1.png" style="display: block; margin: auto auto auto 0;" />
 
