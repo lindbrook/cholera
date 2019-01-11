@@ -138,15 +138,15 @@ The package's vignettes, are also available online at the links below, go into d
 
 ### lab notes
 
-The lab notes, which are only available online, go into greater detail about issues and topics discussed in the vignettes:
-
-[points v. polygons](https://github.com/lindbrook/cholera/blob/master/docs/notes/pump.neighborhoods.notes.md) discusses the tradeoff between using points() and polygon() to plot "expected" area neighborhood plots and the computation of polygon vertices.
+The lab notes, which are only available online, go into greater detail about some of the issues and topics discussed in the vignettes:
 
 [note on duplicate and missing cases](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md) documents the specifics of how I "fixed" two apparent coding errors and three misplaced case in Dodson and Tobler's data.
 
 [computing street addressess](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md) discusses how I use orthogonal projection and hierarchical cluster analysis to "unstack" bars and compute a stack's "address".
 
 [Euclidean v. Voronoi neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/notes/euclidean.voronoi.md) discusses why there are separate functions for `neighborhoodEuclidean()` and `neighborhoodVoronoi()`.
+
+[points v. polygons](https://github.com/lindbrook/cholera/blob/master/docs/notes/pump.neighborhoods.notes.md) discusses the tradeoff between using points() and polygon() to plot "expected" area neighborhood plots and the computation of polygon vertices.
 
 [references](https://github.com/lindbrook/cholera/blob/master/docs/notes/references.md) is an informal list of articles and books about cholera, John Snow and the 1854 outbreak.
 
