@@ -15,17 +15,11 @@
  }}
 \usage{
 landmarks
-
-landmarks
 }
 \description{
 Orthogonal projection of landmarks onto road network.
-
-Orthogonal projection of landmarks onto road network.
 }
 \note{
-\code{\link{orthoProjLandmarks}} documents the code for these data.
-
 \code{\link{orthoProjLandmarks}} documents the code for these data.
 }
 \keyword{datasets}
