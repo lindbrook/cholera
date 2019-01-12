@@ -29,6 +29,9 @@
 #'
 #' # distance from pump 1 to pump 6.
 #' walkingDistance(1, 6, type = "pumps")
+#'
+#' # distance for cases 1 through 3 nearest pump.
+#' lapply(1:3, walkingDistance)
 #' }
 
 walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",

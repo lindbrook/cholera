@@ -27,6 +27,9 @@
 #'
 #' # path from pump 1 to pump 6.
 #' euclideanDistance(1, 6, type = "pumps")
+#'
+#' # distance for cases 1 through 3 nearest pump.
+#' lapply(1:3, euclideanDistance)
 
 euclideanDistance <- function(origin = 1, destination = NULL,
   type = "case-pump", observed = TRUE, case.location = "address",
@@ -99,8 +102,8 @@ euclideanDistance <- function(origin = 1, destination = NULL,
       if (any(abs(destination) %in% p.ID == FALSE)) {
         stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count,
              ".")
-       }
-     }
+      }
+    }
   }
 
   arguments <- list(origin = origin,
