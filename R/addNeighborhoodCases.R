@@ -45,7 +45,7 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
     anchors <- cholera::fatalities.address$anchor.case
 
     nearest.pump <- parallel::mclapply(anchors, function(x) {
-      euclideanDistance(x, destination = pump.select, vestry = vestry)$pump
+      euclideanDistance(x, destination = pump.select, vestry = vestry)$data$pump
     }, mc.cores = cores)
 
     nearest.pump <- data.frame(case = anchors, pump = unlist(nearest.pump))
