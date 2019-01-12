@@ -1,4 +1,4 @@
-#' Compute the Euclidean distance between cases and/or pumps.
+#' Compute the Euclidean distance between cases and/or pumps. (Beta)
 #'
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
@@ -113,6 +113,42 @@ euclideanDistance <- function(origin = 1, destination = NULL,
                     time.unit = "second",
                     walking.speed = 5)
 
-  x <- do.call(euclideanPath, arguments)
-  x$data
+  output <- do.call(euclideanPath, arguments)
+  class(output) <- "euclidean_distance"
+  output
+}
+
+#' Print method for euclideanDistance().
+#'
+#' Summary output.
+#' @param x An object of class "euclidean_distance" created by euclideanDistance().
+#' @param ... Additional parameters.
+#' @return An R data frame.
+#' @export
+#' @examples
+#' euclideanDistance(1)
+#' print(euclideanDistance(1))
+
+print.euclidean_distance <- function(x, ...) {
+  if (class(x) != "euclidean_distance") {
+    stop('"x"\'s class must be "euclidean_distance".')
+  }
+
+  print(x[["data"]])
+}
+
+#' Plot method for euclideanDistance().
+#'
+#' plot output.
+#' @param x An object of class "euclidean_distance" created by euclideanDistance().
+#' @param ... Additional parameters.
+#' @return An R data frame.
+#' @export
+
+plot.euclidean_distance <- function(x, ...) {
+  if (class(x) != "euclidean_distance") {
+    stop('"x"\'s class must be "euclidean_distance".')
+  }
+
+  message("Use plot(euclideanPath()) instead.")
 }

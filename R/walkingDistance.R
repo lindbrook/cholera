@@ -1,4 +1,4 @@
-#' Compute the shortest walking distance between cases and/or pumps.
+#' Compute the shortest walking distance between cases and/or pumps. (Beta)
 #'
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
@@ -130,6 +130,42 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
                     time.unit = "second",
                     walking.speed = 5)
 
-  x <- do.call(walkingPath, arguments)
-  x$data
+  output <- do.call(walkingPath, arguments)
+  class(output) <- "walking_distance"
+  output
+}
+
+#' Print method for walkingDistance().
+#'
+#' Summary output.
+#' @param x An object of class "walking_distance" created by walkingDistance().
+#' @param ... Additional parameters.
+#' @return An R data frame.
+#' @export
+#' @examples
+#' walkingDistance(1)
+#' print(walkingDistance(1))
+
+print.walking_distance <- function(x, ...) {
+  if (class(x) != "walking_distance") {
+    stop('"x"\'s class must be "walking_distance".')
+  }
+
+  print(x[["data"]])
+}
+
+#' Plot method for walkingDistance().
+#'
+#' plot output.
+#' @param x An object of class "walking_distance" created by walkingDistance().
+#' @param ... Additional parameters.
+#' @return An R data frame.
+#' @export
+
+plot.walking_distance <- function(x, ...) {
+  if (class(x) != "walking_distance") {
+    stop('"x"\'s class must be "walking_distance".')
+  }
+
+  message("Use plot(walkingPath()) instead.")
 }
