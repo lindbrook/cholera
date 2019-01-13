@@ -215,17 +215,16 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
 
   ortho.proj <- do.call(rbind, orthogonal.projection)
   row.names(ortho.proj) <- NULL
-  out <- data.frame(ortho.proj, name = landmark.names, stringsAsFactors = FALSE)
+  out <- data.frame(ortho.proj, do.call(rbind, landmarks),
+    name = landmark.names, stringsAsFactors = FALSE)
   row.names(out) <- NULL
   out$case <- seq(20001, 20000 + nrow(out))
   out
 }
 
 landmarksSquares <- function() {
-  golden.sq <- data.frame(name = "Golden Square", x.proj = 11.90927,
-    y.proj = 8.239483)
-  soho.sq <- data.frame(name = "Soho Square", x.proj = 18.07044,
-    y.proj = 15.85703)
+  golden.sq <- data.frame(name = "Golden Square", x = 11.90927, y = 8.239483)
+  soho.sq <- data.frame(name = "Soho Square", x = 18.07044, y = 15.85703)
   out <- rbind(golden.sq, soho.sq)
   start <- max(cholera::landmarks$case) + 1
   stop <- start + nrow(out) - 1
