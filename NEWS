@@ -9,7 +9,7 @@ cholera 0.6.0
 # Data Changes #
 
 - add Earl of Aberdeen residence (Argyll House).
-- update landmarks and landmark.squares
+- nominal and orthogonal coordinates for landmarks.
 
 # Function Changes #
 
@@ -39,6 +39,7 @@ cholera 0.6.0
 - euclideanPath()
 - walkingDistance()
 - walkingPath()
+- find (case or landmark) | pump; reverse lookup (beta)
 
 # Function Changes - case.location argument: "address" or "nominal" #
 
