@@ -33,7 +33,7 @@ cholera 0.6.0
 - addNeighborhoodWalking(polygon.method = "pearl.string")
 - plot.walking(polygon.method = "pearl.string")
 
-# Function Changes - landmarks as origin and/or destination (treated as cases) #
+# Function Change - landmarks as origin and/or destination (treated as cases) #
 
 - euclideanDistance()
 - euclideanPath()
