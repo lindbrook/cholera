@@ -54,7 +54,7 @@ walkingDistance(1, 6, type = "cases")
 # distance from pump 1 to pump 6.
 walkingDistance(1, 6, type = "pumps")
 
-# distance for cases 1 through 3 nearest pump.
+# for multiple cases.
 lapply(1:3, walkingDistance)
 }
 }

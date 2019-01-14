@@ -18,6 +18,9 @@ An R data frame.
 Summary output.
 }
 \examples{
-walkingPath(1)
-print(walkingPath(1))
+\dontrun{
+
+walkingPath()
+print(walkingPath())
+}
 }

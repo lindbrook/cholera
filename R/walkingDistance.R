@@ -30,7 +30,7 @@
 #' # distance from pump 1 to pump 6.
 #' walkingDistance(1, 6, type = "pumps")
 #'
-#' # distance for cases 1 through 3 nearest pump.
+#' # for multiple cases.
 #' lapply(1:3, walkingDistance)
 #' }
 
@@ -75,45 +75,69 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
   p.count <- nrow(p.data)
   p.ID <- seq_len(p.count)
 
+  # ----- #
+
   if (type == "case-pump") {
     if (is.numeric(origin)) {
-      if (origin %in% seq_len(ct) == FALSE) {
-        txt1 <- 'With type = "case-pump" and observed = '
-        txt2 <- 'origin must be between 1 and '
-        stop(txt1, observed, ", ", txt2, ct, ".")
+      if (is.numeric(origin)) {
+        if (origin %in% seq_len(ct) == FALSE) {
+          txt1 <- 'With type = "case-pump" and observed = '
+          txt2 <- ', origin must be between 1 and '
+          stop(txt1, observed, ", ", txt2, ct, ".")
+        }
       }
     } else if (is.character(origin)) {
       origin <- caseAndSpace(origin)
-      if (grepl("Square", origin)) {
-       ego.id <- cholera::landmarks[grep(origin, cholera::landmarks$name),
-         "case"]
-      } else if (origin %in% cholera::landmarks$name) {
-        ego.id <- cholera::landmarks[cholera::landmarks$name == origin,
-          "case"]
-      } else stop('Use a valid landmark name.')
+      origin.test <- origin %in% cholera::landmarks.squares$name == FALSE &
+                     origin %in% cholera::landmarks$name == FALSE
+      if (origin.test) stop("Use a valid landmark name.")
     }
 
     if (!is.null(destination)) {
       if (is.numeric(destination)) {
         if (any(abs(destination) %in% p.ID == FALSE)) {
           txt1 <- 'With type = "case-pump" and vestry = '
-          txt2 <- ', destination must whole numbers 1 >= |x| <= '
+          txt2 <- ', destination must a whole number 1 >= |x| <= '
           stop(txt1, vestry, txt2, p.count, ".")
         }
       }
     }
 
+  # ----- #
+
   } else if (type == "cases") {
+    if (is.numeric(origin)) {
+      if (origin %in% seq_len(ct) == FALSE) {
+        txt1 <- 'With type = "cases" and observed = '
+        txt2 <- ', the origin and destination must be '
+        txt3 <- 'between 1 and '
+        stop(txt1, observed, txt2, txt3, ct, ".")
+      }
+    } else if (is.character(origin)) {
+      origin <- caseAndSpace(origin)
+      origin.test <- origin %in% cholera::landmarks.squares$name == FALSE &
+                     origin %in% cholera::landmarks$name == FALSE
+      if (origin.test) stop("Use a valid landmark name.")
+    }
+
     if (is.null(destination) == FALSE) {
-      if (is.numeric(origin) & is.numeric(destination)) {
-        if (any(abs(c(origin, destination)) %in% seq_len(ct) == FALSE)) {
+      if (is.numeric(destination)) {
+        if (abs(destination) %in% seq_len(ct) == FALSE) {
           txt1 <- 'With type = "cases" and observed = '
-          txt2 <- ', the absolute value of origin and destination must be '
+          txt2 <- ', the absolute value of destination must be '
           txt3 <- 'between 1 and '
           stop(txt1, observed, txt2, txt3, ct, ".")
         }
+      } else if (is.character(destination)) {
+        destination <- caseAndSpace(destination)
+        A <- destination %in% cholera::landmarks.squares$name == FALSE
+        B <- destination %in% cholera::landmarks$name == FALSE
+        destination.test <- A & B
+        if (destination.test) stop("Use a valid landmark name.")
       }
     }
+
+  # ----- #
 
   } else if (type == "pumps") {
     if (any(abs(c(origin, destination)) %in% p.ID == FALSE)) {
@@ -146,8 +170,8 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
 #' @return An R data frame.
 #' @export
 #' @examples
-#' walkingDistance(1)
-#' print(walkingDistance(1))
+#' walkingDistance()
+#' print(walkingDistance())
 
 print.walking_distance <- function(x, ...) {
   if (class(x) != "walking_distance") {
@@ -170,5 +194,5 @@ plot.walking_distance <- function(x, ...) {
     stop('"x"\'s class must be "walking_distance".')
   }
 
-  message("Use plot(walkingPath()) instead.")
+  message("To plot path, use plot(walkingPath()).")
 }

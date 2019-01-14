@@ -18,6 +18,6 @@ An R data frame.
 Summary output.
 }
 \examples{
-walkingDistance(1)
-print(walkingDistance(1))
+walkingDistance()
+print(walkingDistance())
 }
