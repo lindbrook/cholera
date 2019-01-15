@@ -140,10 +140,15 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
   # ----- #
 
   } else if (type == "pumps") {
-    if (any(abs(c(origin, destination)) %in% p.ID == FALSE)) {
-      txt1 <- 'With type = "pumps" and vestry = '
-      txt2 <- ', origin and destination must whole number(s) 1 >= |x| <= '
-      stop(txt1, vestry, txt2, p.count, ".")
+    if (origin %in% p.ID == FALSE) {
+      stop('With vestry = ', vestry, ', origin <= ', p.count, ".")
+    }
+
+    if (!is.null(destination)) {
+      if (any(abs(destination) %in% p.ID == FALSE)) {
+        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count,
+             ".")
+      }
     }
   }
 
