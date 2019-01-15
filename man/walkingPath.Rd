@@ -42,6 +42,9 @@ The function uses a case's "address" (i.e., a stack's "anchor" case) to compute 
 # path from case 1 to nearest pump.
 walkingPath(1)
 
+# path from pump 1 to nearest case.
+walkingPath(NULL, 1)
+
 # path from case 1 to pump 6.
 walkingPath(1, 6)
 
