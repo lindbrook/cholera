@@ -39,7 +39,7 @@ cholera 0.6.0
 - euclideanPath()
 - walkingDistance()
 - walkingPath()
-- find (case or landmark) | pump; reverse lookup (beta)
+- find nearest case or landmark, given pump; reverse lookup (beta)
 
 # Function Changes - case.location argument: "address" or "nominal" #
 
