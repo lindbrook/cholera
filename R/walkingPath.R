@@ -60,16 +60,15 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     if (type != "cases") stop('type must be "cases".')
   }
 
-  if (type == "pumps") {
-    if (origin == 2) {
-      stop ('Pump 2 is a technical isolate. Choose another.')
-    }
-  }
-
   if (type %in% c("case-pump", "pumps")) {
     if (is.null(destination) == FALSE) {
-      if (destination == 2) {
-        stop ('Pump 2 is a technical isolate. Choose another.')
+      if (length(destination) == 1) {
+        if (destination == 2) {
+          stop('Pump 2 is a technical isolate. Choose another.')
+        }
+      }
+      if (any(abs(destination) == 2)) {
+        message('Pump 2 is a technical isolate. Already not considered.')
       }
     }
   }
@@ -246,10 +245,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   if (is.null(origin)) {
     case <- nodes[nodes$node == ego.node & nodes$anchor > 0, "anchor"]
-
     if (case > 20000) {
       case.nm <- cholera::landmarks[cholera::landmarks$case == case, "name"]
-
       if (grepl("Square", case.nm)) {
         case.nm <- unlist(strsplit(case.nm, "-"))[1]
       }
