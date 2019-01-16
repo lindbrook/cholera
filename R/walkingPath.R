@@ -520,47 +520,93 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   # ----- #
 
   } else if (type == "pumps") {
-    if (any(abs(c(origin, destination)) %in% p.ID == FALSE)) {
-      txt1 <- 'With type = "pumps" and vestry = '
-      txt2 <- ', origin and destination must whole numbers 1 >= |x| <= '
-      stop(txt1, vestry, txt2, p.count, ".")
-    }
-
     ego.node <- nodes[nodes$pump == origin, "node"]
     p.nodes <- nodes[nodes$pump > 0, ]
 
-    if (is.null(destination)) {
-      alters <- p.nodes[p.nodes$pump != origin, "node"]
-    } else {
-      if (all(destination > 0)) {
-        alters <- p.nodes[p.nodes$pump %in% destination &
-                          p.nodes$pump != origin, "node"]
-      } else if (all(destination < 0)) {
-        alters <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE &
-                          p.nodes$pump != origin, "node"]
+    if (!is.null(origin)) {
+      if (origin %in% p.ID == FALSE) {
+        txt1 <- 'With type = "pumps" and vestry = '
+        txt2 <- ', origin must be whole numbers 1 <= x <= '
+        stop(txt1, vestry, txt2, p.count, ".")
       }
-    }
 
-    if (weighted) {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x, weights = edges$d)
-      }, numeric(1L))
+      if (is.null(destination)) {
+        alters <- p.nodes[p.nodes$pump != origin, "node"]
+      } else {
+        if (all(destination > 0)) {
+          alters <- p.nodes[p.nodes$pump %in% destination &
+                            p.nodes$pump != origin, "node"]
+        } else if (all(destination < 0)) {
+          alters <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE &
+                            p.nodes$pump != origin, "node"]
+        } else if (any(abs(destination) %in% p.ID == FALSE)) {
+          txt1 <- 'With type = "pumps" and vestry = '
+          txt2 <- ', destination must be whole numbers 1 <= |x| <= '
+          stop(txt1, vestry, txt2, p.count, ".")
+        }
+      }
+
+      if (weighted) {
+        d <- vapply(alters, function(x) {
+          igraph::distances(g, ego.node, x, weights = edges$d)
+        }, numeric(1L))
+      } else {
+        d <- vapply(alters, function(x) {
+          igraph::distances(g, ego.node, x)
+        }, numeric(1L))
+      }
+
+      A <- p.nodes[p.nodes$node == ego.node, "pump"]
+      ego.node <- p.nodes[p.nodes$node == ego.node, "node"]
+
+      if (all(is.infinite(d))) {
+        B <- NA
+        alter.node <- NA
+      } else {
+        sel <- which.min(d)
+        B <- p.nodes[p.nodes$node == names(sel), "pump"]
+        alter.node <- p.nodes[p.nodes$node == names(sel), "node"]
+      }
     } else {
-      d <- vapply(alters, function(x) {
-        igraph::distances(g, ego.node, x)
-      }, numeric(1L))
-    }
+      if (is.null(destination)) {
+        stop("You must provide a destination!")
+      } else {
+        if (is.numeric(destination)) {
+          if (any(abs(destination) %in% p.ID == FALSE)) {
+            txt1 <- 'With type = "pumps" and vestry = '
+            txt2 <- ', 1 <= |destination| <= '
+            stop(txt1, vestry, txt2, p.count, ".")
+          } else {
+            if (all(destination < 0)) {
+              p.nodes <- nodes[nodes$pump != 0, ]
+              alter.node <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE,
+                "node"]
+            } else if (all(destination > 0)) {
+              alter.node <- nodes[nodes$pump %in% destination, "node"]
+            }
+          }
+        }
 
-    A <- p.nodes[p.nodes$node == ego.node, "pump"]
-    ego.node <- p.nodes[p.nodes$node == ego.node, "node"]
+        egos <- p.data[p.data$id != destination & p.data$id != 2, ]
+        egos.id <- p.nodes[p.nodes$pump %in% egos$id, "pump"]
+        egos.nodes <- p.nodes[p.nodes$pump %in% egos$id, "node"]
 
-    if (all(is.infinite(d))) {
-      B <- NA
-      alter.node <- NA
-    } else {
-      sel <- which.min(d)
-      B <- p.nodes[p.nodes$node == names(sel), "pump"]
-      alter.node <- p.nodes[p.nodes$node == names(sel), "node"]
+        if (weighted) {
+          d <- vapply(egos.nodes, function(x) {
+            igraph::distances(g, x, alter.node, weights = edges$d)
+          }, numeric(1L))
+        } else {
+          d <- vapply(egos.nodes, function(x) {
+            igraph::distances(g,  x, alter.node)
+          }, numeric(1L))
+        }
+
+        sel <- which.min(d)
+        ego.node <- names(sel)
+        A <- p.nodes[p.nodes$node == ego.node, "pump"]
+        B <- destination
+        case <- A
+      }
     }
 
     if (weighted) {
