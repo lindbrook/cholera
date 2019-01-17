@@ -6,7 +6,7 @@
 \usage{
 caseLocator(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
   add.title = TRUE, highlight.segment = TRUE, data = FALSE,
-  add = TRUE, col = "red")
+  add = FALSE, col = "red")
 }
 \arguments{
 \item{case}{Numeric or Integer. Whole number between 1 and 578.}

@@ -19,7 +19,7 @@
 #' caseLocator(290, observed = FALSE)
 
 caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
-  add.title = TRUE, highlight.segment = TRUE, data = FALSE, add = TRUE,
+  add.title = TRUE, highlight.segment = TRUE, data = FALSE, add = FALSE,
   col = "red") {
 
   if (!is.numeric(case)) {
