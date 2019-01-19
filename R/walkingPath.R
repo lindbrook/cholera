@@ -234,7 +234,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
         sel <- which.min(d)
         node.sel <- nodes$node %in% names(sel) & nodes$anchor != 0
-        ego.node <- nodes[node.sel, "node"]
+        alter.node <- nodes[node.sel, "node"]
       }
     }
 
@@ -409,7 +409,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       }
 
       if (length(d) == 1) {
-        alter.node <- rownames(d)
+        alter.node <- colnames(d)
       } else {
         alter.node <- names(which.min(d))
       }
@@ -466,22 +466,22 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
     if (rev.flag) {
       out <- list(path = names(unlist(pth$vpath)),
-                    data = data.frame(caseA = alter.id,
-                                      caseB = ego.id,
-                                      anchorA = alter.anchor,
-                                      anchorB = ego.anchor,
-                                      distance = d[which.min(d)],
-                                      stringsAsFactors = FALSE,
-                                      row.names = NULL))
+                  data = data.frame(caseA = alter.id,
+                                    caseB = ego.id,
+                                    anchorA = alter.anchor,
+                                    anchorB = ego.anchor,
+                                    distance = d[which.min(d)],
+                                    stringsAsFactors = FALSE,
+                                    row.names = NULL))
     } else {
       out <- list(path = names(unlist(pth$vpath)),
-                          data = data.frame(caseA = ego.id,
-                                            caseB = alter.id,
-                                            anchorA = ego.anchor,
-                                            anchorB = alter.anchor,
-                                            distance = d[which.min(d)],
-                                            stringsAsFactors = FALSE,
-                                            row.names = NULL))
+                  data = data.frame(caseA = ego.id,
+                                    caseB = alter.id,
+                                    anchorA = ego.anchor,
+                                    anchorB = alter.anchor,
+                                    distance = d[which.min(d)],
+                                    stringsAsFactors = FALSE,
+                                    row.names = NULL))
     }
 
   # ----- #
