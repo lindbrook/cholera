@@ -318,9 +318,13 @@ numericNodeCoordinates <- function(x) {
 }
 
 drawPath <- function(x, case.color, compute.coords = TRUE) {
-  if (compute.coords) dat <- numericNodeCoordinates(x) else dat <- x
-  n1 <- dat[1:(nrow(dat) - 1), ]
-  n2 <- dat[2:nrow(dat), ]
+  if (compute.coords) {
+    path.data <- numericNodeCoordinates(x)
+  } else {
+    path.data <- x
+  }
+  n1 <- path.data[1:(nrow(path.data) - 1), ]
+  n2 <- path.data[2:nrow(path.data), ]
   segments(n1$x, n1$y, n2$x, n2$y, col = case.color, lwd = 3)
 }
 
