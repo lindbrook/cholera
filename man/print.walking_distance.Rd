@@ -18,6 +18,9 @@ An R data frame.
 Summary output.
 }
 \examples{
+\dontrun{
+
 walkingDistance()
 print(walkingDistance())
+}
 }

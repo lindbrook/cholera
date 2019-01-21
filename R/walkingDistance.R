@@ -175,8 +175,11 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
 #' @return An R data frame.
 #' @export
 #' @examples
+#' \dontrun{
+#'
 #' walkingDistance()
 #' print(walkingDistance())
+#' }
 
 print.walking_distance <- function(x, ...) {
   if (class(x) != "walking_distance") {

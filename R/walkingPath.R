@@ -108,7 +108,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   if (type == "case-pump") {
     if (!is.null(origin)) {
-
       if (observed) {
         if (is.numeric(origin)) {
           if (origin %in% seq_len(ct)) {
