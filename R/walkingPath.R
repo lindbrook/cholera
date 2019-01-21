@@ -643,28 +643,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   output
 }
 
-#' Print method for walkingPath().
-#'
-#' Summary output.
-#' @param x An object of class "walking_path" created by walkingPath().
-#' @param ... Additional parameters.
-#' @return An R data frame.
-#' @export
-#' @examples
-#' \dontrun{
-#'
-#' walkingPath()
-#' print(walkingPath())
-#' }
-
-print.walking_path <- function(x, ...) {
-  if (class(x) != "walking_path") {
-    stop('"x"\'s class must be "walking_path".')
-  }
-
-  print(x[c("path", "data")])
-}
-
 #' Plot the walking path between selected cases and/or pumps.
 #'
 #' @param x An object of class "walking_path" created by walkingPath().
@@ -1104,6 +1082,28 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
       x$speed, "km/hr"))
   }
+}
+
+#' Print method for walkingPath().
+#'
+#' Summary output.
+#' @param x An object of class "walking_path" created by walkingPath().
+#' @param ... Additional parameters.
+#' @return An R data frame.
+#' @export
+#' @examples
+#' \dontrun{
+#'
+#' walkingPath()
+#' print(walkingPath())
+#' }
+
+print.walking_path <- function(x, ...) {
+  if (class(x) != "walking_path") {
+    stop('"x"\'s class must be "walking_path".')
+  }
+
+  print(x[c("path", "data")])
 }
 
 citySquare <- function(ego.node, alters, g, nodes, edges, weighted, type) {

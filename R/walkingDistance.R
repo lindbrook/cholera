@@ -167,6 +167,22 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
   output
 }
 
+#' Plot method for walkingDistance().
+#'
+#' plot output.
+#' @param x An object of class "walking_distance" created by walkingDistance().
+#' @param ... Additional parameters.
+#' @return An R data frame.
+#' @export
+
+plot.walking_distance <- function(x, ...) {
+  if (class(x) != "walking_distance") {
+    stop('"x"\'s class must be "walking_distance".')
+  }
+
+  message("To plot path, use plot(walkingPath()).")
+}
+
 #' Print method for walkingDistance().
 #'
 #' Summary output.
@@ -187,20 +203,4 @@ print.walking_distance <- function(x, ...) {
   }
 
   print(x[["data"]])
-}
-
-#' Plot method for walkingDistance().
-#'
-#' plot output.
-#' @param x An object of class "walking_distance" created by walkingDistance().
-#' @param ... Additional parameters.
-#' @return An R data frame.
-#' @export
-
-plot.walking_distance <- function(x, ...) {
-  if (class(x) != "walking_distance") {
-    stop('"x"\'s class must be "walking_distance".')
-  }
-
-  message("To plot path, use plot(walkingPath()).")
 }
