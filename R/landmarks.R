@@ -223,8 +223,10 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
 }
 
 landmarksSquares <- function() {
-  golden.sq <- data.frame(name = "Golden Square", x = 11.90927, y = 8.239483)
-  soho.sq <- data.frame(name = "Soho Square", x = 18.07044, y = 15.85703)
+  golden.sq <- data.frame(name = "Golden Square", x = 11.90927, y = 8.239483,
+    stringsAsFactors = FALSE)
+  soho.sq <- data.frame(name = "Soho Square", x = 18.07044, y = 15.85703,
+    stringsAsFactors = FALSE)
   out <- rbind(golden.sq, soho.sq)
   start <- max(cholera::landmarks$case) + 1
   stop <- start + nrow(out) - 1
