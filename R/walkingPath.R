@@ -301,17 +301,23 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     rev.flag <- is.null(origin) & is.null(destination) == FALSE
 
     if (rev.flag) {
-      tmp <- origin
-      origin <- destination
-      destination <- tmp
+      if (destination %in% seq_len(ct) == FALSE) {
+        txt1 <- 'With type = "cases" and observed = '
+        txt2 <- ', destination must be between 1 and '
+        stop(txt1, observed, ", ", txt2, ct, ".")
+      } else {
+        tmp <- origin
+        origin <- destination
+        destination <- tmp
+      }
     }
 
     if (observed) {
       if (is.numeric(origin)) {
         if (origin %in% seq_len(ct) ) {
           ego.id <- origin
-          ego.anchor <- cholera::anchor.case[cholera::anchor.case$case ==
-            origin, "anchor.case"]
+          ego.sel <- cholera::anchor.case$case == origin
+          ego.anchor <- cholera::anchor.case[ego.sel, "anchor.case"]
         } else {
           txt1 <- 'With type = "cases" and observed = '
           txt2 <- ', origin must be between 1 and '
