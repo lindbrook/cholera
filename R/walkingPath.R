@@ -47,6 +47,10 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
   time.unit = "second", walking.speed = 5) {
 
+  if (is.null(origin) & is.null(destination)) {
+    stop("If origin = NULL, you must supply a destination.")
+  }
+
   if (unit %in% c("meter", "yard", "native") == FALSE) {
     stop('unit must be "meter", "yard" or "native".')
   }
@@ -363,7 +367,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
           } else if (all(destination < 0)) {
             alter.sel <- cholera::anchor.case$case %in% abs(destination) ==
               FALSE
-          }
+          } else stop("all positive or all negative.")
           alter.case <- unique(cholera::anchor.case[alter.sel, "anchor.case"])
         }
       } else {
@@ -371,7 +375,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
           alter.case <- nodes$anchor[nodes$anchor %in% destination]
         } else if (all(destination < 0)) {
           alter.case <- nodes$anchor[nodes$anchor %in% destination == FALSE]
-        }
+        } else stop("all positive or all negative.")
       }
 
       if (is.character(destination)) {
