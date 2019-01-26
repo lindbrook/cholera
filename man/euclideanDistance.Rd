@@ -37,6 +37,8 @@ Compute the Euclidean distance between cases and/or pumps. (Beta)
 The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
 }
 \examples{
+\dontrun{
+
 # path from case 1 to nearest pump.
 euclideanDistance(1)
 
@@ -52,6 +54,7 @@ euclideanDistance(1, 6, type = "cases")
 # path from pump 1 to pump 6.
 euclideanDistance(1, 6, type = "pumps")
 
-# distance for cases 1 through 3 nearest pump.
+# for multiple cases.
 lapply(1:3, euclideanDistance)
+}
 }
