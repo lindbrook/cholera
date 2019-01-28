@@ -5,8 +5,9 @@
 \title{Compute path of the Euclidean distance between cases and/or pumps. (Beta)}
 \usage{
 euclideanPath(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, case.location = "address", vestry = FALSE,
-  unit = "meter", time.unit = "second", walking.speed = 5)
+  observed = TRUE, case.location = "address", landmark.cases = TRUE,
+  vestry = FALSE, unit = "meter", time.unit = "second",
+  walking.speed = 5, multi.core = FALSE)
 }
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
@@ -19,6 +20,8 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 
 \item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
 
+\item{landmark.cases}{Logical. \code{TRUE} includes landmarks as cases.}
+
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
 \item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
@@ -26,6 +29,8 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Default is 5 km/hr.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \value{
 An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
@@ -37,8 +42,13 @@ Compute path of the Euclidean distance between cases and/or pumps. (Beta)
 The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
 }
 \examples{
+\dontrun{
+
 # path from case 1 to nearest pump.
 euclideanPath(1)
+
+# path from pump 1 to nearest case.
+euclideanPath(NULL, 1)
 
 # path from case 1 to pump 6.
 euclideanPath(1, 6)
@@ -52,6 +62,10 @@ euclideanPath(1, 6, type = "cases")
 # path from pump 1 to pump 6.
 euclideanPath(1, 6, type = "pumps")
 
-# Plot result
+# compute multiple cases.
+lapply(1:3, euclideanPath)
+
+# plot path
 plot(euclideanPath(1))
+}
 }
