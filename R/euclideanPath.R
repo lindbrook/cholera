@@ -607,45 +607,46 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
   invisible(lapply(border.list, lines))
 
   if (x$type == "case-pump") {
-    destination.pump <- row.names(x$alter)
-    case.color <- colors[paste0("p", destination.pump)]
+    case.color <- colors[paste0("p", x$data$pump)]
     points(ego.xy, col = "red")
-    pumpTokensEuclidean(x, case.color, destination.pump)
-    text(ego.xy, labels = x$origin, pos = 1)
-  } else if (x$type == "cases" | x$type == "pumps") {
+    pumpTokensEuclidean(x, case.color, x$data$pump)
+    text(ego.xy, labels = x$data$case, pos = 1)
+
+  } else if (x$type == "cases") {
     case.color <- "blue"
-    destination.case <- row.names(x$alter)
     points(ego.xy, col = case.color)
     points(alter.xy, col = case.color)
-    text(ego.xy, labels = x$origin, pos = 1, col = case.color)
+    text(ego.xy, labels = x$data$caseA, pos = 1, col = case.color)
+    text(alter.xy, labels = x$data$caseB, pos = 1, col = case.color)
 
-    if (is.character(x$destination)) {
-      text(alter.xy, labels = x$destination, pos = 1, col = case.color)
-    } else {
-      text(alter.xy, labels = destination.case, pos = 1, col = case.color)
-    }
+  } else if (x$type == "pumps") {
+    case.color <- "blue"
+    points(ego.xy, col = case.color)
+    points(alter.xy, col = case.color)
+    text(ego.xy, labels = x$data$pumpA, pos = 1, col = case.color)
+    text(alter.xy, labels = x$data$pumpB, pos = 1, col = case.color)
   }
 
   if (x$type == "case-pump") {
-    if (is.numeric(x$origin)) {
-      title(main = paste("Case", x$origin, "to Pump", destination.pump))
-    } else if (is.character(x$origin)) {
-      title(main = paste(x$origin, "to Pump", destination.pump))
+    if (is.numeric(x$data$case)) {
+      title(main = paste("Case", x$data$anchor, "to Pump", x$data$pump))
+    } else if (is.character(x$data$case)) {
+      title(main = paste(x$data$case, "to Pump", x$data$pump))
     }
+
   } else if (x$type == "cases") {
-    if (is.numeric(x$origin) &
-      (is.numeric(x$destination) | is.null(x$destination))) {
-      title(main = paste("Case", x$origin, "to Case", destination.case))
-    } else if (is.character(x$origin) & (is.numeric(x$destination) |
-      is.null(x$destination))) {
-      title(main = paste(x$origin, "to Case", destination.case))
-    } else if (is.numeric(x$origin) & is.character(x$destination)) {
-      title(main = paste("Case", x$origin, "to", x$destination))
-    } else if (is.character(x$origin) & is.character(x$destination)) {
-      title(main = paste(x$origin, "to", x$destination))
+    if (is.numeric(x$data$caseA) & is.numeric(x$data$caseB)) {
+      title(main = paste("Case", x$data$anchorA, "to Case", x$data$anchorB))
+    } else if (is.character(x$data$caseA) & is.numeric(x$data$caseB)) {
+      title(main = paste(x$data$caseA, "to Case", x$data$anchorB))
+    } else if (is.numeric(x$data$caseA) & is.character(x$data$caseB)) {
+      title(main = paste("Case", x$data$anchorA, "to", x$data$caseB))
+    } else if (is.character(x$data$caseA) & is.character(x$data$caseB)) {
+      title(main = paste(x$data$caseA, "to", x$data$caseB))
     }
+
   } else if (x$type == "pumps") {
-    title(main = paste("Pump", x$origin, "to Pump", destination.case))
+    title(main = paste("Pump", x$data$pumpA, "to Pump", x$data$pumpB))
   }
 
   if (x$time.unit == "hour") {
