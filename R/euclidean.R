@@ -68,7 +68,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 
   nearest.pump <- parallel::mclapply(anchors, function(x) {
     cholera::euclideanDistance(x, destination = pump.id, vestry = vestry,
-      observed = observed, case.location = case.location)$pump
+      observed = observed, case.location = case.location)$data$pump
   }, mc.cores = cores)
 
   out <- list(pump.data = pump.data,
