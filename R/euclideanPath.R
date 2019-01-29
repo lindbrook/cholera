@@ -436,6 +436,9 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
     }
 
+    ego <- ego[, coords]
+    alter <- case.data[case.data$case == out$anchorB, coords]
+
     if (rev.flag) {
       tmp.case <- out$caseA
       tmp.anchor <- out$anchorA
@@ -443,9 +446,15 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       out$anchorA <- out$anchorB
       out$caseB <- tmp.case
       out$anchorB <- tmp.anchor
-    }
 
-    alter <- case.data[case.data$case == out$anchorB, coords]
+      tmp <- ego
+      ego <- alter
+      alter <- tmp
+
+      tmp <- origin
+      origin <- destination
+      destination <- tmp
+    }
 
   # ----- #
 
