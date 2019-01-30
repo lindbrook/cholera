@@ -114,7 +114,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   # ----- #
 
   if (type == "case-pump") {
-
     if (is.null(destination)) {
       if (is.null(origin)) {
         stop("If origin is set to NULL, you must provide a destination pump!")
@@ -163,11 +162,20 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       } else {
         anchor <- nearest.case
         if (observed) {
-          ego.select <- cholera::ortho.proj$case == anchor
-          ego <- cholera::ortho.proj[ego.select, ]
+          if (case.location == "address") {
+            ego.select <- cholera::ortho.proj$case == anchor
+            ego <- cholera::ortho.proj[ego.select, ]
+          } else if (case.location == "nominal") {
+            ego.select <- cholera::fatalities$case == anchor
+            ego <- cholera::fatalities[ego.select, ]
+          }
         } else {
-          ego.select <- cholera::sim.ortho.proj$case == anchor
-          ego <- cholera::sim.ortho.proj[ego.select, ]
+          if (case.location == "address") {
+            ego.select <- cholera::sim.ortho.proj$case == anchor
+            ego <- cholera::sim.ortho.proj[ego.select, ]
+          } else if (case.location == "nominal") {
+            ego <- cholera::regular.cases[anchor, ]
+          }
         }
       }
 
@@ -235,24 +243,14 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         alter <- alters[sel, coords]
 
       } else if (nrow(ego) > 1) {
-        if (case.location == "address") {
-          ds <- lapply(seq_len(nrow(ego)), function(i) {
-            vapply(alters$pump.id, function(j) {
-              dat <- rbind(alters[alters$pump.id == j, coords], ego[i, ])
-              c(stats::dist(dat))
-            }, numeric(1L))
-          })
-          exit.data <- expand.grid(alters$pump.id, ego.id)
-        } else if (case.location == "nominal") {
-          ds <- lapply(seq_len(nrow(ego)), function(i) {
-            vapply(alters$id, function(j) {
-              dat <- rbind(alters[alters$id == j, coords], ego[i, ])
-              c(stats::dist(dat))
-            }, numeric(1L))
-          })
-          exit.data <- expand.grid(alters$id, ego.id)
-        }
+        ds <- lapply(seq_len(nrow(ego)), function(i) {
+          vapply(alters[, pump.var], function(j) {
+            dat <- rbind(alters[alters[, pump.var] == j, coords], ego[i, ])
+            c(stats::dist(dat))
+          }, numeric(1L))
+        })
 
+        exit.data <- expand.grid(alters[, pump.var], ego.id)
         exit.space <- stats::setNames(exit.data, c("pump", "exit"))
         exit.space$d <- unlist(ds)
         exit.soln <- exit.space[which.min(exit.space$d), ]
@@ -548,7 +546,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
                  type = type,
                  observed = observed,
                  alters = alters,
-                 # sel = sel,
                  vestry = vestry,
                  unit = unit,
                  time.unit = time.unit,
