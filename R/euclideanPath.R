@@ -271,7 +271,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   # ----- #
 
   } else if (type == "cases") {
-
     rev.flag <- is.null(origin) & is.null(destination) == FALSE
 
     if (rev.flag) {
@@ -457,31 +456,26 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   # ----- #
 
   } else if (type == "pumps") {
+    if (identical(all.equal(origin, destination), TRUE)) {
+      stop("Origin must different from destination.")
+    }
+
     rev.flag <- is.null(origin) & is.null(destination) == FALSE
 
     if (rev.flag) {
-      if (is.numeric(destination)) {
-
-      }
-      if (destination %in% seq_len(ct) == FALSE) {
-        txt1 <- 'With origin = NULL, type = "pumps", and observed = '
-        txt2 <- ', you must provide a destination must be between 1 and '
-        stop(txt1, observed, ", ", txt2, ct, ".")
-      } else {
-        tmp <- origin
-        origin <- destination
-        destination <- tmp
-      }
-    } else {
-      if (origin %in% p.ID == FALSE) {
-        txt1 <- 'With type = "pumps", observed = '
-        txt2 <- 'and vestry = '
-        txt3 <- ', the origin must be between 1 and '
-        stop(txt1, observed, ", ", txt2, vestry, txt3, ct, ".")
-      }
+      tmp <- origin
+      origin <- destination
+      destination <- tmp
     }
 
-    ego <- p.data[p.data$pump.id == origin, ]
+    if (origin %in% p.ID == FALSE) {
+      txt1 <- 'With type = "pumps", observed = '
+      txt2 <- 'and vestry = '
+      txt3 <- ', the origin must be between 1 and '
+      stop(txt1, observed, ", ", txt2, vestry, txt3, ct, ".")
+    } else {
+      ego <- p.data[p.data[, pump.var] == origin, ]
+    }
 
     if (!is.null(destination)) {
       if (any(abs(destination) %in% p.ID == FALSE)) {
@@ -490,32 +484,31 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         if (all(destination > 0)) {
           alters <- p.data[destination, ]
         } else if (all(destination < 0)) {
-          alters <- p.data[p.data$pump.id %in% abs(destination) == FALSE, ]
+          alters <- p.data[p.data[, pump.var] %in% abs(destination) == FALSE, ]
         }
-        alters <- alters[alters$pump.id != origin, ]
+        alters <- alters[alters[, pump.var] != origin, ]
       }
     } else {
-      alters <- p.data[p.data$pump.id != origin, ]
+      alters <- p.data[p.data[, pump.var] != origin, ]
     }
 
-    d <- vapply(alters$pump.id, function(i) {
-      dat <- rbind(ego[, c("x.proj", "y.proj")], alters[alters$pump.id == i,
-        c("x.proj", "y.proj")])
+    d <- vapply(alters[, pump.var], function(i) {
+      dat <- rbind(ego[, coords], alters[alters[, pump.var] == i, coords])
       c(stats::dist(dat))
     }, numeric(1L))
 
     sel <- which.min(d)
 
     if (rev.flag) {
-      out <- data.frame(pumpA = alters$pump.id[sel],
-                        pumpB = ego$pump.id,
+      out <- data.frame(pumpA = alters[, pump.var][sel],
+                        pumpB = ego[, pump.var],
                         pump.nameA = alters$street[sel],
                         pump.nameB = ego$street,
                         distance = d[sel],
                         stringsAsFactors = FALSE)
     } else {
-      out <- data.frame(pumpA = ego$pump.id,
-                        pumpB = alters$pump.id[sel],
+      out <- data.frame(pumpA = ego[, pump.var],
+                        pumpB = alters[, pump.var][sel],
                         pump.nameA = ego$street,
                         pump.nameB = alters$street[sel],
                         distance = d[sel],
