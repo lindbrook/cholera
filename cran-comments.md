@@ -30,7 +30,7 @@ R-release: R 3.5.2 (2018-12-20): x86_64-w64-mingw32 (64-bit)
 * 0 errors | 0 warnings | 0 notes
 
 
-R-devel: R Under development (2018-01-09 r75961): x86_64-w64-mingw32 (64-bit)
+R-devel: R Under development (2019-01-27 r76018): x86_64-w64-mingw32 (64-bit)
 
 * 0 errors | 0 warnings | 0 notes
 
