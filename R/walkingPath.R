@@ -305,15 +305,9 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     rev.flag <- is.null(origin) & is.null(destination) == FALSE
 
     if (rev.flag) {
-      if (destination %in% seq_len(ct) == FALSE) {
-        txt1 <- 'With type = "cases" and observed = '
-        txt2 <- ', destination must be between 1 and '
-        stop(txt1, observed, ", ", txt2, ct, ".")
-      } else {
-        tmp <- origin
-        origin <- destination
-        destination <- tmp
-      }
+      tmp <- origin
+      origin <- destination
+      destination <- tmp
     }
 
     if (observed) {
@@ -472,116 +466,84 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       alter.anchor <- landmark.data$case
     }
 
+    out <- list(path = names(unlist(pth$vpath)),
+                data = data.frame(caseA = ego.id,
+                                  caseB = alter.id,
+                                  anchorA = ego.anchor,
+                                  anchorB = alter.anchor,
+                                  distance = d[which.min(d)],
+                                  stringsAsFactors = FALSE,
+                                  row.names = NULL))
+
     if (rev.flag) {
-      out <- list(path = names(unlist(pth$vpath)),
-                  data = data.frame(caseA = alter.id,
-                                    caseB = ego.id,
-                                    anchorA = alter.anchor,
-                                    anchorB = ego.anchor,
-                                    distance = d[which.min(d)],
-                                    stringsAsFactors = FALSE,
-                                    row.names = NULL))
-    } else {
-      out <- list(path = names(unlist(pth$vpath)),
-                  data = data.frame(caseA = ego.id,
-                                    caseB = alter.id,
-                                    anchorA = ego.anchor,
-                                    anchorB = alter.anchor,
-                                    distance = d[which.min(d)],
-                                    stringsAsFactors = FALSE,
-                                    row.names = NULL))
+      tmp.case <- out$data$caseA
+      tmp.anchor <- out$data$anchorA
+      out$path <- rev(out$path)
+      out$data$caseA <- out$data$caseB
+      out$data$anchorA <- out$data$anchorB
+      out$data$caseB <- tmp.case
+      out$data$anchorB <- tmp.anchor
+      tmp <- origin
+      origin <- destination
+      destination <- tmp
     }
 
   # ----- #
 
   } else if (type == "pumps") {
+    rev.flag <- is.null(origin) & is.null(destination) == FALSE
+
+    if (rev.flag) {
+      tmp <- origin
+      origin <- destination
+      destination <- tmp
+    }
+
     ego.node <- nodes[nodes$pump == origin, "node"]
     p.nodes <- nodes[nodes$pump > 0, ]
 
-    if (!is.null(origin)) {
-      if (origin %in% p.ID == FALSE) {
+    if (origin %in% p.ID == FALSE) {
+      txt1 <- 'With type = "pumps" and vestry = '
+      txt2 <- ', origin must be whole numbers 1 <= x <= '
+      stop(txt1, vestry, txt2, p.count, ".")
+    }
+
+    if (is.null(destination)) {
+      alters <- p.nodes[p.nodes$pump != origin, "node"]
+    } else {
+      if (all(destination > 0)) {
+        alters <- p.nodes[p.nodes$pump %in% destination &
+                          p.nodes$pump != origin, "node"]
+      } else if (all(destination < 0)) {
+        alters <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE &
+                          p.nodes$pump != origin, "node"]
+      } else if (any(abs(destination) %in% p.ID == FALSE)) {
         txt1 <- 'With type = "pumps" and vestry = '
-        txt2 <- ', origin must be whole numbers 1 <= x <= '
+        txt2 <- ', destination must be whole numbers 1 <= |x| <= '
         stop(txt1, vestry, txt2, p.count, ".")
       }
+    }
 
-      if (is.null(destination)) {
-        alters <- p.nodes[p.nodes$pump != origin, "node"]
-      } else {
-        if (all(destination > 0)) {
-          alters <- p.nodes[p.nodes$pump %in% destination &
-                            p.nodes$pump != origin, "node"]
-        } else if (all(destination < 0)) {
-          alters <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE &
-                            p.nodes$pump != origin, "node"]
-        } else if (any(abs(destination) %in% p.ID == FALSE)) {
-          txt1 <- 'With type = "pumps" and vestry = '
-          txt2 <- ', destination must be whole numbers 1 <= |x| <= '
-          stop(txt1, vestry, txt2, p.count, ".")
-        }
-      }
-
-      if (weighted) {
-        d <- vapply(alters, function(x) {
-          igraph::distances(g, ego.node, x, weights = edges$d)
-        }, numeric(1L))
-      } else {
-        d <- vapply(alters, function(x) {
-          igraph::distances(g, ego.node, x)
-        }, numeric(1L))
-      }
-
-      A <- p.nodes[p.nodes$node == ego.node, "pump"]
-      ego.node <- p.nodes[p.nodes$node == ego.node, "node"]
-
-      if (all(is.infinite(d))) {
-        B <- NA
-        alter.node <- NA
-      } else {
-        sel <- which.min(d)
-        B <- p.nodes[p.nodes$node == names(sel), "pump"]
-        alter.node <- p.nodes[p.nodes$node == names(sel), "node"]
-      }
+    if (weighted) {
+      d <- vapply(alters, function(x) {
+        igraph::distances(g, ego.node, x, weights = edges$d)
+      }, numeric(1L))
     } else {
-      if (is.null(destination)) {
-        stop("You must provide a destination!")
-      } else {
-        if (is.numeric(destination)) {
-          if (any(abs(destination) %in% p.ID == FALSE)) {
-            txt1 <- 'With type = "pumps" and vestry = '
-            txt2 <- ', 1 <= |destination| <= '
-            stop(txt1, vestry, txt2, p.count, ".")
-          } else {
-            if (all(destination < 0)) {
-              p.nodes <- nodes[nodes$pump != 0, ]
-              alter.node <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE,
-                "node"]
-            } else if (all(destination > 0)) {
-              alter.node <- nodes[nodes$pump %in% destination, "node"]
-            }
-          }
-        }
+      d <- vapply(alters, function(x) {
+        igraph::distances(g, ego.node, x)
+      }, numeric(1L))
+    }
 
-        egos <- p.data[p.data$id != destination & p.data$id != 2, ]
-        egos.id <- p.nodes[p.nodes$pump %in% egos$id, "pump"]
-        egos.nodes <- p.nodes[p.nodes$pump %in% egos$id, "node"]
+    A <- p.nodes[p.nodes$node == ego.node, "pump"]
+    ego.node <- p.nodes[p.nodes$node == ego.node, "node"]
 
-        if (weighted) {
-          d <- vapply(egos.nodes, function(x) {
-            igraph::distances(g, x, alter.node, weights = edges$d)
-          }, numeric(1L))
-        } else {
-          d <- vapply(egos.nodes, function(x) {
-            igraph::distances(g,  x, alter.node)
-          }, numeric(1L))
-        }
-
-        sel <- which.min(d)
-        ego.node <- names(sel)
-        A <- p.nodes[p.nodes$node == ego.node, "pump"]
-        B <- destination
-        case <- A
-      }
+    if (all(is.infinite(d))) {
+      B <- NA
+      alter.node <- NA
+    } else {
+      sel <- which.min(d)
+      B <- p.nodes[p.nodes$node == names(sel), "pump"]
+      alter.node <- p.nodes[p.nodes$node == names(sel), "node"]
     }
 
     if (weighted) {
@@ -600,7 +562,22 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
                                   distance = d[sel],
                                   stringsAsFactors = FALSE,
                                   row.names = NULL))
+
+    if (rev.flag) {
+      tmp.a <- out$data$pumpA
+      tmp.b <- out$data$nameA
+      out$path <- rev(out$path)
+      out$data$caseA <- out$data$pumpB
+      out$data$anchorA <- out$data$nameB
+      out$data$caseB <- tmp.a
+      out$data$anchorB <- tmp.b
+      tmp <- origin
+      origin <- destination
+      destination <- tmp
+    }
   }
+
+  # ----- #
 
   out$data$time <- cholera::distanceTime(out$data$distance, unit = time.unit,
     speed = walking.speed)
@@ -613,41 +590,22 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     out$data$distance <- cholera::unitMeter(out$data$distance, "native")
   }
 
-  if (is.null(origin)) {
-    output <- list(path = out$path,
-                   data = out$data,
-                   origin = case,
-                   destination = destination,
-                   type = type,
-                   observed = observed,
-                   weighted = weighted,
-                   vestry = vestry,
-                   unit = unit,
-                   time.unit = time.unit,
-                   nodes = nodes,
-                   edges = edges,
-                   g = g,
-                   ego.node = ego.node,
-                   alter.node = alter.node,
-                   speed = walking.speed)
-  } else {
-    output <- list(path = out$path,
-                   data = out$data,
-                   origin = origin,
-                   destination = destination,
-                   type = type,
-                   observed = observed,
-                   weighted = weighted,
-                   vestry = vestry,
-                   unit = unit,
-                   time.unit = time.unit,
-                   nodes = nodes,
-                   edges = edges,
-                   g = g,
-                   ego.node = ego.node,
-                   alter.node = alter.node,
-                   speed = walking.speed)
-  }
+  output <- list(path = out$path,
+                 data = out$data,
+                 origin = origin,
+                 destination = destination,
+                 type = type,
+                 observed = observed,
+                 weighted = weighted,
+                 vestry = vestry,
+                 unit = unit,
+                 time.unit = time.unit,
+                 nodes = nodes,
+                 edges = edges,
+                 g = g,
+                 ego.node = ego.node,
+                 alter.node = alter.node,
+                 speed = walking.speed)
 
   class(output) <- "walking_path"
   output
