@@ -80,6 +80,18 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }
   }
 
+  if (type == "pumps") {
+    if (length(origin) == 1) {
+      if (origin == 2) {
+        stop('Pump 2 is a technical isolate. Choose another.')
+      }
+    }
+
+    if (any(abs(origin) == 2)) {
+      message('Pump 2 is a technical isolate. Already not considered.')
+    }
+  }
+
   if (observed) {
     node.data <- cholera::neighborhoodData(vestry)
   } else {
