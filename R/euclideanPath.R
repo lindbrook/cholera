@@ -263,7 +263,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
                           distance = exit.soln$d,
                           stringsAsFactors = FALSE)
 
-        alter <- alters[alters$pump.id == exit.soln$pump, coords]
+        alter <- alters[alters[, pump.var] == exit.soln$pump, coords]
         ego <- cholera::landmarks[sel, coords]
       }
     }
