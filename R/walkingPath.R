@@ -268,22 +268,22 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         case.nm <- unlist(strsplit(case.nm, "-"))[1]
       }
 
-      out <- list(path = path,
-                  data = data.frame(case = case,
-                                    anchor = case.nm,
-                                    pump = destination,
+      out <- list(path = rev(path),
+                  data = data.frame(case = case.nm,
+                                    anchor = case,
                                     pump.name = p.data[p.data$id ==
                                       destination, "street"],
+                                    pump = destination,
                                     distance = d[sel],
                                     stringsAsFactors = FALSE,
                                     row.names = NULL))
     } else {
-      out <- list(path = path,
+      out <- list(path = rev(path),
                   data = data.frame(case = case,
                                     anchor = case,
-                                    pump = destination,
                                     pump.name = p.data[p.data$id ==
                                       destination, "street"],
+                                    pump = destination,
                                     distance = d[sel],
                                     stringsAsFactors = FALSE,
                                     row.names = NULL))
@@ -294,8 +294,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
                   data = data.frame(case = origin,
                                     anchor = nodes[nodes$node == ego.node &
                                       nodes$anchor != 0, "anchor"],
-                                    pump = alter.id,
                                     pump.name = p.name,
+                                    pump = alter.id,
                                     distance = c.square[nr.pair, "distance"],
                                     stringsAsFactors = FALSE,
                                     row.names = NULL))
@@ -303,8 +303,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       out <- list(path = path,
                   data = data.frame(case = origin,
                                     anchor = ego.id,
-                                    pump = alter.id,
                                     pump.name = p.name,
+                                    pump = alter.id,
                                     distance = d[sel],
                                     stringsAsFactors = FALSE,
                                     row.names = NULL))
