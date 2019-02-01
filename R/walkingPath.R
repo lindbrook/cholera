@@ -763,8 +763,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   ## pump as ego ##
 
   if (x$type == "pumps") {
-    ego.p <- ego.data$pump
-    origin.obs <- p.data[p.data == ego.p, c("x", "y")]
+    origin.obs <- p.data[p.data == ego.data$pump, c("x", "y")]
   }
 
   ## pump as alter ##
