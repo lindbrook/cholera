@@ -87,8 +87,10 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       }
     }
 
-    if (any(abs(origin) == 2)) {
-      message('Pump 2 is a technical isolate. Already not considered.')
+    if (is.null(origin) == FALSE) {
+      if (any(abs(origin) == 2)) {
+        message('Pump 2 is a technical isolate. Already not considered.')
+      }
     }
   }
 
@@ -675,9 +677,6 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   alter.data <- nodes[nodes$node == alter.node & node.filter, ]
   dat <- numericNodeCoordinates(x$path)
 
-  ego <- unlist(x$data[, grepl("case", names(x$data))][1])
-  alter <- unlist(x$data[, grepl("case", names(x$data))][2])
-
   if (x$observed) {
     case.data <- cholera::fatalities
   } else {
@@ -692,29 +691,32 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
     }
   }
 
-  ## square data origin ##
+  ## square data ##
 
-  if (is.character(ego)) {
-    if (grepl("Square", ego)) {
-      if (x$origin == "Soho Square") {
-        sq.sel <- cholera::landmarks.squares$name == "Soho Square"
-      } else if (x$origin == "Golden Square") {
-        sq.sel <- cholera::landmarks.squares$name == "Golden Square"
+  if (any(grepl("case", names(x$data)))) {
+    ego <- unlist(x$data[, grepl("case", names(x$data))][1])
+    alter <- unlist(x$data[, grepl("case", names(x$data))][2])
+
+    if (is.character(ego)) {
+      if (grepl("Square", ego)) {
+        if (x$origin == "Soho Square") {
+          sq.sel <- cholera::landmarks.squares$name == "Soho Square"
+        } else if (x$origin == "Golden Square") {
+          sq.sel <- cholera::landmarks.squares$name == "Golden Square"
+        }
+        sq.center.origin <- cholera::landmarks.squares[sq.sel, c("x", "y")]
       }
-      sq.center.origin <- cholera::landmarks.squares[sq.sel, c("x", "y")]
     }
-  }
 
-  ## square data destination ##
-
-  if (is.character(alter)) {
-    if (grepl("Square", unlist(x$data[2]))) {
-      if (x$destination == "Soho Square") {
-        sq.sel <- cholera::landmarks.squares$name == "Soho Square"
-      } else if (x$destination == "Golden Square") {
-        sq.sel <- cholera::landmarks.squares$name == "Golden Square"
+    if (is.character(alter)) {
+      if (grepl("Square", alter)) {
+        if (x$destination == "Soho Square") {
+          sq.sel <- cholera::landmarks.squares$name == "Soho Square"
+        } else if (x$destination == "Golden Square") {
+          sq.sel <- cholera::landmarks.squares$name == "Golden Square"
+        }
+        sq.center.destination <- cholera::landmarks.squares[sq.sel, c("x", "y")]
       }
-      sq.center.destination <- cholera::landmarks.squares[sq.sel, c("x", "y")]
     }
   }
 
@@ -793,21 +795,16 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
   sq.case <- cholera::landmarks[grepl("Square", cholera::landmarks$name),
     "case"]
-  landmark.ego <- ego.data$anchor %in% sq.case
-  landmark.alter <- alter.data$anchor %in% sq.case
+  sq.ego <- ego.data$anchor %in% sq.case
+  sq.alter <- alter.data$anchor %in% sq.case
 
-  if (landmark.ego & !landmark.alter) {
-    dat.plus.origin <- rbind(dat.plus.origin,
-                             sq.center.origin)
-
-  } else if (!landmark.ego & landmark.alter) {
-    dat.plus.origin <- rbind(dat.plus.origin,
-                             sq.center.destination)
-
-  } else if (landmark.ego & landmark.alter) {
-    dat.plus.origin <- rbind(dat.plus.origin,
-                             sq.center.origin,
-                             sq.center.destination)
+  if (sq.ego & !sq.alter) {
+    dat.plus.origin <- rbind(dat.plus.origin, sq.center.origin)
+  } else if (!sq.ego & sq.alter) {
+    dat.plus.origin <- rbind(dat.plus.origin, sq.center.destination)
+  } else if (sq.ego & sq.alter) {
+    dat.plus.origin <- rbind(dat.plus.origin, sq.center.origin,
+      sq.center.destination)
   }
 
   if (zoom) {
@@ -839,33 +836,30 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   }
 
   if (x$type == "case-pump") {
-    if (is.numeric(x$origin)) {
-      title(main = paste("Case", x$origin, "to Pump", x$data$pump))
-    } else if (is.character(x$origin)) {
-      title(main = paste(x$origin, "to Pump", x$data$pump))
+    if (is.numeric(x$data$case)) {
+      title(main = paste("Case", x$data$case, "to Pump", x$data$pump))
+    } else if (is.character(x$data$case)) {
+      title(main = paste(x$data$case, "to Pump", x$data$pump))
     }
   } else if (x$type == "cases") {
     points(destination.obs, col = "red")
-    if (is.numeric(x$origin) &
-      (is.numeric(x$destination) | is.null(x$destination))) {
-      title(main = paste("Case", x$origin, "to Case", alter))
-    } else if (is.character(x$origin) & (is.numeric(x$destination) |
-      is.null(x$destination))) {
-      title(main = paste(x$origin, "to Case", alter))
-    } else if (is.numeric(x$origin) & is.character(x$destination)) {
-      title(main = paste("Case", x$origin, "to", x$destination))
-    } else if (is.character(x$origin) & is.character(x$destination)) {
-      title(main = paste(x$origin, "to", x$destination))
+    if (is.numeric(x$data$caseA) & is.numeric(x$data$caseB)) {
+      title(main = paste("Case", x$data$caseA, "to Case", x$data$caseB))
+    } else if (is.character(x$data$caseA) & is.numeric(x$data$caseB)) {
+      title(main = paste(x$data$caseA, "to Case", x$data$caseB))
+    } else if (is.numeric(x$data$caseA) & is.character(x$data$caseB)) {
+      title(main = paste("Case", x$data$caseA, "to", x$data$caseB))
+    } else if (is.character(x$data$caseA) & is.character(x$data$caseB)) {
+      title(main = paste(x$data$caseA, "to", x$data$caseB))
     }
   } else if (x$type == "pumps") {
-    title(main = paste("Pump", x$origin, "to Pump", alter))
+    title(main = paste("Pump", x$data$pumpA, "to Pump", x$data$pumpB))
   }
 
   points(dat[1, c("x", "y")], col = case.color, pch = 0)
   points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
 
   if (zoom) {
-
     if (x$type %in% c("case-pump", "cases")) {
       if (is.numeric(ego)) {
         text(case.data[case.data$case == ego.data$anchor, c("x", "y")],
@@ -900,11 +894,6 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
             c("x.proj", "y.proj")], labels = alter, pos = 1, col = "red")
         }
       }
-    }
-
-    if (x$type == "pumps") {
-      text(p.data[p.data$case == alter.data$pump, c("x", "y")],
-        labels = alter.data$pump, pos = 1, col = "red")
     }
   }
 
