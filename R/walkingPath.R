@@ -840,9 +840,9 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
   if (x$type == "case-pump") {
     if (is.numeric(x$origin)) {
-      title(main = paste("Case", x$origin, "to Pump", alter))
+      title(main = paste("Case", x$origin, "to Pump", x$data$pump))
     } else if (is.character(x$origin)) {
-      title(main = paste(x$origin, "to Pump", alter))
+      title(main = paste(x$origin, "to Pump", x$data$pump))
     }
   } else if (x$type == "cases") {
     points(destination.obs, col = "red")
