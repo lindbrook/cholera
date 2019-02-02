@@ -596,10 +596,21 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
 
+  if (x$vestry) {
+    pump.names <- paste0("p", cholera::pumps.vestry$id)
+    points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
+      col = colors)
+    text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
+  } else {
+    pump.names <- paste0("p", cholera::pumps$id)
+    points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
+    text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+  }
+
   if (x$type == "case-pump") {
     case.color <- colors[paste0("p", x$data$pump)]
     points(ego.xy, col = "red")
-    pumpTokensEuclidean(x, case.color, x$data$pump)
+    # pumpTokensEuclidean(x, case.color, x$data$pump)
     text(ego.xy, labels = x$data$case, pos = 1)
 
   } else if (x$type == "cases") {
