@@ -176,8 +176,8 @@ plot.euclidean <- function(x, type = "star",
 
     if (add.obs.points) {
       if (x$case.set == "observed") {
-        addNeighborhoodCases(pump.select = x$pump.select, vestry = x$vestry,
-          metric = "euclidean", multi.core = x$cores)
+        cholera::addNeighborhoodCases(pump.select = x$pump.select,
+          vestry = x$vestry, metric = "euclidean", multi.core = x$cores)
       }
     }
 
