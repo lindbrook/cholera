@@ -28,7 +28,7 @@ length(unique(roads$street))
 
 The correspondence between these 528 "streets" and streets in the real world is not one-to-one. Excluding the 50 "streets" used to draw the map's frame, the remaining 478 "streets" actually describe 206 real world roads (e.g., Oxford Street, Regent Street).
 
-This discrepancy emerges because real world streets are approximated using straight line segements. In fact 40% of the "real world" roads are composed of multiple "street" segments: for example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
+This discrepancy emerges because real world streets are approximated using straight line segments. In fact 40% of the "real world" roads are composed of multiple "street" segments: for example, Oxford Street consists of 26 line segments and Broad Street consists of 6.
 
 ```{r}
 # Map Border "Streets" #
