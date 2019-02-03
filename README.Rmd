@@ -118,7 +118,7 @@ devtools::install_github("lindbrook/cholera", build_opts = c("--no-resave-data",
 
 ### vignettes
 
-The package's vignettes, are also available online at the links below, go into detail on a variety of topics.
+The vignettes, which are available in the package as well as online at the links below, go into detail on a variety of topics.
 
 [Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/duplicate.missing.cases.md) describes the two coding errors and three misplaced cases I argue are present in Dodson and Tobler's (1992) digitization of Snow's map. Documentation and details about the fix are found online in ["Note on Duplicate and Missing Cases"](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md).
 
