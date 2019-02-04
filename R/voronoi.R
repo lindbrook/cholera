@@ -139,11 +139,19 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
                  "fatality".'))
   }
 
-  output <- list(pump.id = pump.id, voronoi = voronoi,
-    case.location = case.location, snow.colors = snow.colors, x.rng = x.rng,
-    y.rng = y.rng, select.string = select.string, expected.data = expected.data,
-    coordinates = coordinates, statistic.data = statistic.data,
-    pump.select = pump.select, vestry = vestry, statistic = statistic)
+  output <- list(pump.id = pump.id,
+                 voronoi = voronoi,
+                 case.location = case.location,
+                 snow.colors = snow.colors,
+                 x.rng = x.rng,
+                 y.rng = y.rng,
+                 select.string = select.string,
+                 expected.data = expected.data,
+                 coordinates = coordinates,
+                 statistic.data = statistic.data,
+                 pump.select = pump.select,
+                 vestry = vestry,
+                 statistic = statistic)
 
   class(output) <- "voronoi"
 
