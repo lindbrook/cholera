@@ -611,7 +611,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
     case.color <- colors[paste0("p", x$data$pump)]
     points(ego.xy, col = "red")
     # pumpTokensEuclidean(x, case.color, x$data$pump)
-    text(ego.xy, labels = x$data$case, pos = 1)
+    text(ego.xy, labels = x$data$case, pos = 1, col = "red")
 
   } else if (x$type == "cases") {
     case.color <- "blue"
