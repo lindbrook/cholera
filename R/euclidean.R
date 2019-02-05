@@ -91,7 +91,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".
-#' @param add.obs.points Logical. Add observed fatality "addresses".
+#' @param add.observed.points Logical. Add observed fatality "addresses".
 #' @param msg Logical. Toggle in-progress messages.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
@@ -108,8 +108,8 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' }
 
 plot.euclidean <- function(x, type = "star",
-  polygon.method = "traveling.salesman", add.obs.points = TRUE, msg = FALSE,
-  ...) {
+  polygon.method = "traveling.salesman", add.observed.points = TRUE,
+  msg = FALSE, ...) {
 
   if (class(x) != "euclidean") {
     stop('"x"\'s class needs to be "euclidean".')
@@ -174,10 +174,11 @@ plot.euclidean <- function(x, type = "star",
       }
     }))
 
-    if (add.obs.points) {
+    if (add.observed.points) {
       if (x$case.set == "observed") {
         cholera::addNeighborhoodCases(pump.select = x$pump.select,
-          vestry = x$vestry, metric = "euclidean", multi.core = x$cores)
+          vestry = x$vestry, metric = "euclidean",
+          case.location = x$case.location, multi.core = x$cores)
       }
     }
 

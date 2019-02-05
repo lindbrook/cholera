@@ -5,7 +5,7 @@
 \title{Plot method for neighborhoodEuclidean().}
 \usage{
 \method{plot}{euclidean}(x, type = "star",
-  polygon.method = "traveling.salesman", add.obs.points = TRUE,
+  polygon.method = "traveling.salesman", add.observed.points = TRUE,
   msg = FALSE, ...)
 }
 \arguments{
@@ -15,7 +15,7 @@
 
 \item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".}
 
-\item{add.obs.points}{Logical. Add observed fatality "addresses".}
+\item{add.observed.points}{Logical. Add observed fatality "addresses".}
 
 \item{msg}{Logical. Toggle in-progress messages.}
 
