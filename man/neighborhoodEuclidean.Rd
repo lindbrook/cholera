@@ -15,7 +15,7 @@ neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 
 \item{case.set}{Character. "observed" or "expected".}
 
-\item{case.location}{Character. For\code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
+\item{case.location}{Character. "address" or "nominal". For \code{observed = TRUE}: "address" uses \code{ortho.proj} and "nominal" uses \code{fatalities}. For \code{observed = TRUE}: "address" uses \code{sim.ortho.proj} and "nominal" uses \code{regular.cases}.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
