@@ -833,6 +833,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
 
   if (x$type == "case-pump" | x$type == "cases") {
     points(origin.obs, col = "red")
+    text(origin.obs, col = "red", pos = 1, labels = ego.data$anchor)
   }
 
   if (x$type == "case-pump") {
