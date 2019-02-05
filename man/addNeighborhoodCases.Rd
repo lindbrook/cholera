@@ -5,9 +5,9 @@
 \title{Add observed cases by neighborhood.}
 \usage{
 addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
-  metric = "walking", type = "address", token = "point",
+  metric = "walking", type = "stack.base", token = "point",
   text.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
-  multi.core = FALSE, ...)
+  case.location = "nominal", multi.core = FALSE, ...)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -16,7 +16,7 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 
 \item{metric}{Character. Type of neighborhood: "euclidean" or "walking".}
 
-\item{type}{Character. Type of case: "address" (base of stack), or "fatalities" (entire stack) or "expected".}
+\item{type}{Character. Type of case: "stack.base" (base of stack), or "stack" (entire stack) or "simulated".}
 
 \item{token}{Character. Type of token to plot: "point" or "id".}
 
@@ -27,6 +27,8 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 \item{weighted}{Logical. \code{TRUE} computes shortest walking path weighted by road length. \code{FALSE} computes shortest walking path in terms of the number of nodes.}
 
 \item{color}{Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}}
+
+\item{case.location}{Character. For \code{metric = "euclidean"}: "address" uses \code{ortho.proj}; "nominal" uses \code{fatalities}.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 
