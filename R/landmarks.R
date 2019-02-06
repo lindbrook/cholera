@@ -5,11 +5,11 @@
 
 orthoProjLandmarks <- function(multi.core = FALSE) {
   # landmarks <- orthoProjLandmarks()
-  # landmarks.squares <- landmarksSquares()
+  # landmark.squares <- landmarksSquares()
   # usethis::use_data(landmarks)
-  # usethis::use_data(landmarks.squares)
+  # usethis::use_data(landmark.squares)
   # usethis::use_data(landmarks, overwrite = TRUE)
-  # usethis::use_data(landmarks.squares, overwrite = TRUE)
+  # usethis::use_data(landmark.squares, overwrite = TRUE)
 
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
