@@ -4,7 +4,8 @@
 #' @param vestry Logical. \code{FALSE} for original 13 pumps. TRUE for 14 pumps in Vestry Report.
 #' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.
 #' @param color Character. Color of cell edges.
-#' @param line.type Character. Type of line for cell edges.
+#' @param line.type Character. Type of line for cell edges: lty.
+#' @param line.width Numeric. Width of cell edges: lwd.
 #' @param ... Additional plotting parameters.
 #' @note This function uses \code{deldir::deldir()}.
 #' @import graphics
@@ -14,7 +15,8 @@
 #' addVoronoi()
 
 addVoronoi <- function(pump.select = NULL, vestry = FALSE,
-  case.location = "nominal", color = "black", line.type = "solid", ...) {
+  case.location = "nominal", color = "black", line.type = "solid",
+  line.width = 1, ...) {
 
   if (case.location %in% c("address", "nominal") == FALSE) {
     stop('case.location must be "address" or "nominal".')
@@ -54,5 +56,5 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE,
     range(cholera::roads$y)), suppressMsge = TRUE)
 
   plot(dat, add = TRUE, wline = "tess", wpoints = "none", col = color,
-    lty = line.type, ...)
+    lty = line.type, lwd = line.width, ...)
 }
