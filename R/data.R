@@ -118,7 +118,7 @@
 #'     \item{\code{case}}{numeric case ID}
 #'  }
 #' @docType data
-"landmarks.squares"
+"landmark.squares"
 
 #' Orthogonal projection of observed cases onto road network.
 #'

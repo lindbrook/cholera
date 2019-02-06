@@ -99,7 +99,7 @@ euclideanDistance <- function(origin = 1, destination = NULL,
       }
     } else if (is.character(origin)) {
       origin <- caseAndSpace(origin)
-      origin.test <- origin %in% cholera::landmarks.squares$name == FALSE &
+      origin.test <- origin %in% cholera::landmark.squares$name == FALSE &
                      origin %in% cholera::landmarks$name == FALSE
       if (origin.test) stop("Use a valid landmark name.")
     }
@@ -127,7 +127,7 @@ euclideanDistance <- function(origin = 1, destination = NULL,
       }
     } else if (is.character(origin)) {
       origin <- caseAndSpace(origin)
-      origin.test <- origin %in% cholera::landmarks.squares$name == FALSE &
+      origin.test <- origin %in% cholera::landmark.squares$name == FALSE &
                      origin %in% cholera::landmarks$name == FALSE
       if (origin.test) stop("Use a valid landmark name.")
     }
@@ -142,7 +142,7 @@ euclideanDistance <- function(origin = 1, destination = NULL,
         }
       } else if (is.character(destination)) {
         destination <- caseAndSpace(destination)
-        A <- destination %in% cholera::landmarks.squares$name == FALSE
+        A <- destination %in% cholera::landmark.squares$name == FALSE
         B <- destination %in% cholera::landmarks$name == FALSE
         destination.test <- A & B
         if (destination.test) stop("Use a valid landmark name.")
