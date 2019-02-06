@@ -2,10 +2,10 @@
 % Please edit documentation in R/addNeighborhoodEuclidean.R
 \name{addNeighborhoodEuclidean}
 \alias{addNeighborhoodEuclidean}
-\title{Add Euclidean pump neighborhoods (beta).}
+\title{Add expected Euclidean pump neighborhoods.}
 \usage{
 addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
-  vestry = FALSE, case.set = "observed", case.location = "nominal",
+  vestry = FALSE, case.location = "nominal",
   polygon.method = "traveling.salesman", multi.core = FALSE,
   type = "star", alpha.level = 0.25)
 }
@@ -16,9 +16,7 @@ addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
-\item{case.set}{Character. "observed" or "expected".}
-
-\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
+\item{case.location}{Character. "address" or "nominal". "address" is the x-y coordinates of \code{sim.ortho.proj}. "nominal" is the x-y coordinates of \code{regular.cases}.}
 
 \item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".}
 
@@ -32,7 +30,7 @@ addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 R graphic elements.
 }
 \description{
-Add Euclidean pump neighborhoods (beta).
+Add expected Euclidean pump neighborhoods.
 }
 \note{
 This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
@@ -46,6 +44,6 @@ addNeighborhoodEuclidean()
 
 streetNameLocator("marshall street", zoom = TRUE, radius = 0.5,
   highlight = FALSE, add.subtitle = FALSE)
-addNeighborhoodEuclidean(case.set = "expected", type = "area.polygons")
+addNeighborhoodEuclidean(type = "area.points")
 }
 }
