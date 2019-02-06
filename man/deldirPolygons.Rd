@@ -11,9 +11,12 @@ deldirPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles")
 
 \item{rw.data}{Object. Data frame of secondary source of data to set the rectangular window or bounding box: observations, cases, etc. with variables "x" and "y".}
 
-\item{rw}{Numeric. Alternative to rw.data: vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax. For \code{deldir::deldir()}.}
+\item{rw}{Numeric. Alternative to rw.data: vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax.}
 
 \item{type}{Character. "tiles" (tessellation) or "triangles" (triangulation) vertices.}
+}
+\value{
+An R list of data frames of polygon vertices.
 }
 \description{
 For use with functions that use polygons.
