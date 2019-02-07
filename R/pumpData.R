@@ -1,6 +1,6 @@
 #' Compute pump coordinates.
 #'
-#' Returns either the set of x-y coordinate for the pumps themselves or for their orthogonally projected "addresses" on the network of roads.
+#' Returns either the set of x-y coordinates for the pumps themselves or for their orthogonally projected "addresses" on the network of roads.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param orthogonal Logical. \code{TRUE} returns pump "addresses": the coordinates of the orthogonal projection from a pump's location onto the network of roads. \code{FALSE} returns pump location coordinates.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). On Windows, only \code{multi.core = FALSE} is available.

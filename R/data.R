@@ -50,7 +50,7 @@
 
 #' "Unstacked" amended cholera data with address as unit of observation.
 #'
-#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinate of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
+#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
 #'
 #' @format A data frame with 4 variables for 321 addresses
 #'  \describe{
@@ -72,7 +72,7 @@
 
 #' "Unstacked" amended cholera fatalities data with fatality as unit of observation.
 #'
-#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinate of the case at the base of a stack, and assigns the base case's coordinates to all cases in the stack.
+#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and assigns the base case's coordinates to all cases in the stack.
 #'
 #' @format A data frame with 3 variable that records the position of the 578 bars on Snow's map.
 #'

@@ -224,7 +224,7 @@ text(poland.x, poland.y, "Poland St", srt = poland.angle)
 
 One solution to these problems is to use the three duplicate observations from Cambridge Street to fill in for the three "missing" observations on Broad and Noel Streets. This is both plausible and reasonable.
 
-What makes it plausible is that with the exception of the x-y coordinate of the case at the base of a stack, the remaining coordinates, which make up 44% (257/578) of all bars and which include the proposed locations for the three "missing" observations, do not represent the location of cases. They only serve to align bars within a stack. For this reason, there should be no objections to moving this class of bars.
+What makes it plausible is that with the exception of the x-y coordinates of the case at the base of a stack, the remaining coordinates, which make up 44% (257/578) of all bars and which include the proposed locations for the three "missing" observations, do not represent the location of cases. They only serve to align bars within a stack. For this reason, there should be no objections to moving this class of bars.
 
 What makes it reasonable is that I do not relocate bars by hand. Instead, I use simple geometric interpolation: I use the existing observations in a stack to determine the "standard" _unit_ distance between bars and then use multiples of that _unit_ distance to position the "missing" observations.
 

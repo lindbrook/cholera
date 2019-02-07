@@ -17,7 +17,7 @@ pumpData(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE)
 An R data frame.
 }
 \description{
-Returns either the set of x-y coordinate for the pumps themselves or for their orthogonally projected "addresses" on the network of roads.
+Returns either the set of x-y coordinates for the pumps themselves or for their orthogonally projected "addresses" on the network of roads.
 }
 \note{
 Note: The location of the fourteenth pump, at Hanover Square, and the "correct" location of the Broad Street pump are approximate.

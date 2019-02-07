@@ -13,7 +13,7 @@ addVoronoi(pump.select = NULL, vestry = FALSE,
 
 \item{vestry}{Logical. \code{FALSE} for original 13 pumps. TRUE for 14 pumps in Vestry Report.}
 
-\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
+\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.}
 
 \item{color}{Character. Color of cell edges.}
 

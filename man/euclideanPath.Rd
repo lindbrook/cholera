@@ -18,7 +18,7 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 
 \item{observed}{Logical. Use observed or "simulated" expected data.}
 
-\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinate of \code{regular.cases}.}
+\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.}
 
 \item{landmark.cases}{Logical. \code{TRUE} includes landmarks as cases.}
 
