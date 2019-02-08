@@ -16,5 +16,5 @@ A character vector of colors.
 Uses \code{RColorBrewer::brewer.pal()}.
 }
 \note{
-Built with 'RColorBrewer' package's color blind friendly palettes.
+Built with 'RColorBrewer' package.
 }
