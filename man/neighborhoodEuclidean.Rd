@@ -5,7 +5,7 @@
 \title{Plot Euclidean path pump neighborhoods.}
 \usage{
 neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
-  case.set = "observed", case.location = "nominal",
+  case.location = "nominal", case.set = "observed",
   multi.core = FALSE)
 }
 \arguments{
@@ -13,9 +13,9 @@ neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
-\item{case.set}{Character. "observed" or "expected".}
-
 \item{case.location}{Character. "address" or "nominal". For \code{observed = TRUE}: "address" uses \code{ortho.proj} and "nominal" uses \code{fatalities}. For \code{observed = TRUE}: "address" uses \code{sim.ortho.proj} and "nominal" uses \code{regular.cases}.}
+
+\item{case.set}{Character. "observed" or "expected".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }

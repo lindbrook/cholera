@@ -3,8 +3,8 @@
 #' Plots star graph from pump to its cases.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
-#' @param case.set Character. "observed" or "expected".
 #' @param case.location Character. "address" or "nominal". For \code{observed = TRUE}: "address" uses \code{ortho.proj} and "nominal" uses \code{fatalities}. For \code{observed = TRUE}: "address" uses \code{sim.ortho.proj} and "nominal" uses \code{regular.cases}.
+#' @param case.set Character. "observed" or "expected".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @return An R vector.
 #' @note This function is computationally intensive when \code{case.set = "expected"}.
@@ -18,7 +18,7 @@
 #' }
 
 neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
-  case.set = "observed", case.location = "nominal", multi.core = FALSE) {
+   case.location = "nominal", case.set = "observed", multi.core = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".')
