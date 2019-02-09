@@ -4,13 +4,14 @@
 #' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.
 #' @param pump.select Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param metric Character. Type of neighborhood: "euclidean" or "walking".
-#' @param type Character. Type of case: "stack.base" (base of stack), or "stack" (entire stack) or "simulated".
+#' @param type Character. Type of case: "stack.base" (base of stack), or "stack" (entire stack). For observed = TRUE.
 #' @param token Character. Type of token to plot: "point" or "id".
 #' @param text.size Numeric. Size of case ID text.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest walking path weighted by road length. \code{FALSE} computes shortest walking path in terms of the number of nodes.
 #' @param color Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}
 #' @param case.location Character. For \code{metric = "euclidean"}: "address" uses \code{ortho.proj}; "nominal" uses \code{fatalities}.
+#' @param observed Logical. TRUE is observed; FALSE is expected or simulated.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param ... Additional plotting parameters.
 #' @export
@@ -27,54 +28,42 @@
 addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   metric = "walking", type = "stack.base", token = "point", text.size = 0.5,
   vestry = FALSE, weighted = TRUE, color = NULL, case.location = "nominal",
-  multi.core = FALSE, ...) {
+  observed = TRUE, multi.core = FALSE, ...) {
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
     stop('metric must be "euclidean" or "walking".')
   }
 
-  if (type %in% c("stack.base", "stack") == FALSE) {
-    stop('type must be "stack.base", "stack" or "simulated".')
+  if (observed) {
+    if (type %in% c("stack.base", "stack") == FALSE) {
+      stop('type must be "stack.base", "stack" or "simulated".')
+    }
   }
 
   if (token %in% c("id", "point") == FALSE) {
     stop('token must be "id" or "point".')
   }
 
+  if (case.location %in% c("address", "nominal") == FALSE) {
+    stop('case.location must be "address" or "nominal".')
+  }
+
   cores <- multiCore(multi.core)
 
+  arguments <- list(pump.select = pump.select,
+                    vestry = vestry,
+                    case.location = case.location,
+                    case.set = ifelse(observed, "observed", "expected"),
+                    multi.core = cores)
+
   if (metric == "euclidean") {
-    arguments <- list(pump.select = pump.select,
-                      vestry = vestry,
-                      case.location = case.location)
-
     eucl.data <- do.call("neighborhoodEuclidean", arguments)
-    nearest.pump <- data.frame(case = cholera::fatalities.address$anchor.case,
+    nearest.pump <- data.frame(case = eucl.data$anchor,
                                pump = eucl.data$nearest.pump)
-
   } else if (metric == "walking") {
-    arguments <- list(pump.select = pump.select,
-                      vestry = vestry,
-                      weighted = weighted,
-                      case.set = "observed",
-                      multi.core = cores)
-
-    nearest.path <- do.call("nearestPump", c(arguments, output = "path"))
-
-    if (vestry) {
-      nearest.pump <- vapply(nearest.path, function(paths) {
-        sel <- cholera::ortho.proj.pump.vestry$node %in% paths[length(paths)]
-        cholera::ortho.proj.pump.vestry[sel, "pump.id"]
-      }, numeric(1L))
-    } else {
-      nearest.pump <- vapply(nearest.path, function(paths) {
-        sel <- cholera::ortho.proj.pump$node %in% paths[length(paths)]
-        cholera::ortho.proj.pump[sel, "pump.id"]
-      }, numeric(1L))
-    }
-
-    nearest.pump <- data.frame(case = cholera::fatalities.address$anchor.case,
-                               pump = nearest.pump)
+    arguments$case.location <- NULL
+    walk.data <- do.call("nearestPump", arguments)
+    nearest.pump <- walk.data[, c("case", "pump")]
   }
 
   snow.colors <- cholera::snowColors(vestry)
@@ -88,11 +77,16 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
 
   if (is.null(pump.subset) == FALSE) {
     if (all(pump.subset > 0)) {
-      if (all(pump.subset %in% selected.pumps) == FALSE) {
+      if (all(pump.subset %in% selected.pumps)) {
+        selected.pumps <- selected.pumps[selected.pumps %in% pump.subset]
+      } else {
         stop("pump.subset must be a subset of selected.pumps.")
       }
     } else if (all(pump.subset < 0)) {
-      if (all(abs(pump.subset) %in% selected.pumps) == FALSE) {
+      if (all(abs(pump.subset) %in% selected.pumps)) {
+        selected.pumps <- selected.pumps[selected.pumps %in%
+          abs(pump.subset) == FALSE]
+      } else {
         stop("|pump.subset| must be a subset of selected.pumps.")
       }
     } else {
@@ -100,173 +94,58 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
     }
   }
 
-  if (type == "stack.base") {
-    if (is.null(pump.subset)) {
-      invisible(lapply(selected.pumps, function(x) {
-        addr <- nearest.pump[nearest.pump$pump == x, "case"]
-        if (case.location == "address") {
-          sel <- cholera::ortho.proj$case %in% addr
-          if (token == "point") {
-            points(cholera::ortho.proj[sel, c("x.proj", "y.proj")], pch = 20,
-              cex = 0.75, col = snow.colors[paste0("p", x)])
-          } else if (token == "id") {
-            text(cholera::ortho.proj[sel, c("x.proj", "y.proj")],
-              cex = text.size, col = snow.colors[paste0("p", x)],
-              labels = cholera::ortho.proj[sel, "case"])
-          }
-        } else if (case.location == "nominal") {
-          sel <- cholera::fatalities.address$anchor.case %in% addr
-          if (token == "point") {
-            points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-              cex = 0.75, col = snow.colors[paste0("p", x)])
-          } else if (token == "id") {
-            text(cholera::fatalities.address[sel, c("x", "y")],
-              cex = text.size, col = snow.colors[paste0("p", x)],
-              labels = cholera::fatalities.address[sel, "anchor.case"])
-          }
-        }
-      }))
-    } else {
-      if (all(pump.subset > 0)) {
-        select <- selected.pumps[selected.pumps %in% pump.subset]
-      } else if (all(pump.subset < 0)) {
-        select <- selected.pumps[selected.pumps %in% abs(pump.subset) == FALSE]
-      } else {
-        stop("Use all positive or all negative numbers for pump.subset.")
-      }
+  if (observed) {
+    addr.data <- cholera::ortho.proj
+    nom.data <- cholera::fatalities
+  } else {
+    addr.data <- cholera::sim.ortho.proj
+    nom.data <- cholera::regular.cases
+    nom.data$case <- seq_len(nrow(nom.data))
+  }
 
-      invisible(lapply(select, function(x) {
-        addr <- nearest.pump[nearest.pump$pump == x, "case"]
+  if (case.location == "address") {
+    case.data <- addr.data
+    vars <- c("x.proj", "y.proj")
+  } else if (case.location == "nominal") {
+    case.data <- nom.data
+    vars <- c("x", "y")
+  } else stop("Invalid case.location!")
 
-        if (case.location == "address") {
-          sel <- cholera::ortho.proj$case %in% addr
-          if (token == "point") {
-            points(cholera::ortho.proj[sel, c("x.proj", "y.proj")], pch = 20,
-              cex = 0.75, col = snow.colors[paste0("p", x)])
-          } else if (token == "id") {
-            text(cholera::ortho.proj[sel, c("x.proj", "y.proj")],
-              cex = text.size, col = snow.colors[paste0("p", x)],
-              labels = cholera::ortho.proj[sel, "case"])
-          }
-        } else if (case.location == "nominal") {
-          sel <- cholera::fatalities.address$anchor.case %in% addr
-          if (token == "point") {
-            points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-              cex = 0.75, col = snow.colors[paste0("p", x)])
-          } else if (token == "id") {
-            text(cholera::fatalities.address[sel, c("x", "y")],
-              cex = text.size, col = snow.colors[paste0("p", x)],
-              labels = cholera::fatalities.address[sel, "anchor.case"])
-          }
-        }
-      }))
-    }
+  if (observed) {
+    invisible(lapply(selected.pumps, function(x) {
+      addr <- nearest.pump[nearest.pump$pump == x, "case"]
+      case.sel <- cholera::anchor.case$anchor.case %in% addr
 
-  } else if (type == "stack") {
-    if (is.null(pump.subset)) {
-      invisible(lapply(selected.pumps, function(x) {
-        addr <- nearest.pump[nearest.pump$pump == x, "case"]
-        fatal <- cholera::anchor.case[cholera::anchor.case$anchor.case %in%
-          addr, "case"]
+      if (type == "stack.base") {
+        id <- unique(cholera::anchor.case[case.sel, "anchor.case"])
+      } else if (type == "stack") {
+        id <- cholera::anchor.case[case.sel, "case"]
+      } else stop("Invalid type")
 
-        if (case.location == "address") {
-          sel <- cholera::ortho.proj$case %in% fatal
-          points(cholera::ortho.proj[sel, c("x.proj", "y.proj")], pch = 20,
-            cex = 0.75, col = snow.colors[paste0("p", x)])
-        } else if (case.location == "nominal") {
-          sel <- cholera::fatalities$case %in% fatal
-          points(cholera::fatalities[sel, c("x", "y")], pch = 20,
-            cex = 0.75, col = snow.colors[paste0("p", x)])
-        }
-      }))
-    } else {
-      if (all(pump.subset > 0)) {
-        select <- selected.pumps[selected.pumps %in% pump.subset]
-      } else if (all(pump.subset < 0)) {
-        select <- selected.pumps[selected.pumps %in% abs(pump.subset) == FALSE]
-      } else {
-        stop("Use all positive or all negative numbers for pump.subset.")
-      }
+      sel <- case.data$case %in% id
 
-      invisible(lapply(select, function(x) {
-        addr <- nearest.pump[nearest.pump$pump == x, "case"]
-        fatal <- cholera::anchor.case[cholera::anchor.case$anchor.case %in%
-          addr, "case"]
+      if (token == "point") {
+        points(case.data[sel, vars], pch = 20, cex = 0.75,
+          col = snow.colors[paste0("p", x)])
+      } else if (token == "id") {
+        text(case.data[sel, vars], cex = text.size,
+          col = snow.colors[paste0("p", x)], labels = case.data[sel, "case"])
+      } else stop("Invalid token!")
+    }))
 
-        if (case.location == "address") {
-          sel <- cholera::ortho.proj$case %in% fatal
-          points(cholera::ortho.proj[sel, c("x.proj", "y.proj")], pch = 20,
-            cex = 0.75, col = snow.colors[paste0("p", x)])
-        } else if (case.location == "nominal") {
-          sel <- cholera::fatalities$case %in% fatal
-          points(cholera::fatalities[sel, c("x", "y")], pch = 20,
-            cex = 0.75, col = snow.colors[paste0("p", x)])
-        }
-      }))
-    }
+  } else {
+    invisible(lapply(selected.pumps, function(x) {
+      addr <- nearest.pump[nearest.pump$pump == x, "case"]
+      sel <- case.data$case %in% addr
+      neighborhood.color <- snow.colors[paste0("p", x)]
 
-  } else if (type == "simulated") {
-    x <- neighborhoodWalking(pump.select = pump.select, vestry = vestry)
-    OE <- observedExpected(x)
-    wholes <- OE$expected.wholes
-    splits <- OE$exp.splits
-    splits.pump <- OE$exp.splits.pump
-    splits.segs <- OE$exp.splits.segs
-
-    sim.proj <- cholera::sim.ortho.proj
-    sim.proj.segs <- unique(sim.proj$road.segment)
-
-    if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
-      split.outcome <- parallel::mclapply(seq_along(splits.segs), function(i) {
-        id <- sim.proj$road.segment == splits.segs[i] &
-              is.na(sim.proj$road.segment) == FALSE
-
-        sim.data <- sim.proj[id, ]
-        split.data <- splits[[i]]
-
-        sel <- vapply(seq_len(nrow(sim.data)), function(j) {
-          obs <- sim.data[j, c("x.proj", "y.proj")]
-          distance <- vapply(seq_len(nrow(split.data)), function(k) {
-            stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
-          }, numeric(1L))
-
-          test1 <- signif(sum(distance[1:2])) ==
-            signif(c(stats::dist(split.data[c(1, 2), ])))
-          test2 <- signif(sum(distance[3:4])) ==
-            signif(c(stats::dist(split.data[c(3, 4), ])))
-
-          ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
-        }, integer(1L))
-
-        data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-      }, mc.cores = x$cores)
-
-      split.outcome <- do.call(rbind, split.outcome)
-      split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
-      split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
-        split.outcome[split.outcome$pump == p, "case"]
-      })
-
-      names(split.cases) <- sort(unique(split.outcome$pump))
-    }
-
-    ap <- areaPointsData(sim.proj.segs, wholes, snow.colors, sim.proj,
-      split.cases)
-
-    if (case.location == "address") {
-      points(cholera::sim.ortho.proj[ap$sim.proj.wholes$case, ],
-        col = grDevices::adjustcolor(ap$sim.proj.wholes$color, alpha.f = 1/2),
-        pch = 15, cex = 1.25)
-      points(cholera::sim.ortho.proj[ap$sim.proj.splits$case, ],
-        col = grDevices::adjustcolor(ap$sim.proj.splits$color, alpha.f = 1/2),
-        pch = 15, cex = 1.25)
-    } else if (case.location == "nominal") {
-      points(cholera::regular.cases[ap$sim.proj.wholes$case, ],
-        col = grDevices::adjustcolor(ap$sim.proj.wholes$color, alpha.f = 1/2),
-        pch = 15, cex = 1.25)
-      points(cholera::regular.cases[ap$sim.proj.splits$case, ],
-        col = grDevices::adjustcolor(ap$sim.proj.splits$color, alpha.f = 1/2),
-        pch = 15, cex = 1.25)
-    }
+      if (token == "point") {
+        points(case.data[sel, vars], pch = 15, cex = 1.25,
+          col = grDevices::adjustcolor(neighborhood.color, alpha.f = 1/2))
+      } else if (token == "id") {
+        text(case.data[sel, vars], cex = text.size,
+          col = neighborhood.color, labels = case.data[sel, "case"])
+      } else stop("Invalid token!")
+    }))
   }
 }

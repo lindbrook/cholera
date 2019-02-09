@@ -7,7 +7,8 @@
 addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
   metric = "walking", type = "stack.base", token = "point",
   text.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
-  case.location = "nominal", multi.core = FALSE, ...)
+  case.location = "nominal", observed = TRUE, multi.core = FALSE,
+  ...)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -16,7 +17,7 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 
 \item{metric}{Character. Type of neighborhood: "euclidean" or "walking".}
 
-\item{type}{Character. Type of case: "stack.base" (base of stack), or "stack" (entire stack) or "simulated".}
+\item{type}{Character. Type of case: "stack.base" (base of stack), or "stack" (entire stack). For observed = TRUE.}
 
 \item{token}{Character. Type of token to plot: "point" or "id".}
 
@@ -29,6 +30,8 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 \item{color}{Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}}
 
 \item{case.location}{Character. For \code{metric = "euclidean"}: "address" uses \code{ortho.proj}; "nominal" uses \code{fatalities}.}
+
+\item{observed}{Logical. TRUE is observed; FALSE is expected or simulated.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 
