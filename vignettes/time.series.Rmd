@@ -26,4 +26,4 @@ As part of the Vestry Report, both he and the committee included separate tables
 plot(timeSeries())
 ```
 
-## Notes
+

@@ -261,4 +261,3 @@ The main roadblock to "unstacking" is that there is no notion of an "address" in
 
 To "unstack" the data, we need to match each bar to a specific road (segment) and to a specific stack. To accomplish these tasks, I use two types of classification. For those interested, the details are found in "computing street addresses", which is available [online](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md) in this package's GitHub repository.
 
-## Notes

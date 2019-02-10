@@ -58,4 +58,3 @@ fatalities[c(91, 93, 209), c("x", "y")] <- fix
 
 This fixed data set is available as `fatalities` in this package and as `Snow.deaths2` in 'HistData' (>= ver. 0.7-8). For those interested, details about how I arrived at these values can be found in `fixFatalities()` and in the "note on duplicate and missing cases", available [online](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md) in this package's GitHub repository.
 
-## Notes

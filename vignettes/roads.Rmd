@@ -107,4 +107,3 @@ The original map is 14.5 x 15.5 inches with a stated nominal scale of 30 inches 
 
 Dodson and Tobler write that "The scale of the source map is approx. 1:2000. Coordinate units are meters." By my estimate, one unit on the map is approximately 177 feet or 54 meters per unit.^[According to Dodson and Tobler's data, the length of Carnaby Street from its intersection with Great Marlborough to its intersection with Silver Street is 2.61 units. According to Google Maps, the approximate analog of that segment is the distance along parts of Great Marlborough Street and Carnaby Street between 19-21 Great Marlborough Street and 43 Carnaby Street (at Ganton Street): 463 ft. This translates into approximately 177 feet/unit or 54 meters/unit.]
 
-## Notes
