@@ -610,7 +610,6 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
   if (x$type == "case-pump") {
     case.color <- colors[paste0("p", x$data$pump)]
     points(ego.xy, col = "red")
-    # pumpTokensEuclidean(x, case.color, x$data$pump)
     text(ego.xy, labels = x$data$case, pos = 1, col = "red")
 
   } else if (x$type == "cases") {
@@ -759,20 +758,4 @@ print.euclidean_path <- function(x, ...) {
   }
 
   print(x[c("ego", "alter", "data")])
-}
-
-pumpTokensEuclidean <- function(x, case.color, destination.pump) {
-  if (x$vestry) {
-    obs.pump <- cholera::pumps.vestry
-    ortho.pump <- cholera::ortho.proj.pump.vestry
-  } else {
-    obs.pump <- cholera::pumps
-    ortho.pump <- cholera::ortho.proj.pump
-  }
-
-  obs.data <- obs.pump[obs.pump$id == as.numeric(destination.pump), ]
-  ortho.data <- ortho.pump[ortho.pump$pump.id == as.numeric(destination.pump), ]
-  points(obs.data[, c("x", "y")], pch = 24, cex = 1, col = case.color)
-  text(obs.data[, c("x", "y")], label = paste0("p", destination.pump), pos = 1)
-  points(ortho.data[, c("x.proj", "y.proj")], pch = 0, col = "red")
 }
