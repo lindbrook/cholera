@@ -14,8 +14,6 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
-  # soho.sq <- data.frame(x = 18.07044, y = 15.85703)
-  # golden.sq <- data.frame(x = 11.90927, y = 8.239483)
   huggins.brewery <- data.frame(x = 13.9022, y = 11.87315)
 
   ## Squares ##
@@ -53,7 +51,6 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
     "St James Workhouse", c("id", "x1", "y1", "name")]
   names(st.james.workhouse)[1:3] <- c("road.segment", "x.proj", "y.proj")
   st.james.workhouse$ortho.dist <- 0
-  # vars <- c("road.segment", "x.proj", "y.proj", "ortho.dist", "name")
   vars <- c("x.proj", "y.proj")
   st.james.workhouse <- stats::setNames(st.james.workhouse[, vars], c("x", "y"))
 
@@ -73,7 +70,6 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
   aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y,
     SW$x, SW$y)
   argyll.house <- data.frame(x = aberdeen$x, y = aberdeen$y)
-
 
   ## Model Lodging ##
 
@@ -95,7 +91,6 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
 
   model.lodging <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
                                        NE$x, NE$y, SW$x, SW$y)
-
 
   ## Craven Chapel (Wesleyan) ##
 

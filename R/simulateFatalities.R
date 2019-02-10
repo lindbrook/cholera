@@ -156,7 +156,6 @@ simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
 
     rc <- do.call(rbind, regular.cases)
     rc <- rc[order(as.numeric(row.names(rc))), ]
-
     list(sim.ortho.proj = sim.ortho.proj, regular.cases = rc)
   }
 }

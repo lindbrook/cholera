@@ -76,9 +76,8 @@ snowNeighborhood <- function() {
 
   partial <- snow.edges[snow.edges$id %in% whole.audit$id == FALSE, ]
 
-  partial.proj <-
-    cholera::sim.ortho.proj[cholera::sim.ortho.proj$road.segment %in%
-                            partial$id, ]
+  sel <- cholera::sim.ortho.proj$road.segment %in% partial$id
+  partial.proj <- cholera::sim.ortho.proj[sel, ]
 
   partial.candidates <- split(partial.proj, partial.proj$road.segment)
   partial.segments <- split(partial, partial$id)
