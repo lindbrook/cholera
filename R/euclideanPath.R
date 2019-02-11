@@ -319,12 +319,21 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         } else {
           stop("all positive or all negative.")
         }
-        alters <- case.data[alters.sel, case.coords]
 
-      } else if (is.character(destination)) {
+        alters <- case.data[alters.sel, case.coords]
+      }
+
+      if (is.character(destination)) {
         destination <- caseAndSpace(destination)
-        alters.sel <- grepl(destination, cholera::landmarks$name)
-        alters <- cholera::landmarks[alters.sel, case.coords]
+        landmark.test1 <- destination %in% cholera::landmark.squares$name
+        landmark.test2 <- destination %in% cholera::landmarks$name
+
+        if (!landmark.test1 & !landmark.test2) {
+          stop('Use a valid landmark name for the destination.')
+        } else {
+          alters.sel <- grepl(destination, cholera::landmarks$name)
+          alters <- cholera::landmarks[alters.sel, case.coords]
+        }
       }
     }
 
@@ -339,10 +348,19 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       ego <- case.data[ego.sel, case.coords]
 
-    } else if (is.character(origin)) {
+    }
+
+    if (is.character(origin)) {
       origin <- caseAndSpace(origin)
-      ego.sel <- grepl(origin, cholera::landmarks$name)
-      ego <- cholera::landmarks[ego.sel, case.coords]
+      landmark.test1 <- origin %in% cholera::landmark.squares$name
+      landmark.test2 <- origin %in% cholera::landmarks$name
+
+      if (!landmark.test1 & !landmark.test2) {
+        stop('Use a valid landmark name for the origin.')
+      } else {
+        ego.sel <- grepl(origin, cholera::landmarks$name)
+        ego <- cholera::landmarks[ego.sel, case.coords]
+      }
     }
 
     # remove ego from alters
