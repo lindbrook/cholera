@@ -218,10 +218,21 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
           stop(txt1, observed, ", ", txt2, ct, ".")
         }
 
-      } else if (is.character(origin)) {
+      }
+
+      if (is.character(origin)) {
         origin <- caseAndSpace(origin)
-        ego.sel <- grepl(origin, cholera::landmarks$name)
-        ego.id <- cholera::landmarks[ego.sel, "case"]
+        
+        if (origin %in% cholera::landmark.squares$name) {
+          ego.sel <- grepl(origin, cholera::landmarks$name)
+          ego.id <- cholera::landmarks[ego.sel, "case"]
+        } else if (origin %in% cholera::landmarks$name) {
+          ego.sel <- cholera::landmarks$name == origin
+          ego.id <- cholera::landmarks[ego.sel, "case"]
+        } else {
+          stop('Use a valid landmark name.')
+        }
+
         coord.sel <- cholera::landmarks$case %in% ego.id
         ego <- cholera::landmarks[coord.sel, coords]
       }
