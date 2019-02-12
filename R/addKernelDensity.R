@@ -69,7 +69,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
             bandwidth = bw)
         }
 
-        contour(x = kde$x1, y = kde$x2, z = kde$fhat, col = color,
+        graphics::contour(x = kde$x1, y = kde$x2, z = kde$fhat, col = color,
           lty = line.type, add = TRUE)
 
       } else if (pump.subset == "individual") {
@@ -92,8 +92,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
         invisible(lapply(names(kde), function(nm) {
           dat <- kde[[nm]]
-          contour(x = dat$x1, y = dat$x2, z = dat$fhat, col = snowColors()[nm],
-            lty = line.type, add = TRUE)
+          graphics::contour(x = dat$x1, y = dat$x2, z = dat$fhat,
+            col = snowColors()[nm], lty = line.type, add = TRUE)
         }))
       }
 
@@ -132,8 +132,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
       invisible(lapply(names(kde), function(nm) {
         dat <- kde[[nm]]
-        contour(x = dat$x1, y = dat$x2, z = dat$fhat, col = snowColors()[nm],
-          lty = line.type, add = TRUE)
+        graphics::contour(x = dat$x1, y = dat$x2, z = dat$fhat,
+          col = snowColors()[nm], lty = line.type, add = TRUE)
       }))
     }
 
@@ -149,8 +149,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
     invisible(lapply(names(kde), function(nm) {
       dat <- kde[[nm]]
-      contour(x = dat$x1, y = dat$x2, z = dat$fhat, col = snowColors()[nm],
-        lty = line.type, add = TRUE)
+      graphics::contour(x = dat$x1, y = dat$x2, z = dat$fhat,
+        col = snowColors()[nm], lty = line.type, add = TRUE)
     }))
   }
 }
