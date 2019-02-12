@@ -12,7 +12,7 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
 
-\item{destination}{Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.}
+\item{destination}{Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns the closest pump, "anchor" case or landmark.}
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 

@@ -1,7 +1,7 @@
 #' Compute path of the Euclidean distance between cases and/or pumps. (Beta)
 #'
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
-#' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns closest pump or "anchor" case. Character landmark name.
+#' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns the closest pump, "anchor" case or landmark.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or "simulated" expected data.
 #' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.
@@ -217,12 +217,11 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
           txt2 <- ', origin must be between 1 and '
           stop(txt1, observed, ", ", txt2, ct, ".")
         }
-
       }
 
       if (is.character(origin)) {
         origin <- caseAndSpace(origin)
-        
+
         if (origin %in% cholera::landmark.squares$name) {
           ego.sel <- grepl(origin, cholera::landmarks$name)
         } else if (origin %in% cholera::landmarks$name) {
