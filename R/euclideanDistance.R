@@ -94,7 +94,7 @@ euclideanDistance <- function(origin = 1, destination = NULL,
     if (is.numeric(origin)) {
       if (any(origin %in% seq_len(ct) == FALSE)) {
         txt1 <- 'With type = "cases" and observed = '
-        txt2 <- ', origin must be between 1 and '
+        txt2 <- 'origin must be between 1 and '
         stop(txt1, observed, ", ", txt2, ct, ".")
       }
     } else if (is.character(origin)) {

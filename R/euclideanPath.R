@@ -214,7 +214,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
           }
         } else {
           txt1 <- 'With type = "case-pump" and observed = '
-          txt2 <- ', origin must be between 1 and '
+          txt2 <- 'origin must be between 1 and '
           stop(txt1, observed, ", ", txt2, ct, ".")
         }
       }
