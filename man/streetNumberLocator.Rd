@@ -4,7 +4,7 @@
 \alias{streetNumberLocator}
 \title{Locate road by numerical ID.}
 \usage{
-streetNumberLocator(road.number, zoom = FALSE, radius = 1,
+streetNumberLocator(road.number = 216, zoom = FALSE, radius = 1,
   cases = "anchors", token = "id", add.title = TRUE,
   add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE,
   highlight = TRUE, unit = "meter", time.unit = "second",

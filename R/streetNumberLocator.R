@@ -22,7 +22,7 @@
 #' streetNumberLocator(243, zoom = TRUE)
 #' streetNumberLocator(243, zoom = TRUE, radius = 0)
 
-streetNumberLocator <- function(road.number, zoom = FALSE, radius = 1,
+streetNumberLocator <- function(road.number = 216, zoom = FALSE, radius = 1,
   cases = "anchors", token = "id", add.title = TRUE, add.subtitle = TRUE,
   add.pump = TRUE, vestry = FALSE, highlight = TRUE, unit = "meter",
   time.unit = "second", walking.speed = 5) {

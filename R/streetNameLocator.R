@@ -23,8 +23,9 @@
 #' streetNameLocator("Cambridge Street", zoom = TRUE)
 #' streetNameLocator("Cambridge Street", zoom = TRUE, radius = 0)
 
-streetNameLocator <- function(road.name, zoom = FALSE, radius = 0.1,
-  cases = "anchors", token = "id", add.title = TRUE, add.subtitle = TRUE,
+streetNameLocator <- function(road.name = "broad street", zoom = FALSE,
+  radius = 0.1, cases = "anchors", token = "id", add.title = TRUE,
+  add.subtitle = TRUE,
   add.pump = TRUE, vestry = FALSE, highlight = TRUE, unit = "meter",
   time.unit = "minute", walking.speed = 5) {
 
