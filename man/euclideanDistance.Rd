@@ -2,7 +2,7 @@
 % Please edit documentation in R/euclideanDistance.R
 \name{euclideanDistance}
 \alias{euclideanDistance}
-\title{Compute the Euclidean distance between cases and/or pumps. (Beta)}
+\title{Compute the Euclidean distance between cases and/or pumps.}
 \usage{
 euclideanDistance(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, case.location = "address", vestry = FALSE,
@@ -31,7 +31,7 @@ euclideanDistance(origin = 1, destination = NULL, type = "case-pump",
 An R data frame.
 }
 \description{
-Compute the Euclidean distance between cases and/or pumps. (Beta)
+Compute the Euclidean distance between cases and/or pumps.
 }
 \note{
 The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
