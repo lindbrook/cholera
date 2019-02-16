@@ -4,15 +4,15 @@
 \alias{distanceTime}
 \title{Convert distance to elapsed time.}
 \usage{
-distanceTime(x, unit = "second", meter.unit = cholera::unitMeter(1,
-  unit = "meter"), speed = 5)
+distanceTime(x, unit = "second", meter.unit = unitMeter(1, unit =
+  "meter"), speed = 5)
 }
 \arguments{
 \item{x}{Numeric. Nominal map distance.}
 
 \item{unit}{Character. Unit of measurement: "hour", "minute" or "second".}
 
-\item{meter.unit}{Numeric. 1 meter is approximately 54 map units. Set by \code{cholera::unitMeter()}.}
+\item{meter.unit}{Numeric. 1 meter is approximately 54 map units. Set by \code{unitMeter()}.}
 
 \item{speed}{Numeric. Walking speed in km/hr.}
 }

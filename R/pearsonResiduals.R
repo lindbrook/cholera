@@ -18,7 +18,7 @@ pearsonResiduals.default <- function(x) NULL
 #' @export
 pearsonResiduals.euclidean <- function(x) {
   obs <- unclass(table(x$nearest.pump))
-  exp <- unclass(table(cholera::neighborhoodEuclidean(pump.select = x$pump.id,
+  exp <- unclass(table(neighborhoodEuclidean(pump.select = x$pump.id,
     case.set = "expected", multi.core = x$cores)$nearest.pump))
 
   exp.data <- data.frame(pump.id = as.numeric(names(exp)),

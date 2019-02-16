@@ -2,13 +2,13 @@
 #'
 #' @param x Numeric. Nominal map distance.
 #' @param unit Character. Unit of measurement: "hour", "minute" or "second".
-#' @param meter.unit Numeric. 1 meter is approximately 54 map units. Set by \code{cholera::unitMeter()}.
+#' @param meter.unit Numeric. 1 meter is approximately 54 map units. Set by \code{unitMeter()}.
 #' @param speed Numeric. Walking speed in km/hr.
 #' @return An R vector.
 #' @export
 
 distanceTime <- function(x, unit = "second",
-  meter.unit = cholera::unitMeter(1, unit = "meter"), speed = 5) {
+  meter.unit = unitMeter(1, unit = "meter"), speed = 5) {
 
   if (is.numeric(x) == FALSE) {
     stop('"x" must be numeric.')

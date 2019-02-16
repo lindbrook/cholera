@@ -128,9 +128,9 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
             case.set = arguments$case.set,
             pump.select = pump.select,
             cores = cores,
-            metric = 1 / cholera::unitMeter(1, "meter"))
+            metric = 1 / unitMeter(1, "meter"))
 
-  snow.colors <- cholera::snowColors(x$vestry)
+  snow.colors <- snowColors(x$vestry)
 
   if (!is.null(path.color)) {
     snow.colors <- stats::setNames(rep(path.color, length(snow.colors)),

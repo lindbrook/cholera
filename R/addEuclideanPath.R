@@ -41,8 +41,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
 
   x <- do.call(euclideanPath, arguments)
 
-  colors <- cholera::snowColors(x$vestry)
-
+  colors <- snowColors(x$vestry)
   origin.xy <- x$ego
   alter.xy <- x$alter
   dat <- stats::setNames(rbind(alter.xy, origin.xy), c("x", "y"))
@@ -100,13 +99,12 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
       }
 
       if (unit.posts == "distance") {
-        tot <- cholera::unitMeter(stats::dist(dat))
-        h <- seq(0, tot, unit.interval) / cholera::unitMeter(1)
+        tot <- unitMeter(stats::dist(dat))
+        h <- seq(0, tot, unit.interval) / unitMeter(1)
       } else if (unit.posts == "time") {
-        tot <- cholera::distanceTime(cholera::unitMeter(stats::dist(dat),
-          unit = "native"), speed = x$speed)
-        h <- seq(0, tot, unit.interval) * 1000 * x$speed / 60^2 /
-          cholera::unitMeter(1)
+        tot <- distanceTime(unitMeter(stats::dist(dat), unit = "native"),
+          speed = x$speed)
+        h <- seq(0, tot, unit.interval) * 1000 * x$speed / 60^2 / unitMeter(1)
       } else {
         stop('Specify a unit.posts')
       }

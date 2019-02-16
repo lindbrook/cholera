@@ -56,7 +56,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   }
 
   cores <- multiCore(multi.core)
-  snow.colors <- cholera::snowColors(vestry = vestry)
+  snow.colors <- snowColors(vestry = vestry)
 
   if (case.set == "expected") {
     arguments <- list(pump.select = pump.select,
@@ -120,7 +120,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
               pump.select = pump.select,
               snow.colors = snow.colors,
               cores = cores,
-              metric = 1 / cholera::unitMeter(1, "meter"))
+              metric = 1 / unitMeter(1, "meter"))
 
   class(out) <- "walking"
   out
@@ -379,7 +379,7 @@ expectedCount <- function(x) {
   sim.proj <- cholera::sim.ortho.proj
   sim.proj.segs <- unique(sim.proj$road.segment)
 
-  snow.colors <- cholera::snowColors(x$vestry)
+  snow.colors <- snowColors(x$vestry)
 
   if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
     split.outcome <- parallel::mclapply(seq_along(splits.segs), function(i) {

@@ -119,8 +119,8 @@ plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = "meter",
 
   y.proj <- segment.slope * x.proj + segment.intercept
 
-  cholera::segmentLocator(x$segment, zoom = zoom, radius = radius,
-    title = FALSE, subtitle = FALSE)
+  segmentLocator(x$segment, zoom = zoom, radius = radius, title = FALSE,
+    subtitle = FALSE)
 
   # Bisection / Intersection test
   distB <- stats::dist(rbind(x$seg.df[1, ], c(x.proj, y.proj))) +
@@ -138,13 +138,13 @@ plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = "meter",
   }
 
   if (unit == "meter") {
-    ortho.dist <- cholera::unitMeter(x$distance, "meter")
+    ortho.dist <- unitMeter(x$distance, "meter")
     d.unit <- "m"
   } else if (unit == "yard") {
-    ortho.dist <- cholera::unitMeter(x$distance, "yard")
+    ortho.dist <- unitMeter(x$distance, "yard")
     d.unit <- "yd"
   } else if (unit == "native") {
-    ortho.dist <- cholera::unitMeter(x$distance, "native")
+    ortho.dist <- unitMeter(x$distance, "native")
     d.unit <- "units"
   }
 

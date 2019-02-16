@@ -20,7 +20,7 @@ addWhitehead <- function(pump = "Broad Street", radius = 210, color = "black",
   line.type = "solid", vestry = FALSE, subtitle = FALSE, walking.speed = 5,
   ...) {
 
-  r <- radius / cholera::unitMeter(1, "yard")
+  r <- radius / unitMeter(1, "yard")
   unit.base <- 100
   unit.radians <- 2 * pi / unit.base
 

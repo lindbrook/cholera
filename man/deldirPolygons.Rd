@@ -25,16 +25,15 @@ For use with functions that use polygons.
 This function relies on the 'deldir' package.
 }
 \examples{
-polygon.vertices <- deldirPolygons(cholera::pumps)
-cholera::snowMap()
+polygon.vertices <- deldirPolygons(pumps)
+snowMap()
 invisible(lapply(polygon.vertices, polygon))
 
-polygon.vertices <- deldirPolygons(cholera::pumps, cholera::roads)
-cholera::snowMap()
+polygon.vertices <- deldirPolygons(pumps, roads)
+snowMap()
 invisible(lapply(polygon.vertices, polygon))
 
-polygon.vertices <- deldirPolygons(cholera::pumps, cholera::roads,
- type = "triangles")
-cholera::snowMap()
+polygon.vertices <- deldirPolygons(pumps, roads, type = "triangles")
+snowMap()
 invisible(lapply(polygon.vertices, polygon))
 }

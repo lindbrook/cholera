@@ -95,9 +95,9 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   }
 
   if (observed) {
-    node.data <- cholera::neighborhoodData(vestry)
+    node.data <- neighborhoodData(vestry)
   } else {
-    node.data <- cholera::neighborhoodData(vestry, case.set = "expected")
+    node.data <- neighborhoodData(vestry, case.set = "expected")
   }
 
   nodes <- node.data$nodes
@@ -593,15 +593,15 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   # ----- #
 
-  out$data$time <- cholera::distanceTime(out$data$distance, unit = time.unit,
+  out$data$time <- distanceTime(out$data$distance, unit = time.unit,
     speed = walking.speed)
 
   if (unit == "meter") {
-    out$data$distance <- cholera::unitMeter(out$data$distance, "meter")
+    out$data$distance <- unitMeter(out$data$distance, "meter")
   } else if (unit == "yard") {
-    out$data$distance <- cholera::unitMeter(out$data$distance, "yard")
+    out$data$distance <- unitMeter(out$data$distance, "yard")
   } else if (unit == "native") {
-    out$data$distance <- cholera::unitMeter(out$data$distance, "native")
+    out$data$distance <- unitMeter(out$data$distance, "native")
   }
 
   output <- list(path = out$path,
@@ -665,7 +665,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
   roads.list <- split(rd[, c("x", "y")], rd$street)
   border.list <- split(map.frame[, c("x", "y")], map.frame$street)
-  colors <- cholera::snowColors(x$vestry)
+  colors <- snowColors(x$vestry)
 
   nodes <- x$nodes
   edges <- x$edges
@@ -942,10 +942,9 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       edge.data <- identifyEdges(path.edge, edges)
 
       if (unit.posts == "distance") {
-        cumulative <- cholera::unitMeter(cumsum(edge.data$d), "meter")
+        cumulative <- unitMeter(cumsum(edge.data$d), "meter")
       } else if (unit.posts == "time") {
-        cumulative <- cholera::distanceTime(cumsum(edge.data$d),
-          speed = x$speed)
+        cumulative <- distanceTime(cumsum(edge.data$d), speed = x$speed)
       }
 
       total <- cumulative[length(cumulative)]
@@ -989,10 +988,10 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
         theta <- atan(edge.slope)
 
         if (unit.posts == "distance") {
-          h <- (posts[i] - bins[edge.select[i], "lo"]) / cholera::unitMeter(1)
+          h <- (posts[i] - bins[edge.select[i], "lo"]) / unitMeter(1)
         } else if (unit.posts == "time") {
           h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * x$speed / 60^2 /
-            cholera::unitMeter(1)
+            unitMeter(1)
         }
 
         p.coords <- quandrantCoordinates(e.data, h, theta)

@@ -169,9 +169,9 @@ streetNameLocator <- function(road.name = "broad street", zoom = FALSE,
   if (add.title) title(main = name)
 
   if (add.subtitle) {
-    street.length <- cholera::streetLength(name, unit)
-    native.street.length <- cholera::streetLength(name, unit = "native")
-    est.time <- cholera::distanceTime(native.street.length, unit = time.unit,
+    street.length <- streetLength(name, unit)
+    native.street.length <- streetLength(name, unit = "native")
+    est.time <- distanceTime(native.street.length, unit = time.unit,
       speed = walking.speed)
 
     if (time.unit == "hour") {

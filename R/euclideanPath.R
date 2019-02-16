@@ -548,15 +548,15 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   # ----- #
 
-  out$time <- cholera::distanceTime(out$distance, unit = time.unit,
+  out$time <- distanceTime(out$distance, unit = time.unit,
     speed = walking.speed)
 
   if (unit == "meter") {
-    out$distance <- cholera::unitMeter(out$distance, "meter")
+    out$distance <- unitMeter(out$distance, "meter")
   } else if (unit == "yard") {
-    out$distance <- cholera::unitMeter(out$distance, "yard")
+    out$distance <- unitMeter(out$distance, "yard")
   } else if (unit == "native") {
-    out$distance <- cholera::unitMeter(out$distance, "native")
+    out$distance <- unitMeter(out$distance, "native")
   }
 
   output <- list(ego = ego,

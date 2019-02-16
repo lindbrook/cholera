@@ -9,17 +9,16 @@
 #' @note This function relies on the 'deldir' package.
 #' @export
 #' @examples
-#' polygon.vertices <- deldirPolygons(cholera::pumps)
-#' cholera::snowMap()
+#' polygon.vertices <- deldirPolygons(pumps)
+#' snowMap()
 #' invisible(lapply(polygon.vertices, polygon))
 #'
-#' polygon.vertices <- deldirPolygons(cholera::pumps, cholera::roads)
-#' cholera::snowMap()
+#' polygon.vertices <- deldirPolygons(pumps, roads)
+#' snowMap()
 #' invisible(lapply(polygon.vertices, polygon))
 #'
-#' polygon.vertices <- deldirPolygons(cholera::pumps, cholera::roads,
-#'  type = "triangles")
-#' cholera::snowMap()
+#' polygon.vertices <- deldirPolygons(pumps, roads, type = "triangles")
+#' snowMap()
 #' invisible(lapply(polygon.vertices, polygon))
 
 deldirPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles") {

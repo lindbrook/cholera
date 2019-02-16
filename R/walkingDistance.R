@@ -51,9 +51,9 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
   }
 
   if (observed) {
-    node.data <- cholera::neighborhoodData(vestry)
+    node.data <- neighborhoodData(vestry)
   } else {
-    node.data <- cholera::neighborhoodData(vestry, case.set = "expected")
+    node.data <- neighborhoodData(vestry, case.set = "expected")
   }
 
   nodes <- node.data$nodes

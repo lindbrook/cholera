@@ -42,13 +42,13 @@ profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
     }
   }
 
-  nearest.pump <- cholera::nearestPump(pump.id, multi.core = cores)
+  nearest.pump <- nearestPump(pump.id, multi.core = cores)
 
   x <- cholera::fatalities.address$x
   y <- cholera::fatalities.address$y
   z <- cholera::fatalities.address$case.count
 
-  snow.colors <- cholera::snowColors()[paste0("p", nearest.pump$pump)]
+  snow.colors <- snowColors()[paste0("p", nearest.pump$pump)]
 
   if (is.null(pump.subset)) {
     threejs::scatterplot3js(x, y, z, cex = 0.5,

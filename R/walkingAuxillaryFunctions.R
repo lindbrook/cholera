@@ -204,9 +204,9 @@ postCoordinates <- function(dat, unit, interval, walking.speed,
   arrow.data = FALSE) {
 
   if (unit == "distance") {
-    cumulative <- cholera::unitMeter(cumsum(dat$d), "meter")
+    cumulative <- unitMeter(cumsum(dat$d), "meter")
   } else if (unit == "time") {
-    cumulative <- cholera::distanceTime(cumsum(dat$d), speed = walking.speed)
+    cumulative <- distanceTime(cumsum(dat$d), speed = walking.speed)
   }
 
   total <- cumulative[length(cumulative)]
@@ -236,11 +236,10 @@ postCoordinates <- function(dat, unit, interval, walking.speed,
     theta <- atan(edge.slope)
 
     if (unit == "distance") {
-      h <- (posts[i] - bins[edge.select[i], "lo"]) /
-        cholera::unitMeter(1, "meter")
+      h <- (posts[i] - bins[edge.select[i], "lo"]) /unitMeter(1, "meter")
     } else if (unit == "time") {
       h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * walking.speed /
-        60^2 / cholera::unitMeter(1, "meter")
+        60^2 / unitMeter(1, "meter")
     }
 
     p.coords <- quandrantCoordinates(edge.data, h, theta)
@@ -515,7 +514,7 @@ neighborhoodPathData <- function(x) {
     stop('"x"\'s class needs to be "walking".')
   }
 
-  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
+  dat <- neighborhoodData(vestry = x$vestry, case.set = "observed")
   edges <- dat$edges
   p.data <- dat$nodes.pump
 

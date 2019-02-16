@@ -119,7 +119,7 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
     golden.square[golden.square$name == nm, c("x", "y")]
   })
 
-  landmarks <- list(marx, snow, st.lukes.church,  huggins.brewery,
+  landmarks <- list(marx, snow, st.lukes.church, huggins.brewery,
     pantheon.bazaar, st.james.workhouse, argyll.house, model.lodging,
     craven.chapel)
   landmarks <- append(landmarks, soho)

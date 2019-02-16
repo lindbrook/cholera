@@ -5,8 +5,8 @@
 #' @export
 
 snowNeighborhood <- function() {
-  snow <- cholera::neighborhoodWalking(case.set = "snow")
-  dat <- cholera::neighborhoodData(vestry = snow$vestry)
+  snow <- neighborhoodWalking(case.set = "snow")
+  dat <- neighborhoodData(vestry = snow$vestry)
   edges <- dat$edges
 
   n.paths <- lapply(snow$paths, function(neighborhood) {

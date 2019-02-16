@@ -48,7 +48,7 @@ addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('alpha.level must be > 0 and <= 1.')
   }
 
-  colors <- cholera::snowColors(x$vestry)
+  colors <- snowColors(x$vestry)
   nodes <- x$nodes
   edges <- x$edges
   g <- x$g
@@ -314,10 +314,9 @@ addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     edge.data <- identifyEdges(path.edge, edges)
 
     if (unit.posts == "distance") {
-      cumulative <- cholera::unitMeter(cumsum(edge.data$d), "meter")
+      cumulative <- unitMeter(cumsum(edge.data$d), "meter")
     } else if (unit.posts == "time") {
-      cumulative <- cholera::distanceTime(cumsum(edge.data$d),
-        speed = x$speed)
+      cumulative <- distanceTime(cumsum(edge.data$d), speed = x$speed)
     }
 
     total <- cumulative[length(cumulative)]
@@ -361,10 +360,10 @@ addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       theta <- atan(edge.slope)
 
       if (unit.posts == "distance") {
-        h <- (posts[i] - bins[edge.select[i], "lo"]) / cholera::unitMeter(1)
+        h <- (posts[i] - bins[edge.select[i], "lo"]) / unitMeter(1)
       } else if (unit.posts == "time") {
         h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * x$speed / 60^2 /
-          cholera::unitMeter(1)
+          unitMeter(1)
       }
 
       p.coords <- quandrantCoordinates(e.data, h, theta)

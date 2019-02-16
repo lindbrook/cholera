@@ -38,7 +38,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 
   p.count <- nrow(pump.data)
   p.ID <- seq_len(p.count)
-  snow.colors <- cholera::snowColors(vestry = vestry)
+  snow.colors <- snowColors(vestry = vestry)
 
   if (is.null(pump.select)) {
     pump.id <- pump.data$id
@@ -67,7 +67,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
   }
 
   nearest.pump <- parallel::mclapply(anchors, function(x) {
-    cholera::euclideanDistance(x, destination = pump.id, vestry = vestry,
+    euclideanDistance(x, destination = pump.id, vestry = vestry,
       observed = observed, case.location = case.location)$data$pump
   }, mc.cores = cores)
 
@@ -177,9 +177,9 @@ plot.euclidean <- function(x, type = "star",
 
     if (add.observed.points) {
       if (x$case.set == "observed") {
-        cholera::addNeighborhoodCases(pump.select = x$pump.select,
-          vestry = x$vestry, metric = "euclidean",
-          case.location = x$case.location, multi.core = x$cores)
+        addNeighborhoodCases(pump.select = x$pump.select, vestry = x$vestry,
+          metric = "euclidean", case.location = x$case.location,
+          multi.core = x$cores)
       }
     }
 

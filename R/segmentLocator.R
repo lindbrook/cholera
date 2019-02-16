@@ -89,10 +89,10 @@ segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
 
   if (title) title(main = paste0(st$name, ": Segment # ", id))
 
-  segment.length <- cholera::segmentLength(id, unit)
+  segment.length <- segmentLength(id, unit)
 
-  est.time <- cholera::distanceTime(cholera::segmentLength(id),
-    unit = time.unit, speed = walking.speed)
+  est.time <- distanceTime(segmentLength(id), unit = time.unit, 
+    speed = walking.speed)
 
   if (time.unit == "hour") {
     nominal.time <- paste(round(est.time, 1), "hr.")

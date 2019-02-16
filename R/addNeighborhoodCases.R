@@ -66,7 +66,7 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
     nearest.pump <- walk.data[, c("case", "pump")]
   }
 
-  snow.colors <- cholera::snowColors(vestry)
+  snow.colors <- snowColors(vestry)
 
   if (!is.null(color)) {
     snow.colors <- stats::setNames(rep(color, length(snow.colors)),

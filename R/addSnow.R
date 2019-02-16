@@ -22,8 +22,8 @@ addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
   }
 
   snow.col <- grDevices::adjustcolor(color, alpha.f = alpha.level)
-  edges <- cholera::neighborhoodData(case.set = "snow")$edges
-  snow <- cholera::snowNeighborhood()
+  edges <- neighborhoodData(case.set = "snow")$edges
+  snow <- snowNeighborhood()
 
   if (type == "street") {
     invisible(lapply(c(snow$obs.edges, snow$other.edges), function(x) {

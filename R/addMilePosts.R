@@ -20,8 +20,8 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   }
 
   cores <- multiCore(multi.core)
-  x <- cholera::neighborhoodWalking(pump.select, vestry, multi.core = cores)
-  dat <- cholera::neighborhoodData(vestry = x$vestry, case.set = "observed")
+  x <- neighborhoodWalking(pump.select, vestry, multi.core = cores)
+  dat <- neighborhoodData(vestry = x$vestry, case.set = "observed")
   edges <- dat$edges
   nodes <- dat$nodes
   p.data <- dat$nodes.pump
@@ -125,7 +125,7 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
 
     invisible(lapply(names(coords)[!no.posts], function(nm) {
       dat <- unique(do.call(rbind, coords[[nm]]))
-      color <- cholera::snowColors()[paste0("p", nm)]
+      color <- snowColors()[paste0("p", nm)]
       zero.length.x <- round(abs(dat$x0 - dat$x), 2) == 0
       zero.length.y <- round(abs(dat$y0 - dat$y), 2) == 0
 

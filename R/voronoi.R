@@ -83,7 +83,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   x.rng <- range(cholera::roads$x)
   y.rng <- range(cholera::roads$y)
 
-  snow.colors <- cholera::snowColors(vestry = vestry)
+  snow.colors <- snowColors(vestry = vestry)
 
   if (is.null(pump.select)) {
     pump.id <- pump.data$id
@@ -237,7 +237,7 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
       plot(x$voronoi, add = TRUE, wline = "triang", wpoints = "none")
     }
 
-    voronoi.case.id <- cholera::pumpCase(x)
+    voronoi.case.id <- pumpCase(x)
     voronoi.colors <- vector(length = length(unlist(voronoi.case.id)))
     names(voronoi.colors) <- cholera::fatalities.address$anchor.case
 

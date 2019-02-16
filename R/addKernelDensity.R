@@ -74,12 +74,12 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
       } else if (pump.subset == "individual") {
         if (neighborhood.type == "walking") {
-          n.data <- cholera::neighborhoodWalking(multi.core = cores)
-          cases <- cholera::pumpCase(n.data)
+          n.data <- neighborhoodWalking(multi.core = cores)
+          cases <- pumpCase(n.data)
 
         } else if (neighborhood.type == "voronoi") {
-          n.data <- cholera::neighborhoodVoronoi()
-          cases <- cholera::pumpCase(n.data)
+          n.data <- neighborhoodVoronoi()
+          cases <- pumpCase(n.data)
           empty.cell <- vapply(cases, length, numeric(1L))
           cases <- cases[empty.cell != 0]
         }
@@ -99,14 +99,14 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
     } else if (all(is.numeric(pump.subset))) {
       if (neighborhood.type == "walking") {
-        n.data <- cholera::neighborhoodWalking(multi.core = cores)
+        n.data <- neighborhoodWalking(multi.core = cores)
         obs.neighborhood <- as.numeric(names(n.data$paths))
 
         if (any(abs(pump.subset) %in% obs.neighborhood == FALSE)) {
           stop('For walking neighborhoods, only 3 through 12 are valid.')
         }
 
-        cases.list <- cholera::pumpCase(n.data)
+        cases.list <- pumpCase(n.data)
 
         if (all(pump.subset > 0)) {
           cases <- cases.list[paste0("p", pump.subset)]
@@ -118,8 +118,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
         }
 
       } else if (neighborhood.type == "voronoi") {
-        n.data <- cholera::neighborhoodVoronoi()
-        cases <- cholera::pumpCase(n.data)
+        n.data <- neighborhoodVoronoi()
+        cases <- pumpCase(n.data)
         empty.cell <- vapply(cases, length, numeric(1L))
         cases <- cases[empty.cell != 0]
       }
@@ -132,14 +132,14 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
       invisible(lapply(names(kde), function(nm) {
         dat <- kde[[nm]]
-        graphics::contour(x = dat$x1, y = dat$x2, z = dat$fhat,
+        contour(x = dat$x1, y = dat$x2, z = dat$fhat,
           col = snowColors()[nm], lty = line.type, add = TRUE)
       }))
     }
 
   } else {
-    n.data <- cholera::neighborhoodWalking(pump.select, multi.core = cores)
-    cases <- cholera::pumpCase(n.data)
+    n.data <- neighborhoodWalking(pump.select, multi.core = cores)
+    cases <- pumpCase(n.data)
 
     kde <- lapply(cases, function(id) {
       sel <- cholera::fatalities.address$anchor.case %in% id
