@@ -13,10 +13,10 @@ snowColors <- function(vestry = FALSE) {
     colors.dark[5:8], "red", colors.pair[1])
   if (vestry) {
     out <- c(out, "darkorange")
-    p.data <- cholera::pumps.vestry
+    p.count <- nrow(cholera::pumps.vestry)
   } else {
-    p.data <- cholera::pumps
+    p.count <- nrow(cholera::pumps)
   }
-  names(out) <- paste0("p", seq_len(nrow(p.data)))
+  names(out) <- paste0("p", seq_len(p.count))
   out
 }
