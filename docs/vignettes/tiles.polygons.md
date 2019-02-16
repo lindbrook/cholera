@@ -1,22 +1,32 @@
 deldirPolygons(): Tiles, Triangles and Polygons
 ================
 lindbrook
-2019-01-10
+2019-02-16
 
-`deldirPolygons()` is a wrapper function that extracts the vertices of 'deldir' Delauny triangles and Dirichelet (Voronoi) tiles for use with functions that rely on polygons. The function returns a list of data frames of vertices. This makes tasks like coloring tiles or triangles or counting cases within tiles or triangles easier.
+`deldirVertices()` is a wrapper function that extracts the vertices of
+‘deldir’ Delauny triangles and Dirichelet (Voronoi) tiles for use with
+functions that rely on polygons. The function returns a list of data
+frames of vertices. This makes tasks like coloring tiles or triangles or
+counting cases within tiles or triangles easier.
 
 ``` r
-deldirPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles")
+deldirVertices(sites, rw.data = NULL, rw = NULL, type = "tiles")
 ```
 
-The functions has four arguments. `sites` is the data frame of the sites or focal points used to do the triangulation or tessellation. `rw.data` (rw = 'rectangular window')is the data frame of a secondary source data (e.g., fatalities, customers, etc.). This argument is useful when the range of secondary data exceeds that of the sites data. `rw` is an alternative way to specify the range of data which uses a vector of the corners of the rectangular window: xmin, xmax, ymin, ymax. `type` is "tiles" or "triangles".
+The functions has four arguments. `sites` is the data frame of the sites
+or focal points used to do the triangulation or tessellation. `rw.data`
+(rw = ‘rectangular window’)is the data frame of a secondary source data
+(e.g., fatalities, customers, etc.). This argument is useful when the
+range of secondary data exceeds that of the sites data. `rw` is an
+alternative way to specify the range of data which uses a vector of the
+corners of the rectangular window: xmin, xmax, ymin, ymax. `type` is
+“tiles” or “triangles”.
 
-Coloring Tiles
---------------
+## Coloring Tiles
 
 ``` r
 # compute vertices of Voronoi tiles
-vertices <- deldirPolygons(sites = cholera::pumps, rw.data = cholera::roads)
+vertices <- deldirVertices(sites = cholera::pumps, rw.data = cholera::roads)
 
 # define colors, plot map, and color code fatalities
 snow.colors <- grDevices::adjustcolor(cholera::snowColors(), alpha.f = 1/3)
@@ -29,16 +39,16 @@ invisible(lapply(seq_along(vertices), function(i) {
 }))
 ```
 
-<img src="tiles.polygons_files/figure-markdown_github/coloring-1.png" style="display: block; margin: auto auto auto 0;" />
+<img src="tiles.polygons_files/figure-gfm/coloring-1.png" style="display: block; margin: auto auto auto 0;" />
 
-Counting Observations in Tiles
-------------------------------
+## Counting Observations in Tiles
 
-To count the number of cases within each neighborhood, we can use sp::point.in.polygon().
+To count the number of cases within each neighborhood, we can use
+sp::point.in.polygon().
 
 ``` r
 # compute vertices of Voronoi tiles
-vertices <- deldirPolygons(sites = cholera::pumps, rw.data = cholera::roads)
+vertices <- deldirVertices(sites = cholera::pumps, rw.data = cholera::roads)
 
 # locations of the 578 fatalities in Soho
 cases <- cholera::fatalities.unstacked
@@ -57,14 +67,13 @@ vapply(census, sum, integer(1L))
 >   0   1  13  23   6  61 361  16  27  62   2   2   4
 ```
 
-Counting Observations in Triangles
-----------------------------------
+## Counting Observations in Triangles
 
 To count the number of cases within each triangle:
 
 ``` r
 # compute vertices of Delauny triangles
-vertices <- deldirPolygons(sites = cholera::pumps,
+vertices <- deldirVertices(sites = cholera::pumps,
   rw.data = cholera::roads, type = "triangles")
 
 # locations of the 578 fatalities in Soho

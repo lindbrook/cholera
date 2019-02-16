@@ -9,19 +9,19 @@
 #' @note This function relies on the 'deldir' package.
 #' @export
 #' @examples
-#' polygon.vertices <- deldirPolygons(pumps)
+#' vertices <- deldirVertices(pumps)
 #' snowMap()
-#' invisible(lapply(polygon.vertices, polygon))
+#' invisible(lapply(vertices, polygon))
 #'
-#' polygon.vertices <- deldirPolygons(pumps, roads)
+#' vertices <- deldirVertices(pumps, roads)
 #' snowMap()
-#' invisible(lapply(polygon.vertices, polygon))
+#' invisible(lapply(vertices, polygon))
 #'
-#' polygon.vertices <- deldirPolygons(pumps, roads, type = "triangles")
+#' vertices <- deldirVertices(pumps, roads, type = "triangles")
 #' snowMap()
-#' invisible(lapply(polygon.vertices, polygon))
+#' invisible(lapply(vertices, polygon))
 
-deldirPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles") {
+deldirVertices <- function(sites, rw.data = NULL, rw = NULL, type = "tiles") {
   if (type %in% c("tiles", "triangles") == FALSE) {
     stop('type must be "tiles" or "triangles".')
   }
