@@ -53,7 +53,7 @@ cholera 0.6.0
 - addCase()
 - addDelauny()
 - addNeighborhoodCases()
-- deldirPolygons()
+- deldirVertices()
 - profile2D()
 - profile3D()
 - streetHighlight()
@@ -65,7 +65,7 @@ cholera 0.6.0
 
 # New Vignette #
 
-- "deldirPolygons(): Tiles, Triangles and Polygons"
+- "deldirVertices(): Tiles, Triangles and Polygons"
 
 
 cholera 0.5.1
