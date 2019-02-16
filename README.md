@@ -222,11 +222,11 @@ structure of the `roads` data set, “valid” road names, and my back of
 the envelope translation from the map’s nominal scale to meters (and
 yards).
 
-[deldirPolygons(): Tiles, Triangles and
+[deldirVertices(): Tiles, Triangles and
 Polygons](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/tiles.polygons.md)
-focuses on the `deldirPolygons()`, which extracts the vertices of
+focuses on the `deldirVertices()`, which extracts the vertices of
 triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi
-tessellation) from `deldir::deldir()` for use with polygon based
+tessellation) from `deldir::deldir()` for use with polygon() and related
 functions.
 
 [Kernel Density
