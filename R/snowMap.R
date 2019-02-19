@@ -49,7 +49,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
 
 addRoads <- function(col = "gray", ...) {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  roads.list <- split(rd[, vars], rd$street)
+  roads.list <- split(rd[, c("x", "y")], rd$street)
   invisible(lapply(roads.list, lines, col = "gray", ...))
 }
 
@@ -60,7 +60,7 @@ addRoads <- function(col = "gray", ...) {
 
 addFrame <- function(...) {
   borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  border.list <- split(borders[, vars], borders$street)
+  border.list <- split(borders[, c("x", "y")], borders$street)
   invisible(lapply(border.list, lines, ...))
 }
 
