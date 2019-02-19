@@ -50,24 +50,21 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
   }
 
   cores <- multiCore(multi.core)
-
+  vars <- c("x", "y")
   bw <- rep(bandwidth, 2)
 
   if (is.null(pump.select)) {
     if (all(is.character(pump.subset))) {
       if (pump.subset == "pooled") {
         if (obs.unit == "unstacked") {
-          kde <- KernSmooth::bkde2D(cholera::fatalities.unstacked[,
-            c("x", "y")], bandwidth = bw)
-
+          dat <- cholera::fatalities.unstacked[, vars]
         } else if (obs.unit == "address") {
-          kde <- KernSmooth::bkde2D(cholera::fatalities.address[, c("x", "y")],
-            bandwidth = bw)
-
+          dat <- cholera::fatalities.address[, vars]
         } else if (obs.unit == "fatality") {
-          kde <- KernSmooth::bkde2D(cholera::fatalities[, c("x", "y")],
-            bandwidth = bw)
+          dat <- cholera::fatalities[, vars]
         }
+
+        kde <- KernSmooth::bkde2D(dat, bandwidth = bw)
 
         graphics::contour(x = kde$x1, y = kde$x2, z = kde$fhat, col = color,
           lty = line.type, add = TRUE)
@@ -86,7 +83,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
         kde <- lapply(cases, function(id) {
           sel <- cholera::fatalities.address$anchor.case %in% id
-          dat <- cholera::fatalities.address[sel, c("x", "y")]
+          dat <- cholera::fatalities.address[sel, vars]
           KernSmooth::bkde2D(dat, bandwidth = bw)
         })
 
@@ -126,14 +123,14 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
       kde <- lapply(cases, function(id) {
         sel <- cholera::fatalities.address$anchor.case %in% id
-        dat <- cholera::fatalities.address[sel, c("x", "y")]
+        dat <- cholera::fatalities.address[sel, vars]
         KernSmooth::bkde2D(dat, bandwidth = bw)
       })
 
       invisible(lapply(names(kde), function(nm) {
         dat <- kde[[nm]]
-        contour(x = dat$x1, y = dat$x2, z = dat$fhat,
-          col = snowColors()[nm], lty = line.type, add = TRUE)
+        contour(x = dat$x1, y = dat$x2, z = dat$fhat, col = snowColors()[nm],
+          lty = line.type, add = TRUE)
       }))
     }
 
@@ -143,7 +140,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
     kde <- lapply(cases, function(id) {
       sel <- cholera::fatalities.address$anchor.case %in% id
-      dat <- cholera::fatalities.address[sel, c("x", "y")]
+      dat <- cholera::fatalities.address[sel, vars]
       KernSmooth::bkde2D(dat, bandwidth = bw)
     })
 

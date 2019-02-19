@@ -29,6 +29,7 @@ streetNameLocator <- function(road.name = "broad street", zoom = FALSE,
   unit = "meter", time.unit = "minute", walking.speed = 5) {
 
   real.road.names <- unique(cholera::roads$name)
+  vars <- c("x", "y")
 
   if (is.character(road.name) == FALSE) {
     stop("Road name must be a character string.")
@@ -61,21 +62,20 @@ streetNameLocator <- function(road.name = "broad street", zoom = FALSE,
   }
 
   selected.road <- cholera::roads[cholera::roads$name == name, "street"]
-  roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)
+  roads.list <- split(cholera::roads[, vars], cholera::roads$street)
 
-  rng <- lapply(cholera::roads[cholera::roads$name == name, c("x", "y")],
-    range)
+  rng <- lapply(cholera::roads[cholera::roads$name == name, vars], range)
   x.rng <- c(min(rng$x) - radius, max(rng$x) + radius)
   y.rng <- c(min(rng$y) - radius, max(rng$y) + radius)
 
   if (zoom == FALSE) {
-    plot(cholera::fatalities[, c("x", "y")], xlim = range(cholera::roads$x),
+    plot(cholera::fatalities[, vars], xlim = range(cholera::roads$x),
       ylim = range(cholera::roads$y), pch = 15, cex = 0.5, col = "gray",
       asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
 
   } else {
-    plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
+    plot(cholera::fatalities[, vars], xlim = x.rng, ylim = y.rng,
       pch = NA, asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
 
@@ -88,29 +88,29 @@ streetNameLocator <- function(road.name = "broad street", zoom = FALSE,
 
       if (token == "id") {
         if (cases == "all") {
-          text(cholera::fatalities[!seg.cases, c("x", "y")],
+          text(cholera::fatalities[!seg.cases, vars],
             labels = cholera::fatalities$case[!seg.cases], cex = 0.5)
           if (any(seg.cases)) {
             if (highlight) {
-              text(cholera::fatalities[seg.cases, c("x", "y")],
+              text(cholera::fatalities[seg.cases, vars],
                 labels = cholera::fatalities$case[seg.cases], cex = 0.5,
                 col = "red")
             } else {
-              text(cholera::fatalities[seg.cases, c("x", "y")],
+              text(cholera::fatalities[seg.cases, vars],
                 labels = cholera::fatalities$case[seg.cases], cex = 0.5)
             }
           }
         } else if (cases == "anchors") {
-          text(cholera::fatalities.address[!seg.anchors, c("x", "y")],
+          text(cholera::fatalities.address[!seg.anchors, vars],
             labels = cholera::fatalities.address$anchor.case[!seg.anchors],
             cex = 0.5)
           if (any(seg.anchors)) {
             if (highlight) {
-              text(cholera::fatalities.address[seg.anchors, c("x", "y")],
+              text(cholera::fatalities.address[seg.anchors, vars],
                 labels = cholera::fatalities.address$anchor.case[seg.anchors],
                 cex = 0.5, col = "red")
             } else {
-              text(cholera::fatalities.address[seg.anchors, c("x", "y")],
+              text(cholera::fatalities.address[seg.anchors, vars],
                 labels = cholera::fatalities.address$anchor.case[seg.anchors],
                 cex = 0.5)
             }
@@ -119,27 +119,25 @@ streetNameLocator <- function(road.name = "broad street", zoom = FALSE,
 
       } else if (token == "point") {
         if (cases == "all") {
-          points(cholera::fatalities[!seg.cases, c("x", "y")], pch = 15,
-            cex = 0.5)
+          points(cholera::fatalities[!seg.cases, vars], pch = 15, cex = 0.5)
           if (any(seg.cases)) {
             if (highlight) {
-              points(cholera::fatalities[seg.cases, c("x", "y")], pch = 15,
-                cex = 0.5, col = "red")
+              points(cholera::fatalities[seg.cases, vars], pch = 15, cex = 0.5,
+                col = "red")
             } else {
-              points(cholera::fatalities[seg.cases, c("x", "y")], pch = 15,
-                cex = 0.5)
+              points(cholera::fatalities[seg.cases, vars], pch = 15, cex = 0.5)
             }
           }
         } else if (cases == "anchors") {
-          points(cholera::fatalities.address[!seg.anchors, c("x", "y")],
-            pch = 15, cex = 0.5)
+          points(cholera::fatalities.address[!seg.anchors, vars], pch = 15,
+            cex = 0.5)
           if (any(seg.anchors)) {
             if (highlight) {
-              points(cholera::fatalities.address[seg.anchors, c("x", "y")],
-                pch = 15, cex = 0.5, col = "red")
+              points(cholera::fatalities.address[seg.anchors, vars], pch = 15,
+                cex = 0.5, col = "red")
             } else {
-              points(cholera::fatalities.address[seg.anchors, c("x", "y")],
-                pch = 15, cex = 0.5)
+              points(cholera::fatalities.address[seg.anchors, vars], pch = 15,
+                cex = 0.5)
             }
           }
         }
@@ -149,14 +147,13 @@ streetNameLocator <- function(road.name = "broad street", zoom = FALSE,
 
   if (add.pump) {
     if (vestry) {
-      points(cholera::pumps.vestry[, c("x", "y")], pch = 17, cex = 1,
-        col = "blue")
-      text(cholera::pumps.vestry[, c("x", "y")],
+      points(cholera::pumps.vestry[, vars], pch = 17, cex = 1, col = "blue")
+      text(cholera::pumps.vestry[, vars],
         label = paste0("p", cholera::pumps.vestry$id), pos = 1)
     } else {
-      points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-      text(cholera::pumps[, c("x", "y")],
-        label = paste0("p", cholera::pumps$id), pos = 1)
+      points(cholera::pumps[, vars], pch = 17, cex = 1, col = "blue")
+      text(cholera::pumps[, vars], label = paste0("p", cholera::pumps$id),
+        pos = 1)
     }
   }
 

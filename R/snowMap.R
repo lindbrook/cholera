@@ -23,6 +23,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
   main = NA, case.col = "gray", case.pch = 15, ...) {
 
   rng <- mapRange()
+  vars <- c("x", "y")
 
   if (stacked) {
     cases <- cholera::fatalities
@@ -30,10 +31,10 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
     cases <- cholera::fatalities.address
   }
 
-  plot(cases[, c("x", "y")], xlim = rng$x, ylim = rng$y, pch = NA, asp = 1,
+  plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = 1,
     main = main, ...)
   if (add.roads) addRoads()
-  if (add.cases) points(cases[, c("x", "y")], pch = case.pch, col = case.col,
+  if (add.cases) points(cases[, vars], pch = case.pch, col = case.col,
     cex = 0.5)
   if (add.pumps) addPump(vestry = vestry, col = "blue", pch = 2)
   if (add.landmarks) addLandmarks()
@@ -48,7 +49,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
 
 addRoads <- function(col = "gray", ...) {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  roads.list <- split(rd[, c("x", "y")], rd$street)
+  roads.list <- split(rd[, vars], rd$street)
   invisible(lapply(roads.list, lines, col = "gray", ...))
 }
 
@@ -59,7 +60,7 @@ addRoads <- function(col = "gray", ...) {
 
 addFrame <- function(...) {
   borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  border.list <- split(borders[, c("x", "y")], borders$street)
+  border.list <- split(borders[, vars], borders$street)
   invisible(lapply(border.list, lines, ...))
 }
 
