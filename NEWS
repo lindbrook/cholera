@@ -54,6 +54,7 @@ cholera 0.6.0
 - addDelauny()
 - addNeighborhoodCases()
 - deldirVertices()
+- orthogonalProjection()
 - profile2D()
 - profile3D()
 - streetHighlight()
