@@ -31,7 +31,8 @@ streetNumberLocator <- function(road.number = 216, zoom = FALSE, radius = 1,
     stop("road.number must be numeric.")
   } else {
     if (road.number %in% unique(cholera::roads$street) == FALSE) {
-      stop("road.number must lie between 1 and 528.")
+      rd.ct <- length(unique(cholera::roads$street))
+      stop("road.number must lie between 1 and ", rd.ct, ".")
     }
   }
 
