@@ -18,8 +18,9 @@ orthogonalProjection <- function(case = 12, street = 216) {
   if (is.numeric(street) == FALSE) {
     stop("street must be numeric.")
   } else {
-    if (street %in% unique(cholera::roads$street) == FALSE) {
-      stop("street must lie between 1 and 528.")
+    streetID <- unique(cholera::roads$street)
+    if (street %in% streetID == FALSE) {
+      stop("street must lie between 1 and ", length(streetID), ".")
     }
   }
 
