@@ -34,5 +34,5 @@ orthogonalProjection <- function(case = 12, street = 216) {
   x.proj <- (orthogonal.intercept - road.intercept) /
             (road.slope - orthogonal.slope)
   y.proj <- road.slope * x.proj + road.intercept
-  data.frame(x = x.proj, y = y.proj)
+  data.frame(x = x.proj, y = y.proj, row.names = NULL)
 }
