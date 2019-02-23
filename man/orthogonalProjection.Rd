@@ -4,12 +4,12 @@
 \alias{orthogonalProjection}
 \title{Compute coordinates of orthogonal projection from case to road segment.}
 \usage{
-orthogonalProjection(case = 12, street = 216)
+orthogonalProjection(case = 12, segment.id = "216-1")
 }
 \arguments{
 \item{case}{Numeric. case ID from \code{fatalities}.}
 
-\item{street}{Numeric. Road segment ID.}
+\item{segment.id}{Character. Road segment ID.}
 }
 \value{
 An R data frame.

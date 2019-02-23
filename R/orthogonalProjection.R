@@ -1,11 +1,11 @@
 #' Compute coordinates of orthogonal projection from case to road segment.
 #'
 #' @param case Numeric. case ID from \code{fatalities}.
-#' @param street Numeric. Road segment ID.
+#' @param segment.id Character. Road segment ID.
 #' @return An R data frame.
 #' @export
 
-orthogonalProjection <- function(case = 12, street = 216) {
+orthogonalProjection <- function(case = 12, segment.id = "216-1") {
   if (is.numeric(case) == FALSE) {
     stop("case must be numeric.")
   } else {
@@ -15,18 +15,23 @@ orthogonalProjection <- function(case = 12, street = 216) {
     }
   }
 
-  if (is.numeric(street) == FALSE) {
-    stop("street must be numeric.")
+  if (is.character(segment.id) == FALSE) {
+    stop("segment.id must be character")
   } else {
-    streetID <- unique(cholera::roads$street)
-    if (street %in% streetID == FALSE) {
-      stop("street must lie between 1 and ", length(streetID), ".")
+    streetID <- road.segments$id
+    if (segment.id %in% streetID == FALSE) {
+      stop("See road.segments$id for valid segment.id.")
     }
   }
 
   case.data <- cholera::fatalities[cholera::fatalities$case == case, ]
-  ols <- stats::lm(y ~ x, data = cholera::roads[cholera::roads$street ==
-    street, ])
+  segment.data <- road.segments[road.segments$id == segment.id,
+    c("x1", "y1", "x2", "y2")]
+    
+  road.segment <- data.frame(x = c(segment.data$x1, segment.data$x2),
+                             y = c(segment.data$y1, segment.data$y2))
+
+  ols <- stats::lm(y ~ x, data = road.segment)
   road.intercept <- stats::coef(ols)[1]
   road.slope <- stats::coef(ols)[2]
   orthogonal.slope <- -1 / road.slope
