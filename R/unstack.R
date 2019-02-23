@@ -1,18 +1,3 @@
-#' Fix errors in Dodson and Tobler's digitization of Snow's map.
-#'
-#' Fixes two apparent coding errors using three misplaced cases.
-#' @seealso \code{vignette("duplicate.missing.cases")}
-#' @return An R data frame.
-#' @export
-
-fixFatalities <- function() {
-  data.fix <- data.frame(x = c(12.56974, 12.53617, 12.33145),
-                         y = c(11.51226, 11.58107, 14.80316))
-  fatalities <- HistData::Snow.deaths
-  fatalities[c(91, 93, 209), c("x", "y")] <- data.fix
-  fatalities
-}
-
 #' Unstack "stacks" in Snow's cholera map.
 #'
 #' Unstacks fatalities data by 1) assigning the coordinates of the base case to all cases in a stack and 2) setting the base case as an "address" and making the number of fatalities an attribute.
@@ -34,59 +19,42 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
     roads.list <- split(rd[, c("x", "y")], rd$street)
     border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
-    road.segments <- parallel::mclapply(unique(rd$street), function(i) {
-      dat <- rd[rd$street == i, ]
-      names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
-      seg.data <- dat[-1, c("x1", "y1")]
-      names(seg.data) <- c("x2", "y2")
-      dat <- cbind(dat[-nrow(dat), ], seg.data)
-      dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
-      dat
-    }, mc.cores = cores)
+    case.id <- fatalities$case
 
-    road.segments <- do.call(rbind, road.segments)
+    orthogonal.projection <- parallel::mclapply(case.id, function(case) {
+      case.data <- fatalities[fatalities$case == case, c("x", "y")]
 
-    orthogonal.projection <- parallel::mclapply(fatalities$case, function(i) {
-      case <- fatalities[fatalities$case == i, c("x", "y")]
-
-      within.radius <- lapply(road.segments$id, function(x) {
-        dat <- road.segments[road.segments$id == x, ]
-        test1 <- withinRadius(case, dat[, c("x1", "y1")])
-        test2 <- withinRadius(case, dat[, c("x2", "y2")])
-        if (any(test1, test2)) unique(dat$id)
+      within.radius <- lapply(cholera::road.segments$id, function(id) {
+        seg.data <- cholera::road.segments[cholera::road.segments$id == id, ]
+        test1 <- withinRadius(case.data, seg.data[, c("x1", "y1")])
+        test2 <- withinRadius(case.data, seg.data[, c("x2", "y2")])
+        if (any(test1, test2)) unique(seg.data$id)
       })
 
       within.radius <- unlist(within.radius)
 
-      ortho.proj.test <- lapply(within.radius, function(x) {
-        seg.data <- road.segments[road.segments$id == x,
+      ortho.proj.test <- lapply(within.radius, function(seg.id) {
+        ortho.data <- orthogonalProjection(case, seg.id)
+        x.proj <- ortho.data$x.proj
+        y.proj <- ortho.data$y.proj
+
+        seg.data <- cholera::road.segments[cholera::road.segments$id == seg.id,
           c("x1", "y1", "x2", "y2")]
 
         seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
                              y = c(seg.data$y1, seg.data$y2))
 
-        ols <- stats::lm(y ~ x, data = seg.df)
-        segment.slope <- stats::coef(ols)[2]
-        segment.intercept <- stats::coef(ols)[1]
-        orthogonal.slope <- -1 / segment.slope
-        orthogonal.intercept <- case$y - orthogonal.slope * case$x
-
-        x.proj <- (orthogonal.intercept - segment.intercept) /
-                  (segment.slope - orthogonal.slope)
-
-        y.proj <- segment.slope * x.proj + segment.intercept
-
         # segment bisection/intersection test
         distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
-          stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
+                 stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
 
         bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
 
         if (bisect.test) {
-          ortho.dist <- c(stats::dist(rbind(c(case$x, case$y),
-            c(x.proj, y.proj))))
+          dat <- rbind(c(case.data$x, case.data$y), c(x.proj, y.proj))
+          ortho.dist <- c(stats::dist(dat))
           ortho.pts <- data.frame(x.proj, y.proj)
-          data.frame(road.segment = x, ortho.pts, ortho.dist,
+          data.frame(road.segment = seg.id, ortho.pts, ortho.dist,
             stringsAsFactors = FALSE)
         } else {
           null.out <- data.frame(matrix(NA, ncol = 4))
@@ -107,7 +75,7 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     ortho.proj <- do.call(rbind, orthogonal.projection)
     row.names(ortho.proj) <- NULL
-    ortho.proj$case <- fatalities$case
+    ortho.proj$case <- case.id
 
     road.segment.fix <- list(
       "216-1" = c(290, 61, 174, 547, 523, 521, 138, 59, 340, 508),
@@ -145,29 +113,23 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
     # Recompute orthogonal distances
 
     ortho.projB <- parallel::mclapply(seq_along(road.segment.fix), function(i) {
-      case <- fatalities[unlist(road.segment.fix[[i]]), ]
+      case.data <- fatalities[unlist(road.segment.fix[[i]]), ]
       seg.id <- names(road.segment.fix[i])
-      seg.data <- road.segments[road.segments$id == seg.id, ]
-      seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
-                           y = c(seg.data$y1, seg.data$y2))
 
-      ols <- stats::lm(y ~ x, data = seg.df)
-      segment.slope <- stats::coef(ols)[2]
-      segment.intercept <- stats::coef(ols)[1]
-      orthogonal.slope <- -1 / segment.slope
-      orthogonal.intercept <- case$y - orthogonal.slope * case$x
+      ortho.data <- lapply(case.data$case, function(x) {
+        orthogonalProjection(x, seg.id)
+      })
 
-      x.proj <- (orthogonal.intercept - segment.intercept) /
-                (segment.slope - orthogonal.slope)
+      ortho.data <- do.call(rbind, ortho.data)
+      x.proj <- ortho.data$x.proj
+      y.proj <- ortho.data$y.proj
 
-      y.proj <- segment.slope * x.proj + segment.intercept
-
-      proj.data <- lapply(1:nrow(case), function(j) {
-        dat <- rbind(case[j, c("x", "y")], c(x.proj[j], y.proj[j]))
+      proj.data <- lapply(1:nrow(case.data), function(j) {
+        dat <- rbind(case.data[j, c("x", "y")], c(x.proj[j], y.proj[j]))
         cbind(x.proj[j], y.proj[j], c(stats::dist(dat)))
       })
 
-      out <- data.frame(seg.id, do.call(rbind, proj.data), case$case,
+      out <- data.frame(seg.id, do.call(rbind, proj.data), case.data$case,
         stringsAsFactors = FALSE)
       names(out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist", "case")
       out
@@ -189,8 +151,8 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     case.select <- 286
     case <- fatalities[case.select, ]
-    x.proj <- road.segments[road.segments$id == new.st, "x2"]
-    y.proj <- road.segments[road.segments$id == new.st, "y2"]
+    x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x2"]
+    y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y2"]
     ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
     data.fix <- data.frame(road.segment = new.st, x.proj, y.proj,
       ortho.dist = c(ortho.dist), case = case.select)
@@ -199,8 +161,8 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     case.select <- 56
     case <- fatalities[case.select, ]
-    x.proj <- road.segments[road.segments$id == new.st, "x2"]
-    y.proj <- road.segments[road.segments$id == new.st, "y2"]
+    x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x2"]
+    y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y2"]
     ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
     data.fix <- data.frame(road.segment = new.st, x.proj, y.proj,
       ortho.dist = c(ortho.dist), case = case.select)
@@ -218,8 +180,8 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     case.select <- 440
     case <- fatalities[case.select, ]
-    x.proj <- road.segments[road.segments$id == new.st, "x2"]
-    y.proj <- road.segments[road.segments$id == new.st, "y2"]
+    x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x2"]
+    y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y2"]
     ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
     data.fix <- data.frame(road.segment = new.st, x.proj, y.proj,
       ortho.dist = c(ortho.dist), case = case.select)
@@ -235,8 +197,8 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     case.select <- c(369, 434, 11, 53, 193)
     case <- fatalities[fatalities$case %in% case.select, ]
-    x.proj <- road.segments[road.segments$id == new.st, "x1"]
-    y.proj <- road.segments[road.segments$id == new.st, "y1"]
+    x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x1"]
+    y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y1"]
 
     ortho.dist <- vapply(case$case, function(x) {
       stats::dist(rbind(case[case$case == x, c("x", "y")], c(x.proj, y.proj)))
