@@ -2,16 +2,40 @@
 #'
 #' @param case Numeric. case ID from \code{fatalities}.
 #' @param segment.id Character. Road segment ID.
+#' @param use.pump Logical. Use pump ID as case.
+#' @param vestry Logical. Use vestry pump data.
 #' @return An R data frame.
 #' @export
 
-orthogonalProjection <- function(case = 12, segment.id = "216-1") {
+orthogonalProjection <- function(case = 12, segment.id = "216-1",
+  use.pump = FALSE, vestry = FALSE) {
+
   if (is.numeric(case) == FALSE) {
     stop("case must be numeric.")
   } else {
-    caseID <- cholera::fatalities$case
-    if (case %in% caseID == FALSE) {
-      stop("case must lie between 1 and ", max(caseID), ".")
+    if (use.pump == FALSE) {
+      caseID <- cholera::fatalities$case
+      if (case %in% caseID) {
+        case.data <- cholera::fatalities[cholera::fatalities$case == case, ]
+      } else {
+        stop("case must lie between 1 and ", max(caseID), ".")
+      }
+    } else {
+      if (vestry) {
+        caseID <- cholera::pumps.vestry$id
+        if (case %in% caseID) {
+          case.data <- cholera::pumps.vestry[cholera::pumps.vestry$id == case, ]
+        } else {
+          stop("case must lie between 1 and ", max(caseID), ".")
+        }
+      } else {
+        caseID <- cholera::pumps$id
+        if (case %in% caseID) {
+          case.data <- cholera::pumps[cholera::pumps$id == case, ]
+        } else {
+          stop("case must lie between 1 and ", max(caseID), ".")
+        }
+      }
     }
   }
 
@@ -24,7 +48,6 @@ orthogonalProjection <- function(case = 12, segment.id = "216-1") {
     }
   }
 
-  case.data <- cholera::fatalities[cholera::fatalities$case == case, ]
   sel <- cholera::road.segments$id == segment.id
   segment.data <- cholera::road.segments[sel, c("x1", "y1", "x2", "y2")]
   road.segment <- data.frame(x = c(segment.data$x1, segment.data$x2),

@@ -4,12 +4,17 @@
 \alias{orthogonalProjection}
 \title{Compute coordinates of orthogonal projection from case to road segment.}
 \usage{
-orthogonalProjection(case = 12, segment.id = "216-1")
+orthogonalProjection(case = 12, segment.id = "216-1",
+  use.pump = FALSE, vestry = FALSE)
 }
 \arguments{
 \item{case}{Numeric. case ID from \code{fatalities}.}
 
 \item{segment.id}{Character. Road segment ID.}
+
+\item{use.pump}{Logical. Use pump ID as case.}
+
+\item{vestry}{Logical. Use vestry pump data.}
 }
 \value{
 An R data frame.
