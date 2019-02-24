@@ -49,7 +49,7 @@ classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE,
   y.proj <- segment.slope * x.proj + segment.intercept
 
   if (coordinates) {
-    data.frame(x = x.proj, y = y.proj)
+    data.frame(x.proj, y.proj, row.names = NULL)
   } else {
     # Bisection / Intersection test
     distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
@@ -57,13 +57,17 @@ classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE,
 
     distance <- stats::dist(seg.df)
 
+    proj <- rbind(obs, data.frame(x = x.proj, y = y.proj, row.names = NULL))
+    ortho.distance <- stats::dist(proj)
+
     out <- list(case = case,
                 segment = segment,
                 ols = ols,
                 seg.df = seg.df,
                 obs = obs,
-                distance = distance,
-                test = signif(distance) == signif(distB))
+                distance = ortho.distance,
+                test = signif(distance) == signif(distB),
+                coords = data.frame(x.proj, y.proj, row.names = NULL))
 
     class(out) <- "classifier_audit"
     out
@@ -109,15 +113,9 @@ plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = "meter",
   }
 
   obs <- x$obs
-  segment.slope <- stats::coef(x$ols)[2]
-  segment.intercept <- stats::coef(x$ols)[1]
-  orthogonal.slope <- -1 / segment.slope
-  orthogonal.intercept <- obs$y - orthogonal.slope * obs$x
-
-  x.proj <- (orthogonal.intercept - segment.intercept) /
-            (segment.slope - orthogonal.slope)
-
-  y.proj <- segment.slope * x.proj + segment.intercept
+  coords <- x$coords
+  x.proj <- coords$x.proj
+  y.proj <- coords$y.proj
 
   segmentLocator(x$segment, zoom = zoom, radius = radius, title = FALSE,
     subtitle = FALSE)
@@ -151,5 +149,5 @@ plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = "meter",
   nm <- cholera::road.segments[cholera::road.segments$id == x$segment, "name"]
 
   title(main = paste0(nm, ": Segment # ", x$segment, ", Case # ", x$case),
-        sub = paste(x$test, "; dist =", round(ortho.dist, 1), d.unit))
+        sub = paste(x$test, "; ortho.dist =", round(ortho.dist, 1), d.unit))
 }
