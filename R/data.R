@@ -104,7 +104,7 @@
 #'     \item{\code{name}}{landmark name}
 #'     \item{\code{case}}{numeric case ID}
 #'  }
-#' @note \code{\link{orthoProjLandmarks}} documents the code for these data.
+#' @note \code{\link{landmarkData}} documents the code for these data.
 #' @docType data
 "landmarks"
 

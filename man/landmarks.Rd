@@ -22,6 +22,6 @@ landmarks
 Orthogonal projection of landmarks onto road network.
 }
 \note{
-\code{\link{orthoProjLandmarks}} documents the code for these data.
+\code{\link{landmarkData}} documents the code for these data.
 }
 \keyword{datasets}

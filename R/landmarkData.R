@@ -1,16 +1,10 @@
-#' Landmark data (prototype).
+#' Landmark data.
 #'
 #' Nominal and orthogonal coordinates
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @export
 
-orthoProjLandmarks <- function(multi.core = FALSE) {
-  # landmarks <- orthoProjLandmarks()
-  # landmark.squares <- landmarksSquares()
-  # usethis::use_data(landmarks)
-  # usethis::use_data(landmark.squares)
-  # usethis::use_data(landmarks, overwrite = TRUE)
-  # usethis::use_data(landmark.squares, overwrite = TRUE)
-
+landmarkData <- function(multi.core = FALSE) {
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
@@ -19,7 +13,7 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
   ## Squares ##
 
   squareExits <- function(nm = "Golden Square") {
-    dat <- road.segments[road.segments$name == nm, ]
+    dat <- cholera::road.segments[cholera::road.segments$name == nm, ]
 
     pasteCoords <- function(var1 = "x1", var2 = "y1") {
       vapply(seq_len(nrow(dat)), function(i) {
@@ -137,23 +131,9 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
 
-  road.segments <- parallel::mclapply(unique(rd$street), function(i) {
-    dat <- rd[rd$street == i, ]
-    names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
-    seg.data <- dat[-1, c("x1", "y1")]
-    names(seg.data) <- c("x2", "y2")
-    dat <- cbind(dat[-nrow(dat), ], seg.data)
-    dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
-    dat
-  }, mc.cores = cores)
-
-  road.segments <- do.call(rbind, road.segments)
-
-  orthogonal.projection <- parallel::mclapply(landmarks, function(x) {
-    case <- x
-
-    within.radius <- lapply(road.segments$id, function(x) {
-      dat <- road.segments[road.segments$id == x, ]
+  orthogonal.projection <- parallel::mclapply(landmarks, function(case) {
+    within.radius <- lapply(cholera::road.segments$id, function(x) {
+      dat <- cholera::road.segments[cholera::road.segments$id == x, ]
       test1 <- withinRadius(case, dat[, c("x1", "y1")])
       test2 <- withinRadius(case, dat[, c("x2", "y2")])
       if (any(test1, test2)) unique(dat$id)
@@ -162,7 +142,7 @@ orthoProjLandmarks <- function(multi.core = FALSE) {
     within.radius <- unlist(within.radius)
 
     ortho.proj.test <- lapply(within.radius, function(x) {
-      seg.data <- road.segments[road.segments$id == x,
+      seg.data <- cholera::road.segments[cholera::road.segments$id == x,
         c("x1", "y1", "x2", "y2")]
 
       seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
