@@ -342,6 +342,3 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
   }
 }
 
-withinRadius <- function(a, b, radius = 2) {
-  (a$x - b$x)^2 + (a$y - b$y)^2 <= radius^2
-}
