@@ -59,6 +59,10 @@ cholera 0.6.0
 - profile3D()
 - streetHighlight()
 
+# New Exported Functions #
+- fixFatalities()
+- landmarkData()
+
 # New S3 Function #
 
 - pearsonResiduals()
