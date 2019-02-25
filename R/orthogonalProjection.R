@@ -2,23 +2,25 @@
 #'
 #' @param case Numeric. case ID from \code{fatalities}.
 #' @param segment.id Character. Road segment ID.
+#' @param observed Logical. \code{FALSE} observed case; \code{TRUE} simulated case (\code{regular.cases}).
 #' @param use.pump Logical. Use pump ID as case.
+#' @param case.data Object. For use with \code{simulateFatalities}.
 #' @param vestry Logical. Use vestry pump data.
 #' @return An R data frame.
 #' @export
 
 orthogonalProjection <- function(case = 12, segment.id = "216-1",
-  use.pump = FALSE, vestry = FALSE) {
+  observed = TRUE, use.pump = FALSE, vestry = FALSE, case.data = NULL) {
 
   if (is.numeric(case) == FALSE) {
     stop("case must be numeric.")
   } else {
     if (use.pump == FALSE) {
-      caseID <- cholera::fatalities$case
-      if (case %in% caseID) {
-        case.data <- cholera::fatalities[cholera::fatalities$case == case, ]
-      } else {
-        stop("case must lie between 1 and ", max(caseID), ".")
+      if (observed) {
+        caseID <- cholera::fatalities$case
+        if (case %in% caseID) {
+          case.data <- cholera::fatalities[caseID == case, ]
+        } else stop("case must lie between 1 and ", max(caseID), ".")
       }
     } else {
       if (vestry) {

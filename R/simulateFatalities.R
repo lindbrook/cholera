@@ -24,7 +24,7 @@ simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
     border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
     ## order vertices for polygon functions ##
-    
+
     map.frame.centered <- data.frame(x = map.frame$x - mean(map.frame$x),
                                      y = map.frame$y - mean(map.frame$y))
 
@@ -50,7 +50,8 @@ simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
       within.radius <- unlist(within.radius)
 
       ortho.proj.test <- lapply(within.radius, function(seg.id) {
-        ortho.data <- orthogonalProjection(as.numeric(row.names(case)), seg.id)
+        ortho.data <- orthogonalProjection(as.numeric(row.names(case)), seg.id,
+          observed = FALSE, case.data = case)
         x.proj <- ortho.data$x.proj
         y.proj <- ortho.data$y.proj
 

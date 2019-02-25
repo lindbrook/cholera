@@ -5,16 +5,21 @@
 \title{Compute coordinates of orthogonal projection from case to road segment.}
 \usage{
 orthogonalProjection(case = 12, segment.id = "216-1",
-  use.pump = FALSE, vestry = FALSE)
+  observed = TRUE, use.pump = FALSE, vestry = FALSE,
+  case.data = NULL)
 }
 \arguments{
 \item{case}{Numeric. case ID from \code{fatalities}.}
 
 \item{segment.id}{Character. Road segment ID.}
 
+\item{observed}{Logical. \code{FALSE} observed case; \code{TRUE} simulated case (\code{regular.cases}).}
+
 \item{use.pump}{Logical. Use pump ID as case.}
 
 \item{vestry}{Logical. Use vestry pump data.}
+
+\item{case.data}{Object. For use with \code{simulateFatalities}.}
 }
 \value{
 An R data frame.
