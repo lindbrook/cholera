@@ -19,7 +19,7 @@
 #' segmentLocator("216-1")
 #' segmentLocator("216-1", unit = "yard")
 
-segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
+segmentLocator <- function(id = "216-1", zoom = FALSE, radius = 0.5, cases = "anchors",
   unit = "meter", time.unit = "minute", walking.speed = 5, title = TRUE,
   subtitle = TRUE) {
 
@@ -91,7 +91,7 @@ segmentLocator <- function(id, zoom = FALSE, radius = 0.5, cases = "anchors",
 
   segment.length <- segmentLength(id, unit)
 
-  est.time <- distanceTime(segmentLength(id), unit = time.unit, 
+  est.time <- distanceTime(segmentLength(id), unit = time.unit,
     speed = walking.speed)
 
   if (time.unit == "hour") {
