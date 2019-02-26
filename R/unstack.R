@@ -6,7 +6,7 @@
 #' @param compute Logical. \code{TRUE} computes data. \code{FALSE} uses pre-computed data.
 #' @seealso \code{vignette("unstacking.fatalities")}
 #' @return An R list that includes \code{anchor.case}, \code{fatalities.address}, \code{fatalities.unstacked} and \code{ortho.proj}.
-#' @section Notes: This function is computationally intensive. On a 2.3 GHz Intel Core i7 with R version 3.5.2, it takes approximately 168 seconds to run on one core and approximately 41 seconds to run on eight logical (four physical) cores. These functions document the code that generates \code{\link{anchor.case}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
+#' @section Notes: This function is computationally intensive. On a 2.3 GHz Intel Core i7 with R version 3.5.2, it takes approximately 195 seconds to run on one core and approximately 48 seconds to run on eight logical (four physical) cores. These functions document the code that generates \code{\link{anchor.case}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
 #' @export
 
 unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
@@ -341,4 +341,3 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
         ortho.proj = cholera::ortho.proj)
   }
 }
-
