@@ -70,17 +70,17 @@ streetNumberLocator <- function(road.number = 216, zoom = FALSE,
       y.rng <- range(cholera::roads$y)
     }
   } else if (is.numeric(zoom)) {
-    if (zoom > 0) {
+    if (zoom >= 0) {
       x.rng <- c(min(rng$x) - zoom, max(rng$x) + zoom)
       y.rng <- c(min(rng$y) - zoom, max(rng$y) + zoom)
-    } else stop("If numeric, zoom must be > 0.")
+    } else stop("If numeric, zoom must be >= 0.")
   } else stop("zoom must either be logical or numeric.")
 
   plot(cholera::fatalities[, vars], xlim = x.rng, ylim = y.rng,
     pch = NA, asp = 1)
   invisible(lapply(roads.list, lines, col = "gray"))
 
-  if (zoom) {
+  if ((is.logical(zoom) & zoom == TRUE) | is.numeric(zoom)) {
     if (is.null(cases) == FALSE) {
       id <- cholera::road.segments[cholera::road.segments$street ==
         road.number, "id"]
