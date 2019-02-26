@@ -1,6 +1,7 @@
 #' Add landmarks to plot.
 #'
 #' @param text.size Numeric. cex for text labels.
+#' @param highlight.perimeter Logical. Highlight Lion Brewery and Model Housing.
 #' @note The location of 18 Sackville Street and 28 Dean Street are approximate. Falconberg Court & Mews form an isolate: they are not part of the network of roads and are technically unreachable. Adam and Eve Court and its pump also form an isolate.
 #' @return Base R points and text.
 #' @import graphics
@@ -9,7 +10,7 @@
 #' snowMap(add.landmarks = FALSE)
 #' addLandmarks()
 
-addLandmarks <- function(text.size = 0.5) {
+addLandmarks <- function(text.size = 0.5, highlight.perimeter = TRUE) {
   # 28 Dean Street
   marx <- data.frame(x = 17.3855, y = 13.371)
   text(marx$x, marx$y, labels = "Karl\nMarx", cex = text.size)
@@ -177,4 +178,31 @@ addLandmarks <- function(text.size = 0.5) {
   x.new <- dat[1, "x"] + delta.x
   y.new <- dat[1, "y"] + delta.y
   text(x.new, y.new, labels = "Craven\nChapel", cex = text.size)
+
+  if (highlight.perimeter) {
+    lion.brewery.north <- "187-1"
+    lion.brewery.south <- "225-1"
+    lion.brewery.east <- c("197-1", "215-1")
+    lion.brewery.west <- c("224-1", "226-1")
+
+    model.housing.north <- lion.brewery.south
+    model.housing.south <- "259-1"
+    model.housing.east <- c("245-1", "245-2")
+    model.housing.west <- "259-2"
+
+    brewery <- c(lion.brewery.north, lion.brewery.south, lion.brewery.east,
+      lion.brewery.west)
+    model <- c(model.housing.north, model.housing.south, model.housing.east,
+      model.housing.west)
+    vars <- c("x1", "y1", "x2", "y2")
+
+    landmarkPerimeter <- function(seg.id, col = "dodgerblue", lwd = 2) {
+      lapply(seg.id, function(seg) {
+        dat <- cholera::road.segments[cholera::road.segments$id == seg, vars]
+        segments(dat$x1, dat$y1, dat$x2, dat$y2, col = col, lwd = lwd)
+      })
+    }
+
+    invisible(lapply(c(brewery, model), landmarkPerimeter))
+  }
 }
