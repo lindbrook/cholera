@@ -4,7 +4,7 @@
 \alias{streetNumberLocator}
 \title{Locate road by numerical ID.}
 \usage{
-streetNumberLocator(road.number = 216, zoom = FALSE, radius = 1,
+streetNumberLocator(road.number = 216, zoom = FALSE,
   cases = "anchors", token = "id", add.title = TRUE,
   add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE,
   highlight = TRUE, unit = "meter", time.unit = "second",
@@ -13,9 +13,7 @@ streetNumberLocator(road.number = 216, zoom = FALSE, radius = 1,
 \arguments{
 \item{road.number}{Numeric or integer. A whole number between 1 and 528.}
 
-\item{zoom}{Logical.}
-
-\item{radius}{Numeric.  Control the degree of zoom. Use negative values to zoom in under the range determined by selected street.}
+\item{zoom}{Logical or Numeric. Numeric (>0) controls the degree of zoom. Default value is 0.1.}
 
 \item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
 
@@ -46,5 +44,5 @@ Highlight a road and its cases. See \code{cholera::roads} for numerical IDs and 
 \examples{
 streetNumberLocator(243)
 streetNumberLocator(243, zoom = TRUE)
-streetNumberLocator(243, zoom = TRUE, radius = 0)
+streetNumberLocator(243, zoom = 0.5)
 }

@@ -4,8 +4,8 @@
 \alias{streetNameLocator}
 \title{Locate road by name.}
 \usage{
-streetNameLocator(road.name = "broad street", zoom = FALSE,
-  radius = 0.1, cases = "anchors", token = "id", add.title = TRUE,
+streetNameLocator(road.name = "Broad Street", zoom = FALSE,
+  cases = "anchors", token = "id", add.title = TRUE,
   add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE,
   highlight = TRUE, unit = "meter", time.unit = "minute",
   walking.speed = 5)
@@ -13,9 +13,7 @@ streetNameLocator(road.name = "broad street", zoom = FALSE,
 \arguments{
 \item{road.name}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.}
 
-\item{zoom}{Logical.}
-
-\item{radius}{Numeric. Control the degree of zoom. Use negative values to zoom in under the range determined by selected street.}
+\item{zoom}{Logical or Numeric. Numeric (>0) controls the degree of zoom. Default value is 0.1.}
 
 \item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
 
@@ -47,5 +45,5 @@ Highlight a road and its cases. See the list of road names in \code{vignette}("r
 streetNameLocator("Oxford Street")
 streetNameLocator("oxford street")
 streetNameLocator("Cambridge Street", zoom = TRUE)
-streetNameLocator("Cambridge Street", zoom = TRUE, radius = 0)
+streetNameLocator("Cambridge Street", zoom = 0.5)
 }

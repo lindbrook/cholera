@@ -2,8 +2,7 @@
 #'
 #' Highlight a road and its cases. See the list of road names in \code{vignette}("road.names").
 #' @param road.name Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.
-#' @param zoom Logical.
-#' @param radius Numeric. Control the degree of zoom. Use negative values to zoom in under the range determined by selected street.
+#' @param zoom Logical or Numeric. Numeric (>0) controls the degree of zoom. Default value is 0.1.
 #' @param cases Character. Plot cases: \code{NULL}, "anchors" or "all".
 #' @param token Character. "id" or "point".
 #' @param add.title Logical. Include title.
@@ -21,12 +20,12 @@
 #' streetNameLocator("Oxford Street")
 #' streetNameLocator("oxford street")
 #' streetNameLocator("Cambridge Street", zoom = TRUE)
-#' streetNameLocator("Cambridge Street", zoom = TRUE, radius = 0)
+#' streetNameLocator("Cambridge Street", zoom = 0.5)
 
 streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
-  radius = 0.1, cases = "anchors", token = "id", add.title = TRUE,
-  add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE, highlight = TRUE,
-  unit = "meter", time.unit = "minute", walking.speed = 5) {
+  cases = "anchors", token = "id", add.title = TRUE, add.subtitle = TRUE,
+  add.pump = TRUE, vestry = FALSE, highlight = TRUE, unit = "meter",
+  time.unit = "minute", walking.speed = 5) {
 
   real.road.names <- unique(cholera::roads$name)
   vars <- c("x", "y")
@@ -65,20 +64,28 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
   roads.list <- split(cholera::roads[, vars], cholera::roads$street)
 
   rng <- lapply(cholera::roads[cholera::roads$name == name, vars], range)
-  x.rng <- c(min(rng$x) - radius, max(rng$x) + radius)
-  y.rng <- c(min(rng$y) - radius, max(rng$y) + radius)
 
-  if (zoom == FALSE) {
-    plot(cholera::fatalities[, vars], xlim = range(cholera::roads$x),
-      ylim = range(cholera::roads$y), pch = 15, cex = 0.5, col = "gray",
-      asp = 1)
-    invisible(lapply(roads.list, lines, col = "gray"))
+  if (is.logical(zoom)) {
+    if (zoom) {
+      radius <- 0.1
+      x.rng <- c(min(rng$x) - radius, max(rng$x) + radius)
+      y.rng <- c(min(rng$y) - radius, max(rng$y) + radius)
+    } else {
+      x.rng <- range(cholera::roads$x)
+      y.rng <- range(cholera::roads$y)
+    }
+  } else if (is.numeric(zoom)) {
+    if (zoom > 0) {
+      x.rng <- c(min(rng$x) - zoom, max(rng$x) + zoom)
+      y.rng <- c(min(rng$y) - zoom, max(rng$y) + zoom)
+    } else stop("If numeric, zoom must be > 0.")
+  } else stop("zoom must either be logical or numeric.")
 
-  } else {
-    plot(cholera::fatalities[, vars], xlim = x.rng, ylim = y.rng,
-      pch = NA, asp = 1)
-    invisible(lapply(roads.list, lines, col = "gray"))
+  plot(cholera::fatalities[, vars], xlim = x.rng, ylim = y.rng,
+    pch = NA, asp = 1)
+  invisible(lapply(roads.list, lines, col = "gray"))
 
+  if (zoom) {
     if (is.null(cases) == FALSE) {
       id <- cholera::road.segments[cholera::road.segments$name == name, "id"]
       seg.ortho <- cholera::ortho.proj[cholera::ortho.proj$road.segment %in%
