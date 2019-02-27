@@ -13,7 +13,7 @@ streetNameLocator(road.name = "Broad Street", zoom = FALSE,
 \arguments{
 \item{road.name}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.}
 
-\item{zoom}{Logical or Numeric. Numeric (>0) controls the degree of zoom. Default value is 0.1.}
+\item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is FALSE, which is equivalent to zero.}
 
 \item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
 

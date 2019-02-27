@@ -13,7 +13,7 @@ streetNumberLocator(road.number = 216, zoom = FALSE,
 \arguments{
 \item{road.number}{Numeric or integer. A whole number between 1 and 528.}
 
-\item{zoom}{Logical or Numeric. Numeric (>0) controls the degree of zoom. Default value is 0.1.}
+\item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is FALSE, which is equivalent to zero.}
 
 \item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
 

@@ -2,7 +2,7 @@
 #'
 #' Highlight a road and its cases. See the list of road names in \code{vignette}("road.names").
 #' @param road.name Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.
-#' @param zoom Logical or Numeric. Numeric (>0) controls the degree of zoom. Default value is 0.1.
+#' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is FALSE, which is equivalent to zero.
 #' @param cases Character. Plot cases: \code{NULL}, "anchors" or "all".
 #' @param token Character. "id" or "point".
 #' @param add.title Logical. Include title.
