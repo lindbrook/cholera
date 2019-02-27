@@ -1,4 +1,4 @@
-#' Plot Euclidean path pump neighborhoods.
+#' Compute Euclidean path pump neighborhoods.
 #'
 #' Plots star graph from pump to its cases.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
