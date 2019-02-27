@@ -6,9 +6,8 @@
 \usage{
 addWalkingPath(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
-  time.unit = "second", walking.speed = 5, zoom = TRUE,
-  radius = 0.5, unit.posts = "distance", unit.interval = NULL,
-  alpha.level = 1)
+  time.unit = "second", walking.speed = 5, unit.posts = "distance",
+  unit.interval = NULL, alpha.level = 1)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
@@ -29,10 +28,6 @@ addWalkingPath(origin = 1, destination = NULL, type = "case-pump",
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
-\item{zoom}{Logical.}
-
-\item{radius}{Numeric. Controls the degree of zoom.}
-
 \item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
 
 \item{unit.interval}{Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.}
@@ -49,6 +44,7 @@ Add the shortest walking path between a selected cases or pumps.
 The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using cholera::distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of \code{Inf}. Arrow points represent mileposts or timeposts to the destination.
 }
 \examples{
-streetNameLocator("broad street", zoom = TRUE, highlight = FALSE, add.subtitle = FALSE)
+streetNameLocator("broad street", zoom = TRUE, highlight = FALSE,
+  add.subtitle = FALSE)
 addWalkingPath(447)
 }

@@ -9,8 +9,6 @@
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. \code{unit} is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
-#' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom.
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts.
 #' @param unit.interval Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
@@ -18,13 +16,14 @@
 #' @return An R list with two elements: a character vector of path nodes and a data frame summary.
 #' @export
 #' @examples
-#' streetNameLocator("broad street", zoom = TRUE, highlight = FALSE, add.subtitle = FALSE)
+#' streetNameLocator("broad street", zoom = TRUE, highlight = FALSE,
+#'   add.subtitle = FALSE)
 #' addWalkingPath(447)
 
 addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
-  time.unit = "second", walking.speed = 5, zoom = TRUE, radius = 0.5,
-  unit.posts = "distance", unit.interval = NULL, alpha.level = 1) {
+  time.unit = "second", walking.speed = 5, unit.posts = "distance",
+  unit.interval = NULL, alpha.level = 1) {
 
   arguments <- list(origin = origin,
                     destination = destination,
@@ -159,30 +158,6 @@ addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }
   }
 
-  dat.plus.origin <- rbind(dat, origin.obs)
-
-  if (is.null(x$destination) == FALSE) {
-    if (grepl("Square", x$origin) & grepl("Square", x$destination)) {
-      dat.plus.origin <- rbind(dat.plus.origin, sq.origin, sq.destination)
-    } else if (grepl("Square", x$origin) & !grepl("Square", x$destination)) {
-      dat.plus.origin <- rbind(dat.plus.origin, sq.origin)
-    } else if (!grepl("Square", x$origin) & grepl("Square", x$destination)) {
-      dat.plus.origin <- rbind(dat.plus.origin, sq.destination)
-    }
-  } else {
-    if (grepl("Square", x$origin)) {
-      dat.plus.origin <- rbind(dat.plus.origin, sq.origin)
-    }
-  }
-
-  if (zoom) {
-    x.rng <- c(min(dat.plus.origin$x) - radius, max(dat.plus.origin$x) + radius)
-    y.rng <- c(min(dat.plus.origin$y) - radius, max(dat.plus.origin$y) + radius)
-  } else {
-    x.rng <- range(cholera::roads$x)
-    y.rng <- range(cholera::roads$y)
-  }
-
   if (x$vestry) {
     pump.names <- paste0("p", cholera::pumps.vestry$id)
     points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
@@ -202,70 +177,68 @@ addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
 
   if (x$type %in% c("case-pump", "cases")) {
-    if (zoom) {
-      if (x$observed) {
-        if (is.numeric(x$origin)) {
-          text(cholera::fatalities[cholera::fatalities$case == x$origin,
-            c("x", "y")], labels = x$origin, pos = 1, col = "red")
-        } else if (is.character(x$origin)) {
-          if (x$origin == "Soho Square") {
-            text(sq.center.origin$x, sq.center.origin$y,
-              labels = "Soho\nSquare", col = "red", cex = 0.8)
-          } else if (x$origin == "Golden Square") {
-            text(sq.center.origin$x, sq.center.origin$y,
-              labels = "Golden\nSquare", col = "red", cex = 0.8)
-          } else {
-            text(cholera::landmarks[cholera::landmarks$name == x$origin,
-              c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
-          }
-        }
-
-        if (is.null(x$destination) == FALSE) {
-          if (is.character(x$destination)) {
-            if (x$destination == "Soho Square") {
-              text(sq.center.destination$x, sq.center.destination$y,
-                labels = "Soho\nSquare", col = "red", cex = 0.8)
-            } else if (x$destination == "Golden Square") {
-              text(sq.center.destination$x, sq.center.destination$y,
-                labels = "Golden\nSquare", col = "red", cex = 0.8)
-            } else {
-              text(cholera::landmarks[cholera::landmarks$name == x$destination,
-                c("x.proj", "y.proj")], labels = x$destination, pos = 1,
-                col = "red")
-            }
-          }
-        }
-
-        if (x$type == "cases") {
-          if (is.null(x$destination) | is.numeric(x$destination)) {
-            text(cholera::fatalities[cholera::fatalities$case == x$data$caseB,
-              c("x", "y")], labels = x$data$caseB, pos = 1, col = "red")
-          } else if (is.character(x$destination)) {
-            if (grepl("Square", x$destination) == FALSE) {
-              text(cholera::landmarks[cholera::landmarks$case == x$data$anchorB,
-                c("x.proj", "y.proj")], labels = x$data$caseB, pos = 1,
-                col = "red")
-            }
-          }
-        }
-
-      } else {
-        if (is.numeric(x$origin)) {
-          text(cholera::regular.cases[x$origin, ], labels = x$origin, pos = 1,
-            col = "red")
-        } else if (is.character(x$origin)) {
+    if (x$observed) {
+      if (is.numeric(x$origin)) {
+        text(cholera::fatalities[cholera::fatalities$case == x$origin,
+          c("x", "y")], labels = x$origin, pos = 1, col = "red")
+      } else if (is.character(x$origin)) {
+        if (x$origin == "Soho Square") {
+          text(sq.center.origin$x, sq.center.origin$y,
+            labels = "Soho\nSquare", col = "red", cex = 0.8)
+        } else if (x$origin == "Golden Square") {
+          text(sq.center.origin$x, sq.center.origin$y,
+            labels = "Golden\nSquare", col = "red", cex = 0.8)
+        } else {
           text(cholera::landmarks[cholera::landmarks$name == x$origin,
             c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
         }
+      }
 
-        if (x$type == "cases") {
-          if (is.numeric(x$destination)) {
-            text(cholera::regular.cases[x$data$caseB, ], labels = x$data$caseB,
-              pos = 1, col = "red")
-          } else if (is.character(x$origin)) {
-            text(cholera::landmarks[cholera::landmarks$name == x$origin,
-              c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
+      if (is.null(x$destination) == FALSE) {
+        if (is.character(x$destination)) {
+          if (x$destination == "Soho Square") {
+            text(sq.center.destination$x, sq.center.destination$y,
+              labels = "Soho\nSquare", col = "red", cex = 0.8)
+          } else if (x$destination == "Golden Square") {
+            text(sq.center.destination$x, sq.center.destination$y,
+              labels = "Golden\nSquare", col = "red", cex = 0.8)
+          } else {
+            text(cholera::landmarks[cholera::landmarks$name == x$destination,
+              c("x.proj", "y.proj")], labels = x$destination, pos = 1,
+              col = "red")
           }
+        }
+      }
+
+      if (x$type == "cases") {
+        if (is.null(x$destination) | is.numeric(x$destination)) {
+          text(cholera::fatalities[cholera::fatalities$case == x$data$caseB,
+            c("x", "y")], labels = x$data$caseB, pos = 1, col = "red")
+        } else if (is.character(x$destination)) {
+          if (grepl("Square", x$destination) == FALSE) {
+            text(cholera::landmarks[cholera::landmarks$case == x$data$anchorB,
+              c("x.proj", "y.proj")], labels = x$data$caseB, pos = 1,
+              col = "red")
+          }
+        }
+      }
+
+    } else {
+      if (is.numeric(x$origin)) {
+        text(cholera::regular.cases[x$origin, ], labels = x$origin, pos = 1,
+          col = "red")
+      } else if (is.character(x$origin)) {
+        text(cholera::landmarks[cholera::landmarks$name == x$origin,
+          c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
+      }
+
+      if (x$type == "cases") {
+        if (is.numeric(x$destination)) {
+          text(cholera::regular.cases[x$data$caseB, ], labels = x$data$caseB,
+            pos = 1, col = "red")
+        } else if (is.character(x$origin)) {
+          text(cholera::landmarks[cholera::landmarks$name == x$origin,
+            c("x.proj", "y.proj")], labels = x$origin, pos = 1, col = "red")
         }
       }
     }
