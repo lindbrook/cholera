@@ -50,7 +50,7 @@ This function is computationally intensive. On a single core of a 2.3 GHz Intel 
 \examples{
 \dontrun{
 
-streetNameLocator("marshall street", zoom = TRUE, radius = 0.5)
+streetNameLocator("marshall street", zoom = 0.5)
 addNeighborhoodWalking()
 }
 }

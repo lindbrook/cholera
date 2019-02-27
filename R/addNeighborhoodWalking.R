@@ -21,7 +21,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' streetNameLocator("marshall street", zoom = TRUE, radius = 0.5)
+#' streetNameLocator("marshall street", zoom = 0.5)
 #' addNeighborhoodWalking()
 #' }
 

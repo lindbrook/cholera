@@ -14,12 +14,12 @@
 #' @examples
 #' \dontrun{
 #'
-#' streetNameLocator("marshall street", zoom = TRUE, radius = 0.5,
-#'   highlight = FALSE, add.subtitle = FALSE)
+#' streetNameLocator("marshall street", zoom = 0.5, highlight = FALSE,
+#'   add.subtitle = FALSE)
 #' addNeighborhoodEuclidean()
 #'
-#' streetNameLocator("marshall street", zoom = TRUE, radius = 0.5,
-#'   highlight = FALSE, add.subtitle = FALSE)
+#' streetNameLocator("marshall street", zoom = 0.5, highlight = FALSE,
+#'   add.subtitle = FALSE)
 #' addNeighborhoodEuclidean(type = "area.points")
 #' }
 
