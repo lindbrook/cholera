@@ -5,7 +5,7 @@
 \title{Compute path of the Euclidean distance between cases and/or pumps.}
 \usage{
 euclideanPath(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, case.location = "address", landmark.cases = TRUE,
+  observed = TRUE, case.location = "nominal", landmark.cases = TRUE,
   vestry = FALSE, unit = "meter", time.unit = "second",
   walking.speed = 5, multi.core = FALSE)
 }
@@ -42,8 +42,6 @@ Compute path of the Euclidean distance between cases and/or pumps.
 The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
 }
 \examples{
-\dontrun{
-
 # path from case 1 to nearest pump.
 euclideanPath(1)
 
@@ -67,5 +65,4 @@ lapply(1:3, euclideanPath)
 
 # plot path
 plot(euclideanPath(1))
-}
 }

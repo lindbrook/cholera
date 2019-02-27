@@ -628,8 +628,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' Plot the walking path between selected cases and/or pumps.
 #'
 #' @param x An object of class "walking_path" created by walkingPath().
-#' @param zoom Logical.
-#' @param radius Numeric. Control the degree of zoom.
+#' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.
 #' @param unit.interval Numeric. Set interval between posts. When \code{unit.posts = "distance"}, \code{unit.interval} defaults to 50 meters. When \code{unit.posts = "time"}, \code{unit.interval} defaults to 60 seconds.
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
@@ -644,8 +643,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' plot(walkingPath(15), unit.posts = "time")
 #' }
 
-plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
-  unit.posts = "distance", unit.interval = NULL, alpha.level = 1, ...) {
+plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
+  unit.interval = NULL, alpha.level = 1, ...) {
 
   if (class(x) != "walking_path") {
     stop('x\'s class must be "walking_path".')
@@ -807,13 +806,23 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
       sq.center.destination)
   }
 
-  if (zoom) {
-    x.rng <- c(min(dat.plus.origin$x) - radius, max(dat.plus.origin$x) + radius)
-    y.rng <- c(min(dat.plus.origin$y) - radius, max(dat.plus.origin$y) + radius)
-  } else {
-    x.rng <- range(cholera::roads$x)
-    y.rng <- range(cholera::roads$y)
-  }
+  if (is.logical(zoom)) {
+    if (zoom) {
+      padding <- 0.1
+      x.rng <- c(min(dat.plus.origin$x) - padding,
+                 max(dat.plus.origin$x) + padding)
+      y.rng <- c(min(dat.plus.origin$y) - padding,
+                 max(dat.plus.origin$y) + padding)
+    } else {
+      x.rng <- range(cholera::roads$x)
+      y.rng <- range(cholera::roads$y)
+    }
+  } else if (is.numeric(zoom)) {
+    if (zoom >= 0) {
+      x.rng <- c(min(dat.plus.origin$x) - zoom, max(dat.plus.origin$x) + zoom)
+      y.rng <- c(min(dat.plus.origin$y) - zoom, max(dat.plus.origin$y) + zoom)
+    } else stop("If numeric, zoom must be >= 0.")
+  } else stop("zoom must either be logical or numeric.")
 
   plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
     xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
@@ -860,7 +869,7 @@ plot.walking_path <- function(x, zoom = TRUE, radius = 0.5,
   points(dat[1, c("x", "y")], col = case.color, pch = 0)
   points(dat[nrow(dat), c("x", "y")], col = case.color, pch = 0)
 
-  if (zoom) {
+  if ((is.logical(zoom) & zoom == TRUE) | is.numeric(zoom)) {
     if (x$type %in% c("case-pump", "cases")) {
       if (is.numeric(ego)) {
         text(case.data[case.data$case == ego.data$anchor, c("x", "y")],

@@ -4,18 +4,15 @@
 \alias{caseLocator}
 \title{Locate case by numerical ID.}
 \usage{
-caseLocator(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
-  add.title = TRUE, highlight.segment = TRUE, data = FALSE,
-  add = FALSE, col = "red")
+caseLocator(case = 1, zoom = 1, observed = TRUE, add.title = TRUE,
+  highlight.segment = TRUE, data = FALSE, add = FALSE, col = "red")
 }
 \arguments{
 \item{case}{Numeric or Integer. Whole number between 1 and 578.}
 
-\item{zoom}{Logical.}
+\item{zoom}{Logical or Numeric.A numeric value >= 0 controls the degree of zoom. The default is 1.}
 
 \item{observed}{Logical. \code{TRUE} for observed. \code{FALSE} for simulated.}
-
-\item{radius}{Numeric. Controls the degree of zoom.}
 
 \item{add.title}{Logical. Include title.}
 

@@ -2,8 +2,7 @@
 #'
 #' Highlight selected water pump.
 #' @param id Numeric or Integer. With \code{vestry = TRUE}, a whole number between 1 and 14. With \code{vestry = FALSE}, a whole number between 1 and 13. See \code{cholera::pumps.vestry} and \code{cholera::pumps} for IDs and details about specific pumps.
-#' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom.
+#' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 1.
 #' @param vestry Logical. \code{TRUE} for the 14 pumps from Vestry Report. \code{FALSE} for the original 13 pumps.
 #' @param add.title Logical. Include title.
 #' @param highlight.segment Logical. Highlight case's segment.
@@ -16,8 +15,8 @@
 #' pumpLocator(zoom = TRUE)
 #' pumpLocator(14, vestry = TRUE, zoom = TRUE)
 
-pumpLocator <- function(id = 7, zoom = FALSE, radius = 1, vestry = FALSE,
-  add.title = TRUE, highlight.segment = TRUE, data = FALSE) {
+pumpLocator <- function(id = 7, zoom = 1,  vestry = FALSE, add.title = TRUE,
+  highlight.segment = TRUE, data = FALSE) {
 
   if (is.numeric(id) == FALSE) {
     stop('id must be numeric.')
@@ -44,15 +43,26 @@ pumpLocator <- function(id = 7, zoom = FALSE, radius = 1, vestry = FALSE,
   seg.data <- cholera::road.segments[cholera::road.segments$id == p.seg, ]
 
   if (data == FALSE) {
-    if (zoom) {
-      x.rng <- c(p.data[p.data$id == id, "x"] - radius,
-                 p.data[p.data$id == id, "x"] + radius)
-      y.rng <- c(p.data[p.data$id == id, "y"] - radius,
-                 p.data[p.data$id == id, "y"] + radius)
-     } else {
-       x.rng <- range(cholera::roads$x)
-       y.rng <- range(cholera::roads$y)
-     }
+    if ((is.logical(zoom) & zoom == TRUE) | is.numeric(zoom)) {
+      if (is.logical(zoom)) {
+        padding <- 0.1
+        x.rng <- c(p.data[p.data$id == id, "x"] - padding,
+                   p.data[p.data$id == id, "x"] + padding)
+        y.rng <- c(p.data[p.data$id == id, "y"] - padding,
+                   p.data[p.data$id == id, "y"] + padding)
+
+      } else if (is.numeric(zoom)) {
+        if (zoom >= 0) {
+          x.rng <- c(p.data[p.data$id == id, "x"] - zoom,
+                     p.data[p.data$id == id, "x"] + zoom)
+          y.rng <- c(p.data[p.data$id == id, "y"] - zoom,
+                     p.data[p.data$id == id, "y"] + zoom)
+        } else stop("If numeric, zoom must be >= 0.")
+      } else stop("zoom must either be logical or numeric.")
+    } else {
+      x.rng <- range(cholera::roads$x)
+      y.rng <- range(cholera::roads$y)
+    }
 
     plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
       pch = 15, cex = 0.5, col = "lightgray", asp = 1)
@@ -64,7 +74,7 @@ pumpLocator <- function(id = 7, zoom = FALSE, radius = 1, vestry = FALSE,
     text(p.data[p.data$id == id, c("x", "y")],
       label = p.data$id[p.data$id == id], pos = 1, col = "red")
 
-    if (zoom) {
+    if ((is.logical(zoom) & zoom == TRUE) | is.numeric(zoom)) {
       if (highlight.segment) {
         segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2,
           col = "red", lwd = 2)

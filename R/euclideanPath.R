@@ -15,8 +15,6 @@
 #' @return An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
 #' @export
 #' @examples
-#' \dontrun{
-#'
 #' # path from case 1 to nearest pump.
 #' euclideanPath(1)
 #'
@@ -40,10 +38,9 @@
 #'
 #' # plot path
 #' plot(euclideanPath(1))
-#' }
 
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, case.location = "address", landmark.cases = TRUE,
+  observed = TRUE, case.location = "nominal", landmark.cases = TRUE,
   vestry = FALSE, unit = "meter", time.unit = "second", walking.speed = 5,
   multi.core = FALSE) {
 
@@ -581,8 +578,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' Plot the path of the Euclidean distance between cases and/or pumps.
 #'
 #' @param x An object of class "euclidean_path" created by euclideanPath().
-#' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom.
+#' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; \code{NULL} for no posts.
 #' @param unit.interval Numeric. Set interval between posts. When \code{unit.posts} is "distance", \code{unit.interval} automatically defaults to 50 meters. When \code{unit.posts} is "time", \code{unit.interval} automatically defaults to 60 seconds.
 #' @param ... Additional plotting parameters.
@@ -592,8 +588,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' plot(euclideanPath(15))
 #' plot(euclideanPath(15), unit.posts = "time")
 
-plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
-  unit.posts = "distance", unit.interval = NULL, ...) {
+plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
+  unit.interval = NULL, ...) {
 
   if (class(x) != "euclidean_path") {
     stop('"x"\'s class must be "euclidean_path".')
@@ -610,13 +606,21 @@ plot.euclidean_path <- function(x, zoom = TRUE, radius = 0.5,
   alter.xy <- stats::setNames(x$alter, c("x", "y"))
   dat <- rbind(alter.xy, ego.xy)
 
-  if (zoom) {
-    x.rng <- c(min(dat$x) - radius, max(dat$x) + radius)
-    y.rng <- c(min(dat$y) - radius, max(dat$y) + radius)
-  } else {
-    x.rng <- range(cholera::roads$x)
-    y.rng <- range(cholera::roads$y)
-  }
+  if (is.logical(zoom)) {
+    if (zoom) {
+      padding <- 0.1
+      x.rng <- c(min(dat$x) - padding, max(dat$x) + padding)
+      y.rng <- c(min(dat$y) - padding, max(dat$y) + padding)
+    } else {
+      x.rng <- range(cholera::roads$x)
+      y.rng <- range(cholera::roads$y)
+    }
+  } else if (is.numeric(zoom)) {
+    if (zoom >= 0) {
+      x.rng <- c(min(dat$x) - zoom, max(dat$x) + zoom)
+      y.rng <- c(min(dat$y) - zoom, max(dat$y) + zoom)
+    } else stop("If numeric, zoom must be >= 0.")
+  } else stop("zoom must either be logical or numeric.")
 
   plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
     xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)

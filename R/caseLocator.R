@@ -2,9 +2,8 @@
 #'
 #' Highlight selected observed or simulated case and its home road segment.
 #' @param case Numeric or Integer. Whole number between 1 and 578.
-#' @param zoom Logical.
+#' @param zoom Logical or Numeric.A numeric value >= 0 controls the degree of zoom. The default is 1.
 #' @param observed Logical. \code{TRUE} for observed. \code{FALSE} for simulated.
-#' @param radius Numeric. Controls the degree of zoom.
 #' @param add.title Logical. Include title.
 #' @param highlight.segment Logical. Highlight case's segment.
 #' @param data Logical. Output data.
@@ -18,9 +17,8 @@
 #' caseLocator(290, zoom = TRUE)
 #' caseLocator(290, observed = FALSE)
 
-caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
-  add.title = TRUE, highlight.segment = TRUE, data = FALSE, add = FALSE,
-  col = "red") {
+caseLocator <- function(case = 1, zoom = 1, observed = TRUE, add.title = TRUE,
+  highlight.segment = TRUE, data = FALSE, add = FALSE, col = "red") {
 
   if (!is.numeric(case)) {
     stop("case must be numeric.")
@@ -58,20 +56,39 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE, radius = 1,
     }
 
     if (data == FALSE) {
-      if (zoom) {
-        if (observed) {
-          x.rng <- c(
-            cholera::fatalities[cholera::fatalities$case == case, "x"] - radius,
-            cholera::fatalities[cholera::fatalities$case == case, "x"] + radius)
-          y.rng <- c(
-            cholera::fatalities[cholera::fatalities$case == case, "y"] - radius,
-            cholera::fatalities[cholera::fatalities$case == case, "y"] + radius)
-        } else {
-          x.rng <- c(cholera::regular.cases[case, "x"] - radius,
-                     cholera::regular.cases[case, "x"] + radius)
-          y.rng <- c(cholera::regular.cases[case, "y"] - radius,
-                     cholera::regular.cases[case, "y"] + radius)
-        }
+      if ((is.logical(zoom) & zoom == TRUE) | is.numeric(zoom)) {
+        sel <- cholera::fatalities$case == case
+
+        if (is.logical(zoom)) {
+          padding <- 0.1
+
+          if (observed) {
+            x.rng <- c(cholera::fatalities[sel, "x"] - padding,
+                       cholera::fatalities[sel, "x"] + padding)
+            y.rng <- c(cholera::fatalities[sel, "y"] - padding,
+                       cholera::fatalities[sel, "y"] + padding)
+          } else {
+            x.rng <- c(cholera::regular.cases[case, "x"] - padding,
+                       cholera::regular.cases[case, "x"] + padding)
+            y.rng <- c(cholera::regular.cases[case, "y"] - padding,
+                       cholera::regular.cases[case, "y"] + padding)
+          }
+        } else if (is.numeric(zoom)) {
+          if (zoom >= 0) {
+            if (observed) {
+              x.rng <- c(cholera::fatalities[sel, "x"] - zoom,
+                         cholera::fatalities[sel, "x"] + zoom)
+              y.rng <- c(cholera::fatalities[sel, "y"] - zoom,
+                         cholera::fatalities[sel, "y"] + zoom)
+            } else {
+              x.rng <- c(cholera::regular.cases[case, "x"] - zoom,
+                         cholera::regular.cases[case, "x"] + zoom)
+              y.rng <- c(cholera::regular.cases[case, "y"] - zoom,
+                         cholera::regular.cases[case, "y"] + zoom)
+            }
+          } else stop("If numeric, zoom must be >= 0.")
+        } else stop("zoom must either be logical or numeric.")
+
       } else {
         x.rng <- range(cholera::roads$x)
         y.rng <- range(cholera::roads$y)

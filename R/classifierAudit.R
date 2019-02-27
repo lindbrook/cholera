@@ -96,8 +96,7 @@ print.classifier_audit <- function(x, ...) {
 #'
 #' Plot case, segment and orthogonal projector.
 #' @param x An object of class "classifier_audit" created by \code{classifierAudit()}.
-#' @param zoom Logical.
-#' @param radius Numeric. Controls the degree of zoom.
+#' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.
 #' @param unit Character. Unit of distance: "meter" (the default), "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.
 #' @param ... Additional parameters.
 #' @return A base R graphic.
@@ -105,9 +104,7 @@ print.classifier_audit <- function(x, ...) {
 #' @examples
 #' plot(classifierAudit(case = 483, segment = "326-2"))
 
-plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = "meter",
-  ...) {
-
+plot.classifier_audit <- function(x, zoom = 0.5, unit = "meter", ...) {
   if (unit %in% c("meter", "yard", "native") == FALSE) {
     stop('unit must be "meter", "yard" or "native".')
   }
@@ -117,8 +114,7 @@ plot.classifier_audit <- function(x, zoom = TRUE, radius = 0.5, unit = "meter",
   x.proj <- coords$x.proj
   y.proj <- coords$y.proj
 
-  segmentLocator(x$segment, zoom = zoom, radius = radius, title = FALSE,
-    subtitle = FALSE)
+  segmentLocator(x$segment, zoom = zoom, title = FALSE, subtitle = FALSE)
 
   # Bisection / Intersection test
   distB <- stats::dist(rbind(x$seg.df[1, ], c(x.proj, y.proj))) +
