@@ -8,7 +8,7 @@
 
 1 Note:
 
-Version: 0.5.1   
+Version: 0.5.1
 Check: installed package size   
 Result: NOTE   
      installed size is 5.0Mb   
@@ -30,7 +30,7 @@ R-release: R 3.5.2 (2018-12-20): x86_64-w64-mingw32 (64-bit)
 * 0 errors | 0 warnings | 0 notes
 
 
-R-devel: R Under development (2019-02-15 r76107): x86_64-w64-mingw32 (64-bit)
+R-devel: R Under development (2019-02-26 r76164): x86_64-w64-mingw32 (64-bit)
 
 * 0 errors | 0 warnings | 0 notes
 
