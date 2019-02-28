@@ -7,7 +7,7 @@
 #' @param bandwidth Numeric. Bandwidth for kernel density estimation.
 #' @param color Character. Color of contour lines.
 #' @param line.type Character. Line type for contour lines.
-#' @param obs.unit Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.
+#' @param cases Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @param ... Additional plotting parameters.
 #' @return Add contours to a graphics plot.
@@ -31,12 +31,12 @@
 #' }
 
 addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
-  neighborhood.type = "walking", obs.unit = "unstacked", bandwidth = 0.5,
+  neighborhood.type = "walking", cases = "unstacked", bandwidth = 0.5,
   color = "black", line.type = "solid", multi.core = FALSE, ...) {
 
-  if (!is.null(obs.unit) & !all(obs.unit %in%
+  if (!is.null(cases) & !all(cases %in%
       c("unstacked", "address", "fatality"))) {
-    stop('obs.unit must be "unstacked", "address" or "fatality".')
+    stop('cases must be "unstacked", "address" or "fatality".')
   }
 
   if (!all(neighborhood.type %in% c("voronoi", "walking"))) {
@@ -56,11 +56,11 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
   if (is.null(pump.select)) {
     if (all(is.character(pump.subset))) {
       if (pump.subset == "pooled") {
-        if (obs.unit == "unstacked") {
+        if (cases == "unstacked") {
           dat <- cholera::fatalities.unstacked[, vars]
-        } else if (obs.unit == "address") {
+        } else if (cases == "address") {
           dat <- cholera::fatalities.address[, vars]
-        } else if (obs.unit == "fatality") {
+        } else if (cases == "fatality") {
           dat <- cholera::fatalities[, vars]
         }
 

@@ -5,7 +5,7 @@
 \title{Add 2D kernel density contours.}
 \usage{
 addKernelDensity(pump.subset = "pooled", pump.select = NULL,
-  neighborhood.type = "walking", obs.unit = "unstacked",
+  neighborhood.type = "walking", cases = "unstacked",
   bandwidth = 0.5, color = "black", line.type = "solid",
   multi.core = FALSE, ...)
 }
@@ -16,7 +16,7 @@ addKernelDensity(pump.subset = "pooled", pump.select = NULL,
 
 \item{neighborhood.type}{Character. "voronoi" or "walking"}
 
-\item{obs.unit}{Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.}
+\item{cases}{Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.}
 
 \item{bandwidth}{Numeric. Bandwidth for kernel density estimation.}
 
