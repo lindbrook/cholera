@@ -4,7 +4,7 @@
 \alias{segmentLocator}
 \title{Locate road segment by ID.}
 \usage{
-segmentLocator(id = "216-1", zoom = 0.5, cases = "anchors",
+segmentLocator(id = "216-1", zoom = 0.5, cases = "address",
   unit = "meter", time.unit = "minute", walking.speed = 5,
   title = TRUE, subtitle = TRUE)
 }
@@ -13,7 +13,7 @@ segmentLocator(id = "216-1", zoom = 0.5, cases = "anchors",
 
 \item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.}
 
-\item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
+\item{cases}{Character. Plot cases: \code{NULL}, "address" or "fatality".}
 
 \item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 

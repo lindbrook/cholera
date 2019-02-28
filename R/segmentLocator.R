@@ -3,7 +3,7 @@
 #' Highlights the selected road segment and its cases.
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.
 #' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.
-#' @param cases Character. Plot cases: \code{NULL}, "anchors" or "all".
+#' @param cases Character. Plot cases: \code{NULL}, "address" or "fatality".
 #' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
@@ -18,7 +18,7 @@
 #' segmentLocator("216-1")
 #' segmentLocator("216-1", unit = "yard")
 
-segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "anchors",
+segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
   unit = "meter", time.unit = "minute", walking.speed = 5, title = TRUE,
   subtitle = TRUE) {
 
@@ -68,7 +68,7 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "anchors",
       seg.anchors <- cholera::fatalities.address$anchor.case %in% seg.ortho$case
       seg.cases <- cholera::fatalities$case %in% seg.ortho$case
 
-      if (cases == "all") {
+      if (cases == "fatality") {
         text(cholera::fatalities[!seg.cases, c("x", "y")],
           labels = cholera::fatalities$case[!seg.cases], cex = 0.5)
         if (any(seg.cases)) {
@@ -76,7 +76,7 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "anchors",
             labels = cholera::fatalities$case[seg.cases], cex = 0.5,
             col = "red")
         }
-      } else if (cases == "anchors") {
+      } else if (cases == "address") {
         text(cholera::fatalities.address[!seg.anchors, c("x", "y")],
           labels = cholera::fatalities.address$anchor.case[!seg.anchors],
           cex = 0.5)
