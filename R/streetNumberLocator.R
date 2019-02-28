@@ -3,7 +3,7 @@
 #' Highlight a road and its cases. See \code{cholera::roads} for numerical IDs and \code{vignette}("road.names") for details.
 #' @param road.number Numeric or integer. A whole number between 1 and 528.
 #' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is FALSE, which is equivalent to zero.
-#' @param cases Character. Plot cases: \code{NULL}, "anchors" or "all".
+#' @param cases Character. Plot cases: \code{NULL}, "address" or "fatality".
 #' @param token Character. "id" or "point".
 #' @param add.title Logical. Include title.
 #' @param add.subtitle Logical. Include subtitle with road information.
@@ -22,7 +22,7 @@
 #' streetNumberLocator(243, zoom = 0.5)
 
 streetNumberLocator <- function(road.number = 216, zoom = FALSE,
-  cases = "anchors", token = "id", add.title = TRUE, add.subtitle = TRUE,
+  cases = "address", token = "id", add.title = TRUE, add.subtitle = TRUE,
   add.pump = TRUE, vestry = FALSE, highlight = TRUE, unit = "meter",
   time.unit = "second", walking.speed = 5) {
 
@@ -36,8 +36,8 @@ streetNumberLocator <- function(road.number = 216, zoom = FALSE,
   }
 
   if (is.null(cases) == FALSE) {
-    if (cases %in% c("anchors", "all") == FALSE) {
-      stop('If specified, cases must either be "anchors" or "all".')
+    if (cases %in% c("address", "fatality") == FALSE) {
+      stop('If specified, cases must either be "address" or "fatality".')
     }
   }
 
@@ -91,7 +91,7 @@ streetNumberLocator <- function(road.number = 216, zoom = FALSE,
       seg.cases <- cholera::fatalities$case %in% seg.ortho$case
 
       if (token == "id") {
-        if (cases == "all") {
+        if (cases == "fatality") {
           text(cholera::fatalities[!seg.cases, vars],
             labels = cholera::fatalities$case[!seg.cases], cex = 0.5)
           if (any(seg.cases)) {
@@ -104,7 +104,7 @@ streetNumberLocator <- function(road.number = 216, zoom = FALSE,
                 labels = cholera::fatalities$case[seg.cases], cex = 0.5)
             }
           }
-        } else if (cases == "anchors") {
+        } else if (cases == "address") {
           text(cholera::fatalities.address[!seg.anchors, vars],
             labels = cholera::fatalities.address$anchor.case[!seg.anchors],
             cex = 0.5)
@@ -122,7 +122,7 @@ streetNumberLocator <- function(road.number = 216, zoom = FALSE,
         }
 
       } else if (token == "point") {
-        if (cases == "all") {
+        if (cases == "fatality") {
           points(cholera::fatalities[!seg.cases, vars], pch = 15, cex = 0.5)
           if (any(seg.cases)) {
             if (highlight) {
@@ -132,7 +132,7 @@ streetNumberLocator <- function(road.number = 216, zoom = FALSE,
               points(cholera::fatalities[seg.cases, vars], pch = 15, cex = 0.5)
             }
           }
-        } else if (cases == "anchors") {
+        } else if (cases == "address") {
           points(cholera::fatalities.address[!seg.anchors, vars], pch = 15,
             cex = 0.5)
           if (any(seg.anchors)) {

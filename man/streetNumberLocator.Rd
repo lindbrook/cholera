@@ -5,7 +5,7 @@
 \title{Locate road by numerical ID.}
 \usage{
 streetNumberLocator(road.number = 216, zoom = FALSE,
-  cases = "anchors", token = "id", add.title = TRUE,
+  cases = "address", token = "id", add.title = TRUE,
   add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE,
   highlight = TRUE, unit = "meter", time.unit = "second",
   walking.speed = 5)
@@ -15,7 +15,7 @@ streetNumberLocator(road.number = 216, zoom = FALSE,
 
 \item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is FALSE, which is equivalent to zero.}
 
-\item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
+\item{cases}{Character. Plot cases: \code{NULL}, "address" or "fatality".}
 
 \item{token}{Character. "id" or "point".}
 

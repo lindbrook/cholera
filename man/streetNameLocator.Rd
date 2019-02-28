@@ -5,7 +5,7 @@
 \title{Locate road by name.}
 \usage{
 streetNameLocator(road.name = "Broad Street", zoom = FALSE,
-  cases = "anchors", token = "id", add.title = TRUE,
+  cases = "address", token = "id", add.title = TRUE,
   add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE,
   highlight = TRUE, unit = "meter", time.unit = "minute",
   walking.speed = 5)
@@ -15,7 +15,7 @@ streetNameLocator(road.name = "Broad Street", zoom = FALSE,
 
 \item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is FALSE, which is equivalent to zero.}
 
-\item{cases}{Character. Plot cases: \code{NULL}, "anchors" or "all".}
+\item{cases}{Character. Plot cases: \code{NULL}, "address" or "fatality".}
 
 \item{token}{Character. "id" or "point".}
 
