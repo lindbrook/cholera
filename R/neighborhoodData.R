@@ -64,8 +64,7 @@ nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
     }
 
     if (observed) {
-      sel <- cholera::ortho.proj$case %in%
-             cholera::fatalities.address$anchor.case
+      sel <- cholera::ortho.proj$case %in% cholera::fatalities.address$anchor
       case.segments <- unique(cholera::ortho.proj[sel, "road.segment"])
     } else {
       sim.proj <- cholera::sim.ortho.proj
@@ -210,7 +209,7 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
     if (CaseObs) {
       sel <- cholera::ortho.proj$road.segment %in% id
       road.fatalities <- cholera::ortho.proj[sel, ]
-      sel <- road.fatalities$case %in% cholera::fatalities.address$anchor.case
+      sel <- road.fatalities$case %in% cholera::fatalities.address$anchor
       cases <- road.fatalities[sel, "case"]
       road.address <- road.fatalities[road.fatalities$case %in% cases, ]
       case.data <- data.frame(road.address[, c("x.proj", "y.proj")],

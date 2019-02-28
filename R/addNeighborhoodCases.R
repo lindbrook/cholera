@@ -114,10 +114,10 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   if (observed) {
     invisible(lapply(selected.pumps, function(x) {
       addr <- nearest.pump[nearest.pump$pump == x, "case"]
-      case.sel <- cholera::anchor.case$anchor.case %in% addr
+      case.sel <- cholera::anchor.case$anchor %in% addr
 
       if (type == "stack.base") {
-        id <- unique(cholera::anchor.case[case.sel, "anchor.case"])
+        id <- unique(cholera::anchor.case[case.sel, "anchor"])
       } else if (type == "stack") {
         id <- cholera::anchor.case[case.sel, "case"]
       } else stop("Invalid type")

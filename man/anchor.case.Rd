@@ -6,7 +6,7 @@
 \title{Anchor or base case of each stack of fatalities.}
 \format{\describe{
     \item{\code{case}}{numerical case ID}
-    \item{\code{anchor.case}}{numerical case ID of anchor.case}
+    \item{\code{anchor}}{numerical case ID of anchor.case}
 }}
 \usage{
 anchor.case

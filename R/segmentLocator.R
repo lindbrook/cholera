@@ -65,7 +65,7 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
 
     if (is.null(cases) == FALSE) {
       seg.ortho <- cholera::ortho.proj[cholera::ortho.proj$road.segment == id, ]
-      seg.anchors <- cholera::fatalities.address$anchor.case %in% seg.ortho$case
+      seg.anchors <- cholera::fatalities.address$anchor %in% seg.ortho$case
       seg.cases <- cholera::fatalities$case %in% seg.ortho$case
 
       if (cases == "fatality") {
@@ -78,11 +78,10 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
         }
       } else if (cases == "address") {
         text(cholera::fatalities.address[!seg.anchors, c("x", "y")],
-          labels = cholera::fatalities.address$anchor.case[!seg.anchors],
-          cex = 0.5)
+          labels = cholera::fatalities.address$anchor[!seg.anchors], cex = 0.5)
         if (any(seg.anchors)) {
           text(cholera::fatalities.address[seg.anchors, c("x", "y")],
-            labels = cholera::fatalities.address$anchor.case[seg.anchors],
+            labels = cholera::fatalities.address$anchor[seg.anchors],
             cex = 0.5, col = "red")
         }
       }

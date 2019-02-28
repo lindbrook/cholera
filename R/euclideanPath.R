@@ -362,8 +362,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     # remove ego from alters
     if (any(alters$case %in% ego$case)) {
       case.id <- cholera::anchor.case$case %in% ego$case
-      stack.id <- cholera::anchor.case[case.id, "anchor.case"]
-      stack.sel <- cholera::anchor.case$anchor.case %in% stack.id
+      stack.id <- cholera::anchor.case[case.id, "anchor"]
+      stack.sel <- cholera::anchor.case$anchor %in% stack.id
       stack.cases <- cholera::anchor.case[stack.sel, "case"]
       landmarks.sel <- cholera::landmarks$case %in% ego$case
       landmarks.cases <- cholera::landmarks[landmarks.sel, "case"]
@@ -381,7 +381,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       if (all(ego$case <= 20000)) {
         stack.sel <- cholera::anchor.case$case %in% ego$case
-        ego.id <- cholera::anchor.case[stack.sel, "anchor.case"]
+        ego.id <- cholera::anchor.case[stack.sel, "anchor"]
       } else {
         landmarks.sel <- cholera::landmarks$case %in% ego$case
         ego.id <- cholera::landmarks[landmarks.sel, "case"]
@@ -389,7 +389,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       if (all(alters$case <= 20000)) {
         stack.sel <- cholera::anchor.case$case %in% ego$case
-        alters.id <- cholera::anchor.case[stack.sel, "anchor.case"]
+        alters.id <- cholera::anchor.case[stack.sel, "anchor"]
       } else {
         landmarks.sel <- cholera::landmarks$case %in% ego$case
         alters.id <- cholera::landmarks[landmarks.sel, "case"]
@@ -433,16 +433,15 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       if (case.a < 20000) {
         anchor.a <- cholera::anchor.case[cholera::anchor.case$case == case.a,
-          "anchor.case"]
+          "anchor"]
       } else if (case.a > 20000) {
         anchor.a <- case.a
-        case.a <- cholera::landmarks[cholera::landmarks$case == case.a,
-          "name"]
+        case.a <- cholera::landmarks[cholera::landmarks$case == case.a, "name"]
       }
 
       if (case.b < 20000) {
         anchor.b <- cholera::anchor.case[cholera::anchor.case$case == case.b,
-          "anchor.case"]
+          "anchor"]
       } else if (case.b > 20000) {
         anchor.b <- case.b
         case.b <- cholera::landmarks[cholera::landmarks$case == case.b, "name"]

@@ -59,7 +59,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
   }
 
   if (case.set == "observed") {
-    anchors <- cholera::fatalities.address$anchor.case
+    anchors <- cholera::fatalities.address$anchor
     observed <- TRUE
   } else if (case.set == "expected") {
     anchors <- seq_len(nrow(cholera::regular.cases))
@@ -158,10 +158,10 @@ plot.euclidean <- function(x, type = "star",
       p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
       n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
       if (x$observed) {
-        sel <- cholera::fatalities.address$anchor.case %in% anchors[i]
+        sel <- cholera::fatalities.address$anchor %in% anchors[i]
         n.data <- cholera::fatalities.address[sel, ]
-        lapply(n.data$anchor.case, function(case) {
-          c.data <- n.data[n.data$anchor.case == case, ]
+        lapply(n.data$anchor, function(case) {
+          c.data <- n.data[n.data$anchor == case, ]
           segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
             lwd = 0.5)
         })

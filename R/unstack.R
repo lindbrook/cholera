@@ -299,7 +299,7 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
       group.data <- lapply(group.id, function(i) {
         tmp <- x[x$group == i, ]
         tmp$case.count <- nrow(tmp)
-        tmp$anchor.case <- tmp[tmp$anchor == 1, "case"]
+        tmp$anchor <- tmp[tmp$anchor == 1, "case"]
         tmp$ortho.dist <- NULL
         tmp
       })
@@ -311,12 +311,11 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     single.unstacked <- do.call(rbind, single.address)
     single.unstacked[ c("group", "anchor",  "case.count")] <- 1
-    single.unstacked$anchor.case <- single.unstacked$case
+    single.unstacked$anchor <- single.unstacked$case
     single.unstacked$multiple.obs.seg <- "No"
 
     unstacked <- rbind(multiple.unstacked, single.unstacked)
-    unstacked <- merge(unstacked, fatalities, by.x = "anchor.case",
-      by.y = "case")
+    unstacked <- merge(unstacked, fatalities, by.x = "anchor", by.y = "case")
 
     fatalities.unstacked <- unstacked[, c("case", "x", "y")]
     fatalities.unstacked <-
@@ -325,9 +324,9 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     vars <- c("case", "x", "y", "case.count")
     fatalities.address <- unstacked[unstacked$anchor == 1, vars]
-    names(fatalities.address)[1] <- "anchor.case"
+    names(fatalities.address)[1] <- "anchor"
 
-    anchor.case <- unstacked[, c("anchor.case", "case")]
+    anchor.case <- unstacked[, c("anchor", "case")]
 
     list(anchor.case = anchor.case,
          fatalities.unstacked = fatalities.unstacked,

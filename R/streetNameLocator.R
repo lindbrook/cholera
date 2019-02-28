@@ -90,7 +90,7 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
       id <- cholera::road.segments[cholera::road.segments$name == name, "id"]
       seg.ortho <- cholera::ortho.proj[cholera::ortho.proj$road.segment %in%
         id, ]
-      seg.anchors <- cholera::fatalities.address$anchor.case %in% seg.ortho$case
+      seg.anchors <- cholera::fatalities.address$anchor %in% seg.ortho$case
       seg.cases <- cholera::fatalities$case %in% seg.ortho$case
 
       if (token == "id") {
@@ -109,16 +109,16 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
           }
         } else if (cases == "address") {
           text(cholera::fatalities.address[!seg.anchors, vars],
-            labels = cholera::fatalities.address$anchor.case[!seg.anchors],
+            labels = cholera::fatalities.address$anchor[!seg.anchors],
             cex = 0.5)
           if (any(seg.anchors)) {
             if (highlight) {
               text(cholera::fatalities.address[seg.anchors, vars],
-                labels = cholera::fatalities.address$anchor.case[seg.anchors],
+                labels = cholera::fatalities.address$anchor[seg.anchors],
                 cex = 0.5, col = "red")
             } else {
               text(cholera::fatalities.address[seg.anchors, vars],
-                labels = cholera::fatalities.address$anchor.case[seg.anchors],
+                labels = cholera::fatalities.address$anchor[seg.anchors],
                 cex = 0.5)
             }
           }

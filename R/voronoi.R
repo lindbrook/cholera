@@ -239,7 +239,7 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
 
     voronoi.case.id <- pumpCase(x)
     voronoi.colors <- vector(length = length(unlist(voronoi.case.id)))
-    names(voronoi.colors) <- cholera::fatalities.address$anchor.case
+    names(voronoi.colors) <- cholera::fatalities.address$anchor
 
     for (i in seq_along(voronoi.case.id)) {
       id <- voronoi.case.id[[i]]
@@ -249,12 +249,11 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
     if (euclidean.paths) {
       invisible(lapply(names(voronoi.case.id), function(nm) {
         p.data <- pump.data[paste0("p", pump.data$id) == nm, ]
-        sel <- cholera::fatalities.address$anchor.case %in%
-          voronoi.case.id[[nm]]
+        sel <- cholera::fatalities.address$anchor %in% voronoi.case.id[[nm]]
         n.data <- cholera::fatalities.address[sel, ]
         n.color <- x$snow.colors[nm]
-        lapply(n.data$anchor.case, function(case) {
-          c.data <- n.data[n.data$anchor.case == case, ]
+        lapply(n.data$anchor, function(case) {
+          c.data <- n.data[n.data$anchor == case, ]
           segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
             lwd = 0.5)
         })

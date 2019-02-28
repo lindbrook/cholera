@@ -150,8 +150,8 @@ orthogonalCoordinates <- function(case, pump = 7, angle = 0, vestry = FALSE,
   axis.focus <- p.data[p.data$id == pump, ]
 
   if (observed) {
-    obs <- cholera::fatalities.address[cholera::fatalities.address$anchor.case
-      == case, c("x", "y")]
+    obs <- cholera::fatalities.address[cholera::fatalities.address$anchor ==
+      case, c("x", "y")]
   } else {
     obs <- cholera::regular.cases[case, ]
   }
@@ -206,14 +206,14 @@ profilePerspective <- function(output = "inside", pump = 7, angle = 0,
   coords <- lapply(cases, function(x) orthogonalCoordinates(x, angle = angle))
   coords <- stats::setNames(do.call(rbind, coords), vars)
 
-  dat <- cholera::fatalities.address[cholera::fatalities.address$anchor.case
-    %in% cases, ]
+  dat <- cholera::fatalities.address[cholera::fatalities.address$anchor %in% 
+    cases, ]
   dat <- cbind(dat, coords)
 
   pump.data <- cholera::pumps[cholera::pumps$id == pump, c("x", "y")]
   pump.data$ortho.x <- pump.data$x
   pump.data$ortho.y <- pump.data$y
-  pump.data$anchor.case <- 0
+  pump.data$anchor <- 0
   pump.data$case.count <- 0
   pump.data <- pump.data[, names(dat)]
 
@@ -227,7 +227,7 @@ profilePerspective <- function(output = "inside", pump = 7, angle = 0,
 
   d <- c(0, d)
 
-  out <- data.frame(axis = cumsum(d) - cumsum(d)[which(dat$anchor.case == 0)],
+  out <- data.frame(axis = cumsum(d) - cumsum(d)[which(dat$anchor == 0)],
                     count = dat$case.count)
 
   class(out) <- "profile_perspective"

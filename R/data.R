@@ -5,7 +5,7 @@
 #' @format
 #'  \describe{
 #'     \item{\code{case}}{numerical case ID}
-#'     \item{\code{anchor.case}}{numerical case ID of anchor.case}
+#'     \item{\code{anchor}}{numerical case ID of anchor.case}
 #' }
 #' @note \code{\link{unstackFatalities}} documents the code for these data.
 #' @docType data
@@ -54,7 +54,7 @@
 #'
 #' @format A data frame with 4 variables for 321 addresses
 #'  \describe{
-#'     \item{\code{anchor.case}}{numerical case ID of address}
+#'     \item{\code{anchor}}{numerical case ID of address}
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
 #'     \item{\code{case.count}}{number of fatalities at address}

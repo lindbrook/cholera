@@ -173,12 +173,12 @@ pathData <- function(dat, weighted, case.set, cores) {
   }
 
   if (case.set == "observed") {
-    anchor <- cholera::fatalities.address$anchor.case
+    anchor <- cholera::fatalities.address$anchor
     list(case = anchor, distances = distances(anchor), paths = paths(anchor))
 
   } else if (case.set == "snow") {
     snow <- unique(cholera::anchor.case[cholera::anchor.case$case %in%
-      cholera::snow.neighborhood, "anchor.case"])
+      cholera::snow.neighborhood, "anchor"])
 
     paths.snow <- parallel::mclapply(snow, function(x) {
       case.node <- nodes[nodes$anchor == x, "node"]

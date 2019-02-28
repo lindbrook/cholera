@@ -103,7 +103,7 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
     }, numeric(1L))
   }
 
-  nearest.pump <- data.frame(case = cholera::fatalities.address$anchor.case,
+  nearest.pump <- data.frame(case = cholera::fatalities.address$anchor,
                              pump = nearest.pump)
 
   pumpID <- sort(unique(nearest.pump$pump))

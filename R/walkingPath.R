@@ -130,7 +130,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         if (is.numeric(origin)) {
           if (origin %in% seq_len(ct)) {
             ego.sel <- cholera::anchor.case$case == origin
-            ego.id <- cholera::anchor.case[ego.sel, "anchor.case"]
+            ego.id <- cholera::anchor.case[ego.sel, "anchor"]
           } else {
             txt1 <- 'With type = "case-pump" and observed = '
             txt2 <- ', origin must be between 1 and '
@@ -329,7 +329,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         if (origin %in% seq_len(ct) ) {
           ego.id <- origin
           ego.sel <- cholera::anchor.case$case == origin
-          ego.anchor <- cholera::anchor.case[ego.sel, "anchor.case"]
+          ego.anchor <- cholera::anchor.case[ego.sel, "anchor"]
         } else {
           txt1 <- 'With type = "cases" and observed = '
           txt2 <- ', origin must be between 1 and '
@@ -376,7 +376,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
             alter.sel <- cholera::anchor.case$case %in% abs(destination) ==
               FALSE
           } else stop("all positive or all negative.")
-          alter.case <- unique(cholera::anchor.case[alter.sel, "anchor.case"])
+          alter.case <- unique(cholera::anchor.case[alter.sel, "anchor"])
         }
       } else {
         if (all(destination > 0)) {

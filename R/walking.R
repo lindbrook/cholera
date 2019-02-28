@@ -89,11 +89,11 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 
   if (case.set == "snow") {
     snow.anchors <- cholera::snow.neighborhood[cholera::snow.neighborhood %in%
-      cholera::fatalities.address$anchor.case]
+      cholera::fatalities.address$anchor]
     nearest.pump <- data.frame(case = snow.anchors,
                                pump = nearest.pump)
   } else {
-    nearest.pump <- data.frame(case = cholera::fatalities.address$anchor.case,
+    nearest.pump <- data.frame(case = cholera::fatalities.address$anchor,
                                pump = nearest.pump)
   }
 
@@ -203,7 +203,7 @@ plot.walking <- function(x, type = "road", polygon.method = "pearl.string",
     }))
 
     invisible(lapply(names(x$cases), function(nm) {
-      sel <- cholera::fatalities.address$anchor.case %in% x$cases[[nm]]
+      sel <- cholera::fatalities.address$anchor %in% x$cases[[nm]]
       points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
         cex = 0.75, col = x$snow.colors[paste0("p", nm)])
     }))

@@ -28,9 +28,7 @@ pumpCase.euclidean <- function(x) {
 #' @export
 pumpCase.voronoi <- function(x) {
   output <- x$statistic.data
-  out <- lapply(output, function(x) {
-    cholera::fatalities.address$anchor.case[x == 1]
-  })
+  out <- lapply(output, function(x) cholera::fatalities.address$anchor[x == 1])
 
   if (is.null(x$pump.select)) {
     if (x$vestry == TRUE) {

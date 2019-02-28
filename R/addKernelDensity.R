@@ -82,7 +82,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
         }
 
         kde <- lapply(cases, function(id) {
-          sel <- cholera::fatalities.address$anchor.case %in% id
+          sel <- cholera::fatalities.address$anchor %in% id
           dat <- cholera::fatalities.address[sel, vars]
           KernSmooth::bkde2D(dat, bandwidth = bw)
         })
@@ -122,7 +122,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
       }
 
       kde <- lapply(cases, function(id) {
-        sel <- cholera::fatalities.address$anchor.case %in% id
+        sel <- cholera::fatalities.address$anchor %in% id
         dat <- cholera::fatalities.address[sel, vars]
         KernSmooth::bkde2D(dat, bandwidth = bw)
       })
@@ -139,7 +139,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
     cases <- pumpCase(n.data)
 
     kde <- lapply(cases, function(id) {
-      sel <- cholera::fatalities.address$anchor.case %in% id
+      sel <- cholera::fatalities.address$anchor %in% id
       dat <- cholera::fatalities.address[sel, vars]
       KernSmooth::bkde2D(dat, bandwidth = bw)
     })
