@@ -7,7 +7,7 @@
 streetNumberLocator(road.number = 216, zoom = FALSE,
   cases = "address", token = "id", add.title = TRUE,
   add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE,
-  highlight = TRUE, unit = "meter", time.unit = "second",
+  highlight = TRUE, distance.unit = "meter", time.unit = "second",
   walking.speed = 5)
 }
 \arguments{
@@ -29,7 +29,7 @@ streetNumberLocator(road.number = 216, zoom = FALSE,
 
 \item{highlight}{Logical. Highlight selected road.}
 
-\item{unit}{Character. Unit of measurement: "meter" or "yard". Default is \code{NULL}, which returns the map's native scale.}
+\item{distance.unit}{Character. Unit of measurement: "meter" or "yard". Default is \code{NULL}, which returns the map's native scale.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 

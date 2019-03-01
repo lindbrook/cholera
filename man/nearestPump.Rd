@@ -5,7 +5,7 @@
 \title{Compute shortest walking distances or paths.}
 \usage{
 nearestPump(pump.select = NULL, output = "distance", vestry = FALSE,
-  weighted = TRUE, case.set = "observed", unit = "meter",
+  weighted = TRUE, case.set = "observed", distance.unit = "meter",
   multi.core = FALSE, time.unit = "second", walking.speed = 5)
 }
 \arguments{
@@ -19,7 +19,7 @@ nearestPump(pump.select = NULL, output = "distance", vestry = FALSE,
 
 \item{case.set}{Character. "observed", "expected", or "snow".}
 
-\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is \code{TRUE} and "output" is "distance". See \code{vignette("roads")} for information on unit distances.}
+\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is \code{TRUE} and "output" is "distance". See \code{vignette("roads")} for information on unit distances.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 

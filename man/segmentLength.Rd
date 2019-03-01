@@ -4,12 +4,12 @@
 \alias{segmentLength}
 \title{Compute length of road segment.}
 \usage{
-segmentLength(id, unit = "meter")
+segmentLength(id = "216-1", distance.unit = "meter")
 }
 \arguments{
 \item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number used to identify the sub-segments.}
 
-\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
+\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 }
 \value{
 An R vector of length one.
@@ -19,5 +19,5 @@ Compute length of road segment.
 }
 \examples{
 segmentLength("242-1")
-segmentLength("242-1", unit = "yard")
+segmentLength("242-1", distance.unit = "yard")
 }

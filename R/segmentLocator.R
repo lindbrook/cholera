@@ -4,11 +4,11 @@
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.
 #' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.
 #' @param cases Character. Plot cases: \code{NULL}, "address" or "fatality".
-#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
+#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
-#' @param title Logical. Print title.
-#' @param subtitle Logical. Print subtitle.
+#' @param add.title Logical. Print title.
+#' @param add.subtitle Logical. Print subtitle.
 #' @return A base R graphics plot.
 #' @import graphics
 #' @note With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2").  See \code{cholera::road.segments}.
@@ -16,11 +16,11 @@
 #' @examples
 #' segmentLocator("190-1")
 #' segmentLocator("216-1")
-#' segmentLocator("216-1", unit = "yard")
+#' segmentLocator("216-1", distance.unit = "yard")
 
 segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
-  unit = "meter", time.unit = "minute", walking.speed = 5, title = TRUE,
-  subtitle = TRUE) {
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  add.title = TRUE, add.subtitle = TRUE) {
 
   if (is.character(id) == FALSE) {
     stop('id\'s type must be a character.')
@@ -30,8 +30,8 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
     stop("Invalid segment ID. See cholera::road.segments.")
   }
 
-  if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('unit must be "meter", "yard" or "native".')
+  if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('distance.unit must be "meter", "yard" or "native".')
   }
 
   st <- cholera::road.segments[cholera::road.segments$id == id, ]
@@ -98,12 +98,12 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
     col = "blue")
   segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
 
-  if (title) title(main = paste0(st$name, ": Segment # ", id))
+  if (add.title) title(main = paste0(st$name, ": Segment # ", id))
 
-  segment.length <- segmentLength(id, unit)
+  segment.length <- segmentLength(id, distance.unit)
 
-  est.time <- distanceTime(segmentLength(id), unit = time.unit,
-    speed = walking.speed)
+  est.time <- distanceTime(segment.length, distance.unit = distance.unit,
+    time.unit = time.unit, walking.speed = walking.speed)
 
   if (time.unit == "hour") {
     nominal.time <- paste(round(est.time, 1), "hr.")
@@ -113,13 +113,16 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
     nominal.time <- paste(round(est.time, 1), "secs.")
   }
 
-  if (subtitle) {
-    if (unit == "native") {
-      title(sub = paste(round(segment.length, 2), "units;", nominal.time))
-    } else if (unit == "meter") {
-      title(sub = paste(round(segment.length, 2), "meters;", nominal.time))
-    } else if (unit == "yard") {
-      title(sub = paste(round(segment.length, 2), "yards;", nominal.time))
+  if (add.subtitle) {
+    if (distance.unit == "native") {
+      title(sub = paste(round(segment.length, 2), "units;", nominal.time, "@",
+        walking.speed, "km/hr"))
+    } else if (distance.unit == "meter") {
+      title(sub = paste(round(segment.length, 2), "meters;", nominal.time, "@",
+        walking.speed, "km/hr"))
+    } else if (distance.unit == "yard") {
+      title(sub = paste(round(segment.length, 2), "yards;", nominal.time, "@",
+        walking.speed, "km/hr"))
     }
   }
 }

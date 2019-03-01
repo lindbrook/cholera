@@ -6,7 +6,7 @@
 #' @param observed Logical. Use observed or "simulated" expected data.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of nodes.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.
+#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}. Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network and form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
@@ -35,15 +35,15 @@
 #' }
 
 walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
+  observed = TRUE, weighted = TRUE, vestry = FALSE, distance.unit = "meter",
   time.unit = "second", walking.speed = 5) {
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
     stop('type must be "case-pump", "cases" or "pumps".')
   }
 
-  if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('unit must be "meter", "yard" or "native".')
+  if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('distance.unit must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
@@ -158,9 +158,9 @@ walkingDistance <- function(origin = 1, destination = NULL, type = "case-pump",
                     observed = observed,
                     weighted = weighted,
                     vestry = vestry,
-                    unit = unit,
-                    time.unit = "second",
-                    walking.speed = 5)
+                    distance.unit = distance.unit,
+                    time.unit = time.unit,
+                    walking.speed = walking.speed)
 
   output <- do.call(walkingPath, arguments)
   class(output) <- "walking_distance"

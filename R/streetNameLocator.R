@@ -10,7 +10,7 @@
 #' @param add.pump Logical. Include nearby pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param highlight Logical. Highlight selected road.
-#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
+#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @return A base R graphics plot.
@@ -24,7 +24,7 @@
 
 streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
   cases = "address", token = "id", add.title = TRUE, add.subtitle = TRUE,
-  add.pump = TRUE, vestry = FALSE, highlight = TRUE, unit = "meter",
+  add.pump = TRUE, vestry = FALSE, highlight = TRUE, distance.unit = "meter",
   time.unit = "minute", walking.speed = 5) {
 
   real.road.names <- unique(cholera::roads$name)
@@ -52,8 +52,8 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
     stop('token must be "id", or "point".')
   }
 
-  if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('unit must be "meter", "yard" or "native".')
+  if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('distance.unit must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("minute", "hour", "second") == FALSE) {
@@ -172,10 +172,9 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
   if (add.title) title(main = name)
 
   if (add.subtitle) {
-    street.length <- streetLength(name, unit)
-    native.street.length <- streetLength(name, unit = "native")
-    est.time <- distanceTime(native.street.length, unit = time.unit,
-      speed = walking.speed)
+    street.length <- streetLength(name, distance.unit)
+    est.time <- distanceTime(street.length, distance.unit = distance.unit,
+      time.unit = time.unit, walking.speed = walking.speed)
 
     if (time.unit == "hour") {
       nominal.time <- paste(round(est.time, 1), "hr")
@@ -185,11 +184,11 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
       nominal.time <- paste(round(est.time, 1), "sec")
     }
 
-    if (unit == "native") {
+    if (distance.unit == "native") {
       subtitle <- paste(round(street.length, 1), "units;", nominal.time)
-    } else if (unit == "meter") {
+    } else if (distance.unit == "meter") {
       subtitle <- paste(round(street.length, 1), "m;", nominal.time)
-    } else if (unit == "yard") {
+    } else if (distance.unit == "yard") {
       subtitle <- paste(round(street.length, 1), "yd;", nominal.time)
     }
 

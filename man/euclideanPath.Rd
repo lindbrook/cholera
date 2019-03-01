@@ -6,7 +6,7 @@
 \usage{
 euclideanPath(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, case.location = "nominal", landmark.cases = TRUE,
-  vestry = FALSE, unit = "meter", time.unit = "second",
+  vestry = FALSE, distance.unit = "meter", time.unit = "second",
   walking.speed = 5, multi.core = FALSE)
 }
 \arguments{
@@ -24,7 +24,7 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
-\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
+\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 

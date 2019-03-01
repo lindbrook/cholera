@@ -6,7 +6,7 @@
 #' @param observed Logical. Use observed or "simulated" expected data.
 #' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
-#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
+#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
@@ -36,14 +36,15 @@
 
 euclideanDistance <- function(origin = 1, destination = NULL,
   type = "case-pump", observed = TRUE, case.location = "address",
-  vestry = FALSE, unit = "meter", time.unit = "second", walking.speed = 5) {
+  vestry = FALSE, distance.unit = "meter", time.unit = "second",
+  walking.speed = 5) {
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
     stop('type must be "case-pump", "cases" or "pumps".')
   }
 
-  if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('unit must be "meter", "yard" or "native".')
+  if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('distance.unit must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
@@ -170,9 +171,9 @@ euclideanDistance <- function(origin = 1, destination = NULL,
                     observed = observed,
                     case.location = case.location,
                     vestry = vestry,
-                    unit = unit,
-                    time.unit = "second",
-                    walking.speed = 5)
+                    distance.unit = distance.unit,
+                    time.unit = time.unit,
+                    walking.speed = walking.speed)
 
   output <- do.call(euclideanPath, arguments)
   class(output) <- "euclidean_distance"

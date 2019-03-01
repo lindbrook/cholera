@@ -5,9 +5,9 @@
 \title{Add the shortest walking path between a selected cases or pumps.}
 \usage{
 addWalkingPath(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
-  time.unit = "second", walking.speed = 5, unit.posts = "distance",
-  unit.interval = NULL, alpha.level = 1)
+  observed = TRUE, weighted = TRUE, vestry = FALSE,
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  unit.posts = "distance", unit.interval = NULL, alpha.level = 1)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
@@ -22,7 +22,7 @@ addWalkingPath(origin = 1, destination = NULL, type = "case-pump",
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
-\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. \code{unit} is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.}
+\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. \code{unit} is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 

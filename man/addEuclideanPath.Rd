@@ -5,7 +5,7 @@
 \title{Add the path for the Euclidean distance between cases and/or pumps.}
 \usage{
 addEuclideanPath(origin, destination = NULL, type = "case-pump",
-  observed = TRUE, vestry = FALSE, unit = "meter",
+  observed = TRUE, vestry = FALSE, distance.unit = "meter",
   time.unit = "second", walking.speed = 5, unit.posts = "distance",
   unit.interval = NULL, alpha.level = 1)
 }
@@ -20,7 +20,7 @@ addEuclideanPath(origin, destination = NULL, type = "case-pump",
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
-\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
+\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 

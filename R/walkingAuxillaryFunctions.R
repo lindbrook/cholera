@@ -206,7 +206,7 @@ postCoordinates <- function(dat, unit, interval, walking.speed,
   if (unit == "distance") {
     cumulative <- unitMeter(cumsum(dat$d), "meter")
   } else if (unit == "time") {
-    cumulative <- distanceTime(cumsum(dat$d), speed = walking.speed)
+    cumulative <- distanceTime(cumsum(dat$d), walking.speed = walking.speed)
   }
 
   total <- cumulative[length(cumulative)]

@@ -5,8 +5,8 @@
 \title{Locate road segment by ID.}
 \usage{
 segmentLocator(id = "216-1", zoom = 0.5, cases = "address",
-  unit = "meter", time.unit = "minute", walking.speed = 5,
-  title = TRUE, subtitle = TRUE)
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  add.title = TRUE, add.subtitle = TRUE)
 }
 \arguments{
 \item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
@@ -15,15 +15,15 @@ segmentLocator(id = "216-1", zoom = 0.5, cases = "address",
 
 \item{cases}{Character. Plot cases: \code{NULL}, "address" or "fatality".}
 
-\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
+\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
-\item{title}{Logical. Print title.}
+\item{add.title}{Logical. Print title.}
 
-\item{subtitle}{Logical. Print subtitle.}
+\item{add.subtitle}{Logical. Print subtitle.}
 }
 \value{
 A base R graphics plot.
@@ -37,5 +37,5 @@ With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised 
 \examples{
 segmentLocator("190-1")
 segmentLocator("216-1")
-segmentLocator("216-1", unit = "yard")
+segmentLocator("216-1", distance.unit = "yard")
 }

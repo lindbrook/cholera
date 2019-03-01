@@ -4,17 +4,17 @@
 \alias{distanceTime}
 \title{Convert distance to elapsed time.}
 \usage{
-distanceTime(x, unit = "second", meter.unit = unitMeter(1, unit =
-  "meter"), speed = 5)
+distanceTime(x, distance.unit = "meter", time.unit = "second",
+  walking.speed = 5)
 }
 \arguments{
 \item{x}{Numeric. Nominal map distance.}
 
-\item{unit}{Character. Unit of measurement: "hour", "minute" or "second".}
+\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 
-\item{meter.unit}{Numeric. 1 meter is approximately 54 map units. Set by \code{unitMeter()}.}
+\item{time.unit}{Character. Unit of measurement: "hour", "minute" or "second".}
 
-\item{speed}{Numeric. Walking speed in km/hr.}
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 }
 \value{
 An R vector.

@@ -7,7 +7,7 @@
 streetNameLocator(road.name = "Broad Street", zoom = FALSE,
   cases = "address", token = "id", add.title = TRUE,
   add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE,
-  highlight = TRUE, unit = "meter", time.unit = "minute",
+  highlight = TRUE, distance.unit = "meter", time.unit = "minute",
   walking.speed = 5)
 }
 \arguments{
@@ -29,7 +29,7 @@ streetNameLocator(road.name = "Broad Street", zoom = FALSE,
 
 \item{highlight}{Logical. Highlight selected road.}
 
-\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
+\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 

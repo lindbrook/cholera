@@ -7,7 +7,7 @@
 #' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.
 #' @param landmark.cases Logical. \code{TRUE} includes landmarks as cases.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
-#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
+#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Default is 5 km/hr.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
@@ -41,14 +41,14 @@
 
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, case.location = "nominal", landmark.cases = TRUE,
-  vestry = FALSE, unit = "meter", time.unit = "second", walking.speed = 5,
-  multi.core = FALSE) {
+  vestry = FALSE, distance.unit = "meter", time.unit = "second",
+  walking.speed = 5, multi.core = FALSE) {
 
   if (is.null(origin) & is.null(destination)) {
     stop("If origin = NULL, you must supply a destination.")
   }
 
-  if (unit %in% c("meter", "yard", "native") == FALSE) {
+  if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
     stop('unit must be "meter", "yard" or "native".')
   }
 
@@ -544,16 +544,16 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   # ----- #
 
-  out$time <- distanceTime(out$distance, unit = time.unit,
-    speed = walking.speed)
-
-  if (unit == "meter") {
+  if (distance.unit == "meter") {
     out$distance <- unitMeter(out$distance, "meter")
-  } else if (unit == "yard") {
+  } else if (distance.unit == "yard") {
     out$distance <- unitMeter(out$distance, "yard")
-  } else if (unit == "native") {
+  } else if (distance.unit == "native") {
     out$distance <- unitMeter(out$distance, "native")
   }
+
+  out$time <- distanceTime(out$distance, distance.unit = distance.unit,
+    time.unit = time.unit, walking.speed = walking.speed)
 
   output <- list(ego = ego,
                  alter = alter,
@@ -563,11 +563,11 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
                  observed = observed,
                  alters = alters,
                  vestry = vestry,
-                 unit = unit,
+                 distance.unit = distance.unit,
                  time.unit = time.unit,
                  d = out$distance,
                  t = out$time,
-                 speed = walking.speed,
+                 walking.speed = walking.speed,
                  data = out)
 
   class(output) <- "euclidean_path"
@@ -687,11 +687,11 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
     nominal.time <- paste(round(x$t, 1), "sec")
   }
 
-  if (x$unit == "native") {
+  if (x$distance.unit == "native") {
     d.unit <- "units;"
-  } else if (x$unit == "meter") {
+  } else if (x$distance.unit == "meter") {
     d.unit <- "m;"
-  } else if (x$unit == "yard") {
+  } else if (x$distance.unit == "yard") {
     d.unit <- "yd;"
   }
 
@@ -700,7 +700,7 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
   if (is.null(unit.posts)) {
     arrows(ego.xy$x, ego.xy$y, alter.xy$x, alter.xy$y, col = case.color,
       lwd = 3, length = 0.075)
-    title(sub = paste(round(x$d, 1), d.unit, nominal.time, "@", x$speed,
+    title(sub = paste(round(x$d, 1), d.unit, nominal.time, "@", x$walking.speed,
       "km/hr"))
   } else {
     if (unit.posts %in% c("distance", "time") == FALSE) {
@@ -708,9 +708,9 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
     } else {
       if (is.null(unit.interval)) {
         if (unit.posts == "distance")  {
-          unit.interval <- 50 * x$speed / 5
+          unit.interval <- 50 * x$walking.speed / 5
         } else if (unit.posts == "time") {
-          unit.interval <- 60 * x$speed / 5
+          unit.interval <- 60 * x$walking.speed / 5
         }
       } else {
         if (!is.numeric(unit.interval)) {
@@ -719,12 +719,12 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
       }
 
       if (unit.posts == "distance") {
-        tot <- cholera::unitMeter(stats::dist(dat))
+        tot <- unitMeter(stats::dist(dat))
         h <- seq(0, tot, unit.interval) / cholera::unitMeter(1)
       } else if (unit.posts == "time") {
-        tot <- cholera::distanceTime(cholera::unitMeter(stats::dist(dat),
-          unit = "native"), speed = x$speed)
-        h <- seq(0, tot, unit.interval) * 1000 * x$speed / 60^2 /
+        tot <- cholera::distanceTime(unitMeter(stats::dist(dat),
+          distance.unit = "native"), walking.speed = x$walking.speed)
+        h <- seq(0, tot, unit.interval) * 1000 * x$walking.speed / 60^2 /
           cholera::unitMeter(1)
       } else {
         stop('Specify unit.posts.')
@@ -766,7 +766,7 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
       post.info <- paste("posts @", unit.interval, "sec intervals")
     }
 
-    title(sub = paste(round(x$d, 1), d.unit, nominal.time, "@", x$speed,
+    title(sub = paste(round(x$d, 1), d.unit, nominal.time, "@", x$walking.speed,
       "km/hr;", post.info))
   }
 }

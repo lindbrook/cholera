@@ -6,7 +6,7 @@
 \usage{
 euclideanDistance(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, case.location = "address", vestry = FALSE,
-  unit = "meter", time.unit = "second", walking.speed = 5)
+  distance.unit = "meter", time.unit = "second", walking.speed = 5)
 }
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
@@ -21,7 +21,7 @@ euclideanDistance(origin = 1, destination = NULL, type = "case-pump",
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
-\item{unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
+\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 

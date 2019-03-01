@@ -6,7 +6,7 @@
 #' @param observed Logical. Use observed or "simulated" expected data.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of nodes.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
+#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @note The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using \code{distanceTime()}. Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
@@ -44,15 +44,15 @@
 #' }
 
 walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, weighted = TRUE, vestry = FALSE, unit = "meter",
+  observed = TRUE, weighted = TRUE, vestry = FALSE, distance.unit = "meter",
   time.unit = "second", walking.speed = 5) {
 
   if (is.null(origin) & is.null(destination)) {
     stop("If origin = NULL, you must supply a destination.")
   }
 
-  if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('unit must be "meter", "yard" or "native".')
+  if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
+    stop('distance.unit must be "meter", "yard" or "native".')
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
@@ -593,16 +593,17 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   # ----- #
 
-  out$data$time <- distanceTime(out$data$distance, unit = time.unit,
-    speed = walking.speed)
-
-  if (unit == "meter") {
+  if (distance.unit == "meter") {
     out$data$distance <- unitMeter(out$data$distance, "meter")
-  } else if (unit == "yard") {
+  } else if (distance.unit == "yard") {
     out$data$distance <- unitMeter(out$data$distance, "yard")
-  } else if (unit == "native") {
+  } else if (distance.unit == "native") {
     out$data$distance <- unitMeter(out$data$distance, "native")
   }
+
+  out$data$time <- distanceTime(out$data$distance,
+    distance.unit = distance.unit, time.unit = time.unit,
+    walking.speed = walking.speed)
 
   output <- list(path = out$path,
                  data = out$data,
@@ -612,14 +613,14 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
                  observed = observed,
                  weighted = weighted,
                  vestry = vestry,
-                 unit = unit,
+                 distance.unit = distance.unit,
                  time.unit = time.unit,
                  nodes = nodes,
                  edges = edges,
                  g = g,
                  ego.node = ego.node,
                  alter.node = alter.node,
-                 speed = walking.speed)
+                 walking.speed = walking.speed)
 
   class(output) <- "walking_path"
   output
@@ -917,11 +918,11 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
     nominal.time <- paste(round(x$data$time), "sec")
   }
 
-  if (x$unit == "native") {
+  if (x$distance.unit == "native") {
     d.unit <- "units;"
-  } else if (x$unit == "meter") {
+  } else if (x$distance.unit == "meter") {
     d.unit <- "m;"
-  } else if (x$unit == "yard") {
+  } else if (x$distance.unit == "yard") {
     d.unit <- "yd;"
   }
 
@@ -933,9 +934,9 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
     } else {
       if (is.null(unit.interval)) {
         if (unit.posts == "distance")  {
-          unit.interval <- 50 * x$speed / 5
+          unit.interval <- 50 * x$walking.speed / 5
         } else if (unit.posts == "time") {
-          unit.interval <- 60 * x$speed / 5
+          unit.interval <- 60 * x$walking.speed / 5
         }
       } else {
         if (!is.numeric(unit.interval)) {
@@ -953,7 +954,8 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
       if (unit.posts == "distance") {
         cumulative <- unitMeter(cumsum(edge.data$d), "meter")
       } else if (unit.posts == "time") {
-        cumulative <- distanceTime(cumsum(edge.data$d), speed = x$speed)
+        cumulative <- distanceTime(cumsum(edge.data$d),
+          walking.speed = x$walking.speed)
       }
 
       total <- cumulative[length(cumulative)]
@@ -999,8 +1001,8 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
         if (unit.posts == "distance") {
           h <- (posts[i] - bins[edge.select[i], "lo"]) / unitMeter(1)
         } else if (unit.posts == "time") {
-          h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * x$speed / 60^2 /
-            unitMeter(1)
+          h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 *
+            x$walking.speed / 60^2 / unitMeter(1)
         }
 
         p.coords <- quandrantCoordinates(e.data, h, theta)
@@ -1052,10 +1054,10 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
     }
 
     title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
-      x$speed, "km/hr;", post.info))
+      x$walking.speed, "km/hr;", post.info))
   } else {
     title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
-      x$speed, "km/hr"))
+      x$walking.speed, "km/hr"))
   }
 }
 
