@@ -114,7 +114,8 @@ plot.classifier_audit <- function(x, zoom = 0.5, unit = "meter", ...) {
   x.proj <- coords$x.proj
   y.proj <- coords$y.proj
 
-  segmentLocator(x$segment, zoom = zoom, title = FALSE, subtitle = FALSE)
+  segmentLocator(x$segment, zoom = zoom, add.title = FALSE,
+    add.subtitle = FALSE)
 
   # Bisection / Intersection test
   distB <- stats::dist(rbind(x$seg.df[1, ], c(x.proj, y.proj))) +

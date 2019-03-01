@@ -6,7 +6,7 @@
 #' @param color Character. Color of circle.
 #' @param line.type Character. Circle line type.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps and locations from Vestry report. \code{FALSE} uses original 13 pumps.
-#' @param subtitle Logical. Add subtitle with estimated "walking" time in seconds.
+#' @param add.subtitle Logical. Add subtitle with estimated "walking" time in seconds.
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param ... Additional plotting parameters.
 #' @return Adds a circle (polygon) to a graphics plot.
@@ -17,7 +17,7 @@
 #' addWhitehead()
 
 addWhitehead <- function(pump = "Broad Street", radius = 210, color = "black",
-  line.type = "solid", vestry = FALSE, subtitle = FALSE, walking.speed = 5,
+  line.type = "solid", vestry = FALSE, add.subtitle = FALSE, walking.speed = 5,
   ...) {
 
   r <- radius / unitMeter(1, "yard")

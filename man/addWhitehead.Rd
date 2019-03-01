@@ -5,7 +5,7 @@
 \title{Add Rev. Henry Whitehead's Broad Street pump neighborhood.}
 \usage{
 addWhitehead(pump = "Broad Street", radius = 210, color = "black",
-  line.type = "solid", vestry = FALSE, subtitle = FALSE,
+  line.type = "solid", vestry = FALSE, add.subtitle = FALSE,
   walking.speed = 5, ...)
 }
 \arguments{
@@ -19,7 +19,7 @@ addWhitehead(pump = "Broad Street", radius = 210, color = "black",
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps and locations from Vestry report. \code{FALSE} uses original 13 pumps.}
 
-\item{subtitle}{Logical. Add subtitle with estimated "walking" time in seconds.}
+\item{add.subtitle}{Logical. Add subtitle with estimated "walking" time in seconds.}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
