@@ -351,13 +351,15 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
     if (is.character(origin)) {
       origin <- caseAndSpace(origin)
-      if (grepl("Square", origin)) {
-        ego.data <- cholera::landmarks[grep(origin, cholera::landmarks$name), ]
+      if (origin %in% cholera::landmark.squares$name) {
+        sq.test <- grepl(origin, cholera::landmarks$name)
+        if (any(sq.test)) {
+          ego.data <- cholera::landmarks[sq.test, ]
+        } else stop('Use a valid landmark square name for origin.')
       } else if (origin %in% cholera::landmarks$name) {
-        ego.data <-  cholera::landmarks[cholera::landmarks$name == origin, ]
-      } else {
-        stop('Use a valid landmark name for origin.')
-      }
+        ego.data <- cholera::landmarks[cholera::landmarks$name == origin, ]
+      } else stop('Use a valid landmark name for origin.')
+
       ego.id <- ego.data$name
       ego.anchor <- ego.data$case
     }
@@ -388,13 +390,16 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       if (is.character(destination)) {
         destination <- caseAndSpace(destination)
-        if (grepl("Square", destination)) {
-         alter.case <- cholera::landmarks[grep(destination,
-           cholera::landmarks$name), "case"]
+        if (destination %in% cholera::landmark.squares$name) {
+          sq.test <- grepl(destination, cholera::landmarks$name)
+          if (any(sq.test)) {
+            alter.case <- cholera::landmarks[sq.test, "case"]
+          } else stop('Use a valid landmark square name for destination.')
+
         } else if (destination %in% cholera::landmarks$name) {
           sel <- cholera::landmarks$name == destination
           alter.case <- cholera::landmarks[sel, "case"]
-        }
+        } else stop('Use a valid landmark name for destination.')
       }
 
       alters <- nodes$node[nodes$anchor %in% alter.case &
