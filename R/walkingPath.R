@@ -843,14 +843,17 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
 
   if (x$type == "case-pump" | x$type == "cases") {
     points(origin.obs, col = "red")
-    text(origin.obs, col = "red", pos = 1, labels = ego.data$anchor)
+    if (is.numeric(x$data$case)) {
+      text(origin.obs, col = "red", pos = 1, labels = ego.data$anchor)
+    }
   }
 
   if (x$type == "case-pump") {
     if (is.numeric(x$data$case)) {
       title(main = paste("Case", x$data$case, "to Pump", x$data$pump))
     } else if (is.character(x$data$case)) {
-      title(main = paste(x$data$case, "to Pump", x$data$pump))
+      nm <- cholera::landmarks[cholera::landmarks$case == x$data$anchor, "name"]
+      title(main = paste(nm, "to Pump", x$data$pump))
     }
   } else if (x$type == "cases") {
     points(destination.obs, col = "red")
