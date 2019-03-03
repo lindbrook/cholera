@@ -9,6 +9,7 @@
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param add.title Logical. Print title.
 #' @param add.subtitle Logical. Print subtitle.
+#' @param highlight Logical. Highlight selected road and its cases.
 #' @return A base R graphics plot.
 #' @import graphics
 #' @note With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2").  See \code{cholera::road.segments}.
@@ -20,7 +21,7 @@
 
 segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  add.title = TRUE, add.subtitle = TRUE) {
+  add.title = TRUE, add.subtitle = TRUE, highlight = TRUE) {
 
   if (is.character(id) == FALSE) {
     stop('id\'s type must be a character.')
@@ -72,17 +73,29 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
         text(cholera::fatalities[!seg.cases, c("x", "y")],
           labels = cholera::fatalities$case[!seg.cases], cex = 0.5)
         if (any(seg.cases)) {
-          text(cholera::fatalities[seg.cases, c("x", "y")],
-            labels = cholera::fatalities$case[seg.cases], cex = 0.5,
-            col = "red")
+          if (highlight) {
+            text(cholera::fatalities[seg.cases, c("x", "y")],
+              labels = cholera::fatalities$case[seg.cases], cex = 0.5,
+              col = "red")
+          } else {
+            text(cholera::fatalities[seg.cases, c("x", "y")],
+              labels = cholera::fatalities$case[seg.cases], cex = 0.5)
+          }
+
         }
       } else if (cases == "address") {
         text(cholera::fatalities.address[!seg.anchors, c("x", "y")],
           labels = cholera::fatalities.address$anchor[!seg.anchors], cex = 0.5)
         if (any(seg.anchors)) {
-          text(cholera::fatalities.address[seg.anchors, c("x", "y")],
-            labels = cholera::fatalities.address$anchor[seg.anchors],
-            cex = 0.5, col = "red")
+          if (highlight) {
+            text(cholera::fatalities.address[seg.anchors, c("x", "y")],
+              labels = cholera::fatalities.address$anchor[seg.anchors],
+              cex = 0.5, col = "red")
+          } else {
+            text(cholera::fatalities.address[seg.anchors, c("x", "y")],
+              labels = cholera::fatalities.address$anchor[seg.anchors],
+              cex = 0.5)
+          }
         }
       }
     }
@@ -96,7 +109,9 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
   points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
   text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1,
     col = "blue")
-  segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
+
+  if (highlight) segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
+  else segments(st$x1, st$y1, st$x2, st$y2)
 
   if (add.title) title(main = paste0(st$name, ": Segment # ", id))
 
