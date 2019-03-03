@@ -9,7 +9,7 @@
 #' @param add.subtitle Logical. Include subtitle with road information.
 #' @param add.pump Logical. Include nearby pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param highlight Logical. Highlight selected road.
+#' @param highlight Logical. Highlight selected road and its cases.
 #' @param distance.unit Character. Unit of measurement: "meter" or "yard". Default is \code{NULL}, which returns the map's native scale.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.

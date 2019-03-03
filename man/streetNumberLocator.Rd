@@ -27,7 +27,7 @@ streetNumberLocator(road.number = 216, zoom = FALSE,
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
-\item{highlight}{Logical. Highlight selected road.}
+\item{highlight}{Logical. Highlight selected road and its cases.}
 
 \item{distance.unit}{Character. Unit of measurement: "meter" or "yard". Default is \code{NULL}, which returns the map's native scale.}
 
