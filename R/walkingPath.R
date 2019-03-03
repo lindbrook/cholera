@@ -219,6 +219,10 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     } else {
       if (is.null(destination)) {
         stop("You must provide a destination!")
+      } else if (length(destination) != 1) {
+        stop("If origin is NULL, select only one destination pump.")
+      } else if (destination < 0) {
+        stop("If origin is NULL, no negative selection for destination.")
       } else {
         if (is.numeric(destination)) {
           if (any(abs(destination) %in% p.ID == FALSE)) {
