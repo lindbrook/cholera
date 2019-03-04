@@ -29,7 +29,7 @@ The reason for having two types is that while the `points()` based approach is c
 
 ```{r marshall_points, fig.align = "left", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
 streetNameLocator("marshall street", zoom = TRUE)
-addNeighborhoodCases(type = "expected")
+addNeighborhoodCases(observed = FALSE)
 ```
 
 ```{r marshall_polygons, fig.align = "left", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
