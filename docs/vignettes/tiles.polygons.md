@@ -1,7 +1,7 @@
 deldirPolygons(): Tiles, Triangles and Polygons
 ================
 lindbrook
-2019-02-16
+2019-03-03
 
 `deldirVertices()` is a wrapper function that extracts the vertices of
 ‘deldir’ Delauny triangles and Dirichelet (Voronoi) tiles for use with
@@ -29,9 +29,9 @@ corners of the rectangular window: xmin, xmax, ymin, ymax. `type` is
 vertices <- deldirVertices(sites = cholera::pumps, rw.data = cholera::roads)
 
 # define colors, plot map, and color code fatalities
-snow.colors <- grDevices::adjustcolor(cholera::snowColors(), alpha.f = 1/3)
-cholera::snowMap(add.cases = FALSE)
-cholera::addNeighborhoodCases(metric = "euclidean")
+snow.colors <- grDevices::adjustcolor(snowColors(), alpha.f = 1/3)
+snowMap(add.cases = FALSE)
+addNeighborhoodCases(metric = "euclidean")
 
 # plot color coded polygons
 invisible(lapply(seq_along(vertices), function(i) {

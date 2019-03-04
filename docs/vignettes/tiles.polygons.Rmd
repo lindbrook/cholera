@@ -25,9 +25,9 @@ The functions has four arguments. `sites` is the data frame of the sites or foca
 vertices <- deldirVertices(sites = cholera::pumps, rw.data = cholera::roads)
 
 # define colors, plot map, and color code fatalities
-snow.colors <- grDevices::adjustcolor(cholera::snowColors(), alpha.f = 1/3)
-cholera::snowMap(add.cases = FALSE)
-cholera::addNeighborhoodCases(metric = "euclidean")
+snow.colors <- grDevices::adjustcolor(snowColors(), alpha.f = 1/3)
+snowMap(add.cases = FALSE)
+addNeighborhoodCases(metric = "euclidean")
 
 # plot color coded polygons
 invisible(lapply(seq_along(vertices), function(i) {
