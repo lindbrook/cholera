@@ -111,8 +111,6 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
     col = "blue")
 
   if (highlight) segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
-  else segments(st$x1, st$y1, st$x2, st$y2)
-
   if (add.title) title(main = paste0(st$name, ": Segment # ", id))
 
   segment.length <- segmentLength(id, distance.unit)
