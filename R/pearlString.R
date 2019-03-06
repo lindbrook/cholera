@@ -272,7 +272,7 @@ travelingSalesman <- function(vertices, tsp.method = "repetitive_nn") {
 #' @param i Numeric. Neighborhood ID.
 #' @param pch Numeric.
 #' @param cex Numeric.
-#' @export
+#' @noRd
 
 peripheryAudit <- function(x, i = 1, pch = 16, cex = 0.5) {
   nearest.pump <- x$nearest.pump
@@ -291,7 +291,7 @@ peripheryAudit <- function(x, i = 1, pch = 16, cex = 0.5) {
 #'
 #' @param x Object. Neighborhood data.
 #' @param i Numeric. Neighborhood ID.
-#' @export
+#' @noRd
 
 polygonAudit <- function(x, i = 1) {
   nearest.pump <- x$nearest.pump
