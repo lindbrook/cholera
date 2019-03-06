@@ -275,7 +275,7 @@ the 1854 outbreak.
 `neighborhoodWalking()` is computationally intensive. Using R version
 3.5.2 on a single core of a 2.3 GHz Intel i7, plotting observed paths to
 PDF takes about 5 seconds; doing the same for expected paths takes about
-30 seconds. Using the functions’ parallel implementation on 4 physical
+30 seconds. Using the function’s parallel implementation on 4 physical
 (8 logical) cores, the times fall to about 4 and 13 seconds.
 
 Note that parallelization is currently only available on Linux and Mac.
