@@ -108,7 +108,7 @@
 #' @docType data
 "landmarks"
 
-#' Centers of City Square.
+#' Centers of city squares.
 #'
 #' @format A data frame with 6 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
 #'  \describe{

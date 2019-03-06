@@ -3,7 +3,7 @@
 \docType{data}
 \name{landmark.squares}
 \alias{landmark.squares}
-\title{Centers of City Square.}
+\title{Centers of city squares.}
 \format{A data frame with 6 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
  \describe{
     \item{\code{name}}{square name}
@@ -15,6 +15,6 @@
 landmark.squares
 }
 \description{
-Centers of City Square.
+Centers of city squares.
 }
 \keyword{datasets}
