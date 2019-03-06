@@ -24,7 +24,7 @@ The functions has four arguments. `sites` is the data frame of the sites or foca
 
 To color tiles and triangles or to count the number of points (e.g., fatalities) within each tile or triangle, we can apply `sp::point.in.polygon()` to the results of `deldirVertices()`.
 
-## Count points within tiles and triangles
+## Count points within tiles
 
 ```{r counting_tiles, echo = TRUE, eval = TRUE}
 # compute vertices of Voronoi tiles
@@ -44,6 +44,8 @@ names(census) <- paste0("p", cholera::pumps$id)
 # count of fatalities by neighborhood
 vapply(census, sum, integer(1L))
 ```
+
+## Count points within triangles
 
 ```{r counting_triangles, echo = TRUE, eval = TRUE}
 # compute vertices of Delauny triangles
@@ -65,33 +67,37 @@ names(census) <- paste0("t", seq_along(vertices))
 vapply(census, sum, integer(1L))
 ```
 
-## Color tiles and triangles
+## Color tiles
 
 ```{r coloring_tiles, fig.align = "left", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
 # compute vertices of Voronoi tiles
 vertices <- deldirVertices(sites = cholera::pumps, rw.data = cholera::roads)
 
-# define colors, plot map, and color code tiles
+# define colors
 snow.colors <- grDevices::adjustcolor(snowColors(), alpha.f = 1/3)
-snowMap(add.cases = FALSE)
 
-# plot color coded tiles
+# plot map and color coded tiles
+snowMap(add.cases = FALSE)
 invisible(lapply(seq_along(vertices), function(i) {
   polygon(vertices[[i]], col = snow.colors[[i]])
 }))
 ```
+
+## Color triangles
 
 ```{r coloring_triangles, fig.align = "left", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
 # compute vertices of Delauny triangles
 vertices <- deldirVertices(sites = cholera::pumps,
   rw.data = cholera::roads, type = "triangles")
 
-# define colors, plot map, and color code triangles
-cspace <- sample(colorspace::qualitative_hcl(length(vertices)))
-colors <- grDevices::adjustcolor(cspace, alpha.f = 1/3)
-snowMap(add.cases = FALSE)
+# define colors
+colors.pair <- RColorBrewer::brewer.pal(10, "Paired")
+colors.dark <- RColorBrewer::brewer.pal(8, "Dark2")
+brewer.colors <- sample(c(colors.pair, colors.dark))
+colors <- grDevices::adjustcolor(brewer.colors, alpha.f = 1/3)
 
-# plot color coded triangles
+# plot map and color coded triangles
+snowMap(add.cases = FALSE)
 invisible(lapply(seq_along(vertices), function(i) {
   polygon(vertices[[i]], col = colors[[i]])
 }))

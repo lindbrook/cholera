@@ -69,11 +69,11 @@ vapply(census, sum, integer(1L))
 # compute vertices of Voronoi tiles
 vertices <- deldirVertices(sites = cholera::pumps, rw.data = cholera::roads)
 
-# define colors, plot map, and color code tiles
+# define colors
 snow.colors <- grDevices::adjustcolor(snowColors(), alpha.f = 1/3)
-snowMap(add.cases = FALSE)
 
-# plot color coded tiles
+# plot map and color coded tiles
+snowMap(add.cases = FALSE)
 invisible(lapply(seq_along(vertices), function(i) {
   polygon(vertices[[i]], col = snow.colors[[i]])
 }))
@@ -86,12 +86,14 @@ invisible(lapply(seq_along(vertices), function(i) {
 vertices <- deldirVertices(sites = cholera::pumps,
   rw.data = cholera::roads, type = "triangles")
 
-# define colors, plot map, and color code triangles
-cspace <- sample(colorspace::qualitative_hcl(length(vertices)))
-colors <- grDevices::adjustcolor(cspace, alpha.f = 1/3)
-snowMap(add.cases = FALSE)
+# define colors
+colors.pair <- RColorBrewer::brewer.pal(10, "Paired")
+colors.dark <- RColorBrewer::brewer.pal(8, "Dark2")
+brewer.colors <- sample(c(colors.pair, colors.dark))
+colors <- grDevices::adjustcolor(brewer.colors, alpha.f = 1/3)
 
-# plot color coded triangles
+# plot map and color coded triangles
+snowMap(add.cases = FALSE)
 invisible(lapply(seq_along(vertices), function(i) {
   polygon(vertices[[i]], col = colors[[i]])
 }))
