@@ -2,7 +2,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.5.9.9076-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
-
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 ### package features
@@ -274,7 +273,7 @@ the 1854 outbreak.
 ### note on `neighborhoodWalking()`
 
 `neighborhoodWalking()` is computationally intensive. Using R version
-3.5.1 on a single core of a 2.3 GHz Intel i7, plotting observed paths to
+3.5.2 on a single core of a 2.3 GHz Intel i7, plotting observed paths to
 PDF takes about 5 seconds; doing the same for expected paths takes about
 30 seconds. Using the functions’ parallel implementation on 4 physical
 (8 logical) cores, the times fall to about 4 and 13 seconds.
