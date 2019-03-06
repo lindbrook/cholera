@@ -16,7 +16,7 @@ deldirVertices(sites, rw.data = NULL, rw = NULL, type = "tiles")
 \item{type}{Character. "tiles" (tessellation) or "triangles" (triangulation) vertices.}
 }
 \value{
-An R list of data frames of polygon vertices.
+An R list of data frames of vertices.
 }
 \description{
 For use with functions that use polygons.

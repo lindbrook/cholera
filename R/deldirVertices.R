@@ -5,7 +5,7 @@
 #' @param rw.data Object. Data frame of secondary source of data to set the rectangular window or bounding box: observations, cases, etc. with variables "x" and "y".
 #' @param rw Numeric. Alternative to rw.data: vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax.
 #' @param type Character. "tiles" (tessellation) or "triangles" (triangulation) vertices.
-#' @return An R list of data frames of polygon vertices.
+#' @return An R list of data frames of vertices.
 #' @note This function relies on the 'deldir' package.
 #' @export
 #' @examples
@@ -41,10 +41,10 @@ deldirVertices <- function(sites, rw.data = NULL, rw = NULL, type = "tiles") {
     suppressMsge = TRUE)
 
   if (type == "tiles") {
-    polygon.data <- deldir::tile.list(tile.triangle)
+    vertex.data <- deldir::tile.list(tile.triangle)
   } else if (type == "triangles") {
-    polygon.data <- deldir::triang.list(tile.triangle)
+    vertex.data <- deldir::triang.list(tile.triangle)
   }
 
-  lapply(polygon.data, function(dat) data.frame(x = dat$x, y = dat$y))
+  lapply(vertex.data, function(dat) data.frame(x = dat$x, y = dat$y))
 }
