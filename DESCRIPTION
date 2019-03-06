@@ -5,6 +5,7 @@ Version: 0.5.9.9076
 Date: 2019-03-06
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
   role = c("aut", "cre"))
+Maintainer: lindbrook <lindbrook@gmail.com>
 Description: Amends errors, augments data and aids analysis of John Snow's map
   of the 1854 London cholera outbreak.
 URL: https://github.com/lindbrook/cholera
