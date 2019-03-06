@@ -29,7 +29,7 @@ vertices <- deldirVertices(sites = cholera::pumps, rw.data = cholera::roads)
 # locations of the 578 fatalities in Soho
 cases <- cholera::fatalities.unstacked
 
-# count fatalities within each polygon (neigborhood)
+# count fatalities within each tile
 census <- lapply(vertices, function(tile) {
   sp::point.in.polygon(cases$x, cases$y, tile$x, tile$y)
 })
