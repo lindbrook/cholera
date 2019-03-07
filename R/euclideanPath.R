@@ -265,7 +265,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         out <- data.frame(case = cholera::landmarks[sel, "name"],
                           anchor = exit.soln$exit,
                           pump = exit.soln$pump,
-                          pump.name = alters[exit.soln$pump, "street"],
+                          pump.name = alters[alters$id == exit.soln$pump,
+                            "street"],
                           distance = exit.soln$d,
                           stringsAsFactors = FALSE)
 
