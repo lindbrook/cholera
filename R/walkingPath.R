@@ -688,15 +688,23 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
 
   # St James Workhouse fix
   if (x$type == "case-pump") {
-    ego.data <- ego.data[ego.data$anchor > 20000, ]
+    if (nrow(ego.data) > 1) {
+      ego.data <- ego.data[ego.data$anchor > 20000, ]
+    }
   } else if (x$type == "cases") {
     if (nrow(ego.data) > 1) {
-      if (is.null(x$origin)) {
-        ego.data <- ego.data[ego.data$anchor ==  x$data$anchorB, ]
+      if (is.numeric(x$origin)) {
+        ego.data <- ego.data[ego.data$anchor < 20000, ]
+      } else if (is.character(x$origin)) {
+        ego.data <- ego.data[ego.data$anchor > 20000, ]
       }
+    }
 
-      if (is.null(x$destination)) {
-        ego.data <- ego.data[ego.data$anchor ==  x$data$anchorA, ]
+    if (nrow(alter.data) > 1) {
+      if (is.numeric(x$destination)) {
+        alter.data <- alter.data[alter.data$anchor < 20000, ]
+      } else if (is.character(x$destination)) {
+        alter.data <- alter.data[alter.data$anchor > 20000, ]
       }
     }
   }
