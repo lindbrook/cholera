@@ -6,9 +6,9 @@
 \usage{
 addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, weighted = TRUE, polygon.method = "pearl.string",
-  multi.core = FALSE, area = TRUE, path = NULL, path.color = NULL,
-  path.width = 3, alpha.level = 0.25, polygon.type = "area",
-  polygon.col = NULL, polygon.lwd = 2, ...)
+  path = NULL, path.color = NULL, path.width = 3,
+  alpha.level = 0.25, polygon.type = "solid", polygon.col = NULL,
+  polygon.lwd = 2, multi.core = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -21,10 +21,6 @@ addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
 
 \item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
-
-\item{area}{Logical. Area polygons.}
-
 \item{path}{Character. "expected" or "observed".}
 
 \item{path.color}{Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors()}.}
@@ -33,13 +29,13 @@ addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
-\item{polygon.type}{Character. "perimeter" or "area".}
+\item{polygon.type}{Character. "perimeter" or "solid".}
 
 \item{polygon.col}{Character.}
 
 \item{polygon.lwd}{Numeric.}
 
-\item{...}{Additional plotting parameters.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \description{
 Add expected walking neighborhoods.
