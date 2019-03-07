@@ -687,13 +687,17 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
   dat <- numericNodeCoordinates(x$path)
 
   # St James Workhouse fix
-  if (nrow(ego.data) > 1) {
-    if (is.null(x$origin)) {
-      ego.data <- ego.data[ego.data$anchor ==  x$data$anchorB, ]
-    }
-    
-    if (is.null(x$destination)) {
-      ego.data <- ego.data[ego.data$anchor ==  x$data$anchorA, ]
+  if (x$type == "case-pump") {
+    ego.data <- ego.data[ego.data$anchor > 20000, ]
+  } else if (x$type == "cases") {
+    if (nrow(ego.data) > 1) {
+      if (is.null(x$origin)) {
+        ego.data <- ego.data[ego.data$anchor ==  x$data$anchorB, ]
+      }
+
+      if (is.null(x$destination)) {
+        ego.data <- ego.data[ego.data$anchor ==  x$data$anchorA, ]
+      }
     }
   }
 
