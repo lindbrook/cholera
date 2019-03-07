@@ -7,8 +7,8 @@
 addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
   metric = "walking", type = "stack.base", token = "point",
   text.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
-  case.location = "nominal", observed = TRUE, multi.core = FALSE,
-  ...)
+  case.location = "nominal", observed = TRUE, alpha.level = 0.5,
+  multi.core = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -33,9 +33,9 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 
 \item{observed}{Logical. TRUE is observed; FALSE is expected or simulated.}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+\item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
-\item{...}{Additional plotting parameters.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \description{
 Add cases to a plot as "address" or "fatalities" and as points or IDs.

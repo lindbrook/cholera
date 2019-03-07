@@ -12,8 +12,8 @@
 #' @param color Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}
 #' @param case.location Character. For \code{metric = "euclidean"}: "address" uses \code{ortho.proj}; "nominal" uses \code{fatalities}.
 #' @param observed Logical. TRUE is observed; FALSE is expected or simulated.
+#' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
-#' @param ... Additional plotting parameters.
 #' @export
 #' @examples
 #' \dontrun{
@@ -28,7 +28,7 @@
 addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   metric = "walking", type = "stack.base", token = "point", text.size = 0.5,
   vestry = FALSE, weighted = TRUE, color = NULL, case.location = "nominal",
-  observed = TRUE, multi.core = FALSE, ...) {
+  observed = TRUE, alpha.level = 0.5, multi.core = FALSE) {
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
     stop('metric must be "euclidean" or "walking".')
@@ -141,7 +141,8 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
 
       if (token == "point") {
         points(case.data[sel, vars], pch = 15, cex = 1.25,
-          col = grDevices::adjustcolor(neighborhood.color, alpha.f = 1/2))
+          col = grDevices::adjustcolor(neighborhood.color,
+            alpha.f = alpha.level))
       } else if (token == "id") {
         text(case.data[sel, vars], cex = text.size,
           col = neighborhood.color, labels = case.data[sel, "case"])
