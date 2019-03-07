@@ -509,6 +509,9 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       tmp <- origin
       origin <- destination
       destination <- tmp
+      tmp <- ego.node
+      ego.node <- alter.node
+      alter.node <- tmp
     }
 
   # ----- #
@@ -597,6 +600,9 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       tmp <- origin
       origin <- destination
       destination <- tmp
+      tmp <- ego.node
+      ego.node <- alter.node
+      alter.node <- tmp
     }
   }
 
