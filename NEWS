@@ -35,16 +35,13 @@ cholera 0.6.0
 
 # Function Change - landmarks as origin and/or destination (treated as cases) #
 
-- euclideanDistance()
 - euclideanPath()
-- walkingDistance()
 - walkingPath()
 - find nearest case or landmark, given pump (i.e., reverse lookup)
 
 # Function Changes - case.location argument: "address" or "nominal" #
 
 - addVoronoi(case.location = "nominal")
-- euclideanDistance(case.location = "nominal")
 - euclideanPath(case.location = "nominal")
 - neighborhoodEuclidean(case.location = "nominal")
 
@@ -71,6 +68,11 @@ cholera 0.6.0
 # New Vignette #
 
 - "deldirVertices(): Tiles, Triangles and Polygons"
+
+# Deprecated Functions #
+
+- euclideanDistance()
+- walkingDistance()
 
 
 cholera 0.5.1
