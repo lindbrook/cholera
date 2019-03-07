@@ -77,7 +77,7 @@ addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   anchors <- seq_len(nrow(cholera::regular.cases))
 
   nearest.pump <- parallel::mclapply(anchors, function(x) {
-    euclideanDistance(x, destination = pump.id, vestry = vestry,
+    euclideanPath(x, destination = pump.id, vestry = vestry,
       observed = FALSE, case.location = case.location)$data$pump
   }, mc.cores = cores)
 
