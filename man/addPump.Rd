@@ -5,7 +5,7 @@
 \title{Add selected pump(s) to plot.}
 \usage{
 addPump(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
-  label = TRUE, pos = 1, ...)
+  label = TRUE, pos = 1)
 }
 \arguments{
 \item{pump.select}{Numeric or Integer. Vector of water pump numerical ID(s). With \code{vestry = TRUE}, whole number(s) between 1 and 14. With \code{vestry = FALSE}, whole number(s) between 1 and 13. See \code{pumps.vestry} and \code{pumps} for IDs and details about specific pumps. \code{NULL} plots all pumps. Negative selection allowed.}
@@ -19,8 +19,6 @@ addPump(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
 \item{label}{Logical. TRUE adds text label.}
 
 \item{pos}{Numeric. Position of label.}
-
-\item{...}{Additional plotting parameters.}
 }
 \description{
 Add selected pump(s) to plot.

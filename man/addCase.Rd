@@ -5,7 +5,7 @@
 \title{Add observed case(s).}
 \usage{
 addCase(case = 1, type = "observed", token = "both",
-  text.size = 0.5, col = "red", ...)
+  text.size = 0.5, col = "red")
 }
 \arguments{
 \item{case}{Numeric. Vector of case ID(s).}
@@ -17,19 +17,14 @@ addCase(case = 1, type = "observed", token = "both",
 \item{text.size}{Numeric. Size of case ID text.}
 
 \item{col}{Character. Color.}
-
-\item{...}{Additional plotting parameters.}
 }
 \description{
 Add case(s), as "address" or "fatalities" as points or IDs, to a plot.
 }
 \examples{
-\dontrun{
-
 snowMap(add.cases = FALSE)
 addCase(1)
 
 snowMap(add.cases = FALSE)
 addCase(100)
-}
 }

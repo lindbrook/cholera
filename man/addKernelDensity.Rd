@@ -7,7 +7,7 @@
 addKernelDensity(pump.subset = "pooled", pump.select = NULL,
   neighborhood.type = "walking", cases = "unstacked",
   bandwidth = 0.5, color = "black", line.type = "solid",
-  multi.core = FALSE, ...)
+  multi.core = FALSE)
 }
 \arguments{
 \item{pump.subset}{Character or Numeric: "pooled", "individual", or numeric vector. "pooled" treats all observations as a single set. "individual" is a shortcut for all individual pump neighborhoods. Use of vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.}
@@ -25,8 +25,6 @@ addKernelDensity(pump.subset = "pooled", pump.select = NULL,
 \item{line.type}{Character. Line type for contour lines.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
-
-\item{...}{Additional plotting parameters.}
 }
 \value{
 Add contours to a graphics plot.

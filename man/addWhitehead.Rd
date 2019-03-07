@@ -6,7 +6,7 @@
 \usage{
 addWhitehead(pump = "Broad Street", radius = 210, color = "black",
   line.type = "solid", vestry = FALSE, add.subtitle = FALSE,
-  walking.speed = 5, ...)
+  walking.speed = 5)
 }
 \arguments{
 \item{pump}{Character or Numeric. Name (road name) or numerical ID of selected pump. See \code{pumps} or \code{pumps.vestry}.}
@@ -22,8 +22,6 @@ addWhitehead(pump = "Broad Street", radius = 210, color = "black",
 \item{add.subtitle}{Logical. Add subtitle with estimated "walking" time in seconds.}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
-
-\item{...}{Additional plotting parameters.}
 }
 \value{
 Adds a circle (polygon) to a graphics plot.

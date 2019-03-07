@@ -5,7 +5,7 @@
 \title{Adds Snow's graphical annotation of the Broad Street pump walking neighborhood.}
 \usage{
 addSnow(type = "area", color = "dodgerblue", alpha.level = 0.25,
-  line.width = 2, ...)
+  line.width = 2)
 }
 \arguments{
 \item{type}{Character. Type of annotation plot: "area", "perimeter" or "street".}
@@ -15,8 +15,6 @@ addSnow(type = "area", color = "dodgerblue", alpha.level = 0.25,
 \item{alpha.level}{Numeric. Alpha level transparency: a value in [0, 1].}
 
 \item{line.width}{Numeric. Line width for \code{type = "street"} and \code{type = "perimeter"}.}
-
-\item{...}{Additional plotting parameters.}
 }
 \description{
 Adds Snow's graphical annotation of the Broad Street pump walking neighborhood.

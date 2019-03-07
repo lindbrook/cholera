@@ -4,7 +4,6 @@
 #' @param color Character. Neighborhood color.
 #' @param alpha.level Numeric. Alpha level transparency: a value in [0, 1].
 #' @param line.width Numeric. Line width for \code{type = "street"} and \code{type = "perimeter"}.
-#' @param ... Additional plotting parameters.
 #' @import graphics
 #' @export
 #' @examples
@@ -15,7 +14,7 @@
 #' }
 
 addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
-  line.width = 2, ...) {
+  line.width = 2) {
 
   if (type %in% c("area", "perimeter", "street") == FALSE) {
     stop('type must be "area", "perimeter" or "street".')

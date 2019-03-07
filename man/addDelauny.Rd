@@ -5,7 +5,7 @@
 \title{Add Delauny triangles.}
 \usage{
 addDelauny(pump.select = NULL, vestry = FALSE, color = "black",
-  line.type = "solid", ...)
+  line.type = "solid")
 }
 \arguments{
 \item{pump.select}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6).}
@@ -15,8 +15,6 @@ addDelauny(pump.select = NULL, vestry = FALSE, color = "black",
 \item{color}{Character. Color of triangle edges.}
 
 \item{line.type}{Character. Type of line for triangle edges.}
-
-\item{...}{Additional plotting parameters.}
 }
 \description{
 Add Delauny triangles.

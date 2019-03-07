@@ -4,7 +4,6 @@
 #' @param vestry Logical. \code{FALSE} for original 13 pumps. TRUE for 14 pumps in Vestry Report.
 #' @param color Character. Color of triangle edges.
 #' @param line.type Character. Type of line for triangle edges.
-#' @param ... Additional plotting parameters.
 #' @note This function uses \code{deldir::deldir()}.
 #' @import graphics
 #' @export
@@ -13,7 +12,7 @@
 #' addDelauny()
 
 addDelauny <- function(pump.select = NULL, vestry = FALSE, color = "black",
-  line.type = "solid", ...) {
+  line.type = "solid") {
 
   if (vestry) {
     p.data <- cholera::pumps.vestry

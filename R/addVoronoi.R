@@ -6,7 +6,6 @@
 #' @param color Character. Color of cell edges.
 #' @param line.type Character. Type of line for cell edges: lty.
 #' @param line.width Numeric. Width of cell edges: lwd.
-#' @param ... Additional plotting parameters.
 #' @note This function uses \code{deldir::deldir()}.
 #' @import graphics
 #' @export
@@ -16,7 +15,7 @@
 
 addVoronoi <- function(pump.select = NULL, vestry = FALSE,
   case.location = "nominal", color = "black", line.type = "solid",
-  line.width = 1, ...) {
+  line.width = 1) {
 
   if (case.location %in% c("address", "nominal") == FALSE) {
     stop('case.location must be "address" or "nominal".')
@@ -56,5 +55,5 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE,
     range(cholera::roads$y)), suppressMsge = TRUE)
 
   plot(dat, add = TRUE, wline = "tess", wpoints = "none", col = color,
-    lty = line.type, lwd = line.width, ...)
+    lty = line.type, lwd = line.width)
 }

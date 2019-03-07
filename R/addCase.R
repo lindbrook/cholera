@@ -6,20 +6,17 @@
 #' @param token Character. Type of token to plot: "point", "id" or "both".
 #' @param text.size Numeric. Size of case ID text.
 #' @param col Character. Color.
-#' @param ... Additional plotting parameters.
 #' @export
 #' @examples
-#' \dontrun{
-#'
 #' snowMap(add.cases = FALSE)
 #' addCase(1)
 #'
 #' snowMap(add.cases = FALSE)
 #' addCase(100)
-#' }
+
 
 addCase <- function(case = 1, type = "observed", token = "both",
-  text.size = 0.5, col = "red", ...) {
+  text.size = 0.5, col = "red") {
 
   if (type %in% c("observed", "expected") == FALSE) {
     stop('type must be "observed" or "expected".')
@@ -40,14 +37,13 @@ addCase <- function(case = 1, type = "observed", token = "both",
   } else {
 
     if (token == "point") {
-      points(dat[case, c("x", "y")], lwd = 2, col = col, ...)
+      points(dat[case, c("x", "y")], lwd = 2, col = col)
     } else if (token == "id") {
-      text(dat[case, c("x", "y")], cex = text.size, col = col, labels = case,
-        ...)
+      text(dat[case, c("x", "y")], cex = text.size, col = col, labels = case)
     } else if (token == "both") {
-      points(dat[case, c("x", "y")], lwd = 2, col = col, ...)
+      points(dat[case, c("x", "y")], lwd = 2, col = col)
       text(dat[case, c("x", "y")], cex = text.size, col = col, labels = case,
-        pos = 1, ...)
+        pos = 1)
     }
   }
 }

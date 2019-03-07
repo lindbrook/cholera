@@ -9,7 +9,6 @@
 #' @param line.type Character. Line type for contour lines.
 #' @param cases Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
-#' @param ... Additional plotting parameters.
 #' @return Add contours to a graphics plot.
 #' @import graphics
 #' @note This function uses \code{KernSmooth::bkde2D()}.
@@ -32,7 +31,7 @@
 
 addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
   neighborhood.type = "walking", cases = "unstacked", bandwidth = 0.5,
-  color = "black", line.type = "solid", multi.core = FALSE, ...) {
+  color = "black", line.type = "solid", multi.core = FALSE) {
 
   if (!is.null(cases) & !all(cases %in%
       c("unstacked", "address", "fatality"))) {

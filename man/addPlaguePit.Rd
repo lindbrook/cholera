@@ -4,14 +4,12 @@
 \alias{addPlaguePit}
 \title{Add plague pit (Marshall Street).}
 \usage{
-addPlaguePit(color = "black", line.type = "solid", ...)
+addPlaguePit(color = "black", line.type = "solid")
 }
 \arguments{
 \item{color}{Character. Color of polygon.}
 
 \item{line.type}{Character. Polygon line type.}
-
-\item{...}{Additional plotting parameters.}
 }
 \value{
 Adds a polygon to a graphics plot.
