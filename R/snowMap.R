@@ -44,13 +44,12 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
 #' Add all streets and roads to plot.
 #'
 #' @param col Character. Color
-#' @param ... Additional plotting parameters.
 #' @export
 
-addRoads <- function(col = "gray", ...) {
+addRoads <- function(col = "gray") {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   roads.list <- split(rd[, c("x", "y")], rd$street)
-  invisible(lapply(roads.list, lines, col = "gray", ...))
+  invisible(lapply(roads.list, lines, col = "gray"))
 }
 
 #' Add map border to plot.
