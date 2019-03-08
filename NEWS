@@ -44,6 +44,7 @@ cholera 0.6.0
 - addVoronoi(case.location = "nominal")
 - euclideanPath(case.location = "nominal")
 - neighborhoodEuclidean(case.location = "nominal")
+- addNeighborhoodEuclidean(case.location = "nominal")
 
 # New Functions #
 
@@ -57,6 +58,7 @@ cholera 0.6.0
 - streetHighlight()
 
 # New Exported Functions #
+
 - fixFatalities()
 - landmarkData()
 
@@ -133,7 +135,8 @@ cholera 0.5.0
     plot.voronoi() adds "euclidean.paths" argument for star graph.
 
 - neighborhoodWalking()
-    "area.polygons" related functions for plot_walking() moved to pearlString.R.
+    "area.polygons" related functions for plot_walking() moved to
+    pearlString.R.
 
 - simulateFatalities():
   default is now 20K observations.
@@ -148,7 +151,7 @@ cholera 0.5.0
     location of walking related helper functions.
 
 - walkingDistance() no longer S3.
-    generic S3 functionality moved to  walkingPath().
+    generic S3 functionality moved to walkingPath().
 
 # New Functions #
 
