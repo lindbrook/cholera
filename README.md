@@ -1,5 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.0-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 ### package features
