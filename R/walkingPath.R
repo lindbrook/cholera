@@ -993,9 +993,9 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
       edge.data <- identifyEdges(path.edge, edges)
 
       if (unit.posts == "distance") {
-        cumulative <- unitMeter(cumsum(edge.data$d), "meter")
+        cumulative <- unitMeter(cumsum(edge.data$d))
       } else if (unit.posts == "time") {
-        cumulative <- distanceTime(cumsum(edge.data$d),
+        cumulative <- distanceTime(unitMeter(cumsum(edge.data$d)),
           walking.speed = x$walking.speed)
       }
 

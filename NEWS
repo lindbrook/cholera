@@ -1,3 +1,9 @@
+cholera 0.6.0.9000
+==================
+
+- fix plot.walking_path() timeposts.
+
+
 cholera 0.6.0
 ==================
 
