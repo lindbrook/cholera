@@ -204,7 +204,7 @@ postCoordinates <- function(dat, unit, interval, walking.speed,
   arrow.data = FALSE) {
 
   if (unit == "distance") {
-    cumulative <- unitMeter(cumsum(dat$d), "meter")
+    cumulative <- unitMeter(cumsum(dat$d))
   } else if (unit == "time") {
     cumulative <- distanceTime(cumsum(dat$d), walking.speed = walking.speed)
   }
@@ -236,10 +236,10 @@ postCoordinates <- function(dat, unit, interval, walking.speed,
     theta <- atan(edge.slope)
 
     if (unit == "distance") {
-      h <- (posts[i] - bins[edge.select[i], "lo"]) /unitMeter(1, "meter")
+      h <- (posts[i] - bins[edge.select[i], "lo"]) / unitMeter(1)
     } else if (unit == "time") {
       h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 * walking.speed /
-        60^2 / unitMeter(1, "meter")
+        60^2 / unitMeter(1)
     }
 
     p.coords <- quandrantCoordinates(edge.data, h, theta)

@@ -723,8 +723,8 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
         tot <- unitMeter(stats::dist(dat))
         h <- seq(0, tot, unit.interval) / cholera::unitMeter(1)
       } else if (unit.posts == "time") {
-        tot <- cholera::distanceTime(unitMeter(stats::dist(dat),
-          distance.unit = "native"), walking.speed = x$walking.speed)
+        tot <- distanceTime(unitMeter(stats::dist(dat)),
+          walking.speed = x$walking.speed)
         h <- seq(0, tot, unit.interval) * 1000 * x$walking.speed / 60^2 /
           cholera::unitMeter(1)
       } else {

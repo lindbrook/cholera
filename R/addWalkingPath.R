@@ -305,7 +305,7 @@ addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     edge.data <- identifyEdges(path.edge, edges)
 
     if (unit.posts == "distance") {
-      cumulative <- unitMeter(cumsum(edge.data$d), "meter")
+      cumulative <- unitMeter(cumsum(edge.data$d))
     } else if (unit.posts == "time") {
       cumulative <- distanceTime(cumsum(edge.data$d),
         walking.speed = x$walking.speed)

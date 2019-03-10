@@ -113,7 +113,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
               pump.select = pump.select,
               snow.colors = snow.colors,
               cores = cores,
-              metric = 1 / unitMeter(1, "meter"))
+              metric = 1 / unitMeter(1))
 
   class(out) <- "walking"
   out

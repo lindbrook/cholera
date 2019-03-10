@@ -71,8 +71,7 @@ addWhitehead <- function(pump = "Broad Street", radius = 210, color = "black",
   lines(circumference.x, circumference.y, col = color, lty = line.type)
 
   if (add.subtitle) {
-    est.time <- distanceTime(unitMeter(r, "native"),
-      walking.speed = walking.speed)
+    est.time <- distanceTime(unitMeter(r), walking.speed = walking.speed)
     title(sub = paste(round(est.time, 1), "secs."))
   }
 }
