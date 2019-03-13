@@ -94,6 +94,17 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }
   }
 
+  if (type %in% c("cases", "pumps")) {
+    if (is.null(origin) == FALSE & is.null(destination) == FALSE) {
+      alpha.omega <- c(origin, destination)
+      if (all(is.numeric(alpha.omega)) | all(is.character(alpha.omega))) {
+        if (origin == destination) {
+          stop("origin and destination are at same address!")
+        }
+      }
+    }
+  }
+
   if (observed) {
     node.data <- neighborhoodData(vestry)
   } else {
