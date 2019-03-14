@@ -1,7 +1,7 @@
 cholera 0.6.0.9001
 ==================
 
-- fix St James Workhouse and type = "cases"
+- fix St James Workhouse for type = "cases"
 
 
 cholera 0.6.0.9000
