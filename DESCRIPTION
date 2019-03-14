@@ -14,7 +14,6 @@ LazyData: true
 Depends: R (>= 3.4)
 Imports: deldir (>= 0.0-18),
          HistData (>= 0.7-8),
-         ggplot2,
          igraph,
          KernSmooth,
          pracma,
@@ -23,7 +22,8 @@ Imports: deldir (>= 0.0-18),
          sp,
          threejs,
          TSP
-Suggests: knitr,
+Suggests: ggplot2,
+          knitr,
           rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
