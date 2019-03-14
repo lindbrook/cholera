@@ -384,17 +384,16 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     if (is.null(destination)) {
       node.sel <- nodes$anchor != 0 & nodes$node %in% ego.node == FALSE
       alters <- nodes[node.sel, "node"]
-    } else {
+
+    } else if (is.numeric(destination)) {
       if (observed) {
-        if (is.numeric(destination)) {
-          if (all(destination > 0)) {
-            alter.sel <- cholera::anchor.case$case%in% destination
-          } else if (all(destination < 0)) {
-            alter.sel <- cholera::anchor.case$case %in% abs(destination) ==
-              FALSE
-          } else stop("all positive or all negative.")
-          alter.case <- unique(cholera::anchor.case[alter.sel, "anchor"])
-        }
+        if (all(destination > 0)) {
+          alter.sel <- cholera::anchor.case$case%in% destination
+        } else if (all(destination < 0)) {
+          alter.sel <- cholera::anchor.case$case %in% abs(destination) ==
+            FALSE
+        } else stop("all positive or all negative.")
+        alter.case <- unique(cholera::anchor.case[alter.sel, "anchor"])
       } else {
         if (all(destination > 0)) {
           alter.case <- nodes$anchor[nodes$anchor %in% destination]
@@ -403,18 +402,53 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         } else stop("all positive or all negative.")
       }
 
-      if (is.character(destination)) {
-        destination <- caseAndSpace(destination)
-        if (destination %in% cholera::landmark.squares$name) {
-          sq.test <- grepl(destination, cholera::landmarks$name)
-          if (any(sq.test)) {
-            alter.case <- cholera::landmarks[sq.test, "case"]
-          } else stop('Use a valid landmark square name for destination.')
+      # same stack test
+      if (all(is.numeric(c(ego.id, alter.case)))) {
+        ego.anchor <- cholera::anchor.case[cholera::anchor.case$case %in%
+          ego.id, "anchor"]
+        alter.anchor <- cholera::anchor.case[cholera::anchor.case$case %in%
+          alter.case, "anchor"]
+        stack.test <- vapply(c(ego.anchor, alter.anchor), length, numeric(1L))
 
-        } else if (destination %in% cholera::landmarks$name) {
+        if (all(stack.test== 1)) {
+          if (ego.anchor == alter.anchor) {
+            stop("origin and destination are at same address!")
+          }
+        }
+      }
+
+      alters <- nodes$node[nodes$anchor %in% alter.case &
+                           nodes$node %in% ego.node == FALSE]
+
+    } else if (is.character(destination)) {
+      destination <- caseAndSpace(destination)
+      if (destination %in% cholera::landmark.squares$name) {
+        sq.test <- grepl(destination, cholera::landmarks$name)
+        if (any(sq.test)) {
+          alter.case <- cholera::landmarks[sq.test, "case"]
+        } else stop('Use a valid landmark square name for destination.')
+
+
+      } else if (destination == "St James Workhouse") {
+        st.james.node <- nodes[nodes$anchor == 369, "node"]
+        if (ego.node == st.james.node) {
+          stop("origin and destination are at same address!")
+        } else {
           sel <- cholera::landmarks$name == destination
           alter.case <- cholera::landmarks[sel, "case"]
-        } else stop('Use a valid landmark name for destination.')
+        }
+
+      } else if (destination %in% cholera::landmarks$name) {
+        sel <- cholera::landmarks$name == destination
+        alter.case <- cholera::landmarks[sel, "case"]
+
+      } else stop('Use a valid landmark name for destination.')
+
+      # post caseAndSpace()
+      if (is.character(origin) & is.character(destination)) {
+        if (origin == destination) {
+          stop("origin and destination are at same address!")
+        }
       }
 
       alters <- nodes$node[nodes$anchor %in% alter.case &
@@ -432,8 +466,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       alter.node <- nodes[nodes$anchor == alter.anchor, "node"]
 
       if (is.character(destination)) {
-        alter.id <- cholera::landmarks[cholera::landmarks$case == alter.anchor,
-          "name"]
+        alter.id <- cholera::landmarks[cholera::landmarks$case %in%
+          alter.anchor, "name"]
       } else {
         alter.id <- alter.anchor
       }
@@ -494,7 +528,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }
 
     if (is.character(destination)) {
-      landmark.sel <- cholera::landmarks$case == alter.anchor
+      landmark.sel <- cholera::landmarks$case %in% alter.anchor
       landmark.data <- cholera::landmarks[landmark.sel, ]
       alter.id <- landmark.data$name
       alter.anchor <- landmark.data$case
@@ -803,7 +837,7 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
         destination.obs <- cholera::regular.cases[alter.anchor, ]
       }
     } else if (is.character(unlist(x$data[2]))) {
-      sel <- cholera::landmarks$case == alter.anchor
+      sel <- cholera::landmarks$case %in% alter.anchor
       destination.obs <- cholera::landmarks[sel, c("x.proj", "y.proj")]
       names(destination.obs) <- c("x", "y")
     } else {
