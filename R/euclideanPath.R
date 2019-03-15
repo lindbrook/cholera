@@ -413,14 +413,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       }
     }
 
-
-    # if (is.null(destination)) {
-    #   if (origin.anchor %in% destination.stack |
-    #       destination.anchor %in% origin.stack) {
-    #     stop(stop("origin and destination are at same address!"))
-    #   }
-    # }
-
     if (origin == "St James Workhouse") {
       ego <- case.data[case.data$case == st.james.landmark, case.coords]
     } else {
