@@ -13,6 +13,7 @@ License: GPL (>= 2)
 LazyData: true
 Depends: R (>= 3.4)
 Imports: deldir (>= 0.0-18),
+         ggplot2,
          HistData (>= 0.7-8),
          igraph,
          KernSmooth,
@@ -22,9 +23,7 @@ Imports: deldir (>= 0.0-18),
          sp,
          threejs,
          TSP
-Suggests: ggplot2,
-          knitr,
-          rmarkdown
+Suggests: knitr
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 Encoding: UTF-8
