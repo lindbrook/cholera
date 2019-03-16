@@ -1,3 +1,9 @@
+cholera 0.6.0.9003
+==================
+
+- fix city squares for plot.euclidean_path().
+
+
 cholera 0.6.0.9002
 ==================
 
