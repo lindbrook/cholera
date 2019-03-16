@@ -680,15 +680,11 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
     case.color <- "blue"
     points(ego.xy, col = case.color)
     points(alter.xy, col = case.color)
-    text(ego.xy, labels = x$data$caseA, pos = 1, col = case.color)
-    text(alter.xy, labels = x$data$caseB, pos = 1, col = case.color)
+    text(ego.xy, labels = x$data$caseA, pos = 1, col = "red")
+    text(alter.xy, labels = x$data$caseB, pos = 1, col = "red")
 
   } else if (x$type == "pumps") {
     case.color <- "blue"
-    points(ego.xy, col = case.color)
-    points(alter.xy, col = case.color)
-    text(ego.xy, labels = x$data$pumpA, pos = 1, col = case.color)
-    text(alter.xy, labels = x$data$pumpB, pos = 1, col = case.color)
   }
 
   if (x$type == "case-pump") {
