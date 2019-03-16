@@ -635,23 +635,57 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
 
   colors <- cholera::snowColors(x$vestry)
 
-  ego.xy <- stats::setNames(x$ego, c("x", "y"))
-  alter.xy <- stats::setNames(x$alter, c("x", "y"))
-  dat <- rbind(alter.xy, ego.xy)
+  ego.xy <- x$ego
+  alter.xy <- x$alter
+  dat <- rbind(alter.xy, ego.xy) # NB for arrow order
+
+  ## city square data ##
+
+  if (any(grepl("case", names(x$data)))) {
+    ego <- unlist(x$data[, grepl("case", names(x$data))][1])
+    alter <- unlist(x$data[, grepl("case", names(x$data))][2])
+    if (is.character(ego)) {
+      if (grepl("Square", ego)) {
+        if (x$origin == "Soho Square") {
+          sq.sel <- cholera::landmark.squares$name == "Soho Square"
+        } else if (x$origin == "Golden Square") {
+          sq.sel <- cholera::landmark.squares$name == "Golden Square"
+        }
+        sq.center.origin <- cholera::landmark.squares[sq.sel, c("x", "y")]
+      }
+    }
+    if (is.character(alter)) {
+      if (grepl("Square", alter)) {
+        if (x$destination == "Soho Square") {
+          sq.sel <- cholera::landmark.squares$name == "Soho Square"
+        } else if (x$destination == "Golden Square") {
+          sq.sel <- cholera::landmark.squares$name == "Golden Square"
+        }
+        sq.center.destination <- cholera::landmark.squares[sq.sel, c("x", "y")]
+      }
+    }
+    if (grepl("Square", ego) & grepl("Square", alter)) {
+      dat.plus <- rbind(dat, sq.center.origin, sq.center.destination)
+    } else if (grepl("Square", ego) & !grepl("Square", alter)) {
+      dat.plus <- rbind(dat, sq.center.origin)
+    } else if (!grepl("Square", ego) & grepl("Square", alter)) {
+      dat.plus <- rbind(dat, sq.center.destination)
+    } else dat.plus <- dat
+  }
 
   if (is.logical(zoom)) {
     if (zoom) {
       padding <- 0.1
-      x.rng <- c(min(dat$x) - padding, max(dat$x) + padding)
-      y.rng <- c(min(dat$y) - padding, max(dat$y) + padding)
+      x.rng <- c(min(dat.plus$x) - padding, max(dat.plus$x) + padding)
+      y.rng <- c(min(dat.plus$y) - padding, max(dat.plus$y) + padding)
     } else {
       x.rng <- range(cholera::roads$x)
       y.rng <- range(cholera::roads$y)
     }
   } else if (is.numeric(zoom)) {
     if (zoom >= 0) {
-      x.rng <- c(min(dat$x) - zoom, max(dat$x) + zoom)
-      y.rng <- c(min(dat$y) - zoom, max(dat$y) + zoom)
+      x.rng <- c(min(dat.plus$x) - zoom, max(dat.plus$x) + zoom)
+      y.rng <- c(min(dat.plus$y) - zoom, max(dat.plus$y) + zoom)
     } else stop("If numeric, zoom must be >= 0.")
   } else stop("zoom must either be logical or numeric.")
 
@@ -674,14 +708,53 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
   if (x$type == "case-pump") {
     case.color <- colors[paste0("p", x$data$pump)]
     points(ego.xy, col = "red")
-    text(ego.xy, labels = x$data$case, pos = 1, col = "red")
+    if (is.numeric(ego)) {
+      text(ego.xy, labels = x$data$case, pos = 1, col = "red")
+    } else if (is.character(ego)) {
+      if (grepl("Soho Square", ego)) {
+        text(sq.center.origin$x, sq.center.origin$y,
+          labels = "Soho\nSquare", col = "red", cex = 0.8)
+      } else if (grepl("Golden Square", ego)) {
+        text(sq.center.origin$x, sq.center.origin$y,
+          labels = "Golden\nSquare", col = "red", cex = 0.8)
+      } else {
+        text(cholera::landmarks[cholera::landmarks$name == ego,
+          c("x.proj", "y.proj")], labels = ego, pos = 1, col = "red")
+      }
+    }
 
   } else if (x$type == "cases") {
     case.color <- "blue"
     points(ego.xy, col = case.color)
     points(alter.xy, col = case.color)
-    text(ego.xy, labels = x$data$caseA, pos = 1, col = "red")
-    text(alter.xy, labels = x$data$caseB, pos = 1, col = "red")
+    if (is.numeric(ego)) {
+      text(ego.xy, labels = x$data$caseA, pos = 1, col = "red")
+    } else if (is.character(ego)) {
+      if (grepl("Soho Square", ego)) {
+        text(sq.center.origin$x, sq.center.origin$y,
+          labels = "Soho\nSquare", col = "red", cex = 0.8)
+      } else if (grepl("Golden Square", ego)) {
+        text(sq.center.origin$x, sq.center.origin$y,
+          labels = "Golden\nSquare", col = "red", cex = 0.8)
+      } else {
+        text(cholera::landmarks[cholera::landmarks$name == ego,
+          c("x.proj", "y.proj")], labels = ego, pos = 1, col = "red")
+      }
+    }
+    if (is.numeric(alter)) {
+      text(alter.xy, labels = x$data$caseB, pos = 1, col = "red")
+    } else if (is.character(alter)) {
+      if (grepl("Soho Square", alter)) {
+        text(sq.center.destination$x, sq.center.destination$y,
+          labels = "Soho\nSquare", col = "red", cex = 0.8)
+      } else if (grepl("Golden Square", alter)) {
+        text(sq.center.destination$x, sq.center.destination$y,
+          labels = "Golden\nSquare", col = "red", cex = 0.8)
+      } else {
+        text(cholera::landmarks[cholera::landmarks$name == alter,
+          c("x.proj", "y.proj")], labels = alter, pos = 1, col = "red")
+      }
+    }
 
   } else if (x$type == "pumps") {
     case.color <- "blue"
