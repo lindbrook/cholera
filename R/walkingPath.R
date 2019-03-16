@@ -774,7 +774,7 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
     }
   }
 
-  ## square data ##
+  ## city square data ##
 
   if (any(grepl("case", names(x$data)))) {
     ego <- unlist(x$data[, grepl("case", names(x$data))][1])
