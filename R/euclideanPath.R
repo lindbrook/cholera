@@ -265,8 +265,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         out <- data.frame(case = cholera::landmarks[sel, "name"],
                           anchor = exit.soln$exit,
                           pump = exit.soln$pump,
-                          pump.name = alters[alters$id == exit.soln$pump,
-                            "street"],
+                          pump.name = alters[sel, "street"],
                           distance = exit.soln$d,
                           stringsAsFactors = FALSE)
 
@@ -597,6 +596,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
                  observed = observed,
                  alters = alters,
                  vestry = vestry,
+                 case.location = case.location,
                  distance.unit = distance.unit,
                  time.unit = time.unit,
                  d = out$distance,
@@ -635,9 +635,15 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
 
   colors <- cholera::snowColors(x$vestry)
 
+  if (x$case.location == "address") {
+    coords <- c("x", "y")
+    names(x$ego) <- coords
+    names(x$alter) <- coords
+  }
+
   ego.xy <- x$ego
   alter.xy <- x$alter
-  dat <- rbind(alter.xy, ego.xy) # NB for arrow order
+  dat <- rbind(alter.xy, ego.xy) # alter before ego for arrow order
 
   ## city square data ##
 
@@ -673,21 +679,37 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
     } else dat.plus <- dat
   }
 
-  if (is.logical(zoom)) {
-    if (zoom) {
-      padding <- 0.1
-      x.rng <- c(min(dat.plus$x) - padding, max(dat.plus$x) + padding)
-      y.rng <- c(min(dat.plus$y) - padding, max(dat.plus$y) + padding)
-    } else {
-      x.rng <- range(cholera::roads$x)
-      y.rng <- range(cholera::roads$y)
-    }
-  } else if (is.numeric(zoom)) {
-    if (zoom >= 0) {
-      x.rng <- c(min(dat.plus$x) - zoom, max(dat.plus$x) + zoom)
-      y.rng <- c(min(dat.plus$y) - zoom, max(dat.plus$y) + zoom)
-    } else stop("If numeric, zoom must be >= 0.")
-  } else stop("zoom must either be logical or numeric.")
+  if (x$type %in% c("case-pump", "cases")) {
+    if (is.logical(zoom)) {
+      if (zoom) {
+        x.rng <- c(min(dat.plus$x) - zoom, max(dat.plus$x) + zoom)
+        y.rng <- c(min(dat.plus$y) - zoom, max(dat.plus$y) + zoom)
+      } else {
+        x.rng <- range(cholera::roads$x)
+        y.rng <- range(cholera::roads$y)
+      }
+    } else if (is.numeric(zoom)) {
+      if (zoom >= 0) {
+        x.rng <- c(min(dat.plus$x) - zoom, max(dat.plus$x) + zoom)
+        y.rng <- c(min(dat.plus$y) - zoom, max(dat.plus$y) + zoom)
+      } else stop("If numeric, zoom must be >= 0.")
+    } else stop("zoom must either be logical or numeric.")
+  } else if (x$type == "pumps") {
+    if (is.logical(zoom)) {
+      if (zoom) {
+        x.rng <- c(min(dat$x) - zoom, max(dat$x) + zoom)
+        y.rng <- c(min(dat$y) - zoom, max(dat$y) + zoom)
+      } else {
+        x.rng <- range(cholera::roads$x)
+        y.rng <- range(cholera::roads$y)
+      }
+    } else if (is.numeric(zoom)) {
+      if (zoom >= 0) {
+        x.rng <- c(min(dat$x) - zoom, max(dat$x) + zoom)
+        y.rng <- c(min(dat$y) - zoom, max(dat$y) + zoom)
+      } else stop("If numeric, zoom must be >= 0.")
+    } else stop("zoom must either be logical or numeric.")
+  }
 
   plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
     xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)

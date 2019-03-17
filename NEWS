@@ -1,3 +1,9 @@
+cholera 0.6.0.9004
+==================
+
+- fix case.location = "address" for plot.euclidean_path().
+
+
 cholera 0.6.0.9003
 ==================
 
