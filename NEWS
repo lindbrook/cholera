@@ -1,3 +1,9 @@
+cholera 0.6.0.9005
+==================
+
+- add nearestPump(metric = "euclidean").
+
+
 cholera 0.6.0.9004
 ==================
 
