@@ -1,6 +1,7 @@
 #' Compute shortest walking distances or paths.
 #'
 #' @param pump.select Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
+#' @param metric Character. "eucldidean" or "walking".
 #' @param output Character. "distance" or "path".
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
@@ -13,9 +14,20 @@
 #' @export
 #' @return An R data frame or list of 'igraph' paths.
 
-nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
-  weighted = TRUE, case.set = "observed", distance.unit = "meter",
-  multi.core = FALSE, time.unit = "second", walking.speed = 5) {
+nearestPump <- function(pump.select = NULL, metric = "walking",
+  output = "distance", vestry = FALSE, weighted = TRUE, case.set = "observed",
+  distance.unit = "meter", multi.core = FALSE, time.unit = "second",
+  walking.speed = 5) {
+
+  if (vestry) p.id <- cholera::pumps.vestry$id else p.id <- cholera::pumps$id
+
+  p.count <- max(p.id)
+
+  if (is.null(pump.select) == FALSE) {
+    if (any(abs(pump.select) %in% p.id == FALSE)) {
+      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count, ".")
+    }
+  }
 
   if (output %in% c("distance", "path") == FALSE) {
     stop('output must be "distance" or "path".')
@@ -30,63 +42,96 @@ nearestPump <- function(pump.select = NULL, output = "distance", vestry = FALSE,
   }
 
   cores <- multiCore(multi.core)
-  dat <- neighborhoodData(vestry, case.set)
-  path.data <- pathData(dat, weighted, case.set, cores)
-  distances <- path.data$distances
-  paths <- path.data$paths
 
-  if (is.null(pump.select)) {
-    distance.data <- lapply(distances, function(x) {
-      data.frame(pump = as.numeric(names(which.min(x))),
-        distance = x[which.min(x)])
-    })
+  if (metric %in% c("euclidean", "walking") == FALSE) {
+    stop('metric must either be "euclidean" or "walking".')
 
-  } else {
-    if (all(pump.select > 0)) {
-      distance.data <- lapply(distances, function(x) {
-        candidates <- x[names(x) %in% pump.select]
-        dat <- candidates[which.min(candidates)]
-        data.frame(pump = as.numeric(names(dat)), distance = dat)
-      })
+  } else if (metric == "euclidean") {
+    anchors <- cholera::fatalities.address$anchor
 
-    } else if (all(pump.select < 0)) {
-      distance.data <- lapply(distances, function(x) {
-        candidates <- x[names(x) %in% abs(pump.select) == FALSE]
-        dat <- candidates[which.min(candidates)]
-        data.frame(pump = as.numeric(names(dat)), distance = dat)
-      })
-    }
-  }
+    if (is.null(pump.select)) {
+      distance.data <- parallel::mclapply(anchors, function(x) {
+        euclideanPath(x)$data
+      }, mc.cores = cores)
 
-  if (output == "path") {
-    parallel::mclapply(seq_along(paths), function(i) {
-      out <- names(paths[[i]][[paste(distance.data[[i]]$pump)]])
-    }, mc.cores = cores)
-  } else if (output == "distance") {
-    out <- data.frame(case = path.data$case,
-                      do.call(rbind, distance.data),
-                      pump.name = NA,
-                      row.names = NULL)
+    } else {
+      if (all(pump.select > 0)) {
+        distance.data <- parallel::mclapply(anchors, function(x) {
+          euclideanPath(x, pump.select)$data
+        }, mc.cores = cores)
 
-    for (x in cholera::pumps$id) {
-      out[out$pump == x, "pump.name"] <-
-        cholera::pumps[cholera::pumps$id == x, "street"]
+      } else if (all(pump.select < 0)) {
+        pump.candidate <- p.id[p.id %in% abs(pump.select) == FALSE]
+        
+        distance.data <- parallel::mclapply(anchors, function(x) {
+          euclideanPath(x, pump.candidate)$data
+        }, mc.cores = cores)
+      } else stop("pump select must be all postive or negative.")
     }
 
-    out <- out[, c("case", "pump", "pump.name", "distance")]
-
-    out$time <- distanceTime(out$distance, time.unit = time.unit,
-      walking.speed = walking.speed)
-
-    if (distance.unit == "meter") {
-      out$distance <- unitMeter(out$distance, "meter")
-    } else if (distance.unit == "yard") {
-      out$distance <- unitMeter(out$distance, "yard")
-    } else if (distance.unit == "native") {
-      out$distance <- unitMeter(out$distance, "native")
-    }
-
+    out <- do.call(rbind, distance.data)
+    out$anchor <- NULL
     out
+
+  } else if (metric == "walking") {
+    dat <- neighborhoodData(vestry, case.set)
+    path.data <- pathData(dat, weighted, case.set, cores)
+    distances <- path.data$distances
+    paths <- path.data$paths
+
+    if (is.null(pump.select)) {
+      distance.data <- lapply(distances, function(x) {
+        data.frame(pump = as.numeric(names(which.min(x))),
+          distance = x[which.min(x)])
+      })
+
+    } else {
+      if (all(pump.select > 0)) {
+        distance.data <- lapply(distances, function(x) {
+          candidates <- x[names(x) %in% pump.select]
+          dat <- candidates[which.min(candidates)]
+          data.frame(pump = as.numeric(names(dat)), distance = dat)
+        })
+
+      } else if (all(pump.select < 0)) {
+        distance.data <- lapply(distances, function(x) {
+          candidates <- x[names(x) %in% abs(pump.select) == FALSE]
+          dat <- candidates[which.min(candidates)]
+          data.frame(pump = as.numeric(names(dat)), distance = dat)
+        })
+      }
+    }
+
+    if (output == "path") {
+      parallel::mclapply(seq_along(paths), function(i) {
+        out <- names(paths[[i]][[paste(distance.data[[i]]$pump)]])
+      }, mc.cores = cores)
+    } else if (output == "distance") {
+      out <- data.frame(case = path.data$case,
+                        do.call(rbind, distance.data),
+                        pump.name = NA,
+                        row.names = NULL)
+
+      for (x in cholera::pumps$id) {
+        out[out$pump == x, "pump.name"] <-
+          cholera::pumps[cholera::pumps$id == x, "street"]
+      }
+
+      out <- out[, c("case", "pump", "pump.name", "distance")]
+
+      out$time <- distanceTime(out$distance, time.unit = time.unit,
+        walking.speed = walking.speed)
+
+      if (distance.unit == "meter") {
+        out$distance <- unitMeter(out$distance, "meter")
+      } else if (distance.unit == "yard") {
+        out$distance <- unitMeter(out$distance, "yard")
+      } else if (distance.unit == "native") {
+        out$distance <- unitMeter(out$distance, "native")
+      }
+
+      out
+    }
   }
 }
 
