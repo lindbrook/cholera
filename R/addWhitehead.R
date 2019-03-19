@@ -2,7 +2,8 @@
 #'
 #' A circle (polygon), centered around a desired pump with a radius of 210 yards. The Broad Street pump is the default.
 #' @param pump Character or Numeric. Name (road name) or numerical ID of selected pump. See \code{pumps} or \code{pumps.vestry}.
-#' @param radius Numeric. Distance from a pump in yards.
+#' @param radius Numeric. Distance from a pump.
+#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @param color Character. Color of circle.
 #' @param line.type Character. Circle line type.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps and locations from Vestry report. \code{FALSE} uses original 13 pumps.
@@ -15,11 +16,11 @@
 #' snowMap(add.landmarks = FALSE)
 #' addWhitehead()
 
-addWhitehead <- function(pump = "Broad Street", radius = 210, color = "black",
-  line.type = "solid", vestry = FALSE, add.subtitle = FALSE,
-  walking.speed = 5) {
+addWhitehead <- function(pump = "Broad Street", radius = 210,
+  distance.unit = "yard", color = "black", line.type = "solid",
+  vestry = FALSE, add.subtitle = FALSE, walking.speed = 5) {
 
-  r <- radius / unitMeter(1, "yard")
+  r <- radius / unitMeter(1, distance.unit)
   unit.base <- 100
   unit.radians <- 2 * pi / unit.base
 
