@@ -14,15 +14,11 @@ unitMeter <- function(x, distance.unit = "meter", yard.unit = 177 / 3,
     stop('x must be numeric.')
   }
 
-  if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('distance.unit must be "meter", "yard" or "native".')
-  }
-
   if (distance.unit == "meter") {
     x * meter.unit
   } else if (distance.unit == "yard") {
     x * yard.unit
   } else if (distance.unit == "native") {
     x
-  }
+  } else stop('distance.unit must be "meter", "yard" or "native".')
 }
