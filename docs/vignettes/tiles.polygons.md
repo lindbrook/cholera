@@ -1,16 +1,16 @@
-deldirPolygons(): Tiles, Triangles and Polygons
+voronoiPolygons(): Tiles, Triangles and Polygons
 ================
 lindbrook
-2019-03-06
+2019-03-29
 
-`deldirVertices()` is a wrapper function that extracts the vertices of
+`voronoiPolygons()` is a wrapper function that extracts the vertices of
 ‘deldir’ Delauny triangles and Dirichelet (Voronoi) tiles for use with
 functions like graphics::polygon(). The function returns a list of data
 frames of vertices. This makes tasks like coloring tiles or triangles or
 counting cases within those tiles or triangles easier.
 
 ``` r
-deldirVertices(sites, rw.data = NULL, rw = NULL, type = "tiles")
+voronoiPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles")
 ```
 
 The functions has four arguments. `sites` is the data frame of the sites
@@ -24,13 +24,13 @@ corners of the rectangular window: xmin, xmax, ymin, ymax. `type` is
 
 To color tiles and triangles or to count the number of points (e.g.,
 fatalities) within each tile or triangle, we can apply
-`sp::point.in.polygon()` to the results of `deldirVertices()`.
+`sp::point.in.polygon()` to the results of `voronoiPolygons()`.
 
 ## Count points within tiles
 
 ``` r
 # compute vertices of Voronoi tiles
-vertices <- deldirVertices(sites = cholera::pumps, rw.data = cholera::roads)
+vertices <- voronoiPolygons(sites = cholera::pumps, rw.data = cholera::roads)
 
 # locations of the 578 fatalities in Soho
 cases <- cholera::fatalities.unstacked
@@ -53,7 +53,7 @@ vapply(census, sum, integer(1L))
 
 ``` r
 # compute vertices of Delauny triangles
-vertices <- deldirVertices(sites = cholera::pumps,
+vertices <- voronoiPolygons(sites = cholera::pumps,
   rw.data = cholera::roads, type = "triangles")
 
 # locations of the 578 fatalities in Soho
@@ -77,7 +77,7 @@ vapply(census, sum, integer(1L))
 
 ``` r
 # compute vertices of Voronoi tiles
-vertices <- deldirVertices(sites = cholera::pumps, rw.data = cholera::roads)
+vertices <- voronoiPolygons(sites = cholera::pumps, rw.data = cholera::roads)
 
 # define colors
 snow.colors <- grDevices::adjustcolor(snowColors(), alpha.f = 1/3)
@@ -95,7 +95,7 @@ invisible(lapply(seq_along(vertices), function(i) {
 
 ``` r
 # compute vertices of Delauny triangles
-vertices <- deldirVertices(sites = cholera::pumps,
+vertices <- voronoiPolygons(sites = cholera::pumps,
   rw.data = cholera::roads, type = "triangles")
 
 # define colors

@@ -1,6 +1,6 @@
 #' Extract vertices of Delauny triangles and Dirichelet (Voronoi) tiles.
 #'
-#' For use with functions that use polygons.
+#' For construction and plotting of Delauny and Voronoi polygons.
 #' @param sites Object. Data frame of sites to compute Delauny triangulation and Dirichelet (Voronoi) tessellation with variables "x" and "y".
 #' @param rw.data Object. Data frame of secondary source of data to set the rectangular window or bounding box: observations, cases, etc. with variables "x" and "y".
 #' @param rw Numeric. Alternative to rw.data: vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax.
@@ -9,19 +9,19 @@
 #' @note This function relies on the 'deldir' package.
 #' @export
 #' @examples
-#' vertices <- deldirVertices(pumps)
+#' vertices <- voronoiPolygons(pumps)
 #' snowMap()
 #' invisible(lapply(vertices, polygon))
 #'
-#' vertices <- deldirVertices(pumps, roads)
+#' vertices <- voronoiPolygons(pumps, roads)
 #' snowMap()
 #' invisible(lapply(vertices, polygon))
 #'
-#' vertices <- deldirVertices(pumps, roads, type = "triangles")
+#' vertices <- voronoiPolygons(pumps, roads, type = "triangles")
 #' snowMap()
 #' invisible(lapply(vertices, polygon))
 
-deldirVertices <- function(sites, rw.data = NULL, rw = NULL, type = "tiles") {
+voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles") {
   if (type %in% c("tiles", "triangles") == FALSE) {
     stop('type must be "tiles" or "triangles".')
   }

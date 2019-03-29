@@ -112,9 +112,9 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
                               pct = voronoi$summary$dir.wts)
 
   if (is.null(pump.select)) {
-    coordinates <- deldirVertices(pump.data, cholera::roads)
+    coordinates <- voronoiPolygons(pump.data, cholera::roads)
   } else {
-    coordinates <- deldirVertices(pump.data[pump.select,], cholera::roads)
+    coordinates <- voronoiPolygons(pump.data[pump.select,], cholera::roads)
   }
 
   if (is.null(statistic)) {
