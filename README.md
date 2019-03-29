@@ -223,7 +223,7 @@ yards).
 
 [voronoiPolygons(): Tiles, Triangles and
 Polygons](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/tiles.polygons.md)
-focuses on the `deldirVertices()`, which extracts the vertices of
+focuses on the `voronoiPolygons()`, which extracts the vertices of
 triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi
 tessellation) from `deldir::deldir()` for use with polygon() and related
 functions.
