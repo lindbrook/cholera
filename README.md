@@ -2,7 +2,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
 [![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.0.9007-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
-
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 ### package features
@@ -222,7 +221,7 @@ structure of the `roads` data set, “valid” road names, and my back of
 the envelope translation from the map’s nominal scale to meters (and
 yards).
 
-[deldirVertices(): Tiles, Triangles and
+[voronoiPolygons(): Tiles, Triangles and
 Polygons](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/tiles.polygons.md)
 focuses on the `deldirVertices()`, which extracts the vertices of
 triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi

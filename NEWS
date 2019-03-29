@@ -1,7 +1,7 @@
 cholera 0.6.0.9007
 ==================
 
-- rename deldirVertices() back to voronoiPolygons() .
+- rename deldirVertices() back to voronoiPolygons().
 
 
 cholera 0.6.0.9006
