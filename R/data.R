@@ -190,6 +190,22 @@
 #' @docType data
 "plague.pit"
 
+
+#' Walking distance to pump.
+#'
+#' Pump 7 currently.
+#' @format A data frame with 5 variables.
+#' \describe{
+#'   \item{\code{case}}{case ID}
+#'   \item{\code{pump}}{pump ID}
+#'   \item{\code{pump.name}}{pump name}
+#'   \item{\code{distance}}{walking distance in meters}
+#'   \item{\code{time}}{walking time in seconds based on 5 km/hr walking speed}
+#' }
+#' @docType data
+"sim.dist"
+
+
 #' List of "simulated" fatalities grouped by walking-distance pump neighborhood.
 #'
 #' @format A list 4972 IDs spread over 13 vectors.
