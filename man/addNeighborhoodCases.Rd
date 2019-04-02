@@ -6,9 +6,9 @@
 \usage{
 addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
   metric = "walking", type = "stack.base", token = "point",
-  text.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
-  case.location = "nominal", observed = TRUE, alpha.level = 0.5,
-  multi.core = FALSE)
+  text.size = 0.5, pch = 15, point.size = 0.5, vestry = FALSE,
+  weighted = TRUE, color = NULL, case.location = "nominal",
+  observed = TRUE, alpha.level = 0.5, multi.core = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -22,6 +22,10 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 \item{token}{Character. Type of token to plot: "point" or "id".}
 
 \item{text.size}{Numeric. Size of case ID text.}
+
+\item{pch}{Numeric.}
+
+\item{point.size}{Numeric.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 

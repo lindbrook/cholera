@@ -7,6 +7,8 @@
 #' @param type Character. Type of case: "stack.base" (base of stack), or "stack" (entire stack). For observed = TRUE.
 #' @param token Character. Type of token to plot: "point" or "id".
 #' @param text.size Numeric. Size of case ID text.
+#' @param pch Numeric.
+#' @param point.size Numeric.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest walking path weighted by road length. \code{FALSE} computes shortest walking path in terms of the number of nodes.
 #' @param color Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}
@@ -27,7 +29,7 @@
 
 addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   metric = "walking", type = "stack.base", token = "point", text.size = 0.5,
-  vestry = FALSE, weighted = TRUE, color = NULL, case.location = "nominal",
+  pch = 15, point.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL, case.location = "nominal",
   observed = TRUE, alpha.level = 0.5, multi.core = FALSE) {
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
@@ -125,7 +127,7 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
       sel <- case.data$case %in% id
 
       if (token == "point") {
-        points(case.data[sel, vars], pch = 20, cex = 0.75,
+        points(case.data[sel, vars], pch = pch, cex = point.size,
           col = snow.colors[paste0("p", x)])
       } else if (token == "id") {
         text(case.data[sel, vars], cex = text.size,
@@ -140,7 +142,7 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
       neighborhood.color <- snow.colors[paste0("p", x)]
 
       if (token == "point") {
-        points(case.data[sel, vars], pch = 15, cex = 1.25,
+        points(case.data[sel, vars], pch = pch, cex = point.size,
           col = grDevices::adjustcolor(neighborhood.color,
             alpha.f = alpha.level))
       } else if (token == "id") {
