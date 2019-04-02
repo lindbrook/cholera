@@ -337,7 +337,7 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
       } else if (polygon.type == "solid") {
         polygon(cholera::regular.cases[pearl.string[[nm]], ],
           col = polygon.col)
-      }
+      } else stop('polygon.type must be "perimeter" or "solid".')
     }))
   } else {
     n.subset <- pearl.string[pump.subset]
@@ -358,7 +358,7 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
       } else if (polygon.type == "solid") {
         polygon(cholera::regular.cases[pearl.string[[nm]], ],
           col = polygon.col)
-      }
+      } else stop('polygon.type must be "perimeter" or "solid".')
     }))
   }
 
