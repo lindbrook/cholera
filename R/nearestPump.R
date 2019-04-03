@@ -252,7 +252,7 @@ pathData <- function(dat, weighted, case.set, cores) {
     list(case = snow, distances = distances.snow, paths = paths.snow)
 
   } else if (case.set == "expected") {
-    exp.case <- sort(nodes$anchor[nodes$anchor != 0])
+    exp.case <- sort(nodes$anchor[nodes$anchor != 0 & nodes$anchor <= 20000])
 
     ## Falconberg Court and Mews: isolate without pumps ##
     falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
