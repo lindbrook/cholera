@@ -1,3 +1,10 @@
+cholera 0.6.0.9010
+==================
+
+- add sim.walking.distance dataset prototype.
+- remove sim.dist dataset prototype.
+
+
 cholera 0.6.0.9009
 ==================
 
@@ -7,7 +14,7 @@ cholera 0.6.0.9009
 cholera 0.6.0.9008
 ==================
 
-- add sim.dist data set.
+- add sim.dist data set prototype.
 - add pch and point.size arguments to addNeighborhoodCases().
 
 

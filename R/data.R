@@ -193,8 +193,7 @@
 
 #' Walking distance to pump.
 #'
-#' Pump 7 currently.
-#' @format A data frame with 5 variables.
+#' @format A list of 12 data frames with 5 variables.
 #' \describe{
 #'   \item{\code{case}}{case ID}
 #'   \item{\code{pump}}{pump ID}
@@ -203,7 +202,7 @@
 #'   \item{\code{time}}{walking time in seconds based on 5 km/hr walking speed}
 #' }
 #' @docType data
-"sim.dist"
+"sim.walking.distance"
 
 
 #' List of "simulated" fatalities grouped by walking-distance pump neighborhood.
