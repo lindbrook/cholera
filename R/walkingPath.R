@@ -959,8 +959,10 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
   if ((is.logical(zoom) & zoom == TRUE) | is.numeric(zoom)) {
     if (x$type %in% c("case-pump", "cases")) {
       if (is.numeric(ego)) {
-        text(case.data[case.data$case == ego.data$anchor, c("x", "y")],
-          labels = ego.data$anchor, pos = 1, col = "red")
+        if (x$observed) sel <- case.data$case == ego.data$anchor
+        else sel <- row.names(case.data) == ego.data$anchor
+        text(case.data[sel, c("x", "y")], labels = ego.data$anchor, pos = 1,
+          col = "red")
       } else if (is.character(ego)) {
         if (grepl("Soho Square", ego)) {
           text(sq.center.origin$x, sq.center.origin$y,
