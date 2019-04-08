@@ -1,3 +1,10 @@
+cholera 0.6.0.9011
+==================
+
+- add pos argument to addCase().
+- fix plot.walking_path() for observed = FALSE.
+
+
 cholera 0.6.0.9010
 ==================
 
