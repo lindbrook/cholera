@@ -402,17 +402,19 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         } else stop("all positive or all negative.")
       }
 
-      # same stack test
-      if (all(is.numeric(c(ego.id, alter.case)))) {
-        ego.anchor <- cholera::anchor.case[cholera::anchor.case$case %in%
-          ego.id, "anchor"]
-        alter.anchor <- cholera::anchor.case[cholera::anchor.case$case %in%
-          alter.case, "anchor"]
-        stack.test <- vapply(c(ego.anchor, alter.anchor), length, numeric(1L))
+      if (observed) {
+        # same stack test
+        if (all(is.numeric(c(ego.id, alter.case)))) {
+          ego.anchor <- cholera::anchor.case[cholera::anchor.case$case %in%
+            ego.id, "anchor"]
+          alter.anchor <- cholera::anchor.case[cholera::anchor.case$case %in%
+            alter.case, "anchor"]
+          stack.test <- vapply(c(ego.anchor, alter.anchor), length, numeric(1L))
 
-        if (all(stack.test== 1)) {
-          if (ego.anchor == alter.anchor) {
-            stop("origin and destination are at same address!")
+          if (all(stack.test== 1)) {
+            if (ego.anchor == alter.anchor) {
+              stop("origin and destination are at same address!")
+            }
           }
         }
       }
