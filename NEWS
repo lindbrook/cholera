@@ -1,6 +1,12 @@
 cholera 0.6.0.9012
 ==================
 
+- enable col argument in addRoads().
+
+
+cholera 0.6.0.9012
+==================
+
 - add isolines() prototype.
 
 

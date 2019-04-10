@@ -49,7 +49,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
 addRoads <- function(col = "gray") {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   roads.list <- split(rd[, c("x", "y")], rd$street)
-  invisible(lapply(roads.list, lines, col = "gray"))
+  invisible(lapply(roads.list, lines, col = col))
 }
 
 #' Add map border to plot.
