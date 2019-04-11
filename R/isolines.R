@@ -6,7 +6,7 @@
 #' @param palette Character. RColorBrewer palette.
 #' @export
 
-isolines <- function(pump.select = 7, post = 50, post.type = "distance",
+isoLines <- function(pump.select = 7, post = 50, post.type = "distance",
   palette = "OrRd") {
 
   pump.dist <- cholera::sim.walking.distance[[paste(pump.select)]]
