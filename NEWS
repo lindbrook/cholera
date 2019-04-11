@@ -1,4 +1,11 @@
-cholera 0.6.0.9012
+cholera 0.6.0.9014
+==================
+
+- add isoVertices() prototype.
+- isolines() -> isoLines().
+
+
+cholera 0.6.0.9013
 ==================
 
 - enable col argument in addRoads().
