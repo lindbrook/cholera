@@ -3,6 +3,7 @@ cholera 0.6.0.9014
 
 - add isoVertices() prototype.
 - isolines() -> isoLines().
+- enable palette argument in isoLines().
 
 
 cholera 0.6.0.9013

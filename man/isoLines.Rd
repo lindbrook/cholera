@@ -5,7 +5,7 @@
 \title{Plot isochrone and isodistance regions (prototype)}
 \usage{
 isoLines(pump.select = 7, post = 50, post.type = "distance",
-  palette = "OrRd")
+  palette = "Spectral")
 }
 \arguments{
 \item{pump.select}{Numeric.}

@@ -7,11 +7,11 @@
 #' @export
 
 isoLines <- function(pump.select = 7, post = 50, post.type = "distance",
-  palette = "OrRd") {
+  palette = "Spectral") {
 
   pump.dist <- cholera::sim.walking.distance[[paste(pump.select)]]
   cutpoint <- seq(0, 350, post)
-  mypalette <- RColorBrewer::brewer.pal(length(cutpoint), "OrRd")
+  mypalette <- RColorBrewer::brewer.pal(length(cutpoint), palette)
   snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
 
   invisible(lapply(seq_along(cutpoint), function(i) {
