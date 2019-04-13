@@ -4,7 +4,8 @@
 \alias{voronoiPolygons}
 \title{Extract vertices of Delauny triangles and Dirichelet (Voronoi) tiles.}
 \usage{
-voronoiPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles")
+voronoiPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles",
+  output = "vertices")
 }
 \arguments{
 \item{sites}{Object. Data frame of sites to compute Delauny triangulation and Dirichelet (Voronoi) tessellation with variables "x" and "y".}
@@ -14,9 +15,11 @@ voronoiPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles")
 \item{rw}{Numeric. Alternative to rw.data: vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax.}
 
 \item{type}{Character. "tiles" (tessellation) or "triangles" (triangulation) vertices.}
+
+\item{output}{Character. "vertices" or "polygons". "vertices" re "polygons" will draw base R polygons() to an existing plot.}
 }
 \value{
-An R list of data frames of vertices.
+An R list of data frames or base R graphics polygon()'s'.
 }
 \description{
 For construction and plotting of Delauny and Voronoi polygons.
@@ -25,15 +28,19 @@ For construction and plotting of Delauny and Voronoi polygons.
 This function relies on the 'deldir' package.
 }
 \examples{
-vertices <- voronoiPolygons(pumps)
 snowMap()
-invisible(lapply(vertices, polygon))
+voronoiPolygons(pumps, output = "polygons")
+
+snowMap()
+voronoiPolygons(pumps, roads, output = "polygons")
+
+snowMap()
+voronoiPolygons(pumps, roads, type = "triangles", output = "polygons")
 
 vertices <- voronoiPolygons(pumps, roads)
-snowMap()
-invisible(lapply(vertices, polygon))
-
-vertices <- voronoiPolygons(pumps, roads, type = "triangles")
-snowMap()
-invisible(lapply(vertices, polygon))
+snow.colors <- grDevices::adjustcolor(snowColors(), alpha.f = 1/3)
+snowMap(add.cases = FALSE)
+invisible(lapply(seq_along(vertices), function(i) {
+  polygon(vertices[[i]], col = snow.colors[[i]])
+}))
 }

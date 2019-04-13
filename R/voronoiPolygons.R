@@ -5,23 +5,30 @@
 #' @param rw.data Object. Data frame of secondary source of data to set the rectangular window or bounding box: observations, cases, etc. with variables "x" and "y".
 #' @param rw Numeric. Alternative to rw.data: vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax.
 #' @param type Character. "tiles" (tessellation) or "triangles" (triangulation) vertices.
-#' @return An R list of data frames of vertices.
+#' @param output Character. "vertices" or "polygons". "vertices" re "polygons" will draw base R polygons() to an existing plot.
+#' @return An R list of data frames or base R graphics polygon()'s'.
 #' @note This function relies on the 'deldir' package.
 #' @export
 #' @examples
-#' vertices <- voronoiPolygons(pumps)
 #' snowMap()
-#' invisible(lapply(vertices, polygon))
+#' voronoiPolygons(pumps, output = "polygons")
+#'
+#' snowMap()
+#' voronoiPolygons(pumps, roads, output = "polygons")
+#'
+#' snowMap()
+#' voronoiPolygons(pumps, roads, type = "triangles", output = "polygons")
 #'
 #' vertices <- voronoiPolygons(pumps, roads)
-#' snowMap()
-#' invisible(lapply(vertices, polygon))
-#'
-#' vertices <- voronoiPolygons(pumps, roads, type = "triangles")
-#' snowMap()
-#' invisible(lapply(vertices, polygon))
+#' snow.colors <- grDevices::adjustcolor(snowColors(), alpha.f = 1/3)
+#' snowMap(add.cases = FALSE)
+#' invisible(lapply(seq_along(vertices), function(i) {
+#'   polygon(vertices[[i]], col = snow.colors[[i]])
+#' }))
 
-voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles") {
+voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles",
+  output = "vertices") {
+
   if (type %in% c("tiles", "triangles") == FALSE) {
     stop('type must be "tiles" or "triangles".')
   }
@@ -46,5 +53,11 @@ voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles") {
     vertex.data <- deldir::triang.list(tile.triangle)
   }
 
-  lapply(vertex.data, function(dat) data.frame(x = dat$x, y = dat$y))
+  vertices <- lapply(vertex.data, function(dat) {
+    data.frame(x = dat$x, y = dat$y)
+  })
+
+  if (output == "vertices") vertices
+  else if (output == "polygons") invisible(lapply(vertices, polygon))
+  else stop('output must either be "vertices" or "polygons".')
 }
