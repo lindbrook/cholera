@@ -10,7 +10,7 @@ isoLines(pump.select = 7, post = 50, post.type = "distance",
 \arguments{
 \item{pump.select}{Numeric.}
 
-\item{post}{Numeric.}
+\item{post}{Numeric. Distance or time increment.}
 
 \item{post.type}{Character. "distance or "time".}
 
@@ -18,4 +18,7 @@ isoLines(pump.select = 7, post = 50, post.type = "distance",
 }
 \description{
 Plot isochrone and isodistance regions (prototype)
+}
+\note{
+The number of possible bands or bins is determined by the max number of colors in 'RColorBrewer' palettes.
 }
