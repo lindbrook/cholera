@@ -2,7 +2,7 @@ cholera 0.6.0.9015
 ==================
 
 - add output argument to voronoiPolygons().
-- maximum number of bands or bins in isoLines() set by 'RColorBrewer' palette's maxcolors.
+- number of bands in isoLines() set by 'RColorBrewer' palette's maxcolors.
 - polygon() based plot.iso() method for isoVertices().
 
 
