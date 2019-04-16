@@ -4,7 +4,6 @@
 #' @param pump.select Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
-#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".
 #' @param path Character. "expected" or "observed".
 #' @param path.color Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors()}.
 #' @param path.width Numeric. Set width of paths.
@@ -24,10 +23,9 @@
 #' }
 
 addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
-  vestry = FALSE, weighted = TRUE, polygon.method = "pearl.string",
-  path = NULL, path.color = NULL, path.width = 3, alpha.level = 0.25,
-  polygon.type = "solid", polygon.col = NULL, polygon.lwd = 2,
-  multi.core = FALSE) {
+  vestry = FALSE, weighted = TRUE, path = NULL, path.color = NULL,
+  path.width = 3, alpha.level = 0.25, polygon.type = "solid",
+  polygon.col = NULL, polygon.lwd = 2, multi.core = FALSE) {
 
   if (is.null(path) == FALSE) {
     if (path %in% c("expected", "observed") == FALSE) {
@@ -67,15 +65,6 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
         stop('pump.subset should be a subset of pump.select.')
       }
     }
-  }
-
-
-  if (polygon.method == "pearl.string") {
-    verticesFn <- pearlString
-  } else if (polygon.method == "traveling.salesman") {
-    verticesFn <- travelingSalesman
-  } else {
-    stop('polygon.method must be "pearl.string" or "traveling.salesman".')
   }
 
   cores <- multiCore(multi.core)
@@ -316,7 +305,7 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
 
   periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
     mc.cores = x$cores)
-  pearl.string <- parallel::mclapply(periphery.cases, verticesFn,
+  pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
     mc.cores = x$cores)
 
   if (is.null(pump.subset)) {

@@ -91,7 +91,6 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
-#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".
 #' @param add.observed.points Logical. Add observed fatality "addresses".
 #' @param msg Logical. Toggle in-progress messages.
 #' @param ... Additional plotting parameters.
@@ -108,8 +107,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' plot(neighborhoodEuclidean(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.euclidean <- function(x, type = "star",
-  polygon.method = "traveling.salesman", add.observed.points = TRUE,
+plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   msg = FALSE, ...) {
 
   if (class(x) != "euclidean") {
@@ -119,14 +117,6 @@ plot.euclidean <- function(x, type = "star",
   if (type %in% c("area.points", "area.polygons")) {
     if (x$case.set != "expected") {
       stop('area plots valid only when case.set = "expected".')
-    }
-
-    if (polygon.method == "pearl.string") {
-      verticesFn <- pearlString
-    } else if (polygon.method == "traveling.salesman") {
-      verticesFn <- travelingSalesman
-    } else {
-      stop('polygon.method must be "pearl.string" or "traveling.salesman".')
     }
   }
 
@@ -205,7 +195,7 @@ plot.euclidean <- function(x, type = "star",
 
     periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
       mc.cores = x$cores)
-    pearl.string <- parallel::mclapply(periphery.cases, verticesFn,
+    pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
       mc.cores = x$cores)
     names(pearl.string) <- p.num
 

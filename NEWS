@@ -1,6 +1,12 @@
 cholera 0.6.0.9015
 ==================
 
+- deprecate pearlString() in favor of travelingSalesman().
+
+
+cholera 0.6.0.9015
+==================
+
 - add output argument to voronoiPolygons().
 - number of bands in isoLines() set by 'RColorBrewer' palette's maxcolors.
 - polygon() based plot.iso() method for isoVertices().

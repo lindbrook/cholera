@@ -123,7 +123,6 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
 #' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
-#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".
 #' @param msg Logical. Toggle in-progress messages.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
@@ -138,8 +137,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.walking <- function(x, type = "road", polygon.method = "pearl.string",
-  msg = FALSE, ...) {
+plot.walking <- function(x, type = "road", msg = FALSE, ...) {
 
   if (class(x) != "walking") {
     stop('"x"\'s class needs to be "walking".')
@@ -152,14 +150,6 @@ plot.walking <- function(x, type = "road", polygon.method = "pearl.string",
   if (type %in% c("area.points", "area.polygons")) {
     if (x$case.set != "expected") {
       stop('area plots valid only when case.set = "expected".')
-    }
-
-    if (polygon.method == "pearl.string") {
-      verticesFn <- pearlString
-    } else if (polygon.method == "traveling.salesman") {
-      verticesFn <- travelingSalesman
-    } else {
-      stop('polygon.method must be "pearl.string" or "traveling.salesman".')
     }
   }
 
@@ -295,7 +285,7 @@ plot.walking <- function(x, type = "road", polygon.method = "pearl.string",
 
       periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
         mc.cores = x$cores)
-      pearl.string <- parallel::mclapply(periphery.cases, verticesFn,
+      pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
         mc.cores = x$cores)
 
       invisible(lapply(names(pearl.string), function(nm) {

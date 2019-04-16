@@ -29,7 +29,7 @@ The reason for having two types is that while the `points()` based approach is c
 
 ```{r marshall_points, fig.align = "left", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
 streetNameLocator("marshall street", zoom = TRUE)
-addNeighborhoodCases(observed = FALSE)
+addNeighborhoodCases(observed = FALSE, pch = 15, point.size = 1.25)
 ```
 
 ```{r marshall_polygons, fig.align = "left", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
@@ -65,27 +65,22 @@ To find the vertices of the pump neighborhood polygon, I'd argue that what we wa
 
 ![](perimeter-1.png)
 
-The final task is to connect the dots in the right order (no overlapping edges). Essentially, we want to add pearls to a string to form the polygon.
+The final task is to connect the dots in the "right" order (no overlapping edges). Essentially, we want to add pearls to a string to form the polygon.
 
 ![](pearl_string-1.png)
 
-## String of pearls algorithms
+## String of pearls via the traveling salesman problem.
 
-I have coded two working solutions.^[Initially, I used the 'alphahull' package. But doing so not only requires tweaking a parameter, it also has a license, ACM, that generates a warning on CRAN Package Check.] The first, [`pearlString()`](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R), cycles through the candidate points and uses reverse [epicycles](https://en.wikipedia.org/wiki/Deferent_and_epicycle) to find the next point to add to the string of pearls. This is the default for walking neighborhoods. The second, [`travelingSalesman()`](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R), uses the 'TSP' package and its implementation of repetitive nearest neighbors to compute the string of pearls. This is the default for Euclidean neighborhoods.
+My current working solution is  [`travelingSalesman()`](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R). This functions uses the 'TSP' package and its implementation of repetitive nearest neighbors to compute the string of pearls.
 
 ```{r pearl_string, fig.align = "left", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
 neighborhood <- neighborhoodWalking(-6, case.set = "expected", vestry = TRUE)
-plot(neighborhood, type = "area.polygons", method = "pearl.string")
-```
-
-```{r traveling, fig.align = "left", fig.width = 5, fig.height = 5, echo = TRUE, eval = TRUE}
-neighborhood <- neighborhoodWalking(-6, case.set = "expected", vestry = TRUE)
-plot(neighborhood, type = "area.polygons", method = "traveling.salesman")
+plot(neighborhood, type = "area.polygons")
 ```
 
 ## why 20K observations?
 
-Of equal, if not greater importance is the density of simulated cases. As far as pearlString() is concerned, I found that the algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data  helps. As a tradeoff between computational speed and functional robustness, I ended up using 20K simulated cases.
+Of equal, if not greater importance is the density of simulated cases. I found that the algorithm can fail by getting stuck in dead ends or by skipping over points. As is often the case, more data  helps. As a tradeoff between computational speed and functional robustness, I ended up using 20K simulated cases.
 
 ## Expected areas v. expected roads.
 

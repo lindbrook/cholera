@@ -5,10 +5,9 @@
 \title{Add expected walking neighborhoods.}
 \usage{
 addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
-  vestry = FALSE, weighted = TRUE, polygon.method = "pearl.string",
-  path = NULL, path.color = NULL, path.width = 3,
-  alpha.level = 0.25, polygon.type = "solid", polygon.col = NULL,
-  polygon.lwd = 2, multi.core = FALSE)
+  vestry = FALSE, weighted = TRUE, path = NULL, path.color = NULL,
+  path.width = 3, alpha.level = 0.25, polygon.type = "solid",
+  polygon.col = NULL, polygon.lwd = 2, multi.core = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -18,8 +17,6 @@ addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
 \item{weighted}{Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
-
-\item{polygon.method}{Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".}
 
 \item{path}{Character. "expected" or "observed".}
 

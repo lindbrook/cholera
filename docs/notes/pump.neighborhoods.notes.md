@@ -1,7 +1,7 @@
 points v. polygons
 ================
 lindbrook
-2019-03-03
+2019-04-16
 
 There are two types of “expected” pump neighborhood area plots. The
 first uses `points()`; the second uses `polygon()`.
@@ -29,7 +29,7 @@ see the granularity of the `points()` based approach:
 
 ``` r
 streetNameLocator("marshall street", zoom = TRUE)
-addNeighborhoodCases(observed = FALSE)
+addNeighborhoodCases(observed = FALSE, pch = 15, point.size = 1.25)
 ```
 
 <img src="pump.neighborhoods.notes_files/figure-gfm/marshall_points-1.png" style="display: block; margin: auto auto auto 0;" />
@@ -91,47 +91,34 @@ cardinal directions (i.e., North, South, East and West). See
 
 ![](perimeter-1.png)
 
-The final task is to connect the dots in the right order (no overlapping
-edges). Essentially, we want to add pearls to a string to form the
-polygon.
+The final task is to connect the dots in the “right” order (no
+overlapping edges). Essentially, we want to add pearls to a string to
+form the polygon.
 
 ![](pearl_string-1.png)
 
-## String of pearls algorithms
+## String of pearls via the traveling salesman problem.
 
-I have coded two working solutions.\[2\] The first,
-[`pearlString()`](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R),
-cycles through the candidate points and uses reverse
-[epicycles](https://en.wikipedia.org/wiki/Deferent_and_epicycle) to find
-the next point to add to the string of pearls. This is the default for
-walking neighborhoods. The second,
-[`travelingSalesman()`](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R),
-uses the ‘TSP’ package and its implementation of repetitive nearest
-neighbors to compute the string of pearls. This is the default for
-Euclidean
-neighborhoods.
+My current working solution is
+[`travelingSalesman()`](https://github.com/lindbrook/cholera/blob/master/R/pearlString.R).
+This functions uses the ‘TSP’ package and its implementation of
+repetitive nearest neighbors to compute the string of
+pearls.
 
 ``` r
 neighborhood <- neighborhoodWalking(-6, case.set = "expected", vestry = TRUE)
-plot(neighborhood, type = "area.polygons", method = "pearl.string")
+plot(neighborhood, type = "area.polygons")
 ```
 
 <img src="pump.neighborhoods.notes_files/figure-gfm/pearl_string-1.png" style="display: block; margin: auto auto auto 0;" />
 
-``` r
-neighborhood <- neighborhoodWalking(-6, case.set = "expected", vestry = TRUE)
-plot(neighborhood, type = "area.polygons", method = "traveling.salesman")
-```
-
-<img src="pump.neighborhoods.notes_files/figure-gfm/traveling-1.png" style="display: block; margin: auto auto auto 0;" />
-
 ## why 20K observations?
 
-Of equal, if not greater importance is the density of simulated cases.
-As far as pearlString() is concerned, I found that the algorithm can
-fail by getting stuck in dead ends or by skipping over points. As is
-often the case, more data helps. As a tradeoff between computational
-speed and functional robustness, I ended up using 20K simulated
+Of equal, if not greater importance is the density of simulated cases. I
+found that the algorithm can fail by getting stuck in dead ends or by
+skipping over points. As is often the case, more data helps. As a
+tradeoff between computational speed and functional robustness, I ended
+up using 20K simulated
 cases.
 
 ## Expected areas v. expected roads.
@@ -154,7 +141,3 @@ implementations can produce different results.
 
 1.  Because the map frame is not rectangular, the actual number of
     points is 19,993.
-
-2.  Initially, I used the ‘alphahull’ package. But doing so not only
-    requires tweaking a parameter, it also has a license, ACM, that
-    generates a warning on CRAN Package Check.

@@ -34,7 +34,7 @@ addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
     snow.area <- cholera::regular.cases[snow$sim.case, ]
     radius <- c(stats::dist(cholera::regular.cases[c(1, 3), ]))
     periphery.cases <- peripheryCases(row.names(snow.area), pearlStringRadius())
-    pearl.string <- pearlString(periphery.cases, pearlStringRadius())
+    pearl.string <- travelingSalesman(periphery.cases, pearlStringRadius())
 
     if (type == "perimeter") {
       polygon(cholera::regular.cases[pearl.string, ], border = snow.col,

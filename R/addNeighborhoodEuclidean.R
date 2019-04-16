@@ -6,7 +6,6 @@
 #' @param case.location Character. "address" or "nominal". "address" is the x-y coordinates of \code{sim.ortho.proj}. "nominal" is the x-y coordinates of \code{regular.cases}.
 #' @param type Character. Type of plot: "star", "area.points" or "area.polygons".
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
-#' @param polygon.method Character. Method of computing polygon vertices: "pearl.string" or "traveling.salesman".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @return R graphic elements.
 #' @note This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
@@ -25,20 +24,10 @@
 
 addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, case.location = "nominal", type = "star", alpha.level = 0.5,
-  polygon.method = "traveling.salesman", multi.core = FALSE) {
+  multi.core = FALSE) {
 
   if (case.location %in% c("address", "nominal") == FALSE) {
     stop('case.location must be "address" or "nominal".')
-  }
-
-  if (type == "area.polygons") {
-    if (polygon.method == "pearl.string") {
-      verticesFn <- pearlString
-    } else if (polygon.method == "traveling.salesman") {
-      verticesFn <- travelingSalesman
-    } else {
-      stop('polygon.method must be "pearl.string" or "traveling.salesman".')
-    }
   }
 
   cores <- multiCore(multi.core)
@@ -152,7 +141,7 @@ addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
 
     periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
       mc.cores = x$cores)
-    pearl.string <- parallel::mclapply(periphery.cases, verticesFn,
+    pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
       mc.cores = x$cores)
     names(pearl.string) <- p.num
 
