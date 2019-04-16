@@ -1,4 +1,4 @@
-cholera 0.6.0.9015
+cholera 0.6.0.9016
 ==================
 
 - deprecate pearlString() in favor of travelingSalesman().
