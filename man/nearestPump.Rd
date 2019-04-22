@@ -2,7 +2,7 @@
 % Please edit documentation in R/nearestPump.R
 \name{nearestPump}
 \alias{nearestPump}
-\title{Compute shortest walking distances or paths.}
+\title{Compute shortest distances or paths to selected pumps.}
 \usage{
 nearestPump(pump.select = NULL, metric = "walking",
   output = "distance", vestry = FALSE, weighted = TRUE,
@@ -34,7 +34,7 @@ nearestPump(pump.select = NULL, metric = "walking",
 An R data frame or list of 'igraph' paths.
 }
 \description{
-Compute shortest walking distances or paths.
+Compute shortest distances or paths to selected pumps.
 }
 \note{
 Time is computed using \code{distanceTime()}.

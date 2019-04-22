@@ -1,3 +1,10 @@
+cholera 0.6.0.9017
+==================
+
+- fix computed time in nearestPump() and amend sim.walking.distance.
+- test new isobands in isoLines().
+
+
 cholera 0.6.0.9016
 ==================
 

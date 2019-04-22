@@ -1,4 +1,4 @@
-#' Compute shortest walking distances or paths.
+#' Compute shortest distances or paths to selected pumps.
 #'
 #' @param pump.select Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param metric Character. "eucldidean" or "walking".
@@ -66,7 +66,6 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
 
       } else if (all(pump.select < 0)) {
         pump.candidate <- p.id[p.id %in% abs(pump.select) == FALSE]
-        
         distance.data <- parallel::mclapply(anchors, function(x) {
           euclideanPath(x, pump.candidate)$data
         }, mc.cores = cores)
@@ -123,9 +122,6 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
 
       out <- out[, c("case", "pump", "pump.name", "distance")]
 
-      out$time <- distanceTime(out$distance, time.unit = time.unit,
-        walking.speed = walking.speed)
-
       if (distance.unit == "meter") {
         out$distance <- unitMeter(out$distance, "meter")
       } else if (distance.unit == "yard") {
@@ -133,6 +129,9 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
       } else if (distance.unit == "native") {
         out$distance <- unitMeter(out$distance, "native")
       }
+
+      out$time <- distanceTime(out$distance, time.unit = time.unit,
+        walking.speed = walking.speed)
 
       out
     }
