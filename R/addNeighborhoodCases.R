@@ -29,7 +29,7 @@
 
 addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   metric = "walking", type = "stack.base", token = "point", text.size = 0.5,
-  pch = 15, point.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
+  pch = 16, point.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
   case.location = "nominal", observed = TRUE, alpha.level = 0.5,
   multi.core = FALSE) {
 
