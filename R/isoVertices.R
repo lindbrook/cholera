@@ -15,7 +15,7 @@ isoVertices <- function(pump.select = 7, post = 50, post.type = "distance",
 
   pump.dist <- cholera::sim.walking.distance[[paste(pump.select)]]
   delta <- post # increment
-  isobands <- seq(0, 350, delta)
+  isobands <- seq(0, 10 * delta, delta)
 
   iso.vertices <- parallel::mclapply(isobands, function(cutpt) {
     sel <- pump.dist$distance > cutpt & pump.dist$distance <= cutpt + delta
