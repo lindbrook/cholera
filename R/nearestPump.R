@@ -41,6 +41,10 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
     stop('distance.unit must be "meter", "yard" or "native".')
   }
 
+  if (time.unit %in% c("hour", "minute", "second") == FALSE) {
+    stop('unit must be "hour", "minute" or "second".')
+  }
+
   cores <- multiCore(multi.core)
 
   if (metric %in% c("euclidean", "walking") == FALSE) {

@@ -18,7 +18,7 @@ distanceTime <- function(x, distance.unit = "meter", time.unit = "second",
     stop('distance.unit must be "meter", "yard" or "native".')
   }
 
-  if (time.unit %in% c("minute", "hour", "second") == FALSE) {
+  if (time.unit %in% c("hour", "minute", "second") == FALSE) {
     stop('unit must be "hour", "minute" or "second".')
   }
 
