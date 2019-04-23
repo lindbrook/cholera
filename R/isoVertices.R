@@ -80,13 +80,40 @@ index0 <- function(x) as.data.frame(t(utils::combn(length(x), 2)))
 #' Plot method for isoVertices().
 #'
 #' @param x An object of class "iso" created by \code{isoVertices()}.
+#' @param sel.post Numeric. Select milepost polygon.
 #' @param palette Character. RColorBrewer palette.
 #' @param alpha.level Numeric. Alpha level transparency
 #' @param ... Additional arguments.
 #' @return A vector with observed counts.
 #' @export
 
-plot.iso <- function(x, palette = "Spectral", alpha.level  = 1/3, ...) {
+# plot.iso <- function(x, palette = "Spectral", alpha.level  = 1/3, ...) {
+#   if (palette %in% row.names(RColorBrewer::brewer.pal.info) == FALSE) {
+#     stop("Invalid palette name. Check RColorBrewer::brewer.pal.info")
+#   }
+#
+#   sel <- row.names(RColorBrewer::brewer.pal.info) == palette
+#   bins <- RColorBrewer::brewer.pal.info[sel, "maxcolors"] - 1
+#   pump.dist <- cholera::sim.walking.distance[[paste(x$pump.select)]]
+#   cutpoint <- seq(0, x$post * bins, x$post)
+#   mypalette <- RColorBrewer::brewer.pal(length(cutpoint), palette)
+#
+#   invisible(lapply(seq_along(x$vertices), function(i) {
+#     vertices <- x$vertices[[i]]
+#     color <- grDevices::adjustcolor(mypalette[i], alpha.f =  alpha.level)
+#     if (is.atomic(vertices)) {
+#       polygon(cholera::regular.cases[vertices, ], col = color)
+#     } else {
+#       lapply(vertices, function(dat) {
+#         polygon(cholera::regular.cases[dat, ], col = color)
+#       })
+#     }
+#   }))
+# }
+
+plot.iso <- function(x, sel.post = 50, palette = "Spectral", alpha.level  = 1/3,
+  ...) {
+
   if (palette %in% row.names(RColorBrewer::brewer.pal.info) == FALSE) {
     stop("Invalid palette name. Check RColorBrewer::brewer.pal.info")
   }
@@ -97,17 +124,19 @@ plot.iso <- function(x, palette = "Spectral", alpha.level  = 1/3, ...) {
   cutpoint <- seq(0, x$post * bins, x$post)
   mypalette <- RColorBrewer::brewer.pal(length(cutpoint), palette)
 
-  invisible(lapply(seq_along(x$vertices), function(i) {
+  i <- which(cutpoint == sel.post)
+
+  # invisible(lapply(seq_along(x$vertices), function(i) {
     vertices <- x$vertices[[i]]
     color <- grDevices::adjustcolor(mypalette[i], alpha.f =  alpha.level)
     if (is.atomic(vertices)) {
       polygon(cholera::regular.cases[vertices, ], col = color)
     } else {
-      lapply(vertices, function(dat) {
+      invisible(lapply(vertices, function(dat) {
         polygon(cholera::regular.cases[dat, ], col = color)
-      })
+      }))
     }
-  }))
+  # }))
 }
 
 #' Print method for isoVertices().

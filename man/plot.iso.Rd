@@ -4,10 +4,13 @@
 \alias{plot.iso}
 \title{Plot method for isoVertices().}
 \usage{
-\method{plot}{iso}(x, palette = "Spectral", alpha.level = 1/3, ...)
+\method{plot}{iso}(x, sel.post = 50, palette = "Spectral",
+  alpha.level = 1/3, ...)
 }
 \arguments{
 \item{x}{An object of class "iso" created by \code{isoVertices()}.}
+
+\item{sel.post}{Numeric. Select milepost polygon.}
 
 \item{palette}{Character. RColorBrewer palette.}
 
