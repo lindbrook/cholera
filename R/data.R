@@ -190,36 +190,6 @@
 #' @docType data
 "plague.pit"
 
-
-#' Walking distance to pump.
-#'
-#' @format A list of 12 data frames with 5 variables.
-#' \describe{
-#'   \item{\code{case}}{case ID}
-#'   \item{\code{pump}}{pump ID}
-#'   \item{\code{pump.name}}{pump name}
-#'   \item{\code{distance}}{walking distance in meters}
-#'   \item{\code{time}}{walking time in seconds based on 5 km/hr walking speed}
-#' }
-#' @docType data
-"sim.walking.distance"
-
-
-#' List of "simulated" fatalities grouped by walking-distance pump neighborhood.
-#'
-#' @format A list 4972 IDs spread over 13 vectors.
-#' \describe{
-#'  \item{\code{sim.pump.case}}{numerical ID}
-#' }
-#' @note \code{\link{neighborhoodWalking}} documents the code for these data. For details, see \code{vignette}("pump.neighborhoods").
-#' @examples
-#' \dontrun{
-#'
-#' pumpCase(neighborhoodWalking(case.set = "expected"))
-#' }
-#' @docType data
-"sim.pump.case"
-
 #' Dodson and Tobler's pump data with street name.
 #'
 #' Adds and amends road locations for water pumps from John Snow's map to Dodson and Tobler's street data. The latter are available at Michael Friendly's HistData::Snow.streets.
@@ -316,6 +286,34 @@
 #'
 #' \code{\link{segmentLocator}}
 "roads"
+
+#' List of "simulated" fatalities grouped by walking-distance pump neighborhood.
+#'
+#' @format A list 4972 IDs spread over 13 vectors.
+#' \describe{
+#'  \item{\code{sim.pump.case}}{numerical ID}
+#' }
+#' @note \code{\link{neighborhoodWalking}} documents the code for these data. For details, see \code{vignette}("pump.neighborhoods").
+#' @examples
+#' \dontrun{
+#'
+#' pumpCase(neighborhoodWalking(case.set = "expected"))
+#' }
+#' @docType data
+"sim.pump.case"
+
+#' Walking distance to Broad Street Pump (#7).
+#'
+#' @format A data frames with 5 variables.
+#' \describe{
+#'   \item{\code{case}}{case ID}
+#'   \item{\code{pump}}{pump ID}
+#'   \item{\code{pump.name}}{pump name}
+#'   \item{\code{distance}}{walking distance in meters}
+#'   \item{\code{time}}{walking time in seconds based on 5 km/hr walking speed}
+#' }
+#' @docType data
+"sim.walking.distance"
 
 #' Snow neighborhood fatalities.
 #'

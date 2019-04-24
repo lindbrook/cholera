@@ -3,8 +3,8 @@
 \docType{data}
 \name{sim.walking.distance}
 \alias{sim.walking.distance}
-\title{Walking distance to pump.}
-\format{A list of 12 data frames with 5 variables.
+\title{Walking distance to Broad Street Pump (#7).}
+\format{A data frames with 5 variables.
 \describe{
   \item{\code{case}}{case ID}
   \item{\code{pump}}{pump ID}
@@ -16,6 +16,6 @@
 sim.walking.distance
 }
 \description{
-Walking distance to pump.
+Walking distance to Broad Street Pump (#7).
 }
 \keyword{datasets}
