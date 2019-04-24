@@ -4,12 +4,9 @@
 \alias{isoVertices}
 \title{isochrone and isodistance vertices (prototype)}
 \usage{
-isoVertices(pump.select = 7, post = 50, post.type = "distance",
-  multi.core = FALSE)
+isoVertices(post = 50, post.type = "distance", multi.core = FALSE)
 }
 \arguments{
-\item{pump.select}{Numeric.}
-
 \item{post}{Numeric.}
 
 \item{post.type}{Character. "distance or "time".}

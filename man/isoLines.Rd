@@ -4,12 +4,9 @@
 \alias{isoLines}
 \title{Plot isochrone and isodistance regions (prototype)}
 \usage{
-isoLines(pump.select = 7, post = 50, post.type = "distance",
-  palette = "Spectral")
+isoLines(post = 50, post.type = "distance", palette = "Spectral")
 }
 \arguments{
-\item{pump.select}{Numeric.}
-
 \item{post}{Numeric. Distance or time increment.}
 
 \item{post.type}{Character. "distance or "time".}
