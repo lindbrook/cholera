@@ -310,8 +310,8 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
 #' print(neighborhoodVoronoi())
 
 print.voronoi <- function(x, ...) {
-  census <- x$statistic.data
-  print(vapply(census, sum, numeric(1L)))
+  census <- vapply(x$statistic.data, sum, numeric(1L))
+  print(stats::setNames(census, paste0("p", x$pump.id)))
 }
 
 polygonColors <- function(resid.vector, upper.limit = 67, alpha = FALSE) {

@@ -225,5 +225,7 @@ print.euclidean <- function(x, ...) {
   if (class(x) != "euclidean") {
     stop('"x"\'s class needs to be "euclidean".')
   }
-  print(table(x$nearest.pump))
+
+  xtab <- table(x$nearest.pump)
+  print(stats::setNames(xtab, paste0("p", names(xtab))))
 }

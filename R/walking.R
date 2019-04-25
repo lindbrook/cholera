@@ -112,6 +112,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
               case.set = case.set,
               pump.select = pump.select,
               snow.colors = snow.colors,
+              pumpID = pumpID,
               cores = cores,
               metric = 1 / unitMeter(1))
 
@@ -346,6 +347,7 @@ print.walking <- function(x, ...) {
 
   if (x$case.set == "observed" | x$case.set == "snow") {
     out <- vapply(x$paths, length, numeric(1L))
+    out <- stats::setNames(out, paste0("p", x$pumpID))
   } else if (x$case.set == "expected") {
     out <- expectedCount(x)
   }
@@ -409,5 +411,6 @@ expectedCount <- function(x) {
 
   count.data <- merge(whole.count, split.count, by = "pump", all.x = TRUE)
   count.data[is.na(count.data)] <- 0
-  stats::setNames(count.data$count.x + count.data$count.y, count.data$pump)
+  stats::setNames(count.data$count.x + count.data$count.y,
+    paste0("p", count.data$pump))
 }
