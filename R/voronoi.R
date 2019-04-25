@@ -183,10 +183,6 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
   euclidean.paths = FALSE, ...) {
 
-  if (class(x) != "voronoi") {
-    stop('"x"\'s class needs to be "voronoi".')
-  }
-
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
   roads.list <- split(rd[, c("x", "y")], rd$street)
@@ -298,20 +294,34 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
 
 #' Print method for neighborhoodVoronoi().
 #'
-#' Return observed counts for Voronoi neighborhoods.
+#' Parameter values for neighborhoodVoronoi().
 #' @param x An object of class "voronoi" created by \code{neighborhoodVoronoi()}.
 #' @param ... Additional arguments.
-#' @return A vector with observed counts.
-#' @seealso \code{addVoronoi()}
-#' \code{plot.voronoi()}
+#' @return A list of argument values.
 #' @export
 #' @examples
 #' neighborhoodVoronoi()
 #' print(neighborhoodVoronoi())
 
 print.voronoi <- function(x, ...) {
-  census <- vapply(x$statistic.data, sum, numeric(1L))
-  print(stats::setNames(census, paste0("p", x$pump.id)))
+  print(x[c("pump.id", "case.location", "vestry", "statistic")])
+}
+
+#' Summary method for neighborhoodVoronoi().
+#'
+#' Return computed counts for Voronoi neighborhoods.
+#' @param object Object. An object of class "voronoi" created by \code{neighborhoodVoronoi()}.
+#' @param ... Additional arguments.
+#' @return A vector of counts by neighborhood.
+#' @seealso \code{addVoronoi()}
+#' \code{plot.voronoi()}
+#' @export
+#' @examples
+#' summary(neighborhoodVoronoi())
+
+summary.voronoi <- function(object, ...) {
+  census <- vapply(object$statistic.data, sum, numeric(1L))
+  stats::setNames(census, paste0("p", object$pump.id))
 }
 
 polygonColors <- function(resid.vector, upper.limit = 67, alpha = FALSE) {

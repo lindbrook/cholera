@@ -12,10 +12,10 @@
 \item{...}{Additional parameters.}
 }
 \value{
-An R vector.
+A list of argument values.
 }
 \description{
-Return count of paths (anchor cases) by pump neighborhood.
+Parameter values for neighborhoodWalking().
 }
 \examples{
 \dontrun{

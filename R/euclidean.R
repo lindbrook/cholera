@@ -110,10 +110,6 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   msg = FALSE, ...) {
 
-  if (class(x) != "euclidean") {
-    stop('"x"\'s class needs to be "euclidean".')
-  }
-
   if (type %in% c("area.points", "area.polygons")) {
     if (x$case.set != "expected") {
       stop('area plots valid only when case.set = "expected".')
@@ -216,16 +212,30 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
 
 #' Print method for neighborhoodEuclidean().
 #'
+#' Parameter values for neighborhoodEuclidean().
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
 #' @param ... Additional parameters.
-#' @return An R class 'table' vector.
+#' @return A list of argument values.
 #' @export
+#' @examples
+#' neighborhoodEuclidean()
+#' print(neighborhoodEuclidean())
 
 print.euclidean <- function(x, ...) {
-  if (class(x) != "euclidean") {
-    stop('"x"\'s class needs to be "euclidean".')
-  }
+  print(x[c("pump.id", "case.set", "case.location", "vestry")])
+}
 
-  xtab <- table(x$nearest.pump)
-  print(stats::setNames(xtab, paste0("p", names(xtab))))
+#' Summary method for neighborhoodEuclidean().
+#'
+#' Return computed counts for Euclidean neighborhoods.
+#' @param object Object. An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
+#' @param ... Additional parameters.
+#' @return A vector of counts by neighborhood.
+#' @export
+#' @examples
+#' summary(neighborhoodEuclidean())
+
+summary.euclidean <- function(object, ...) {
+  xtab <- table(object$nearest.pump)
+  stats::setNames(xtab, paste0("p", names(xtab)))
 }

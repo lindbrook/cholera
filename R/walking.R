@@ -139,11 +139,6 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' }
 
 plot.walking <- function(x, type = "road", msg = FALSE, ...) {
-
-  if (class(x) != "walking") {
-    stop('"x"\'s class needs to be "walking".')
-  }
-
   if (type %in% c("road", "area.points", "area.polygons") == FALSE) {
     stop('type must be "road", "area.points", "area.polygons".')
   }
@@ -328,10 +323,10 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
 
 #' Print method for neighborhoodWalking().
 #'
-#' Return count of paths (anchor cases) by pump neighborhood.
+#' Parameter values for neighborhoodWalking().
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
 #' @param ... Additional parameters.
-#' @return An R vector.
+#' @return A list of argument values.
 #' @export
 #' @examples
 #' \dontrun{
@@ -341,17 +336,30 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
 #' }
 
 print.walking <- function(x, ...) {
-  if (class(x) != "walking") {
-    stop('"x"\'s class needs to be "walking".')
-  }
+  print(x[c("pump.id", "case.set", "case.location", "vestry")])
+}
 
-  if (x$case.set == "observed" | x$case.set == "snow") {
-    out <- vapply(x$paths, length, numeric(1L))
-    out <- stats::setNames(out, paste0("p", x$pumpID))
-  } else if (x$case.set == "expected") {
-    out <- expectedCount(x)
+#' Summary method for neighborhoodWalking().
+#'
+#' Return computed counts for walking neighborhoods.
+#' @param object Object. An object of class "walking" created by \code{neighborhoodWalking()}.
+#' @param ... Additional parameters.
+#' @return An R vector.
+#' @export
+#' @examples
+#' \dontrun{
+#'
+#' summary(neighborhoodWalking())
+#' }
+
+summary.walking <- function(object, ...) {
+  if (object$case.set == "observed" | object$case.set == "snow") {
+    out <- vapply(object$paths, length, numeric(1L))
+    out <- stats::setNames(out, paste0("p", object$pumpID))
+  } else if (object$case.set == "expected") {
+    out <- expectedCount(object)
   }
-  print(out)
+  out
 }
 
 expectedCount <- function(x) {

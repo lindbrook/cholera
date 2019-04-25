@@ -12,16 +12,12 @@
 \item{...}{Additional arguments.}
 }
 \value{
-A vector with observed counts.
+A list of argument values.
 }
 \description{
-Return observed counts for Voronoi neighborhoods.
+Parameter values for neighborhoodVoronoi().
 }
 \examples{
 neighborhoodVoronoi()
 print(neighborhoodVoronoi())
-}
-\seealso{
-\code{addVoronoi()}
-\code{plot.voronoi()}
 }

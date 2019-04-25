@@ -1,7 +1,8 @@
 cholera 0.6.0.9020
 ==================
 
-- make output of print methods clearer.
+- add summary.euclidean(), summary.voronoi() and summary.walking().
+- amend print.euclidean(), print.voronoi() and print.walking().
 
 
 cholera 0.6.0.9019

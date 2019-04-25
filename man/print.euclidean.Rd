@@ -12,8 +12,12 @@
 \item{...}{Additional parameters.}
 }
 \value{
-An R class 'table' vector.
+A list of argument values.
 }
 \description{
-Print method for neighborhoodEuclidean().
+Parameter values for neighborhoodEuclidean().
+}
+\examples{
+neighborhoodEuclidean()
+print(neighborhoodEuclidean())
 }
