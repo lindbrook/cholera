@@ -37,11 +37,10 @@ The next figure plots the same data but excludes the Broad Street pump from cons
 plot(neighborhoodVoronoi(-7))
 ```
 
-In either case, the numerical results can be summarized using the `print()` method.
+In either case, the numerical results can be summarized using the `summary()` method.
 
 ```{r}
-# print(neighborhoodVoronoi()) or
-neighborhoodVoronoi()
+summary(neighborhoodVoronoi())
 ```
 
 To get an estimate of the difference between observed and expected fatalities, you can use `pearsonResiduals()`. Note that "Pearson" is "Count" minus "Expected" divided by the square root of "Expected":
@@ -65,8 +64,7 @@ plot(neighborhoodWalking())
 The summary results are:
 
 ```{r}
-# print(neighborhoodWalking()) or
-neighborhoodWalking()
+summary(neighborhoodWalking())
 ```
 
 ```{r}

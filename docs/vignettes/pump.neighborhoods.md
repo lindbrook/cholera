@@ -1,7 +1,7 @@
 Pump Neighborhoods
 ================
 lindbrook
-2019-02-10
+2019-04-30
 
 ## Overview
 
@@ -68,12 +68,12 @@ plot(neighborhoodVoronoi(-7))
 <img src="pump.neighborhoods_files/figure-gfm/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
 
 In either case, the numerical results can be summarized using the
-`print()` method.
+`summary()` method.
 
 ``` r
-# print(neighborhoodVoronoi()) or
-neighborhoodVoronoi()
->  [1]   0   1  10  13   3  39 182  12  17  38   2   2   2
+summary(neighborhoodVoronoi())
+>  p1  p2  p3  p4  p5  p6  p7  p8  p9 p10 p11 p12 p13 
+>   0   1  10  13   3  39 182  12  17  38   2   2   2
 ```
 
 To get an estimate of the difference between observed and expected
@@ -135,9 +135,8 @@ plot(neighborhoodWalking())
 The summary results are:
 
 ``` r
-# print(neighborhoodWalking()) or
-neighborhoodWalking()
->   3   4   5   6   7   8   9  10  11  12 
+summary(neighborhoodWalking())
+>  p3  p4  p5  p6  p7  p8  p9 p10 p11 p12 
 >  12   6   1  44 189  14  32  20   2   1
 ```
 
