@@ -4,10 +4,12 @@
 \alias{simWalkingDistance}
 \title{Compute walking distance for simulated cases.}
 \usage{
-simWalkingDistance(pump.select = 7)
+simWalkingDistance(pump.select = 7, multi.core = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \description{
 Compute walking distance for simulated cases.

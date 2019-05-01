@@ -1,3 +1,9 @@
+cholera 0.6.0.9022
+==================
+
+- add multi.core argument to simWalkingDistance().
+
+
 cholera 0.6.0.9021
 ==================
 
