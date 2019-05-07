@@ -1,7 +1,7 @@
 Pump Neighborhoods
 ================
 lindbrook
-2019-04-30
+2019-05-07
 
 ## Overview
 
@@ -230,8 +230,8 @@ embedded environment. See `vignette("parallel")` for details.
     be sufficient: e.g.,
     <https://www.theguardian.com/news/datablog/2013/mar/15/john-snow-cholera-map>.
     To reconstruct the roads represented on Snow’s map, one might also
-    consider John Mackenzie’ approach at
-    <https://www1.udel.edu/johnmack/frec682/cholera/cholera2.html>.
+    consider John Mackenzie’ approach at (broken link–https ://
+    www1.udel.edu/johnmack/frec682/cholera/cholera2.html).
 
 3.  These data are found in `regular.cases`.
 
