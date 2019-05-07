@@ -1,3 +1,9 @@
+cholera 0.6.0.9023
+==================
+
+- remove isoLines() and isoVertices() for CRAN maintenance release.
+
+
 cholera 0.6.0.9022
 ==================
 
