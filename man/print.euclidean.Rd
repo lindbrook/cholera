@@ -18,6 +18,9 @@ A list of argument values.
 Parameter values for neighborhoodEuclidean().
 }
 \examples{
+\dontrun{
+
 neighborhoodEuclidean()
 print(neighborhoodEuclidean())
+}
 }

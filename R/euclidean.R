@@ -218,8 +218,11 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
 #' @return A list of argument values.
 #' @export
 #' @examples
+#' \dontrun{
+#'
 #' neighborhoodEuclidean()
 #' print(neighborhoodEuclidean())
+#' }
 
 print.euclidean <- function(x, ...) {
   print(x[c("pump.id", "case.set", "case.location", "vestry")])
