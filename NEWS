@@ -1,3 +1,9 @@
+cholera 0.6.0.9024
+==================
+
+- add case.location to addEuclideanPath().
+
+
 cholera 0.6.0.9023
 ==================
 

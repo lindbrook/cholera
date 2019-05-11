@@ -5,9 +5,9 @@
 \title{Add the path for the Euclidean distance between cases and/or pumps.}
 \usage{
 addEuclideanPath(origin, destination = NULL, type = "case-pump",
-  observed = TRUE, vestry = FALSE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5, unit.posts = "distance",
-  unit.interval = NULL, alpha.level = 1)
+  observed = TRUE, case.location = "address", vestry = FALSE,
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  unit.posts = "distance", unit.interval = NULL, alpha.level = 1)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
@@ -17,6 +17,8 @@ addEuclideanPath(origin, destination = NULL, type = "case-pump",
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
 \item{observed}{Logical. Use observed or simulated expected data.}
+
+\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 

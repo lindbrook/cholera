@@ -4,6 +4,7 @@
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
 #' @param observed Logical. Use observed or simulated expected data.
+#' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
@@ -16,9 +17,9 @@
 #' @export
 
 addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
-  observed = TRUE, vestry = FALSE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5, unit.posts = "distance",
-  unit.interval = NULL, alpha.level = 1) {
+  observed = TRUE, case.location = "address", vestry = FALSE,
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  unit.posts = "distance", unit.interval = NULL, alpha.level = 1) {
 
   if (is.numeric(origin) == FALSE) {
     stop('origin must be numeric.')
@@ -34,7 +35,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
                     destination = destination,
                     type = type,
                     observed = observed,
-                    case.location = "address",
+                    case.location = case.location,
                     vestry = vestry,
                     distance.unit = distance.unit,
                     time.unit = time.unit,

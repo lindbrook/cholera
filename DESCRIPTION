@@ -1,9 +1,9 @@
 Package: cholera
 Type: Package
 Title: Amend, Augment and Aid Analysis of John Snow's Cholera Map
-Version: 0.6.0.9023
-Date: 2019-05-07
-Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
+Version: 0.6.0.9024
+Date: 2019-05-11
+Authors@R: person("Peter Li", email = "lindbrook@gmail.com",
   role = c("aut", "cre"))
 Description: Amends errors, augments data and aids analysis of John Snow's map
   of the 1854 London cholera outbreak.
@@ -23,7 +23,8 @@ Imports: deldir (>= 0.0-18),
          sp,
          threejs,
          TSP
-Suggests: knitr
+Suggests: knitr,
+          rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 Encoding: UTF-8
