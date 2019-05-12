@@ -2,6 +2,7 @@ cholera 0.6.0.9024
 ==================
 
 - add case.location to addEuclideanPath().
+- fix typo in "points v. polygons".
 
 
 cholera 0.6.0.9023

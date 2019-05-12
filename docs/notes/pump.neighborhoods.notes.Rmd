@@ -39,7 +39,7 @@ addNeighborhoodWalking()
 
 ## how to compute neighborhood area plots
 
-For both types, I use "expected" data to compute the expected neighborhood area. Using `sp::spsample()` and `sp::`polygon()``, I place 20K regularly-spaced points across the face of the map (in the "real world", points are approximately 6 meters apart.).^[Because the map frame is not rectangular, the actual number of points is 19,993.]
+For both types, I use "expected" data to compute the expected neighborhood area. Using `sp::spsample()` and `sp::polygon()`, I place 20K regularly-spaced points across the face of the map (in the "real world", these points are approximately 6 meters apart.).^[Because the map frame is not rectangular, the actual number of points is 19,993.]
 
 ```{r, regular_cases, eval = FALSE}
 sp::spsample(sp::Polygon(map.frame[, c("x", "y")]), n = 20000, type = "regular")

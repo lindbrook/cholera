@@ -1,7 +1,7 @@
 points v. polygons
 ================
 lindbrook
-2019-04-16
+2019-05-12
 
 There are two types of “expected” pump neighborhood area plots. The
 first uses `points()`; the second uses `polygon()`.
@@ -44,9 +44,9 @@ addNeighborhoodWalking()
 ## how to compute neighborhood area plots
 
 For both types, I use “expected” data to compute the expected
-neighborhood area. Using `sp::spsample()` and `sp::`polygon()\`\`, I
-place 20K regularly-spaced points across the face of the map (in the
-“real world”, points are approximately 6 meters
+neighborhood area. Using `sp::spsample()` and `sp::polygon()`, I place
+20K regularly-spaced points across the face of the map (in the “real
+world”, points are approximately 6 meters
 apart.).\[1\]
 
 ``` r
