@@ -18,7 +18,7 @@ A list of argument values.
 Parameter values for neighborhoodWalking().
 }
 \examples{
-\dontrun{
+\donttest{
 
 neighborhoodWalking()
 print(neighborhoodWalking())

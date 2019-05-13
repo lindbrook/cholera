@@ -4,7 +4,7 @@
 #' @return An R vector.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' pearsonResiduals(neighborhoodEuclidean())
 #' pearsonResiduals(neighborhoodVoronoi())

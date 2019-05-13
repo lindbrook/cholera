@@ -18,7 +18,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' snowMap(add.cases = FALSE)
 #' addNeighborhoodCases(pump.subset = c(6, 10))

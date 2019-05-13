@@ -14,7 +14,7 @@
 #' @note This function uses \code{KernSmooth::bkde2D()}.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' snowMap()
 #' addKernelDensity()

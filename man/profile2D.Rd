@@ -22,7 +22,7 @@ profile2D(angle = 0, pump = 7, vestry = FALSE, type = "base",
 2D Profile .
 }
 \examples{
-\dontrun{
+\donttest{
 
 profile2D(angle = 30)
 profile2D(angle = 30, type = "ggplot2")

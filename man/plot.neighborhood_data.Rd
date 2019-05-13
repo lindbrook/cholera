@@ -18,7 +18,7 @@ A base R plot.
 Visualize underlying road network (with or without cases and pumps).
 }
 \examples{
-\dontrun{
+\donttest{
 
 plot(neighborhoodData())
 plot(neighborhoodData(embed = FALSE))

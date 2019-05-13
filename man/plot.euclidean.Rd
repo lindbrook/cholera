@@ -28,7 +28,7 @@ Plot method for neighborhoodEuclidean().
 This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
 }
 \examples{
-\dontrun{
+\donttest{
 
 plot(neighborhoodEuclidean())
 plot(neighborhoodEuclidean(-6))

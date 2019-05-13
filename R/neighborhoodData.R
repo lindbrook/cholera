@@ -41,7 +41,7 @@ neighborhoodData <- function(vestry = FALSE, case.set = "observed",
 #' @return A base R plot.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' plot(neighborhoodData())
 #' plot(neighborhoodData(embed = FALSE))

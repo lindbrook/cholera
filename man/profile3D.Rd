@@ -22,7 +22,7 @@ profile3D(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
 3D Profile.
 }
 \examples{
-\dontrun{
+\donttest{
 
 profile3D(pump.select = 6:7)
 profile3D(pump.subset = -7)

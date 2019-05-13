@@ -29,7 +29,7 @@ Plots star graph from pump to its cases.
 This function is computationally intensive when \code{case.set = "expected"}.
 }
 \examples{
-\dontrun{
+\donttest{
 
 neighborhoodEuclidean()
 neighborhoodEuclidean(-6)

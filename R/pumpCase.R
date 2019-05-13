@@ -4,7 +4,7 @@
 #' @return An R list of numeric ID of cases by pump neighborhoods.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' pumpCase(neighborhoodEuclidean())
 #' pumpCase(neighborhoodVoronoi())

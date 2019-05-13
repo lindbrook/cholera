@@ -25,7 +25,7 @@ Plot method for neighborhoodWalking().
 When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. The "area.points" plot takes about 28 seconds (11 using the parallel implementation). The "area.polygons" plot takes 49 seconds (17 using the parallel implementation).
 }
 \examples{
-\dontrun{
+\donttest{
 
 plot(neighborhoodWalking())
 plot(neighborhoodWalking(case.set = "expected"))

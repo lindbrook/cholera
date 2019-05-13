@@ -18,7 +18,7 @@ An R data frame.
 Summary output.
 }
 \examples{
-\dontrun{
+\donttest{
 
 walkingPath()
 print(walkingPath())

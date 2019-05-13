@@ -18,7 +18,7 @@ An R vector.
 Return computed counts for walking neighborhoods.
 }
 \examples{
-\dontrun{
+\donttest{
 
 summary(neighborhoodWalking())
 }

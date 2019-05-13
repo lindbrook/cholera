@@ -16,7 +16,7 @@ An R list of numeric ID of cases by pump neighborhoods.
 Extract numeric case IDs by pump neighborhood.
 }
 \examples{
-\dontrun{
+\donttest{
 
 pumpCase(neighborhoodEuclidean())
 pumpCase(neighborhoodVoronoi())

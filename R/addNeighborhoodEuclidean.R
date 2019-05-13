@@ -11,7 +11,7 @@
 #' @note This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' streetNameLocator("marshall street", zoom = 0.5, highlight = FALSE,
 #'   add.subtitle = FALSE)

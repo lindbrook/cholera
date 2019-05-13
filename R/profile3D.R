@@ -7,7 +7,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' profile3D(pump.select = 6:7)
 #' profile3D(pump.subset = -7)

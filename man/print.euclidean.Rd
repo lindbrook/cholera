@@ -18,7 +18,7 @@ A list of argument values.
 Parameter values for neighborhoodEuclidean().
 }
 \examples{
-\dontrun{
+\donttest{
 
 neighborhoodEuclidean()
 print(neighborhoodEuclidean())

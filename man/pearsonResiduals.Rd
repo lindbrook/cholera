@@ -16,7 +16,7 @@ An R vector.
 Compute Pearson Residuals (prototype)
 }
 \examples{
-\dontrun{
+\donttest{
 
 pearsonResiduals(neighborhoodEuclidean())
 pearsonResiduals(neighborhoodVoronoi())

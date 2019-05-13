@@ -36,7 +36,7 @@ Add 2D kernel density contours based on selected sets of observations.
 This function uses \code{KernSmooth::bkde2D()}.
 }
 \examples{
-\dontrun{
+\donttest{
 
 snowMap()
 addKernelDensity()

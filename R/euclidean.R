@@ -10,7 +10,7 @@
 #' @note This function is computationally intensive when \code{case.set = "expected"}.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' neighborhoodEuclidean()
 #' neighborhoodEuclidean(-6)
@@ -98,7 +98,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' @note This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' plot(neighborhoodEuclidean())
 #' plot(neighborhoodEuclidean(-6))
@@ -218,7 +218,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
 #' @return A list of argument values.
 #' @export
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'
 #' neighborhoodEuclidean()
 #' print(neighborhoodEuclidean())
