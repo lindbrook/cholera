@@ -2,6 +2,7 @@ cholera 0.6.0.9025
 ==================
 
 - fix print.walking().
+- amend travelingSalesman() argument in addSnow().
 
 
 cholera 0.6.0.9024
