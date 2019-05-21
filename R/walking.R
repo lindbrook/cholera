@@ -336,7 +336,7 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
 #' }
 
 print.walking <- function(x, ...) {
-  print(x[c("pump.id", "case.set", "case.location", "vestry")])
+  print(x[c("pumpID", "case.set", "vestry")])
 }
 
 #' Summary method for neighborhoodWalking().
