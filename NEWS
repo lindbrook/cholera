@@ -1,3 +1,10 @@
+cholera 0.6.0.9026
+==================
+
+- deprecate statistic argument in neighborhoodVoronoi().
+- enable 'address' and 'nominal' cases in plot.voronoi().
+
+
 cholera 0.6.0.9025
 ==================
 

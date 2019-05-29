@@ -28,17 +28,16 @@ pumpCase.euclidean <- function(x) {
 #' @export
 pumpCase.voronoi <- function(x) {
   output <- x$statistic.data
-  out <- lapply(output, function(x) cholera::fatalities.address$anchor[x == 1])
-
-  if (is.null(x$pump.select)) {
-    if (x$vestry == TRUE) {
-      stats::setNames(out, paste0("p", seq_len(nrow(cholera::pumps.vestry))))
-    } else {
-      stats::setNames(out, paste0("p", seq_len(nrow(cholera::pumps))))
-    }
-  } else {
-    stats::setNames(out, paste0("p", x$pump.id))
+  if (x$case.location == "address") {
+    out <- lapply(output, function(x) {
+      cholera::fatalities.address$anchor[x == 1]
+    })
+  } else if (x$case.location == "nominal") {
+    out <- lapply(output, function(x) {
+      cholera::fatalities$case[x == 1]
+    })
   }
+  out
 }
 
 #' @export
