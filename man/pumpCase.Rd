@@ -4,10 +4,12 @@
 \alias{pumpCase}
 \title{Extract numeric case IDs by pump neighborhood.}
 \usage{
-pumpCase(x)
+pumpCase(x, case)
 }
 \arguments{
 \item{x}{An object created by \code{neighborhoodEuclidean()}, \code{neighborhoodVoronoi()} or \code{neighborhoodWalking()}.}
+
+\item{case}{Character. "address" or "fatality"}
 }
 \value{
 An R list of numeric ID of cases by pump neighborhoods.

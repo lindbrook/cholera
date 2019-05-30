@@ -1,6 +1,7 @@
 #'  Extract numeric case IDs by pump neighborhood.
 #'
 #' @param x An object created by \code{neighborhoodEuclidean()}, \code{neighborhoodVoronoi()} or \code{neighborhoodWalking()}.
+#' @param case Character. "address" or "fatality"
 #' @return An R list of numeric ID of cases by pump neighborhoods.
 #' @export
 #' @examples
@@ -11,12 +12,12 @@
 #' pumpCase(neighborhoodWalking())
 #' }
 
-pumpCase <- function(x) UseMethod("pumpCase", x)
+pumpCase <- function(x, case) UseMethod("pumpCase", x)
 
-pumpCase.default <- function(x) NULL
+pumpCase.default <- function(x, case) NULL
 
 #' @export
-pumpCase.euclidean <- function(x) {
+pumpCase.euclidean <- function(x, case = "address") {
   pumps <- sort(unique(x$nearest.pump))
   out <- lapply(pumps, function(p) {
     x$anchors[x$nearest.pump == p]
@@ -26,7 +27,7 @@ pumpCase.euclidean <- function(x) {
 }
 
 #' @export
-pumpCase.voronoi <- function(x) {
+pumpCase.voronoi <- function(x, case = "address") {
   output <- x$statistic.data
   if (x$case.location == "address") {
     out <- lapply(output, function(x) {
@@ -41,7 +42,12 @@ pumpCase.voronoi <- function(x) {
 }
 
 #' @export
-pumpCase.walking <- function(x) {
-  output <- x$cases
-  stats::setNames(output, paste0("p", names(output)))
+pumpCase.walking <- function(x, case = "address") {
+  if (case == "address") {
+    x$cases
+  } else if (case == "fatality") {
+    lapply(x$cases, function(dat) {
+      cholera::anchor.case[cholera::anchor.case$anchor %in% dat, "case"]
+    })
+  } else stop('case must either be "address" or "fatality"')
 }
