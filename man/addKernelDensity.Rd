@@ -5,9 +5,8 @@
 \title{Add 2D kernel density contours.}
 \usage{
 addKernelDensity(pump.subset = "pooled", pump.select = NULL,
-  neighborhood.type = "walking", cases = "unstacked",
-  bandwidth = 0.5, color = "black", line.type = "solid",
-  multi.core = FALSE)
+  neighborhood.type = "walking", data = "unstacked", bandwidth = 0.5,
+  color = "black", line.type = "solid", multi.core = FALSE)
 }
 \arguments{
 \item{pump.subset}{Character or Numeric: "pooled", "individual", or numeric vector. "pooled" treats all observations as a single set. "individual" is a shortcut for all individual pump neighborhoods. Use of vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.}
@@ -16,7 +15,7 @@ addKernelDensity(pump.subset = "pooled", pump.select = NULL,
 
 \item{neighborhood.type}{Character. "voronoi" or "walking"}
 
-\item{cases}{Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.}
+\item{data}{Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.}
 
 \item{bandwidth}{Numeric. Bandwidth for kernel density estimation.}
 

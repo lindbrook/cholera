@@ -7,7 +7,7 @@
 #' @param bandwidth Numeric. Bandwidth for kernel density estimation.
 #' @param color Character. Color of contour lines.
 #' @param line.type Character. Line type for contour lines.
-#' @param cases Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.
+#' @param data Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @return Add contours to a graphics plot.
 #' @import graphics
@@ -30,12 +30,12 @@
 #' }
 
 addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
-  neighborhood.type = "walking", cases = "unstacked", bandwidth = 0.5,
+  neighborhood.type = "walking", data = "unstacked", bandwidth = 0.5,
   color = "black", line.type = "solid", multi.core = FALSE) {
 
-  if (!is.null(cases) & !all(cases %in%
+  if (!is.null(data) & !all(data %in%
       c("unstacked", "address", "fatality"))) {
-    stop('cases must be "unstacked", "address" or "fatality".')
+    stop('data must be "unstacked", "address" or "fatality".')
   }
 
   if (!all(neighborhood.type %in% c("voronoi", "walking"))) {
@@ -55,11 +55,11 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
   if (is.null(pump.select)) {
     if (all(is.character(pump.subset))) {
       if (pump.subset == "pooled") {
-        if (cases == "unstacked") {
+        if (data == "unstacked") {
           dat <- cholera::fatalities.unstacked[, vars]
-        } else if (cases == "address") {
+        } else if (data == "address") {
           dat <- cholera::fatalities.address[, vars]
-        } else if (cases == "fatality") {
+        } else if (data == "fatality") {
           dat <- cholera::fatalities[, vars]
         }
 
@@ -105,9 +105,9 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
         cases.list <- pumpCase(n.data)
 
         if (all(pump.subset > 0)) {
-          cases <- cases.list[paste0("p", pump.subset)]
+          cases <- cases.list[pump.subset]
         } else if (all(pump.subset < 0)) {
-          sel <- names(cases.list) %in% paste0("p", abs(pump.subset)) == FALSE
+          sel <- names(cases.list) %in% abs(pump.subset) == FALSE
           cases <- cases.list[sel]
         } else {
           stop("Use all positive or all negative numbers for pump.subset.")
@@ -128,8 +128,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
       invisible(lapply(names(kde), function(nm) {
         dat <- kde[[nm]]
-        contour(x = dat$x1, y = dat$x2, z = dat$fhat, col = snowColors()[nm],
-          lty = line.type, add = TRUE)
+        contour(x = dat$x1, y = dat$x2, z = dat$fhat,
+          col = snowColors()[paste0("p", nm)], lty = line.type, add = TRUE)
       }))
     }
 
@@ -146,7 +146,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
     invisible(lapply(names(kde), function(nm) {
       dat <- kde[[nm]]
       graphics::contour(x = dat$x1, y = dat$x2, z = dat$fhat,
-        col = snowColors()[nm], lty = line.type, add = TRUE)
+        col = snowColors()[paste0("p", nm)], lty = line.type, add = TRUE)
     }))
   }
 }

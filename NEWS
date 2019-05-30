@@ -1,3 +1,10 @@
+cholera 0.6.0.9027
+==================
+
+- add 'case' argument to pumpCase().
+- fix addKernelDensity(): change argument 'case' to 'data'.
+
+
 cholera 0.6.0.9026
 ==================
 
