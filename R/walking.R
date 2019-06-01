@@ -106,7 +106,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   names(neighborhood.paths) <- pumpID
 
   out <- list(paths = neighborhood.paths,
-              cases = neighborhood.cases,
+              cases = stats::setNames(neighborhood.cases, paste0("p", pumpID)),
               vestry = vestry,
               weighted = weighted,
               case.set = case.set,
@@ -184,7 +184,7 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
     invisible(lapply(names(x$cases), function(nm) {
       sel <- cholera::fatalities.address$anchor %in% x$cases[[nm]]
       points(cholera::fatalities.address[sel, c("x", "y")], pch = 20,
-        cex = 0.75, col = x$snow.colors[paste0("p", nm)])
+        cex = 0.75, col = x$snow.colors[nm])
     }))
 
   } else if (x$case.set == "snow") {
