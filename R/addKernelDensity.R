@@ -105,9 +105,9 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
         cases.list <- pumpCase(n.data)
 
         if (all(pump.subset > 0)) {
-          cases <- cases.list[pump.subset]
+          cases <- cases.list[paste0("p", pump.subset)]
         } else if (all(pump.subset < 0)) {
-          sel <- names(cases.list) %in% abs(pump.subset) == FALSE
+          sel <- names(cases.list) %in% paste0("p", abs(pump.subset)) == FALSE
           cases <- cases.list[sel]
         } else {
           stop("Use all positive or all negative numbers for pump.subset.")
@@ -129,7 +129,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
       invisible(lapply(names(kde), function(nm) {
         dat <- kde[[nm]]
         contour(x = dat$x1, y = dat$x2, z = dat$fhat,
-          col = snowColors()[paste0("p", nm)], lty = line.type, add = TRUE)
+          col = snowColors()[nm], lty = line.type, add = TRUE)
       }))
     }
 
@@ -146,7 +146,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
     invisible(lapply(names(kde), function(nm) {
       dat <- kde[[nm]]
       graphics::contour(x = dat$x1, y = dat$x2, z = dat$fhat,
-        col = snowColors()[paste0("p", nm)], lty = line.type, add = TRUE)
+        col = snowColors()[nm], lty = line.type, add = TRUE)
     }))
   }
 }

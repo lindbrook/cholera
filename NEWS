@@ -1,3 +1,9 @@
+cholera 0.6.0.9029
+==================
+
+- amend neighborhood name references in addKernelDensity().
+
+
 cholera 0.6.0.9028
 ==================
 
