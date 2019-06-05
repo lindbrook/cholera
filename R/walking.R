@@ -314,7 +314,13 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
   }
 
   pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
-  title(main = "Pump Neighborhoods: Walking")
+
+  if (is.null(x$pump.select)) {
+    title(main = "Pump Neighborhoods: Walking")
+  } else {
+    title(main = paste0("Pump Neighborhoods: Walking", "\n", "Pumps ",
+      paste(sort(x$pump.select), collapse = ", ")))
+  }
 
   if (msg) {
     if (x$case.set == "expected") message("Done!")
