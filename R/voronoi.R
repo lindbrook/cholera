@@ -204,10 +204,9 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
       title(main = "Pump Neighborhoods: Voronoi (nominal)")
     }
   } else {
-    points(pump.data[x$pump.select, c("x", "y")], pch = 2,
-      col = x$snow.colors)
-    text(pump.data[x$pump.select, c("x", "y")],
-      label = paste0("p", x$pump.id), pos = 1)
+    points(pump.data[x$pump.select, c("x", "y")], pch = 2, col = x$snow.colors)
+    text(pump.data[x$pump.select, c("x", "y")], label = paste0("p", x$pump.id),
+      pos = 1)
 
     if (x$case.location == "address") {
       title(main = paste0("Pump Neighborhoods: Voronoi (address)", "\n",
@@ -219,8 +218,7 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
   }
 
   if (voronoi.cells) {
-    plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none",
-      lty = "solid")
+    plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
   }
 
   if (delauny.triangles) {
