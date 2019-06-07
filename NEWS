@@ -1,207 +1,49 @@
-cholera 0.6.0.9031
+cholera 0.6.5
 ==================
 
-- copyedit README.
-- remove Pump Neighborhoods vignette.
-
-
-cholera 0.6.0.9030
-==================
-
-- amend plot.walking() titles.
-
-
-cholera 0.6.0.9029
-==================
-
-- amend neighborhood name references in addKernelDensity().
-
-
-cholera 0.6.0.9028
-==================
-
-- amend pump neighborhood list names.
-
-
-cholera 0.6.0.9027
-==================
-
-- add 'case' argument to pumpCase().
-- fix addKernelDensity(): change argument 'case' to 'data'.
-
-
-cholera 0.6.0.9026
-==================
-
-- deprecate statistic argument in neighborhoodVoronoi().
-- enable 'address' and 'nominal' cases in plot.voronoi().
-
-
-cholera 0.6.0.9025
-==================
-
-- fix print.walking().
-- amend travelingSalesman() argument in addSnow().
-
-
-cholera 0.6.0.9024
-==================
-
-- add case.location to addEuclideanPath().
-- fix typo in "points v. polygons".
-
-
-cholera 0.6.0.9023
-==================
-
-- remove isoLines() and isoVertices() for CRAN maintenance release.
-
-
-cholera 0.6.0.9022
-==================
-
-- add multi.core argument to simWalkingDistance().
-
-
-cholera 0.6.0.9021
-==================
-
-- update "Pump Neighborhoods" vignette with summary() methods.
-
-
-cholera 0.6.0.9020
-==================
-
-- add summary.euclidean(), summary.voronoi() and summary.walking().
-- amend print.euclidean(), print.voronoi() and print.walking().
-
-
-cholera 0.6.0.9019
-==================
-
-- limit isoLines() and isoVertices() and sim.walking.distance to pump #7.
-
-
-cholera 0.6.0.9018
-==================
-
-- test selective printing of individual polygons.
-
-
-cholera 0.6.0.9017
-==================
-
-- fix computed time in nearestPump() and amend sim.walking.distance.
-- test new isobands in isoLines().
-
-
-cholera 0.6.0.9016
-==================
-
-- deprecate pearlString() in favor of travelingSalesman().
-
-
-cholera 0.6.0.9015
-==================
-
-- add output argument to voronoiPolygons().
-- number of bands in isoLines() set by 'RColorBrewer' palette's maxcolors.
-- polygon() based plot.iso() method for isoVertices().
-
-
-cholera 0.6.0.9014
-==================
-
-- add isoVertices() prototype.
-- isolines() -> isoLines().
-- enable palette argument in isoLines().
-
-
-cholera 0.6.0.9013
-==================
-
-- enable col argument in addRoads().
-
-
-cholera 0.6.0.9012
-==================
-
-- add isolines() prototype.
-
-
-cholera 0.6.0.9011
-==================
-
-- add pos argument to addCase().
-- fix plot.walking_path() for observed = FALSE.
-
-
-cholera 0.6.0.9010
-==================
-
-- add sim.walking.distance dataset prototype.
-- remove sim.dist dataset prototype.
-
-
-cholera 0.6.0.9009
-==================
-
-- exclude landmarks from case.set - "expected".
-
-
-cholera 0.6.0.9008
-==================
-
-- add sim.dist data set prototype.
-- add pch and point.size arguments to addNeighborhoodCases().
-
-
-cholera 0.6.0.9007
-==================
-
-- rename deldirVertices() back to voronoiPolygons().
-
-
-cholera 0.6.0.9006
-==================
-
-- add distance.unit argument to addWhitehead().
-
-
-cholera 0.6.0.9005
-==================
-
-- add nearestPump(metric = "euclidean").
-
-
-cholera 0.6.0.9004
-==================
-
-- fix case.location = "address" for plot.euclidean_path().
-
-
-cholera 0.6.0.9003
-==================
-
-- fix city squares for plot.euclidean_path().
-
-
-cholera 0.6.0.9002
-==================
-
-- fix St James Workhouse for euclideanPath(type = "cases").
-
-
-cholera 0.6.0.9001
-==================
-
-- fix St James Workhouse for walkingPath(type = "cases").
-
-
-cholera 0.6.0.9000
-==================
+# Fixes #
 
 - fix plot.walking_path() timeposts.
+- fix plot.walking_path(observed = FALSE).
+- fix St James Workhouse for walkingPath(type = "cases").
+- fix St James Workhouse for euclideanPath(type = "cases").
+- fix city squares for plot.euclidean_path().
+- fix computed time in nearestPump() and amend sim.walking.distance.
+
+# New Data #
+
+- add sim.walking.distance.
+
+# Function Changes #
+
+- add nearestPump(metric = "euclidean").
+- add distance.unit argument to addWhitehead().
+- add pch and point.size arguments to addNeighborhoodCases().
+- add pos argument to addCase().
+- add output argument to voronoiPolygons().
+- add summary.euclidean(), summary.voronoi() and summary.walking().
+- add multi.core argument to simWalkingDistance().
+- add case.location to addEuclideanPath().
+- add 'case' argument to pumpCase().
+- amend travelingSalesman() argument in addSnow().
+- amend print.euclidean(), print.voronoi() and print.walking().
+- amend argument 'case' to 'data' in addKernelDensity().
+- amend plot.walking() titles.
+- deprecate pearlString() in favor of travelingSalesman().
+- deprecate statistic argument in neighborhoodVoronoi().
+- enable col argument in addRoads().
+- enable 'address' and 'nominal' cases in plot.voronoi().
+- exclude landmarks from case.set - "expected".
+- rename deldirVertices() back to voronoiPolygons().
+
+# Vignettes #
+
+- rename "deldirPolygons()" to "voronoiPolygons()".
+- remove Pump Neighborhoods vignette.
+
+# DESCRIPTION #
+
+- remove 'scales" from Imports.
 
 
 cholera 0.6.0
