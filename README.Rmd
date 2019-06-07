@@ -98,7 +98,7 @@ The value of these functions goes beyond replicating and validating Snow's metho
 
 While walking distanced based neighborhoods are based on paths that follow streets, Euclidean distance based neighborhoods are based on straight line paths between a location and the nearest (or selected):
 
-```{r, fig.align = "default", fig.width = 5, fig.height = 5, fig.show = "hold", out.width = "50%"}
+```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
 title(main = "Walking Distances")
 invisible(lapply(c(1, 191, 46, 363, 85), addWalkingPath))
@@ -110,14 +110,14 @@ invisible(lapply(c(1, 191, 46, 363, 85), addEuclideanPath))
 
 To build a neighborhood, we apply this algorithm to each location or "address" with at least one observed fatality. This builds the "observed" neighborhoods:
 
-```{r, fig.align = "default", fig.width = 5, fig.height = 5, fig.show = "hold", out.width = "50%"}
+```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 plot(neighborhoodWalking())
 plot(neighborhoodEuclidean())
 ```
 
 Ultimately, for testing purposes we also want the "expected" neighborhoods. For walking neighborhoods, I use the same approach but use simulated data. Using `sp::spsample()` and `sp::Polygon()`, I place 20,000 regularly spaced points, which lie approximately 6 meters apart, `unitMeter(dist(regular.cases[1:2, ]))`, across the face of the map and then compute the shortest path to the nearest pump.^[These data are found in `regular.cases` data frame. Note that because the map is not rectangular, there are only 19,993 cases.] For Euclidean neighborhoods, we can compute Voronoi diagrams.^[http://www.ams.org/samplings/feature-column/fcarc-voronoi]
 
-```{r, fig.align = "default", fig.width = 5, fig.height = 5, fig.show = "hold", out.width = "50%"}
+```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 plot(neighborhoodWalking(case.set = "expected"), "area.polygons")
 
 plot(neighborhoodVoronoi())
@@ -127,14 +127,14 @@ plot(neighborhoodVoronoi())
 
 To explore "observed" walking neighborhoods, use `neighborhoodWalking()` with the `pump.select` argument:
 
-```{r, fig.align = "default", fig.width = 5, fig.height = 5, fig.show = "hold", out.width = "50%"}
+```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 plot(neighborhoodWalking(6:7))
 plot(neighborhoodWalking(-7))
 ```
 
 To explore "expected" walking neighborhoods, add case.set = "expected" argument:
 
-```{r, fig.align = "default", fig.width = 5, fig.height = 5, fig.show = "hold", out.width = "50%"}
+```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 plot(neighborhoodWalking(6:7, case.set = "expected"), type = "area.polygons")
 plot(neighborhoodWalking(-7, case.set = "expected"), type = "area.polygons")
 ```
@@ -143,14 +143,14 @@ plot(neighborhoodWalking(-7, case.set = "expected"), type = "area.polygons")
 
 To explore "observed" Euclidean neighborhoods, use `neighborhoodEuclidean()` with the `pump.select` argument:
 
-```{r, fig.align = "default", fig.width = 5, fig.height = 5, fig.show = "hold", out.width = "50%"}
+```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 plot(neighborhoodEuclidean(6:7))
 plot(neighborhoodEuclidean(-7))
 ```
 
 To explore "expected" Euclidean neighborhoods, use `neighborhoodVoronoi()` with the `pump.select` argument:
 
-```{r, fig.align = "default", fig.width = 5, fig.height = 5, fig.show = "hold", out.width = "50%"}
+```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 plot(neighborhoodVoronoi(6:7))
 plot(neighborhoodVoronoi(-7))
 ```
