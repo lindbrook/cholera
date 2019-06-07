@@ -19,7 +19,6 @@ Imports: deldir (>= 0.0-18),
          KernSmooth,
          pracma,
          RColorBrewer,
-         scales,
          sp,
          threejs,
          TSP
