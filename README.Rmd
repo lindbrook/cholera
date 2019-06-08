@@ -50,53 +50,33 @@ devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 devtools::install_github("lindbrook/cholera", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
-### warning message
-
-With R version 3.6.0, you may see the warning below when loading 'cholera':
-
-```
-> library(cholera)
-Registered S3 methods overwritten by 'ggplot2':
-  method         from
-  [.quosures     rlang
-  c.quosures     rlang
-  print.quosures rlang
-```
-
-My understanding is that it's more annoying than problematic. It's fixed in 'ggplot2' version >= 3.2.0. If it's not yet on CRAN, install the development version from GitHub:
-
-```{r, eval = FALSE}
-# For 'devtools' (>= 2.0.0)
-devtools::install_github("tidyverse/ggplot2", build_opts = c("--no-resave-data", "--no-manual"))
-```
-
 ## background
 
-John Snow's map of the 1854 cholera outbreak in London, which appeared in _On The Mode Of Communication Of Cholera_, is one of the best known examples of data visualization and information design:
+John Snow's map, published in his _On The Mode Of Communication Of Cholera_, of the 1854 cholera outbreak in London is one of the best known examples of data visualization and information design:
 
 ![](vignettes/msu-snows-mapB.jpg)
 
-By plotting the number and location of fatalities on a map, Snow was able to a perform a task that is easily taken for granted today: visualizing a spatial distribution. Looking at the results with our modern eye, the pattern on the map seems unmistakable, if not self-evident. The map appears to support Snow's claims that cholera is a waterborne disease and that the pump on Broad Street is the source of the outbreak. And yet, despite its virtues, the map failed to convince either the authorities or Snow's colleagues in the medical and scientific communities. Even today, many are skeptical of this or any map's ability to demonstrate such claims.
+By plotting the number and location of fatalities using stacks of bars on a map, Snow was able to perform a task that is now easily taken for granted: he visualized a spatial distribution. Looking at the results, the pattern on the map seems unmistakable. The map appears to support Snow's claims that cholera is a waterborne disease and that the pump on Broad Street is the source of the outbreak.
 
-Beyond considerations of time and place, what critics past and present are picking up on is the fact that a concentration of cases around the Broad Street pump alone is not convincing. To put it differently, as is the map does not refute the primary rival explanation to waterborne transmission: the pattern we see is not unlike what airborne transmission (miasma theory) might look like. And while the presence of a pump at or near the epicenter of the distribution of fatalities is strong circumstantial evidence, it is nonetheless circumstantial.
+And yet, despite its virtues, the map failed to convince either the authorities or Snow's colleagues in the medical and scientific communities. Even today, many are skeptical of the map's ability to support such claims. Beyond considerations of time and place, what critics past and present are picking up on is that a concentration of cases around the Broad Street pump alone should not be enough to convince us. The problem is the map does not refute the primary rival explanation to waterborne transmission: the pattern we see is not unlike what airborne transmission (miasma theory) might look like. In other words, while the presence of a pump at or near the epicenter of the distribution of fatalities is strong circumstantial evidence, it is nonetheless circumstantial.
 
 ### pump neighborhoods
 
-This may be the reason why Snow added a graphical annotation to a second lesser-known version of the map:^[ _Report On The Cholera Outbreak In The Parish Of St. James, Westminster, During The Autumn Of 1854_]
+This may be the reason why Snow added a graphical annotation to a second lesser-known version of the map, published in the _Report On The Cholera Outbreak In The Parish Of St. James, Westminster, During The Autumn Of 1854_.
 
 ![](vignettes/fig12-6.png)
 
-Despite its hand-drawn, back-of-the-envelope appearance, Snow writes: "The inner dotted line on the map shews [sic] the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps ..." (Ibid., p. 109.). In other words, guided by the principle that all else being equal people tend to choose the closest pump Snow is computing a _pump neighborhood_: the set of addresses or locations defined by their relative proximity to a specific water pump. By identifying the neighborhood of the Broad Street pump, Snow's annotation sets limits on where we should and should _not_ find fatalities. In short, Snow's annotation is a hypothesis or prediction.
+Despite its hand-drawn, back-of-the-envelope appearance, Snow writes: "The inner dotted line on the map shews [sic] the various points which have been found by careful measurement to be at an equal distance by the nearest road from the pump in Broad Street and the surrounding pumps ..." (Ibid., p. 109). My interpretation of this statement is that, guided by the principle that all else being equal people tend to choose the closest pump, Snow is computing a _pump neighborhood_: the set of addresses or locations defined by their relative proximity to a specific water pump. By doing so, Snow's annotation sets limits on where we should and should _not_ find fatalities. In short, Snow's annotation is a hypothesis or prediction.
 
 ## computing pump neighborhoods
 
-While the specifics of his data and method of computation appear to be lost to history, I reverse engineer what I consider to be his approach by doing the following. First, from the quotation above I infer that his measure of proximity is the walking distance along the streets of Soho.^[The computation of walking distance is by no means new (see Shiode, 2012). Another approach is to use GIS. For applications that don't need to consider the actual historic walking distances, this layers-based approach, which typically relies on current maps, may be sufficient: e.g., https://www.theguardian.com/news/datablog/2013/mar/15/john-snow-cholera-map.] Second, putting aside aside questions about the map's accuracy,^[The map is actually a commercial map that Snow annotated.] which might be excellent, I set the map to be the definitive "text" and de facto source of data.^[I use a modified version of Dodson and Tobler's 1992 digitization. Each bar and each pump is assigned a unique x-y coordinate. Each road is translated into a series of straight line segments, defined by those segments' endpoints. While the original data, http://www.ncgia.ucsb.edu/pubs/snow/snow.html, are no longer available, they are preserved in Michael Friendly's 'HistData' package. Note that a future version of this package will re-digitize and geocode the map.] I then write functions to compute and visualized walking distances on the map.
+While his actual data and the specifics method of computation appear to be lost to history, I reverse engineer what I infer to be his approach by doing the following. First, from the quotation above I assume that his measure of proximity is the walking distance along the streets of Soho. Second, putting aside aside questions about the map's accuracy (it's actually a commercial map that Snow annotated), I consider the map to be the definitive "text" and make it the de facto source of data.
 
-The value of these functions goes beyond replicating and validating Snow's methods. By creating counterfactual scenarios by computing hypothetical neighborhoods via the selective inclusion or exclusion of pumps or by considering additional measures of proximity (e.g., Euclidean), we can better assess the ability of the map to test Snow's claims.
+I then wrote functions that compute and visualize walking distances on the map. The value of these functions go beyond the ability to replicate and validate Snow's efforts. By allowing you to compute hypothetical neighborhoods via selective inclusion or exclusion of pumps or to allow for different measures of proximity (e.g., Euclidean), they also allow you to explore counterfactual scenarios. Ultimately, this can help us to better assess whether we really can use the map to "prove" Snow's claims.
 
 ## walking v. Euclidean neighborhoods
 
-While walking distanced based neighborhoods are based on paths that follow streets, Euclidean distance based neighborhoods are based on straight line paths between a location and the nearest (or selected):
+While walking distanced based neighborhoods are based on paths that follow streets, Euclidean distance based neighborhoods are based on straight line paths between a location and the nearest (or selected) pump:
 
 ```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
@@ -108,14 +88,14 @@ title(main = "Euclidean Distances")
 invisible(lapply(c(1, 191, 46, 363, 85), addEuclideanPath))
 ```
 
-To build a neighborhood, we apply this algorithm to each location or "address" with at least one observed fatality. This builds the "observed" neighborhoods:
+To build a neighborhood, we apply this algorithm to each location or "address" with at least one observed fatality. This builds the "observed" neighborhood:
 
 ```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 plot(neighborhoodWalking())
 plot(neighborhoodEuclidean())
 ```
 
-Ultimately, for testing purposes we also want the "expected" neighborhoods. For walking neighborhoods, I use the same approach but use simulated data. Using `sp::spsample()` and `sp::Polygon()`, I place 20,000 regularly spaced points, which lie approximately 6 meters apart, `unitMeter(dist(regular.cases[1:2, ]))`, across the face of the map and then compute the shortest path to the nearest pump.^[These data are found in `regular.cases` data frame. Note that because the map is not rectangular, there are only 19,993 cases.] For Euclidean neighborhoods, we can compute Voronoi diagrams.^[http://www.ams.org/samplings/feature-column/fcarc-voronoi]
+Ultimately, for testing purposes we want the "expected" neighborhoods. For walking neighborhoods, I use the same approach but use simulated data. Using `sp::spsample()` and `sp::Polygon()`, I place 20,000 regularly spaced points, which lie approximately 6 meters apart, `unitMeter(dist(regular.cases[1:2, ]))`, across the face of the map and then compute the shortest path to the nearest pump.
 
 ```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 plot(neighborhoodWalking(case.set = "expected"), "area.polygons")
@@ -132,7 +112,7 @@ plot(neighborhoodWalking(6:7))
 plot(neighborhoodWalking(-7))
 ```
 
-To explore "expected" walking neighborhoods, add case.set = "expected" argument:
+To explore "expected" walking neighborhoods, add the case.set = "expected" argument:
 
 ```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
 plot(neighborhoodWalking(6:7, case.set = "expected"), type = "area.polygons")
@@ -162,6 +142,27 @@ plot(neighborhoodVoronoi(-7))
 Note that parallelization is currently only available on Linux and Mac.
 
 Also, note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which `neighborhoodWalking()` uses, strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("parallel")` for details.
+
+
+### warning message
+
+With R version 3.6.0, you may see the warning below when loading 'cholera':
+
+```
+> library(cholera)
+Registered S3 methods overwritten by 'ggplot2':
+  method         from
+  [.quosures     rlang
+  c.quosures     rlang
+  print.quosures rlang
+```
+
+My understanding is that it's more annoying than problematic. It's fixed in 'ggplot2' version >= 3.2.0. If it's not yet on CRAN, install the development version from GitHub:
+
+```{r, eval = FALSE}
+# For 'devtools' (>= 2.0.0)
+devtools::install_github("tidyverse/ggplot2", build_opts = c("--no-resave-data", "--no-manual"))
+```
 
 ### vignettes
 
@@ -193,5 +194,3 @@ The lab notes, which are only available online, go into greater detail about som
 
 [references](https://github.com/lindbrook/cholera/blob/master/docs/notes/references.md) is an informal list of articles and books about cholera, John Snow and the 1854 outbreak.
 
-
-### Notes

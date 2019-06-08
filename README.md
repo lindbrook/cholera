@@ -46,6 +46,180 @@ devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
 devtools::install_github("lindbrook/cholera", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
+## background
+
+John Snow’s map, published in his *On The Mode Of Communication Of
+Cholera*, of the 1854 cholera outbreak in London is one of the best
+known examples of data visualization and information design:
+
+![](vignettes/msu-snows-mapB.jpg)
+
+By plotting the number and location of fatalities using stacks of bars
+on a map, Snow was able to perform a task that is now easily taken for
+granted: he visualized a spatial distribution. Looking at the results,
+the pattern on the map seems unmistakable. The map appears to support
+Snow’s claims that cholera is a waterborne disease and that the pump on
+Broad Street is the source of the outbreak.
+
+And yet, despite its virtues, the map failed to convince either the
+authorities or Snow’s colleagues in the medical and scientific
+communities. Even today, many are skeptical of the map’s ability to
+support such claims. Beyond considerations of time and place, what
+critics past and present are picking up on is that a concentration of
+cases around the Broad Street pump alone should not be enough to
+convince us. The problem is the map does not refute the primary rival
+explanation to waterborne transmission: the pattern we see is not unlike
+what airborne transmission (miasma theory) might look like. In other
+words, while the presence of a pump at or near the epicenter of the
+distribution of fatalities is strong circumstantial evidence, it is
+nonetheless circumstantial.
+
+### pump neighborhoods
+
+This may be the reason why Snow added a graphical annotation to a second
+lesser-known version of the map, published in the *Report On The Cholera
+Outbreak In The Parish Of St. James, Westminster, During The Autumn Of
+1854*.
+
+![](vignettes/fig12-6.png)
+
+Despite its hand-drawn, back-of-the-envelope appearance, Snow writes:
+“The inner dotted line on the map shews \[sic\] the various points
+which have been found by careful measurement to be at an equal distance
+by the nearest road from the pump in Broad Street and the surrounding
+pumps …” (Ibid., p. 109). My interpretation of this statement is that,
+guided by the principle that all else being equal people tend to choose
+the closest pump, Snow is computing a *pump neighborhood*: the set of
+addresses or locations defined by their relative proximity to a specific
+water pump. By doing so, Snow’s annotation sets limits on where we
+should and should *not* find fatalities. In short, Snow’s annotation is
+a hypothesis or prediction.
+
+## computing pump neighborhoods
+
+While his actual data and the specifics method of computation appear to
+be lost to history, I reverse engineer what I infer to be his approach
+by doing the following. First, from the quotation above I assume that
+his measure of proximity is the walking distance along the streets of
+Soho. Second, putting aside aside questions about the map’s accuracy
+(it’s actually a commercial map that Snow annotated), I consider the
+map to be the definitive “text” and make it the de facto source of data.
+
+I then wrote functions that compute and visualize walking distances on
+the map. The value of these functions go beyond the ability to replicate
+and validate Snow’s efforts. By allowing you to compute hypothetical
+neighborhoods via selective inclusion or exclusion of pumps or to allow
+for different measures of proximity (e.g., Euclidean), they also allow
+you to explore counterfactual scenarios. Ultimately, this can help us to
+better assess whether we really can use the map to “prove” Snow’s
+claims.
+
+## walking v. Euclidean neighborhoods
+
+While walking distanced based neighborhoods are based on paths that
+follow streets, Euclidean distance based neighborhoods are based on
+straight line paths between a location and the nearest (or selected)
+pump:
+
+``` r
+streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
+title(main = "Walking Distances")
+invisible(lapply(c(1, 191, 46, 363, 85), addWalkingPath))
+
+streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
+title(main = "Euclidean Distances")
+invisible(lapply(c(1, 191, 46, 363, 85), addEuclideanPath))
+```
+
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-4-2.png" width="50%" />
+
+To build a neighborhood, we apply this algorithm to each location or
+“address” with at least one observed fatality. This builds the
+“observed” neighborhood:
+
+``` r
+plot(neighborhoodWalking())
+plot(neighborhoodEuclidean())
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-5-2.png" width="50%" />
+
+Ultimately, for testing purposes we want the “expected” neighborhoods.
+For walking neighborhoods, I use the same approach but use simulated
+data. Using `sp::spsample()` and `sp::Polygon()`, I place 20,000
+regularly spaced points, which lie approximately 6 meters apart,
+`unitMeter(dist(regular.cases[1:2, ]))`, across the face of the map and
+then compute the shortest path to the nearest pump.
+
+``` r
+plot(neighborhoodWalking(case.set = "expected"), "area.polygons")
+
+plot(neighborhoodVoronoi())
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-6-2.png" width="50%" />
+
+### Walking neighborhoods
+
+To explore “observed” walking neighborhoods, use `neighborhoodWalking()`
+with the `pump.select` argument:
+
+``` r
+plot(neighborhoodWalking(6:7))
+plot(neighborhoodWalking(-7))
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-7-2.png" width="50%" />
+
+To explore “expected” walking neighborhoods, add the case.set =
+“expected”
+argument:
+
+``` r
+plot(neighborhoodWalking(6:7, case.set = "expected"), type = "area.polygons")
+plot(neighborhoodWalking(-7, case.set = "expected"), type = "area.polygons")
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-8-2.png" width="50%" />
+
+### Euclidean neighborhoods
+
+To explore “observed” Euclidean neighborhoods, use
+`neighborhoodEuclidean()` with the `pump.select` argument:
+
+``` r
+plot(neighborhoodEuclidean(6:7))
+plot(neighborhoodEuclidean(-7))
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-9-2.png" width="50%" />
+
+To explore “expected” Euclidean neighborhoods, use
+`neighborhoodVoronoi()` with the `pump.select` argument:
+
+``` r
+plot(neighborhoodVoronoi(6:7))
+plot(neighborhoodVoronoi(-7))
+```
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
+
+### note on `neighborhoodWalking()` and `neighborhoodEuclidean()`
+
+`neighborhoodWalking()` and `neighborhoodEuclidean()` are
+computationally intensive. Using R version 3.6.0 on a single core of a
+2.3 GHz Intel i7, plotting observed paths to PDF takes about 4.4
+seconds; doing the same for expected paths takes about 27 seconds. Using
+the function’s parallel implementation on 4 physical (8 logical) cores,
+the times fall to about 3.9 and 12 seconds.
+
+Note that parallelization is currently only available on Linux and Mac.
+
+Also, note that although some precautions are taken in R.app on macOS,
+the developers of the ‘parallel’ package, which `neighborhoodWalking()`
+uses, strongly discourage against using parallelization within a GUI or
+embedded environment. See `vignette("parallel")` for details.
+
 ### warning message
 
 With R version 3.6.0, you may see the warning below when loading
@@ -66,177 +240,6 @@ development version from GitHub:
 # For 'devtools' (>= 2.0.0)
 devtools::install_github("tidyverse/ggplot2", build_opts = c("--no-resave-data", "--no-manual"))
 ```
-
-## background
-
-John Snow’s map of the 1854 cholera outbreak in London, which appeared
-in *On The Mode Of Communication Of Cholera*, is one of the best known
-examples of data visualization and information design:
-
-![](vignettes/msu-snows-mapB.jpg)
-
-By plotting the number and location of fatalities on a map, Snow was
-able to a perform a task that is easily taken for granted today:
-visualizing a spatial distribution. Looking at the results with our
-modern eye, the pattern on the map seems unmistakable, if not
-self-evident. The map appears to support Snow’s claims that cholera is a
-waterborne disease and that the pump on Broad Street is the source of
-the outbreak. And yet, despite its virtues, the map failed to convince
-either the authorities or Snow’s colleagues in the medical and
-scientific communities. Even today, many are skeptical of this or any
-map’s ability to demonstrate such claims.
-
-Beyond considerations of time and place, what critics past and present
-are picking up on is the fact that a concentration of cases around the
-Broad Street pump alone is not convincing. To put it differently, as is
-the map does not refute the primary rival explanation to waterborne
-transmission: the pattern we see is not unlike what airborne
-transmission (miasma theory) might look like. And while the presence of
-a pump at or near the epicenter of the distribution of fatalities is
-strong circumstantial evidence, it is nonetheless circumstantial.
-
-### pump neighborhoods
-
-This may be the reason why Snow added a graphical annotation to a second
-lesser-known version of the map:\[1\]
-
-![](vignettes/fig12-6.png)
-
-Despite its hand-drawn, back-of-the-envelope appearance, Snow writes:
-“The inner dotted line on the map shews \[sic\] the various points
-which have been found by careful measurement to be at an equal distance
-by the nearest road from the pump in Broad Street and the surrounding
-pumps …” (Ibid., p. 109.). In other words, guided by the principle that
-all else being equal people tend to choose the closest pump Snow is
-computing a *pump neighborhood*: the set of addresses or locations
-defined by their relative proximity to a specific water pump. By
-identifying the neighborhood of the Broad Street pump, Snow’s annotation
-sets limits on where we should and should *not* find fatalities. In
-short, Snow’s annotation is a hypothesis or prediction.
-
-## computing pump neighborhoods
-
-While the specifics of his data and method of computation appear to be
-lost to history, I reverse engineer what I consider to be his approach
-by doing the following. First, from the quotation above I infer that his
-measure of proximity is the walking distance along the streets of
-Soho.\[2\] Second, putting aside aside questions about the map’s
-accuracy,\[3\] which might be excellent, I set the map to be the
-definitive “text” and de facto source of data.\[4\] I then write
-functions to compute and visualized walking distances on the map.
-
-The value of these functions goes beyond replicating and validating
-Snow’s methods. By creating counterfactual scenarios by computing
-hypothetical neighborhoods via the selective inclusion or exclusion of
-pumps or by considering additional measures of proximity (e.g.,
-Euclidean), we can better assess the ability of the map to test Snow’s
-claims.
-
-## walking v. Euclidean neighborhoods
-
-While walking distanced based neighborhoods are based on paths that
-follow streets, Euclidean distance based neighborhoods are based on
-straight line paths between a location and the nearest (or
-selected):
-
-``` r
-streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
-title(main = "Walking Distances")
-invisible(lapply(c(1, 191, 46, 363, 85), addWalkingPath))
-
-streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
-title(main = "Euclidean Distances")
-invisible(lapply(c(1, 191, 46, 363, 85), addEuclideanPath))
-```
-
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-5-2.png" width="50%" />
-
-To build a neighborhood, we apply this algorithm to each location or
-“address” with at least one observed fatality. This builds the
-“observed” neighborhoods:
-
-``` r
-plot(neighborhoodWalking())
-plot(neighborhoodEuclidean())
-```
-
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-6-2.png" width="50%" />
-
-Ultimately, for testing purposes we also want the “expected”
-neighborhoods. For walking neighborhoods, I use the same approach but
-use simulated data. Using `sp::spsample()` and `sp::Polygon()`, I place
-20,000 regularly spaced points, which lie approximately 6 meters apart,
-`unitMeter(dist(regular.cases[1:2, ]))`, across the face of the map and
-then compute the shortest path to the nearest pump.\[5\] For Euclidean
-neighborhoods, we can compute Voronoi diagrams.\[6\]
-
-``` r
-plot(neighborhoodWalking(case.set = "expected"), "area.polygons")
-
-plot(neighborhoodVoronoi())
-```
-
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-7-2.png" width="50%" />
-
-### Walking neighborhoods
-
-To explore “observed” walking neighborhoods, use `neighborhoodWalking()`
-with the `pump.select` argument:
-
-``` r
-plot(neighborhoodWalking(6:7))
-plot(neighborhoodWalking(-7))
-```
-
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-8-2.png" width="50%" />
-
-To explore “expected” walking neighborhoods, add case.set = “expected”
-argument:
-
-``` r
-plot(neighborhoodWalking(6:7, case.set = "expected"), type = "area.polygons")
-plot(neighborhoodWalking(-7, case.set = "expected"), type = "area.polygons")
-```
-
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-9-2.png" width="50%" />
-
-### Euclidean neighborhoods
-
-To explore “observed” Euclidean neighborhoods, use
-`neighborhoodEuclidean()` with the `pump.select` argument:
-
-``` r
-plot(neighborhoodEuclidean(6:7))
-plot(neighborhoodEuclidean(-7))
-```
-
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
-
-To explore “expected” Euclidean neighborhoods, use
-`neighborhoodVoronoi()` with the `pump.select` argument:
-
-``` r
-plot(neighborhoodVoronoi(6:7))
-plot(neighborhoodVoronoi(-7))
-```
-
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-11-2.png" width="50%" />
-
-### note on `neighborhoodWalking()` and `neighborhoodEuclidean()`
-
-`neighborhoodWalking()` and `neighborhoodEuclidean()` are
-computationally intensive. Using R version 3.6.0 on a single core of a
-2.3 GHz Intel i7, plotting observed paths to PDF takes about 4.4
-seconds; doing the same for expected paths takes about 27 seconds. Using
-the function’s parallel implementation on 4 physical (8 logical) cores,
-the times fall to about 3.9 and 12 seconds.
-
-Note that parallelization is currently only available on Linux and Mac.
-
-Also, note that although some precautions are taken in R.app on macOS,
-the developers of the ‘parallel’ package, which `neighborhoodWalking()`
-uses, strongly discourage against using parallelization within a GUI or
-embedded environment. See `vignette("parallel")` for details.
 
 ### vignettes
 
@@ -313,31 +316,3 @@ vertices.
 [references](https://github.com/lindbrook/cholera/blob/master/docs/notes/references.md)
 is an informal list of articles and books about cholera, John Snow and
 the 1854 outbreak.
-
-### Notes
-
-1.   *Report On The Cholera Outbreak In The Parish Of St. James,
-    Westminster, During The Autumn Of 1854*
-
-2.  The computation of walking distance is by no means new (see Shiode,
-    2012). Another approach is to use GIS. For applications that don’t
-    need to consider the actual historic walking distances, this
-    layers-based approach, which typically relies on current maps, may
-    be sufficient: e.g.,
-    <https://www.theguardian.com/news/datablog/2013/mar/15/john-snow-cholera-map>.
-
-3.  The map is actually a commercial map that Snow annotated.
-
-4.  I use a modified version of Dodson and Tobler’s 1992 digitization.
-    Each bar and each pump is assigned a unique x-y coordinate. Each
-    road is translated into a series of straight line segments, defined
-    by those segments’ endpoints. While the original data,
-    <http://www.ncgia.ucsb.edu/pubs/snow/snow.html>, are no longer
-    available, they are preserved in Michael Friendly’s ‘HistData’
-    package. Note that a future version of this package will re-digitize
-    and geocode the map.
-
-5.  These data are found in `regular.cases` data frame. Note that
-    because the map is not rectangular, there are only 19,993 cases.
-
-6.  <http://www.ams.org/samplings/feature-column/fcarc-voronoi>
