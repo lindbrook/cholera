@@ -153,7 +153,6 @@ then compute the shortest path to the nearest pump.
 
 ``` r
 plot(neighborhoodWalking(case.set = "expected"), "area.polygons")
-
 plot(neighborhoodVoronoi())
 ```
 
@@ -232,9 +231,9 @@ With R version 3.6.0, you may see the warning below when loading
       c.quosures     rlang
       print.quosures rlang
 
-My understanding is that it’s more annoying than problematic. It’s fixed
-in ‘ggplot2’ version \>= 3.2.0. If it’s not yet on CRAN, install the
-development version from GitHub:
+My understanding is that this is more annoying than problematic. It’s
+fixed in ‘ggplot2’ version \>= 3.2.0. If it’s not yet on CRAN, install
+the development version from GitHub:
 
 ``` r
 # For 'devtools' (>= 2.0.0)
@@ -250,29 +249,26 @@ the links below, go into detail on a variety of topics.
 Cases](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/duplicate.missing.cases.md)
 describes the two coding errors and three misplaced cases I argue are
 present in Dodson and Tobler’s (1992) digitization of Snow’s map.
-Documentation and details about the fix are found online in [“Note on
-Duplicate and Missing
-Cases”](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md).
 
 [“Unstacking”
 Bars](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/unstacking.bars.md)
 discusses the inferential and visual importance of “unstacking” the bars
 in Snow’s map and the two “unstacked” data sets, which use “fatalities”
-and “addresses” as the units of
+and “addresses” as units of
 observation.
 
 [Roads](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/roads.md)
 covers issues related to roads. This includes discussion of how and why
 I move pump \#5 from Queen Street (I) to Marlborough Mews, the overall
-structure of the `roads` data set, “valid” road names, and my back of
-the envelope translation from the map’s nominal scale to meters (and
-yards).
+structure of the `roads` data set, “valid” road names, and my
+back-of-the-envelope translation from the map’s nominal scale to meters
+(and yards).
 
 [voronoiPolygons(): Tiles, Triangles and
 Polygons](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/tiles.polygons.md)
-focuses on the `voronoiPolygons()`, which extracts the vertices of
-triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi
-tessellation) from `deldir::deldir()` for use with polygon() and related
+focuses on the `voronoiPolygons()` function, which extracts the vertices
+of triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi
+tessellation) from `deldir::deldir()` for use with polygon() and other
 functions.
 
 [Kernel Density
@@ -290,7 +286,7 @@ Street pump.
 ### lab notes
 
 The lab notes, which are only available online, go into greater detail
-about some of the issues and topics discussed in the vignettes:
+about issues and topics discussed in the vignettes:
 
 [note on duplicate and missing
 cases](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md)
