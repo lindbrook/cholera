@@ -8,7 +8,7 @@
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @return R graphic elements.
-#' @note This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
+#' @note This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 3.6 seconds while doing so for expected paths takes about 109 seconds. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to about 1.4 and 28 seconds. Note that parallelization is currently only available on Linux and Mac, and that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which \code{neighborhoodWalking()} uses, strongly discourage against using parallelization within a GUI or embedded environment. See \code{vignette("parallel")} for details. Also, the function computes approximate of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
 #' @export
 #' @examples
 #' \donttest{
