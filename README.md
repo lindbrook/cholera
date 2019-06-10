@@ -235,8 +235,8 @@ With R version 3.6.0, you may see the warning below when loading
       print.quosures rlang
 
 My understanding is that this is more annoying than problematic. It’s
-fixed in ‘ggplot2’ version \>= 3.2.0. If it’s not yet on CRAN, install
-the development version from GitHub:
+fixed in ‘ggplot2’ in version 3.2.0. If that version is not yet on CRAN,
+install the development version from GitHub:
 
 ``` r
 # For 'devtools' (>= 2.0.0)
@@ -245,19 +245,20 @@ devtools::install_github("tidyverse/ggplot2", build_opts = c("--no-resave-data",
 
 ### vignettes
 
-The vignettes, which are available in the package as well as online at
-the links below, go into detail on a variety of topics.
+The vignettes are available in the package as well as online at the
+links below.
 
 [Duplicate and Missing
 Cases](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/duplicate.missing.cases.md)
-describes the two coding errors and three misplaced cases I argue are
-present in Dodson and Tobler’s (1992) digitization of Snow’s map.
+describes the two coding errors and the three misplaced cases that I
+argue are present in Dodson and Tobler’s (1992) digitization of Snow’s
+map.
 
 [“Unstacking”
 Bars](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/unstacking.bars.md)
-discusses the inferential and visual importance of “unstacking” the bars
-in Snow’s map and the two “unstacked” data sets, which use “fatalities”
-and “addresses” as units of
+discusses the inferential and visual reasons to “unstack” bars. Then, it
+describes the two “unstacked” data sets: one using “fatalities” and one
+using “addresses” as the unit of
 observation.
 
 [Roads](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/roads.md)
@@ -282,19 +283,19 @@ of the functions in ‘cholera’.
 
 [Time
 Series](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/time.series.md)
-discusses functions and data related to fatalities time series data and
-the question of the effect of the removal of the handle from the Broad
-Street pump.
+discusses functions and data related to the aggregate time series
+fatalities data and the questions surrounding the effect of the removal
+of the handle from the Broad Street pump.
 
 ### lab notes
 
-The lab notes, which are only available online, go into greater detail
-about issues and topics discussed in the vignettes:
+The lab notes, which are only available online, go into detail about
+certain issues and topics discussed in the vignettes:
 
 [note on duplicate and missing
 cases](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md)
-documents the specifics of how I “fixed” two apparent coding errors and
-three misplaced case in Dodson and Tobler’s data.
+documents the specifics of how I fixed the two apparent coding errors
+and three apparently misplaced case in Dodson and Tobler’s data.
 
 [computing street
 addresses](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md)
@@ -303,13 +304,14 @@ analysis to “unstack” bars and compute a stack’s “address”.
 
 [Euclidean v. Voronoi
 neighborhoods](https://github.com/lindbrook/cholera/blob/master/docs/notes/euclidean.voronoi.md)
-discusses why there are separate functions for `neighborhoodEuclidean()`
-and `neighborhoodVoronoi()`.
+discusses why there are separate functions, `neighborhoodEuclidean()`
+and `neighborhoodVoronoi()`, for Euclidean distance based neighborhoods.
 
 [points v.
 polygons](https://github.com/lindbrook/cholera/blob/master/docs/notes/pump.neighborhoods.notes.md)
 discusses the tradeoff between using points() and polygon() to plot
-“expected” area neighborhood plots and the computation of polygon
+“expected” neighborhood using area plots and the computation of
+polygon
 vertices.
 
 [references](https://github.com/lindbrook/cholera/blob/master/docs/notes/references.md)
