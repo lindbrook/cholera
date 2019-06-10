@@ -1,10 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.0.9033-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.5-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
-### package features
+#### package features
 
   - Fixes three apparent coding errors in Dodson and Tobler’s 1992
     digitization of Snow’s map.
@@ -25,7 +25,7 @@
   - Adds two aggregate time series fatalities data sets, taken from the
     Vestry report.
 
-### getting started
+#### getting started
 
 To install ‘cholera’ from CRAN:
 
@@ -74,7 +74,7 @@ words, while the presence of a pump at or near the epicenter of the
 distribution of fatalities is strong circumstantial evidence, it is
 nonetheless circumstantial.
 
-### pump neighborhoods
+## pump neighborhoods
 
 This may be the reason why Snow added a graphical annotation to a second
 lesser-known version of the map, published in the *Report On The Cholera
@@ -95,7 +95,7 @@ water pump. By doing so, Snow’s annotation sets limits on where we
 should and should *not* find fatalities. In short, Snow’s annotation is
 a hypothesis or prediction.
 
-## computing pump neighborhoods
+#### computing pump neighborhoods
 
 While his actual data and the specifics method of computation appear to
 be lost to history, I reverse engineer what I infer to be his approach
@@ -114,7 +114,7 @@ you to explore counterfactual scenarios. Ultimately, this can help us to
 better assess whether we really can use the map to “prove” Snow’s
 claims.
 
-## walking v. Euclidean neighborhoods
+#### walking v. Euclidean neighborhoods
 
 While walking distanced based neighborhoods are based on paths that
 follow streets, Euclidean distance based neighborhoods are based on
@@ -158,7 +158,7 @@ plot(neighborhoodVoronoi())
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-6-2.png" width="50%" />
 
-### Walking neighborhoods
+#### exploring walking neighborhoods
 
 To explore “observed” walking neighborhoods, use `neighborhoodWalking()`
 with the `pump.select` argument:
@@ -181,7 +181,7 @@ plot(neighborhoodWalking(-7, case.set = "expected"), type = "area.polygons")
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-8-2.png" width="50%" />
 
-### Euclidean neighborhoods
+#### exploring Euclidean neighborhoods
 
 To explore “observed” Euclidean neighborhoods, use
 `neighborhoodEuclidean()` with the `pump.select` argument:
@@ -203,7 +203,7 @@ plot(neighborhoodVoronoi(-7))
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
 
-### note on `neighborhoodWalking()` and `neighborhoodEuclidean()`
+#### note on computational performance
 
 `neighborhoodWalking()` and `neighborhoodEuclidean()` are
 computationally intensive. Using R version 3.6.0 on a single core of a
@@ -222,7 +222,7 @@ the developers of the ‘parallel’ package, which both functions use,
 strongly discourage against using parallelization within a GUI or
 embedded environment. See `vignette("parallel")` for details.
 
-### warning message
+#### warning message
 
 With R version 3.6.0, you may see the warning below when loading
 ‘cholera’:
@@ -243,7 +243,7 @@ install the development version from GitHub:
 devtools::install_github("tidyverse/ggplot2", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
-### vignettes
+#### vignettes
 
 The vignettes are available in the package as well as online at the
 links below.
@@ -287,7 +287,7 @@ discusses functions and data related to the aggregate time series
 fatalities data and the questions surrounding the effect of the removal
 of the handle from the Broad Street pump.
 
-### lab notes
+#### lab notes
 
 The lab notes, which are only available online, go into detail about
 certain issues and topics discussed in the vignettes:
