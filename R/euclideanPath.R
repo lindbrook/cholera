@@ -10,7 +10,6 @@
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Default is 5 km/hr.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
 #' @note The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
 #' @return An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
 #' @export
@@ -42,7 +41,7 @@
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, case.location = "nominal", landmark.cases = TRUE,
   vestry = FALSE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5, multi.core = FALSE) {
+  walking.speed = 5) {
 
   if (is.null(origin) & is.null(destination)) {
     stop("If origin = NULL, you must supply a destination.")
@@ -67,8 +66,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   if (case.location %in% c("address", "nominal") == FALSE) {
     stop('case.location must be "address" or "nominal".')
   }
-
-  cores <- multiCore(multi.core)
 
   obs.ct <- nrow(cholera::fatalities)
   exp.ct <- nrow(cholera::regular.cases)
@@ -446,13 +443,13 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       }
 
     } else if (nrow(ego) > 1) {
-      ds <- parallel::mclapply(ego$case, function(i) {
+      ds <- lapply(ego$case, function(i) {
         vapply(alters$case, function(j) {
           dat <- rbind(alters[alters$case == j, coords],
                        ego[ego$case == i, coords])
           c(stats::dist(dat))
         }, numeric(1L))
-      }, mc.cores = cores)
+      })
 
       exit.space <- stats::setNames(expand.grid(alters$case, ego$case),
         c("case", "exit"))

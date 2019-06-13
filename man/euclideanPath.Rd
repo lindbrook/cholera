@@ -7,7 +7,7 @@
 euclideanPath(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, case.location = "nominal", landmark.cases = TRUE,
   vestry = FALSE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5, multi.core = FALSE)
+  walking.speed = 5)
 }
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
@@ -29,8 +29,6 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Default is 5 km/hr.}
-
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
 }
 \value{
 An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
