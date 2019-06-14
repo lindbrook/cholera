@@ -16,21 +16,16 @@ unstackFatalities3 <- function(multi.core = FALSE,
 
   cl <- parallel::makePSOCKcluster(cores)
   parallel::clusterExport(cl = cl, varlist = "fatalities")
+  parallel::clusterEvalQ(cl, library(cholera))
+  parallel::clusterEvalQ(cl, library(stats))
 
   orthogonal.projection <- parallel::parLapply(cl, case.id, function(case) {
-    library(cholera)
-    library(stats)
-
-    withinRadius <- function(a, b, radius = 2) {
-      (a$x - b$x)^2 + (a$y - b$y)^2 <= radius^2
-    }
-
     case.data <- fatalities[fatalities$case == case, c("x", "y")]
 
     within.radius <- lapply(cholera::road.segments$id, function(id) {
       seg.data <- cholera::road.segments[cholera::road.segments$id == id, ]
-      test1 <- withinRadius(case.data, seg.data[, c("x1", "y1")])
-      test2 <- withinRadius(case.data, seg.data[, c("x2", "y2")])
+      test1 <- cholera::withinRadius(case.data, seg.data[, c("x1", "y1")])
+      test2 <- cholera::withinRadius(case.data, seg.data[, c("x2", "y2")])
       if (any(test1, test2)) unique(seg.data$id)
     })
 
@@ -77,4 +72,5 @@ unstackFatalities3 <- function(multi.core = FALSE,
   })
 
   parallel::stopCluster(cl)
+  orthogonal.projection
 }
