@@ -62,8 +62,8 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
 
       within.radius <- lapply(road.segments$id, function(x) {
         seg.data <- cholera::road.segments[cholera::road.segments$id == x, ]
-        test1 <- withinRadius(case, seg.data[, c("x1", "y1")])
-        test2 <- withinRadius(case, seg.data[, c("x2", "y2")])
+        test1 <- cholera::withinRadius(case, seg.data[, c("x1", "y1")])
+        test2 <- cholera::withinRadius(case, seg.data[, c("x2", "y2")])
         if (any(test1, test2)) unique(seg.data$id)
       })
 

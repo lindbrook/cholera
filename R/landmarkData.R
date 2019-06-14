@@ -134,8 +134,8 @@ landmarkData <- function(multi.core = FALSE) {
   orthogonal.projection <- parallel::mclapply(landmarks, function(case) {
     within.radius <- lapply(cholera::road.segments$id, function(x) {
       dat <- cholera::road.segments[cholera::road.segments$id == x, ]
-      test1 <- withinRadius(case, dat[, c("x1", "y1")])
-      test2 <- withinRadius(case, dat[, c("x2", "y2")])
+      test1 <- cholera::withinRadius(case, dat[, c("x1", "y1")])
+      test2 <- cholera::withinRadius(case, dat[, c("x2", "y2")])
       if (any(test1, test2)) unique(dat$id)
     })
 

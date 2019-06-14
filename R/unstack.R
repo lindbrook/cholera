@@ -26,8 +26,8 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
       within.radius <- lapply(cholera::road.segments$id, function(id) {
         seg.data <- cholera::road.segments[cholera::road.segments$id == id, ]
-        test1 <- withinRadius(case.data, seg.data[, c("x1", "y1")])
-        test2 <- withinRadius(case.data, seg.data[, c("x2", "y2")])
+        test1 <- cholera::withinRadius(case.data, seg.data[, c("x1", "y1")])
+        test2 <- cholera::withinRadius(case.data, seg.data[, c("x2", "y2")])
         if (any(test1, test2)) unique(seg.data$id)
       })
 
