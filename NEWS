@@ -2,6 +2,7 @@ cholera 0.6.5.9002
 ==================
 
 - use parallel::clusterExport(envir = environment()).
+- test parLapply() in unstackFatalities().
 
 
 cholera 0.6.5.9001
