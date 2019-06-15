@@ -14,10 +14,13 @@ unstackFatalities3 <- function(multi.core = FALSE,
   cores <- multiCore(multi.core)
   case.id <- fatalities$case
 
-  cl <- parallel::makePSOCKcluster(cores)
-  parallel::clusterExport(cl = cl, varlist = "fatalities")
-  parallel::clusterEvalQ(cl, library(cholera))
-  parallel::clusterEvalQ(cl, library(stats))
+  # if(.Platform$OS.type == "windows") {
+  # }
+
+  cl <- parallel::makeCluster(cores)
+
+  parallel::clusterExport(cl = cl, varlist = "fatalities",
+    envir = environment())
 
   orthogonal.projection <- parallel::parLapply(cl, case.id, function(case) {
     case.data <- fatalities[fatalities$case == case, c("x", "y")]
