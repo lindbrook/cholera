@@ -5,7 +5,7 @@
 \title{Unstack "stacks" in Snow's cholera map.}
 \usage{
 unstackFatalities(multi.core = FALSE, compute = FALSE,
-  fatalities = fixFatalities())
+  fatalities = fixFatalities(), dev.mode = FALSE)
 }
 \arguments{
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
@@ -13,6 +13,8 @@ unstackFatalities(multi.core = FALSE, compute = FALSE,
 \item{compute}{Logical. \code{TRUE} computes data. \code{FALSE} uses pre-computed data.}
 
 \item{fatalities}{Corrected fatalities data from \code{cholera::fixFatalities()}. For original data, use \code{HistData::Snow.deaths}.}
+
+\item{dev.mode}{Logical. Development mode to test parallel::pasLapply().}
 }
 \value{
 An R list that includes \code{anchor.case}, \code{fatalities.address}, \code{fatalities.unstacked} and \code{ortho.proj}.
