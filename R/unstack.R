@@ -75,28 +75,21 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
 
     # Recompute orthogonal distances
 
-    ortho.projB <- parallel::mclapply(seq_along(road.segment.fix), function(i) {
-      case.data <- fatalities[unlist(road.segment.fix[[i]]), ]
-      seg.id <- names(road.segment.fix[i])
+    fix.id <- seq_along(road.segment.fix)
 
-      ortho.data <- lapply(case.data$case, function(x) {
-        orthogonalProjection(x, seg.id)
+    if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+      cl <- parallel::makeCluster(cores)
+      parallel::clusterExport(cl = cl, envir = environment(),
+        varlist = c("road.segment.fix", "fatalities"))
+      ortho.projB <- parallel::parLapply(cl, fix.id, function(i) {
+        orthoProjB(i, fatalities, road.segment.fix)
       })
-
-      ortho.data <- do.call(rbind, ortho.data)
-      x.proj <- ortho.data$x.proj
-      y.proj <- ortho.data$y.proj
-
-      proj.data <- lapply(1:nrow(case.data), function(j) {
-        dat <- rbind(case.data[j, c("x", "y")], c(x.proj[j], y.proj[j]))
-        cbind(x.proj[j], y.proj[j], c(stats::dist(dat)))
-      })
-
-      out <- data.frame(seg.id, do.call(rbind, proj.data), case.data$case,
-        stringsAsFactors = FALSE)
-      names(out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist", "case")
-      out
-    }, mc.cores = cores)
+      parallel::stopCluster(cl)
+    } else {
+      ortho.projB <- parallel::mclapply(fix.id, function(i) {
+        orthoProjB(i, fatalities, road.segment.fix)
+      }, mc.cores = cores)
+    }
 
     ortho.projB <- do.call(rbind, ortho.projB)
     row.names(ortho.projB) <- NULL
@@ -194,80 +187,29 @@ unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
     cutpoint <- 0.05
     multiple.obs <- road.incidence[road.incidence$count > 1, ]
 
-    multiple.address <- parallel::mclapply(multiple.obs$id, function(i) {
-      cases <- ortho.proj[ortho.proj$road.segment == i, "case"]
-      ortho <- ortho.proj[ortho.proj$road.segment == i, c("x.proj", "y.proj")]
-      orientation <- sign(fatalities[cases, c("x", "y")] - ortho)
-
-      sideA <- (orientation$x == -1 & orientation$y == 1) |
-        (orientation$x == -1 & orientation$y == -1) |
-        (orientation$x == 0 & orientation$y == 1) |
-        (orientation$x == 1 & orientation$y == 0)
-
-      orientation$side <- ifelse(sideA, 1, 0)
-
-      if (length(unique(orientation$side)) == 2) {
-        A <- as.numeric(row.names(orientation[orientation$side == 1, ]))
-        B <- as.numeric(row.names(orientation[orientation$side == 0, ]))
-        dataA <- ortho.proj[ortho.proj$case %in% A, c("x.proj", "y.proj")]
-        dataB <- ortho.proj[ortho.proj$case %in% B, c("x.proj", "y.proj")]
-
-        if (nrow(dataA) >= 2) {
-          clusterA <- stats::hclust(stats::dist(dataA))
-          outA <- stats::cutree(clusterA, h = cutpoint)
-        } else {
-          outA <- 1
-          names(outA) <- row.names(dataA)
-        }
-
-        if (nrow(dataB) >= 2) {
-          clusterB <- stats::hclust(stats::dist(dataB))
-          outB <- stats::cutree(clusterB, h = cutpoint)
-        } else {
-          outB <- 1
-          names(outB) <- row.names(dataB)
-        }
-
-        outB <- max(outA) +  outB
-        census <- c(outA, outB)
-        out <- data.frame(case = as.numeric(names(census)), group = census,
-          stringsAsFactors = FALSE)
-        row.names(out) <- NULL
-      }
-
-      if (length(unique(orientation$side)) == 1) {
-        A <- as.numeric(row.names(orientation))
-        dataA <- ortho.proj[ortho.proj$case %in% A, c("x.proj", "y.proj")]
-
-        if (nrow(dataA) >= 2) {
-          clusterA <- stats::hclust(stats::dist(dataA))
-          outA <- stats::cutree(clusterA, h = cutpoint)
-        } else {
-          outA <- 1
-        }
-
-        out <- data.frame(case = A, group = outA, stringsAsFactors = FALSE)
-        row.names(out) <- NULL
-      }
-
-      out <- merge(out, ortho.proj[ortho.proj$road.segment == i,
-        c("case", "ortho.dist")], by = "case")
-      out <- out[order(out$group, out$ortho.dist), ]
-      out$anchor <- ifelse(duplicated(out$group) == FALSE, 1, 0)
-      data.frame(id = i, out, stringsAsFactors = FALSE)
-    }, mc.cores = cores)
-
-    multiple.unstacked <- parallel::mclapply(multiple.address, function(x) {
-      group.id <- unique(x$group)
-      group.data <- lapply(group.id, function(i) {
-        tmp <- x[x$group == i, ]
-        tmp$case.count <- nrow(tmp)
-        tmp$anchor <- tmp[tmp$anchor == 1, "case"]
-        tmp$ortho.dist <- NULL
-        tmp
+    if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+      cl <- parallel::makeCluster(cores)
+      parallel::clusterExport(cl = cl, envir = environment(),
+        varlist = c("ortho.proj", "fatalities", "cutpoint"))
+      multiple.address <- parallel::parLapply(cl, multiple.obs$id, function(i) {
+        multipleAddress(i, ortho.proj, fatalities, cutpoint)
       })
-      do.call(rbind, group.data)
-    })
+      parallel::stopCluster(cl)
+    } else {
+      multiple.address <- parallel::mclapply(multiple.obs$id, function(i) {
+        multipleAddress(i, ortho.proj, fatalities, cutpoint)
+      }, mc.cores = cores)
+    }
+
+    if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+      cl <- parallel::makeCluster(cores)
+      multiple.unstacked <- parallel::parLapply(cl, multiple.address,
+        multipleUnstack)
+      parallel::stopCluster(cl)
+    } else {
+      multiple.unstacked <- parallel::mclapply(multiple.address,
+        multipleUnstack, mc.cores = cores)
+    }
 
     multiple.unstacked <- do.call(rbind,multiple.unstacked)
     multiple.unstacked$multiple.obs.seg <- "Yes"
@@ -354,4 +296,102 @@ orthoProj <- function(case, fatalities) {
   } else {
     out[1, ] # all candidate roads are NA; arbitrarily choose first obs.
   }
+}
+
+orthoProjB <- function(i, fatalities, road.segment.fix) {
+  case.data <- fatalities[unlist(road.segment.fix[[i]]), ]
+  seg.id <- names(road.segment.fix[i])
+
+  ortho.data <- lapply(case.data$case, function(x) {
+    cholera::orthogonalProjection(x, seg.id)
+  })
+
+  ortho.data <- do.call(rbind, ortho.data)
+  x.proj <- ortho.data$x.proj
+  y.proj <- ortho.data$y.proj
+
+  proj.data <- lapply(1:nrow(case.data), function(j) {
+    dat <- rbind(case.data[j, c("x", "y")], c(x.proj[j], y.proj[j]))
+    cbind(x.proj[j], y.proj[j], c(stats::dist(dat)))
+  })
+
+  out <- data.frame(seg.id, do.call(rbind, proj.data), case.data$case,
+    stringsAsFactors = FALSE)
+  names(out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist", "case")
+  out
+}
+
+multipleAddress <- function(i, ortho.proj, fatalities, cutpoint) {
+  cases <- ortho.proj[ortho.proj$road.segment == i, "case"]
+  ortho <- ortho.proj[ortho.proj$road.segment == i, c("x.proj", "y.proj")]
+  orientation <- sign(fatalities[cases, c("x", "y")] - ortho)
+
+  sideA <- (orientation$x == -1 & orientation$y == 1) |
+    (orientation$x == -1 & orientation$y == -1) |
+    (orientation$x == 0 & orientation$y == 1) |
+    (orientation$x == 1 & orientation$y == 0)
+
+  orientation$side <- ifelse(sideA, 1, 0)
+
+  if (length(unique(orientation$side)) == 2) {
+    A <- as.numeric(row.names(orientation[orientation$side == 1, ]))
+    B <- as.numeric(row.names(orientation[orientation$side == 0, ]))
+    dataA <- ortho.proj[ortho.proj$case %in% A, c("x.proj", "y.proj")]
+    dataB <- ortho.proj[ortho.proj$case %in% B, c("x.proj", "y.proj")]
+
+    if (nrow(dataA) >= 2) {
+      clusterA <- stats::hclust(stats::dist(dataA))
+      outA <- stats::cutree(clusterA, h = cutpoint)
+    } else {
+      outA <- 1
+      names(outA) <- row.names(dataA)
+    }
+
+    if (nrow(dataB) >= 2) {
+      clusterB <- stats::hclust(stats::dist(dataB))
+      outB <- stats::cutree(clusterB, h = cutpoint)
+    } else {
+      outB <- 1
+      names(outB) <- row.names(dataB)
+    }
+
+    outB <- max(outA) +  outB
+    census <- c(outA, outB)
+    out <- data.frame(case = as.numeric(names(census)), group = census,
+      stringsAsFactors = FALSE)
+    row.names(out) <- NULL
+  }
+
+  if (length(unique(orientation$side)) == 1) {
+    A <- as.numeric(row.names(orientation))
+    dataA <- ortho.proj[ortho.proj$case %in% A, c("x.proj", "y.proj")]
+
+    if (nrow(dataA) >= 2) {
+      clusterA <- stats::hclust(stats::dist(dataA))
+      outA <- stats::cutree(clusterA, h = cutpoint)
+    } else {
+      outA <- 1
+    }
+
+    out <- data.frame(case = A, group = outA, stringsAsFactors = FALSE)
+    row.names(out) <- NULL
+  }
+
+  out <- merge(out, ortho.proj[ortho.proj$road.segment == i,
+    c("case", "ortho.dist")], by = "case")
+  out <- out[order(out$group, out$ortho.dist), ]
+  out$anchor <- ifelse(duplicated(out$group) == FALSE, 1, 0)
+  data.frame(id = i, out, stringsAsFactors = FALSE)
+}
+
+multipleUnstack <- function(x) {
+  group.id <- unique(x$group)
+  group.data <- lapply(group.id, function(i) {
+    tmp <- x[x$group == i, ]
+    tmp$case.count <- nrow(tmp)
+    tmp$anchor <- tmp[tmp$anchor == 1, "case"]
+    tmp$ortho.dist <- NULL
+    tmp
+  })
+  do.call(rbind, group.data)
 }
