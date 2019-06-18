@@ -209,8 +209,10 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
       which(nearest.pump == n)
     })
 
-    periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
-      mc.cores = x$cores)
+    # periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
+    #   mc.cores = x$cores)
+    periphery.cases <- peripheryCases(neighborhood.cases, x$cores, x$dev.mode)
+
     pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
       mc.cores = x$cores)
     names(pearl.string) <- p.num

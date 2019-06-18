@@ -7,27 +7,67 @@ pearlStringRadius <- function() {
 }
 
 # remove observations with neighbors at each of the 4 cardinal directions
-peripheryCases <- function(n.points, radius = pearlStringRadius()) {
-  n.area <- cholera::regular.cases[n.points, ]
-  periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {
-    case.point <- n.area[i, ]
+# peripheryCases <- function(n.points, radius = pearlStringRadius()) {
+#   n.area <- cholera::regular.cases[n.points, ]
+#   periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {
+#     case.point <- n.area[i, ]
+#
+#     N <- signif(case.point$x) == signif(n.area$x) &
+#          signif(case.point$y + radius) == signif(n.area$y)
+#
+#     E <- signif(case.point$x + radius) == signif(n.area$x) &
+#          signif(case.point$y) == signif(n.area$y)
+#
+#     S <- signif(case.point$x) == signif(n.area$x) &
+#          signif(case.point$y - radius) == signif(n.area$y)
+#
+#     W <- signif(case.point$x - radius) == signif(n.area$x) &
+#          signif(case.point$y) == signif(n.area$y)
+#
+#     sum(c(N, E, S, W)) == 4
+#   }, logical(1L))
+#
+#   row.names(n.area[which(periphery.test == FALSE), ])
+# }
 
-    N <- signif(case.point$x) == signif(n.area$x) &
-         signif(case.point$y + radius) == signif(n.area$y)
+peripheryCases <- function(n.points, cores, dev.mode,
+  radius = pearlStringRadius()) {
 
-    E <- signif(case.point$x + radius) == signif(n.area$x) &
-         signif(case.point$y) == signif(n.area$y)
+  periphery_cases <- function(n.points, radius) {
+    n.area <- cholera::regular.cases[n.points, ]
+    periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {
+      case.point <- n.area[i, ]
 
-    S <- signif(case.point$x) == signif(n.area$x) &
-         signif(case.point$y - radius) == signif(n.area$y)
+      N <- signif(case.point$x) == signif(n.area$x) &
+           signif(case.point$y + radius) == signif(n.area$y)
 
-    W <- signif(case.point$x - radius) == signif(n.area$x) &
-         signif(case.point$y) == signif(n.area$y)
+      E <- signif(case.point$x + radius) == signif(n.area$x) &
+           signif(case.point$y) == signif(n.area$y)
 
-    sum(c(N, E, S, W)) == 4
-  }, logical(1L))
+      S <- signif(case.point$x) == signif(n.area$x) &
+           signif(case.point$y - radius) == signif(n.area$y)
 
-  row.names(n.area[which(periphery.test == FALSE), ])
+      W <- signif(case.point$x - radius) == signif(n.area$x) &
+           signif(case.point$y) == signif(n.area$y)
+
+      sum(c(N, E, S, W)) == 4
+    }, logical(1L))
+
+    row.names(n.area[which(periphery.test == FALSE), ])
+  }
+
+  if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+    cl <- parallel::makeCluster(cores)
+    parallel::clusterExport(cl = cl, envir = environment(),
+      varlist = c("n.points", "radius"))
+    p.cases <- parallel::parLapply(cl, n.points, periphery_cases, radius)
+    parallel::stopCluster(cl)
+  } else {
+    p.cases <- parallel::mclapply(n.points, periphery_cases, radius,
+      mc.cores = cores)
+  }
+
+  p.cases
 }
 
 #' Compute polygon vertices via 'TSP' package.
