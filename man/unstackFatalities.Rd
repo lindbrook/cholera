@@ -14,7 +14,7 @@ unstackFatalities(multi.core = FALSE, compute = FALSE,
 
 \item{fatalities}{Corrected fatalities data from \code{cholera::fixFatalities()}. For original data, use \code{HistData::Snow.deaths}.}
 
-\item{dev.mode}{Logical. Development mode to test parallel::parLapply().}
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \value{
 An R list that includes \code{anchor.case}, \code{fatalities.address}, \code{fatalities.unstacked} and \code{ortho.proj}.
