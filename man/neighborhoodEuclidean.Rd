@@ -6,7 +6,7 @@
 \usage{
 neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
   case.location = "nominal", case.set = "observed",
-  multi.core = FALSE)
+  multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
@@ -18,6 +18,8 @@ neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 \item{case.set}{Character. "observed" or "expected".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \value{
 An R vector.
