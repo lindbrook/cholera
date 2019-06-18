@@ -2,7 +2,7 @@ cholera 0.6.5.9004
 ==================
 
 - add unstackAuxiliaryFunctions.R
-- .
+- add parallel Windows implementation for unstackFatalities().
 
 
 cholera 0.6.5.9003
