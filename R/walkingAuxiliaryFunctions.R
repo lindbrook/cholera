@@ -1,8 +1,8 @@
-#' Common auxillary functions for walking path functions.
+#' Common auxiliary functions for walking path functions.
 #' walking(), walkingPath(), addMilePosts(), milePosts(), addNeighborhood().
 #' @noRd
 
-walkingAuxillaryFunctions <- function() NULL
+walkingAuxiliaryFunctions <- function() NULL
 
 auditEdge <- function(p, edges, output = "logical") {
   if (output == "logical") {
