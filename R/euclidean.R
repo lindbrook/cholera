@@ -73,6 +73,23 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
       observed = observed, case.location = case.location)$data$pump
   }, mc.cores = cores)
 
+  # Windows parallel implementation not faster
+  # if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+  #   cl <- parallel::makeCluster(cores)
+  #   parallel::clusterExport(cl = cl, envir = environment(),
+  #     varlist = c("pump.id", "vestry", "observed", "case.location"))
+  #   projection <- parallel::parLapply(cl, anchors, function(x) {
+  #     cholera::euclideanPath(x, destination = pump.id, vestry = vestry,
+  #       observed = observed, case.location = case.location)$data$pump
+  #   })
+  #   parallel::stopCluster(cl)
+  # } else {
+  #   nearest.pump <- parallel::mclapply(anchors, function(x) {
+  #     euclideanPath(x, destination = pump.id, vestry = vestry,
+  #       observed = observed, case.location = case.location)$data$pump
+  #   }, mc.cores = cores)
+  # }
+
   out <- list(pump.data = pump.data,
               pump.select = pump.select,
               vestry = vestry,
@@ -83,7 +100,8 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
               anchors = anchors,
               observed = observed,
               nearest.pump = unlist(nearest.pump),
-              cores = cores)
+              cores = cores,
+              dev.mode = dev.mode)
 
   class(out) <- "euclidean"
   out
