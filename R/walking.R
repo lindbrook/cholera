@@ -6,6 +6,7 @@
 #' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected" or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R list with 7 objects:
 #' \itemize{
 #'   \item{\code{paths}: list of paths to nearest or selected pump(s).}
@@ -26,7 +27,8 @@
 #' }
 
 neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, case.set = "observed", multi.core = FALSE) {
+  weighted = TRUE, case.set = "observed", multi.core = FALSE,
+  dev.mode = FALSE) {
 
   if (is.null(pump.select) == FALSE) {
     if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
@@ -114,7 +116,8 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
               snow.colors = snow.colors,
               pumpID = pumpID,
               cores = cores,
-              metric = 1 / unitMeter(1))
+              metric = 1 / unitMeter(1),
+              dev.mode = dev.mode)
 
   class(out) <- "walking"
   out
@@ -279,8 +282,10 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
 
       names(neighborhood.cases) <- pearl.neighborhood
 
-      periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
-        mc.cores = x$cores)
+      # periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
+      #   mc.cores = x$cores)
+      periphery.cases <- peripheryCases(neighborhood.cases, x$cores, x$dev.mode)
+
       pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
         mc.cores = x$cores)
 
