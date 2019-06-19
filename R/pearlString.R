@@ -53,7 +53,9 @@ peripheryCases <- function(n.points, cores, dev.mode,
 #' @note Default method for neighborhoodEuclidean().
 #' @noRd
 
-travelingSalesman <- function(vertices, tsp.method = "repetitive_nn") {
+travelingSalesman <- function(vertices, cores, dev.mode,
+  tsp.method = "repetitive_nn") {
+
   methods <- c("identity", "random", "nearest_insertion", "farthest_insertion",
     "cheapest_insertion", "arbitrary_insertion", "nn", "repetitive_nn")
 
@@ -63,15 +65,30 @@ travelingSalesman <- function(vertices, tsp.method = "repetitive_nn") {
          "nn", or "repetitive_nn".')
   }
 
-  d <- stats::dist(cholera::regular.cases[vertices, ])
-  distances <- data.frame(t(utils::combn(vertices, 2)), c(d),
-    stringsAsFactors = FALSE)
-  names(distances) <- c("a", "b", "dist")
-  distances$pathID <- paste0(distances$a, "-", distances$b)
-  distances$rev.pathID <- paste0(distances$b, "-", distances$a)
-  tsp <- TSP::TSP(d, labels = vertices)
-  soln <- TSP::solve_TSP(tsp, method = tsp.method)
-  names(soln)
+  traveling_salesman <- function(x, tsp.method) {
+    d <- stats::dist(cholera::regular.cases[x, ])
+    distances <- data.frame(t(utils::combn(x, 2)), c(d),
+      stringsAsFactors = FALSE)
+    names(distances) <- c("a", "b", "dist")
+    distances$pathID <- paste0(distances$a, "-", distances$b)
+    distances$rev.pathID <- paste0(distances$b, "-", distances$a)
+    tsp <- TSP::TSP(d, labels = x)
+    soln <- TSP::solve_TSP(tsp, method = tsp.method)
+    names(soln)
+  }
+
+  if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+    cl <- parallel::makeCluster(cores)
+    parallel::clusterExport(cl = cl, envir = environment(),
+      varlist = "vertices")
+    p.string <- parallel::parLapply(cl, vertices, traveling_salesman, tsp.method)
+    parallel::stopCluster(cl)
+  } else {
+    p.string <- parallel::mclapply(vertices, traveling_salesman, tsp.method,
+      mc.cores = cores)
+  }
+
+  p.string
 }
 
 ## diagnostic plots ##
