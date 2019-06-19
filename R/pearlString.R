@@ -6,30 +6,6 @@ pearlStringRadius <- function() {
   c(stats::dist(cholera::regular.cases[c(1, 2), ]))
 }
 
-# remove observations with neighbors at each of the 4 cardinal directions
-# peripheryCases <- function(n.points, radius = pearlStringRadius()) {
-#   n.area <- cholera::regular.cases[n.points, ]
-#   periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {
-#     case.point <- n.area[i, ]
-#
-#     N <- signif(case.point$x) == signif(n.area$x) &
-#          signif(case.point$y + radius) == signif(n.area$y)
-#
-#     E <- signif(case.point$x + radius) == signif(n.area$x) &
-#          signif(case.point$y) == signif(n.area$y)
-#
-#     S <- signif(case.point$x) == signif(n.area$x) &
-#          signif(case.point$y - radius) == signif(n.area$y)
-#
-#     W <- signif(case.point$x - radius) == signif(n.area$x) &
-#          signif(case.point$y) == signif(n.area$y)
-#
-#     sum(c(N, E, S, W)) == 4
-#   }, logical(1L))
-#
-#   row.names(n.area[which(periphery.test == FALSE), ])
-# }
-
 peripheryCases <- function(n.points, cores, dev.mode,
   radius = pearlStringRadius()) {
 
