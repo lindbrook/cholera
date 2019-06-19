@@ -282,12 +282,8 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
 
       names(neighborhood.cases) <- pearl.neighborhood
 
-      # periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
-      #   mc.cores = x$cores)
       periphery.cases <- peripheryCases(neighborhood.cases, x$cores, x$dev.mode)
-
-      pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
-        mc.cores = x$cores)
+      pearl.string <- travelingSalesman(periphery.cases, x$cores, x$dev.mode)
 
       invisible(lapply(names(pearl.string), function(nm) {
         sel <- paste0("p", nm)
