@@ -454,8 +454,18 @@ observedExpected <- function(x, n.data) {
   unobs.split.segments <- setdiff(unobs.segments, unlist(unobs.whole))
 
   if (length(unobs.split.segments) > 0) {
-    unobs.split.data <- parallel::mclapply(unobs.split.segments,
-      splitSegments, edges, p.name, p.node, x, mc.cores = x$cores)
+    if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
+      cl <- parallel::makeCluster(x$cores)
+      parallel::clusterExport(cl = cl, envir = environment(),
+        varlist = c("edges", "p.name", "p.node", "x"))
+      unobs.split.data <- parallel::parLapply(cl, unobs.split.segments,
+        function(seg) splitSegments(seg, edges, p.name, p.node, x))
+      parallel::stopCluster(cl)
+    } else {
+      unobs.split.data <- parallel::mclapply(unobs.split.segments,
+        splitSegments, edges, p.name, p.node, x, mc.cores = x$cores)
+    }
+
     cutpoints <- cutpointValues(unobs.split.data)
     unobs.split.pump <- lapply(unobs.split.data, function(x) unique(x$pump))
     unobs.split <- splitData(unobs.split.segments, cutpoints, edges)
