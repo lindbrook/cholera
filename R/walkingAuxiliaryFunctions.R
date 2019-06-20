@@ -357,12 +357,11 @@ areaPointsData <- function(sim.proj.segs, wholes, snow.colors, sim.proj,
 
 
 # for neighborhoodWalking():expectedCount() and pearsonResiduals.walking()
-observedExpected <- function(x) {
+observedExpected <- function(x, n.data) {
   if (class(x) != "walking") {
     stop('"x"\'s class needs to be "walking".')
   }
 
-  n.data <- neighborhoodPathData(x)
   dat <- n.data$dat
   edges <- n.data$edges
   neighborhood.path.edges <- n.data$neighborhood.path.edges

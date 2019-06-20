@@ -204,7 +204,7 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
     }))
 
   } else if (x$case.set == "expected") {
-    OE <- observedExpected(x)
+    OE <- observedExpected(x, n.data)
     wholes <- OE$expected.wholes
     splits <- OE$exp.splits
     splits.pump <- OE$exp.splits.pump
