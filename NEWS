@@ -1,9 +1,16 @@
+cholera 0.6.5.9007
+==================
+
+- amend observedExpected().
+- add parallel Windows version of observedExpected().
+
+
 cholera 0.6.5.9006
 ==================
 
 - add travelingSalesman() parLapply() prototype.
-- add parallel Windows implementation for neighborhoodEuclidean().
-- add parallel Windows implementation for neighborhoodWalking().
+- add parallel Windows version of neighborhoodEuclidean().
+- add parallel Windows version of neighborhoodWalking().
 
 
 cholera 0.6.5.9005

@@ -401,8 +401,18 @@ observedExpected <- function(x, n.data) {
   obs.partial.segments <- setdiff(partial.segs, unlist(obs.partial.whole))
 
   if (length(obs.partial.segments) > 0) {
-    obs.partial.split.data <- parallel::mclapply(obs.partial.segments,
-      splitSegments, edges, p.name, p.node, x, mc.cores = x$cores)
+    if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
+      cl <- parallel::makeCluster(x$cores)
+      parallel::clusterExport(cl = cl, envir = environment(),
+        varlist = c("edges", "p.name", "p.node", "x"))
+      obs.partial.split.data <- parallel::parLapply(cl, obs.partial.segments,
+        function(seg) splitSegments(seg, edges, p.name, p.node, x))
+      parallel::stopCluster(cl)
+    } else {
+      obs.partial.split.data <- parallel::mclapply(obs.partial.segments,
+        splitSegments, edges, p.name, p.node, x, mc.cores = x$cores)
+    }
+
     cutpoints <- cutpointValues(obs.partial.split.data)
     obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
       unique(x$pump))
