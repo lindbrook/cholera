@@ -499,7 +499,7 @@ observedExpected <- function(x, n.data) {
 
   names(expected.wholes) <- pumpID
 
-  # obs.split.test <- length(obs.partial.segments)
+  obs.split.test <- length(obs.partial.segments)
   unobs.split.test <- length(unobs.split.segments)
 
   if (obs.split.test > 0 & unobs.split.test == 0) {
