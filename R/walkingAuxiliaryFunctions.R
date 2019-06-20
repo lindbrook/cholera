@@ -39,8 +39,19 @@ checkSegment <- function(s, dat, edges, p.node, sub.edge = FALSE) {
 }
 
 wholeSegments <- function(segs, dat, edges, p.name, p.node, x) {
-  distances <- parallel::mclapply(segs, checkSegment, dat, edges, p.node,
-    mc.cores = x$cores)
+  if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
+    cl <- parallel::makeCluster(x$cores)
+    parallel::clusterExport(cl = cl, envir = environment(),
+      varlist = c("dat", "edges", "p.node"))
+    distances <- parallel::parLapply(cl, segs, function(s) {
+      checkSegment(s, dat, edges, p.node)
+    })
+    parallel::stopCluster(cl)
+  } else {
+    distances <- parallel::mclapply(segs, checkSegment, dat, edges, p.node,
+      mc.cores = x$cores)
+  }
+
   audit <- lapply(distances, function(d) {
     unique(vapply(d, which.min, integer(1L)))
   })
