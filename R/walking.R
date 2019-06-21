@@ -364,13 +364,14 @@ summary.walking <- function(object, ...) {
     out <- vapply(object$paths, length, numeric(1L))
     out <- stats::setNames(out, paste0("p", object$pumpID))
   } else if (object$case.set == "expected") {
+
     out <- expectedCount(object)
   }
   out
 }
 
 expectedCount <- function(x) {
-  OE <- observedExpected(x)
+  OE <- observedExpected(x, neighborhoodPathData(x))
   splits <- OE$exp.splits
   splits.pump <- OE$exp.splits.pump
   splits.segs <- OE$exp.splits.segs
