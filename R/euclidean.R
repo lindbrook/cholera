@@ -72,7 +72,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
     cl <- parallel::makeCluster(cores)
     parallel::clusterExport(cl = cl, envir = environment(),
       varlist = c("pump.id", "vestry", "observed", "case.location"))
-    projection <- parallel::parLapply(cl, anchors, function(x) {
+    nearest.pump <- parallel::parLapply(cl, anchors, function(x) {
       cholera::euclideanPath(x, destination = pump.id, vestry = vestry,
         observed = observed, case.location = case.location)$data$pump
     })
