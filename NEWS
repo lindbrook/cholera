@@ -2,6 +2,7 @@ cholera 0.6.5.9009
 ==================
 
 - add parallel Windows version of split.outcome object.
+- add parallel Windows prototype for simulateFatalities().
 
 
 cholera 0.6.5.9008
