@@ -214,29 +214,51 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
     sim.proj.segs <- unique(sim.proj$road.segment)
 
     if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
-      split.outcome <- parallel::mclapply(seq_along(splits.segs), function(i) {
-        id <- sim.proj$road.segment == splits.segs[i] &
-              is.na(sim.proj$road.segment) == FALSE
-
-        sim.data <- sim.proj[id, ]
-        split.data <- splits[[i]]
-
-        sel <- vapply(seq_len(nrow(sim.data)), function(j) {
-          obs <- sim.data[j, c("x.proj", "y.proj")]
-          distance <- vapply(seq_len(nrow(split.data)), function(k) {
-            stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
-          }, numeric(1L))
-
-          test1 <- signif(sum(distance[1:2])) ==
-            signif(c(stats::dist(split.data[c(1, 2), ])))
-          test2 <- signif(sum(distance[3:4])) ==
-            signif(c(stats::dist(split.data[c(3, 4), ])))
-
-          ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
-        }, integer(1L))
-
-        data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-      }, mc.cores = x$cores)
+      if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
+        cl <- parallel::makeCluster(x$cores)
+        parallel::clusterExport(cl = cl, envir = environment(),
+          varlist = c("splits.segs", "sim.proj", "splits", "splits.pump"))
+        split.outcome <- parallel::parLapply(cl, seq_along(splits.segs),
+          function(i) {
+          id <- sim.proj$road.segment == splits.segs[i] &
+                is.na(sim.proj$road.segment) == FALSE
+          sim.data <- sim.proj[id, ]
+          split.data <- splits[[i]]
+          sel <- vapply(seq_len(nrow(sim.data)), function(j) {
+            obs <- sim.data[j, c("x.proj", "y.proj")]
+            distance <- vapply(seq_len(nrow(split.data)), function(k) {
+              stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
+            }, numeric(1L))
+            test1 <- signif(sum(distance[1:2])) ==
+              signif(c(stats::dist(split.data[c(1, 2), ])))
+            test2 <- signif(sum(distance[3:4])) ==
+              signif(c(stats::dist(split.data[c(3, 4), ])))
+            ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
+          }, integer(1L))
+          data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
+        })
+        parallel::stopCluster(cl)
+      } else {
+        split.outcome <- parallel::mclapply(seq_along(splits.segs),
+          function(i) {
+          id <- sim.proj$road.segment == splits.segs[i] &
+                is.na(sim.proj$road.segment) == FALSE
+          sim.data <- sim.proj[id, ]
+          split.data <- splits[[i]]
+          sel <- vapply(seq_len(nrow(sim.data)), function(j) {
+            obs <- sim.data[j, c("x.proj", "y.proj")]
+            distance <- vapply(seq_len(nrow(split.data)), function(k) {
+              stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
+            }, numeric(1L))
+            test1 <- signif(sum(distance[1:2])) ==
+              signif(c(stats::dist(split.data[c(1, 2), ])))
+            test2 <- signif(sum(distance[3:4])) ==
+              signif(c(stats::dist(split.data[c(3, 4), ])))
+            ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
+          }, integer(1L))
+          data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
+        }, mc.cores = x$cores)
+      }
 
       split.outcome <- do.call(rbind, split.outcome)
       split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
@@ -372,10 +394,10 @@ summary.walking <- function(object, ...) {
 
 expectedCount <- function(x) {
   OE <- observedExpected(x, neighborhoodPathData(x))
+  wholes <- OE$expected.wholes
   splits <- OE$exp.splits
   splits.pump <- OE$exp.splits.pump
   splits.segs <- OE$exp.splits.segs
-  wholes <- OE$expected.wholes
 
   sim.proj <- cholera::sim.ortho.proj
   sim.proj.segs <- unique(sim.proj$road.segment)
@@ -383,26 +405,51 @@ expectedCount <- function(x) {
   snow.colors <- snowColors(x$vestry)
 
   if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
-    split.outcome <- parallel::mclapply(seq_along(splits.segs), function(i) {
-      id <- sim.proj$road.segment == splits.segs[i] &
-            is.na(sim.proj$road.segment) == FALSE
-      sim.data <- sim.proj[id, ]
-      split.data <- splits[[i]]
-
-      sel <- vapply(seq_len(nrow(sim.data)), function(j) {
-        obs <- sim.data[j, c("x.proj", "y.proj")]
-        distance <- vapply(seq_len(nrow(split.data)), function(k) {
-          stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
-        }, numeric(1L))
-        test1 <- signif(sum(distance[1:2])) ==
-          signif(c(stats::dist(split.data[c(1, 2), ])))
-        test2 <- signif(sum(distance[3:4])) ==
-          signif(c(stats::dist(split.data[c(3, 4), ])))
-        ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
-      }, integer(1L))
-
-      data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-    }, mc.cores = x$cores)
+    if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
+      cl <- parallel::makeCluster(x$cores)
+      parallel::clusterExport(cl = cl, envir = environment(),
+        varlist = c("splits.segs", "sim.proj", "splits", "splits.pump"))
+      split.outcome <- parallel::parLapply(cl, seq_along(splits.segs),
+        function(i) {
+        id <- sim.proj$road.segment == splits.segs[i] &
+              is.na(sim.proj$road.segment) == FALSE
+        sim.data <- sim.proj[id, ]
+        split.data <- splits[[i]]
+        sel <- vapply(seq_len(nrow(sim.data)), function(j) {
+          obs <- sim.data[j, c("x.proj", "y.proj")]
+          distance <- vapply(seq_len(nrow(split.data)), function(k) {
+            stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
+          }, numeric(1L))
+          test1 <- signif(sum(distance[1:2])) ==
+            signif(c(stats::dist(split.data[c(1, 2), ])))
+          test2 <- signif(sum(distance[3:4])) ==
+            signif(c(stats::dist(split.data[c(3, 4), ])))
+          ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
+        }, integer(1L))
+        data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
+      })
+      parallel::stopCluster(cl)
+    } else {
+      split.outcome <- parallel::mclapply(seq_along(splits.segs),
+        function(i) {
+        id <- sim.proj$road.segment == splits.segs[i] &
+              is.na(sim.proj$road.segment) == FALSE
+        sim.data <- sim.proj[id, ]
+        split.data <- splits[[i]]
+        sel <- vapply(seq_len(nrow(sim.data)), function(j) {
+          obs <- sim.data[j, c("x.proj", "y.proj")]
+          distance <- vapply(seq_len(nrow(split.data)), function(k) {
+            stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
+          }, numeric(1L))
+          test1 <- signif(sum(distance[1:2])) ==
+            signif(c(stats::dist(split.data[c(1, 2), ])))
+          test2 <- signif(sum(distance[3:4])) ==
+            signif(c(stats::dist(split.data[c(3, 4), ])))
+          ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
+        }, integer(1L))
+        data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
+      }, mc.cores = x$cores)
+    }
 
     split.outcome <- do.call(rbind, split.outcome)
     split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
