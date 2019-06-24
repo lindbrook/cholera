@@ -1,3 +1,10 @@
+cholera 0.6.5.9010
+==================
+
+- add parallel Windows version of addNeighborhoodEuclidean().
+- use splitOutcomes() in neighborhoodWalking().
+
+
 cholera 0.6.5.9009
 ==================
 
