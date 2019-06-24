@@ -12,6 +12,7 @@
 #' @param polygon.col Character.
 #' @param polygon.lwd Numeric.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @import graphics
 #' @note This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 4.4 seconds while doing so for expected paths takes about 28 seconds. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to about 3.7 and 12 seconds. Note that parallelization is currently only available on Linux and Mac, and that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which \code{neighborhoodWalking()} uses, strongly discourage against using parallelization within a GUI or embedded environment. See \code{vignette("parallel")} for details.
 #' @export
@@ -25,7 +26,7 @@
 addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, weighted = TRUE, path = NULL, path.color = NULL,
   path.width = 3, alpha.level = 0.25, polygon.type = "solid",
-  polygon.col = NULL, polygon.lwd = 2, multi.core = FALSE) {
+  polygon.col = NULL, polygon.lwd = 2, multi.core = FALSE, dev.mode = FALSE) {
 
   if (is.null(path) == FALSE) {
     if (path %in% c("expected", "observed") == FALSE) {
@@ -114,7 +115,8 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
             case.set = arguments$case.set,
             pump.select = pump.select,
             cores = cores,
-            metric = 1 / unitMeter(1))
+            metric = 1 / unitMeter(1),
+            dev.mode = dev.mode)
 
   snow.colors <- snowColors(x$vestry)
 
@@ -163,8 +165,19 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   obs.partial.segments <- setdiff(partial.segs, unlist(obs.partial.whole))
 
   if (length(obs.partial.segments) > 0) {
-    obs.partial.split.data <- parallel::mclapply(obs.partial.segments,
-      splitSegments, edges, p.name, p.node, x, mc.cores = x$cores)
+
+    if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
+      cl <- parallel::makeCluster(x$cores)
+      parallel::clusterExport(cl = cl, envir = environment(),
+        varlist = c("edges", "p.name", "p.node", "x"))
+      obs.partial.split.data <- parallel::parLapply(cl, obs.partial.segments,
+        splitSegments, edges, p.name, p.node, x)
+      parallel::stopCluster(cl)
+    } else {
+      obs.partial.split.data <- parallel::mclapply(obs.partial.segments,
+        splitSegments, edges, p.name, p.node, x, mc.cores = x$cores)
+    }
+
     cutpoints <- cutpointValues(obs.partial.split.data, x)
     obs.partial.split.pump <- lapply(obs.partial.split.data, function(x)
       unique(x$pump))
@@ -230,15 +243,15 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   if (split.test1 > 0 & split.test2 == 0) {
     splits <- obs.partial.split
     splits.pump <- obs.partial.split.pump
-    split.segs <- obs.partial.segments
+    splits.segs <- obs.partial.segments
   } else if (split.test1 == 0 & split.test2 > 0) {
     splits <- unobs.split
     splits.pump <- unobs.split.pump
-    split.segs <- unobs.split.segments
+    splits.segs <- unobs.split.segments
   } else if (split.test1 > 0 & split.test2 > 0) {
     splits <- c(obs.partial.split, unobs.split)
     splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
-    split.segs <- c(obs.partial.segments, unobs.split.segments)
+    splits.segs <- c(obs.partial.segments, unobs.split.segments)
   }
 
   sim.proj <- cholera::sim.ortho.proj
@@ -246,30 +259,8 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   sim.proj.segs <- sim.proj.segs[!is.na(sim.proj.segs)]
 
   if (split.test1 > 0 | split.test2 > 0) {
-    split.outcome <- parallel::mclapply(seq_along(split.segs), function(i) {
-      id <- sim.proj$road.segment == split.segs[i] &
-            is.na(sim.proj$road.segment) == FALSE
-
-      sim.data <- sim.proj[id, ]
-      split.data <- splits[[i]]
-
-      sel <- vapply(seq_len(nrow(sim.data)), function(j) {
-        obs <- sim.data[j, c("x.proj", "y.proj")]
-        ds <- vapply(seq_len(nrow(split.data)), function(k) {
-          stats::dist(matrix(c(obs, split.data[k, ]), 2, 2, byrow = TRUE))
-        }, numeric(1L))
-
-        test1 <- signif(sum(ds[1:2])) ==
-          signif(c(stats::dist(split.data[c(1, 2), ])))
-        test2 <- signif(sum(ds[3:4])) ==
-          signif(c(stats::dist(split.data[c(3, 4), ])))
-
-        ifelse(any(c(test1, test2)), which(c(test1, test2)), NA)
-      }, integer(1L))
-
-      data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
-    }, mc.cores = x$cores)
-
+    split.outcome <- splitOutcomes(x, splits.segs, sim.proj, splits,
+      splits.pump)
     split.outcome <- do.call(rbind, split.outcome)
     split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
     split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
@@ -302,11 +293,8 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   }
 
   names(neighborhood.cases) <- pearl.neighborhood
-
-  periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
-    mc.cores = x$cores)
-  pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
-    mc.cores = x$cores)
+  periphery.cases <- peripheryCases(neighborhood.cases, x$cores, x$dev.mode)
+  pearl.string <- travelingSalesman(periphery.cases, x$cores, x$dev.mode)
 
   if (is.null(pump.subset)) {
     invisible(lapply(names(pearl.string), function(nm) {
