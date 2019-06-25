@@ -10,6 +10,7 @@
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is \code{TRUE} and "output" is "distance". See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @note Time is computed using \code{distanceTime()}.
 #' @export
 #' @return An R data frame or list of 'igraph' paths.
@@ -17,7 +18,7 @@
 nearestPump <- function(pump.select = NULL, metric = "walking",
   output = "distance", vestry = FALSE, weighted = TRUE, case.set = "observed",
   distance.unit = "meter", multi.core = FALSE, time.unit = "second",
-  walking.speed = 5) {
+  walking.speed = 5, dev.mode = FALSE) {
 
   if (vestry) p.id <- cholera::pumps.vestry$id else p.id <- cholera::pumps$id
 
@@ -54,21 +55,43 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
     anchors <- cholera::fatalities.address$anchor
 
     if (is.null(pump.select)) {
-      distance.data <- parallel::mclapply(anchors, function(x) {
-        euclideanPath(x)$data
-      }, mc.cores = cores)
-
+      if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+        cl <- parallel::makeCluster(cores)
+        distance.data <- parallel::parLapply(cl, anchors, function(x) {
+          cholera::euclideanPath(x)$data
+        })
+        parallel::stopCluster(cl)
+      } else {
+        distance.data <- parallel::mclapply(anchors, function(x) {
+          cholera::euclideanPath(x)$data
+        }, mc.cores = cores)
+      }
     } else {
       if (all(pump.select > 0)) {
-        distance.data <- parallel::mclapply(anchors, function(x) {
-          euclideanPath(x, pump.select)$data
-        }, mc.cores = cores)
-
+        if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+          cl <- parallel::makeCluster(cores)
+          distance.data <- parallel::parLapply(cl, anchors, function(x) {
+            cholera::euclideanPath(x, pump.select)$data
+          })
+          parallel::stopCluster(cl)
+        } else {
+          distance.data <- parallel::mclapply(anchors, function(x) {
+            cholera::euclideanPath(x, pump.select)$data
+          }, mc.cores = cores)
+        }
       } else if (all(pump.select < 0)) {
-        pump.candidate <- p.id[p.id %in% abs(pump.select) == FALSE]
-        distance.data <- parallel::mclapply(anchors, function(x) {
-          euclideanPath(x, pump.candidate)$data
-        }, mc.cores = cores)
+        neg.pump.select <- p.id[p.id %in% abs(pump.select) == FALSE]
+        if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+          cl <- parallel::makeCluster(cores)
+          distance.data <- parallel::parLapply(cl, anchors, function(x) {
+            cholera::euclideanPath(x, neg.pump.select)$data
+          })
+          parallel::stopCluster(cl)
+        } else {
+          distance.data <- parallel::mclapply(anchors, function(x) {
+            cholera::euclideanPath(x, neg.pump.select)$data
+          }, mc.cores = cores)
+        }
       } else stop("pump select must be all postive or negative.")
     }
 
@@ -109,6 +132,21 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
       parallel::mclapply(seq_along(paths), function(i) {
         out <- names(paths[[i]][[paste(distance.data[[i]]$pump)]])
       }, mc.cores = cores)
+
+      # parLapply() slower.
+      # if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+      #   cl <- parallel::makeCluster(cores)
+      #   parallel::clusterExport(cl = cl, envir = environment(),
+      #     varlist = c("paths", "distance.data"))
+      #   distance.data <- parallel::parLapply(cl, seq_along(paths), function(i) {
+      #     out <- names(paths[[i]][[paste(distance.data[[i]]$pump)]])
+      #   })
+      #   parallel::stopCluster(cl)
+      # } else {
+      #   parallel::mclapply(seq_along(paths), function(i) {
+      #     out <- names(paths[[i]][[paste(distance.data[[i]]$pump)]])
+      #   }, mc.cores = cores)
+      # }
     } else if (output == "distance") {
       out <- data.frame(case = path.data$case,
                         do.call(rbind, distance.data),

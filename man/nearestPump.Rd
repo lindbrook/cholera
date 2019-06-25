@@ -7,7 +7,7 @@
 nearestPump(pump.select = NULL, metric = "walking",
   output = "distance", vestry = FALSE, weighted = TRUE,
   case.set = "observed", distance.unit = "meter", multi.core = FALSE,
-  time.unit = "second", walking.speed = 5)
+  time.unit = "second", walking.speed = 5, dev.mode = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
@@ -29,6 +29,8 @@ nearestPump(pump.select = NULL, metric = "walking",
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \value{
 An R data frame or list of 'igraph' paths.
