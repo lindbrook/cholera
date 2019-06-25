@@ -15,5 +15,5 @@ simWalkingDistance(pump.select = 7, multi.core = FALSE)
 Compute walking distance for simulated cases.
 }
 \note{
-This function documents sim.walking.distance data frame.
+This function documents the code that create the sim.walking.distance data frame.
 }
