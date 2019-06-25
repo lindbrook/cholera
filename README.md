@@ -207,41 +207,21 @@ plot(neighborhoodVoronoi(-7))
 
 `neighborhoodWalking()` and `neighborhoodEuclidean()` are
 computationally intensive. Using R version 3.6.0 on a single core of a
-2.3 GHz Intel i7, the former plots observed paths to PDF in about 4.4
-seconds and expected paths in 27 seconds. Using the function’s parallel
-implementation on 4 physical (8 logical) cores, the times fall to about
-3.9 and 12 seconds. The latter plots observed paths to PDF in about 3.6
-seconds and expected paths in 109 seconds. Using the function’s parallel
-implementation on 4 physical (8 logical) cores, the times fall to about
-1.4 and 28 seconds.
+2.3 GHz Intel i7 on macOS, the former plots observed paths to PDF in
+about 4.4 seconds and expected paths in 27 seconds. Using the function’s
+parallel implementation on 4 physical (8 logical) cores, the times fall
+to about 3.9 and 12 seconds. The latter plots observed paths to PDF in
+about 3.6 seconds and expected paths in 109 seconds. Using the
+function’s parallel implementation on 4 physical (8 logical) cores,
+the times fall to about 1.4 and 28 seconds.
 
-Note that parallelization is currently only available on Linux and Mac.
+Parallelization is available on Linux, Mac and Windows. The Windows
+version is in beta testing.
 
 Also, note that although some precautions are taken in R.app on macOS,
 the developers of the ‘parallel’ package, which both functions use,
 strongly discourage against using parallelization within a GUI or
 embedded environment. See `vignette("parallel")` for details.
-
-#### warning message
-
-With R version 3.6.0, you may see the warning below when loading
-‘cholera’:
-
-    > library(cholera)
-    Registered S3 methods overwritten by 'ggplot2':
-      method         from
-      [.quosures     rlang
-      c.quosures     rlang
-      print.quosures rlang
-
-My understanding is that this is more annoying than problematic. It’s
-fixed in ‘ggplot2’ in version 3.2.0. If that version is not yet on CRAN,
-install the development version from GitHub:
-
-``` r
-# For 'devtools' (>= 2.0.0)
-devtools::install_github("tidyverse/ggplot2", build_opts = c("--no-resave-data", "--no-manual"))
-```
 
 #### vignettes
 
