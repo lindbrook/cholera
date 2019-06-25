@@ -165,7 +165,6 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   obs.partial.segments <- setdiff(partial.segs, unlist(obs.partial.whole))
 
   if (length(obs.partial.segments) > 0) {
-
     if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
       cl <- parallel::makeCluster(x$cores)
       parallel::clusterExport(cl = cl, envir = environment(),
@@ -269,7 +268,6 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
 
     names(split.cases) <- sort(unique(split.outcome$pump))
   }
-
 
   whole.cases <- lapply(names(wholes), function(nm) {
     sel <- sim.proj$road.segment %in% wholes[[nm]]
