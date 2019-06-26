@@ -33,17 +33,13 @@ To install ‘cholera’ from CRAN:
 install.packages("cholera")
 ```
 
-To install the current development version from GitHub:
+To install the current development version from
+GitHub:
 
 ``` r
-# Note that you may need to install the 'devtools' package:
-# install.packages("devtools")
+# You may need to first install the 'devtools' via install.packages("devtools").
 
-# For 'devtools' (< 2.0.0)
 devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
-
-# For 'devtools' (>= 2.0.0)
-devtools::install_github("lindbrook/cholera", build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 ## background
