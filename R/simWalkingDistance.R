@@ -1,7 +1,7 @@
 #' Compute walking distance for simulated cases.
 #'
 #' @param pump.select Numeric.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @export
 #' @note This function documents the code that create the sim.walking.distance data frame.
 

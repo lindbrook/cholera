@@ -17,7 +17,7 @@ neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 
 \item{case.set}{Character. "observed" or "expected".}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
 
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
@@ -28,7 +28,7 @@ An R vector.
 Plots star graph from pump to its cases.
 }
 \note{
-This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 3.6 seconds while doing so for expected paths takes about 109 seconds. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to about 1.4 and 28 seconds. Note that parallelization is currently only available on Linux and Mac, and that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which \code{neighborhoodWalking()} uses, strongly discourage against using parallelization within a GUI or embedded environment. See \code{vignette("parallel")} for details.
+This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, plotting observed paths to PDF takes about 3.6 seconds while doing so for expected paths takes about 109 seconds. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to about 1.4 and 28 seconds. Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which \code{neighborhoodWalking()} uses, strongly discourage against using parallelization within a GUI or embedded environment. See \code{vignette("parallel")} for details.
 }
 \examples{
 \donttest{
