@@ -8,19 +8,21 @@
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param type Character. "arrows" or "points".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return R base graphics arrows or points.
 #' @export
 
 addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, unit = "distance", interval = NULL, walking.speed = 5,
-  type = "arrows", multi.core = FALSE) {
+  type = "arrows", multi.core = FALSE, dev.mode = FALSE) {
 
   if (type %in% c("arrows", "points") == FALSE) {
     stop('type must either be "arrows" or "points"')
   }
 
   cores <- multiCore(multi.core)
-  x <- neighborhoodWalking(pump.select, vestry, multi.core = cores)
+  x <- neighborhoodWalking(pump.select, vestry, multi.core = cores,
+    dev.mode = dev.mode)
   dat <- neighborhoodData(vestry = x$vestry, case.set = "observed")
   edges <- dat$edges
   nodes <- dat$nodes
@@ -40,9 +42,19 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   }
 
   # vector of nodes for the 321 observed anchor cases
-  n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
-    lapply(neighborhood, auditEdge, edges, output = "id2")
-  }, mc.cores = x$cores)
+  # if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
+  #   cl <- parallel::makeCluster(x$cores)
+  #   parallel::clusterExport(cl = cl, envir = environment(),
+  #     varlist = c("edges", "auditEdge"))
+  #   n.path.edges <- parallel::parLapply(cl, x$paths, function(neighborhood) {
+  #     auditEdge(neighborhood, edges, output = "id2")
+  #   })
+  #   parallel::stopCluster(cl)
+  # } else {
+    n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
+      lapply(neighborhood, auditEdge, edges, output = "id2")
+    }, mc.cores = x$cores)
+  # }
 
   if (!is.null(pump.subset)) {
     if (all(pump.subset > 0)) {
@@ -111,10 +123,22 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   }
 
   if (type == "arrows") {
-    coords <- parallel::mclapply(names(endpt.paths), function(nm) {
-      lapply(edge.data[[nm]], postCoordinates, unit, interval, walking.speed,
-        arrow.data = TRUE)
-    }, mc.cores = cores)
+    # if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
+    #   cl <- parallel::makeCluster(x$cores)
+    #   parallel::clusterExport(cl = cl, envir = environment(),
+    #     varlist = c("postCoordinates", "edge.data", "unit", "interval",
+    #     "walking.speed", "unitMeter"))
+    #   coords <- parallel::parLapply(cl, names(endpt.paths), function(nm) {
+    #     postCoordinates(edge.data[[nm]], unit, interval, walking.speed,
+    #       arrow.data = TRUE)
+    #   })
+    #   parallel::stopCluster(cl)
+    # } else {
+      coords <- parallel::mclapply(names(endpt.paths), function(nm) {
+        lapply(edge.data[[nm]], postCoordinates, unit, interval, walking.speed,
+          arrow.data = TRUE)
+      }, mc.cores = cores)
+    # }
 
     coords <- stats::setNames(coords, names(endpt.paths))
 

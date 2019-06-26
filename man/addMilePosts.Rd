@@ -6,7 +6,7 @@
 \usage{
 addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   unit = "distance", interval = NULL, walking.speed = 5,
-  type = "arrows", multi.core = FALSE)
+  type = "arrows", multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -24,6 +24,8 @@ addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
 \item{type}{Character. "arrows" or "points".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \value{
 R base graphics arrows or points.
