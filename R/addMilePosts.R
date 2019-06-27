@@ -42,19 +42,9 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   }
 
   # vector of nodes for the 321 observed anchor cases
-  # if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
-  #   cl <- parallel::makeCluster(x$cores)
-  #   parallel::clusterExport(cl = cl, envir = environment(),
-  #     varlist = c("edges", "auditEdge"))
-  #   n.path.edges <- parallel::parLapply(cl, x$paths, function(neighborhood) {
-  #     auditEdge(neighborhood, edges, output = "id2")
-  #   })
-  #   parallel::stopCluster(cl)
-  # } else {
-    n.path.edges <- parallel::mclapply(x$paths, function(neighborhood) {
+    n.path.edges <- lapply(x$paths, function(neighborhood) {
       lapply(neighborhood, auditEdge, edges, output = "id2")
-    }, mc.cores = x$cores)
-  # }
+    })
 
   if (!is.null(pump.subset)) {
     if (all(pump.subset > 0)) {
