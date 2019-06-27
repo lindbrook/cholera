@@ -1,4 +1,4 @@
-#' Add distance or time based "mileposts" to a walking neighborhood plot.
+#' Add distance or time based "mileposts" to an observed walking neighborhood plot.
 #'
 #' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.
 #' @param pump.select Numeric. Numeric vector of pumps to define possible pump neighborhoods (i.e. the "population"). Negative selection is possible. NULL selects all "observed" pumps (i.e., pumps with at least one case).
