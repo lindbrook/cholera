@@ -129,24 +129,10 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
     }
 
     if (output == "path") {
-      parallel::mclapply(seq_along(paths), function(i) {
-        out <- names(paths[[i]][[paste(distance.data[[i]]$pump)]])
-      }, mc.cores = cores)
+      lapply(seq_along(paths), function(i) {
+        names(paths[[i]][[paste(distance.data[[i]]$pump)]])
+      })
 
-      # parLapply() slower.
-      # if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
-      #   cl <- parallel::makeCluster(cores)
-      #   parallel::clusterExport(cl = cl, envir = environment(),
-      #     varlist = c("paths", "distance.data"))
-      #   distance.data <- parallel::parLapply(cl, seq_along(paths), function(i) {
-      #     out <- names(paths[[i]][[paste(distance.data[[i]]$pump)]])
-      #   })
-      #   parallel::stopCluster(cl)
-      # } else {
-      #   parallel::mclapply(seq_along(paths), function(i) {
-      #     out <- names(paths[[i]][[paste(distance.data[[i]]$pump)]])
-      #   }, mc.cores = cores)
-      # }
     } else if (output == "distance") {
       out <- data.frame(case = path.data$case,
                         do.call(rbind, distance.data),
