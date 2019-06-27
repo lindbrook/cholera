@@ -6,10 +6,10 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected", or "snow".
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is \code{TRUE} and "output" is "distance". See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @note Time is computed using \code{distanceTime()}.
 #' @export
@@ -17,8 +17,8 @@
 
 nearestPump <- function(pump.select = NULL, metric = "walking",
   output = "distance", vestry = FALSE, weighted = TRUE, case.set = "observed",
-  distance.unit = "meter", multi.core = FALSE, time.unit = "second",
-  walking.speed = 5, dev.mode = FALSE) {
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  multi.core = FALSE, dev.mode = FALSE) {
 
   if (vestry) p.id <- cholera::pumps.vestry$id else p.id <- cholera::pumps$id
 

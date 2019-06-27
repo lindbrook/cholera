@@ -6,8 +6,9 @@
 \usage{
 nearestPump(pump.select = NULL, metric = "walking",
   output = "distance", vestry = FALSE, weighted = TRUE,
-  case.set = "observed", distance.unit = "meter", multi.core = FALSE,
-  time.unit = "second", walking.speed = 5, dev.mode = FALSE)
+  case.set = "observed", distance.unit = "meter",
+  time.unit = "second", walking.speed = 5, multi.core = FALSE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
@@ -24,11 +25,11 @@ nearestPump(pump.select = NULL, metric = "walking",
 
 \item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is \code{TRUE} and "output" is "distance". See \code{vignette("roads")} for information on unit distances.}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
-
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
 
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
