@@ -1,3 +1,10 @@
+cholera 0.6.5.9013
+==================
+
+- add parallel Windows version of addMilePosts().
+- amend nearestPump().
+
+
 cholera 0.6.5.9012
 ==================
 
