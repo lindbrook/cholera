@@ -65,14 +65,14 @@ travelingSalesman <- function(vertices, cores, dev.mode,
          "nn", or "repetitive_nn".')
   }
 
-  traveling_salesman <- function(x, tsp.method) {
-    d <- stats::dist(cholera::regular.cases[x, ])
-    distances <- data.frame(t(utils::combn(x, 2)), c(d),
+  traveling_salesman <- function(v, tsp.method) {
+    d <- stats::dist(cholera::regular.cases[v, ])
+    distances <- data.frame(t(utils::combn(v, 2)), c(d),
       stringsAsFactors = FALSE)
     names(distances) <- c("a", "b", "dist")
     distances$pathID <- paste0(distances$a, "-", distances$b)
     distances$rev.pathID <- paste0(distances$b, "-", distances$a)
-    tsp <- TSP::TSP(d, labels = x)
+    tsp <- TSP::TSP(d, labels = v)
     soln <- TSP::solve_TSP(tsp, method = tsp.method)
     names(soln)
   }
@@ -80,7 +80,7 @@ travelingSalesman <- function(vertices, cores, dev.mode,
   if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
     cl <- parallel::makeCluster(cores)
     parallel::clusterExport(cl = cl, envir = environment(),
-      varlist = "vertices")
+      varlist = "vertices", "cores", "dev.mode")
     p.string <- parallel::parLapply(cl, vertices, traveling_salesman, tsp.method)
     parallel::stopCluster(cl)
   } else {
