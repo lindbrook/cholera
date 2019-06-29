@@ -135,3 +135,5 @@ polygonAudit <- function(x, i = 1) {
   polygon(cholera::regular.cases[travelingSalesman(periphery.cases[[i]]), ],
     col = grDevices::adjustcolor(snowColors()[i], alpha.f = 2/3))
 }
+
+index0 <- function(x) as.data.frame(t(utils::combn(length(x), 2)))
