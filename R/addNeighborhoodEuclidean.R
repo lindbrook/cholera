@@ -151,8 +151,8 @@ addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
       which(nearest.pump == n)
     })
 
-    periphery.cases <- peripheryCases(neighborhood.cases, cores, dev.mode)
-    pearl.string <- travelingSalesman(periphery.cases, cores, dev.mode)
+    periphery.cases <- lapply(neighborhood.cases, peripheryCases)
+    pearl.string <- lapply(periphery.cases, travelingSalesman)
     names(pearl.string) <- p.num
 
     invisible(lapply(names(pearl.string), function(nm) {

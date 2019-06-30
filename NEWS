@@ -3,8 +3,8 @@ cholera 0.6.5.9015
 
 - amend isoVertices().
 - use non-parallel versions of peripheryCases() and travelingSalesman().
-- amend plot.walking() for peripheryCases() and travelingSalesman().
-- amend plot.euclidean() for peripheryCases() and travelingSalesman().
+- amend plot.walking(), plot.euclidean(), addNeighborhoodEuclidean() and
+  addNeighborhoodEuclidean)() for peripheryCases() and travelingSalesman().
 
 
 cholera 0.6.5.9014
