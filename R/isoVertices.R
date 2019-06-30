@@ -2,7 +2,7 @@
 #'
 #' @param post Numeric.
 #' @param post.type Character. "distance or "time".
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @export
 
 isoVertices <- function(post = 50, post.type = "distance", multi.core = FALSE) {
@@ -14,9 +14,11 @@ isoVertices <- function(post = 50, post.type = "distance", multi.core = FALSE) {
   delta <- post # increment
   isobands <- seq(0, 10 * delta, delta)
 
-  iso.vertices <- parallel::mclapply(isobands, function(cutpt) {
-    sel <- pump.dist$distance > cutpt & pump.dist$distance <= cutpt + delta
+  iso.vertices <- parallel::mclapply(isobands, function(cutpoint) {
+    sel <- pump.dist$distance > cutpoint &
+           pump.dist$distance <= cutpoint + delta
     neighborhood.points <- pump.dist[sel, "case"]
+
     vertices <- peripheryCases(neighborhood.points)
 
     d <- c(stats::dist(cholera::regular.cases[vertices, ]))
@@ -60,7 +62,10 @@ isoVertices <- function(post = 50, post.type = "distance", multi.core = FALSE) {
       network.components <- igraph::biconnected.components(g)$components
       out <- lapply(network.components, function(x) travelingSalesman(names(x)))
     }
+
+    out
   }, mc.cores = cores)
+
 
   names(iso.vertices) <- isobands
   output <- list(post = post,
@@ -70,8 +75,6 @@ isoVertices <- function(post = 50, post.type = "distance", multi.core = FALSE) {
   class(output) <- "iso"
   output
 }
-
-index0 <- function(x) as.data.frame(t(utils::combn(length(x), 2)))
 
 #' Plot method for isoVertices().
 #'

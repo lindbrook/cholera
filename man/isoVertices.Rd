@@ -11,7 +11,7 @@ isoVertices(post = 50, post.type = "distance", multi.core = FALSE)
 
 \item{post.type}{Character. "distance or "time".}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
 }
 \description{
 isochrone and isodistance vertices (prototype)
