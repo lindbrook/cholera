@@ -203,8 +203,8 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
       which(nearest.pump == n)
     })
 
-    periphery.cases <- peripheryCases(neighborhood.cases, x$cores, x$dev.mode)
-    pearl.string <- travelingSalesman(periphery.cases, x$cores, x$dev.mode)
+    periphery.cases <- lapply(neighborhood.cases, peripheryCases)
+    pearl.string <- lapply(periphery.cases, travelingSalesman)
     names(pearl.string) <- p.num
 
     invisible(lapply(names(pearl.string), function(nm) {

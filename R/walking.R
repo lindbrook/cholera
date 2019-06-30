@@ -260,8 +260,8 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
 
       names(neighborhood.cases) <- pearl.neighborhood
 
-      periphery.cases <- peripheryCases(neighborhood.cases, x$cores, x$dev.mode)
-      pearl.string <- travelingSalesman(periphery.cases, x$cores, x$dev.mode)
+      periphery.cases <- lapply(neighborhood.cases, peripheryCases)
+      pearl.string <- lapply(periphery.cases, travelingSalesman)
 
       invisible(lapply(names(pearl.string), function(nm) {
         sel <- paste0("p", nm)
