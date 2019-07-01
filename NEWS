@@ -1,3 +1,10 @@
+cholera 0.6.5.9016
+==================
+
+- amend peripheryCases() in addSnow().
+- amend observedExpected() in pearsonResiduals().
+
+
 cholera 0.6.5.9015
 ==================
 
