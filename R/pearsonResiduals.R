@@ -79,7 +79,7 @@ pearson <- function(x) {
 #' @noRd
 
 expectedWalkingLength <- function(x) {
-  dat <- observedExpected(x)
+  dat <- observedExpected(x, neighborhoodPathData(x))
   observed.wholes <- dat$observed.wholes
   expected.wholes <- dat$expected.wholes
   obs.splits <- dat$exp.splits
