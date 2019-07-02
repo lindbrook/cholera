@@ -8,21 +8,17 @@ pearlStringRadius <- function() {
 
 peripheryCases <- function(n.points, radius = pearlStringRadius()) {
   n.area <- cholera::regular.cases[n.points, ]
+
   periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {
     case.point <- n.area[i, ]
-
     N <- signif(case.point$x) == signif(n.area$x) &
          signif(case.point$y + radius) == signif(n.area$y)
-
     E <- signif(case.point$x + radius) == signif(n.area$x) &
          signif(case.point$y) == signif(n.area$y)
-
     S <- signif(case.point$x) == signif(n.area$x) &
          signif(case.point$y - radius) == signif(n.area$y)
-
     W <- signif(case.point$x - radius) == signif(n.area$x) &
          signif(case.point$y) == signif(n.area$y)
-
     sum(c(N, E, S, W)) == 4
   }, logical(1L))
 
@@ -59,6 +55,8 @@ travelingSalesman <- function(vertices, cores, dev.mode,
   names(soln)
 }
 
+index0 <- function(x) as.data.frame(t(utils::combn(length(x), 2)))
+
 ## diagnostic plots ##
 
 #' Plot periphery cases.
@@ -75,7 +73,6 @@ peripheryAudit <- function(x, i = 1, pch = 16, cex = 0.5) {
   neighborhood.cases <- lapply(p.num, function(n) {
     which(nearest.pump == n)
   })
-
   periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
     mc.cores = x$cores)
   points(cholera::regular.cases[periphery.cases[[i]], ], pch = pch, cex = cex,
@@ -94,7 +91,6 @@ polygonAudit <- function(x, i = 1) {
   neighborhood.cases <- lapply(p.num, function(n) {
     which(nearest.pump == n)
   })
-
   periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
     mc.cores = x$cores)
   pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
@@ -103,5 +99,3 @@ polygonAudit <- function(x, i = 1) {
   polygon(cholera::regular.cases[travelingSalesman(periphery.cases[[i]]), ],
     col = grDevices::adjustcolor(snowColors()[i], alpha.f = 2/3))
 }
-
-index0 <- function(x) as.data.frame(t(utils::combn(length(x), 2)))
