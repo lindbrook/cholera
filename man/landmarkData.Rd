@@ -4,10 +4,12 @@
 \alias{landmarkData}
 \title{Landmark data.}
 \usage{
-landmarkData(multi.core = FALSE)
+landmarkData(multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \description{
 Nominal and orthogonal coordinates

@@ -2,9 +2,10 @@
 #'
 #' Nominal and orthogonal coordinates
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @export
 
-landmarkData <- function(multi.core = FALSE) {
+landmarkData <- function(multi.core = FALSE, dev.mode = FALSE) {
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
@@ -131,62 +132,7 @@ landmarkData <- function(multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
 
-  orthogonal.projection <- parallel::mclapply(landmarks, function(case) {
-    within.radius <- lapply(cholera::road.segments$id, function(x) {
-      dat <- cholera::road.segments[cholera::road.segments$id == x, ]
-      test1 <- cholera::withinRadius(case, dat[, c("x1", "y1")])
-      test2 <- cholera::withinRadius(case, dat[, c("x2", "y2")])
-      if (any(test1, test2)) unique(dat$id)
-    })
-
-    within.radius <- unlist(within.radius)
-
-    ortho.proj.test <- lapply(within.radius, function(x) {
-      seg.data <- cholera::road.segments[cholera::road.segments$id == x,
-        c("x1", "y1", "x2", "y2")]
-
-      seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
-                           y = c(seg.data$y1, seg.data$y2))
-
-      ols <- stats::lm(y ~ x, data = seg.df)
-      segment.slope <- stats::coef(ols)[2]
-      segment.intercept <- stats::coef(ols)[1]
-      orthogonal.slope <- -1 / segment.slope
-      orthogonal.intercept <- case$y - orthogonal.slope * case$x
-
-      x.proj <- (orthogonal.intercept - segment.intercept) /
-                (segment.slope - orthogonal.slope)
-
-      y.proj <- segment.slope * x.proj + segment.intercept
-
-      # segment bisection/intersection test
-      distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
-        stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
-
-      bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
-
-      if (bisect.test) {
-        ortho.dist <- c(stats::dist(rbind(c(case$x, case$y),
-          c(x.proj, y.proj))))
-        ortho.pts <- data.frame(x.proj, y.proj)
-        data.frame(road.segment = x, ortho.pts, ortho.dist,
-          stringsAsFactors = FALSE)
-      } else {
-        null.out <- data.frame(matrix(NA, ncol = 4))
-        names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
-        null.out
-      }
-    })
-
-    out <- do.call(rbind, ortho.proj.test)
-
-    if (all(is.na(out)) == FALSE) {
-      sel <- which.min(out$ortho.dist)
-      out[sel, ]
-    } else {
-      out[1, ] # all candidate roads are NA; arbitrarily choose first obs.
-    }
-  }, mc.cores = cores)
+  orthogonal.projection <- orthoProjLandmarks(landmarks, cores, dev.mode)
 
   ortho.proj <- do.call(rbind, orthogonal.projection)
   row.names(ortho.proj) <- NULL
@@ -222,4 +168,72 @@ segmentIntersection <- function(x1, y1, x2, y2, a1, b1, a2, b2) {
   y <- y1 + ua * (y2 - y1)
   inside <- (ua >= 0) & (ua <= 1) & (ub >= 0) & (ub <= 1)
   data.frame(x = ifelse(inside, x, NA), y = ifelse(inside, y, NA))
+}
+
+orthoProjLandmarks <- function(landmarks, cores, dev.mode) {
+  ortho_proj_landmarks <- function(case) {
+    within.radius <- lapply(cholera::road.segments$id, function(x) {
+      dat <- cholera::road.segments[cholera::road.segments$id == x, ]
+      test1 <- cholera::withinRadius(case, dat[, c("x1", "y1")])
+      test2 <- cholera::withinRadius(case, dat[, c("x2", "y2")])
+      if (any(test1, test2)) unique(dat$id)
+    })
+
+    within.radius <- unlist(within.radius)
+
+    ortho.proj.test <- lapply(within.radius, function(x) {
+      seg.data <- cholera::road.segments[cholera::road.segments$id == x,
+        c("x1", "y1", "x2", "y2")]
+      seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                           y = c(seg.data$y1, seg.data$y2))
+
+      ols <- stats::lm(y ~ x, data = seg.df)
+      segment.slope <- stats::coef(ols)[2]
+      segment.intercept <- stats::coef(ols)[1]
+      orthogonal.slope <- -1 / segment.slope
+      orthogonal.intercept <- case$y - orthogonal.slope * case$x
+
+      x.proj <- (orthogonal.intercept - segment.intercept) /
+                (segment.slope - orthogonal.slope)
+      y.proj <- segment.slope * x.proj + segment.intercept
+
+      # segment bisection/intersection test
+      distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
+        stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
+
+      bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
+
+      if (bisect.test) {
+        ortho.dist <- c(stats::dist(rbind(c(case$x, case$y),
+          c(x.proj, y.proj))))
+        ortho.pts <- data.frame(x.proj, y.proj)
+        data.frame(road.segment = x, ortho.pts, ortho.dist,
+          stringsAsFactors = FALSE)
+      } else {
+        null.out <- data.frame(matrix(NA, ncol = 4))
+        names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
+        null.out
+      }
+    })
+
+    out <- do.call(rbind, ortho.proj.test)
+
+    if (all(is.na(out)) == FALSE) {
+      sel <- which.min(out$ortho.dist)
+      out[sel, ]
+    } else {
+      out[1, ] # all candidate roads are NA; arbitrarily choose first obs.
+    }
+  }
+
+  if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+    cl <- parallel::makeCluster(cores)
+    output <- parallel::parLapply(cl, landmarks, ortho_proj_landmarks)
+    parallel::stopCluster(cl)
+  } else {
+    output <- parallel::mclapply(landmarks, ortho_proj_landmarks,
+      mc.cores = cores)
+  }
+
+  output
 }
