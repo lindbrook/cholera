@@ -1,6 +1,6 @@
 #' Set or compute the number of cores for parallelized functions.
 #'
-#' Uses parallel::mclapply().
+#' For parallel::mclapply() and parallel::parLapply().
 #' @param x Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number of logical cores to use.
 #' @noRd
 
