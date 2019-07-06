@@ -18,7 +18,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' streetNameLocator("marshall street", zoom = 0.5)
 #' addNeighborhoodWalking()
 #' }

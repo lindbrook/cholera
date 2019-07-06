@@ -5,7 +5,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' pearsonResiduals(neighborhoodEuclidean())
 #' pearsonResiduals(neighborhoodVoronoi())
 #' pearsonResiduals(neighborhoodWalking())

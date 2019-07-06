@@ -38,7 +38,6 @@ The function uses a case's "address" (i.e., a stack's "anchor" case) to compute 
 }
 \examples{
 \donttest{
-
 # path from case 1 to nearest pump.
 walkingPath(1)
 

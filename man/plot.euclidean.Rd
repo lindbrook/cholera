@@ -29,7 +29,6 @@ This uses an approximate computation of polygons, using the 'TSP' package, that 
 }
 \examples{
 \donttest{
-
 plot(neighborhoodEuclidean())
 plot(neighborhoodEuclidean(-6))
 plot(neighborhoodEuclidean(pump.select = 6:7))

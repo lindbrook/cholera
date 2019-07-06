@@ -19,7 +19,6 @@ Summary output.
 }
 \examples{
 \donttest{
-
 walkingPath()
 print(walkingPath())
 }

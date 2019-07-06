@@ -36,7 +36,6 @@ This function uses \code{KernSmooth::bkde2D()}.
 }
 \examples{
 \donttest{
-
 snowMap()
 addKernelDensity()
 

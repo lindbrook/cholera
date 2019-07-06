@@ -21,7 +21,6 @@ Adds Snow's graphical annotation of the Broad Street pump walking neighborhood.
 }
 \examples{
 \donttest{
-
 plot(neighborhoodVoronoi())
 addSnow()
 }

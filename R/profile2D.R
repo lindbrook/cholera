@@ -9,7 +9,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' profile2D(angle = 30)
 #' profile2D(angle = 30, type = "ggplot2")
 #' }
@@ -206,7 +205,7 @@ profilePerspective <- function(output = "inside", pump = 7, angle = 0,
   coords <- lapply(cases, function(x) orthogonalCoordinates(x, angle = angle))
   coords <- stats::setNames(do.call(rbind, coords), vars)
 
-  dat <- cholera::fatalities.address[cholera::fatalities.address$anchor %in% 
+  dat <- cholera::fatalities.address[cholera::fatalities.address$anchor %in%
     cases, ]
   dat <- cbind(dat, coords)
 

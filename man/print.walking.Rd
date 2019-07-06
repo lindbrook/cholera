@@ -19,7 +19,6 @@ Parameter values for neighborhoodWalking().
 }
 \examples{
 \donttest{
-
 neighborhoodWalking()
 print(neighborhoodWalking())
 }

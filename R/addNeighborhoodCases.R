@@ -19,7 +19,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' snowMap(add.cases = FALSE)
 #' addNeighborhoodCases(pump.subset = c(6, 10))
 #'

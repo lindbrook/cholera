@@ -36,7 +36,6 @@ This function is computationally intensive. On a single core of a 2.3 GHz Intel 
 }
 \examples{
 \donttest{
-
 streetNameLocator("marshall street", zoom = 0.5, highlight = FALSE,
   add.subtitle = FALSE)
 addNeighborhoodEuclidean()

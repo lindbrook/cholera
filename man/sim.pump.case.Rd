@@ -19,7 +19,6 @@ List of "simulated" fatalities grouped by walking-distance pump neighborhood.
 }
 \examples{
 \donttest{
-
 pumpCase(neighborhoodWalking(case.set = "expected"))
 }
 }

@@ -26,7 +26,6 @@ When plotting area graphs with simulated data (i.e., \code{case.set = "expected"
 }
 \examples{
 \donttest{
-
 plot(neighborhoodWalking())
 plot(neighborhoodWalking(case.set = "expected"))
 plot(neighborhoodWalking(case.set = "expected"), type = "area.points")

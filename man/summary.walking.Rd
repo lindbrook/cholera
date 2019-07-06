@@ -19,7 +19,6 @@ Return computed counts for walking neighborhoods.
 }
 \examples{
 \donttest{
-
 summary(neighborhoodWalking())
 }
 }

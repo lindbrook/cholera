@@ -14,7 +14,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' # path from case 1 to nearest pump.
 #' walkingPath(1)
 #'
@@ -701,7 +700,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' @section Note: Arrows represent mileposts or timeposts to the destination.
 #' @examples
 #' \donttest{
-#'
 #' plot(walkingPath(15))
 #' plot(walkingPath(15), unit.posts = "time")
 #' }
@@ -1162,7 +1160,6 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' walkingPath()
 #' print(walkingPath())
 #' }

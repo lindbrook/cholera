@@ -41,7 +41,6 @@ This function is computationally intensive. On a single core of a 2.3 GHz Intel 
 }
 \examples{
 \donttest{
-
 neighborhoodWalking()
 neighborhoodWalking(pump.select = -6)
 }

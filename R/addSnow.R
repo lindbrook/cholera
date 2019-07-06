@@ -8,7 +8,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' plot(neighborhoodVoronoi())
 #' addSnow()
 #' }

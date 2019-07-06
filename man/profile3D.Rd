@@ -23,7 +23,6 @@ profile3D(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
 }
 \examples{
 \donttest{
-
 profile3D(pump.select = 6:7)
 profile3D(pump.subset = -7)
 profile3D(pump.subset = -7, drop.neg.subset = TRUE)

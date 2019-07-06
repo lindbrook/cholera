@@ -19,7 +19,6 @@ Visualize underlying road network (with or without cases and pumps).
 }
 \examples{
 \donttest{
-
 plot(neighborhoodData())
 plot(neighborhoodData(embed = FALSE))
 }

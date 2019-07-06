@@ -19,7 +19,6 @@ Extract numeric case IDs by pump neighborhood.
 }
 \examples{
 \donttest{
-
 pumpCase(neighborhoodEuclidean())
 pumpCase(neighborhoodVoronoi())
 pumpCase(neighborhoodWalking())

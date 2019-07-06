@@ -19,7 +19,6 @@ Parameter values for neighborhoodEuclidean().
 }
 \examples{
 \donttest{
-
 neighborhoodEuclidean()
 print(neighborhoodEuclidean())
 }

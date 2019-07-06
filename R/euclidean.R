@@ -12,7 +12,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' neighborhoodEuclidean()
 #' neighborhoodEuclidean(-6)
 #' neighborhoodEuclidean(pump.select = 6:7)
@@ -113,7 +112,6 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' plot(neighborhoodEuclidean())
 #' plot(neighborhoodEuclidean(-6))
 #' plot(neighborhoodEuclidean(pump.select = 6:7))
@@ -231,7 +229,6 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' neighborhoodEuclidean()
 #' print(neighborhoodEuclidean())
 #' }

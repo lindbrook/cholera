@@ -15,7 +15,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' snowMap()
 #' addKernelDensity()
 #'

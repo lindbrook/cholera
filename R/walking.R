@@ -21,7 +21,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' neighborhoodWalking()
 #' neighborhoodWalking(pump.select = -6)
 #' }
@@ -134,7 +133,6 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' plot(neighborhoodWalking())
 #' plot(neighborhoodWalking(case.set = "expected"))
 #' plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
@@ -315,7 +313,6 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' neighborhoodWalking()
 #' print(neighborhoodWalking())
 #' }
@@ -333,7 +330,6 @@ print.walking <- function(x, ...) {
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' summary(neighborhoodWalking())
 #' }
 

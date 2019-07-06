@@ -6,7 +6,6 @@
 #' @export
 #' @examples
 #' \donttest{
-#'
 #' pumpCase(neighborhoodEuclidean())
 #' pumpCase(neighborhoodVoronoi())
 #' pumpCase(neighborhoodWalking())

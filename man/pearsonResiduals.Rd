@@ -17,7 +17,6 @@ Compute Pearson Residuals (prototype)
 }
 \examples{
 \donttest{
-
 pearsonResiduals(neighborhoodEuclidean())
 pearsonResiduals(neighborhoodVoronoi())
 pearsonResiduals(neighborhoodWalking())

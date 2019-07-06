@@ -32,7 +32,6 @@ This function is computationally intensive. On a single core of a 2.3 GHz Intel 
 }
 \examples{
 \donttest{
-
 neighborhoodEuclidean()
 neighborhoodEuclidean(-6)
 neighborhoodEuclidean(pump.select = 6:7)
