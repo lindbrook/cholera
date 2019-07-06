@@ -1,8 +1,6 @@
 #' Set or compute the number of cores for parallelized functions.
 #'
-#' For parallel::mclapply() and parallel::parLapply().
-#' @param x Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number of logical cores to use.
-#' @note Returns physical cores for Windows, for parallel::parLapply(), and logical cores for macOS and unix, for parallel::mclapply().
+#' @param x Logical or Numeric. \code{TRUE} returns the number of logical cores for parallel::mclapply() on macOS and Unix or the number of physical cores for parallel::parLapply() on Windows. \code{FALSE} uses one, single core. You can also specify the number of cores.
 #' @noRd
 
 multiCore <- function(x = TRUE) {
@@ -15,7 +13,7 @@ multiCore <- function(x = TRUE) {
         cores <- 1L
       }
     } else if (is.numeric(x)) {
-      obs.cores <- parallel::detectCores(logical = logical.cores)
+      obs.cores <- parallel::detectCores()
       if (x > obs.cores) {
         msg <- 'For your system, the number of specified cores must be <= '
         stop(paste0(msg, obs.cores, "."))

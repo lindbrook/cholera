@@ -1,3 +1,9 @@
+cholera 0.6.5.9020
+==================
+
+- fix setting of number of logical cores in multiCore().
+
+
 cholera 0.6.5.9019
 ==================
 
