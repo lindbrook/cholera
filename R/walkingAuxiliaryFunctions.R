@@ -560,9 +560,16 @@ neighborhoodPathData <- function(x) {
     p.name <- p.data$pump
   }
 
-  neighborhood.path.edges <- parallel::mclapply(x$paths, function(neigh) {
-    lapply(neigh, auditEdge, edges)
-  }, mc.cores = x$cores)
+  if (.Platform$OS.type == "windows") {
+    neighborhood.path.edges <- lapply(x$paths, function(neigh) {
+      lapply(neigh, auditEdge, edges)
+    })
+  } else {
+    neighborhood.path.edges <- parallel::mclapply(x$paths, function(neigh) {
+      lapply(neigh, auditEdge, edges)
+    }, mc.cores = x$cores)
+  }
+
 
   list(dat = dat,
        edges = edges,

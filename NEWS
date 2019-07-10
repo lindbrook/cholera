@@ -2,6 +2,7 @@ cholera 0.6.5.9021
 ==================
 
 - fix nearestPump(output = "path", dev.mode = TRUE).
+- use lapply() in neighborhoodPathData() with Windows.
 
 
 cholera 0.6.5.9020
