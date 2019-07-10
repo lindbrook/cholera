@@ -97,7 +97,6 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
 
     out <- do.call(rbind, distance.data)
     out$anchor <- NULL
-    out
 
   } else if (metric == "walking") {
     dat <- neighborhoodData(vestry, case.set)
@@ -129,7 +128,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
     }
 
     if (output == "path") {
-      lapply(seq_along(paths), function(i) {
+      out <- lapply(seq_along(paths), function(i) {
         names(paths[[i]][[paste(distance.data[[i]]$pump)]])
       })
 
@@ -156,10 +155,9 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
 
       out$time <- distanceTime(out$distance, time.unit = time.unit,
         walking.speed = walking.speed)
-
-      out
     }
   }
+  out
 }
 
 # pathData <- function(dat, weighted, case.set, cores) {
@@ -395,9 +393,9 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode) {
           }
         }
       }, mc.cores = cores)
-
-      pths
     }
+    
+    pths
   }
 
   distances <- function(x) {

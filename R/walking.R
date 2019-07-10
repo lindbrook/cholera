@@ -63,7 +63,8 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
                     vestry = vestry,
                     weighted = weighted,
                     case.set = case.set,
-                    multi.core = cores)
+                    multi.core = cores,
+                    dev.mode = dev.mode)
 
   if (case.set == "expected") arguments$case.set <- "observed"
 
