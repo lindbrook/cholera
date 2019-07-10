@@ -1,7 +1,7 @@
 cholera 0.6.5.9021
 ==================
 
-- fix nearestPump(output = "path", dev.mode = TRUE)
+- fix nearestPump(output = "path", dev.mode = TRUE).
 
 
 cholera 0.6.5.9020
