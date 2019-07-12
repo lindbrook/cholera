@@ -1,3 +1,10 @@
+cholera 0.6.5.9022
+==================
+
+- add simWalkingDistance(dev.mode).
+- add nearestPump(metric = "walking", case.set = "expected").
+
+
 cholera 0.6.5.9021
 ==================
 

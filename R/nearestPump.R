@@ -52,44 +52,56 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
     stop('metric must either be "euclidean" or "walking".')
 
   } else if (metric == "euclidean") {
-    anchors <- cholera::fatalities.address$anchor
+    if (case.set == "observed") {
+      anchors <- cholera::fatalities.address$anchor
+      observed <- TRUE
+    } else if (case.set == "expected") {
+      anchors <- seq_len(nrow(cholera::regular.cases))
+      observed <- FALSE
+    }
 
     if (is.null(pump.select)) {
       if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
         cl <- parallel::makeCluster(cores)
+        parallel::clusterExport(cl = cl, envir = environment(),
+          varlist = "observed")
         distance.data <- parallel::parLapply(cl, anchors, function(x) {
-          cholera::euclideanPath(x)$data
+          cholera::euclideanPath(x, observed = observed)$data
         })
         parallel::stopCluster(cl)
       } else {
         distance.data <- parallel::mclapply(anchors, function(x) {
-          cholera::euclideanPath(x)$data
+          cholera::euclideanPath(x, observed = observed)$data
         }, mc.cores = cores)
       }
     } else {
       if (all(pump.select > 0)) {
         if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
           cl <- parallel::makeCluster(cores)
+          parallel::clusterExport(cl = cl, envir = environment(),
+            varlist = "observed")
           distance.data <- parallel::parLapply(cl, anchors, function(x) {
-            cholera::euclideanPath(x, pump.select)$data
+            cholera::euclideanPath(x, pump.select, observed = observed)$data
           })
           parallel::stopCluster(cl)
         } else {
           distance.data <- parallel::mclapply(anchors, function(x) {
-            cholera::euclideanPath(x, pump.select)$data
+            cholera::euclideanPath(x, pump.select, observed = observed)$data
           }, mc.cores = cores)
         }
       } else if (all(pump.select < 0)) {
         neg.pump.select <- p.id[p.id %in% abs(pump.select) == FALSE]
         if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
           cl <- parallel::makeCluster(cores)
+          parallel::clusterExport(cl = cl, envir = environment(),
+            varlist = "observed")
           distance.data <- parallel::parLapply(cl, anchors, function(x) {
-            cholera::euclideanPath(x, neg.pump.select)$data
+            cholera::euclideanPath(x, neg.pump.select, observed = observed)$data
           })
           parallel::stopCluster(cl)
         } else {
           distance.data <- parallel::mclapply(anchors, function(x) {
-            cholera::euclideanPath(x, neg.pump.select)$data
+            cholera::euclideanPath(x, neg.pump.select, observed = observed)$data
           }, mc.cores = cores)
         }
       } else stop("pump select must be all postive or negative.")
@@ -394,7 +406,7 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode) {
         }
       }, mc.cores = cores)
     }
-    
+
     pths
   }
 
