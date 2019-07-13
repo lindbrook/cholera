@@ -7,9 +7,10 @@ multiCore <- function(x = TRUE) {
   if (is.logical(x) | is.numeric(x)) {
     if (is.logical(x)) {
       if (x == TRUE) {
-        if (.Platform$OS.type == "windows") {
-          cores <- parallel::detectCores(logical = FALSE)
-        } else cores <- parallel::detectCores()
+        # if (.Platform$OS.type == "windows") {
+        #   cores <- parallel::detectCores(logical = FALSE)
+        # } else
+        cores <- parallel::detectCores()
       } else {
         cores <- 1L
       }
