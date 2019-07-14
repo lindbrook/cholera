@@ -13,7 +13,6 @@
 #' @param weighted Logical. \code{TRUE} computes shortest walking path weighted by road length. \code{FALSE} computes shortest walking path in terms of the number of nodes.
 #' @param color Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}
 #' @param case.location Character. For \code{metric = "euclidean"}: "address" uses \code{ortho.proj}; "nominal" uses \code{fatalities}.
-#' @param observed Logical. TRUE is observed; FALSE is expected or simulated.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @export
@@ -29,17 +28,14 @@
 addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   metric = "walking", type = "stack.base", token = "point", text.size = 0.5,
   pch = 16, point.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
-  case.location = "nominal", observed = TRUE, alpha.level = 0.5,
-  multi.core = FALSE) {
+  case.location = "nominal", alpha.level = 0.5, multi.core = FALSE) {
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
     stop('metric must be "euclidean" or "walking".')
   }
 
-  if (observed) {
-    if (type %in% c("stack.base", "stack") == FALSE) {
-      stop('type must be "stack.base", "stack" or "simulated".')
-    }
+  if (type %in% c("stack.base", "stack") == FALSE) {
+    stop('type must be "stack.base", "stack" or "simulated".')
   }
 
   if (token %in% c("id", "point") == FALSE) {
@@ -55,7 +51,6 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   arguments <- list(pump.select = pump.select,
                     vestry = vestry,
                     case.location = case.location,
-                    case.set = ifelse(observed, "observed", "expected"),
                     multi.core = cores)
 
   if (metric == "euclidean") {
@@ -96,14 +91,8 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
     }
   }
 
-  if (observed) {
-    addr.data <- cholera::ortho.proj
-    nom.data <- cholera::fatalities
-  } else {
-    addr.data <- cholera::sim.ortho.proj
-    nom.data <- cholera::regular.cases
-    nom.data$case <- seq_len(nrow(nom.data))
-  }
+  addr.data <- cholera::ortho.proj
+  nom.data <- cholera::fatalities
 
   if (case.location == "address") {
     case.data <- addr.data
@@ -113,42 +102,24 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
     vars <- c("x", "y")
   } else stop("Invalid case.location!")
 
-  if (observed) {
-    invisible(lapply(selected.pumps, function(x) {
-      addr <- nearest.pump[nearest.pump$pump == x, "case"]
-      case.sel <- cholera::anchor.case$anchor %in% addr
+  invisible(lapply(selected.pumps, function(x) {
+    addr <- nearest.pump[nearest.pump$pump == x, "case"]
+    case.sel <- cholera::anchor.case$anchor %in% addr
 
-      if (type == "stack.base") {
-        id <- unique(cholera::anchor.case[case.sel, "anchor"])
-      } else if (type == "stack") {
-        id <- cholera::anchor.case[case.sel, "case"]
-      } else stop("Invalid type")
+    if (type == "stack.base") {
+      id <- unique(cholera::anchor.case[case.sel, "anchor"])
+    } else if (type == "stack") {
+      id <- cholera::anchor.case[case.sel, "case"]
+    } else stop("Invalid type")
 
-      sel <- case.data$case %in% id
+    sel <- case.data$case %in% id
 
-      if (token == "point") {
-        points(case.data[sel, vars], pch = pch, cex = point.size,
-          col = snow.colors[paste0("p", x)])
-      } else if (token == "id") {
-        text(case.data[sel, vars], cex = text.size,
-          col = snow.colors[paste0("p", x)], labels = case.data[sel, "case"])
-      } else stop("Invalid token!")
-    }))
-
-  } else {
-    invisible(lapply(selected.pumps, function(x) {
-      addr <- nearest.pump[nearest.pump$pump == x, "case"]
-      sel <- case.data$case %in% addr
-      neighborhood.color <- snow.colors[paste0("p", x)]
-
-      if (token == "point") {
-        points(case.data[sel, vars], pch = pch, cex = point.size,
-          col = grDevices::adjustcolor(neighborhood.color,
-            alpha.f = alpha.level))
-      } else if (token == "id") {
-        text(case.data[sel, vars], cex = text.size,
-          col = neighborhood.color, labels = case.data[sel, "case"])
-      } else stop("Invalid token!")
-    }))
-  }
+    if (token == "point") {
+      points(case.data[sel, vars], pch = pch, cex = point.size,
+        col = snow.colors[paste0("p", x)])
+    } else if (token == "id") {
+      text(case.data[sel, vars], cex = text.size,
+        col = snow.colors[paste0("p", x)], labels = case.data[sel, "case"])
+    } else stop("Invalid token!")
+  }))
 }

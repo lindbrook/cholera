@@ -1,3 +1,9 @@
+cholera 0.6.5.9024
+==================
+
+- deprecate case.set argument in addNeighborhoodCases().
+
+
 cholera 0.6.5.9023
 ==================
 
