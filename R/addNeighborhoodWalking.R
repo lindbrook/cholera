@@ -69,13 +69,13 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
 
   cores <- multiCore(multi.core)
 
-  arguments <- list(pump.select = pump.select,
-                    vestry = vestry,
-                    weighted = weighted,
-                    case.set = "observed",
-                    multi.core = cores)
-
-  nearest.path <- do.call("nearestPump", c(arguments, output = "path"))
+  nearest.path <- nearestPump(pump.select = pump.select,
+                              vestry = vestry,
+                              weighted = weighted,
+                              case.set = "observed",
+                              output = "path",
+                              multi.core = cores,
+                              dev.mode = dev.mode)
 
   if (vestry) {
     nearest.pump <- vapply(nearest.path, function(paths) {
@@ -111,7 +111,7 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
             cases = neighborhood.cases,
             vestry = vestry,
             weighted = weighted,
-            case.set = arguments$case.set,
+            case.set = "observed",
             pump.select = pump.select,
             cores = cores,
             metric = 1 / unitMeter(1),

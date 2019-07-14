@@ -59,16 +59,13 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   cores <- multiCore(multi.core)
   snow.colors <- snowColors(vestry = vestry)
 
-  arguments <- list(pump.select = pump.select,
-                    vestry = vestry,
-                    weighted = weighted,
-                    case.set = case.set,
-                    multi.core = cores,
-                    dev.mode = dev.mode)
-
-  if (case.set == "expected") arguments$case.set <- "observed"
-
-  nearest.path <- do.call("nearestPump", c(arguments, output = "path"))
+  nearest.path <- nearestPump(pump.select = pump.select,
+                              vestry = vestry,
+                              weighted = weighted,
+                              case.set = "observed",
+                              output = "path",
+                              multi.core = cores,
+                              dev.mode = dev.mode)
 
   if (vestry) {
     nearest.pump <- vapply(nearest.path, function(paths) {
