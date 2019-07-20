@@ -570,7 +570,6 @@ neighborhoodPathData <- function(x) {
     }, mc.cores = x$cores)
   }
 
-
   list(dat = dat,
        edges = edges,
        p.node = p.node,
