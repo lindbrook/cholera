@@ -69,13 +69,15 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
 
   cores <- multiCore(multi.core)
 
-  nearest.path <- nearestPump(pump.select = pump.select,
+  nearest.data <- nearestPump(pump.select = pump.select,
                               vestry = vestry,
                               weighted = weighted,
                               case.set = "observed",
-                              output = "path",
                               multi.core = cores,
                               dev.mode = dev.mode)
+
+  nearest.dist <- nearest.data$distance
+  nearest.path <- nearest.data$path
 
   if (vestry) {
     nearest.pump <- vapply(nearest.path, function(paths) {
@@ -90,9 +92,9 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   }
 
   nearest.pump <- data.frame(case = cholera::fatalities.address$anchor,
-                             pump = nearest.pump)
+                             pump = nearest.dist$pump)
 
-  pumpID <- sort(unique(nearest.pump$pump))
+  pumpID <- sort(unique(nearest.dist$pump))
 
   neighborhood.cases <- lapply(pumpID, function(p) {
     nearest.pump[nearest.pump$pump == p, "case"]

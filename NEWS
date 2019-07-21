@@ -1,3 +1,9 @@
+cholera 0.6.5.9026
+==================
+
+- remove output argument from nearestPump().
+
+
 cholera 0.6.5.9025
 ==================
 

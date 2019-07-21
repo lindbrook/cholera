@@ -59,25 +59,15 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   cores <- multiCore(multi.core)
   snow.colors <- snowColors(vestry = vestry)
 
-  nearest.path <- nearestPump(pump.select = pump.select,
+  nearest.data <- nearestPump(pump.select = pump.select,
                               vestry = vestry,
                               weighted = weighted,
                               case.set = "observed",
-                              output = "path",
                               multi.core = cores,
                               dev.mode = dev.mode)
 
-  if (vestry) {
-    nearest.pump <- vapply(nearest.path, function(paths) {
-      sel <- cholera::ortho.proj.pump.vestry$node %in% paths[length(paths)]
-      cholera::ortho.proj.pump.vestry[sel, "pump.id"]
-    }, numeric(1L))
-  } else {
-    nearest.pump <- vapply(nearest.path, function(paths) {
-      sel <- cholera::ortho.proj.pump$node %in% paths[length(paths)]
-      cholera::ortho.proj.pump[sel, "pump.id"]
-    }, numeric(1L))
-  }
+  nearest.dist <- nearest.data$distance
+  nearest.path <- nearest.data$path
 
   if (case.set == "snow") {
     snow.anchors <- cholera::snow.neighborhood[cholera::snow.neighborhood %in%
@@ -86,10 +76,10 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
                                pump = nearest.pump)
   } else {
     nearest.pump <- data.frame(case = cholera::fatalities.address$anchor,
-                               pump = nearest.pump)
+                               pump = nearest.dist$pump)
   }
 
-  pumpID <- sort(unique(nearest.pump$pump))
+  pumpID <- sort(unique(nearest.dist$pump))
 
   neighborhood.cases <- lapply(pumpID, function(p) {
     nearest.pump[nearest.pump$pump == p, "case"]
