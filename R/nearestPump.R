@@ -163,7 +163,9 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
       time.unit = time.unit, walking.speed = walking.speed)
   }
 
-  list(path = out.path, distance = out.distance)
+  if (metric == "walking") list(path = out.path, distance = out.distance)
+  else if (metric == "euclidean") out
+
 }
 
 pathData <- function(dat, weighted, case.set, cores, dev.mode) {
@@ -422,3 +424,4 @@ nearestPumpWalking <- function(pump.select = NULL, vestry = FALSE,
   ap <- ap[, c("case", "pump")]
   row.names(ap) <- NULL
   ap
+}
