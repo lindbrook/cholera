@@ -384,3 +384,41 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode) {
          paths = paths(exp.case))
   }
 }
+
+nearestPumpWalking <- function(pump.select = NULL, vestry = FALSE,
+  weighted = TRUE, multi.core = FALSE, dev.mode = FALSE) {
+
+  x <- neighborhoodWalking(pump.select = pump.select, vestry = vestry,
+    weighted = weighted, case.set = "observed", multi.core = multi.core,
+    dev.mode = dev.mode)
+
+  n.data <- neighborhoodPathData(x)
+  OE <- observedExpected(x, n.data)
+
+  wholes <- OE$expected.wholes
+  splits <- OE$exp.splits
+  splits.pump <- OE$exp.splits.pump
+  splits.segs <- OE$exp.splits.segs
+
+  sim.proj <- cholera::sim.ortho.proj
+  sim.proj.segs <- unique(sim.proj$road.segment)
+
+  if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
+    split.outcome <- splitOutcomes(x, splits.segs, sim.proj, splits,
+      splits.pump)
+    split.outcome <- do.call(rbind, split.outcome)
+    split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
+    split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
+      split.outcome[split.outcome$pump == p, "case"]
+    })
+
+    names(split.cases) <- sort(unique(split.outcome$pump))
+  }
+
+  ap <- areaPointsData(sim.proj.segs, wholes, x$snow.colors, sim.proj,
+    split.cases)
+
+  ap <- do.call(rbind, ap)
+  ap <- ap[, c("case", "pump")]
+  row.names(ap) <- NULL
+  ap
