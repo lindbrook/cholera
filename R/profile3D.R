@@ -41,7 +41,7 @@ profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
     }
   }
 
-  nearest.pump <- nearestPump(pump.id, multi.core = cores)
+  nearest.pump <- nearestPump(pump.id, multi.core = cores)$distance
 
   x <- cholera::fatalities.address$x
   y <- cholera::fatalities.address$y

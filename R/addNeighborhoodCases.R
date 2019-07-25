@@ -60,7 +60,7 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   } else if (metric == "walking") {
     arguments$case.location <- NULL
     walk.data <- do.call("nearestPump", arguments)
-    nearest.pump <- walk.data[, c("case", "pump")]
+    nearest.pump <- walk.data$distance[, c("case", "pump")]
   }
 
   snow.colors <- snowColors(vestry)

@@ -1,3 +1,9 @@
+cholera 0.6.5.9028
+==================
+
+- add nearestPump(metric = "walking") prototype.
+
+
 cholera 0.6.5.9027
 ==================
 

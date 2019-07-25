@@ -107,65 +107,72 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
     out$anchor <- NULL
 
   } else if (metric == "walking") {
-    dat <- neighborhoodData(vestry, case.set)
-    path.data <- pathData(dat, weighted, case.set, cores, dev.mode)
-    distances <- path.data$distances
-    paths <- path.data$paths
 
-    if (is.null(pump.select)) {
-      distance.data <- lapply(distances, function(x) {
-        data.frame(pump = as.numeric(names(which.min(x))),
-          distance = x[which.min(x)])
+    if (case.set == "observed") {
+      dat <- neighborhoodData(vestry, case.set)
+      path.data <- pathData(dat, weighted, case.set, cores, dev.mode)
+      distances <- path.data$distances
+      paths <- path.data$paths
+
+      if (is.null(pump.select)) {
+        distance.data <- lapply(distances, function(x) {
+          data.frame(pump = as.numeric(names(which.min(x))),
+            distance = x[which.min(x)])
+        })
+
+      } else {
+        if (all(pump.select > 0)) {
+          distance.data <- lapply(distances, function(x) {
+            candidates <- x[names(x) %in% pump.select]
+            dat <- candidates[which.min(candidates)]
+            data.frame(pump = as.numeric(names(dat)), distance = dat)
+          })
+
+        } else if (all(pump.select < 0)) {
+          distance.data <- lapply(distances, function(x) {
+            candidates <- x[names(x) %in% abs(pump.select) == FALSE]
+            dat <- candidates[which.min(candidates)]
+            data.frame(pump = as.numeric(names(dat)), distance = dat)
+          })
+        }
+      }
+
+      out.path <- lapply(seq_along(paths), function(i) {
+        names(paths[[i]][[paste(distance.data[[i]]$pump)]])
       })
 
-    } else {
-      if (all(pump.select > 0)) {
-        distance.data <- lapply(distances, function(x) {
-          candidates <- x[names(x) %in% pump.select]
-          dat <- candidates[which.min(candidates)]
-          data.frame(pump = as.numeric(names(dat)), distance = dat)
-        })
+      out.distance <- data.frame(case = path.data$case,
+                        do.call(rbind, distance.data),
+                        pump.name = NA,
+                        row.names = NULL)
 
-      } else if (all(pump.select < 0)) {
-        distance.data <- lapply(distances, function(x) {
-          candidates <- x[names(x) %in% abs(pump.select) == FALSE]
-          dat <- candidates[which.min(candidates)]
-          data.frame(pump = as.numeric(names(dat)), distance = dat)
-        })
+      for (x in cholera::pumps$id) {
+        out.distance[out.distance$pump == x, "pump.name"] <-
+          cholera::pumps[cholera::pumps$id == x, "street"]
       }
+
+      out.distance <- out.distance[, c("case", "pump", "pump.name", "distance")]
+
+      if (distance.unit == "meter") {
+        out.distance$distance <- unitMeter(out.distance$distance, "meter")
+      } else if (distance.unit == "yard") {
+        out.distance$distance <- unitMeter(out.distance$distance, "yard")
+      } else if (distance.unit == "native") {
+        out.distance$distance <- unitMeter(out.distance$distance, "native")
+      }
+
+      out.distance$time <- distanceTime(out.distance$distance,
+        time.unit = time.unit, walking.speed = walking.speed)
+
+    } else if (case.set == "expected") {
+      out <- nearestPumpWalking(pump.select = pump.select, vestry = vestry,
+        weighted = weighted, multi.core = multi.core, dev.mode = dev.mode)
     }
-
-    out.path <- lapply(seq_along(paths), function(i) {
-      names(paths[[i]][[paste(distance.data[[i]]$pump)]])
-    })
-
-    out.distance <- data.frame(case = path.data$case,
-                      do.call(rbind, distance.data),
-                      pump.name = NA,
-                      row.names = NULL)
-
-    for (x in cholera::pumps$id) {
-      out.distance[out.distance$pump == x, "pump.name"] <-
-        cholera::pumps[cholera::pumps$id == x, "street"]
-    }
-
-    out.distance <- out.distance[, c("case", "pump", "pump.name", "distance")]
-
-    if (distance.unit == "meter") {
-      out.distance$distance <- unitMeter(out.distance$distance, "meter")
-    } else if (distance.unit == "yard") {
-      out.distance$distance <- unitMeter(out.distance$distance, "yard")
-    } else if (distance.unit == "native") {
-      out.distance$distance <- unitMeter(out.distance$distance, "native")
-    }
-
-    out.distance$time <- distanceTime(out.distance$distance,
-      time.unit = time.unit, walking.speed = walking.speed)
   }
 
-  if (metric == "walking") list(path = out.path, distance = out.distance)
-  else if (metric == "euclidean") out
-
+  if (metric == "walking" & case.set == "observed") {
+    list(path = out.path, distance = out.distance)
+  } else out
 }
 
 pathData <- function(dat, weighted, case.set, cores, dev.mode) {
