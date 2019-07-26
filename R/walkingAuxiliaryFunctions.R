@@ -352,15 +352,17 @@ areaPointsData <- function(sim.proj.segs, wholes, snow.colors, sim.proj,
     sim.proj.wholes[sel, "color"] <- snow.colors[paste0("p", nm)]
   }
 
-  sim.proj.splits <- sim.proj[sim.proj$case %in% unlist(split.cases), ]
-  sim.proj.splits$pump <- NA
-  sim.proj.splits$color <- NA
+  if (is.null(split.cases) == FALSE) {
+    sim.proj.splits <- sim.proj[sim.proj$case %in% unlist(split.cases), ]
+    sim.proj.splits$pump <- NA
+    sim.proj.splits$color <- NA
 
-  for (nm in names(split.cases)) {
-    sel <- sim.proj.splits$case %in% split.cases[[nm]]
-    sim.proj.splits[sel, "pump"] <- as.numeric(nm)
-    sim.proj.splits[sel, "color"] <- snow.colors[paste0("p", nm)]
-  }
+    for (nm in names(split.cases)) {
+      sel <- sim.proj.splits$case %in% split.cases[[nm]]
+      sim.proj.splits[sel, "pump"] <- as.numeric(nm)
+      sim.proj.splits[sel, "color"] <- snow.colors[paste0("p", nm)]
+    }
+  } else sim.proj.splits <- NULL
 
   list(sim.proj.wholes = sim.proj.wholes,
        sim.proj.splits = sim.proj.splits)
@@ -524,6 +526,10 @@ observedExpected <- function(x, n.data) {
     exp.splits <- c(obs.partial.split, unobs.split)
     exp.splits.pump <- c(obs.partial.split.pump, unobs.split.pump)
     exp.splits.segs <- c(obs.partial.segments, unobs.split.segments)
+  } else {
+    exp.splits <- NULL
+    exp.splits.pump <- NULL
+    exp.splits.segs <- NULL
   }
 
   list(observed.wholes = observed.wholes,
@@ -598,7 +604,7 @@ expectedCount <- function(x) {
       split.outcome[split.outcome$pump == p, "case"]
     })
     names(split.cases) <- sort(unique(split.outcome$pump))
-  } else stop("error!")
+  } else split.cases <- NULL
 
   ap <- areaPointsData(sim.proj.segs, wholes, snow.colors, sim.proj,
     split.cases)
