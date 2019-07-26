@@ -165,8 +165,8 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
         time.unit = time.unit, walking.speed = walking.speed)
 
     } else if (case.set == "expected") {
-      out <- nearestPumpWalking(pump.select = pump.select, vestry = vestry,
-        weighted = weighted, multi.core = multi.core, dev.mode = dev.mode)
+      out <- nearestPumpWalkingExp(pump.select = pump.select, vestry = vestry,
+        weighted = weighted, cores)
     }
   }
 
@@ -394,12 +394,11 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode) {
   }
 }
 
-nearestPumpWalking <- function(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, multi.core = FALSE, dev.mode = FALSE) {
+nearestPumpWalkingExp <- function(pump.select = NULL, vestry = FALSE,
+  weighted = TRUE, cores) {
 
   x <- neighborhoodWalking(pump.select = pump.select, vestry = vestry,
-    weighted = weighted, case.set = "observed", multi.core = multi.core,
-    dev.mode = dev.mode)
+    weighted = weighted, case.set = "observed", multi.core = cores)
 
   n.data <- neighborhoodPathData(x)
   OE <- observedExpected(x, n.data)
@@ -422,7 +421,7 @@ nearestPumpWalking <- function(pump.select = NULL, vestry = FALSE,
     })
 
     names(split.cases) <- sort(unique(split.outcome$pump))
-  }
+  } else split.cases <- NULL
 
   ap <- areaPointsData(sim.proj.segs, wholes, x$snow.colors, sim.proj,
     split.cases)
@@ -430,5 +429,10 @@ nearestPumpWalking <- function(pump.select = NULL, vestry = FALSE,
   ap <- do.call(rbind, ap)
   ap <- ap[, c("case", "pump")]
   row.names(ap) <- NULL
-  ap
+
+  dat <- parallel::mclapply(seq_len(nrow(ap)), function(i) {
+    walkingPath(ap$case[i], ap$pump[i], observed = FALSE)$data
+  }, mc.cores = cores)
+
+  do.call(rbind, dat)
 }
