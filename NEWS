@@ -1,7 +1,13 @@
+cholera 0.6.5.9030
+==================
+
+- add nearestPumpAudit().
+
+
 cholera 0.6.5.9029
 ==================
 
-- set no splits to NULL: 
+- set no splits to NULL:
   nearestPump(), areaPointsData(), observedExpected(), expectedCount().
 - add nearestPumpWalkingExp() prototype.
 
