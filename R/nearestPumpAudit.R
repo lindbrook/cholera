@@ -7,6 +7,7 @@ nearestPumpAudit <- function(vestry = FALSE, case.set = "observed",
 
   ## ----- ##
 
+dat <- neighborhoodData(vestry = vestry, case.set = "expected")
   g <- dat$g
   nodes <- dat$nodes
   edges <- dat$edges
@@ -32,6 +33,8 @@ nearestPumpAudit <- function(vestry = FALSE, case.set = "observed",
 
   exp.case <- case[case %in% FCM.cases == FALSE]
 
+  ## ----- ##
+
   # nearest.pump <- vector(mode = "numeric", length = length(exp.case))
   nearest.pump <- matrix(0, nrow = length(exp.case), ncol = 3)
 
@@ -46,4 +49,48 @@ nearestPumpAudit <- function(vestry = FALSE, case.set = "observed",
   }
 
   stats::setNames(as.data.frame(nearest.pump), c("case", "distance", "pump"))
+
+  ## ----- ##
+
+  nearest.pump <- parallel::mclapply(seq_along(exp.case), function(i) {
+    case.node <- nodes[nodes$anchor == exp.case[i], "node"]
+    d <- c(igraph::distances(g, case.node, nodes.pump$node,
+      weights = edges$d))
+    names(d) <- nodes.pump$pump
+    p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
+
+    data.frame(case = exp.case[i],
+               pump = p,
+               distance = min(d[is.infinite(d) == FALSE]))
+  }, mc.cores = 4L)
+
+  ## ----- ##
+
+  nearest.path <- parallel::mclapply(seq_along(exp.case), function(i) {
+    case.node <- nodes[nodes$anchor == exp.case[i], "node"]
+    if (exp.case[i] %in% AE.cases) {
+      igraph::shortest_paths(g, case.node,
+        nodes.pump[nodes.pump$pump == 2, "node"], weights = edges$d)$vpath
+    } else {
+      igraph::shortest_paths(g, case.node,
+        nodes.pump[nodes.pump$pump != 2, "node"], weights = edges$d)$vpath
+    }
+  }, mc.cores = 4L)
+
+
+  ## ----- ##
+
+  nearest.path <- vector("list", length = length(exp.case))
+
+  for (i in seq_along(exp.case)) {
+    case.node <- nodes[nodes$anchor == exp.case[i], "node"]
+    if (exp.case[i] %in% AE.cases) {
+      nearest.path[[i]] <- igraph::shortest_paths(g, case.node,
+        nodes.pump[nodes.pump$pump == 2, "node"], weights = edges$d)$vpath
+    } else {
+      nearest.path[[i]] <- igraph::shortest_paths(g, case.node,
+        nodes.pump[nodes.pump$pump != 2, "node"], weights = edges$d)$vpath
+    }
+    cat(exp.case[i], "")
+  }
 }
