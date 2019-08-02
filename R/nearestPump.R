@@ -107,38 +107,23 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
     out$anchor <- NULL
 
   } else if (metric == "walking") {
+    dat <- neighborhoodData(vestry, case.set)
 
     if (case.set == "observed") {
-      dat <- neighborhoodData(vestry, case.set)
       path.data <- pathData(dat, weighted, case.set, cores, dev.mode)
-      distances <- path.data$distances
-      paths <- path.data$paths
 
-      if (is.null(pump.select)) {
-        distance.data <- lapply(distances, function(x) {
-          data.frame(pump = as.numeric(names(which.min(x))),
-            distance = x[which.min(x)])
-        })
-
-      } else {
-        if (all(pump.select > 0)) {
-          distance.data <- lapply(distances, function(x) {
+      distance.data <- lapply(path.data$distances, function(x) {
+        if (is.null(pump.select)) {
+          candidates <- x
+        } else {
+          if (all(pump.select > 0)) {
             candidates <- x[names(x) %in% pump.select]
-            dat <- candidates[which.min(candidates)]
-            data.frame(pump = as.numeric(names(dat)), distance = dat)
-          })
-
-        } else if (all(pump.select < 0)) {
-          distance.data <- lapply(distances, function(x) {
+          } else if (all(pump.select < 0)) {
             candidates <- x[names(x) %in% abs(pump.select) == FALSE]
-            dat <- candidates[which.min(candidates)]
-            data.frame(pump = as.numeric(names(dat)), distance = dat)
-          })
+          }
         }
-      }
-
-      out.path <- lapply(seq_along(paths), function(i) {
-        names(paths[[i]][[paste(distance.data[[i]]$pump)]])
+        dat <- candidates[which.min(candidates)]
+        data.frame(pump = as.numeric(names(dat)), distance = dat)
       })
 
       out.distance <- data.frame(case = path.data$case,
@@ -152,27 +137,107 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
       }
 
       out.distance <- out.distance[, c("case", "pump", "pump.name", "distance")]
-
-      if (distance.unit == "meter") {
-        out.distance$distance <- unitMeter(out.distance$distance, "meter")
-      } else if (distance.unit == "yard") {
-        out.distance$distance <- unitMeter(out.distance$distance, "yard")
-      } else if (distance.unit == "native") {
-        out.distance$distance <- unitMeter(out.distance$distance, "native")
-      }
+      out.distance$distance <- unitMeter(out.distance$distance, distance.unit)
 
       out.distance$time <- distanceTime(out.distance$distance,
         time.unit = time.unit, walking.speed = walking.speed)
 
+      paths <- path.data$paths
+      out.path <- lapply(seq_along(paths), function(i) {
+       names(paths[[i]][[paste(distance.data[[i]]$pump)]])
+      })
+
     } else if (case.set == "expected") {
-      out <- nearestPumpWalkingExp(pump.select = pump.select, vestry = vestry,
-        weighted = weighted, cores)
+      g <- dat$g
+      nodes <- dat$nodes
+      edges <- dat$edges
+      nodes.pump <- dat$nodes.pump
+
+      ## Adam and Eve Court: isolate with pump ##
+      rd <- "Adam and Eve Court"
+      adam.eve.ct <- cholera::road.segments[cholera::road.segments$name == rd, "id"]
+      sel <- cholera::sim.ortho.proj$road.segment == adam.eve.ct &
+             !is.na(cholera::sim.ortho.proj$road.segment)
+      AE.cases <- cholera::sim.ortho.proj[sel, "case"]
+
+      ## Falconberg Court and Mews: isolate without pumps ##
+      falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
+      sel <- cholera::sim.ortho.proj$road.segment %in% falconberg.ct.mews &
+             !is.na(cholera::sim.ortho.proj$road.segment)
+      FCM.cases <- cholera::sim.ortho.proj[sel, "case"]
+
+      case <- nodes[nodes$anchor != 0 & nodes$anchor < 20000, "anchor"]
+      exp.case <- case[case %in% FCM.cases == FALSE]
+
+      nearest.pump <- parallel::mclapply(seq_along(exp.case), function(i) {
+        case.node <- nodes[nodes$anchor == exp.case[i], "node"]
+        d <- c(igraph::distances(g, case.node, nodes.pump$node,
+          weights = edges$d))
+        names(d) <- nodes.pump$pump
+        p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
+
+        data.frame(case = exp.case[i],
+                   pump = p,
+                   distance = min(d[is.infinite(d) == FALSE]))
+      }, mc.cores = cores)
+
+      out.distance <- do.call(rbind, nearest.pump)
+
+      for (x in cholera::pumps$id) {
+        out.distance[out.distance$pump == x, "pump.name"] <-
+          cholera::pumps[cholera::pumps$id == x, "street"]
+      }
+
+      out.distance <- out.distance[, c("case", "pump", "pump.name", "distance")]
+      out.distance$distance <- unitMeter(out.distance$distance, distance.unit)
+      out.distance$time <- distanceTime(out.distance$distance,
+        time.unit = time.unit, walking.speed = walking.speed)
+      out.distance <- out.distance[order(out.distance$case), ]
+
+      # nearest.path <- parallel::mclapply(seq_along(exp.case), function(i) {
+      #   case.node <- nodes[nodes$anchor == exp.case[i], "node"]
+      #   if (exp.case[i] %in% AE.cases) {
+      #     pth <- igraph::shortest_paths(g, case.node,
+      #       nodes.pump[nodes.pump$pump == 2, "node"], weights = edges$d)$vpath
+      #     # stats::setNames(pth, 2)
+      #   } else {
+      #     pth <- igraph::shortest_paths(g, case.node,
+      #       nodes.pump[nodes.pump$pump != 2, "node"], weights = edges$d)$vpath
+      #     # stats::setNames(pth, nodes.pump[nodes.pump$pump != 2, "pump"])
+      #   }
+      #   pth
+      # }, mc.cores = cores)
+
+      nearest.path <- vector("list", length = length(exp.case))
+
+      for (i in seq_along(exp.case)) {
+        case.node <- nodes[nodes$anchor == exp.case[i], "node"]
+        if (exp.case[i] %in% AE.cases) {
+          nearest.path[[i]] <- igraph::shortest_paths(g, case.node,
+            nodes.pump[nodes.pump$pump == 2, "node"], weights = edges$d)$vpath
+        } else {
+          nearest.path[[i]] <- igraph::shortest_paths(g, case.node,
+            nodes.pump[nodes.pump$pump != 2, "node"], weights = edges$d)$vpath
+        }
+        # cat(exp.case[i], "")
+      }
+
+      nearest.path <- lapply(seq_along(exp.case), function(i) {
+        if (exp.case[i] %in% AE.cases) {
+          stats::setNames(nearest.path[[i]], 2)
+        } else {
+          stats::setNames(nearest.path[[i]],
+            nodes.pump[nodes.pump$pump != 2, "pump"])
+        }
+      })
+
+      out.path <- lapply(seq_along(nearest.path), function(i) {
+        names(nearest.path[[i]][[paste(nearest.pump[[i]]$pump)]])
+      })
     }
   }
-
-  if (metric == "walking" & case.set == "observed") {
-    list(path = out.path, distance = out.distance)
-  } else out
+  
+  list(path = out.path, distance = out.distance)
 }
 
 pathData <- function(dat, weighted, case.set, cores, dev.mode) {
@@ -392,47 +457,4 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode) {
          distances = distances(exp.case),
          paths = paths(exp.case))
   }
-}
-
-nearestPumpWalkingExp <- function(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, cores) {
-
-  x <- neighborhoodWalking(pump.select = pump.select, vestry = vestry,
-    weighted = weighted, case.set = "observed", multi.core = cores)
-
-  n.data <- neighborhoodPathData(x)
-  OE <- observedExpected(x, n.data)
-
-  wholes <- OE$expected.wholes
-  splits <- OE$exp.splits
-  splits.pump <- OE$exp.splits.pump
-  splits.segs <- OE$exp.splits.segs
-
-  sim.proj <- cholera::sim.ortho.proj
-  sim.proj.segs <- unique(sim.proj$road.segment)
-
-  if (OE$obs.split.test > 0 | OE$unobs.split.test > 0) {
-    split.outcome <- splitOutcomes(x, splits.segs, sim.proj, splits,
-      splits.pump)
-    split.outcome <- do.call(rbind, split.outcome)
-    split.outcome <- split.outcome[!is.na(split.outcome$pump), ]
-    split.cases <- lapply(sort(unique(split.outcome$pump)), function(p) {
-      split.outcome[split.outcome$pump == p, "case"]
-    })
-
-    names(split.cases) <- sort(unique(split.outcome$pump))
-  } else split.cases <- NULL
-
-  ap <- areaPointsData(sim.proj.segs, wholes, x$snow.colors, sim.proj,
-    split.cases)
-
-  ap <- do.call(rbind, ap)
-  ap <- ap[, c("case", "pump")]
-  row.names(ap) <- NULL
-
-  dat <- parallel::mclapply(seq_len(nrow(ap)), function(i) {
-    walkingPath(ap$case[i], ap$pump[i], observed = FALSE)$data
-  }, mc.cores = cores)
-
-  do.call(rbind, dat)
 }
