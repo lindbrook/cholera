@@ -194,7 +194,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
                 weights = edges$d))
             }
 
-            names(d) <- nodes.pump$pump
+            names(d) <- nodes.pump[p.sel, "pump"]
             p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
             data.frame(case = exp.case[i], pump = p,
               distance = min(d[is.infinite(d) == FALSE]))
@@ -206,7 +206,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
         }
 
       } else {
-        
+
         ## Adam and Eve Court (#2): 106 expected cases ##
         if (is.null(pump.select) == FALSE & 2 %in% p.sel == FALSE) {
           exp.case.AE <- exp.case[exp.case %in% AE.cases]
