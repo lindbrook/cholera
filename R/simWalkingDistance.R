@@ -8,6 +8,6 @@
 
 simWalkingDistance <- function(pump.select = 7, multi.core = FALSE,
   dev.mode = FALSE) {
-  nearestPump(pump.select, case.set = "expected", multi.core = multi.core,
-    dev.mode = dev.mode)
+  nearestPump(pump.select = pump.select, case.set = "expected",
+    multi.core = multi.core, dev.mode = dev.mode)$distance
 }
