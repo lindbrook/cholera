@@ -26,11 +26,16 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
   if (is.null(pump.select) == FALSE) {
     if (any(abs(pump.select) %in% p.id == FALSE)) {
       stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count, ".")
-    }
-  }
+    } else if (all(pump.select < 0)) {
+      p.sel <- p.id[p.id %in% abs(pump.select) == FALSE]
+    } else if (all(pump.select > 0)) p.sel <- pump.select
+  } else p.sel <- p.id
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
     stop('case.set must be "observed", "expected" or "snow".')
+  } else {
+    if (case.set == "observed") obs <- TRUE
+    else if (case.set == "expected") obs <- FALSE
   }
 
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
@@ -47,60 +52,20 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
     stop('metric must either be "euclidean" or "walking".')
 
   } else if (metric == "euclidean") {
-    if (case.set == "observed") {
-      anchors <- cholera::fatalities.address$anchor
-      distance.data <- parallel::mclapply(anchors, function(x) {
-        cholera::euclideanPath(x, observed = TRUE)$data
-      }, mc.cores = cores)
+    anchors <- seq_len(nrow(cholera::regular.cases))
 
-    } else if (case.set == "expected") {
-      anchors <- seq_len(nrow(cholera::regular.cases))
-      if (is.null(pump.select)) {
-        if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
-          cl <- parallel::makeCluster(cores)
-          parallel::clusterExport(cl = cl, envir = environment(),
-            varlist = "observed")
-          distance.data <- parallel::parLapply(cl, anchors, function(x) {
-            cholera::euclideanPath(x, observed = FALSE)$data
-          })
-          parallel::stopCluster(cl)
-        } else {
-          distance.data <- parallel::mclapply(anchors, function(x) {
-            cholera::euclideanPath(x, observed = FALSE)$data
-          }, mc.cores = cores)
-        }
-      } else {
-        if (all(pump.select > 0)) {
-          if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
-            cl <- parallel::makeCluster(cores)
-            parallel::clusterExport(cl = cl, envir = environment(),
-              varlist = "observed")
-            distance.data <- parallel::parLapply(cl, anchors, function(x) {
-              cholera::euclideanPath(x, pump.select, observed = FALSE)$data
-            })
-            parallel::stopCluster(cl)
-          } else {
-            distance.data <- parallel::mclapply(anchors, function(x) {
-              cholera::euclideanPath(x, pump.select, observed = FALSE)$data
-            }, mc.cores = cores)
-          }
-        } else if (all(pump.select < 0)) {
-          neg.pump.select <- p.id[p.id %in% abs(pump.select) == FALSE]
-          if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
-            cl <- parallel::makeCluster(cores)
-            parallel::clusterExport(cl = cl, envir = environment(),
-              varlist = "observed")
-            distance.data <- parallel::parLapply(cl, anchors, function(x) {
-              cholera::euclideanPath(x, neg.pump.select, observed = FALSE)$data
-            })
-            parallel::stopCluster(cl)
-          } else {
-            distance.data <- parallel::mclapply(anchors, function(x) {
-              cholera::euclideanPath(x, neg.pump.select, observed = FALSE)$data
-            }, mc.cores = cores)
-          }
-        } else stop("pump select must be all postive or negative.")
-      }
+    if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+      cl <- parallel::makeCluster(cores)
+      parallel::clusterExport(cl = cl, envir = environment(),
+        varlist = "observed")
+      distance.data <- parallel::parLapply(cl, anchors, function(x) {
+        cholera::euclideanPath(x, destination = p.sel, observed = obs)$data
+      })
+      parallel::stopCluster(cl)
+    } else {
+      distance.data <- parallel::mclapply(anchors, function(x) {
+        cholera::euclideanPath(x, destination = p.sel, observed = obs)$data
+      }, mc.cores = cores)
     }
 
     out <- do.call(rbind, distance.data)
@@ -153,9 +118,10 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
       edges <- dat$edges
       nodes.pump <- dat$nodes.pump
 
-      ## Adam and Eve Court: isolate with pump ##
+      ## Adam and Eve Court: isolate with pump (#2) ##
       rd <- "Adam and Eve Court"
-      adam.eve.ct <- cholera::road.segments[cholera::road.segments$name == rd, "id"]
+      sel <- cholera::road.segments$name == rd
+      adam.eve.ct <- cholera::road.segments[sel, "id"]
       sel <- cholera::sim.ortho.proj$road.segment == adam.eve.ct &
              !is.na(cholera::sim.ortho.proj$road.segment)
       AE.cases <- cholera::sim.ortho.proj[sel, "case"]
@@ -169,23 +135,148 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
       case <- nodes[nodes$anchor != 0 & nodes$anchor < 20000, "anchor"]
       exp.case <- case[case %in% FCM.cases == FALSE]
 
-      nearest.pump <- parallel::mclapply(seq_along(exp.case), function(i) {
-        case.node <- nodes[nodes$anchor == exp.case[i], "node"]
-        d <- c(igraph::distances(g, case.node, nodes.pump$node,
-          weights = edges$d))
-        names(d) <- nodes.pump$pump
-        p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
+      if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
 
-        data.frame(case = exp.case[i],
-                   pump = p,
-                   distance = min(d[is.infinite(d) == FALSE]))
-      }, mc.cores = cores)
+        ## Adam and Eve Court (#2): 106 expected cases ##
+        if (is.null(pump.select) == FALSE & 2 %in% p.sel == FALSE) {
+          exp.case.AE <- exp.case[exp.case %in% AE.cases]
+          exp.case.not_AE <- exp.case[exp.case %in% AE.cases == FALSE]
 
-      out.distance <- do.call(rbind, nearest.pump)
+          cl <- parallel::makeCluster(cores)
 
-      for (x in cholera::pumps$id) {
-        out.distance[out.distance$pump == x, "pump.name"] <-
-          cholera::pumps[cholera::pumps$id == x, "street"]
+          parallel::clusterExport(cl = cl, envir = environment(),
+            varlist = c("exp.case.AE", "g", "nodes", "edges", "nodes.pump",
+              "p.sel"))
+
+          nearest.pump <- parallel::parLapply(cl, seq_along(exp.case.AE),
+            function(i) {
+            case.node <- nodes[nodes$anchor == exp.case.AE[i], "node"]
+
+            if (is.null(p.sel)) {
+              d <- c(igraph::distances(g, case.node, nodes.pump$node,
+                weights = edges$d))
+            } else {
+              d <- c(igraph::distances(g, case.node, nodes.pump[p.sel, "node"],
+                weights = edges$d))
+            }
+
+            names(d) <- nodes.pump$pump
+            p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
+            data.frame(case = exp.case.AE[i], pump = p,
+              distance = min(d[is.infinite(d) == FALSE]))
+          })
+
+          parallel::stopCluster(cl)
+
+          out.distance <- do.call(rbind, nearest.pump)
+          out.distance.AE <- data.frame(case = exp.case.AE, pump = NA,
+            distance = NA)
+          out.distance <- rbind(out.distance, out.distance.AE)
+
+        } else if (is.null(pump.select) |
+                  (is.null(pump.select) == FALSE & 2 %in% p.sel == TRUE)) {
+
+          cl <- parallel::makeCluster(cores)
+
+          parallel::clusterExport(cl = cl, envir = environment(),
+            varlist = c("exp.case", "g", "nodes", "edges", "nodes.pump",
+              "p.sel"))
+
+          nearest.pump <- parallel::parLapply(cl, seq_along(exp.case),
+            function(i) {
+            case.node <- nodes[nodes$anchor == exp.case[i], "node"]
+
+            if (is.null(p.sel)) {
+              d <- c(igraph::distances(g, case.node, nodes.pump$node,
+                weights = edges$d))
+            } else {
+              d <- c(igraph::distances(g, case.node, nodes.pump[p.sel, "node"],
+                weights = edges$d))
+            }
+
+            names(d) <- nodes.pump$pump
+            p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
+            data.frame(case = exp.case[i], pump = p,
+              distance = min(d[is.infinite(d) == FALSE]))
+          })
+
+          parallel::stopCluster(cl)
+
+          out.distance <- do.call(rbind, nearest.pump)
+        }
+
+      } else {
+        
+        ## Adam and Eve Court (#2): 106 expected cases ##
+        if (is.null(pump.select) == FALSE & 2 %in% p.sel == FALSE) {
+          exp.case.AE <- exp.case[exp.case %in% AE.cases]
+          exp.case.not_AE <- exp.case[exp.case %in% AE.cases == FALSE]
+
+          nearest.pump <- parallel::mclapply(seq_along(exp.case.not_AE),
+            function(i) {
+
+            case.node <- nodes[nodes$anchor == exp.case.not_AE[i], "node"]
+
+            if (is.null(p.sel)) {
+              d <- c(igraph::distances(g, case.node, nodes.pump$node,
+                weights = edges$d))
+            } else {
+              d <- c(igraph::distances(g, case.node, nodes.pump[p.sel, "node"],
+                weights = edges$d))
+            }
+
+            names(d) <- nodes.pump[p.sel, "pump"]
+            p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
+            data.frame(case = exp.case.not_AE[i], pump = p,
+              distance = min(d[is.infinite(d) == FALSE]))
+          }, mc.cores = cores)
+
+          out.distance <- do.call(rbind, nearest.pump)
+          out.distance.AE <- data.frame(case = exp.case.AE, pump = NA,
+            distance = NA)
+          out.distance <- rbind(out.distance, out.distance.AE)
+
+        } else if (is.null(pump.select) |
+                  (is.null(pump.select) == FALSE & 2 %in% p.sel == TRUE)) {
+
+          nearest.pump <- parallel::mclapply(seq_along(exp.case), function(i) {
+            case.node <- nodes[nodes$anchor == exp.case[i], "node"]
+
+            if (is.null(p.sel)) {
+              d <- c(igraph::distances(g, case.node, nodes.pump$node,
+                weights = edges$d))
+            } else {
+              d <- c(igraph::distances(g, case.node, nodes.pump[p.sel, "node"],
+                weights = edges$d))
+            }
+
+            names(d) <- nodes.pump[p.sel, "pump"]
+            p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
+            data.frame(case = exp.case[i], pump = p,
+              distance = min(d[is.infinite(d) == FALSE]))
+          }, mc.cores = cores)
+
+          out.distance <- do.call(rbind, nearest.pump)
+        }
+      }
+
+      if (any(is.na(out.distance$pump))) {
+        temp <- out.distance[!is.na(out.distance$pump), ]
+        temp$pump.name <- NA
+
+        for (x in cholera::pumps$id) {
+          temp[temp$pump == x , "pump.name"] <-
+            cholera::pumps[cholera::pumps$id == x, "street"]
+        }
+
+        temp2 <- out.distance[is.na(out.distance$pump), ]
+        temp2$pump.name <- NA
+        out.distance <- rbind(temp, temp2)
+      } else {
+        for (x in cholera::pumps$id) {
+          out.distance[out.distance$pump == x , "pump.name"] <-
+            cholera::pumps[cholera::pumps$id == x, "street"]
+        }
       }
 
       out.distance <- out.distance[, c("case", "pump", "pump.name", "distance")]
@@ -193,51 +284,11 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
       out.distance$time <- distanceTime(out.distance$distance,
         time.unit = time.unit, walking.speed = walking.speed)
       out.distance <- out.distance[order(out.distance$case), ]
-
-      # nearest.path <- parallel::mclapply(seq_along(exp.case), function(i) {
-      #   case.node <- nodes[nodes$anchor == exp.case[i], "node"]
-      #   if (exp.case[i] %in% AE.cases) {
-      #     pth <- igraph::shortest_paths(g, case.node,
-      #       nodes.pump[nodes.pump$pump == 2, "node"], weights = edges$d)$vpath
-      #     # stats::setNames(pth, 2)
-      #   } else {
-      #     pth <- igraph::shortest_paths(g, case.node,
-      #       nodes.pump[nodes.pump$pump != 2, "node"], weights = edges$d)$vpath
-      #     # stats::setNames(pth, nodes.pump[nodes.pump$pump != 2, "pump"])
-      #   }
-      #   pth
-      # }, mc.cores = cores)
-
-      nearest.path <- vector("list", length = length(exp.case))
-
-      for (i in seq_along(exp.case)) {
-        case.node <- nodes[nodes$anchor == exp.case[i], "node"]
-        if (exp.case[i] %in% AE.cases) {
-          nearest.path[[i]] <- igraph::shortest_paths(g, case.node,
-            nodes.pump[nodes.pump$pump == 2, "node"], weights = edges$d)$vpath
-        } else {
-          nearest.path[[i]] <- igraph::shortest_paths(g, case.node,
-            nodes.pump[nodes.pump$pump != 2, "node"], weights = edges$d)$vpath
-        }
-        # cat(exp.case[i], "")
-      }
-
-      nearest.path <- lapply(seq_along(exp.case), function(i) {
-        if (exp.case[i] %in% AE.cases) {
-          stats::setNames(nearest.path[[i]], 2)
-        } else {
-          stats::setNames(nearest.path[[i]],
-            nodes.pump[nodes.pump$pump != 2, "pump"])
-        }
-      })
-
-      out.path <- lapply(seq_along(nearest.path), function(i) {
-        names(nearest.path[[i]][[paste(nearest.pump[[i]]$pump)]])
-      })
     }
   }
-  
-  list(path = out.path, distance = out.distance)
+
+  if (case.set == "observed") list(path = out.path, distance = out.distance)
+  else if (case.set == "expected") list(distance = out.distance)
 }
 
 pathData <- function(dat, weighted, case.set, cores, dev.mode) {
