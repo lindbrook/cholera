@@ -3,11 +3,17 @@
 #' @param pump.select Numeric.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
+#' @param compute Logical.
 #' @export
 #' @note This function documents the code that create the sim.walking.distance data frame.
 
-simWalkingDistance <- function(pump.select = 7, multi.core = FALSE,
-  dev.mode = FALSE) {
-  nearestPump(pump.select = pump.select, case.set = "expected",
-    multi.core = multi.core, dev.mode = dev.mode)$distance
+simulateWalkingDistance <- function(pump.select = 7, multi.core = FALSE,
+  dev.mode = FALSE, compute = FALSE) {
+
+  if (compute == FALSE) {
+    cholera::sim.walking.distance
+  } else {
+    nearestPump(pump.select = pump.select, case.set = "expected",
+      multi.core = multi.core, dev.mode = dev.mode)$distance
+  }
 }

@@ -1,3 +1,9 @@
+cholera 0.6.5.9033
+==================
+
+- rename and amend simWalkingDistance() to simulateWalkingDistance().
+
+
 cholera 0.6.5.9032
 ==================
 
