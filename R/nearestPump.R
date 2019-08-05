@@ -52,7 +52,11 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
     stop('metric must either be "euclidean" or "walking".')
 
   } else if (metric == "euclidean") {
-    anchors <- seq_len(nrow(cholera::regular.cases))
+    if (case.set == "observed") {
+      anchors <- cholera::fatalities.unstacked$case
+    } else if (case.set == "expected") {
+      anchors <- seq_len(nrow(cholera::regular.cases))
+    }
 
     if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
       cl <- parallel::makeCluster(cores)
@@ -68,8 +72,8 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
       }, mc.cores = cores)
     }
 
-    out <- do.call(rbind, distance.data)
-    out$anchor <- NULL
+    out.distance <- do.call(rbind, distance.data)
+    out.distance$anchor <- NULL
 
   } else if (metric == "walking") {
     dat <- neighborhoodData(vestry, case.set)
@@ -287,8 +291,9 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
     }
   }
 
-  if (case.set == "observed") list(path = out.path, distance = out.distance)
-  else if (case.set == "expected") list(distance = out.distance)
+  if (case.set == "observed" & metric == "walking") {
+    list(path = out.path, distance = out.distance)
+  } else list(distance = out.distance)
 }
 
 pathData <- function(dat, weighted, case.set, cores, dev.mode) {

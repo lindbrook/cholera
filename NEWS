@@ -1,3 +1,9 @@
+cholera 0.6.5.9034
+==================
+
+- fix nearestPump(metric = "euclidean", case.set = ("observed", "expected")).
+
+
 cholera 0.6.5.9033
 ==================
 
