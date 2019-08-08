@@ -31,11 +31,11 @@ nearestPump(pump.select = NULL, metric = "walking", vestry = FALSE,
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \value{
-An R data frame or list of 'igraph' paths.
+An R data frame or list of 'igraph' path nodes.
 }
 \description{
 Compute shortest distances or paths to selected pumps.
 }
 \note{
-Time is computed using \code{distanceTime()}.
+This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, for walking distance, computing the nearest pump for observed cases takes takes 2.4 seconds while doing so for expected cases takes about 344 seconds; for Euclidean distnace, computing the nearest pump for observed cases takes takes 3.0 seconds and 104 seconds for expected cases. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to about 1.8 and 90 seconds for walking distances; 0.9 and 25 seconds for Euclidean distances. Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See \code{vignette("parallel")} for details. Time is computed using \code{distanceTime()}.
 }

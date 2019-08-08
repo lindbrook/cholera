@@ -6,7 +6,7 @@
 #' @param simulated.obs Numeric. Number of sample cases.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R list with two elements: \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}
-#' @note This function is computationally intensive. With "simulated.obs" set to 20,000 simulated cases (actually generating 19,993 cases), the function takes about 83 minutes to run on a single core of a 2.3 GHz Intel Core i7 with R version 3.6.0 and 19 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}. In real world terms, the distance between of these simulated cases is approximately 6 meters.
+#' @note This function is computationally intensive. With "simulated.obs" set to 20,000 simulated cases (actually generating 19,993 cases), the function takes about 89 minutes to run on a single core of a 2.3 GHz Intel Core i7 with R version 3.6.1 and 21 minutes to run on eight logical (four physical) cores. This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}. In real world terms, the distance between of these simulated cases is approximately 6 meters.
 #' @export
 
 simulateFatalities <- function(compute = FALSE, multi.core = FALSE,

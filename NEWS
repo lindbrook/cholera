@@ -1,3 +1,10 @@
+cholera 0.6.5.9035
+==================
+
+- update/add benchmark timings for nearestPump(), simulateFatalities(),
+  simulateWalkingDistance(), unstackFatalities() and neighborhoodWalking().
+
+
 cholera 0.6.5.9034
 ==================
 

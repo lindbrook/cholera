@@ -20,5 +20,5 @@ simulateWalkingDistance(pump.select = 7, multi.core = FALSE,
 Compute walking distance for simulated cases.
 }
 \note{
-This function documents the code that create the sim.walking.distance data frame.
+This function is computationally intensive. On a 2.3 GHz Intel Core i7 with R version 3.6.1, it takes approximately 203 seconds to run on one core and approximately 54 seconds to run on eight logical (four physical) cores. This functions document the code that generates \code{\link{sim.walking.distance}}.
 }
