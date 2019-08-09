@@ -150,24 +150,22 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
 
           parallel::clusterExport(cl = cl, envir = environment(),
             varlist = c("exp.case.AE", "g", "nodes", "edges", "nodes.pump",
-              "p.sel"))
+              "p.sel", "pump.select"))
 
-          nearest.pump <- parallel::parLapply(cl, seq_along(exp.case.AE),
-            function(i) {
-            case.node <- nodes[nodes$anchor == exp.case.AE[i], "node"]
-
-            if (is.null(p.sel)) {
+          nearest.pump <- parallel::parLapply(cl, exp.case.not_AE, function(x) {
+            case.node <- nodes[nodes$anchor == x, "node"]
+            if (is.null(pump.select)) {
               d <- c(igraph::distances(g, case.node, nodes.pump$node,
                 weights = edges$d))
             } else {
               d <- c(igraph::distances(g, case.node, nodes.pump[p.sel, "node"],
                 weights = edges$d))
             }
-
-            names(d) <- nodes.pump$pump
+            names(d) <- p.sel
             p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
-            data.frame(case = exp.case.AE[i], pump = p,
-              distance = min(d[is.infinite(d) == FALSE]))
+            data.frame(case = x,
+                       pump = p,
+                       distance = min(d[is.infinite(d) == FALSE]))
           })
 
           parallel::stopCluster(cl)
@@ -184,24 +182,22 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
 
           parallel::clusterExport(cl = cl, envir = environment(),
             varlist = c("exp.case", "g", "nodes", "edges", "nodes.pump",
-              "p.sel"))
+            "p.sel", "pump.select"))
 
-          nearest.pump <- parallel::parLapply(cl, seq_along(exp.case),
-            function(i) {
-            case.node <- nodes[nodes$anchor == exp.case[i], "node"]
-
-            if (is.null(p.sel)) {
+          nearest.pump <- parallel::parLapply(cl, exp.case, function(x) {
+            case.node <- nodes[nodes$anchor == x, "node"]
+            if (is.null(pump.select)) {
               d <- c(igraph::distances(g, case.node, nodes.pump$node,
                 weights = edges$d))
             } else {
               d <- c(igraph::distances(g, case.node, nodes.pump[p.sel, "node"],
                 weights = edges$d))
             }
-
-            names(d) <- nodes.pump[p.sel, "pump"]
+            names(d) <- p.sel
             p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
-            data.frame(case = exp.case[i], pump = p,
-              distance = min(d[is.infinite(d) == FALSE]))
+            data.frame(case = x,
+                       pump = p,
+                       distance = min(d[is.infinite(d) == FALSE]))
           })
 
           parallel::stopCluster(cl)
