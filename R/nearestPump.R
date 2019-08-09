@@ -130,7 +130,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
              !is.na(cholera::sim.ortho.proj$road.segment)
       AE.cases <- cholera::sim.ortho.proj[sel, "case"]
 
-      ## Falconberg Court and Mews: isolate without pumps ##
+      ## Falconberg Court and Mews: isolate without pump ##
       falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
       sel <- cholera::sim.ortho.proj$road.segment %in% falconberg.ct.mews &
              !is.na(cholera::sim.ortho.proj$road.segment)
@@ -216,23 +216,20 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
           exp.case.AE <- exp.case[exp.case %in% AE.cases]
           exp.case.not_AE <- exp.case[exp.case %in% AE.cases == FALSE]
 
-          nearest.pump <- parallel::mclapply(seq_along(exp.case.not_AE),
-            function(i) {
-
-            case.node <- nodes[nodes$anchor == exp.case.not_AE[i], "node"]
-
-            if (is.null(p.sel)) {
+          nearest.pump <- parallel::mclapply(exp.case.not_AE, function(x) {
+            case.node <- nodes[nodes$anchor == x, "node"]
+            if (is.null(pump.select)) {
               d <- c(igraph::distances(g, case.node, nodes.pump$node,
                 weights = edges$d))
             } else {
               d <- c(igraph::distances(g, case.node, nodes.pump[p.sel, "node"],
                 weights = edges$d))
             }
-
-            names(d) <- nodes.pump[p.sel, "pump"]
+            names(d) <- p.sel
             p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
-            data.frame(case = exp.case.not_AE[i], pump = p,
-              distance = min(d[is.infinite(d) == FALSE]))
+            data.frame(case = x,
+                       pump = p,
+                       distance = min(d[is.infinite(d) == FALSE]))
           }, mc.cores = cores)
 
           out.distance <- do.call(rbind, nearest.pump)
@@ -243,21 +240,20 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
         } else if (is.null(pump.select) |
                   (is.null(pump.select) == FALSE & 2 %in% p.sel == TRUE)) {
 
-          nearest.pump <- parallel::mclapply(seq_along(exp.case), function(i) {
-            case.node <- nodes[nodes$anchor == exp.case[i], "node"]
-
-            if (is.null(p.sel)) {
+          nearest.pump <- parallel::mclapply(exp.case, function(x) {
+            case.node <- nodes[nodes$anchor == x, "node"]
+            if (is.null(pump.select)) {
               d <- c(igraph::distances(g, case.node, nodes.pump$node,
                 weights = edges$d))
             } else {
               d <- c(igraph::distances(g, case.node, nodes.pump[p.sel, "node"],
                 weights = edges$d))
             }
-
-            names(d) <- nodes.pump[p.sel, "pump"]
+            names(d) <- p.sel
             p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
-            data.frame(case = exp.case[i], pump = p,
-              distance = min(d[is.infinite(d) == FALSE]))
+            data.frame(case = x,
+                       pump = p,
+                       distance = min(d[is.infinite(d) == FALSE]))
           }, mc.cores = cores)
 
           out.distance <- do.call(rbind, nearest.pump)
