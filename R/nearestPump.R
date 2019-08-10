@@ -60,8 +60,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
 
     if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
       cl <- parallel::makeCluster(cores)
-      parallel::clusterExport(cl = cl, envir = environment(),
-        varlist = "observed")
+      parallel::clusterExport(cl = cl, envir = environment(), varlist = "obs")
       distance.data <- parallel::parLapply(cl, anchors, function(x) {
         cholera::euclideanPath(x, destination = p.sel, observed = obs)$data
       })

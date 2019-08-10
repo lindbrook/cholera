@@ -1,8 +1,14 @@
+cholera 0.6.5.9037
+==================
+
+- fix nearestPump(metric = "euclidean") parallel::parLapply().
+
+
 cholera 0.6.5.9036
 ==================
 
-- fix nearestPump() parallel::parLapply().
-- amend nearestPump() parallel::mclapply().
+- fix nearestPump(metric = "walking") parallel::parLapply().
+- amend nearestPump(metric = "walking") parallel::mclapply().
 
 
 cholera 0.6.5.9035
