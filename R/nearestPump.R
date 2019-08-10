@@ -47,6 +47,10 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
   }
 
   cores <- multiCore(multi.core)
+  
+  win.exception <- (.Platform$OS.type == "windows" &
+                    metric == "walking" &
+                    case.set == "expected")
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
     stop('metric must either be "euclidean" or "walking".')
@@ -58,7 +62,9 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
       anchors <- seq_len(nrow(cholera::regular.cases))
     }
 
-    if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+    if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode |
+      win.exception) {
+
       cl <- parallel::makeCluster(cores)
       parallel::clusterExport(cl = cl, envir = environment(), varlist = "obs")
       distance.data <- parallel::parLapply(cl, anchors, function(x) {
