@@ -56,7 +56,9 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     stop('case.set must be "observed", "expected" or "snow".')
   }
 
-  cores <- multiCore(multi.core)
+  if (.Platform$OS.type == "windows") cores <- 1L
+  else cores <- multiCore(multi.core)
+
   snow.colors <- snowColors(vestry = vestry)
 
   nearest.data <- nearestPump(pump.select = pump.select,
