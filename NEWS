@@ -2,6 +2,9 @@ cholera 0.6.5.9037
 ==================
 
 - fix nearestPump(metric = "euclidean") parallel::parLapply().
+- disable Windows parallel support for neighborhoodWalking().
+- disable Windows parallel support for
+  nearestPump(metric = "walking", case.set = "observed").
 
 
 cholera 0.6.5.9036
