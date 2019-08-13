@@ -57,6 +57,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   }
 
   snow.colors <- snowColors(vestry = vestry)
+  cores <- multiCore(multi.core)
 
   nearest.data <- nearestPump(pump.select = pump.select,
                               vestry = vestry,

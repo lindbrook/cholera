@@ -1,3 +1,9 @@
+cholera 0.6.5.9039
+==================
+
+- fix neighborhoodWalking(): compute cores.
+
+
 cholera 0.6.5.9038
 ==================
 
