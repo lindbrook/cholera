@@ -248,8 +248,23 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
 
       names(neighborhood.cases) <- pearl.neighborhood
 
-      periphery.cases <- lapply(neighborhood.cases, peripheryCases)
-      pearl.string <- lapply(periphery.cases, travelingSalesman)
+
+      if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
+        cl <- parallel::makeCluster(x$cores)
+        parallel::clusterExport(cl = cl, envir = environment(),
+          varlist = c("peripheryCases", "pearlStringRadius",
+          "travelingSalesman"))
+        periphery.cases <- parallel::parLapply(cl, neighborhood.cases,
+          peripheryCases)
+        pearl.string <- parallel::parLapply(cl, periphery.cases,
+          travelingSalesman)
+        parallel::stopCluster(cl)
+      } else {
+        periphery.cases <- parallel::mclapply(neighborhood.cases,
+          peripheryCases, mc.cores = x$core)
+        pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
+          mc.cores = x$cores)
+      }
 
       invisible(lapply(names(pearl.string), function(nm) {
         sel <- paste0("p", nm)

@@ -1,3 +1,11 @@
+cholera 0.6.5.9038
+==================
+
+- amend observedExpected() for parallel::parLapply().
+- disable splitOutcomes() parallel::parLapply().
+- parallelize peripheryCases() and travelingSalesman().
+
+
 cholera 0.6.5.9037
 ==================
 
