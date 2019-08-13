@@ -647,19 +647,20 @@ splitOutcomes <- function(x, splits.segs, sim.proj, splits, splits.pump) {
     data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
   }
 
-  if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
-    cl <- parallel::makeCluster(x$cores)
-    parallel::clusterExport(cl = cl, envir = environment(),
-      varlist = c("splits.segs", "sim.proj", "splits", "splits.pump"))
-    output <- parallel::parLapply(cl, seq_along(splits.segs), function(i) {
-      split_outcomes(i, splits.segs, sim.proj, splits, splits.pump)
-    })
-    parallel::stopCluster(cl)
-  } else {
+  # if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
+  #   cl <- parallel::makeCluster(x$cores)
+  #   parallel::clusterExport(cl = cl, envir = environment(),
+  #     varlist = c("splits.segs", "sim.proj", "splits", "splits.pump",
+  #     "split_outcomes"))
+  #   output <- parallel::parLapply(cl, seq_along(splits.segs), function(i) {
+  #     split_outcomes(i, splits.segs, sim.proj, splits, splits.pump)
+  #   })
+  #   parallel::stopCluster(cl)
+  # } else {
     output <- parallel::mclapply(seq_along(splits.segs), function(i) {
       split_outcomes(i, splits.segs, sim.proj, splits, splits.pump)
     }, mc.cores = x$cores)
-  }
+  # }
 
   output
 }
