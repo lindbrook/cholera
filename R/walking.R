@@ -56,9 +56,6 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     stop('case.set must be "observed", "expected" or "snow".')
   }
 
-  if (.Platform$OS.type == "windows") cores <- 1L
-  else cores <- multiCore(multi.core)
-
   snow.colors <- snowColors(vestry = vestry)
 
   nearest.data <- nearestPump(pump.select = pump.select,
@@ -247,7 +244,6 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
       }
 
       names(neighborhood.cases) <- pearl.neighborhood
-
 
       if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
         cl <- parallel::makeCluster(x$cores)
