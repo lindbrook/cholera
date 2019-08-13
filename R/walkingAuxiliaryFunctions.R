@@ -416,7 +416,8 @@ observedExpected <- function(x, n.data) {
     if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
       cl <- parallel::makeCluster(x$cores)
       parallel::clusterExport(cl = cl, envir = environment(),
-        varlist = c("edges", "p.name", "p.node", "x", "checkSegment"))
+        varlist = c("edges", "p.name", "p.node", "x", "checkSegment",
+        "splitSegments"))
       obs.partial.split.data <- parallel::parLapply(cl, obs.partial.segments,
         function(seg) splitSegments(seg, edges, p.name, p.node, x))
       parallel::stopCluster(cl)
@@ -469,7 +470,7 @@ observedExpected <- function(x, n.data) {
     if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
       cl <- parallel::makeCluster(x$cores)
       parallel::clusterExport(cl = cl, envir = environment(),
-        varlist = c("edges", "p.name", "p.node", "x"))
+        varlist = c("edges", "p.name", "p.node", "x", "splitSegments"))
       unobs.split.data <- parallel::parLapply(cl, unobs.split.segments,
         function(seg) splitSegments(seg, edges, p.name, p.node, x))
       parallel::stopCluster(cl)
