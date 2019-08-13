@@ -32,9 +32,7 @@ peripheryCases <- function(n.points, radius = pearlStringRadius()) {
 #' @note Default method for neighborhoodEuclidean().
 #' @noRd
 
-travelingSalesman <- function(vertices, cores, dev.mode,
-  tsp.method = "repetitive_nn") {
-
+travelingSalesman <- function(vertices, tsp.method = "repetitive_nn") {
   methods <- c("identity", "random", "nearest_insertion", "farthest_insertion",
     "cheapest_insertion", "arbitrary_insertion", "nn", "repetitive_nn")
 
