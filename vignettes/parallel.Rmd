@@ -1,0 +1,33 @@
+---
+title: "Parallelization"
+author: "lindbrook"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Parallelization}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = ">"
+)
+```
+
+As of version 0.7.0, the 'cholera' package has implemented parallel computation support for Windows via parallel::parLapply(). Previous versions implemented this for macOS and Unix via parallel::mclapply(). 'parallel''s documentation goes to great length to discourage the use of these functions interactively:
+
+> Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which \code{neighborhoodWalking()} uses, strongly discourage against using parallelization within a GUI or embedded environment.
+
+That said, with more recent versions of 'parallel', I have not experienced significant problems other than those due to coding issues.
+
+Function  | mclapply() | parLapply()
+------------- | ------------- | -------------
+Content Cell  | Content Cell  |
+Content Cell  | Content Cell  |
+
+
+## mclapply() v. parLapply()
+
+In theory, my understanding is that computational performance is better with mclapply() than with parLapply() due to greater overhead for the latter. With some exceptions, I have found this to be true (on macOS). This has some implications for programming: you can more easily apply mclapply() to more finely grained problems whereas parLapply() shows benefits for larger tasks.
