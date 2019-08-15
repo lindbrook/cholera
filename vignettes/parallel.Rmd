@@ -22,10 +22,35 @@ As of version 0.7.0, the 'cholera' package has implemented parallel computation 
 
 That said, with more recent versions of 'parallel', I have not experienced significant problems other than those due to coding issues.
 
-Function  | mclapply() | parLapply()
+neighborhoodWalking()  | 1 logical core | 8 logical cores
 ------------- | ------------- | -------------
-Content Cell  | Content Cell  |
-Content Cell  | Content Cell  |
+plot.walking() | 4.5  | 3.8
+plot.walking(case.set = "expected", type = "road") | 25.9  | 10.3
+plot.walking(case.set = "expected", type = "area.points") | 25.9  | 10.6
+plot.walking(case.set = "expected", type = "area.polygons") | 52.4  | 18.9
+
+
+neighborhoodEuclidean  | 1 logical core | 8 logical cores
+------------- | ------------- | -------------
+plot.euclidean() | 3.6  | 1.3
+plot.euclidean(case.set = "expected", type = "road") | 109.1  | 28.5
+plot.euclidean(case.set = "expected", type = "area.points") | 108.6  | 27.5
+plot.euclidean(case.set = "expected", type = "area.polygons") | 125.7  | 45.7
+
+
+function  | 1 logical core | 8 logical cores
+------------- | ------------- | -------------
+simulateFatalities() | 5280.5  | 1228.3
+unstackFatalities() | 163.3  | 39.5
+simulateWalkingDistance() | 204.5  | 57.9
+
+
+function  | 1 logical core | 8 logical cores
+------------- | ------------- | -------------
+nearestPump() | 2.4  | 1.8
+nearestPump(metric = "euclidean") | 3.1  | 1.0
+nearestPump(case.set = "expected") | 347.8  | 92.7
+nearestPump(metric = "euclidean", case.set = "expected") | 106.1  | 25.8
 
 
 ## mclapply() v. parLapply()
