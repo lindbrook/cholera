@@ -1,3 +1,10 @@
+cholera 0.6.5.9041
+==================
+
+- disable neighborhoodWalking() parallel Windows code.
+- amend function documentation about parallelization.
+
+
 cholera 0.6.5.9040
 ==================
 
