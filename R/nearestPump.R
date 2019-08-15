@@ -8,9 +8,9 @@
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
-#' @note This function is computationally intensive. On a single core of a 2.3 GHz Intel i7, for walking distance, computing the nearest pump for observed cases takes takes 2.4 seconds while doing so for expected cases takes about 344 seconds; for Euclidean distnace, computing the nearest pump for observed cases takes takes 3.0 seconds and 104 seconds for expected cases. Using the parallel implementation on 4 physical (8 logical) cores, these times fall to about 1.8 and 90 seconds for walking distances; 0.9 and 25 seconds for Euclidean distances. Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See \code{vignette("parallel")} for details. Time is computed using \code{distanceTime()}.
+#' @note Time is computed using \code{distanceTime()}.
 #' @export
 #' @return An R data frame or list of 'igraph' path nodes.
 
@@ -47,7 +47,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
   }
 
   cores <- multiCore(multi.core)
-  
+
   win.exception <- (.Platform$OS.type == "windows" &
                     metric == "walking" &
                     case.set == "expected")

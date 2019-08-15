@@ -23,7 +23,7 @@ An R list that includes \code{anchor.case}, \code{fatalities.address}, \code{fat
 Unstacks fatalities data by 1) assigning the coordinates of the base case to all cases in a stack and 2) setting the base case as an "address" and making the number of fatalities an attribute.
 }
 \note{
-This function is computationally intensive. On a 2.3 GHz Intel Core i7 with R version 3.6.1, it takes approximately 163 seconds to run on one core and approximately 39 seconds to run on eight logical (four physical) cores. These functions document the code that generates \code{\link{anchor.case}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
+This function is computationally intensive. This function documents the code that generates \code{\link{anchor.case}},  \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}. See \code{vignette("Parallelization")} for details.
 }
 \seealso{
 \code{vignette("unstacking.fatalities")}

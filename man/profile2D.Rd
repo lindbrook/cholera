@@ -16,7 +16,7 @@ profile2D(angle = 0, pump = 7, vestry = FALSE, type = "base",
 
 \item{type}{Character. Type of graphic: "base" or "ggplot2".}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
 }
 \description{
 2D Profile .

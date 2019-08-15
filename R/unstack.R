@@ -7,7 +7,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @seealso \code{vignette("unstacking.fatalities")}
 #' @return An R list that includes \code{anchor.case}, \code{fatalities.address}, \code{fatalities.unstacked} and \code{ortho.proj}.
-#' @note This function is computationally intensive. On a 2.3 GHz Intel Core i7 with R version 3.6.1, it takes approximately 163 seconds to run on one core and approximately 39 seconds to run on eight logical (four physical) cores. These functions document the code that generates \code{\link{anchor.case}}, \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
+#' @note This function is computationally intensive. This function documents the code that generates \code{\link{anchor.case}},  \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}. See \code{vignette("Parallelization")} for details.
 #' @export
 
 unstackFatalities <- function(multi.core = FALSE, compute = FALSE,

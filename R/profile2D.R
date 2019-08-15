@@ -4,7 +4,7 @@
 #' @param pump Numeric. Select pump as focal point.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param type Character. Type of graphic: "base" or "ggplot2".
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @import ggplot2
 #' @export
 #' @examples
@@ -182,7 +182,7 @@ orthogonalCoordinates <- function(case, pump = 7, angle = 0, vestry = FALSE,
 #' @param pump Numeric. Selected pump focal point.
 #' @param angle Numeric. Angle of perspective axis in degrees.
 #' @param vestry Logical. \code{TRUE} for the 14 pumps from Vestry Report. \code{FALSE} for the original 13 pumps.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. On Windows, only \code{multi.core = FALSE} is available.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @noRd
 
 profilePerspective <- function(output = "inside", pump = 7, angle = 0,
