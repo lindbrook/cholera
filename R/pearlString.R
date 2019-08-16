@@ -29,7 +29,6 @@ peripheryCases <- function(n.points, radius = pearlStringRadius()) {
 #'
 #' @param vertices Object. Polygon vertices candidates.
 #' @param tsp.method Character. Traveling saleman algorithm. See TSP::solve_TSP() for details. Default method is repetitive nearest neighbor: "repetitive_nn".
-#' @note Default method for neighborhoodEuclidean().
 #' @noRd
 
 travelingSalesman <- function(vertices, tsp.method = "repetitive_nn") {
