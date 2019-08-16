@@ -7,7 +7,7 @@
 #' @param interval Numeric. Interval between mileposts: 50 meters for "distance";  60 seconds for "time".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param type Character. "arrows" or "points".
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return R base graphics arrows or points.
 #' @export

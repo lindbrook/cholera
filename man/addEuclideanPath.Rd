@@ -18,7 +18,7 @@ addEuclideanPath(origin, destination = NULL, type = "case-pump",
 
 \item{observed}{Logical. Use observed or simulated expected data.}
 
-\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.}
+\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "address" is the x-y coordinate of a stack's "anchor" case. "nominal" is the x-y coordinate of a bar.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
@@ -41,5 +41,5 @@ An R list with 3 data frames: x-y coordinates for the origin and destination, an
 Add the path for the Euclidean distance between cases and/or pumps.
 }
 \note{
-The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
+Walking time is computed using \code{distanceTime()}.
 }
