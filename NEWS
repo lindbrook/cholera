@@ -1,3 +1,10 @@
+cholera 0.6.5.9042
+==================
+
+- remove isoLines() and isoVertices().
+- amend function documentation about parallelization.
+
+
 cholera 0.6.5.9041
 ==================
 
