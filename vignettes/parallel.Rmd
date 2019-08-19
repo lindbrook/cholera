@@ -16,37 +16,70 @@ knitr::opts_chunk$set(
 )
 ```
 
-As of version 0.7.0, the 'cholera' package has implemented parallel computation support for Windows via parallel::parLapply(). Previous versions implemented this for macOS and Unix via parallel::mclapply(). 'parallel''s documentation goes to great length to discourage the use of these functions interactively:
+With the release of version 0.7.0, the 'cholera' package supports parallelization of functions on Windows via parallel::parLapply() when the number of selected cores is greater than one. Previously, parallelization was only supported for macOS and Unix via parallel::mclapply().
 
-> Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which \code{neighborhoodWalking()} uses, strongly discourage against using parallelization within a GUI or embedded environment.
+My understanding is that due to greater overhead computational performance is generally better with mclapply() than with parLapply(). With some exceptions, I have found this to be true. For what it's worth, I found that you benefit from use mclapply() even on finely grained tasks or chunks of code whereas parLapply() provides real benefits only for larger tasks.
 
-That said, with more recent versions of 'parallel', I have not experienced significant problems other than those due to coding issues.
+Note that the 'parallel' package's documentation goes to great length to discourage the use of these functions interactively:
 
-| neighborhoodWalking()  | 1 logical core | 8 logical cores
+> Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment.
+
+That said, with more recent versions of 'parallel', I only rarely experience crashes. But too be safe, I've set the default to use the non-parallelized code. Where available, you can run a function in parallel by using multi.core = TRUE (you can also pass a number to select the number of logical cores).
+
+## Benchmark timings
+
+The timings below (in seconds) including those for parallel:parLapply(), which are used to support parallelization on Window, were done on a 2.3 Ghz Intel Core i7 using R version 3.6.1 on macOS 10.14.6.
+
+### parallel::mclapply()
+
+| neighborhoodWalking() | 1 logical core | 8 logical cores
 :------------- | -------------: | -------------:
-plot.walking() | 4.5  | 3.8
-plot.walking(case.set = "expected", type = "road") | 25.9  | 10.3
-plot.walking(case.set = "expected", type = "area.points") | 25.9  | 10.6
-plot.walking(case.set = "expected", type = "area.polygons") | 52.4  | 18.9
+plot.walking() | 4.5 | 3.8
+plot.walking(case.set = "expected", type = "road") | 26 | 10
+plot.walking(case.set = "expected", type = "area.points") | 26 | 11
+plot.walking(case.set = "expected", type = "area.polygons") | 52 | 19
 
-| neighborhoodEuclidean  | 1 logical core | 8 logical cores
+| neighborhoodEuclidean() | 1 logical core | 8 logical cores
 :------------- | -------------: | -------------:
-plot.euclidean() | 3.6  | 1.3
-plot.euclidean(case.set = "expected", type = "road") | 109.1  | 28.5
-plot.euclidean(case.set = "expected", type = "area.points") | 108.6  | 27.5
-plot.euclidean(case.set = "expected", type = "area.polygons") | 125.7  | 45.7
+plot.euclidean() | 3.6 | 1.3
+plot.euclidean(case.set = "expected", type = "road") | 109 | 28
+plot.euclidean(case.set = "expected", type = "area.points") | 109 | 28
+plot.euclidean(case.set = "expected", type = "area.polygons") | 126 | 46
 
-| function  | 1 logical core | 8 logical cores
+| function | 1 logical core | 8 logical cores
 :------------- | -------------: | -------------:
-simulateFatalities() | 5280.5  | 1228.3
-unstackFatalities() | 163.3  | 39.5
-simulateWalkingDistance() | 204.5  | 57.9
-nearestPump() | 2.4  | 1.8
-nearestPump(metric = "euclidean") | 3.1  | 1.0
-nearestPump(case.set = "expected") | 347.8  | 92.7
-nearestPump(metric = "euclidean", case.set = "expected") | 106.1  | 25.8
+nearestPump() | 2.4 | 1.8
+nearestPump(metric = "euclidean") | 3.1 | 1.0
+nearestPump(case.set = "expected") | 348 | 93
+nearestPump(metric = "euclidean", case.set = "expected") | 106 | 26
+simulateFatalities() | 5280 | 1228
+unstackFatalities() | 163 | 40
+simulateWalkingDistance() | 204 | 58
 
+### parallel::parLapply()
 
-## mclapply() v. parLapply()
+neighborhoodWalking() | 1 logical core | 8 logical cores
+:------------- | -------------: | -------------:
+plot.walking() | 5.9  | 11.6
+plot.walking(case.set = "expected", type = "road") | 26 | 29
+plot.walking(case.set = "expected", type = "area.points") | 29 | 34
+plot.walking(case.set = "expected", type = "area.polygons") | 55 | 46
 
-In theory, my understanding is that computational performance is better with mclapply() than with parLapply() due to greater overhead for the latter. With some exceptions, I have found this to be true (on macOS). This has some implications for programming: you can more easily apply mclapply() to more finely grained problems whereas parLapply() shows benefits for larger tasks.
+> Note that due to its performance, parallelization is not automatically available on Windows for neighborhoodWalking(). If you want to use it, you'll need to dev.mode = TRUE.
+
+| neighborhoodEuclidean() | 1 logical core | 8 logical cores
+:------------- | -------------: | -------------:
+plot.euclidean() | 4.2 | 3.7
+plot.euclidean(case.set = "expected", type = "road") | 108 | 32
+plot.euclidean(case.set = "expected", type = "area.points") | 107 | 31
+plot.euclidean(case.set = "expected", type = "area.polygons") | 124 | 48
+
+| function | 1 logical core | 8 logical cores
+:------------- | -------------: | -------------:
+simulateFatalities() | 5116 | 1273
+unstackFatalities() | 164 | 50
+simulateWalkingDistance() | 200 | 73
+nearestPump() | 3.6 | 9.6
+nearestPump(metric = "euclidean") | 3.8  | 3.3
+nearestPump(case.set = "expected") | 345 | 96
+nearestPump(metric = "euclidean", case.set = "expected") | 106 | 29
