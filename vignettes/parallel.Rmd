@@ -16,15 +16,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-With the release of version 0.7.0, the 'cholera' package supports parallelization of functions on Windows via parallel::parLapply() when the number of selected cores is greater than one. Previously, parallelization was only supported for macOS and Unix via parallel::mclapply().
+'cholera' supports parallelization via parallel::mclapply(), for macOS and Unix, and via parallel::parLapply(), for Windows.
 
-My understanding is that due to greater overhead computational performance is generally better with mclapply() than with parLapply(). With some exceptions, I have found this to be true. For what it's worth, I found that you benefit from use mclapply() even on finely grained tasks or chunks of code whereas parLapply() provides real benefits only for larger tasks.
+By default, for reasons discussed below, parallelization is turned off. For functions that support it, to enable it you need only set "multi.core = TRUE". You can also pass a value for the number of logical cores to use. To avoid paging to disk, you'd benefit from having adequate RAM: 16 GB is more than adequate for functions in this package.
 
 Note that the 'parallel' package's documentation goes to great length to discourage the use of these functions interactively:
 
-> Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment.
-
-That said, with more recent versions of 'parallel', I only rarely experience crashes. But too be safe, I've set the default to use the non-parallelized code. Where available, you can run a function in parallel by using multi.core = TRUE (you can also pass a number to select the number of logical cores).
+> Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. That said, with more recent versions of 'parallel', I only rarely experience crashes. But to be safe, I've set "multi.core = FALSE".
 
 ## Benchmark timings
 
@@ -65,7 +63,7 @@ plot.walking(case.set = "expected", type = "road") | 26 | 29
 plot.walking(case.set = "expected", type = "area.points") | 29 | 34
 plot.walking(case.set = "expected", type = "area.polygons") | 55 | 46
 
-> Note that due to its performance, parallelization is not automatically available on Windows for neighborhoodWalking(). If you want to use it, you'll need to dev.mode = TRUE.
+> Note that due to its performance, parallelization is not automatically enabled on Windows for neighborhoodWalking(). If you want to use it, you need to set dev.mode = TRUE.
 
 | neighborhoodEuclidean() | 1 logical core | 8 logical cores
 :------------- | -------------: | -------------:
@@ -76,10 +74,16 @@ plot.euclidean(case.set = "expected", type = "area.polygons") | 124 | 48
 
 | function | 1 logical core | 8 logical cores
 :------------- | -------------: | -------------:
-simulateFatalities() | 5116 | 1273
-unstackFatalities() | 164 | 50
-simulateWalkingDistance() | 200 | 73
 nearestPump() | 3.6 | 9.6
 nearestPump(metric = "euclidean") | 3.8  | 3.3
 nearestPump(case.set = "expected") | 345 | 96
 nearestPump(metric = "euclidean", case.set = "expected") | 106 | 29
+simulateFatalities() | 5116 | 1273
+unstackFatalities() | 164 | 50
+simulateWalkingDistance() | 200 | 73
+
+> Note that due to its performance, parallelization is not automatically enabled on Windows for nearestPump(metric = "walking", case.set = "observed"). If you want to use it, you need to set dev.mode = TRUE.
+
+## Note on mclapply() v. parLapply()
+
+My understanding is that due to greater overhead, mclapply() generally outperforms parLapply(). Related to to this, I found that that in contrast to parLapply(), I was more likely to see benefits from using mclapply() especially when applied to finely grained tasks (smaller chunks of code). This has two implications: first, it made the code less easily portable to Windows; second, it opens up the possibility of future optimization.
