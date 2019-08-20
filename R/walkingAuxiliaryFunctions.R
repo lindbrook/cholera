@@ -39,14 +39,16 @@ checkSegment <- function(s, dat, edges, p.node, sub.edge = FALSE) {
 }
 
 wholeSegments <- function(segs, dat, edges, p.name, p.node, x) {
-  # if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
   if (x$dev.mode) {
     cl <- parallel::makeCluster(x$cores)
+
     parallel::clusterExport(cl = cl, envir = environment(),
       varlist = c("dat", "edges", "p.node"))
+
     distances <- parallel::parLapply(cl, segs, function(s) {
       checkSegment(s, dat, edges, p.node)
     })
+
     parallel::stopCluster(cl)
   } else {
     distances <- parallel::mclapply(segs, checkSegment, dat, edges, p.node,
@@ -414,14 +416,16 @@ observedExpected <- function(x, n.data) {
   obs.partial.segments <- setdiff(partial.segs, unlist(obs.partial.whole))
 
   if (length(obs.partial.segments) > 0) {
-    # if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
     if (x$dev.mode) {
       cl <- parallel::makeCluster(x$cores)
+
       parallel::clusterExport(cl = cl, envir = environment(),
         varlist = c("edges", "p.name", "p.node", "x", "checkSegment",
         "splitSegments"))
+
       obs.partial.split.data <- parallel::parLapply(cl, obs.partial.segments,
         function(seg) splitSegments(seg, edges, p.name, p.node, x))
+
       parallel::stopCluster(cl)
     } else {
       obs.partial.split.data <- parallel::mclapply(obs.partial.segments,
@@ -469,13 +473,15 @@ observedExpected <- function(x, n.data) {
   unobs.split.segments <- setdiff(unobs.segments, unlist(unobs.whole))
 
   if (length(unobs.split.segments) > 0) {
-    # if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
     if (x$dev.mode) {
       cl <- parallel::makeCluster(x$cores)
+
       parallel::clusterExport(cl = cl, envir = environment(),
         varlist = c("edges", "p.name", "p.node", "x", "splitSegments"))
+
       unobs.split.data <- parallel::parLapply(cl, unobs.split.segments,
         function(seg) splitSegments(seg, edges, p.name, p.node, x))
+
       parallel::stopCluster(cl)
     } else {
       unobs.split.data <- parallel::mclapply(unobs.split.segments,
@@ -570,7 +576,6 @@ neighborhoodPathData <- function(x) {
     p.name <- p.data$pump
   }
 
-  # if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
   if (x$dev.mode) {
     neighborhood.path.edges <- lapply(x$paths, function(neigh) {
       lapply(neigh, auditEdge, edges)
@@ -651,7 +656,6 @@ splitOutcomes <- function(x, splits.segs, sim.proj, splits, splits.pump) {
     data.frame(case = sim.data$case, pump = splits.pump[[i]][sel])
   }
 
-  # if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
   if (x$dev.mode) {
     cl <- parallel::makeCluster(x$cores)
     parallel::clusterExport(cl = cl, envir = environment(),

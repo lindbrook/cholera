@@ -48,9 +48,9 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
 
   cores <- multiCore(multi.core)
 
-  win.exception <- (.Platform$OS.type == "windows" &
-                    metric == "walking" &
-                    case.set == "expected")
+  w1 <- (.Platform$OS.type == "windows" & metric == "euclidean" & cores > 1)
+  w2 <- (.Platform$OS.type == "windows" & case.set == "expected" & cores > 1)
+  win.exception <- (w1 | w2)
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
     stop('metric must either be "euclidean" or "walking".')
@@ -62,9 +62,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
       anchors <- seq_len(nrow(cholera::regular.cases))
     }
 
-    if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode |
-      win.exception) {
-
+    if (dev.mode | win.exception) {
       cl <- parallel::makeCluster(cores)
       parallel::clusterExport(cl = cl, envir = environment(), varlist = "obs")
       distance.data <- parallel::parLapply(cl, anchors, function(x) {
@@ -84,7 +82,8 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
     dat <- neighborhoodData(vestry, case.set)
 
     if (case.set == "observed") {
-      path.data <- pathData(dat, weighted, case.set, cores, dev.mode)
+      path.data <- pathData(dat, weighted, case.set, cores, dev.mode,
+        win.exception)
 
       distance.data <- lapply(path.data$distances, function(x) {
         if (is.null(pump.select)) {
@@ -144,8 +143,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
       case <- nodes[nodes$anchor != 0 & nodes$anchor < 20000, "anchor"]
       exp.case <- case[case %in% FCM.cases == FALSE]
 
-      if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
-
+      if (dev.mode | win.exception) {
         ## Adam and Eve Court (#2): 106 expected cases ##
         if (is.null(pump.select) == FALSE & 2 %in% p.sel == FALSE) {
           exp.case.AE <- exp.case[exp.case %in% AE.cases]
@@ -293,7 +291,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
   } else list(distance = out.distance)
 }
 
-pathData <- function(dat, weighted, case.set, cores, dev.mode) {
+pathData <- function(dat, weighted, case.set, cores, dev.mode, win.exception) {
   g <- dat$g
   nodes <- dat$nodes
   edges <- dat$edges
@@ -307,13 +305,11 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode) {
   AE.cases <- cholera::sim.ortho.proj[sel, "case"]
 
   paths <- function(x) {
-    if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+    if (dev.mode | win.exception) {
       cl <- parallel::makeCluster(cores)
-
       parallel::clusterExport(cl = cl, envir = environment(),
         varlist = c("weighted", "case.set", "g", "nodes", "edges",
           "nodes.pump"))
-
       pths <- parallel::parLapply(cl, x, function(a) {
         case.node <- nodes[nodes$anchor == a, "node"]
         if (weighted) {
@@ -400,13 +396,11 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode) {
   }
 
   distances <- function(x) {
-    if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+    if (dev.mode | win.exception) {
       cl <- parallel::makeCluster(cores)
-
       parallel::clusterExport(cl = cl, envir = environment(),
         varlist = c("weighted", "case.set", "g", "nodes", "edges",
           "nodes.pump"))
-
       dists <- parallel::parLapply(cl, x, function(a) {
         case.node <- nodes[nodes$anchor == a, "node"]
         if (weighted) {

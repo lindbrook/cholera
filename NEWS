@@ -1,3 +1,10 @@
+cholera 0.6.5.9043
+==================
+
+- copyedit parallelization vignette
+- amend windows parallel exception for neighborhoodWalking() and nearestPump().
+
+
 cholera 0.6.5.9042
 ==================
 
