@@ -1,7 +1,14 @@
+cholera 0.6.5.9044
+==================
+
+- update parLapply() benchmark timings.
+- copyedit parallelization vignette.
+
+
 cholera 0.6.5.9043
 ==================
 
-- copyedit parallelization vignette
+- copyedit parallelization vignette.
 - amend windows parallel exception for neighborhoodWalking() and nearestPump().
 
 

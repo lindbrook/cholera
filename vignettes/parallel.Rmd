@@ -58,29 +58,29 @@ simulateWalkingDistance() | 204 | 58
 
 neighborhoodWalking() | 1 logical core | 8 logical cores
 :------------- | -------------: | -------------:
-plot.walking() | 5.9  | 11.6
-plot.walking(case.set = "expected", type = "road") | 26 | 29
-plot.walking(case.set = "expected", type = "area.points") | 29 | 34
-plot.walking(case.set = "expected", type = "area.polygons") | 55 | 46
+plot.walking() | 5.6  | 11.6
+plot.walking(case.set = "expected", type = "road") | 30 | 36
+plot.walking(case.set = "expected", type = "area.points") | 30 | 36
+plot.walking(case.set = "expected", type = "area.polygons") | 56 | 48
 
 > Note that due to its performance, parallelization is not automatically enabled on Windows for neighborhoodWalking(). If you want to use it, you need to set dev.mode = TRUE.
 
 | neighborhoodEuclidean() | 1 logical core | 8 logical cores
 :------------- | -------------: | -------------:
-plot.euclidean() | 4.2 | 3.7
+plot.euclidean() | 4.2 | 3.8
 plot.euclidean(case.set = "expected", type = "road") | 108 | 32
 plot.euclidean(case.set = "expected", type = "area.points") | 107 | 31
 plot.euclidean(case.set = "expected", type = "area.polygons") | 124 | 48
 
 | function | 1 logical core | 8 logical cores
 :------------- | -------------: | -------------:
-nearestPump() | 3.6 | 9.6
-nearestPump(metric = "euclidean") | 3.8  | 3.3
-nearestPump(case.set = "expected") | 345 | 96
+nearestPump() | 3.6 | 9.8
+nearestPump(metric = "euclidean") | 3.8  | 3.4
+nearestPump(case.set = "expected") | 345 | 94
 nearestPump(metric = "euclidean", case.set = "expected") | 106 | 29
-simulateFatalities() | 5116 | 1273
-unstackFatalities() | 164 | 50
-simulateWalkingDistance() | 200 | 73
+simulateFatalities() | 5094 | 1268
+unstackFatalities() | 163 | 50
+simulateWalkingDistance() | 200 | 72
 
 > Note that due to its performance, parallelization is not automatically enabled on Windows for nearestPump(metric = "walking", case.set = "observed"). If you want to use it, you need to set dev.mode = TRUE.
 
