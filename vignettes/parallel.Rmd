@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 'cholera' supports parallelization via parallel::mclapply(), for macOS and Unix, and via parallel::parLapply(), for Windows.
 
-By default, for reasons discussed below, parallelization is turned off. For functions that support it, to enable it you need only set "multi.core = TRUE". You can also pass a value for the number of logical cores to use. To avoid paging to disk, you'd benefit from having adequate RAM: 16 GB is more than adequate for functions in this package.
+By default, for reasons discussed below, parallelization is turned off. For functions that support it, to enable it you need only set "multi.core = TRUE". You can also pass a value for the number of logical cores to use. To avoid paging to disk, you should having adequate RAM. A conservative estimate is that a thread/job can take up to 500 MB. That means if you're running on 8 cores, eight threads will take approximately 4 GB of memory.
 
 Note that the 'parallel' package's documentation goes to great length to discourage the use of these functions interactively:
 
@@ -26,7 +26,7 @@ Note that the 'parallel' package's documentation goes to great length to discour
 
 ## Benchmark timings
 
-The timings below (in seconds) including those for parallel:parLapply(), which are used to support parallelization on Window, were done on a 2.3 Ghz Intel Core i7 using R version 3.6.1 on macOS 10.14.6.
+The timings below (in seconds) including those for parallel:parLapply(), which are used to support parallelization on Window, were done on a 2.3 Ghz Intel Core i7 using the 'microbenchmark' package with R version 3.6.1 on macOS 10.14.6.
 
 ### parallel::mclapply()
 
