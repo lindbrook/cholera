@@ -16,17 +16,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-'cholera' supports parallelization via parallel::mclapply(), for macOS and Unix, and via parallel::parLapply(), for Windows.
+The 'cholera' package supports parallelization of certain functions using the 'parallel' package, which is included in R's base distribution. On macOS and Unix, this is done using parallel::mclapply(); on Windows, this is done using parallel::parLapply(). For reasons discussed below, parallelization is off by default. For functions that support it, you need to set "multi.core = TRUE"; this will use all of your machine's logical cores. You can also pass the number of logical cores you want to use. To check the number of available cores, use `parallel::detectCores()`. To avoid the performance penalties of paging to disk, you should having adequate RAM. A conservative estimate is that each task can take up to 500 MB. So if you're running on jobs on 8 cores, you'll need at least 4GB of available RAM.
 
-By default, for reasons discussed below, parallelization is turned off. For functions that support it, to enable it you need only set "multi.core = TRUE". You can also pass a value for the number of logical cores to use. To avoid paging to disk, you should having adequate RAM. A conservative estimate is that a thread/job can take up to 500 MB. That means if you're running on 8 cores, eight threads will take approximately 4 GB of memory.
-
-Note that the 'parallel' package's documentation goes to great length to discourage the use of these functions interactively:
+The reason that parallelization is off by default is that 'parallel' package's documentation goes to great length to discourage the use of these functions interactively:
 
 > Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. That said, with more recent versions of 'parallel', I only rarely experience crashes. But to be safe, I've set "multi.core = FALSE".
 
+That said, with more recent versions of 'parallel', I have not experienced crashes either in the R application or in RStudio.
+
 ## Benchmark timings
 
-The timings below (in seconds) including those for parallel:parLapply(), which are used to support parallelization on Window, were done on a 2.3 Ghz Intel Core i7 using the 'microbenchmark' package with R version 3.6.1 on macOS 10.14.6.
+The timings below (in seconds) were done on a 2.3 Ghz Intel Core i7 using the 'microbenchmark' package with R version 3.6.1 on macOS 10.14.6. This includes timings for parallel:parLapply(), which is the function used to support parallelization on Windows.
 
 ### parallel::mclapply()
 
@@ -84,6 +84,8 @@ simulateWalkingDistance() | 200 | 72
 
 > Note that due to its performance, parallelization is not automatically enabled on Windows for nearestPump(metric = "walking", case.set = "observed"). If you want to use it, you need to set dev.mode = TRUE.
 
-## Note on mclapply() v. parLapply()
+## Programming: mclapply() v. parLapply()
 
-My understanding is that due to greater overhead, mclapply() generally outperforms parLapply(). Related to to this, I found that that in contrast to parLapply(), I was more likely to see benefits from using mclapply() especially when applied to finely grained tasks (smaller chunks of code). This has two implications: first, it made the code less easily portable to Windows; second, it opens up the possibility of future optimization.
+My understanding is that due to greater overhead, mclapply() generally outperforms parLapply().
+In terms of writing code, I've found that even when applied to finely grained tasks (smaller chunks of code) I was more likely to see benefits from using mclapply() than when using parLapply(). With the latter, I found that you're more easily penalized: tasks took longer to run in parallel than in serial.
+

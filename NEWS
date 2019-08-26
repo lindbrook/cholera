@@ -1,3 +1,10 @@
+cholera 0.6.5.9045
+==================
+
+- update cran-comments (except R-devel).
+- copyedit parallelization vignette.
+
+
 cholera 0.6.5.9044
 ==================
 
