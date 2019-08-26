@@ -1,6 +1,6 @@
 ### Test environments
 
-* local OS X install, R 3.6.0 (2019-04-26)
+* local OS X install, R 3.6.1 (2019-07-05)
 * win-builder ("R-devel", "R-oldrelease" and "R-release")
 
 
@@ -8,22 +8,22 @@
 
 1 Note:
 
-Version: 0.6.0
+Version: 0.6.5
 Check: installed package size
 Result: NOTE
-     installed size is 5.9Mb
+     installed size is 5.6Mb
      sub-directories of 1Mb or more:
-     doc 2.8Mb
-     help 1.8Mb
+     data 1.0Mb
+     doc 1.6Mb
+     help 2.3Mb
 Flavor: r-patched-solaris-x86
-
 
 ### R CMD check results
 
-R 3.6.0 (2019-04-26), x86_64-apple-darwin15.6.0 (64-bit):
+R 3.6.1 (2019-07-05), x86_64-apple-darwin15.6.0 (64-bit):
 * 0 errors | 0 warnings | 0 notes
 
-R-release: 3.6.0 (2019-04-26): x86_64-w64-mingw32 (64-bit)
+R-release: 3.6.1 (2019-07-05): x86_64-w64-mingw32 (64-bit)
 * 0 errors | 0 warnings | 0 notes
 
 R-devel: R Under development (2019-06-05 r76674): x86_64-w64-mingw32 (64-bit)
