@@ -26,9 +26,6 @@ R 3.6.1 (2019-07-05), x86_64-apple-darwin15.6.0 (64-bit):
 R-release: 3.6.1 (2019-07-05): x86_64-w64-mingw32 (64-bit)
 * 0 errors | 0 warnings | 0 notes
 
-R-devel: R Under development (2019-06-05 r76674): x86_64-w64-mingw32 (64-bit)
-* 0 errors | 0 warnings | 0 notes
-
 R-oldrelease: R 3.5.3 (2019-03-11): x86_64-w64-mingw32 (64-bit)
 * 0 errors | 0 warnings | 0 notes
 
