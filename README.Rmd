@@ -103,15 +103,15 @@ plot(neighborhoodVoronoi())
 To explore "observed" walking neighborhoods, use `neighborhoodWalking()` with the `pump.select` argument:
 
 ```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
-plot(neighborhoodWalking(6:7))
-plot(neighborhoodWalking(-7))
+plot(neighborhoodWalking(pump.select = 6:7))
+plot(neighborhoodWalking(pump.select = -7))
 ```
 
 To explore "expected" walking neighborhoods, add the case.set = "expected" argument:
 
 ```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
-plot(neighborhoodWalking(6:7, case.set = "expected"), type = "area.polygons")
-plot(neighborhoodWalking(-7, case.set = "expected"), type = "area.polygons")
+plot(neighborhoodWalking(pump.select =  6:7, case.set = "expected"), type = "area.polygons")
+plot(neighborhoodWalking(pump.select = -7, case.set = "expected"), type = "area.polygons")
 ```
 
 #### exploring Euclidean neighborhoods
@@ -119,15 +119,15 @@ plot(neighborhoodWalking(-7, case.set = "expected"), type = "area.polygons")
 To explore "observed" Euclidean neighborhoods, use `neighborhoodEuclidean()` with the `pump.select` argument:
 
 ```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
-plot(neighborhoodEuclidean(6:7))
-plot(neighborhoodEuclidean(-7))
+plot(neighborhoodEuclidean(pump.select = 6:7))
+plot(neighborhoodEuclidean(pump.select = -7))
 ```
 
 To explore "expected" Euclidean neighborhoods, use `neighborhoodVoronoi()` with the `pump.select` argument:
 
 ```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
-plot(neighborhoodVoronoi(6:7))
-plot(neighborhoodVoronoi(-7))
+plot(neighborhoodVoronoi(pump.select = 6:7))
+plot(neighborhoodVoronoi(pump.select = -7))
 ```
 
 #### note on computational performance

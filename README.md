@@ -162,8 +162,8 @@ To explore “observed” walking neighborhoods, use `neighborhoodWalking()`
 with the `pump.select` argument:
 
 ``` r
-plot(neighborhoodWalking(6:7))
-plot(neighborhoodWalking(-7))
+plot(neighborhoodWalking(pump.select = 6:7))
+plot(neighborhoodWalking(pump.select = -7))
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-7-2.png" width="50%" />
@@ -173,8 +173,8 @@ To explore “expected” walking neighborhoods, add the case.set =
 argument:
 
 ``` r
-plot(neighborhoodWalking(6:7, case.set = "expected"), type = "area.polygons")
-plot(neighborhoodWalking(-7, case.set = "expected"), type = "area.polygons")
+plot(neighborhoodWalking(pump.select =  6:7, case.set = "expected"), type = "area.polygons")
+plot(neighborhoodWalking(pump.select = -7, case.set = "expected"), type = "area.polygons")
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-8-2.png" width="50%" />
@@ -185,8 +185,8 @@ To explore “observed” Euclidean neighborhoods, use
 `neighborhoodEuclidean()` with the `pump.select` argument:
 
 ``` r
-plot(neighborhoodEuclidean(6:7))
-plot(neighborhoodEuclidean(-7))
+plot(neighborhoodEuclidean(pump.select = 6:7))
+plot(neighborhoodEuclidean(pump.select = -7))
 ```
 
 <img src="man/figures/README-unnamed-chunk-9-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-9-2.png" width="50%" />
@@ -195,8 +195,8 @@ To explore “expected” Euclidean neighborhoods, use
 `neighborhoodVoronoi()` with the `pump.select` argument:
 
 ``` r
-plot(neighborhoodVoronoi(6:7))
-plot(neighborhoodVoronoi(-7))
+plot(neighborhoodVoronoi(pump.select = 6:7))
+plot(neighborhoodVoronoi(pump.select = -7))
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
