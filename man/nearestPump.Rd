@@ -26,7 +26,7 @@ nearestPump(pump.select = NULL, metric = "walking", vestry = FALSE,
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallel")} for details.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }

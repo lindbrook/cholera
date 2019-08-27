@@ -209,7 +209,7 @@ the base R distribution: to enable parallelization, set `multi.core =
 TRUE` where available. Note that although some precautions are taken in
 R.app on macOS, the developers of the ‘parallel’ package strongly
 discourage against using parallelization within a GUI or embedded
-environment. See `vignette("parallel")` for details.
+environment. See `vignette("Parallelization")` for details.
 
 #### vignettes
 
