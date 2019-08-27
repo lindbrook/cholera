@@ -8,7 +8,7 @@ unstackFatalities(multi.core = FALSE, compute = FALSE,
   fatalities = fixFatalities(), dev.mode = FALSE)
 }
 \arguments{
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores. See \code{vignette("Parallelization")} for details.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores. See \code{vignette("Parallel")} for details.}
 
 \item{compute}{Logical. \code{TRUE} computes data. \code{FALSE} uses pre-computed data.}
 

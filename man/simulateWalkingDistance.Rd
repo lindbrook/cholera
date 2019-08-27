@@ -20,5 +20,5 @@ simulateWalkingDistance(pump.select = 7, multi.core = FALSE,
 Compute walking distance for simulated cases.
 }
 \note{
-This function is computationally intensive. See \code{vignette("Parallelization")} for details. This functions document the code that generates \code{\link{sim.walking.distance}}.
+This function is computationally intensive. See \code{vignette("Parallel")} for details. This functions document the code that generates \code{\link{sim.walking.distance}}.
 }

@@ -11,7 +11,7 @@
 #' @param polygon.type Character. "perimeter" or "solid".
 #' @param polygon.col Character.
 #' @param polygon.lwd Numeric.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallel")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @import graphics
 #' @export
