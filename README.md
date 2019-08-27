@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.6.5.9045-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.0-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -24,6 +24,8 @@
     location of the Broad Street pump.
   - Adds two aggregate time series fatalities data sets, taken from the
     Vestry report.
+  - With ‘cholera’ version 0.7.0, support for parallel computation now
+    includes Windows in addition to Linux and macOS.
 
 #### getting started
 
@@ -201,23 +203,13 @@ plot(neighborhoodVoronoi(-7))
 
 #### note on computational performance
 
-`neighborhoodWalking()` and `neighborhoodEuclidean()` are
-computationally intensive. Using R version 3.6.0 on a single core of a
-2.3 GHz Intel i7 on macOS, the former plots observed paths to PDF in
-about 4.4 seconds and expected paths in 27 seconds. Using the function’s
-parallel implementation on 4 physical (8 logical) cores, the times fall
-to about 3.9 and 12 seconds. The latter plots observed paths to PDF in
-about 3.6 seconds and expected paths in 109 seconds. Using the
-function’s parallel implementation on 4 physical (8 logical) cores,
-the times fall to about 1.4 and 28 seconds.
-
-Parallelization is available on Linux, Mac and Windows. The Windows
-version is in beta testing.
-
-Also, note that although some precautions are taken in R.app on macOS,
-the developers of the ‘parallel’ package, which both functions use,
-strongly discourage against using parallelization within a GUI or
-embedded environment. See `vignette("parallel")` for details.
+Support for parallel computation for selected functions on Linux, Mac
+and Windows implemented using the ‘parallel’ package, which is part of
+the base R distribution: to enable parallelization, set `multi.core =
+TRUE` where available. Note that although some precautions are taken in
+R.app on macOS, the developers of the ‘parallel’ package strongly
+discourage against using parallelization within a GUI or embedded
+environment. See `vignette("parallel")` for details.
 
 #### vignettes
 
