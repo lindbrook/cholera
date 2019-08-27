@@ -87,5 +87,5 @@ simulateWalkingDistance() | 200 | 72
 ## Programming: mclapply() v. parLapply()
 
 My understanding is that due to greater overhead, mclapply() generally outperforms parLapply().
-In terms of writing code, I've found that even when applied to finely grained tasks (smaller chunks of code) I was more likely to see benefits from using mclapply() than when using parLapply(). With the latter, I found that you're more easily penalized: tasks took longer to run in parallel than in serial.
+In terms of writing code, I've found that even when applied to finely grained tasks (smaller chunks of code) I was more likely to see benefits from using mclapply() than when using parLapply(). With the latter, I found that you're actually more easily penalized: there will be jobs that take longer to run in parallel than in serial.
 
