@@ -1,0 +1,111 @@
+Parallelization
+================
+lindbrook
+2019-08-28
+
+The ‘cholera’ package supports parallelization of certain functions
+using the ‘parallel’ package, which is included in R’s base
+distribution. On macOS and Unix, this is done using
+parallel::mclapply(); on Windows, this is done using
+parallel::parLapply(). For reasons discussed below, parallelization is
+off by default. For functions that support it, you need to set
+“multi.core = TRUE”; this will use all of your machine’s logical
+cores. You can also pass the number of logical cores you want to use. To
+check the number of available cores, use `parallel::detectCores()`. To
+avoid the performance penalties of paging to disk, you should having
+adequate RAM. A conservative estimate is that each task can take up to
+500 MB. So if you’re running on jobs on 8 cores, you’ll need at least
+4GB of available RAM.
+
+The reason that parallelization is off by default is that ‘parallel’
+package’s documentation goes to great length to discourage the use of
+these functions interactively:
+
+> Note that although some precautions are taken in R.app on macOS, the
+> developers of the ‘parallel’ package, which neighborhoodWalking()
+> uses, strongly discourage against using parallelization within a GUI
+> or embedded environment. That said, with more recent versions of
+> ‘parallel’, I only rarely experience crashes. But to be safe, I’ve
+> set “multi.core = FALSE”.
+
+That said, with more recent versions of ‘parallel’, I have not
+experienced crashes either in the R application or in RStudio.
+
+## Benchmark timings
+
+The timings below (in seconds) were done on a 2.3 Ghz Intel Core i7
+using the ‘microbenchmark’ package with R version 3.6.1 on macOS
+10.14.6. This includes timings for parallel:parLapply(), which is the
+function used to support parallelization on
+Windows.
+
+### parallel::mclapply()
+
+| neighborhoodWalking()                                       | 1 logical core | 8 logical cores |
+| :---------------------------------------------------------- | -------------: | --------------: |
+| plot.walking()                                              |            4.5 |             3.8 |
+| plot.walking(case.set = “expected”, type = “road”)          |             26 |              10 |
+| plot.walking(case.set = “expected”, type = “area.points”)   |             26 |              11 |
+| plot.walking(case.set = “expected”, type = “area.polygons”) |             52 |              19 |
+
+| neighborhoodEuclidean()                                       | 1 logical core | 8 logical cores |
+| :------------------------------------------------------------ | -------------: | --------------: |
+| plot.euclidean()                                              |            3.6 |             1.3 |
+| plot.euclidean(case.set = “expected”, type = “road”)          |            109 |              28 |
+| plot.euclidean(case.set = “expected”, type = “area.points”)   |            109 |              28 |
+| plot.euclidean(case.set = “expected”, type = “area.polygons”) |            126 |              46 |
+
+| function                                                 | 1 logical core | 8 logical cores |
+| :------------------------------------------------------- | -------------: | --------------: |
+| nearestPump()                                            |            2.4 |             1.8 |
+| nearestPump(metric = “euclidean”)                        |            3.1 |             1.0 |
+| nearestPump(case.set = “expected”)                       |            348 |              93 |
+| nearestPump(metric = “euclidean”, case.set = “expected”) |            106 |              26 |
+| simulateFatalities()                                     |           5280 |            1228 |
+| unstackFatalities()                                      |            163 |              40 |
+| simulateWalkingDistance()                                |            204 |              58 |
+
+### parallel::parLapply()
+
+| neighborhoodWalking()                                       | 1 logical core | 8 logical cores |
+| :---------------------------------------------------------- | -------------: | --------------: |
+| plot.walking()                                              |            5.6 |            11.6 |
+| plot.walking(case.set = “expected”, type = “road”)          |             30 |              36 |
+| plot.walking(case.set = “expected”, type = “area.points”)   |             30 |              36 |
+| plot.walking(case.set = “expected”, type = “area.polygons”) |             56 |              48 |
+
+> Note that due to its performance, parallelization is not automatically
+> enabled on Windows for neighborhoodWalking(). If you want to use it,
+> you need to set dev.mode =
+TRUE.
+
+| neighborhoodEuclidean()                                       | 1 logical core | 8 logical cores |
+| :------------------------------------------------------------ | -------------: | --------------: |
+| plot.euclidean()                                              |            4.2 |             3.8 |
+| plot.euclidean(case.set = “expected”, type = “road”)          |            108 |              32 |
+| plot.euclidean(case.set = “expected”, type = “area.points”)   |            107 |              31 |
+| plot.euclidean(case.set = “expected”, type = “area.polygons”) |            124 |              48 |
+
+| function                                                 | 1 logical core | 8 logical cores |
+| :------------------------------------------------------- | -------------: | --------------: |
+| nearestPump()                                            |            3.6 |             9.8 |
+| nearestPump(metric = “euclidean”)                        |            3.8 |             3.4 |
+| nearestPump(case.set = “expected”)                       |            345 |              94 |
+| nearestPump(metric = “euclidean”, case.set = “expected”) |            106 |              29 |
+| simulateFatalities()                                     |           5094 |            1268 |
+| unstackFatalities()                                      |            163 |              50 |
+| simulateWalkingDistance()                                |            200 |              72 |
+
+> Note that due to its performance, parallelization is not automatically
+> enabled on Windows for nearestPump(metric = “walking”, case.set =
+> “observed”). If you want to use it, you need to set dev.mode = TRUE.
+
+## Programming: mclapply() v. parLapply()
+
+My understanding is that due to greater overhead, mclapply() generally
+outperforms parLapply(). In terms of writing code, I’ve found that even
+when applied to finely grained tasks (smaller chunks of code) I was more
+likely to see benefits from using mclapply() than when using
+parLapply(). With the latter, I found that you’re actually more easily
+penalized: there will be jobs that take longer to run in parallel than
+in serial.
