@@ -150,6 +150,8 @@ The vignettes are available in the package as well as online at the links below.
 
 [Time Series](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/time.series.md) discusses functions and data related to the aggregate time series fatalities data and the questions surrounding the effect of the removal of the handle from the Broad Street pump.
 
+[Parallelization](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/parallelization.md) discusses the parallelization of selected functions and provides benchmark timings.
+
 #### lab notes
 
 The lab notes, which are only available online, go into detail about certain issues and topics discussed in the vignettes:

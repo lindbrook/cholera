@@ -253,7 +253,12 @@ of the functions in ‘cholera’.
 Series](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/time.series.md)
 discusses functions and data related to the aggregate time series
 fatalities data and the questions surrounding the effect of the removal
-of the handle from the Broad Street pump.
+of the handle from the Broad Street
+pump.
+
+[Parallelization](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/parallelization.md)
+discusses the parallelization of selected functions and provides
+benchmark timings.
 
 #### lab notes
 
