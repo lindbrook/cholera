@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2019-02-03
+2019-08-29
 
 John Broich. 2013. *London: Water and the Making of the Modern City*.
 Pittsburgh: University of Pittsburgh Press.
@@ -38,6 +38,10 @@ World*. New York: Liveright.
 R. J. Morris. 1976. *Cholera 1832: The Social Response to An Epidemic*.
 New York: Holmes & Meier.
 
+Nick Paumgarten. 2019. “The Message of Measles”. *The New Yorker*.
+September 2.
+<https://www.newyorker.com/magazine/2019/09/02/the-message-of-measles>.
+
 Margaret Pelling. 1978. *Cholera, Fever and English Medicine:
 1825-1865*. Oxford: Oxford University Press.
 
@@ -60,3 +64,6 @@ Press.
 Bee Wilson. 2008. *Swindled: The Dark History of Food Fraud, From
 Poisoned Candy to Counterfeit Coffee*. Princeton: Princeton University
 Press.
+
+Alison Winter. 1998. *Mesmerized: powers of mind in Victorian Britain*.
+Chicago: The University of Chicago Press.
