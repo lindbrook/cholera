@@ -39,9 +39,9 @@ To install the current development version from
 GitHub:
 
 ``` r
-# You may need to first install the 'devtools' via install.packages("devtools").
+# You may need to first install the 'remotes' via install.packages("remotes").
 
-devtools::install_github("lindbrook/cholera", build_vignettes = TRUE)
+remotes::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 
 ## background
