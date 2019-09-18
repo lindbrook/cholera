@@ -23,6 +23,11 @@ Flavor: r-patched-solaris-x86
 R 3.6.1 (2019-07-05), x86_64-apple-darwin15.6.0 (64-bit):
 * 0 errors | 0 warnings | 0 notes
 
+### R win-builder check results
+
+R-devel: R Under development (unstable) (2019-09-55 r77192): x86_64-w64-mingw32 (64-bit)
+* 0 errors | 0 warnings | 0 note
+
 R-release: 3.6.1 (2019-07-05): x86_64-w64-mingw32 (64-bit)
 * 0 errors | 0 warnings | 0 notes
 
