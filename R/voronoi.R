@@ -33,7 +33,7 @@
 #' dat$coordinates
 
 neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
-  case.location = "nominal", polygon.vertices = FALSE) {
+  case.location = "address", polygon.vertices = FALSE) {
 
   if (case.location %in% c("address", "nominal") == FALSE) {
     stop('case.location must be "address" or "nominal".')
