@@ -22,6 +22,8 @@
 #'
 #' \code{vignette("kernel.density")}
 #'
+#' \code{vignette("parallelization")}
+#'
 #' \code{vignette("pump.neighborhoods")}
 #'
 #' \code{vignette("roads")}
