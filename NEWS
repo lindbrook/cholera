@@ -2,6 +2,7 @@ cholera 0.7.0.9003
 ==================
 
 - note parallelization vignette in cholera-package.Rd.
+- add and set default neighborhoodVoronoi(pump.location = "nominal").
 
 
 cholera 0.7.0.9002

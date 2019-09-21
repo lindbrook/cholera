@@ -3,7 +3,8 @@
 #' Group cases into neighborhoods using Voronoi tessellation.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "address" uses the x-y coordinates of \code{ortho.proj}. "nominal" uses the x-y coordinates of \code{fatalities}.
+#' @param case.location Character. "address" or "nominal". "address" uses the x-y coordinates of \code{ortho.proj}. "nominal" uses the x-y coordinates of \code{fatalities}.
+#' @param pump.location Character. "address" or "nominal". "address" uses the x-y coordinates of \code{ortho.proj.pump} or \code{ortho.proj.pump.vestry}. "nominal" uses the x-y coordinates of \code{pumps} or \code{pumps.vestry}.
 #' @param polygon.vertices Logical. \code{TRUE} returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for \code{sp::point.in.polygon()} as used in \code{print.voronoi()} method.
 #' @return An R list with 12 objects.
 #' \itemize{
@@ -33,7 +34,8 @@
 #' dat$coordinates
 
 neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
-  case.location = "address", polygon.vertices = FALSE) {
+  case.location = "address", pump.location = "nominal",
+  polygon.vertices = FALSE) {
 
   if (case.location %in% c("address", "nominal") == FALSE) {
     stop('case.location must be "address" or "nominal".')
@@ -42,7 +44,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
     else if (case.location == "nominal") statistic <- "fatality"
   }
 
-  if (case.location == "address") {
+  if (pump.location == "address") {
     if (vestry) {
       pump.data <- cholera::ortho.proj.pump.vestry
       pump.data$street <- cholera::pumps.vestry$street
@@ -54,7 +56,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
       names(pump.data)[names(pump.data) %in%
         c("x.proj", "y.proj", "pump.id")] <- c("x", "y", "id")
     }
-  } else if (case.location == "nominal") {
+  } else if (pump.location == "nominal") {
     if (vestry) {
       pump.data <- cholera::pumps.vestry
     } else {
