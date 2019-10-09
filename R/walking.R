@@ -339,7 +339,6 @@ summary.walking <- function(object, ...) {
     out <- vapply(object$paths, length, numeric(1L))
     out <- stats::setNames(out, paste0("p", object$pumpID))
   } else if (object$case.set == "expected") {
-
     out <- expectedCount(object)
   }
   out
