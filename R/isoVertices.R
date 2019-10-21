@@ -72,35 +72,58 @@ isoVertices <- function(post = 50, post.type = "distance", multi.core = FALSE) {
 #' Plot method for isoVertices().
 #'
 #' @param x An object of class "iso" created by \code{isoVertices()}.
-#' @param sel.post Numeric. Select milepost polygon.
+#' @param selected.post Character or Numeric. Select milepost polygon. "all" or number.
 #' @param palette Character. RColorBrewer palette.
 #' @param alpha.level Numeric. Alpha level transparency
 #' @param ... Additional arguments.
 #' @return A vector with observed counts.
 #' @export
 
-plot.iso <- function(x, sel.post = 50, palette = "Spectral", alpha.level = 1/3,
-  ...) {
+plot.iso <- function(x, selected.post = "all", palette = "Spectral",
+  alpha.level = 1/3, ...) {
 
   if (palette %in% row.names(RColorBrewer::brewer.pal.info) == FALSE) {
     stop("Invalid palette name. Check RColorBrewer::brewer.pal.info")
   }
 
   sel <- row.names(RColorBrewer::brewer.pal.info) == palette
-  bins <- RColorBrewer::brewer.pal.info[sel, "maxcolors"] - 1
+  bins <- RColorBrewer::brewer.pal.info[sel, "maxcolors"]
   pump.dist <- cholera::sim.walking.distance
-  cutpoint <- seq(0, x$post * bins, x$post)
-  mypalette <- RColorBrewer::brewer.pal(length(cutpoint), palette)
+  mypalette <- c(RColorBrewer::brewer.pal(11, palette), "blue", "violet")
 
-  i <- which(cutpoint == sel.post)
-  vertices <- x$vertices[[i]]
-  color <- grDevices::adjustcolor(mypalette[i], alpha.f =  alpha.level)
-  if (is.atomic(vertices)) {
-    polygon(cholera::regular.cases[vertices, ], col = color)
-  } else {
-    invisible(lapply(vertices, function(dat) {
-      polygon(cholera::regular.cases[dat, ], col = color)
-    }))
+  if (is.numeric(selected.post)) {
+
+    if (selected.post %in% names(x$vertices) == FALSE) {
+      stop('If numeric, selected.post must be ',
+           paste(names(x$vertices), collapse = ", "),
+           ".")
+    }
+
+    i <- which(names(x$vertices) == selected.post)
+    vertices <- x$vertices[[i]]
+    color <- grDevices::adjustcolor(mypalette[i], alpha.f =  alpha.level)
+    if (is.atomic(vertices)) {
+      polygon(cholera::regular.cases[vertices, ], col = color)
+    } else {
+      invisible(lapply(vertices, function(dat) {
+        polygon(cholera::regular.cases[dat, ], col = color)
+      }))
+    }
+  } else if (is.character(selected.post)) {
+    if (selected.post != "all") {
+      stop('If not numeric, only other choice for selected.post is "all".')
+    } else {
+      invisible(lapply(seq_along(x$vertices), function(i) {
+        color <- grDevices::adjustcolor(mypalette[i], alpha.f =  alpha.level)
+        if (is.list(x$vertices[[i]])) {
+          invisible(lapply(x$vertices[[i]], function(vs) {
+            polygon(cholera::regular.cases[vs, ], col = color)
+          }))
+        } else {
+          polygon(cholera::regular.cases[x$vertices[[i]], ], col = color)
+        }
+      }))
+    }
   }
 }
 
