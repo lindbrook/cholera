@@ -73,35 +73,32 @@ isoVertices <- function(post = 50, post.type = "distance", multi.core = FALSE) {
 #'
 #' @param x An object of class "iso" created by \code{isoVertices()}.
 #' @param selected.post Character or Numeric. Select milepost polygon. "all" or number.
-#' @param palette Character. RColorBrewer palette.
+#' @param palette Character.
 #' @param alpha.level Numeric. Alpha level transparency
 #' @param ... Additional arguments.
 #' @return A vector with observed counts.
 #' @export
 
-plot.iso <- function(x, selected.post = "all", palette = "Spectral",
+plot.iso <- function(x, selected.post = "all", palette = "plasma",
   alpha.level = 1/3, ...) {
 
-  if (palette %in% row.names(RColorBrewer::brewer.pal.info) == FALSE) {
-    stop("Invalid palette name. Check RColorBrewer::brewer.pal.info")
+  pump.dist <- cholera::sim.walking.distance
+  isobands <- seq(0, 600, x$post)
+
+  if (palette == "plasma") {
+    mypalette <- viridisLite::plasma(length(isobands), alpha = alpha.level,
+      begin = 0, end = 1, direction = -1)
   }
 
-  sel <- row.names(RColorBrewer::brewer.pal.info) == palette
-  bins <- RColorBrewer::brewer.pal.info[sel, "maxcolors"]
-  pump.dist <- cholera::sim.walking.distance
-  mypalette <- c(RColorBrewer::brewer.pal(11, palette), "blue", "violet")
-
   if (is.numeric(selected.post)) {
-
     if (selected.post %in% names(x$vertices) == FALSE) {
       stop('If numeric, selected.post must be ',
-           paste(names(x$vertices), collapse = ", "),
-           ".")
+           paste(names(x$vertices), collapse = ", "), ".")
     }
 
     i <- which(names(x$vertices) == selected.post)
     vertices <- x$vertices[[i]]
-    color <- grDevices::adjustcolor(mypalette[i], alpha.f =  alpha.level)
+    color <- mypalette[i]
     if (is.atomic(vertices)) {
       polygon(cholera::regular.cases[vertices, ], col = color)
     } else {
@@ -114,7 +111,7 @@ plot.iso <- function(x, selected.post = "all", palette = "Spectral",
       stop('If not numeric, only other choice for selected.post is "all".')
     } else {
       invisible(lapply(seq_along(x$vertices), function(i) {
-        color <- grDevices::adjustcolor(mypalette[i], alpha.f =  alpha.level)
+        color <- mypalette[i]
         if (is.list(x$vertices[[i]])) {
           invisible(lapply(x$vertices[[i]], function(vs) {
             polygon(cholera::regular.cases[vs, ], col = color)

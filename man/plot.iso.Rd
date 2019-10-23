@@ -4,7 +4,7 @@
 \alias{plot.iso}
 \title{Plot method for isoVertices().}
 \usage{
-\method{plot}{iso}(x, selected.post = "all", palette = "Spectral",
+\method{plot}{iso}(x, selected.post = "all", palette = "plasma",
   alpha.level = 1/3, ...)
 }
 \arguments{
@@ -12,7 +12,7 @@
 
 \item{selected.post}{Character or Numeric. Select milepost polygon. "all" or number.}
 
-\item{palette}{Character. RColorBrewer palette.}
+\item{palette}{Character.}
 
 \item{alpha.level}{Numeric. Alpha level transparency}
 
