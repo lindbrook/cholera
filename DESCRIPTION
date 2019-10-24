@@ -21,7 +21,8 @@ Imports: deldir (>= 0.0-18),
          RColorBrewer,
          sp,
          threejs,
-         TSP
+         TSP,
+         viridisLite
 Suggests: knitr,
           rmarkdown
 VignetteBuilder: knitr
