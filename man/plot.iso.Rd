@@ -5,7 +5,7 @@
 \title{Plot method for isoVertices().}
 \usage{
 \method{plot}{iso}(x, selected.post = "all", palette = "plasma",
-  alpha.level = 1/3, ...)
+  alpha.level = 1/2, ...)
 }
 \arguments{
 \item{x}{An object of class "iso" created by \code{isoVertices()}.}

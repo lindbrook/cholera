@@ -2,9 +2,10 @@
 % Please edit documentation in R/isoVertices.R
 \name{isoVertices}
 \alias{isoVertices}
-\title{isochrone and isodistance vertices (prototype)}
+\title{Isochrone and isodistance vertices (prototype)}
 \usage{
-isoVertices(post = 50, post.type = "distance", multi.core = FALSE)
+isoVertices(post = 50, post.type = "distance", multi.core = FALSE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{post}{Numeric.}
@@ -12,7 +13,9 @@ isoVertices(post = 50, post.type = "distance", multi.core = FALSE)
 \item{post.type}{Character. "distance or "time".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.}
+
+\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \description{
-isochrone and isodistance vertices (prototype)
+Isochrone and isodistance vertices (prototype)
 }
