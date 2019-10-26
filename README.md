@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.0.9007-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.0.9008-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -151,10 +151,21 @@ then compute the shortest path to the nearest pump.
 
 ``` r
 plot(neighborhoodWalking(case.set = "expected"), "area.polygons")
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="50%" />
+
+For Euclidean distance based neighborhoods, we can use the same
+simulated data and compute the as-the-crow-flies distance to the nearest
+pump. Or, we can leverage a more computationally efficient approach,
+Voronoi tessellation, which will produce the same neighborhoods.
+
+``` r
+plot(neighborhoodEuclidean(case.set = "expected"))
 plot(neighborhoodVoronoi())
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-6-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-7-2.png" width="50%" />
 
 #### exploring walking neighborhoods
 
@@ -166,7 +177,7 @@ plot(neighborhoodWalking(pump.select = 6:7))
 plot(neighborhoodWalking(pump.select = -7))
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-7-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-8-2.png" width="50%" />
 
 To explore “expected” walking neighborhoods, add the case.set =
 “expected”
@@ -177,7 +188,7 @@ plot(neighborhoodWalking(pump.select =  6:7, case.set = "expected"), type = "are
 plot(neighborhoodWalking(pump.select = -7, case.set = "expected"), type = "area.polygons")
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-8-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-9-2.png" width="50%" />
 
 #### exploring Euclidean neighborhoods
 
@@ -189,7 +200,7 @@ plot(neighborhoodEuclidean(pump.select = 6:7))
 plot(neighborhoodEuclidean(pump.select = -7))
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-9-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
 
 To explore “expected” Euclidean neighborhoods, use
 `neighborhoodVoronoi()` with the `pump.select` argument:
@@ -199,7 +210,7 @@ plot(neighborhoodVoronoi(pump.select = 6:7))
 plot(neighborhoodVoronoi(pump.select = -7))
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-11-2.png" width="50%" />
 
 #### note on computational performance
 

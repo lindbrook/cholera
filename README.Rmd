@@ -93,8 +93,15 @@ plot(neighborhoodEuclidean())
 
 Ultimately, for testing purposes we want the "expected" neighborhoods. For walking neighborhoods, I use the same approach but use simulated data. Using `sp::spsample()` and `sp::Polygon()`, I place 20,000 regularly spaced points, which lie approximately 6 meters apart, `unitMeter(dist(regular.cases[1:2, ]))`, across the face of the map and then compute the shortest path to the nearest pump.
 
-```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
+```{r, fig.width = 6, fig.height = 6, out.width = "50%"}
 plot(neighborhoodWalking(case.set = "expected"), "area.polygons")
+```
+
+For Euclidean distance based neighborhoods, we can use the same simulated data and compute the as-the-crow-flies distance to the nearest pump. Or, we can leverage a more computationally efficient approach, Voronoi tessellation, which will produce the same neighborhoods.
+
+
+```{r, fig.align = "default", fig.width = 6, fig.height = 6, fig.show = "hold", out.width = "50%"}
+plot(neighborhoodEuclidean(case.set = "expected"))
 plot(neighborhoodVoronoi())
 ```
 
