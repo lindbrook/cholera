@@ -40,7 +40,6 @@ GitHub:
 
 ``` r
 # You may need to first install the 'remotes' via install.packages("remotes").
-
 remotes::install_github("lindbrook/cholera", build_vignettes = TRUE)
 ```
 
