@@ -4,18 +4,18 @@
 \alias{isoLines}
 \title{Plot isochrone and isodistance regions (prototype)}
 \usage{
-isoLines(post = 50, post.type = "distance", palette = "Spectral")
+isoLines(post = 50, post.type = "distance", palette = "plasma",
+  alpha.level = 1/2)
 }
 \arguments{
 \item{post}{Numeric. Distance or time increment.}
 
-\item{post.type}{Character. "distance or "time".}
+\item{post.type}{Character. "distance" or "time".}
 
-\item{palette}{Character. RColorBrewer palette.}
+\item{palette}{Character.}
+
+\item{alpha.level}{Numeric. Alpha level transparency}
 }
 \description{
 Plot isochrone and isodistance regions (prototype)
-}
-\note{
-The number of possible bands or bins is determined by the max number of colors in 'RColorBrewer' palettes.
 }

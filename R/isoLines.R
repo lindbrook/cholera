@@ -1,33 +1,29 @@
 #' Plot isochrone and isodistance regions (prototype)
 #'
 #' @param post Numeric. Distance or time increment.
-#' @param post.type Character. "distance or "time".
-#' @param palette Character. RColorBrewer palette.
+#' @param post.type Character. "distance" or "time".
+#' @param palette Character.
+#' @param alpha.level Numeric. Alpha level transparency
 #' @export
-#' @note The number of possible bands or bins is determined by the max number of colors in 'RColorBrewer' palettes.
 
-isoLines <- function(post = 50, post.type = "distance", palette = "Spectral") {
-  if (palette %in% row.names(RColorBrewer::brewer.pal.info) == FALSE) {
-    stop("Invalid palette name. Check RColorBrewer::brewer.pal.info")
-  }
+isoLines <- function(post = 50, post.type = "distance", palette = "plasma",
+  alpha.level = 1/2) {
 
-  sel <- row.names(RColorBrewer::brewer.pal.info) == palette
-  bins <- RColorBrewer::brewer.pal.info[sel, "maxcolors"] - 1
+  if (post.type == "distance") isobands <- seq(0, 600, post)
+  if (post.type == "time") isobands <- seq(0, 500, post)
 
   pump.dist <- cholera::sim.walking.distance
-  cutpoint <- seq(0, post * bins, post)
-  mypalette <- RColorBrewer::brewer.pal(length(cutpoint), palette)
+
+  if (palette == "plasma") {
+    mypalette <- viridisLite::plasma(length(isobands), alpha = alpha.level,
+      begin = 0, end = 1, direction = -1)
+  }
+
   snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
 
-  invisible(lapply(seq_along(cutpoint), function(i) {
-    if (post.type == "distance") {
-      sel <- pump.dist$distance > cutpoint[i] &
-             pump.dist$distance <= cutpoint[i] + post
-    } else if (post.type == "time") {
-      sel <- pump.dist$time * 60 > cutpoint[i] &
-             pump.dist$time * 60 <= cutpoint[i] + post
-    }
-
+  invisible(lapply(seq_along(isobands), function(i) {
+    sel <- pump.dist$distance > isobands[i] &
+           pump.dist$distance <= isobands[i] + post
     neighborhood.cases <- pump.dist[sel, "case"]
     points(cholera::regular.cases[neighborhood.cases, ], pch = 16,
       col = mypalette[i], cex = 1)
