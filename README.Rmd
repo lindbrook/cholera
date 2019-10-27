@@ -138,7 +138,7 @@ plot(neighborhoodVoronoi(pump.select = -7))
 
 #### note on computational performance
 
-Support for parallel computation for selected functions on Linux, Mac and Windows implemented using the 'parallel' package, which is part of the base R distribution: to enable parallelization, set `multi.core = TRUE` where available. Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("Parallelization")` for details.
+Parallel computation is implemented using the 'parallel' package, which is part of the base R distribution. To enable parallelization, set `multi.core = TRUE` where available. Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("Parallelization")` for details.
 
 #### vignettes
 

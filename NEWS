@@ -1,7 +1,8 @@
 cholera 0.7.0.9009
 ==================
 
-use 'viridisLite' in isoLines().
+- use 'viridisLite' in isoLines().
+- copyedit "note on computational performance".
 
 
 cholera 0.7.0.9008
