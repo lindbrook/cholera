@@ -1,3 +1,10 @@
+cholera 0.7.0.9010
+==================
+
+- fix unneeded warnings in addEuclideanPath().
+- add subtitles for selected pumps in plot.euclidean().
+
+
 cholera 0.7.0.9009
 ==================
 

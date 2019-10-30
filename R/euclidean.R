@@ -212,7 +212,13 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   }
 
   pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
-  title(main = "Pump Neighborhoods: Euclidean")
+  
+  if (is.null(x$pump.select)) {
+    title(main = "Pump Neighborhoods: Euclidean")
+  } else {
+    title(main = paste0("Pump Neighborhoods: Euclidean", "\n", "Pumps ",
+      paste(sort(x$pump.select), collapse = ", ")))
+  }
 
   if (msg) {
     if (x$case.set == "expected") message("Done!")
