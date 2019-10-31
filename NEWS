@@ -2,6 +2,7 @@ cholera 0.7.0.9011
 ==================
 
 - change README figures from 6" to 5.5".
+- test multi.core = TRUE.
 
 
 cholera 0.7.0.9010

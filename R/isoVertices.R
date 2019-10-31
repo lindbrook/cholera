@@ -6,7 +6,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @export
 
-isoVertices <- function(post = 50, post.type = "distance", multi.core = FALSE,
+isoVertices <- function(post = 50, post.type = "distance", multi.core = TRUE,
   dev.mode = FALSE) {
 
   cores <- multiCore(multi.core)

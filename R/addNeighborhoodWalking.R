@@ -24,7 +24,7 @@
 addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, weighted = TRUE, path = NULL, path.color = NULL,
   path.width = 3, alpha.level = 0.25, polygon.type = "solid",
-  polygon.col = NULL, polygon.lwd = 2, multi.core = FALSE, dev.mode = FALSE) {
+  polygon.col = NULL, polygon.lwd = 2, multi.core = TRUE, dev.mode = FALSE) {
 
   if (is.null(path) == FALSE) {
     if (path %in% c("expected", "observed") == FALSE) {

@@ -14,7 +14,7 @@
 #' }
 
 profile2D <- function(angle = 0, pump = 7, vestry = FALSE, type = "base",
-  multi.core = FALSE) {
+  multi.core = TRUE) {
 
   if (angle < 0 | angle > 360) stop("Use 0 >= angle <= 360.")
 
@@ -186,7 +186,7 @@ orthogonalCoordinates <- function(case, pump = 7, angle = 0, vestry = FALSE,
 #' @noRd
 
 profilePerspective <- function(output = "inside", pump = 7, angle = 0,
-  vestry = FALSE, multi.core = FALSE) {
+  vestry = FALSE, multi.core = TRUE) {
 
   walk <- nearestPump(vestry = vestry, multi.core = multi.core)$distance
   neighborhood.select <- walk[walk$pump == pump, ]

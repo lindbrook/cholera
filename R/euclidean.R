@@ -17,7 +17,7 @@
 #' }
 
 neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
-   case.location = "nominal", case.set = "observed", multi.core = FALSE,
+   case.location = "nominal", case.set = "observed", multi.core = TRUE,
    dev.mode = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
@@ -212,7 +212,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   }
 
   pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
-  
+
   if (is.null(x$pump.select)) {
     title(main = "Pump Neighborhoods: Euclidean")
   } else {

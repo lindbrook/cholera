@@ -6,7 +6,7 @@
 \usage{
 nearestPump(pump.select = NULL, metric = "walking", vestry = FALSE,
   weighted = TRUE, case.set = "observed", distance.unit = "meter",
-  time.unit = "second", walking.speed = 5, multi.core = FALSE,
+  time.unit = "second", walking.speed = 5, multi.core = TRUE,
   dev.mode = FALSE)
 }
 \arguments{

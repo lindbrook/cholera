@@ -14,7 +14,7 @@
 #' }
 
 profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
-  drop.neg.subset = FALSE, multi.core = FALSE) {
+  drop.neg.subset = FALSE, multi.core = TRUE) {
 
   if (vestry) {
     pump.id <- cholera::pumps.vestry$id

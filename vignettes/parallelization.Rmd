@@ -20,7 +20,7 @@ The 'cholera' package supports parallelization of certain functions using the 'p
 
 The reason that parallelization is off by default is that 'parallel' package's documentation goes to great length to discourage the use of these functions interactively:
 
-> Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. That said, with more recent versions of 'parallel', I only rarely experience crashes. But to be safe, I've set "multi.core = FALSE".
+> Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package, which neighborhoodWalking() uses, strongly discourage against using parallelization within a GUI or embedded environment. That said, with more recent versions of 'parallel', I only rarely experience crashes. As an experiment, I've set "multi.core = TRUE".
 
 That said, with more recent versions of 'parallel', I have not experienced crashes either in the R application or in RStudio.
 
@@ -88,4 +88,3 @@ simulateWalkingDistance() | 200 | 72
 
 My understanding is that due to greater overhead, mclapply() generally outperforms parLapply().
 In terms of writing code, I've found that even when applied to finely grained tasks (smaller chunks of code) I was more likely to see benefits from using mclapply() than when using parLapply(). With the latter, I found that you're actually more easily penalized: there will be jobs that take longer to run in parallel than in serial.
-

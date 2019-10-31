@@ -4,7 +4,7 @@
 \alias{simulateFatalities}
 \title{Generate simulated fatalities.}
 \usage{
-simulateFatalities(compute = FALSE, multi.core = FALSE,
+simulateFatalities(compute = FALSE, multi.core = TRUE,
   simulated.obs = 20000L, dev.mode = FALSE)
 }
 \arguments{

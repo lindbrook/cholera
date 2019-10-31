@@ -9,7 +9,7 @@
 #' @note Note: The location of the fourteenth pump, at Hanover Square, and the "correct" location of the Broad Street pump are approximate. This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
 #' @export
 
-pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
+pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = TRUE) {
   pumps <- HistData::Snow.pumps
   pumps$label <- c("Market Place", "Adam and Eve Court", "Berners Street",
     "Newman Street", "Marlborough Mews", "Little Marlborough Street",

@@ -4,7 +4,7 @@
 \alias{pumpData}
 \title{Compute pump coordinates.}
 \usage{
-pumpData(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE)
+pumpData(vestry = FALSE, orthogonal = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}

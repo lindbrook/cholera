@@ -4,7 +4,7 @@
 \alias{unstackFatalities}
 \title{Unstack "stacks" in Snow's cholera map.}
 \usage{
-unstackFatalities(multi.core = FALSE, compute = FALSE,
+unstackFatalities(multi.core = TRUE, compute = FALSE,
   fatalities = fixFatalities(), dev.mode = FALSE)
 }
 \arguments{

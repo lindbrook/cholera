@@ -6,7 +6,7 @@
 \usage{
 addMilePosts(pump.subset = NULL, pump.select = NULL, vestry = FALSE,
   unit = "distance", interval = NULL, walking.speed = 5,
-  type = "arrows", multi.core = FALSE, dev.mode = FALSE)
+  type = "arrows", multi.core = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}

@@ -14,7 +14,7 @@
 
 addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, unit = "distance", interval = NULL, walking.speed = 5,
-  type = "arrows", multi.core = FALSE, dev.mode = FALSE) {
+  type = "arrows", multi.core = TRUE, dev.mode = FALSE) {
 
   if (type %in% c("arrows", "points") == FALSE) {
     stop('type must either be "arrows" or "points"')

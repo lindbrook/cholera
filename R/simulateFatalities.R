@@ -9,7 +9,7 @@
 #' @note This function is computationally intensive. With "simulated.obs" set to 20,000 simulated cases (actually generating 19,993 cases). This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}. In real world terms, the distance between of these simulated cases is approximately 6 meters.
 #' @export
 
-simulateFatalities <- function(compute = FALSE, multi.core = FALSE,
+simulateFatalities <- function(compute = FALSE, multi.core = TRUE,
   simulated.obs = 20000L, dev.mode = FALSE) {
 
   if (compute == FALSE) {

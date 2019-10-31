@@ -5,7 +5,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @export
 
-landmarkData <- function(multi.core = FALSE, dev.mode = FALSE) {
+landmarkData <- function(multi.core = TRUE, dev.mode = FALSE) {
   marx <- data.frame(x = 17.3855, y = 13.371)
   snow <- data.frame(x = 10.22414, y = 4.383851)
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)

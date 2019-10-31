@@ -4,7 +4,7 @@
 \alias{isoVertices}
 \title{Isochrone and isodistance vertices (prototype)}
 \usage{
-isoVertices(post = 50, post.type = "distance", multi.core = FALSE,
+isoVertices(post = 50, post.type = "distance", multi.core = TRUE,
   dev.mode = FALSE)
 }
 \arguments{

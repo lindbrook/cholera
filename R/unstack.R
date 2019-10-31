@@ -10,7 +10,7 @@
 #' @note This function is computationally intensive. This function documents the code that generates \code{\link{anchor.case}},  \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
 #' @export
 
-unstackFatalities <- function(multi.core = FALSE, compute = FALSE,
+unstackFatalities <- function(multi.core = TRUE, compute = FALSE,
   fatalities = fixFatalities(), dev.mode = FALSE) {
 
   if (compute) {

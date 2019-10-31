@@ -6,7 +6,7 @@
 \usage{
 addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, case.location = "nominal", type = "star",
-  alpha.level = 0.5, multi.core = FALSE, dev.mode = FALSE)
+  alpha.level = 0.5, multi.core = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.}

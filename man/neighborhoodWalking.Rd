@@ -5,7 +5,7 @@
 \title{Compute walking path pump neighborhoods.}
 \usage{
 neighborhoodWalking(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, case.set = "observed", multi.core = FALSE,
+  weighted = TRUE, case.set = "observed", multi.core = TRUE,
   dev.mode = FALSE)
 }
 \arguments{

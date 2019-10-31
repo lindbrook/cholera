@@ -25,7 +25,7 @@
 #' }
 
 neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, case.set = "observed", multi.core = FALSE,
+  weighted = TRUE, case.set = "observed", multi.core = TRUE,
   dev.mode = FALSE) {
 
   if (is.null(pump.select) == FALSE) {
