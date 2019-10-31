@@ -24,8 +24,8 @@
     location of the Broad Street pump.
   - Adds two aggregate time series fatalities data sets, taken from the
     Vestry report.
-  - With ‘cholera’ version 0.7.0, support for parallel computation now
-    includes Windows in addition to Linux and macOS.
+  - With ‘cholera’ version \>= 0.7.0, support for parallel computation
+    now includes Windows in addition to Linux and macOS.
 
 #### getting started
 

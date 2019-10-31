@@ -13,7 +13,7 @@
 #' \item Appends actual street names to roads data.
 #' \item Includes the revised pump data used in the second version of Snow's map from the Vestry report, which includes the "correct" location of the Broad Street pump.
 #' \item Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
-#' \item Computes and visualizes two types of "pump neighborhoods": Voronoi, based on Euclidean distance, and walking, based on computed walking distances.
+#' \item With ‘cholera’ version >= 0.7.0, support for parallel computation now includes Windows in addition to Linux and macOS.
 #' }
 #'
 #' To learn more, see the vignettes:
