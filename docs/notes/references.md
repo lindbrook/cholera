@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2019-08-29
+2019-11-10
 
 John Broich. 2013. *London: Water and the Making of the Modern City*.
 Pittsburgh: University of Pittsburgh Press.
@@ -21,6 +21,9 @@ London*. London: Atlantic Books.
 
 David Freedman. 1999. “From Association to Causation: Some Remarks on
 the History of Statistics”. *Statistical Science*. 14(3): 243-258.
+
+Mary Gabriel. 2011. *Love and Capital: Karl and Jenny Marx and the Birth
+of a Revolution*. New York: Little, Brown and Company.
 
 Ruth Goodman. 2015. *How to Be a Victorian: A Dawn-to-Dusk Guide to
 Victorian Life*. New York: Liveright.
