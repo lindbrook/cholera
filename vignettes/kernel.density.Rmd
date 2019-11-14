@@ -16,9 +16,14 @@ library(cholera)
 
 By default, the `addKernelDensity()` function pools all observations:
 
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE, eval = FALSE}
 snowMap()
 addKernelDensity()
+```
+
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE, eval = TRUE}
+snowMap()
+addKernelDensity(multi.core = FALSE)
 ```
 
 However, this presuppose that all cases have a common source. To consider the possible existence of multiple pump neighborhoods, the function provides two ways to explore hypothetical scenarios.
@@ -26,15 +31,25 @@ However, this presuppose that all cases have a common source. To consider the po
 By using the `pump.select` argument, you can define a "population" of pump neighborhoods by specify the pumps to consider:
 
 
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE, eval = FALSE}
 snowMap()
 addKernelDensity(pump.select = c(6, 8))
+```
+
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE, eval = TRUE}
+snowMap()
+addKernelDensity(pump.select = c(6, 8), multi.core = FALSE)
 ```
 
 By using the `pump.subset` argument, you can define the subset of the "population" to consider:
 
 
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE, eval = FALSE}
 snowMap()
 addKernelDensity(pump.subset = c(6, 8))
+```
+
+```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE, eval = TRUE}
+snowMap()
+addKernelDensity(pump.subset = c(6, 8), multi.core = FALSE)
 ```
