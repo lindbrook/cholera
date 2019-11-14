@@ -18,5 +18,7 @@ A vector of counts by neighborhood.
 Return computed counts for Euclidean neighborhoods.
 }
 \examples{
+\donttest{
 summary(neighborhoodEuclidean())
+}
 }

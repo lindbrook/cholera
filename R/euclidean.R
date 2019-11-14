@@ -250,7 +250,9 @@ print.euclidean <- function(x, ...) {
 #' @return A vector of counts by neighborhood.
 #' @export
 #' @examples
+#' \donttest{
 #' summary(neighborhoodEuclidean())
+#' }
 
 summary.euclidean <- function(object, ...) {
   xtab <- table(object$nearest.pump)
