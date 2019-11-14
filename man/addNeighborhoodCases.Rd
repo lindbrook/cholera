@@ -4,11 +4,22 @@
 \alias{addNeighborhoodCases}
 \title{Add observed cases by neighborhood.}
 \usage{
-addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
-  metric = "walking", type = "stack.base", token = "point",
-  text.size = 0.5, pch = 16, point.size = 0.5, vestry = FALSE,
-  weighted = TRUE, color = NULL, case.location = "nominal",
-  alpha.level = 0.5, multi.core = TRUE)
+addNeighborhoodCases(
+  pump.subset = NULL,
+  pump.select = NULL,
+  metric = "walking",
+  type = "stack.base",
+  token = "point",
+  text.size = 0.5,
+  pch = 16,
+  point.size = 0.5,
+  vestry = FALSE,
+  weighted = TRUE,
+  color = NULL,
+  case.location = "nominal",
+  alpha.level = 0.5,
+  multi.core = TRUE
+)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}

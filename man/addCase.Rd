@@ -4,8 +4,14 @@
 \alias{addCase}
 \title{Add observed case(s).}
 \usage{
-addCase(case = 1, type = "observed", token = "both",
-  text.size = 0.5, col = "red", pos = 1)
+addCase(
+  case = 1,
+  type = "observed",
+  token = "both",
+  text.size = 0.5,
+  col = "red",
+  pos = 1
+)
 }
 \arguments{
 \item{case}{Numeric. Vector of case ID(s).}

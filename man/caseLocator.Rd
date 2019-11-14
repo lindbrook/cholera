@@ -4,8 +4,16 @@
 \alias{caseLocator}
 \title{Locate case by numerical ID.}
 \usage{
-caseLocator(case = 1, zoom = 1, observed = TRUE, add.title = TRUE,
-  highlight.segment = TRUE, data = FALSE, add = FALSE, col = "red")
+caseLocator(
+  case = 1,
+  zoom = 1,
+  observed = TRUE,
+  add.title = TRUE,
+  highlight.segment = TRUE,
+  data = FALSE,
+  add = FALSE,
+  col = "red"
+)
 }
 \arguments{
 \item{case}{Numeric or Integer. Whole number between 1 and 578.}

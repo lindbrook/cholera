@@ -4,8 +4,12 @@
 \alias{neighborhoodData}
 \title{Compute network graph of roads, cases and pumps.}
 \usage{
-neighborhoodData(vestry = FALSE, case.set = "observed", embed = TRUE,
-  embed.landmarks = TRUE)
+neighborhoodData(
+  vestry = FALSE,
+  case.set = "observed",
+  embed = TRUE,
+  embed.landmarks = TRUE
+)
 }
 \arguments{
 \item{vestry}{Logical. Use Vestry Report pump data.}

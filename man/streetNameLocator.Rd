@@ -4,11 +4,20 @@
 \alias{streetNameLocator}
 \title{Locate road by name.}
 \usage{
-streetNameLocator(road.name = "Broad Street", zoom = FALSE,
-  cases = "address", token = "id", add.title = TRUE,
-  add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE,
-  highlight = TRUE, distance.unit = "meter", time.unit = "minute",
-  walking.speed = 5)
+streetNameLocator(
+  road.name = "Broad Street",
+  zoom = FALSE,
+  cases = "address",
+  token = "id",
+  add.title = TRUE,
+  add.subtitle = TRUE,
+  add.pump = TRUE,
+  vestry = FALSE,
+  highlight = TRUE,
+  distance.unit = "meter",
+  time.unit = "minute",
+  walking.speed = 5
+)
 }
 \arguments{
 \item{road.name}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.}

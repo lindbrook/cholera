@@ -4,9 +4,16 @@
 \alias{plot.time_series}
 \title{Plot aggregate time series data from Vestry report.}
 \usage{
-\method{plot}{time_series}(x, statistic = "fatal.attacks",
-  pump.handle = TRUE, main = "Removal of the Broad Street Pump Handle",
-  type = "o", xlab = "Date", ylab = "Fatalities", ...)
+\method{plot}{time_series}(
+  x,
+  statistic = "fatal.attacks",
+  pump.handle = TRUE,
+  main = "Removal of the Broad Street Pump Handle",
+  type = "o",
+  xlab = "Date",
+  ylab = "Fatalities",
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class "time_series" from timeSeries().}

@@ -4,8 +4,7 @@
 \alias{plot.euclidean}
 \title{Plot method for neighborhoodEuclidean().}
 \usage{
-\method{plot}{euclidean}(x, type = "star", add.observed.points = TRUE,
-  msg = FALSE, ...)
+\method{plot}{euclidean}(x, type = "star", add.observed.points = TRUE, msg = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "euclidean" created by \code{neighborhoodEuclidean()}.}

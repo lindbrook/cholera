@@ -4,9 +4,14 @@
 \alias{neighborhoodEuclidean}
 \title{Compute Euclidean path pump neighborhoods.}
 \usage{
-neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
-  case.location = "nominal", case.set = "observed",
-  multi.core = TRUE, dev.mode = FALSE)
+neighborhoodEuclidean(
+  pump.select = NULL,
+  vestry = FALSE,
+  case.location = "nominal",
+  case.set = "observed",
+  multi.core = TRUE,
+  dev.mode = FALSE
+)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}

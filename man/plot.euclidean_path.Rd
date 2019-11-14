@@ -4,8 +4,7 @@
 \alias{plot.euclidean_path}
 \title{Plot the path of the Euclidean distance between cases and/or pumps.}
 \usage{
-\method{plot}{euclidean_path}(x, zoom = 0.5, unit.posts = "distance",
-  unit.interval = NULL, ...)
+\method{plot}{euclidean_path}(x, zoom = 0.5, unit.posts = "distance", unit.interval = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class "euclidean_path" created by euclideanPath().}

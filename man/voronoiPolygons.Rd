@@ -4,8 +4,13 @@
 \alias{voronoiPolygons}
 \title{Extract vertices of Delauny triangles and Dirichelet (Voronoi) tiles.}
 \usage{
-voronoiPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles",
-  output = "vertices")
+voronoiPolygons(
+  sites,
+  rw.data = NULL,
+  rw = NULL,
+  type = "tiles",
+  output = "vertices"
+)
 }
 \arguments{
 \item{sites}{Object. Data frame of sites to compute Delauny triangulation and Dirichelet (Voronoi) tessellation with variables "x" and "y".}

@@ -4,10 +4,18 @@
 \alias{euclideanPath}
 \title{Compute path of the Euclidean distance between cases and/or pumps.}
 \usage{
-euclideanPath(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, case.location = "nominal", landmark.cases = TRUE,
-  vestry = FALSE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5)
+euclideanPath(
+  origin = 1,
+  destination = NULL,
+  type = "case-pump",
+  observed = TRUE,
+  case.location = "nominal",
+  landmark.cases = TRUE,
+  vestry = FALSE,
+  distance.unit = "meter",
+  time.unit = "second",
+  walking.speed = 5
+)
 }
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}

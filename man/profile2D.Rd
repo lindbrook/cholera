@@ -4,8 +4,13 @@
 \alias{profile2D}
 \title{2D Profile .}
 \usage{
-profile2D(angle = 0, pump = 7, vestry = FALSE, type = "base",
-  multi.core = TRUE)
+profile2D(
+  angle = 0,
+  pump = 7,
+  vestry = FALSE,
+  type = "base",
+  multi.core = TRUE
+)
 }
 \arguments{
 \item{angle}{Numeric. Angle of perspective axis in degrees.}

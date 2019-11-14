@@ -4,8 +4,14 @@
 \alias{pumpLocator}
 \title{Locate water pump by numerical ID.}
 \usage{
-pumpLocator(id = 7, zoom = 1, vestry = FALSE, add.title = TRUE,
-  highlight.segment = TRUE, data = FALSE)
+pumpLocator(
+  id = 7,
+  zoom = 1,
+  vestry = FALSE,
+  add.title = TRUE,
+  highlight.segment = TRUE,
+  data = FALSE
+)
 }
 \arguments{
 \item{id}{Numeric or Integer. With \code{vestry = TRUE}, a whole number between 1 and 14. With \code{vestry = FALSE}, a whole number between 1 and 13. See \code{cholera::pumps.vestry} and \code{cholera::pumps} for IDs and details about specific pumps.}

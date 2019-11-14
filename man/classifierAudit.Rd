@@ -4,8 +4,12 @@
 \alias{classifierAudit}
 \title{Test if case is orthogonal to segment.}
 \usage{
-classifierAudit(case = 483, segment = "326-2", observed = TRUE,
-  coordinates = FALSE)
+classifierAudit(
+  case = 483,
+  segment = "326-2",
+  observed = TRUE,
+  coordinates = FALSE
+)
 }
 \arguments{
 \item{case}{Numeric or Integer. Numeric ID of observed case.}

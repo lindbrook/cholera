@@ -4,8 +4,12 @@
 \alias{addDelauny}
 \title{Add Delauny triangles.}
 \usage{
-addDelauny(pump.select = NULL, vestry = FALSE, color = "black",
-  line.type = "solid")
+addDelauny(
+  pump.select = NULL,
+  vestry = FALSE,
+  color = "black",
+  line.type = "solid"
+)
 }
 \arguments{
 \item{pump.select}{Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6).}
