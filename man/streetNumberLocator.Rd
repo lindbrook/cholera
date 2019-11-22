@@ -4,20 +4,10 @@
 \alias{streetNumberLocator}
 \title{Locate road by numerical ID.}
 \usage{
-streetNumberLocator(
-  road.number = 216,
-  zoom = FALSE,
-  cases = "address",
-  token = "id",
-  add.title = TRUE,
-  add.subtitle = TRUE,
-  add.pump = TRUE,
-  vestry = FALSE,
-  highlight = TRUE,
-  distance.unit = "meter",
-  time.unit = "second",
-  walking.speed = 5
-)
+streetNumberLocator(road.number = 216, zoom = FALSE, cases = "address",
+  token = "id", add.title = TRUE, add.subtitle = TRUE, add.pump = TRUE,
+  vestry = FALSE, highlight = TRUE, distance.unit = "meter",
+  time.unit = "second", walking.speed = 5)
 }
 \arguments{
 \item{road.number}{Numeric or integer. A whole number between 1 and 528.}

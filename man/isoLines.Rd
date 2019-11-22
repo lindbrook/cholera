@@ -4,12 +4,8 @@
 \alias{isoLines}
 \title{Plot isochrone and isodistance regions (prototype)}
 \usage{
-isoLines(
-  post = 50,
-  post.type = "distance",
-  palette = "plasma",
-  alpha.level = 1/2
-)
+isoLines(post = 50, post.type = "distance", palette = "plasma",
+  alpha.level = 1/2)
 }
 \arguments{
 \item{post}{Numeric. Distance or time increment.}

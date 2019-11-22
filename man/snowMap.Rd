@@ -4,19 +4,9 @@
 \alias{snowMap}
 \title{Plot John Snow's cholera map.}
 \usage{
-snowMap(
-  vestry = FALSE,
-  stacked = TRUE,
-  add.cases = TRUE,
-  add.landmarks = FALSE,
-  add.pumps = TRUE,
-  add.roads = TRUE,
-  add.frame = TRUE,
-  main = NA,
-  case.col = "gray",
-  case.pch = 15,
-  ...
-)
+snowMap(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
+  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE,
+  add.frame = TRUE, main = NA, case.col = "gray", case.pch = 15, ...)
 }
 \arguments{
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}

@@ -4,17 +4,9 @@
 \alias{walkingPath}
 \title{Compute the shortest walking path between cases and/or pumps.}
 \usage{
-walkingPath(
-  origin = 1,
-  destination = NULL,
-  type = "case-pump",
-  observed = TRUE,
-  weighted = TRUE,
-  vestry = FALSE,
-  distance.unit = "meter",
-  time.unit = "second",
-  walking.speed = 5
-)
+walkingPath(origin = 1, destination = NULL, type = "case-pump",
+  observed = TRUE, weighted = TRUE, vestry = FALSE,
+  distance.unit = "meter", time.unit = "second", walking.speed = 5)
 }
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}

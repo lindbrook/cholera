@@ -4,13 +4,9 @@
 \alias{neighborhoodVoronoi}
 \title{Compute Voronoi pump neighborhoods.}
 \usage{
-neighborhoodVoronoi(
-  pump.select = NULL,
-  vestry = FALSE,
-  case.location = "address",
-  pump.location = "nominal",
-  polygon.vertices = FALSE
-)
+neighborhoodVoronoi(pump.select = NULL, vestry = FALSE,
+  case.location = "address", pump.location = "nominal",
+  polygon.vertices = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}

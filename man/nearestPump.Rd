@@ -4,18 +4,10 @@
 \alias{nearestPump}
 \title{Compute shortest distances or paths to selected pumps.}
 \usage{
-nearestPump(
-  pump.select = NULL,
-  metric = "walking",
-  vestry = FALSE,
-  weighted = TRUE,
-  case.set = "observed",
-  distance.unit = "meter",
-  time.unit = "second",
-  walking.speed = 5,
-  multi.core = TRUE,
-  dev.mode = FALSE
-)
+nearestPump(pump.select = NULL, metric = "walking", vestry = FALSE,
+  weighted = TRUE, case.set = "observed", distance.unit = "meter",
+  time.unit = "second", walking.speed = 5, multi.core = TRUE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}

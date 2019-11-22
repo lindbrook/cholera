@@ -4,12 +4,8 @@
 \alias{distanceTime}
 \title{Convert distance to elapsed time.}
 \usage{
-distanceTime(
-  x,
-  distance.unit = "meter",
-  time.unit = "second",
-  walking.speed = 5
-)
+distanceTime(x, distance.unit = "meter", time.unit = "second",
+  walking.speed = 5)
 }
 \arguments{
 \item{x}{Numeric. Nominal map distance.}

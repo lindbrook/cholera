@@ -4,14 +4,8 @@
 \alias{orthogonalProjection}
 \title{Compute coordinates of orthogonal projection from case to road segment.}
 \usage{
-orthogonalProjection(
-  case = 12,
-  segment.id = "216-1",
-  observed = TRUE,
-  use.pump = FALSE,
-  vestry = FALSE,
-  case.data = NULL
-)
+orthogonalProjection(case = 12, segment.id = "216-1", observed = TRUE,
+  use.pump = FALSE, vestry = FALSE, case.data = NULL)
 }
 \arguments{
 \item{case}{Numeric. case ID from \code{fatalities}.}

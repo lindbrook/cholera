@@ -4,12 +4,8 @@
 \alias{simulateWalkingDistance}
 \title{Compute walking distance for simulated cases.}
 \usage{
-simulateWalkingDistance(
-  pump.select = 7,
-  multi.core = TRUE,
-  dev.mode = FALSE,
-  compute = FALSE
-)
+simulateWalkingDistance(pump.select = 7, multi.core = TRUE,
+  dev.mode = FALSE, compute = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric.}

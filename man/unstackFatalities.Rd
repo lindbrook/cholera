@@ -4,12 +4,8 @@
 \alias{unstackFatalities}
 \title{Unstack "stacks" in Snow's cholera map.}
 \usage{
-unstackFatalities(
-  multi.core = TRUE,
-  compute = FALSE,
-  fatalities = fixFatalities(),
-  dev.mode = FALSE
-)
+unstackFatalities(multi.core = TRUE, compute = FALSE,
+  fatalities = fixFatalities(), dev.mode = FALSE)
 }
 \arguments{
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores. See \code{vignette("Parallelization")} for details.}

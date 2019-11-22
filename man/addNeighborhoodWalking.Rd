@@ -4,21 +4,11 @@
 \alias{addNeighborhoodWalking}
 \title{Add expected walking neighborhoods.}
 \usage{
-addNeighborhoodWalking(
-  pump.subset = NULL,
-  pump.select = NULL,
-  vestry = FALSE,
-  weighted = TRUE,
-  path = NULL,
-  path.color = NULL,
-  path.width = 3,
-  alpha.level = 0.25,
-  polygon.type = "solid",
-  polygon.col = NULL,
-  polygon.lwd = 2,
-  multi.core = TRUE,
-  dev.mode = FALSE
-)
+addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
+  vestry = FALSE, weighted = TRUE, path = NULL, path.color = NULL,
+  path.width = 3, alpha.level = 0.25, polygon.type = "solid",
+  polygon.col = NULL, polygon.lwd = 2, multi.core = TRUE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}

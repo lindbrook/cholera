@@ -4,12 +4,8 @@
 \alias{simulateFatalities}
 \title{Generate simulated fatalities.}
 \usage{
-simulateFatalities(
-  compute = FALSE,
-  multi.core = TRUE,
-  simulated.obs = 20000L,
-  dev.mode = FALSE
-)
+simulateFatalities(compute = FALSE, multi.core = TRUE,
+  simulated.obs = 20000L, dev.mode = FALSE)
 }
 \arguments{
 \item{compute}{Logical. \code{TRUE} computes data. \code{FALSE} uses pre-computed data. For replication of data used in the package,}
