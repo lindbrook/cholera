@@ -1,3 +1,10 @@
+cholera 0.7.0.9012
+==================
+
+- add pointsFromGeoTIFF().
+- add roadsPlot().
+
+
 cholera 0.7.0.9011
 ==================
 
