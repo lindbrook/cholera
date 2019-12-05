@@ -18,6 +18,7 @@ Imports: deldir (>= 0.0-18),
          igraph,
          KernSmooth,
          pracma,
+         raster,
          RColorBrewer,
          sp,
          threejs,
@@ -26,7 +27,7 @@ Imports: deldir (>= 0.0-18),
 Suggests: knitr,
           rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 7.0.1
+RoxygenNote: 7.0.2
 Roxygen: list(old_usage = TRUE)
 Encoding: UTF-8
 Language: en-US
