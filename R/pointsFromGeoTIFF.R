@@ -1,6 +1,7 @@
 #' Extract points from GeoTiff (prototype).
 #'
 #' @param x Object. GeoTIFF.
+#' @export
 
 pointsFromGeoTIFF <- function(x) {
   ras <- raster::raster(x)

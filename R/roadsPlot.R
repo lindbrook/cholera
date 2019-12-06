@@ -2,6 +2,7 @@
 #'
 #' @param quadrant Numeric. 1:4.
 #' @param add.roads Logical.
+#' @export
 
 roadsPlot <- function(quadrant = 1, add.roads = TRUE) {
   center.x <- min(cholera::roads$x) +
