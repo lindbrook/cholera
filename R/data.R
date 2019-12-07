@@ -235,6 +235,22 @@
 #' @docType data
 "regular.cases"
 
+#' Ground control points for QGIS 3.10 (experimental).
+#'
+#' @format A data frame with 8 observations and 8 variables.
+#' \describe{
+#'   \item{\code{mapX}}{}
+#'   \item{\code{mapY}}{}
+#'   \item{\code{pixelX }}{}
+#'   \item{\code{pixelY}}{}
+#'   \item{\code{enable}}{}
+#'   \item{\code{dX}}{}
+#'   \item{\code{dY}}{}
+#'   \item{\code{residual}}{}
+#' }
+#' @docType data
+"road.gcp.points"
+
 #' Dodson and Tobler's street data transformed into road segments.
 #'
 #' This data set transforms Dodson and Tobler's street data to give each straight line segment of a "road" a unique ID.
