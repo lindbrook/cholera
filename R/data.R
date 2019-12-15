@@ -303,6 +303,33 @@
 #' \code{\link{segmentLocator}}
 "roads"
 
+#' Dodson and Tobler's street data with appended road names, longitdue and latitude..
+#'
+#' This data set adds road names from John Snow's map to Dodson and Tobler's street data. The latter are also available from HistData::Snow.streets.
+#'
+#' @format A data frame with 206 observations and 5 variables. The data describe the roads on Snow's map.
+#' \describe{
+#'   \item{\code{street}}{street segment number, which range between 1 and 528}
+#'   \item{\code{n}}{number of points in this street line segment}
+#'   \item{\code{x}}{x-coordinate}
+#'   \item{\code{y}}{y-coordinate}
+#'   \item{\code{id}}{unique numeric ID}
+#'   \item{\code{name}}{road name}
+#'   \item{\code{x2}}{longitude}
+#'   \item{\code{y2}}{latitude}
+#' }
+#' @docType data
+#' @seealso \code{\link{road.segments}}
+#'
+#' \code{vignette}("road.names")
+#'
+#' \code{\link{streetNameLocator}}
+#'
+#' \code{\link{streetNumberLocator}}
+#'
+#' \code{\link{segmentLocator}}
+"roads2"
+
 #' List of "simulated" fatalities grouped by walking-distance pump neighborhood.
 #'
 #' @format A list 4972 IDs spread over 13 vectors.
