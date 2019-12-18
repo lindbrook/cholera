@@ -1,3 +1,11 @@
+cholera 0.7.0.9018
+==================
+
+- add rotatePoint(unique.coords = TRUE).
+- use roads$id as index in rotatePoint().
+- fix quadrants I & IV in rotatePoint().
+
+
 cholera 0.7.0.9017
 ==================
 

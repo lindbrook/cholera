@@ -1,11 +1,17 @@
 #' Rotate points (prototype).
 #'
-#' @param id Point ID.
+#' @param id Numeric. Point ID.
+#' @param unique.coords Logical. Use unique coordinates.
 #' @export
 
 rotatePoint <- function(id = 66, unique.coords = TRUE) {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   rd <- rd[order(rd$x, rd$y), ]
+
+  if (unique.coords) {
+    rd$point.id <- paste0(rd$x, "-", rd$y)
+    rd <- rd[!duplicated(rd$point.id), ]
+  }
 
   center <- data.frame(x = mean(range(rd$x)), y = mean(range(rd$y)))
 

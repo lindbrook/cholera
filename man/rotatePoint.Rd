@@ -4,10 +4,12 @@
 \alias{rotatePoint}
 \title{Rotate points (prototype).}
 \usage{
-rotatePoint(id = 1)
+rotatePoint(id = 66, unique.coords = TRUE)
 }
 \arguments{
-\item{id}{Point ID.}
+\item{id}{Numeric. Point ID.}
+
+\item{unique.coords}{Logical. Use unique coordinates.}
 }
 \description{
 Rotate points (prototype).
