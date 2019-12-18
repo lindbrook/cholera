@@ -1,6 +1,6 @@
 #' Rotate points (prototype).
 #'
-#' @param id Numeric. Point ID.
+#' @param id Numeric. Raod segment endpoint ID.
 #' @param unique.coords Logical. Use unique coordinates.
 #' @export
 
