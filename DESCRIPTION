@@ -21,6 +21,7 @@ Imports: deldir (>= 0.0-18),
          raster,
          RColorBrewer,
          sp,
+         stats,
          threejs,
          TSP,
          viridisLite
