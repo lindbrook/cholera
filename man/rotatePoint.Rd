@@ -4,7 +4,7 @@
 \alias{rotatePoint}
 \title{Rotate points (prototype).}
 \usage{
-rotatePoint(id)
+rotatePoint(id = 1)
 }
 \arguments{
 \item{id}{Point ID.}

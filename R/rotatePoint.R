@@ -3,27 +3,35 @@
 #' @param id Point ID.
 #' @export
 
-rotatePoint <- function(id) {
+rotatePoint <- function(id = 1) {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   rd <- rd[order(rd$x, rd$y), ]
 
-  ols <- stats::lm(y ~ x, data = rd[c(1, id), c("x", "y")])
+  center <- data.frame(x = mean(range(rd$x)), y = mean(range(rd$y)))
+
+  points.data <- rbind(center, rd[id, c("x", "y")])
+  theta <- theta(points.data)
+  h <- stats::dist(points.data)
+
+  theta.delta <- referenceRadians()
+
+  x.prime <- c(center$x - cos(theta - theta.delta) * h)
+  y.prime <- c(center$y - sin(theta - theta.delta) * h)
+  data.frame(x = x.prime, y = y.prime, row.names = NULL)
+}
+
+referenceRadians <- function(id1 = 1, id2 = 2) {
+  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rd <- rd[order(rd$x, rd$y), ]
+  x1 <- rd[id1, "x"]
+  y1 <- rd[id1, "y"]
+  x2 <- rd[id2, "x"]
+  y2 <- rd[id2, "y"]
+  atan((x1 - x2) / (y2 - y1))
+}
+
+theta <- function(points.data) {
+  ols <- stats::lm(y ~ x, data = points.data)
   segment.slope <- stats::coef(ols)[2]
-  delta.theta <- atan(segment.slope) + pi / 2
-
-  x0 <- rd[1, "x"]
-  y0 <- rd[1, "y"]
-  x.sel <- rd[id, "x"]
-  y.sel <- rd[id, "y"]
-
-  data.frame(x = xPrime(x.sel, y.sel, x0, y0, delta.theta),
-             y = yPrime(x.sel, y.sel, x0, y0, delta.theta))
-}
-
-xPrime <- function(x, y, x0, y0, delta.theta) {
-  cos(delta.theta) * (x - x0) + sin(delta.theta) * (y - y0) + x0
-}
-
-yPrime <- function(x, y ,x0, y0, delta.theta) {
-  -sin(delta.theta) * (x - x0) + cos(delta.theta) * (y - y0) + y0
+  atan(segment.slope)
 }
