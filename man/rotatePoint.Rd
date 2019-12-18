@@ -7,7 +7,7 @@
 rotatePoint(id = 66, unique.coords = TRUE)
 }
 \arguments{
-\item{id}{Numeric. Raod segment endpoint ID.}
+\item{id}{Numeric. Road segment endpoint ID.}
 
 \item{unique.coords}{Logical. Use unique coordinates.}
 }
