@@ -3,13 +3,13 @@
 #' @param id Point ID.
 #' @export
 
-rotatePoint <- function(id = 1) {
+rotatePoint <- function(id = 66, unique.coords = TRUE) {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   rd <- rd[order(rd$x, rd$y), ]
 
   center <- data.frame(x = mean(range(rd$x)), y = mean(range(rd$y)))
 
-  points.data <- rbind(center, rd[id, c("x", "y")])
+  points.data <- rbind(center, rd[rd$id == id, c("x", "y")])
   theta <- theta(points.data)
   h <- stats::dist(points.data)
 
