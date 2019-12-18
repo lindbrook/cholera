@@ -15,8 +15,14 @@ rotatePoint <- function(id = 1) {
 
   theta.delta <- referenceRadians()
 
-  x.prime <- c(center$x - cos(theta - theta.delta) * h)
-  y.prime <- c(center$y - sin(theta - theta.delta) * h)
+  if (points.data$x[1] - points.data$x[2] >= 0) {
+    x.prime <- c(center$x - cos(theta - theta.delta) * h)
+    y.prime <- c(center$y - sin(theta - theta.delta) * h)
+  } else {
+    x.prime <- c(center$x + cos(theta - theta.delta) * h)
+    y.prime <- c(center$y + sin(theta - theta.delta) * h)
+  }
+
   data.frame(x = x.prime, y = y.prime, row.names = NULL)
 }
 
