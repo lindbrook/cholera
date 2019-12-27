@@ -12,8 +12,8 @@
   \item{\code{y}}{y-coordinate}
   \item{\code{id}}{unique numeric ID}
   \item{\code{name}}{road name}
-  \item{\code{x2}}{longitude}
-  \item{\code{y2}}{latitude}
+  \item{\code{longitude}}{longitude (est.)}
+  \item{\code{latitude}}{latitude (est.)}
 }}
 \usage{
 roads2
