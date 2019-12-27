@@ -1,8 +1,8 @@
 cholera 0.7.0.9021
 ==================
 
-- amend roads2 prototype.
-- add roadsLatLong().
+- roads2: x2 -> longitude; y2 -> latitude.
+- add roadsLatLong() prototype.
 
 
 cholera 0.7.0.9020
