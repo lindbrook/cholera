@@ -1,3 +1,9 @@
+cholera 0.7.0.9022
+==================
+
+- add unitMeter(input.unit = "latlong").
+
+
 cholera 0.7.0.9021
 ==================
 
