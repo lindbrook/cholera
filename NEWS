@@ -3,6 +3,9 @@ cholera 0.7.0.9021
 
 - roads2: x2 -> longitude; y2 -> latitude.
 - add roadsLatLong() prototype.
+- fix meter benchmnark typo: Silver Street -> Cross Street.
+- add roadSegments2() prototype.
+- add road.segments2 prototype.
 
 
 cholera 0.7.0.9020
