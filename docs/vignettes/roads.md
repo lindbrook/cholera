@@ -1,7 +1,7 @@
 Roads
 ================
 lindbrook
-2019-02-10
+2019-12-27
 
 ## Overview
 
@@ -248,7 +248,7 @@ map is approximately 177 feet or 54 meters per unit.\[2\]
 
 2.  According to Dodson and Tobler’s data, the length of Carnaby Street
     from its intersection with Great Marlborough to its intersection
-    with Silver Street is 2.61 units. According to Google Maps, the
+    with Cross Street is 2.61 units. According to Google Maps, the
     approximate analog of that segment is the distance along parts of
     Great Marlborough Street and Carnaby Street between 19-21 Great
     Marlborough Street and 43 Carnaby Street (at Ganton Street): 463 ft.
