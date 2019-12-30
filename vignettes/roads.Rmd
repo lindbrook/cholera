@@ -123,3 +123,5 @@ Dodson and Tobler write that "The scale of the source map is approx. 1:2000. Coo
 # % difference
 round(100 * (d.latlong - d.nominal) / d.nominal, 2)
 ```
+
+## Notes
