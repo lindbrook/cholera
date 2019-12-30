@@ -39,6 +39,12 @@ unitMeter <- function(x, output.unit = "meter", input.unit = "nominal") {
   } else stop('output.unit must be "meter", "yard" or "nominal".')
 }
 
+#' Compute total length of roads.
+#'
+#' @param dat Object. data frame.
+#' @param input.unit Character. "nominal" or "latlong".
+#' @export
+
 stLength <- function(dat, input.unit = "nominal") {
   d <- vapply(seq_len(nrow(dat)), function(i) {
     if (input.unit == "nominal") {
