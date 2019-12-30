@@ -1,7 +1,7 @@
 Roads
 ================
 lindbrook
-2019-12-27
+2019-12-30
 
 ## Overview
 
@@ -239,6 +239,26 @@ inches per mile.
 Dodson and Tobler write that “The scale of the source map is approx.
 1:2000. Coordinate units are meters.” By my estimate, one unit on the
 map is approximately 177 feet or 54 meters per unit.\[2\]
+
+## Lat-long “envelope” estimate
+
+``` r
+# total length of roads on map (meters) using nominal scale
+(d.nominal <- unitMeter(stLength(road.segments)))
+[1] 22331.67
+```
+
+``` r
+# total length of roads on map (meters) using nominal scale
+(d.latlong <- unitMeter(stLength(road.segments2, "latlong"), input.unit = "latlong"))
+[1] 25874.34
+```
+
+``` r
+# % difference
+round(100 * (d.latlong - d.nominal) / d.nominal, 2)
+[1] 15.86
+```
 
 ## Notes
 
