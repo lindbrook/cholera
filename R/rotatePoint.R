@@ -1,10 +1,11 @@
 #' Rotate points (prototype).
 #'
 #' @param id Numeric. Road segment endpoint ID.
+#' @param point.type Character. "roads", "fatalities", "pumps", or "pumps.vestry".
 #' @param unique.coords Logical. Use unique coordinates.
 #' @export
 
-rotatePoint <- function(id = 66, unique.coords = TRUE) {
+rotatePoint <- function(id = 1, point.type = "roads", unique.coords = TRUE) {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   rd <- rd[order(rd$x, rd$y), ]
 
@@ -15,10 +16,25 @@ rotatePoint <- function(id = 66, unique.coords = TRUE) {
 
   center <- data.frame(x = mean(range(rd$x)), y = mean(range(rd$y)))
 
-  points.data <- rbind(center, rd[rd$id == id, c("x", "y")])
+  if (point.type == "roads") {
+    points.data <- rbind(center, rd[rd$id == id, c("x", "y")])
+  } else if (point.type == "fatalities") {
+    sel <- cholera::fatalities$case == id
+    points.data <- rbind(center, cholera::fatalities[sel, c("x", "y")])
+  } else if (point.type == "pumps") {
+    sel <- cholera::pumps$id == id
+    points.data <- rbind(center, cholera::pumps[sel, c("x", "y")])
+  } else if (point.type == "pumps.vestry") {
+    sel <- cholera::pumps.vestry$id == id
+    points.data <- rbind(center, cholera::pumps.vestry[sel, c("x", "y")])
+  } else {
+    msg1 <- 'point.type must be "roads",'
+    msg2 <- '"fatalities", "pumps", or "pumps.vestry".'
+    stop(paste(msg1, msg2))
+  }
+
   theta <- theta(points.data)
   h <- stats::dist(points.data)
-
   theta.delta <- referenceRadians()
 
   if (points.data$x[1] - points.data$x[2] >= 0) {
