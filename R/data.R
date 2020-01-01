@@ -48,6 +48,34 @@
 #' @docType data
 "fatalities"
 
+#' Amended Dodson and Tobler's cholera data.
+#'
+#' An amended version of Dodson and Tobler's digitization of John Snow's map of the 1854 London cholera outbreak. It removes 3 duplicate observations and imputes the location for 3 "missing" observation. This information is also available in HistData::Snow.deaths2 (>= ver. 0.7-8).
+#'
+#' @format A data frame with 3 variable that records the position and the nearest pump for the 578 bars on Snow's map.
+#'
+#'  \describe{
+#'     \item{\code{case}}{numeric case ID}
+#'     \item{\code{x}}{x-coordinate}
+#'     \item{\code{y}}{y-coordinate}
+#'     \item{\code{longitude}}{x-coordinate}
+#'     \item{\code{latitude}}{y-coordinate}
+#' }
+#' @seealso \code{\link{caseLocator}}
+#'
+#' \code{\link{streetNameLocator}}
+#'
+#' \code{\link{streetNumberLocator}}
+#'
+#' @note \code{\link{fixFatalities}} documents the code for these data. For details, see \code{vignette}("duplicate.missing.cases").
+#' @seealso  \code{\link{caseLocator}}
+#'
+#' \code{\link{streetNameLocator}}
+#'
+#' \code{\link{streetNumberLocator}}
+#' @docType data
+"fatalities2"
+
 #' "Unstacked" amended cholera data with address as unit of observation.
 #'
 #' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".

@@ -1,3 +1,11 @@
+cholera 0.7.0.9024
+==================
+
+- remove roadsPlot().
+- add rotatePoint(point.type = "roads").
+- add longitude and latitude to fatalities2 (experimental).
+
+
 cholera 0.7.0.9023
 ==================
 
