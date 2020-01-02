@@ -234,6 +234,24 @@
 #' @docType data
 "pumps"
 
+#' Dodson and Tobler's pump data with street name.
+#'
+#' Adds and amends road locations for water pumps from John Snow's map to Dodson and Tobler's street data. The latter are available at Michael Friendly's HistData::Snow.streets.
+#'
+#' @format A data frame with 13 observations and 4 variables that describe the pumps on Snow's map.
+#' \describe{
+#'   \item{\code{id}}{pump number between 1 and 13}
+#'   \item{\code{street}}{nearest street}
+#'   \item{\code{x}}{x-coordinate}
+#'   \item{\code{y}}{y-coordinate}
+#'   \item{\code{longitude}}{x-coordinate}
+#'   \item{\code{latitude}}{y-coordinate}
+#' }
+#' @seealso \code{\link{pumpLocator}}
+#' @note \code{\link{pumpData}} documents the code for these data.
+#' @docType data
+"pumps2"
+
 #' Vestry report pump data.
 #'
 #' These data include the fourteenth pump, at Hanover Square, and the "corrected" location of the Broad Street pump that Snow includes in the second version of his map in the Vestry report.
