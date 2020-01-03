@@ -9,7 +9,7 @@ cholera 0.7.0.9024
 ==================
 
 - remove roadsPlot().
-- add rotatePoint(point.type = "roads").
+- add rotatePoint(point.type = c("fatalities", "pumps", "pumps.vestry", "roads").
 - add longitude and latitude to fatalities2 (experimental).
 
 
