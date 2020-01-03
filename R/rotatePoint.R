@@ -1,7 +1,7 @@
 #' Rotate points (prototype).
 #'
 #' @param id Numeric. Road segment endpoint ID.
-#' @param point.type Character. "roads", "fatalities", "pumps", or "pumps.vestry".
+#' @param point.type Character. "roads", "fatalities", "fatalities.address", "pumps", or "pumps.vestry".
 #' @param unique.coords Logical. Use unique coordinates.
 #' @export
 
@@ -21,6 +21,9 @@ rotatePoint <- function(id = 1, point.type = "roads", unique.coords = TRUE) {
   } else if (point.type == "fatalities") {
     sel <- cholera::fatalities$case == id
     points.data <- rbind(center, cholera::fatalities[sel, c("x", "y")])
+  } else if (point.type == "fatalities.address") {
+    sel <- cholera::fatalities.address$anchor == id
+    points.data <- rbind(center, cholera::fatalities.address[sel, c("x", "y")])
   } else if (point.type == "pumps") {
     sel <- cholera::pumps$id == id
     points.data <- rbind(center, cholera::pumps[sel, c("x", "y")])
@@ -29,7 +32,7 @@ rotatePoint <- function(id = 1, point.type = "roads", unique.coords = TRUE) {
     points.data <- rbind(center, cholera::pumps.vestry[sel, c("x", "y")])
   } else {
     msg1 <- 'point.type must be "roads",'
-    msg2 <- '"fatalities", "pumps", or "pumps.vestry".'
+    msg2 <- '"fatalities", "fatalities.address", "pumps", or "pumps.vestry".'
     stop(paste(msg1, msg2))
   }
 

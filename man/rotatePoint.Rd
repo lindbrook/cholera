@@ -9,7 +9,7 @@ rotatePoint(id = 1, point.type = "roads", unique.coords = TRUE)
 \arguments{
 \item{id}{Numeric. Road segment endpoint ID.}
 
-\item{point.type}{Character. "roads", "fatalities", "pumps", or "pumps.vestry".}
+\item{point.type}{Character. "roads", "fatalities", "fatalities.address", "pumps", or "pumps.vestry".}
 
 \item{unique.coords}{Logical. Use unique coordinates.}
 }
