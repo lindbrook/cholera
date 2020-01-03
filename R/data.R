@@ -98,6 +98,30 @@
 #' @docType data
 "fatalities.address"
 
+#' "Unstacked" amended cholera data with address as unit of observation.
+#'
+#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
+#'
+#' @format A data frame with 4 variables for 321 addresses
+#'  \describe{
+#'     \item{\code{anchor}}{numerical case ID of address}
+#'     \item{\code{x}}{x-coordinate}
+#'     \item{\code{y}}{y-coordinate}
+#'     \item{\code{case.count}}{number of fatalities at address}
+#'     \item{\code{longitude}}{x-coordinate}
+#'     \item{\code{latitude}}{y-coordinate}
+#' }
+#' @seealso
+#' \code{\link{caseLocator}}
+#'
+#' \code{\link{streetNameLocator}}
+#'
+#' \code{\link{streetNumberLocator}}
+#'
+#' @note \code{\link{unstackFatalities}} documents the code for these data. For details, see \code{vignette}("unstacking.fatalities").
+#' @docType data
+"fatalities.address2"
+
 #' "Unstacked" amended cholera fatalities data with fatality as unit of observation.
 #'
 #' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and assigns the base case's coordinates to all cases in the stack.
@@ -267,6 +291,24 @@
 #' @note \code{\link{pumpData}} documents the code for these data.
 #' @docType data
 "pumps.vestry"
+
+#' Vestry report pump data.
+#'
+#' These data include the fourteenth pump, at Hanover Square, and the "corrected" location of the Broad Street pump that Snow includes in the second version of his map in the Vestry report.
+#'
+#' @format A data frame with 14 observations and 4 variables.
+#' \describe{
+#'   \item{\code{id}}{pump number between 1 and 14}
+#'   \item{\code{street}}{nearest street}
+#'   \item{\code{x}}{x-coordinate}
+#'   \item{\code{y}}{y-coordinate}
+#'   \item{\code{longitude}}{x-coordinate}
+#'   \item{\code{latitude}}{y-coordinate}
+#' }
+#' @seealso \code{\link{pumpLocator}}
+#' @note \code{\link{pumpData}} documents the code for these data.
+#' @docType data
+"pumps.vestry2"
 
 #' "Expected" cases.
 #'

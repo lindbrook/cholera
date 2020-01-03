@@ -2,6 +2,8 @@ cholera 0.7.0.9026
 ==================
 
 - add rotatePoint(point.type = c("fatalities.address").
+- use :: in snowMap2() prototype.
+- add longitude and latitude to fatalities.address2 and pumps.vestry2 (experimental).
 
 
 cholera 0.7.0.9025
