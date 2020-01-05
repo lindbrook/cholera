@@ -118,7 +118,11 @@
 #'
 #' \code{\link{streetNumberLocator}}
 #'
-#' @note \code{\link{unstackFatalities}} documents the code for these data. For details, see \code{vignette}("unstacking.fatalities").
+#' @note sel <- fatalities2$case %in% fatalities.address2$anchor
+#'
+#' identical(fatalities2[sel, "longitude"], fatalities.address2$longitude)
+#'
+#' identical(fatalities2[sel, "latitude"], fatalities.address2$latitude)
 #' @docType data
 "fatalities.address2"
 

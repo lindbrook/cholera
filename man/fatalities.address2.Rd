@@ -20,7 +20,11 @@ fatalities.address2
 An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
 }
 \note{
-\code{\link{unstackFatalities}} documents the code for these data. For details, see \code{vignette}("unstacking.fatalities").
+sel <- fatalities2$case %in% fatalities.address2$anchor
+
+identical(fatalities2[sel, "longitude"], fatalities.address2$longitude)
+
+identical(fatalities2[sel, "latitude"], fatalities.address2$latitude)
 }
 \seealso{
 \code{\link{caseLocator}}
