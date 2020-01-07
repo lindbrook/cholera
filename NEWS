@@ -1,3 +1,10 @@
+cholera 0.7.0.9027
+==================
+
+- consolidate of pointCentroids(), pointsFromGeoTIFF(), roadsLatLong() and rotatePoint()
+  into latitudeLongitude().
+
+
 cholera 0.7.0.9026
 ==================
 
