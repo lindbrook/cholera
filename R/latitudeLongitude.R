@@ -323,13 +323,21 @@ rotatePoint <- function(id = 1, point.type = "roads", unique.coords = TRUE) {
   data.frame(x = x.prime, y = y.prime, row.names = NULL)
 }
 
-referenceRadians <- function(id1 = 1, id2 = 2) {
-  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  rd <- rd[order(rd$x, rd$y), ]
-  x1 <- rd[id1, "x"]
-  y1 <- rd[id1, "y"]
-  x2 <- rd[id2, "x"]
-  y2 <- rd[id2, "y"]
+#' Estimate rotation of georeferencing (radians).
+#'
+#' QGIS georeferencing realigns map: left side approximately parallel to y-axis
+#' @param id1 Numeric. Road segment endpoint ID. Margaret Street.
+#' @param id2 Numeric. Road segment endpoint ID. Phoenix Yard.
+#' @note These two points are the first two observations on the top left side.
+#' @noRd
+
+referenceRadians <- function(id1 = 66, id2 = 171) {
+  rd <- cholera::roads
+  # rd[order(rd$x, rd$y), ] # first two observations on top left side
+  x1 <- rd[rd$id == id1, "x"]
+  y1 <- rd[rd$id == id1, "y"]
+  x2 <- rd[rd$id == id2, "x"]
+  y2 <- rd[rd$id == id2, "y"]
   atan((x1 - x2) / (y2 - y1))
 }
 
