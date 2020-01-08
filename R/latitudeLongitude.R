@@ -273,11 +273,11 @@ pointsFromGeoTIFF <- function(x) {
 #' Rotate points (prototype).
 #'
 #' @param id Numeric. Road segment endpoint ID.
-#' @param point.type Character. "roads", "fatalities", "fatalities.address", "pumps", or "pumps.vestry".
+#' @param dataset Character. "roads", "fatalities", "fatalities.address", "pumps", or "pumps.vestry".
 #' @param unique.coords Logical. Use unique coordinates.
 #' @noRd
 
-rotatePoint <- function(id = 1, point.type = "roads", unique.coords = TRUE) {
+rotatePoint <- function(id = 1, dataset = "roads", unique.coords = TRUE) {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   rd <- rd[order(rd$x, rd$y), ]
 
@@ -288,22 +288,22 @@ rotatePoint <- function(id = 1, point.type = "roads", unique.coords = TRUE) {
 
   center <- data.frame(x = mean(range(rd$x)), y = mean(range(rd$y)))
 
-  if (point.type == "roads") {
+  if (dataset == "roads") {
     points.data <- rbind(center, rd[rd$id == id, c("x", "y")])
-  } else if (point.type == "fatalities") {
+  } else if (dataset == "fatalities") {
     sel <- cholera::fatalities$case == id
     points.data <- rbind(center, cholera::fatalities[sel, c("x", "y")])
-  } else if (point.type == "fatalities.address") {
+  } else if (dataset == "fatalities.address") {
     sel <- cholera::fatalities.address$anchor == id
     points.data <- rbind(center, cholera::fatalities.address[sel, c("x", "y")])
-  } else if (point.type == "pumps") {
+  } else if (dataset == "pumps") {
     sel <- cholera::pumps$id == id
     points.data <- rbind(center, cholera::pumps[sel, c("x", "y")])
-  } else if (point.type == "pumps.vestry") {
+  } else if (dataset == "pumps.vestry") {
     sel <- cholera::pumps.vestry$id == id
     points.data <- rbind(center, cholera::pumps.vestry[sel, c("x", "y")])
   } else {
-    msg1 <- 'point.type must be "roads", "fatalities", "fatalities.address",'
+    msg1 <- 'dataset must be "roads", "fatalities", "fatalities.address",'
     msg2 <- '"pumps", or "pumps.vestry".'
     stop(paste(msg1, msg2))
   }
