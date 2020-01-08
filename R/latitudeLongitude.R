@@ -14,92 +14,67 @@ latitudeLongitude <- function(geotiff, dataset = "roads", cutpoint = 0.000006,
   cores <- multiCore(multi.core)
   vars1 <- c("x", "y")
   vars2 <- c("longitude", "latitude")
+  sets <- c("roads", "fatalities", "fatalities.address", "pumps",
+    "pumps.vestry")
+
   dat <- pointsFromGeoTIFF(geotiff)
 
   # clean TIFF #
 
-  if (dataset == "roads") {
-    f.data <- dat[dat$road.segments4_modified != 0 &
-                  dat$road.segments4_modified != 255, ]
-
-  } else if (dataset == "fatalities") {
-    f.data <- dat[dat$fatalities_modified != 0 &
-                  dat$fatalities_modified != 255, ]
-
-  } else if (dataset == "fatalities.address") {
-    f.data <- dat[dat$fatalities.address_modified != 0 &
-                  dat$fatalities.address_modified != 255, ]
-
-  } else if (dataset == "pumps") {
-    f.data <- dat[dat$pumps_modified != 0 & dat$pumps_modified != 255, ]
-
-  } else if (dataset == "pumps.vestry") {
-    f.data <- dat[dat$pumps.vestry_modified != 0 &
-                  dat$pumps.vestry_modified != 255, ]
-
-  } else {
+  if (dataset %in% sets == FALSE) {
     msg1 <- 'dataset must be "roads", "fatalities", "fatalities.address",'
     msg2 <- '"pumps", or "pumps.vestry".'
-    stop(paste(msg1, msg2))
-  }
+    stop(msg1, msg2)
+  } else sel.var <- paste0(dataset, "_modified")
 
+  f.data <- dat[dat[sel.var] != 0 & dat[sel.var] != 255, ]
   f.data <- f.data[order(f.data$x, f.data$y), vars1]
 
   # cluster analysis #
+
   distances <- stats::dist(f.data)
   tree <- stats::hclust(distances)
   clusters <- stats::cutree(tree, h = cutpoint)
   cluster.id <- unique(clusters)
 
-  # estimate center of a point's points (pixels?)
+  # estimate center of a point's points (pixels?) #
+
   pts <- lapply(cluster.id, function(grp) names(clusters[clusters == grp]))
   centroids <- lapply(pts, function(p) data.frame(t(colMeans(f.data[p, ]))))
   centroids <- do.call(rbind, centroids)
 
-
-  # rotate native coordinates to "match" georeferenced coordinates #
   if (dataset == "roads") {
-    # unique road segment endpoints #
     rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
     rd$point.id <- paste0(rd$x, "-", rd$y)
     rd.duplicate <- rd[duplicated(rd$point.id), ]
     rd.unique <- rd[!duplicated(rd$point.id), ]
-
-    coordinates <- parallel::mclapply(rd.unique$id, rotatePoint,
-      mc.cores = cores)
-
+    id <- rd.unique$id
   } else if (dataset == "fatalities") {
-    coordinates <- parallel::mclapply(cholera::fatalities$case, function(x) {
-      rotatePoint(x, point.type = "fatalities")
-    }, mc.cores = cores)
-
+    id <- cholera::fatalities$case
   } else if (dataset == "fatalities.address") {
     id <- cholera::fatalities.address$anchor
-    coordinates <- parallel::mclapply(id, function(x) {
-      rotatePoint(x, point.type = "fatalities.address")
-    }, mc.cores = cores)
-
   } else if (dataset == "pumps") {
-    coordinates <- parallel::mclapply(cholera::pumps$id, function(x) {
-      rotatePoint(x, point.type = "pumps")
-    }, mc.cores = cores)
-
+    id <- cholera::pumps$id
   } else if (dataset == "pumps.vestry") {
-    coordinates <- parallel::mclapply(cholera::pumps.vestry$id, function(x) {
-      rotatePoint(x, point.type = "pumps.vestry")
-    }, mc.cores = cores)
+    id <- cholera::pumps.vestry$id
   }
 
+  coordinates <- parallel::mclapply(id, function(x) {
+    rotatePoint(x, dataset = dataset)
+  }, mc.cores = cores)
+
   coordinates <- do.call(rbind, coordinates)
-  coordinates <- data.frame(id = rd.unique$id, coordinates)
+  coordinates <- data.frame(id = id, coordinates)
 
   # normalize and rescale native and georeferenced coordinates #
+
   coordinates.scaled <- data.frame(id = coordinates$id,
     scale(coordinates[, vars1]))
 
   centroids.scaled <- data.frame(scale(centroids[, vars1]))
 
-  # compute distances between native and and georeferenced coordinates #
+  # compute distances between scaled native and and scaled georeferenced coordinates #
+
   alters <- centroids.scaled[, vars1]
 
   translation <- parallel::mclapply(coordinates.scaled$id, function(id) {
@@ -123,7 +98,6 @@ latitudeLongitude <- function(geotiff, dataset = "roads", cutpoint = 0.000006,
 
     id <- vapply(duplicate.centroids, function(x) {
       dat <- translation[translation$centroid == x, ]
-
       sel <- coordinates.scaled $id %in% dat$id
       obs.data <- rbind(coordinates.scaled[sel, vars1],
                         centroids.scaled[unique(dat$centroid), vars1])
@@ -141,7 +115,7 @@ latitudeLongitude <- function(geotiff, dataset = "roads", cutpoint = 0.000006,
     })
 
     ## audit plots ##
-    
+
     # invisible(lapply(seq_along(translation.duplicates), function(i) {
     #   dat <- translation.duplicates[[i]]
     #   if (i < length(translation.duplicates)) {
@@ -160,6 +134,7 @@ latitudeLongitude <- function(geotiff, dataset = "roads", cutpoint = 0.000006,
     translation[translation$id == 1101, "centroid"] <- 9
 
     # assembly #
+
     rd.unique[, vars2] <- NA
 
     for (x in rd.unique$id) {
@@ -176,23 +151,45 @@ latitudeLongitude <- function(geotiff, dataset = "roads", cutpoint = 0.000006,
 
     roads2 <- rbind(rd.unique, rd.duplicate)
     roads2 <- roads2[order(roads2$id), ]
-
     # usethis::use_data(roads2)
+    # usethis::use_data(roads2, overwrite = TRUE)
 
   } else if (dataset == "fatalities") {
-    # setdiff(fatalities$case, unique(translation$centroid))
-    # 495
+    missing.centroids <- sort(setdiff(seq_len(nrow(centroids)),
+      unique(translation$centroid)))
 
-    # translation$centroid[duplicated((translation$centroid))]
-    # 500
+    sel <- duplicated(translation$centroid)
+    duplicate.centroids <- translation$centroid[sel]
 
-    # subset(translation, centroid == 500)
-    #      id centroid           d
-    # 86   86      500 0.007725832
-    # 125 125      500 0.013241356
+    id <- vapply(duplicate.centroids, function(x) {
+      dat <- translation[translation$centroid == x, ]
+      sel <- coordinates.scaled $id %in% dat$id
+      obs.data <- rbind(coordinates.scaled[sel, vars1],
+                        centroids.scaled[unique(dat$centroid), vars1])
 
-    # auditTranslationPlot(86, 125, 495, 500)
+      d <- vapply(missing.centroids, function(y) {
+        c.data <- centroids.scaled[y, vars1]
+        sum(sqrt((c.data$x - obs.data$x)^2 + (c.data$y - obs.data$y)^2))
+      }, numeric(1L))
+
+      which.min(d)
+    }, integer(1L))
+
+    translation.duplicates <- lapply(duplicate.centroids, function(x) {
+      dat <- translation[translation$centroid == x, ]
+    })
+
+    ## audit plots ##
+
+    # invisible(lapply(seq_along(translation.duplicates), function(i) {
+    #   dat <- translation.duplicates[[i]]
+    #   auditTranslationPlot(dat$id[1], dat$id[2], dat$centroid[1],
+    #     missing.centroids[id][i], coordinates.scaled, centroids.scaled)
+    # }))
+
     translation[translation$id == 86, "centroid"] <- 495
+
+    # assembly #
 
     fatalities[, c("x2", "y2")] <- NA
 
@@ -205,12 +202,18 @@ latitudeLongitude <- function(geotiff, dataset = "roads", cutpoint = 0.000006,
     # usethis::use_data(fatalities2)
     # usethis::use_data(roads2, overwrite = TRUE)
 
-
   } else if (dataset == "fatalities.address") {
-    # setdiff(fatalities.address$anchor, unique(translation$centroid))
-    # setdiff(fatalities.address$anchor, fatalities.address$anchor[translation$centroid])
+    missing.centroids <- sort(setdiff(seq_len(nrow(centroids)),
+      unique(translation$centroid)))
 
-    vars2 <- c("longitude", "latitude")
+    sel <- duplicated(translation$centroid)
+    duplicate.centroids <- translation$centroid[sel]
+
+    # any(missing.centroids)
+    # any(duplicate.centroids)
+    # No data fixes!
+
+    # assembly #
 
     fatalities.address[, vars2] <- NA
 
@@ -223,13 +226,18 @@ latitudeLongitude <- function(geotiff, dataset = "roads", cutpoint = 0.000006,
     # usethis::use_data(fatalities.address2)
     # usethis::use_data(fatalities.address2, overwrite = TRUE)
 
-
-
   } else if (dataset == "pumps") {
-    # setdiff(pumps$id, unique(translation$centroid))
-    # translation$centroid[duplicated((translation$centroid))]
+    missing.centroids <- sort(setdiff(seq_len(nrow(centroids)),
+      unique(translation$centroid)))
 
-    vars2 <- c("longitude", "latitude")
+    sel <- duplicated(translation$centroid)
+    duplicate.centroids <- translation$centroid[sel]
+
+    # any(missing.centroids)
+    # any(duplicate.centroids)
+    # No data fixes!
+
+    # assembly #
 
     pumps[, vars2] <- NA
 
@@ -238,9 +246,22 @@ latitudeLongitude <- function(geotiff, dataset = "roads", cutpoint = 0.000006,
       pumps[pumps$id == id, vars2] <- centroids[c.id, ]
     }
 
+    pumps2 <- pumps
+    # usethis::use_data(pumps2)
+    # usethis::use_data(pumps2, overwrite = TRUE)
+
   } else if (dataset == "pumps.vestry") {
-    # setdiff(pumps.vestry$id, unique(translation$centroid))
-    # translation$centroid[duplicated((translation$centroid))]
+    missing.centroids <- sort(setdiff(seq_len(nrow(centroids)),
+      unique(translation$centroid)))
+
+    sel <- duplicated(translation$centroid)
+    duplicate.centroids <- translation$centroid[sel]
+
+    # any(missing.centroids)
+    # any(duplicate.centroids)
+    # No data fixes!
+
+    # assembly #
 
     vars2 <- c("longitude", "latitude")
 
@@ -254,9 +275,7 @@ latitudeLongitude <- function(geotiff, dataset = "roads", cutpoint = 0.000006,
     pumps.vestry2 <- pumps.vestry
     # usethis::use_data(pumps.vestry2)
     # usethis::use_data(pumps.vestry2, overwrite = TRUE)
-
   }
-
 }
 
 #' Extract points from GeoTiff (prototype).
@@ -369,9 +388,3 @@ auditTranslationPlot <- function(coord1, coord2, cent1, cent2,
 # plot(roads2[, vars2], pch = NA)
 # roads.list <- split(roads2[, vars2], roads2$street)
 # invisible(lapply(roads.list, lines))
-
-## add data to package
-
-# roads2 <- roadsLatLong()
-# usethis::use_data(roads2)
-# usethis::use_data(roads2, overwrite = TRUE)

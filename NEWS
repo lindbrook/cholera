@@ -1,3 +1,11 @@
+cholera 0.7.0.9028
+==================
+
+- amend latitudeLongitude().
+- rotatePoint(point.type) -> rotatePoint(dataset).
+- amend referenceRadians().
+
+
 cholera 0.7.0.9027
 ==================
 
