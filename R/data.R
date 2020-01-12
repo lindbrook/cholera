@@ -379,10 +379,10 @@
 #'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
 #'   \item{\code{id}}{character segment ID}
 #'   \item{\code{name}}{road name}
-#'   \item{\code{lon1}}{longitude of first endpoint}
-#'   \item{\code{lat1}}{latitude of first endpoint}
-#'   \item{\code{lon2}}{longitude of second endpoint}
-#'   \item{\code{lat2}}{latitude of second endpoint}
+#'   \item{\code{longitude1}}{longitude of first endpoint}
+#'   \item{\code{latitude1}}{latitude of first endpoint}
+#'   \item{\code{longitude2}}{longitude of second endpoint}
+#'   \item{\code{latitude2}}{latitude of second endpoint}
 #' }
 #' @seealso \code{\link{roads}}
 #'

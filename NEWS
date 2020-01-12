@@ -1,3 +1,9 @@
+cholera 0.7.0.9029
+==================
+
+- road.segments2: "lon" and "lat" -> "longitude" and "latitude".
+
+
 cholera 0.7.0.9028
 ==================
 

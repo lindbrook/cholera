@@ -51,8 +51,8 @@ stLength <- function(dat, input.unit = "nominal") {
       p1 <- dat[i, c("x1", "y1")]
       p2 <- dat[i, c("x2", "y2")]
     } else if (input.unit == "latlong") {
-      p1 <- dat[i, c("lon1", "lat1")]
-      p2 <- dat[i, c("lon2", "lat2")]
+      p1 <- dat[i, c("longitude1", "latitude1")]
+      p2 <- dat[i, c("longitude2", "latitude2")]
     }
     vars <- c("x", "y")
     names(p1) <- vars
