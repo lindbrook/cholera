@@ -6,5 +6,5 @@
 #' @export
 
 withinRadius <- function(a, b, radius = 2) {
-  (a$x - b$x)^2 + (a$y - b$y)^2 <= radius^2
+  (a[, 1] - b[, 1])^2 + (a[, 2] - b[, 2])^2 <= radius^2
 }
