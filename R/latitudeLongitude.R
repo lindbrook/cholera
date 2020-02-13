@@ -327,7 +327,7 @@ rotatePoint <- function(id = 1, dataset = "roads", unique.coords = TRUE) {
     stop(paste(msg1, msg2))
   }
 
-  theta <- theta(points.data)
+  theta <- radians(points.data)
   h <- stats::dist(points.data)
   theta.delta <- referenceRadians()
 
@@ -360,7 +360,7 @@ referenceRadians <- function(id1 = 66, id2 = 171) {
   atan((x1 - x2) / (y2 - y1))
 }
 
-theta <- function(points.data) {
+radians <- function(points.data) {
   ols <- stats::lm(y ~ x, data = points.data)
   segment.slope <- stats::coef(ols)[2]
   atan(segment.slope)
