@@ -4,9 +4,11 @@
 \name{border}
 \alias{border}
 \title{Numeric IDs of line segments that create the map's border frame.}
-\format{\describe{
+\format{
+\describe{
     \item{\code{border}}{numerical ID}
-}}
+}
+}
 \usage{
 border
 }

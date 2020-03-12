@@ -4,7 +4,8 @@
 \name{roads}
 \alias{roads}
 \title{Dodson and Tobler's street data with appended road names.}
-\format{A data frame with 206 observations and 5 variables. The data describe the roads on Snow's map.
+\format{
+A data frame with 206 observations and 5 variables. The data describe the roads on Snow's map.
 \describe{
   \item{\code{street}}{street segment number, which range between 1 and 528}
   \item{\code{n}}{number of points in this street line segment}
@@ -12,7 +13,8 @@
   \item{\code{y}}{y-coordinate}
   \item{\code{id}}{unique numeric ID}
   \item{\code{name}}{road name}
-}}
+}
+}
 \usage{
 roads
 }

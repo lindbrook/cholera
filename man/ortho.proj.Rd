@@ -4,14 +4,16 @@
 \name{ortho.proj}
 \alias{ortho.proj}
 \title{Orthogonal projection of observed cases onto road network.}
-\format{A data frame with 5 variables that records the position of the orthogonal projection of the 578 cases onto the network of roads.
+\format{
+A data frame with 5 variables that records the position of the orthogonal projection of the 578 cases onto the network of roads.
  \describe{
     \item{\code{road.segment}}{"address" road segment}
     \item{\code{x.proj}}{x-coordinate}
     \item{\code{y.proj}}{y-coordinate}
     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
     \item{\code{case}}{numeric case ID}
- }}
+ }
+}
 \usage{
 ortho.proj
 }

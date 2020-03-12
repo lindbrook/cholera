@@ -4,13 +4,15 @@
 \name{fatalities.unstacked}
 \alias{fatalities.unstacked}
 \title{"Unstacked" amended cholera fatalities data with fatality as unit of observation.}
-\format{A data frame with 3 variable that records the position of the 578 bars on Snow's map.
+\format{
+A data frame with 3 variable that records the position of the 578 bars on Snow's map.
 
  \describe{
     \item{\code{case}}{numerical case ID}
     \item{\code{x}}{x-coordinate}
     \item{\code{y}}{y-coordinate}
-}}
+}
+}
 \usage{
 fatalities.unstacked
 }

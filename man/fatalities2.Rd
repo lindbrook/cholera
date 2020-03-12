@@ -4,7 +4,8 @@
 \name{fatalities2}
 \alias{fatalities2}
 \title{Amended Dodson and Tobler's cholera data.}
-\format{A data frame with 3 variable that records the position and the nearest pump for the 578 bars on Snow's map.
+\format{
+A data frame with 3 variable that records the position and the nearest pump for the 578 bars on Snow's map.
 
  \describe{
     \item{\code{case}}{numeric case ID}
@@ -12,7 +13,8 @@
     \item{\code{y}}{y-coordinate}
     \item{\code{longitude}}{x-coordinate}
     \item{\code{latitude}}{y-coordinate}
-}}
+}
+}
 \usage{
 fatalities2
 }

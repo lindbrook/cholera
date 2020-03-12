@@ -4,13 +4,15 @@
 \name{pumps.vestry}
 \alias{pumps.vestry}
 \title{Vestry report pump data.}
-\format{A data frame with 14 observations and 4 variables.
+\format{
+A data frame with 14 observations and 4 variables.
 \describe{
   \item{\code{id}}{pump number between 1 and 14}
   \item{\code{street}}{nearest street}
   \item{\code{x}}{x-coordinate}
   \item{\code{y}}{y-coordinate}
-}}
+}
+}
 \usage{
 pumps.vestry
 }

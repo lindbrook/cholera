@@ -4,10 +4,12 @@
 \name{sim.pump.case}
 \alias{sim.pump.case}
 \title{List of "simulated" fatalities grouped by walking-distance pump neighborhood.}
-\format{A list 4972 IDs spread over 13 vectors.
+\format{
+A list 4972 IDs spread over 13 vectors.
 \describe{
  \item{\code{sim.pump.case}}{numerical ID}
-}}
+}
+}
 \usage{
 sim.pump.case
 }

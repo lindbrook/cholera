@@ -4,7 +4,8 @@
 \name{roads2}
 \alias{roads2}
 \title{Dodson and Tobler's street data with appended road names, longitdue and latitude..}
-\format{A data frame with 206 observations and 5 variables. The data describe the roads on Snow's map.
+\format{
+A data frame with 206 observations and 5 variables. The data describe the roads on Snow's map.
 \describe{
   \item{\code{street}}{street segment number, which range between 1 and 528}
   \item{\code{n}}{number of points in this street line segment}
@@ -14,7 +15,8 @@
   \item{\code{name}}{road name}
   \item{\code{longitude}}{longitude (est.)}
   \item{\code{latitude}}{latitude (est.)}
-}}
+}
+}
 \usage{
 roads2
 }

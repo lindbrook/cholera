@@ -4,7 +4,8 @@
 \name{road.segments2}
 \alias{road.segments2}
 \title{Dodson and Tobler's street data transformed into road segments.}
-\format{A data frame with 657 observations and 7 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
+\format{
+A data frame with 657 observations and 7 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
 \describe{
   \item{\code{street}}{numeric street ID, which range between 1 and 528}
   \item{\code{id}}{character segment ID}
@@ -13,7 +14,8 @@
   \item{\code{latitude1}}{latitude of first endpoint}
   \item{\code{longitude2}}{longitude of second endpoint}
   \item{\code{latitude2}}{latitude of second endpoint}
-}}
+}
+}
 \usage{
 road.segments2
 }

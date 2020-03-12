@@ -4,11 +4,13 @@
 \name{plague.pit}
 \alias{plague.pit}
 \title{Plague pit coordinates.}
-\format{A data frame with 13 observations and 2 variables.
+\format{
+A data frame with 13 observations and 2 variables.
 \describe{
   \item{\code{x}}{x-coordinate}
   \item{\code{y}}{y-coordinate}
-}}
+}
+}
 \usage{
 plague.pit
 }

@@ -4,10 +4,12 @@
 \name{snow.neighborhood}
 \alias{snow.neighborhood}
 \title{Snow neighborhood fatalities.}
-\format{A vector with 384 observations.
+\format{
+A vector with 384 observations.
 \describe{
   \item{\code{snow.neighborhood}}{numeric case ID}
-}}
+}
+}
 \usage{
 snow.neighborhood
 }

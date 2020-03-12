@@ -4,7 +4,8 @@
 \name{road.gcp.points}
 \alias{road.gcp.points}
 \title{Ground control points for QGIS 3.10 (experimental).}
-\format{A data frame with 8 observations and 8 variables.
+\format{
+A data frame with 8 observations and 8 variables.
 \describe{
   \item{\code{mapX}}{}
   \item{\code{mapY}}{}
@@ -14,7 +15,8 @@
   \item{\code{dX}}{}
   \item{\code{dY}}{}
   \item{\code{residual}}{}
-}}
+}
+}
 \usage{
 road.gcp.points
 }

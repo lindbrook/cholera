@@ -4,14 +4,16 @@
 \name{sim.walking.distance}
 \alias{sim.walking.distance}
 \title{Walking distance to Broad Street Pump (#7).}
-\format{A data frames with 5 variables.
+\format{
+A data frames with 5 variables.
 \describe{
   \item{\code{case}}{case ID}
   \item{\code{pump}}{pump ID}
   \item{\code{pump.name}}{pump name}
   \item{\code{distance}}{walking distance in meters}
   \item{\code{time}}{walking time in seconds based on 5 km/hr walking speed}
-}}
+}
+}
 \usage{
 sim.walking.distance
 }

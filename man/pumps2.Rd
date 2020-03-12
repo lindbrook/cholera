@@ -4,7 +4,8 @@
 \name{pumps2}
 \alias{pumps2}
 \title{Dodson and Tobler's pump data with street name.}
-\format{A data frame with 13 observations and 4 variables that describe the pumps on Snow's map.
+\format{
+A data frame with 13 observations and 4 variables that describe the pumps on Snow's map.
 \describe{
   \item{\code{id}}{pump number between 1 and 13}
   \item{\code{street}}{nearest street}
@@ -12,7 +13,8 @@
   \item{\code{y}}{y-coordinate}
   \item{\code{longitude}}{x-coordinate}
   \item{\code{latitude}}{y-coordinate}
-}}
+}
+}
 \usage{
 pumps2
 }

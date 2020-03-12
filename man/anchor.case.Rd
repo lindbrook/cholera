@@ -4,10 +4,12 @@
 \name{anchor.case}
 \alias{anchor.case}
 \title{Anchor or base case of each stack of fatalities.}
-\format{\describe{
+\format{
+\describe{
     \item{\code{case}}{numerical case ID}
     \item{\code{anchor}}{numerical case ID of anchor.case}
-}}
+}
+}
 \usage{
 anchor.case
 }

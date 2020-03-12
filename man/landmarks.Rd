@@ -4,7 +4,8 @@
 \name{landmarks}
 \alias{landmarks}
 \title{Orthogonal projection of landmarks onto road network.}
-\format{A data frame with 6 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
+\format{
+A data frame with 6 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
  \describe{
     \item{\code{road.segment}}{"address" road segment}
     \item{\code{x.proj}}{orthogonal x-coordinate}
@@ -14,7 +15,8 @@
     \item{\code{y}}{nominal y-coordinate}
     \item{\code{name}}{landmark name}
     \item{\code{case}}{numeric case ID}
- }}
+ }
+}
 \usage{
 landmarks
 }
