@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2019-11-10
+2020-04-04
 
 John Broich. 2013. *London: Water and the Making of the Modern City*.
 Pittsburgh: University of Pittsburgh Press.
@@ -51,6 +51,9 @@ Margaret Pelling. 1978. *Cholera, Fever and English Medicine:
 Liza Picard. 2006. *Victorian London: The Life of A City, 1840-1870*.
 New York: St Martin’s Press.
 
+Robert Skidelsky. 2018. *Money and Government: The Past and Future of
+Economics*. New Haven: Yale University Press.
+
 John Snow. 1855. *On The Mode Of Communication Of Cholera*. London: John
 Churchill.
 
@@ -60,7 +63,7 @@ Yorkshire: Pen and Sword History.
 Tom Vanderbilt. 2008. *Traffic: Why We Drive the Way We Do (and What It
 Says About Us)*. New York: Knopf.
 
-Peter Vinten-Johansen, et al. .2003. *Cholera, Chloroform, and the
+Peter Vinten-Johansen, et al. 2003. *Cholera, Chloroform, and the
 Science of Medicine: A Life of John Snow*. Oxford: Oxford University
 Press.
 
