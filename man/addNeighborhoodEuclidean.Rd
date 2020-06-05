@@ -32,7 +32,7 @@ R graphic elements.
 Add expected Euclidean pump neighborhoods.
 }
 \examples{
-\donttest{
+\dontrun{
 streetNameLocator("marshall street", zoom = 0.5, highlight = FALSE,
   add.subtitle = FALSE)
 addNeighborhoodEuclidean()

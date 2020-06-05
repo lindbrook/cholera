@@ -7,7 +7,7 @@
 #' @import graphics
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' plot(neighborhoodVoronoi())
 #' addSnow()
 #' }

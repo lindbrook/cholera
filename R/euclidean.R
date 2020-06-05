@@ -10,7 +10,7 @@
 #' @return An R vector.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' neighborhoodEuclidean()
 #' neighborhoodEuclidean(-6)
 #' neighborhoodEuclidean(pump.select = 6:7)
@@ -110,7 +110,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' @note This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' plot(neighborhoodEuclidean())
 #' plot(neighborhoodEuclidean(-6))
 #' plot(neighborhoodEuclidean(pump.select = 6:7))
@@ -233,7 +233,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
 #' @return A list of argument values.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' neighborhoodEuclidean()
 #' print(neighborhoodEuclidean())
 #' }
@@ -250,7 +250,7 @@ print.euclidean <- function(x, ...) {
 #' @return A vector of counts by neighborhood.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' summary(neighborhoodEuclidean())
 #' }
 

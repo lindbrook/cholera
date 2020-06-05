@@ -43,7 +43,7 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 Add cases to a plot as "address" or "fatalities" and as points or IDs.
 }
 \examples{
-\donttest{
+\dontrun{
 snowMap(add.cases = FALSE)
 addNeighborhoodCases(pump.subset = c(6, 10))
 

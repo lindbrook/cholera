@@ -11,7 +11,7 @@
 #' @return R graphic elements.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' streetNameLocator("marshall street", zoom = 0.5, highlight = FALSE,
 #'   add.subtitle = FALSE)
 #' addNeighborhoodEuclidean()

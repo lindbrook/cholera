@@ -25,7 +25,7 @@ Plot method for neighborhoodWalking().
 When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods.
 }
 \examples{
-\donttest{
+\dontrun{
 plot(neighborhoodWalking())
 plot(neighborhoodWalking(case.set = "expected"))
 plot(neighborhoodWalking(case.set = "expected"), type = "area.points")

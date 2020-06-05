@@ -1,3 +1,9 @@
+cholera 0.7.0.9031
+==================
+
+- use dontrun for examples with parallel code (R 4.0.0).
+
+
 cholera 0.7.0.9030
 ==================
 

@@ -13,7 +13,7 @@
 #' @return An R list with two elements: a character vector of path nodes and a data frame summary.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # path from case 1 to nearest pump.
 #' walkingPath(1)
 #'
@@ -699,7 +699,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' @export
 #' @section Note: Arrows represent mileposts or timeposts to the destination.
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' plot(walkingPath(15))
 #' plot(walkingPath(15), unit.posts = "time")
 #' }
@@ -1159,7 +1159,7 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
 #' @return An R data frame.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' walkingPath()
 #' print(walkingPath())
 #' }

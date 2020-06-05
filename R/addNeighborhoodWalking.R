@@ -16,7 +16,7 @@
 #' @import graphics
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' streetNameLocator("marshall street", zoom = 0.5)
 #' addNeighborhoodWalking()
 #' }

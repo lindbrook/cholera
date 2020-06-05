@@ -41,7 +41,7 @@ addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
 Add expected walking neighborhoods.
 }
 \examples{
-\donttest{
+\dontrun{
 streetNameLocator("marshall street", zoom = 0.5)
 addNeighborhoodWalking()
 }

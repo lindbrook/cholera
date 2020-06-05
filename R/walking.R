@@ -19,7 +19,7 @@
 #' }
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' neighborhoodWalking()
 #' neighborhoodWalking(pump.select = -6)
 #' }
@@ -119,7 +119,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' plot(neighborhoodWalking())
 #' plot(neighborhoodWalking(case.set = "expected"))
 #' plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
@@ -313,7 +313,7 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
 #' @return A list of argument values.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' neighborhoodWalking()
 #' print(neighborhoodWalking())
 #' }
@@ -330,7 +330,7 @@ print.walking <- function(x, ...) {
 #' @return An R vector.
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' summary(neighborhoodWalking())
 #' }
 

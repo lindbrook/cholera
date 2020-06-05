@@ -8,7 +8,7 @@
 #' @import ggplot2
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' profile2D(angle = 30)
 #' profile2D(angle = 30, type = "ggplot2")
 #' }

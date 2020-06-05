@@ -36,7 +36,7 @@ An R list with 7 objects:
 Group cases into neighborhoods based on walking distance.
 }
 \examples{
-\donttest{
+\dontrun{
 neighborhoodWalking()
 neighborhoodWalking(pump.select = -6)
 }
