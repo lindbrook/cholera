@@ -109,11 +109,9 @@ orthoProjB <- function(fatalities, road.segment.fix, cores, dev.mode) {
     })
     parallel::stopCluster(cl)
   } else {
-
     projection <- parallel::mclapply(fix.id, function(i) {
       ortho_projB(i, fatalities, road.segment.fix)
     }, mc.cores = cores)
-
   }
   projection
 }
@@ -154,7 +152,7 @@ multipleAddress <- function(multiple.obs, ortho.proj, fatalities, cutpoint,
         names(outB) <- row.names(dataB)
       }
 
-      outB <- max(outA) +  outB
+      outB <- max(outA) + outB
       census <- c(outA, outB)
       out <- data.frame(case = as.numeric(names(census)), group = census,
         stringsAsFactors = FALSE)

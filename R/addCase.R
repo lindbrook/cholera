@@ -33,7 +33,7 @@ addCase <- function(case = 1, type = "observed", token = "both",
   }
 
   if (pos %in% 1:4 == FALSE) stop("pos must be 1, 2, 3, or 4.")
-  
+
   if (any(case %in% seq_len(nrow(dat)) == FALSE)) {
     stop('With type = ', type, ', case must be between 1 and ', nrow(dat), ".")
   } else {
