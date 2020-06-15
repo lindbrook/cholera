@@ -48,34 +48,6 @@
 #' @docType data
 "fatalities"
 
-#' Amended Dodson and Tobler's cholera data.
-#'
-#' An amended version of Dodson and Tobler's digitization of John Snow's map of the 1854 London cholera outbreak. It removes 3 duplicate observations and imputes the location for 3 "missing" observation. This information is also available in HistData::Snow.deaths2 (>= ver. 0.7-8).
-#'
-#' @format A data frame with 3 variable that records the position and the nearest pump for the 578 bars on Snow's map.
-#'
-#'  \describe{
-#'     \item{\code{case}}{numeric case ID}
-#'     \item{\code{x}}{x-coordinate}
-#'     \item{\code{y}}{y-coordinate}
-#'     \item{\code{longitude}}{x-coordinate}
-#'     \item{\code{latitude}}{y-coordinate}
-#' }
-#' @seealso \code{\link{caseLocator}}
-#'
-#' \code{\link{streetNameLocator}}
-#'
-#' \code{\link{streetNumberLocator}}
-#'
-#' @note \code{\link{fixFatalities}} documents the code for these data. For details, see \code{vignette}("duplicate.missing.cases").
-#' @seealso  \code{\link{caseLocator}}
-#'
-#' \code{\link{streetNameLocator}}
-#'
-#' \code{\link{streetNumberLocator}}
-#' @docType data
-"fatalities2"
-
 #' "Unstacked" amended cholera data with address as unit of observation.
 #'
 #' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
@@ -97,34 +69,6 @@
 #' @note \code{\link{unstackFatalities}} documents the code for these data. For details, see \code{vignette}("unstacking.fatalities").
 #' @docType data
 "fatalities.address"
-
-#' "Unstacked" amended cholera data with address as unit of observation.
-#'
-#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
-#'
-#' @format A data frame with 4 variables for 321 addresses
-#'  \describe{
-#'     \item{\code{anchor}}{numerical case ID of address}
-#'     \item{\code{x}}{x-coordinate}
-#'     \item{\code{y}}{y-coordinate}
-#'     \item{\code{case.count}}{number of fatalities at address}
-#'     \item{\code{longitude}}{x-coordinate}
-#'     \item{\code{latitude}}{y-coordinate}
-#' }
-#' @seealso
-#' \code{\link{caseLocator}}
-#'
-#' \code{\link{streetNameLocator}}
-#'
-#' \code{\link{streetNumberLocator}}
-#'
-#' @note sel <- fatalities2$case %in% fatalities.address2$anchor
-#'
-#' identical(fatalities2[sel, "longitude"], fatalities.address2$longitude)
-#'
-#' identical(fatalities2[sel, "latitude"], fatalities.address2$latitude)
-#' @docType data
-"fatalities.address2"
 
 #' "Unstacked" amended cholera fatalities data with fatality as unit of observation.
 #'
@@ -262,24 +206,6 @@
 #' @docType data
 "pumps"
 
-#' Dodson and Tobler's pump data with street name.
-#'
-#' Adds and amends road locations for water pumps from John Snow's map to Dodson and Tobler's street data. The latter are available at Michael Friendly's HistData::Snow.streets.
-#'
-#' @format A data frame with 13 observations and 4 variables that describe the pumps on Snow's map.
-#' \describe{
-#'   \item{\code{id}}{pump number between 1 and 13}
-#'   \item{\code{street}}{nearest street}
-#'   \item{\code{x}}{x-coordinate}
-#'   \item{\code{y}}{y-coordinate}
-#'   \item{\code{longitude}}{x-coordinate}
-#'   \item{\code{latitude}}{y-coordinate}
-#' }
-#' @seealso \code{\link{pumpLocator}}
-#' @note \code{\link{pumpData}} documents the code for these data.
-#' @docType data
-"pumps2"
-
 #' Vestry report pump data.
 #'
 #' These data include the fourteenth pump, at Hanover Square, and the "corrected" location of the Broad Street pump that Snow includes in the second version of his map in the Vestry report.
@@ -296,24 +222,6 @@
 #' @docType data
 "pumps.vestry"
 
-#' Vestry report pump data.
-#'
-#' These data include the fourteenth pump, at Hanover Square, and the "corrected" location of the Broad Street pump that Snow includes in the second version of his map in the Vestry report.
-#'
-#' @format A data frame with 14 observations and 4 variables.
-#' \describe{
-#'   \item{\code{id}}{pump number between 1 and 14}
-#'   \item{\code{street}}{nearest street}
-#'   \item{\code{x}}{x-coordinate}
-#'   \item{\code{y}}{y-coordinate}
-#'   \item{\code{longitude}}{x-coordinate}
-#'   \item{\code{latitude}}{y-coordinate}
-#' }
-#' @seealso \code{\link{pumpLocator}}
-#' @note \code{\link{pumpData}} documents the code for these data.
-#' @docType data
-"pumps.vestry2"
-
 #' "Expected" cases.
 #'
 #' The result of using sp::spsample() and sp::Polygon() to generate 19,993 regularly spaced simulated cases within the map's borders.
@@ -326,22 +234,6 @@
 #' @note \code{\link{simulateFatalities}} documents the code for these data.
 #' @docType data
 "regular.cases"
-
-#' Ground control points for QGIS 3.10 (experimental).
-#'
-#' @format A data frame with 8 observations and 8 variables.
-#' \describe{
-#'   \item{\code{mapX}}{}
-#'   \item{\code{mapY}}{}
-#'   \item{\code{pixelX }}{}
-#'   \item{\code{pixelY}}{}
-#'   \item{\code{enable}}{}
-#'   \item{\code{dX}}{}
-#'   \item{\code{dY}}{}
-#'   \item{\code{residual}}{}
-#' }
-#' @docType data
-"road.gcp.points"
 
 #' Dodson and Tobler's street data transformed into road segments.
 #'
@@ -370,33 +262,6 @@
 #' @docType data
 "road.segments"
 
-#' Dodson and Tobler's street data transformed into road segments.
-#'
-#' This data set transforms Dodson and Tobler's street data to give each straight line segment of a "road" a unique ID.
-#'
-#' @format A data frame with 657 observations and 7 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
-#' \describe{
-#'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
-#'   \item{\code{id}}{character segment ID}
-#'   \item{\code{name}}{road name}
-#'   \item{\code{longitude1}}{longitude of first endpoint}
-#'   \item{\code{latitude1}}{latitude of first endpoint}
-#'   \item{\code{longitude2}}{longitude of second endpoint}
-#'   \item{\code{latitude2}}{latitude of second endpoint}
-#' }
-#' @seealso \code{\link{roads}}
-#'
-#'\code{vignette}("road.names")
-#'
-#' \code{\link{streetNameLocator}}
-#'
-#' \code{\link{streetNumberLocator}}
-#'
-#' \code{\link{segmentLocator}}
-#' @note \code{\link{roadSegments}} documents the code for these data.
-#' @docType data
-"road.segments2"
-
 #' Dodson and Tobler's street data with appended road names.
 #'
 #' This data set adds road names from John Snow's map to Dodson and Tobler's street data. The latter are also available from HistData::Snow.streets.
@@ -421,33 +286,6 @@
 #'
 #' \code{\link{segmentLocator}}
 "roads"
-
-#' Dodson and Tobler's street data with appended road names, longitdue and latitude..
-#'
-#' This data set adds road names from John Snow's map to Dodson and Tobler's street data. The latter are also available from HistData::Snow.streets.
-#'
-#' @format A data frame with 206 observations and 5 variables. The data describe the roads on Snow's map.
-#' \describe{
-#'   \item{\code{street}}{street segment number, which range between 1 and 528}
-#'   \item{\code{n}}{number of points in this street line segment}
-#'   \item{\code{x}}{x-coordinate}
-#'   \item{\code{y}}{y-coordinate}
-#'   \item{\code{id}}{unique numeric ID}
-#'   \item{\code{name}}{road name}
-#'   \item{\code{longitude}}{longitude (est.)}
-#'   \item{\code{latitude}}{latitude (est.)}
-#' }
-#' @docType data
-#' @seealso \code{\link{road.segments}}
-#'
-#' \code{vignette}("road.names")
-#'
-#' \code{\link{streetNameLocator}}
-#'
-#' \code{\link{streetNumberLocator}}
-#'
-#' \code{\link{segmentLocator}}
-"roads2"
 
 #' List of "simulated" fatalities grouped by walking-distance pump neighborhood.
 #'

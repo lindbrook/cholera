@@ -4,12 +4,10 @@
 \alias{stLength}
 \title{Compute total length of roads.}
 \usage{
-stLength(dat, input.unit = "nominal")
+stLength(dat)
 }
 \arguments{
 \item{dat}{Object. data frame.}
-
-\item{input.unit}{Character. "nominal" or "latlong".}
 }
 \description{
 Compute total length of roads.
