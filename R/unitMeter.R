@@ -3,30 +3,19 @@
 #' A best guess estimate.
 #' @param x Numeric. Nominal map distance.
 #' @param output.unit Character. Unit of distance: "meter", "yard" or "nominal". "nominal" returns the map's nominal scale. See \code{vignette("roads")} for information on conversion.
-#' @param input.unit Character. "nominal" or "latlong".
 #' @export
 
-unitMeter <- function(x, output.unit = "meter", input.unit = "nominal") {
-  if (all(input.unit %in% c("nominal", "latlong") == FALSE)) {
-    stop('input.unit must be "nominal" or "latlong".')
-  }
-
+unitMeter <- function(x, output.unit = "meter") {
   if (is.numeric(x) == FALSE) {
     stop('x must be numeric.')
   }
 
-  if (input.unit == "nominal") {
-    sel <- cholera::road.segments$name == "Carnaby Street"
-    carnaby <- cholera::road.segments[sel, ]
-  } else if (input.unit == "latlong") {
-    sel <- cholera::road.segments2$name == "Carnaby Street"
-    carnaby <- cholera::road.segments2[sel, ]
-  }
-
+  sel <- cholera::road.segments$name == "Carnaby Street"
+  carnaby <- cholera::road.segments[sel, ]
   carnaby <- carnaby[-c(8:9), ]
 
   carnaby.ft <- 463
-  foot.unit <- carnaby.ft / stLength(carnaby, input.unit = input.unit)
+  foot.unit <- carnaby.ft / stLength(carnaby)
   yard.unit <- foot.unit / 3
   meter.unit <- foot.unit / 3.281
 
@@ -42,18 +31,12 @@ unitMeter <- function(x, output.unit = "meter", input.unit = "nominal") {
 #' Compute total length of roads.
 #'
 #' @param dat Object. data frame.
-#' @param input.unit Character. "nominal" or "latlong".
 #' @export
 
-stLength <- function(dat, input.unit = "nominal") {
+stLength <- function(dat) {
   d <- vapply(seq_len(nrow(dat)), function(i) {
-    if (input.unit == "nominal") {
-      p1 <- dat[i, c("x1", "y1")]
-      p2 <- dat[i, c("x2", "y2")]
-    } else if (input.unit == "latlong") {
-      p1 <- dat[i, c("longitude1", "latitude1")]
-      p2 <- dat[i, c("longitude2", "latitude2")]
-    }
+    p1 <- dat[i, c("x1", "y1")]
+    p2 <- dat[i, c("x2", "y2")]
     vars <- c("x", "y")
     names(p1) <- vars
     names(p2) <- vars

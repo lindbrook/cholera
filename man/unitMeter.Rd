@@ -4,14 +4,12 @@
 \alias{unitMeter}
 \title{Convert nominal map distance to meters or yards.}
 \usage{
-unitMeter(x, output.unit = "meter", input.unit = "nominal")
+unitMeter(x, output.unit = "meter")
 }
 \arguments{
 \item{x}{Numeric. Nominal map distance.}
 
 \item{output.unit}{Character. Unit of distance: "meter", "yard" or "nominal". "nominal" returns the map's nominal scale. See \code{vignette("roads")} for information on conversion.}
-
-\item{input.unit}{Character. "nominal" or "latlong".}
 }
 \description{
 A best guess estimate.
