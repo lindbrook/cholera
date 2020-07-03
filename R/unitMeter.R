@@ -31,7 +31,7 @@ unitMeter <- function(x, output.unit = "meter") {
 #' Compute total length of roads.
 #'
 #' @param dat Object. data frame.
-#' @export
+#' @noRd
 
 stLength <- function(dat) {
   d <- vapply(seq_len(nrow(dat)), function(i) {
