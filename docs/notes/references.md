@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2020-04-04
+2020-07-05
 
 John Broich. 2013. *London: Water and the Making of the Modern City*.
 Pittsburgh: University of Pittsburgh Press.
@@ -15,6 +15,9 @@ London: John Churchill.
 
 Michael Durey. 1979. *The Return of the Plague: British Society and the
 Cholera 1831-2*. London: Gill and Macmillan Humanities Press.
+
+Niall Fergurson. 2001. *The Cash Nexus: Money and Power in the Modern
+World*. New York: Basic Books.
 
 Judith Flanders. 2012. *The Victorian City: Everyday Life in Dickens’s
 London*. London: Atlantic Books.
