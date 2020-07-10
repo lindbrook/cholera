@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2020-07-05
+2020-07-10
 
 John Broich. 2013. *London: Water and the Making of the Modern City*.
 Pittsburgh: University of Pittsburgh Press.
@@ -30,6 +30,9 @@ of a Revolution*. New York: Little, Brown and Company.
 
 Ruth Goodman. 2015. *How to Be a Victorian: A Dawn-to-Dusk Guide to
 Victorian Life*. New York: Liveright.
+
+David Graeber. 2011. *Debt: The First 5,000 Years*. Brooklyn: Melville
+House.
 
 Brian Harrison. 1997. *Drink and the Victorians*. Edinburgh: Edinburgh
 University Press.
