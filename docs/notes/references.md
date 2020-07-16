@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2020-07-10
+2020-07-16
 
 John Broich. 2013. *London: Water and the Making of the Modern City*.
 Pittsburgh: University of Pittsburgh Press.
@@ -16,8 +16,14 @@ London: John Churchill.
 Michael Durey. 1979. *The Return of the Plague: British Society and the
 Cholera 1831-2*. London: Gill and Macmillan Humanities Press.
 
+Niall Fergurson. 1998 *The House of Rothschild: The World’s Banker
+1849-1999*. New York: Penguin Books.
+
 Niall Fergurson. 2001. *The Cash Nexus: Money and Power in the Modern
 World*. New York: Basic Books.
+
+Niall Fergurson. 2002. *Empire: The Rise and Demise of the British World
+Order and the Lessons for Global Power*. New York: Basic Books.
 
 Judith Flanders. 2012. *The Victorian City: Everyday Life in Dickens’s
 London*. London: Atlantic Books.
@@ -43,6 +49,9 @@ their Detection*. London: Longmans, Green, and Co.
 Steven Johnson. 2006. *The Ghost Map: The Story of London’s Most
 Terrifying Epidemic – and How it Changed Science, Cities and the Modern
 World*. New York: Liveright.
+
+Jill Lepore. 2020. “The Invention of the Police.” *The New Yorker*. July
+13.
 
 R. J. Morris. 1976. *Cholera 1832: The Social Response to An Epidemic*.
 New York: Holmes & Meier.
