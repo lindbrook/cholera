@@ -81,9 +81,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   if (type == "pumps") {
     if (length(origin) == 1) {
-      if (origin == 2) {
-        stop('Pump 2 is a technical isolate. Choose another.')
-      }
+      if (origin == 2) stop('Pump 2 is a technical isolate. Choose another.')
     }
 
     if (is.null(origin) == FALSE) {

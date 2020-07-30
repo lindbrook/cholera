@@ -15,9 +15,7 @@
 classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE,
   coordinates = FALSE) {
 
-  if (!is.numeric(case)) {
-    stop("case must be numeric.")
-  }
+  if (!is.numeric(case)) stop("case must be numeric.")
 
   if (observed) {
     if (case %in% unique(cholera::fatalities$case) == FALSE) {

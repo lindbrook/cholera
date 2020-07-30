@@ -16,13 +16,14 @@ neighborhoodData <- function(vestry = FALSE, case.set = "observed",
   }
 
   if (case.set == "expected") {
-    node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
+    args <- list(embed = embed, embed.landmarks = embed.landmarks,
       vestry = vestry, observed = FALSE)
   } else {
-    node.data <- nodeData(embed = embed, embed.landmarks = embed.landmarks,
+    args <- list(embed = embed, embed.landmarks = embed.landmarks,
       vestry = vestry)
   }
 
+  node.data <- do.call("nodeData", args)
   nodes <- node.data$nodes
   edges <- node.data$edges
   g <- node.data$g

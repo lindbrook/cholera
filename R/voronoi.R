@@ -48,14 +48,12 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
     if (vestry) {
       pump.data <- cholera::ortho.proj.pump.vestry
       pump.data$street <- cholera::pumps.vestry$street
-      names(pump.data)[names(pump.data) %in%
-        c("x.proj", "y.proj", "pump.id")] <- c("x", "y", "id")
     } else {
       pump.data <- cholera::ortho.proj.pump
       pump.data$street <- cholera::pumps$street
-      names(pump.data)[names(pump.data) %in%
-        c("x.proj", "y.proj", "pump.id")] <- c("x", "y", "id")
     }
+    sel <- names(pump.data) %in% c("x.proj", "y.proj", "pump.id")
+    names(pump.data)[sel] <- c("x", "y", "id")
   } else if (pump.location == "nominal") {
     if (vestry) {
       pump.data <- cholera::pumps.vestry

@@ -18,9 +18,7 @@
 pumpLocator <- function(id = 7, zoom = 1,  vestry = FALSE, add.title = TRUE,
   highlight.segment = TRUE, data = FALSE) {
 
-  if (is.numeric(id) == FALSE) {
-    stop('id must be numeric.')
-  }
+  if (is.numeric(id) == FALSE) stop('id must be numeric.')
 
   if (!vestry & id %in% cholera::pumps$id == FALSE) {
     stop('For original pumps, id must be a whole number between 1 and 13.')

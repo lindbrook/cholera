@@ -20,9 +20,7 @@
 caseLocator <- function(case = 1, zoom = 1, observed = TRUE, add.title = TRUE,
   highlight.segment = TRUE, data = FALSE, add = FALSE, col = "red") {
 
-  if (!is.numeric(case)) {
-    stop("case must be numeric.")
-  }
+  if (!is.numeric(case)) stop("case must be numeric.")
 
   if (observed) {
     if (case %in% unique(cholera::fatalities$case) == FALSE) {

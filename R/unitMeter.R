@@ -6,9 +6,7 @@
 #' @export
 
 unitMeter <- function(x, output.unit = "meter") {
-  if (is.numeric(x) == FALSE) {
-    stop('x must be numeric.')
-  }
+  if (is.numeric(x) == FALSE) stop('x must be numeric.')
 
   sel <- cholera::road.segments$name == "Carnaby Street"
   carnaby <- cholera::road.segments[sel, ]

@@ -23,9 +23,7 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
   add.title = TRUE, add.subtitle = TRUE, highlight = TRUE) {
 
-  if (is.character(id) == FALSE) {
-    stop('id\'s type must be a character.')
-  }
+  if (is.character(id) == FALSE) stop('id\'s type must be a character.')
 
   if (id %in% cholera::road.segments$id == FALSE) {
     stop("Invalid segment ID. See cholera::road.segments.")
