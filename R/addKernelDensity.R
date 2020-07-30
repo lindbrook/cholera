@@ -42,7 +42,9 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
   if (is.character(pump.subset)) {
     if (pump.subset %in% c("individual", "pooled") == FALSE) {
-      stop("If not numeric, pump.subset must either be 'individual' or 'pooled'.")
+      txt1 <- "If not numeric,"
+      txt2 <- "pump.subset must either be 'individual' or 'pooled'."
+      stop(paste(txt1, txt2))
     }
   }
 

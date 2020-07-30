@@ -42,9 +42,9 @@ addMilePosts <- function(pump.subset = NULL, pump.select = NULL,
   }
 
   # vector of nodes for the 321 observed anchor cases
-    n.path.edges <- lapply(x$paths, function(neighborhood) {
-      lapply(neighborhood, auditEdge, edges, output = "id2")
-    })
+  n.path.edges <- lapply(x$paths, function(neighborhood) {
+    lapply(neighborhood, auditEdge, edges, output = "id2")
+  })
 
   if (!is.null(pump.subset)) {
     if (all(pump.subset > 0)) {

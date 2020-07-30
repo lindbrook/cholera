@@ -9,13 +9,8 @@
 #' segmentLength("242-1", distance.unit = "yard")
 
 segmentLength <- function(id = "216-1", distance.unit = "meter") {
-  if (is.character(id) == FALSE) {
-    stop('id\'s type must be character.')
-  }
-
-  if (id %in% cholera::road.segments$id == FALSE) {
-    stop("Invalid segment ID.")
-  }
+  if (is.character(id) == FALSE) stop('id\'s type must be character.')
+  if (id %in% cholera::road.segments$id == FALSE) stop("Invalid segment ID.")
 
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
     stop('distance.unit must be "meter", "yard" or "native".')

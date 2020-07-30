@@ -10,9 +10,7 @@
 distanceTime <- function(x, distance.unit = "meter", time.unit = "second",
   walking.speed = 5) {
 
-  if (is.numeric(x) == FALSE) {
-    stop('"x" must be numeric.')
-  }
+  if (is.numeric(x) == FALSE) stop('"x" must be numeric.')
 
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
     stop('distance.unit must be "meter", "yard" or "native".')

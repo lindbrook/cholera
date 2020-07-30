@@ -82,7 +82,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = TRUE) {
 
         # segment bisection/intersection test
         distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
-          stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
+                 stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
 
         bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
 

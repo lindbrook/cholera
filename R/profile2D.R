@@ -32,9 +32,7 @@ profile2D <- function(angle = 0, pump = 7, vestry = FALSE, type = "base",
 
   cores <- multiCore(multi.core)
 
-  if (length(pump) != 1) {
-    stop('Select one pump.')
-  }
+  if (length(pump) != 1) stop('Select one pump.')
 
   inside <- profilePerspective("inside", pump = pump, angle = angle,
     vestry = vestry, multi.core = cores)

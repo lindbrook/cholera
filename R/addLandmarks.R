@@ -90,8 +90,7 @@ addLandmarks <- function(text.size = 0.5, highlight.perimeter = TRUE) {
                                   NE$x, NE$y, SW$x, SW$y)
 
   points(aberdeen$x, aberdeen$y, pch = 15, cex = 1/3)
-  text(aberdeen$x, aberdeen$y, labels = "Earl of\nAberdeen",
-    cex = text.size)
+  text(aberdeen$x, aberdeen$y, labels = "Earl of\nAberdeen", cex = text.size)
 
   # 1) Marlborough Mews: Police Station
 

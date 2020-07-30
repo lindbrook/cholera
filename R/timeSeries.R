@@ -83,16 +83,13 @@ plot.time_series <- function(x, statistic = "fatal.attacks",
   pump.handle = TRUE, main = "Removal of the Broad Street Pump Handle",
   type = "o", xlab = "Date", ylab = "Fatalities", ...) {
 
-  if (class(x) != "time_series") {
-    stop('x\'s class needs to be "time_series".')
-  }
+  if (class(x) != "time_series") stop('x\'s class needs to be "time_series".')
 
   if (all(statistic %in% c("deaths", "fatal.attacks")) == FALSE) {
     stop('statistic must either be "deaths" or "fatal.attacks".')
   }
 
   dat <- x$data
-
   plot(dat$date, dat[, statistic], type = type, xlab = xlab, ylab = ylab, ...)
   title(main = main, ...)
   if (pump.handle) pumpHandle()
