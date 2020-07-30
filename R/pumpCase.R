@@ -29,15 +29,10 @@ pumpCase.euclidean <- function(x, case = "address") {
 pumpCase.voronoi <- function(x, case = "address") {
   output <- x$statistic.data
   if (x$case.location == "address") {
-    out <- lapply(output, function(x) {
-      cholera::fatalities.address$anchor[x == 1]
-    })
+    lapply(output, function(x) cholera::fatalities.address$anchor[x == 1])
   } else if (x$case.location == "nominal") {
-    out <- lapply(output, function(x) {
-      cholera::fatalities$case[x == 1]
-    })
+    lapply(output, function(x) cholera::fatalities$case[x == 1])
   }
-  out
 }
 
 #' @export
