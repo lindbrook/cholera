@@ -2,13 +2,13 @@
 % Please edit documentation in R/addCase.R
 \name{addCase}
 \alias{addCase}
-\title{Add observed case(s).}
+\title{Add observed case(s) to plot.}
 \usage{
 addCase(case = 1, type = "observed", token = "both", text.size = 0.5,
   col = "red", pos = 1)
 }
 \arguments{
-\item{case}{Numeric. Vector of case ID(s).}
+\item{case}{Numeric. Vector of case ID(s). NULL plots all cases.}
 
 \item{type}{Character. Type of case: "observed" or "expected".}
 
