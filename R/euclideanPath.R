@@ -44,27 +44,27 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   walking.speed = 5) {
 
   if (is.null(origin) & is.null(destination)) {
-    stop("If origin = NULL, you must supply a destination.")
+    stop("If origin = NULL, you must supply a destination.", call. = FALSE)
   }
 
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('unit must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".', call. = FALSE)
   }
 
   if (time.unit %in% c("hour", "minute", "second") == FALSE) {
-    stop('time.unit must be "hour", "minute" or "second".')
+    stop('time.unit must be "hour", "minute" or "second".', call. = FALSE)
   }
 
   if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
-    stop('type must be "case-pump", "cases" or "pumps".')
+    stop('type must be "case-pump", "cases" or "pumps".', call. = FALSE)
   }
 
   if (is.character(destination)) {
-    if (type != "cases") stop('type must be "cases".')
+    if (type != "cases") stop('type must be "cases".', call. = FALSE)
   }
 
   if (case.location %in% c("address", "nominal") == FALSE) {
-    stop('case.location must be "address" or "nominal".')
+    stop('case.location must be "address" or "nominal".', call. = FALSE)
   }
 
   obs.ct <- nrow(cholera::fatalities)
@@ -110,7 +110,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   if (type == "case-pump") {
     if (is.null(destination)) {
       if (is.null(origin)) {
-        stop("If origin is set to NULL, you must provide a destination pump!")
+        stop("If origin is set to NULL, you must provide a destination pump!",
+          call. = FALSE)
       } else {
         alters <- p.data
       }
@@ -118,7 +119,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       if (any(abs(destination) %in% p.ID)) {
         alters <- p.data[destination, ]
       } else {
-        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count)
+        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count,
+          call. = FALSE)
       }
     }
 
@@ -209,7 +211,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         } else {
           txt1 <- 'With type = "case-pump" and observed = '
           txt2 <- 'origin must be between 1 and '
-          stop(txt1, observed, ", ", txt2, ct, ".")
+          stop(txt1, observed, ", ", txt2, ct, ".", call. = FALSE)
         }
       }
 
@@ -221,7 +223,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         } else if (origin %in% cholera::landmarks$name) {
           ego.sel <- cholera::landmarks$name == origin
         } else {
-          stop('Use a valid landmark name.')
+          stop('Use a valid landmark name.', call. = FALSE)
         }
 
         ego.id <- cholera::landmarks[ego.sel, "case"]
@@ -314,7 +316,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       if (length(origin.stack) > 1 & is.numeric(destination)) {
         if (origin %in% origin.stack & destination %in% origin.stack) {
-          stop("origin and destination are at same address!")
+          stop("origin and destination are at same address!", call. = FALSE)
         }
       }
 
@@ -331,7 +333,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       ego.sel <- grepl(origin, cholera::landmarks$name)
 
       if (!landmark.test1 & !landmark.test2) {
-        stop('Use a valid landmark name for the origin.')
+        stop('Use a valid landmark name for the origin.', call. = FALSE)
 
       } else if (origin == "St James Workhouse") {
         origin.anchor <- st.james.landmark
@@ -362,7 +364,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         } else if (all(destination < 0)) {
           alters.sel <- case.data$case %in% abs(destination) == FALSE
         } else {
-          stop("Destination must be all positive or all negative.")
+          stop("Destination must be all positive or all negative.",
+            call. = FALSE)
         }
         alters <- case.data[alters.sel & case.data$case != origin, case.coords]
       }
@@ -372,7 +375,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
         if (is.character(origin)) {
           if (origin == destination) {
-            stop("origin and destination are at same address!")
+            stop("origin and destination are at same address!", call. = FALSE)
           }
         }
 
@@ -382,7 +385,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         alter.sel <- grepl(destination, cholera::landmarks$name)
 
         if (!landmark.test1 & !landmark.test2) {
-          stop('Use a valid landmark name for the destination.')
+          stop('Use a valid landmark name for the destination.', call. = FALSE)
 
         } else if (destination == "St James Workhouse") {
           destination.anchor <- st.james.landmark
@@ -510,7 +513,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   } else if (type == "pumps") {
     if (identical(all.equal(origin, destination), TRUE)) {
-      stop("Origin must different from destination.")
+      stop("Origin must different from destination.", call. = FALSE)
     }
 
     rev.flag <- is.null(origin) & is.null(destination) == FALSE
@@ -525,14 +528,15 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       txt1 <- 'With type = "pumps", observed = '
       txt2 <- 'and vestry = '
       txt3 <- ', the origin must be between 1 and '
-      stop(txt1, observed, ", ", txt2, vestry, txt3, ct, ".")
+      stop(txt1, observed, ", ", txt2, vestry, txt3, ct, ".", call. = FALSE)
     } else {
       ego <- p.data[p.data[, pump.var] == origin, ]
     }
 
     if (!is.null(destination)) {
       if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count, ".")
+        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count,
+          ".", call. = FALSE)
       } else {
         if (all(destination > 0)) {
           alters <- p.data[destination, ]
@@ -622,7 +626,7 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
   unit.interval = NULL, ...) {
 
   if (class(x) != "euclidean_path") {
-    stop('"x"\'s class must be "euclidean_path".')
+    stop('"x"\'s class must be "euclidean_path".', call. = FALSE)
   }
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
@@ -689,8 +693,8 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
       if (zoom >= 0) {
         x.rng <- c(min(dat.plus$x) - zoom, max(dat.plus$x) + zoom)
         y.rng <- c(min(dat.plus$y) - zoom, max(dat.plus$y) + zoom)
-      } else stop("If numeric, zoom must be >= 0.")
-    } else stop("zoom must either be logical or numeric.")
+      } else stop("If numeric, zoom must be >= 0.", call. = FALSE)
+    } else stop("zoom must either be logical or numeric.", call. = FALSE)
   } else if (x$type == "pumps") {
     if (is.logical(zoom)) {
       if (zoom) {
@@ -704,8 +708,8 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
       if (zoom >= 0) {
         x.rng <- c(min(dat$x) - zoom, max(dat$x) + zoom)
         y.rng <- c(min(dat$y) - zoom, max(dat$y) + zoom)
-      } else stop("If numeric, zoom must be >= 0.")
-    } else stop("zoom must either be logical or numeric.")
+      } else stop("If numeric, zoom must be >= 0.", call. = FALSE)
+    } else stop("zoom must either be logical or numeric.", call. = FALSE)
   }
 
   plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
@@ -826,7 +830,8 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
       "km/hr"))
   } else {
     if (unit.posts %in% c("distance", "time") == FALSE) {
-      stop('If specified, unit.posts must be "distance" or "time".')
+      stop('If specified, unit.posts must be "distance" or "time".',
+        call. = FALSE)
     } else {
       if (is.null(unit.interval)) {
         if (unit.posts == "distance")  {
@@ -836,7 +841,7 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
         }
       } else {
         if (!is.numeric(unit.interval)) {
-          stop('unit.interval must be numeric.')
+          stop('unit.interval must be numeric.', call. = FALSE)
         }
       }
 
@@ -849,7 +854,7 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
         h <- seq(0, tot, unit.interval) * 1000 * x$walking.speed / 60^2 /
           cholera::unitMeter(1)
       } else {
-        stop('Specify unit.posts.')
+        stop('Specify unit.posts.', call. = FALSE)
       }
 
       ols <- stats::lm(y ~ x, data = dat)

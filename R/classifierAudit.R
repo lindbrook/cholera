@@ -15,16 +15,18 @@
 classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE,
   coordinates = FALSE) {
 
-  if (!is.numeric(case)) stop("case must be numeric.")
+  if (!is.numeric(case)) stop("case must be numeric.", call. = FALSE)
 
   if (observed) {
     if (case %in% unique(cholera::fatalities$case) == FALSE) {
-      stop("Observed case must be a whole number between 1 and 578.")
+      stop("Observed case must be a whole number between 1 and 578.",
+        call. = FALSE)
     }
     obs <- cholera::fatalities[cholera::fatalities$case == case, c("x", "y")]
   } else {
     if (case %in% seq_len(nrow(cholera::regular.cases)) == FALSE) {
-      stop("Simulated case must be a whole number between 1 and 4993.")
+      stop("Simulated case must be a whole number between 1 and 4993.",
+        call. = FALSE)
     }
     obs <- cholera::regular.cases[case, c("x", "y")]
   }

@@ -1,3 +1,9 @@
+cholera 0.7.0.9034
+==================
+
+- use stop(call. = FALSE) with primary functions.
+
+
 cholera 0.7.0.9033
 ==================
 

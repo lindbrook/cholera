@@ -18,14 +18,16 @@
 pumpLocator <- function(id = 7, zoom = 1,  vestry = FALSE, add.title = TRUE,
   highlight.segment = TRUE, data = FALSE) {
 
-  if (is.numeric(id) == FALSE) stop('id must be numeric.')
+  if (is.numeric(id) == FALSE) stop('id must be numeric.', call. = FALSE)
 
   if (!vestry & id %in% cholera::pumps$id == FALSE) {
-    stop('For original pumps, id must be a whole number between 1 and 13.')
+    stop('For original pumps, id must be a whole number between 1 and 13.',
+      call. = FALSE)
   }
 
   if (vestry & id %in% cholera::pumps.vestry$id == FALSE) {
-    stop('For vestry pumps, id must lie be a whole number 1 and 14.')
+    stop('For vestry pumps, id must lie be a whole number 1 and 14.',
+      call. = FALSE)
   }
 
   if (vestry) {
@@ -55,8 +57,8 @@ pumpLocator <- function(id = 7, zoom = 1,  vestry = FALSE, add.title = TRUE,
                      p.data[p.data$id == id, "x"] + zoom)
           y.rng <- c(p.data[p.data$id == id, "y"] - zoom,
                      p.data[p.data$id == id, "y"] + zoom)
-        } else stop("If numeric, zoom must be >= 0.")
-      } else stop("zoom must either be logical or numeric.")
+        } else stop("If numeric, zoom must be >= 0.", call. = FALSE)
+      } else stop("zoom must either be logical or numeric.", call. = FALSE)
     } else {
       x.rng <- range(cholera::roads$x)
       y.rng <- range(cholera::roads$y)

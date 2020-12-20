@@ -16,7 +16,7 @@
 profile2D <- function(angle = 0, pump = 7, vestry = FALSE, type = "base",
   multi.core = TRUE) {
 
-  if (angle < 0 | angle > 360) stop("Use 0 >= angle <= 360.")
+  if (angle < 0 | angle > 360) stop("Use 0 >= angle <= 360.", call. = FALSE)
 
   if (vestry) {
     pump.id <- cholera::pumps.vestry$id
@@ -26,13 +26,14 @@ profile2D <- function(angle = 0, pump = 7, vestry = FALSE, type = "base",
 
   if (is.null(pump) == FALSE) {
     if (any(abs(pump) %in% pump.id == FALSE)) {
-      stop('For vestry = ', vestry, ', 1 >= |pump| <= ', max(pump.id))
+      stop('For vestry = ', vestry, ', 1 >= |pump| <= ', max(pump.id),
+        call. = FALSE)
     }
   }
 
   cores <- multiCore(multi.core)
 
-  if (length(pump) != 1) stop('Select one pump.')
+  if (length(pump) != 1) stop('Select one pump.', call. = FALSE)
 
   inside <- profilePerspective("inside", pump = pump, angle = angle,
     vestry = vestry, multi.core = cores)
@@ -81,7 +82,7 @@ profile2D <- function(angle = 0, pump = 7, vestry = FALSE, type = "base",
 
   } else {
     if (type %in% c("base", "ggplot2") == FALSE) {
-      stop('type must be "base" or "ggplot2".')
+      stop('type must be "base" or "ggplot2".', call. = FALSE)
     }
   }
 }

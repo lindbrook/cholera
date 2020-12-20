@@ -27,32 +27,34 @@ streetNumberLocator <- function(road.number = 216, zoom = FALSE,
   time.unit = "second", walking.speed = 5) {
 
   if (is.numeric(road.number) == FALSE) {
-    stop("road.number must be numeric.")
+    stop("road.number must be numeric.", call. = FALSE)
   } else {
     if (road.number %in% unique(cholera::roads$street) == FALSE) {
       rd.ct <- length(unique(cholera::roads$street))
-      stop("road.number must lie between 1 and ", rd.ct, ".")
+      stop("road.number must lie between 1 and ", rd.ct, ".", call. = FALSE)
     }
   }
 
   if (is.null(cases) == FALSE) {
     if (cases %in% c("address", "fatality") == FALSE) {
-      stop('If specified, cases must either be "address" or "fatality".')
+      stop('If specified, cases must either be "address" or "fatality".',
+        call. = FALSE)
     }
   }
 
   if (token %in% c("id", "point") == FALSE) {
-    stop('token must be "id", or "point".')
+    stop('token must be "id", or "point".', call. = FALSE)
   }
 
   if (is.null(distance.unit) == FALSE) {
     if (distance.unit %in% c("meter", "yard") == FALSE) {
-      stop('If specified, distance.unit must either be "meter" or "yard".')
+      stop('If specified, distance.unit must either be "meter" or "yard".',
+        call. = FALSE)
     }
   }
 
   if (time.unit %in% c("minute", "hour", "second") == FALSE) {
-    stop('time.unit must be "hour", "minute" or "second".')
+    stop('time.unit must be "hour", "minute" or "second".', call. = FALSE)
   }
 
   vars <- c("x", "y")
@@ -73,8 +75,8 @@ streetNumberLocator <- function(road.number = 216, zoom = FALSE,
     if (zoom >= 0) {
       x.rng <- c(min(rng$x) - zoom, max(rng$x) + zoom)
       y.rng <- c(min(rng$y) - zoom, max(rng$y) + zoom)
-    } else stop("If numeric, zoom must be >= 0.")
-  } else stop("zoom must either be logical or numeric.")
+    } else stop("If numeric, zoom must be >= 0.", call. = FALSE)
+  } else stop("zoom must either be logical or numeric.", call. = FALSE)
 
   plot(cholera::fatalities[, vars], xlim = x.rng, ylim = y.rng,
     pch = NA, asp = 1)

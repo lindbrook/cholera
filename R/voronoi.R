@@ -38,7 +38,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   polygon.vertices = FALSE) {
 
   if (case.location %in% c("address", "nominal") == FALSE) {
-    stop('case.location must be "address" or "nominal".')
+    stop('case.location must be "address" or "nominal".', call. = FALSE)
   } else {
     if (case.location == "address") statistic <- "address"
     else if (case.location == "nominal") statistic <- "fatality"
@@ -63,22 +63,25 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   }
 
   if (is.null(pump.select) == FALSE) {
-    if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
+    if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.",
+      call. = FALSE)
     p.count <- nrow(pump.data)
     p.ID <- seq_len(p.count)
 
     if (any(abs(pump.select) %in% p.ID == FALSE)) {
-      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count)
+      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count,
+        call. = FALSE)
     }
 
     msg1 <- 'If specified,'
     msg2 <- 'pump.select must include at least 2 different pumps.'
-    if (length(unique(p.ID[pump.select])) < 2) stop(msg1, msg2)
+    if (length(unique(p.ID[pump.select])) < 2) stop(msg1, msg2, call. = FALSE)
   }
 
   if (is.null(statistic) == FALSE) {
     if (all(statistic %in% c("address", "fatality")) == FALSE) {
-      stop('If specified, statistic must either be "address" or "fatality".')
+      stop('If specified, statistic must either be "address" or "fatality".',
+        call. = FALSE)
     }
   }
 

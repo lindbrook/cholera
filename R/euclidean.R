@@ -21,11 +21,11 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
    dev.mode = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
-    stop('case.set must be "observed" or "expected".')
+    stop('case.set must be "observed" or "expected".', call. = FALSE)
   }
 
   if (case.location %in% c("address", "nominal") == FALSE) {
-    stop('case.location must be "address" or "nominal".')
+    stop('case.location must be "address" or "nominal".', call. = FALSE)
   }
 
   cores <- multiCore(multi.core)
@@ -43,9 +43,12 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
   if (is.null(pump.select)) {
     pump.id <- pump.data$id
   } else {
-    if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
+    if (is.numeric(pump.select) == FALSE) {
+      stop("pump.select must be numeric.", call. = FALSE)
+    }
     if (any(abs(pump.select) %in% p.ID) == FALSE) {
-      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count, ".")
+      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count, ".",
+        call. = FALSE)
     }
 
     if (all(pump.select > 0)) {
@@ -54,7 +57,8 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
       sel <- pump.data$id %in% abs(pump.select) == FALSE
       pump.id <- pump.data$id[pump.select]
     } else {
-      stop("Use all positive or all negative numbers for pump.select.")
+      stop("Use all positive or all negative numbers for pump.select.",
+        call. = FALSE)
     }
   }
 

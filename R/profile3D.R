@@ -26,10 +26,10 @@ profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
 
   if (is.null(pump.select) == FALSE) {
     if (is.numeric(pump.select) == FALSE) {
-      stop("pump.select must be numeric.")
+      stop("pump.select must be numeric.", call. = FALSE)
     } else if (any(abs(pump.select) %in% pump.id) == FALSE) {
       stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ',
-        length(pump.id),  ".")
+        length(pump.id),  ".", call. = FALSE)
     }
 
     if (all(pump.select > 0)) {
@@ -37,7 +37,8 @@ profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
     } else if (all(pump.select < 0)) {
       pump.id <- pump.id[pump.id %in% abs(pump.select) == FALSE]
     } else {
-      stop("Use all positive or all negative numbers for pump.select.")
+      stop("Use all positive or all negative numbers for pump.select.",
+        call. = FALSE)
     }
   }
 
@@ -54,7 +55,7 @@ profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
       color = grDevices::adjustcolor(unname(snow.colors), alpha.f = 2/3))
   } else {
     if (!all(abs(pump.subset) %in% pump.id)) {
-      stop("pump.subset must be a subset of pump.select.")
+      stop("pump.subset must be a subset of pump.select.", call. = FALSE)
     }
 
     if (all(pump.subset < 0)) {

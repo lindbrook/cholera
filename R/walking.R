@@ -29,12 +29,14 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   dev.mode = FALSE) {
 
   if (is.null(pump.select) == FALSE) {
-    if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
+    if (is.numeric(pump.select) == FALSE) {
+      stop("pump.select must be numeric.", call. = FALSE)
+    }
     if (length(pump.select) == 1) {
       if (pump.select == 2) {
         msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
         msg2 <- " It's an isolate, unreachable for observed fatalities."
-        stop(msg1, msg2)
+        stop(msg1, msg2, call. = FALSE)
       }
     }
 
@@ -47,12 +49,13 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     p.ID <- seq_len(p.count)
 
     if (any(abs(pump.select) %in% p.ID == FALSE)) {
-      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count)
+      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count,
+        call. = FALSE)
     }
   }
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
-    stop('case.set must be "observed", "expected" or "snow".')
+    stop('case.set must be "observed", "expected" or "snow".', call. = FALSE)
   }
 
   snow.colors <- snowColors(vestry = vestry)

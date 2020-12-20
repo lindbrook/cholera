@@ -31,33 +31,34 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
   vars <- c("x", "y")
 
   if (is.character(road.name) == FALSE) {
-    stop("Road name must be a character string.")
+    stop("Road name must be a character string.", call. = FALSE)
   } else if (road.name %in% real.road.names == FALSE) {
     case.name <- caseAndSpace(road.name)
     if (case.name %in% real.road.names == FALSE) {
       txt1 <- "Invalid road name. Check spelling or"
       txt2 <- 'see list of road names in vignette("roads").'
       error.msg <- paste(txt1, txt2)
-      stop(error.msg)
+      stop(error.msg, call. = FALSE)
     } else name <- case.name
   } else name <- road.name
 
   if (is.null(cases) == FALSE) {
     if (cases %in% c("address", "fatality") == FALSE) {
-      stop('If specified, cases must either be "address" or "fatality".')
+      stop('If specified, cases must either be "address" or "fatality".',
+        call. = FALSE)
     }
   }
 
   if (token %in% c("id", "point") == FALSE) {
-    stop('token must be "id", or "point".')
+    stop('token must be "id", or "point".', call. = FALSE)
   }
 
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('distance.unit must be "meter", "yard" or "native".')
+    stop('distance.unit must be "meter", "yard" or "native".', call. = FALSE)
   }
 
   if (time.unit %in% c("minute", "hour", "second") == FALSE) {
-    stop('time.unit must be "hour", "minute" or "second".')
+    stop('time.unit must be "hour", "minute" or "second".', call. = FALSE)
   }
 
   selected.road <- cholera::roads[cholera::roads$name == name, "street"]
@@ -78,8 +79,8 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
     if (zoom >= 0) {
       x.rng <- c(min(rng$x) - zoom, max(rng$x) + zoom)
       y.rng <- c(min(rng$y) - zoom, max(rng$y) + zoom)
-    } else stop("If numeric, zoom must be >= 0.")
-  } else stop("zoom must either be logical or numeric.")
+    } else stop("If numeric, zoom must be >= 0.", call. = FALSE)
+  } else stop("zoom must either be logical or numeric.", call. = FALSE)
 
   plot(cholera::fatalities[, vars], xlim = x.rng, ylim = y.rng,
     pch = NA, asp = 1)

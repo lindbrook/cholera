@@ -20,15 +20,17 @@
 caseLocator <- function(case = 1, zoom = 1, observed = TRUE, add.title = TRUE,
   highlight.segment = TRUE, data = FALSE, add = FALSE, col = "red") {
 
-  if (!is.numeric(case)) stop("case must be numeric.")
+  if (!is.numeric(case)) stop("case must be numeric.", call. = FALSE)
 
   if (observed) {
     if (case %in% unique(cholera::fatalities$case) == FALSE) {
-      stop("Observed case must be a whole number between 1 and 578.")
+      stop("Observed case must be a whole number between 1 and 578.",
+        call. = FALSE)
     }
   } else {
     if (case %in% seq_len(nrow(cholera::regular.cases)) == FALSE) {
-      stop("Simulated case must be a whole number between 1 and 19,993.")
+      stop("Simulated case must be a whole number between 1 and 19,993.",
+        call. = FALSE)
     }
   }
 
