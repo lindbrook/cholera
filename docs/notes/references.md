@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2020-07-16
+2021-03-18
 
 John Broich. 2013. *London: Water and the Making of the Modern City*.
 Pittsburgh: University of Pittsburgh Press.
@@ -50,6 +50,9 @@ Steven Johnson. 2006. *The Ghost Map: The Story of London’s Most
 Terrifying Epidemic – and How it Changed Science, Cities and the Modern
 World*. New York: Liveright.
 
+Gareth Stedman Jones. 1971 (2013). *Outcast London: A Study in the
+Relationship Between Classes in Victorian Society*. London: Verso.
+
 Jill Lepore. 2020. “The Invention of the Police.” *The New Yorker*. July
 13.
 
@@ -74,6 +77,9 @@ Churchill.
 
 Amanda J. Thomas. 2015. *Cholera: The Victorian Plague*. South
 Yorkshire: Pen and Sword History.
+
+E. P. Thompson. 1963 (1966). *The Making of the English Working Class*.
+New York: Vintage Books.
 
 Tom Vanderbilt. 2008. *Traffic: Why We Drive the Way We Do (and What It
 Says About Us)*. New York: Knopf.
