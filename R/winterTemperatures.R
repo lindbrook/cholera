@@ -69,7 +69,7 @@ plot.winterTemperatures <- function(x, end.date = NULL, ...) {
     tmp <- t.data[t.data$id == z, ]
     segments(tmp[1, "date"], tmp[1, "temp"], tmp[2, "date"], tmp[2, "temp"])
     segments(tmp[2, "date"], tmp[2, "temp"], tmp[3, "date"], tmp[3, "temp"])
-	}))
+  }))
   lines(stats::lowess(t.data$date, t.data$temp, f = 1/3), col = "dodgerblue",
     lwd = 2)
   abline(v = as.Date("1854-09-01"), col = "red")
