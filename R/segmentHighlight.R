@@ -16,13 +16,16 @@ segmentHighlight <- function(id, highlight = TRUE, angled = FALSE) {
 
   st <- cholera::road.segments[cholera::road.segments$id == id, ]
   if (highlight) segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
+
+  seg.data <- data.frame(x = unlist(st[, c("x1", "x2")]),
+                         y = unlist(st[, c("y1", "y2")]),
+                         row.names = NULL)
+
+  intercept.slope <- stats::coef(stats::lm(y ~ x, data = seg.data))
+  x.prime <- mean(seg.data$x)
+  y.prime <- x.prime * intercept.slope["x"] + intercept.slope["(Intercept)"]
+
   if (angled) {
-    seg.data <- data.frame(x = unlist(st[, c("x1", "x2")]),
-                           y = unlist(st[, c("y1", "y2")]),
-                           row.names = NULL)
-    intercept.slope <- stats::coef(stats::lm(y ~ x, data = seg.data))
-    x.prime <- mean(seg.data$x)
-    y.prime <- x.prime * intercept.slope["x"] + intercept.slope["(Intercept)"]
     angle <- atan(intercept.slope["x"]) * 180L / pi
     text(x.prime, y.prime, labels = id, srt = angle, col = "red")
   } else {
