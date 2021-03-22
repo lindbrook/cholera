@@ -37,7 +37,7 @@ winterTemperatures <- function() {
 	feb.date <- as.Date(paste0(Year , "-02-", leap.day))
 
 	out <- data.frame(date = c(dec.date, jan.date, feb.date),
-										temp = c(Dec, Jan, Feb))
+	                  temp = c(Dec, Jan, Feb))
 
 	out <- out[order(out$date), ]
 	row.names(out) <- NULL
