@@ -5,6 +5,10 @@
 #' @param angled Logical. Rotate segment ID label.
 #' @return A base R graphics segment(s).
 #' @export
+#' @examples
+#' streetNameLocator("Soho Square", zoom = TRUE, highlight = FALSE)
+#' ids <- road.segments[road.segments$name == "Soho Square", "id"]
+#' invisible(lapply(ids, function(x) segmentHighlight(x, highlight = FALSE)))
 
 segmentHighlight <- function(id, highlight = TRUE, angled = FALSE) {
   if (is.character(id) == FALSE) stop('id\'s type must be character.',

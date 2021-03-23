@@ -19,3 +19,8 @@ A base R graphics segment(s).
 \description{
 Highlight segment by ID.
 }
+\examples{
+streetNameLocator("Soho Square", zoom = TRUE, highlight = FALSE)
+ids <- road.segments[road.segments$name == "Soho Square", "id"]
+invisible(lapply(ids, function(x) segmentHighlight(x, highlight = FALSE)))
+}
