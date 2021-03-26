@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{object.}
 
-\item{end.date}{Date.}
+\item{end.date}{Date. "yyyy-mm-dd".}
 
 \item{...}{Additional plotting parameters.}
 }

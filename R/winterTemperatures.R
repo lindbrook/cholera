@@ -32,24 +32,28 @@ winterTemperatures <- function() {
     43.6, 41.2, 41.5, 38.4)
 
   dec.date <- as.Date(paste0(Year - 1, "-12-31"), optional = TRUE)
-  jan.date <- as.Date(paste0(Year , "-01-31"), optional = TRUE)
+  jan.date <- as.Date(paste0(Year, "-01-31"), optional = TRUE)
   leap.day <- vapply(Year, leapDay, numeric(1L))
   feb.date <- as.Date(paste0(Year , "-02-", leap.day))
-  out <- data.frame(date = c(dec.date, jan.date, feb.date),
-                    temp = c(Dec, Jan, Feb))
 
-  out <- out[order(out$date), ]
-  row.names(out) <- NULL
-  out$id <- rep(1:(length(Year)), each = 3)
-  out <- list(data = out)
-  class(out) <- "winterTemperatures"
-  out
+  if (any(is.na(dec.date)) | any(is.na(jan.date))) {
+    stop("Invalid Date(s).")
+  } else {
+    out <- data.frame(date = c(dec.date, jan.date, feb.date),
+                      temp = c(Dec, Jan, Feb))
+    out <- out[order(out$date), ]
+    row.names(out) <- NULL
+    out$id <- rep(1:(length(Year)), each = 3)
+    out <- list(data = out)
+    class(out) <- "winterTemperatures"
+    out
+  }
 }
 
 #' Plot method for winterTemperatures().
 #'
 #' @param x object.
-#' @param end.date Date.
+#' @param end.date Date. "yyyy-mm-dd".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
@@ -64,7 +68,8 @@ plot.winterTemperatures <- function(x, end.date = NULL, ...) {
   } else t.data <- temperature
 
   plot(t.data$date, t.data$temp, xlab = "Date",
-    ylab = "Temperature (Farenheit)")
+    ylab = "Temperature (Farenheit)",
+    main = "Winter Temperatures (Kew Observatory)")
   invisible(lapply(unique(t.data$id), function(z) {
     tmp <- t.data[t.data$id == z, ]
     segments(tmp[1, "date"], tmp[1, "temp"], tmp[2, "date"], tmp[2, "temp"])
@@ -77,6 +82,7 @@ plot.winterTemperatures <- function(x, end.date = NULL, ...) {
     col = "red", col.axis = "red")
 }
 
+# Compute Leap Days.
 leapDay <- function(x) {
   yr_004 <- x %% 4 == 0
   yr_100 <- x %% 100 == 0
