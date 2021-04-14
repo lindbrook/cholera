@@ -179,6 +179,24 @@
 #' @docType data
 "ortho.proj.pump.vestry"
 
+#' Oxford monthly weather data, January 1853 - November 1860.
+#'
+#' Extract from UK Met Office (https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/oxforddata.txt): Lat 51.761 Lon -1.262, 63 metres amsl. Approximate 90 km (55 miles) northwest of Soho.
+#'
+#' @format A data frame with 7 variables and 95 observations.
+#'  \describe{
+#'     \item{\code{year}}{yyyy}
+#'     \item{\code{mo}}{month (mm)}
+#'     \item{\code{tmax}}{maximum temperature degrees Celsius}
+#'     \item{\code{tmin}}{minium temperature degrees Celsius}
+#'     \item{\code{airfrost}}{days}
+#'     \item{\code{rain}}{milimeters (mm)}
+#'     \item{\code{sun}}{sunshine hours}
+#'  }
+#' @note December 1860 excluded due to missing tmin observation.
+#' @docType data
+"oxford.weather"
+
 #' Plague pit coordinates.
 #'
 #' Coordinates for polygon() or sp::Polygon(). In progress.
