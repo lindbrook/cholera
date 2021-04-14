@@ -19,3 +19,6 @@ A base R plot.
 \description{
 Plot method for winterTemperatures().
 }
+\examples{
+plot(winterTemperatures(), "1859-6-1")
+}

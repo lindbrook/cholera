@@ -57,6 +57,8 @@ winterTemperatures <- function() {
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
+#' @examples
+#' plot(winterTemperatures(), "1859-6-1")
 
 plot.winterTemperatures <- function(x, end.date = NULL, ...) {
   temperature <- x$data
