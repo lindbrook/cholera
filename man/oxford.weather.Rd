@@ -20,7 +20,7 @@ A data frame with 7 variables and 95 observations.
 oxford.weather
 }
 \description{
-Extract from UK Met Office (https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/oxforddata.txt): Lat 51.761 Lon -1.262, 63 metres amsl. Approximate (65 miles) northwest of Soho.
+Extract from UK Met Office (https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/oxforddata.txt): Lat 51.761 Lon -1.262, 63 metres amsl. Approximate 90 km (55 miles) northwest of Soho.
 }
 \note{
 December 1860 excluded due to missing tmin observation.
