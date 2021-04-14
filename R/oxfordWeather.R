@@ -64,10 +64,10 @@ plot.oxfordWeather <- function(x, statistic = "temperature", ...) {
     }))
     abline(v = sept, col = "red", lty = "dotted")
     abline(h = x[x$date %in% outbreak, "tmax"], col = "red")
-    axis(3, at = as.Date(outbreak), labels = format(outbreak, "%b %Y"),
-      padj = 0.9, col.ticks = "red", cex.axis = 0.9)
-    axis(3, at = as.Date(sept[-2]), labels = NA,
-      padj = 0.9, col.ticks = "red", cex.axis = 0.75)
+    axis(3, at = outbreak, labels = format(outbreak, "%b %Y"), padj = 0.9,
+      col.ticks = "red", cex.axis = 0.9)
+    axis(3, at = sept[-2], labels = NA, padj = 0.9, col.ticks = "red",
+      cex.axis = 0.75)
   } else if (statistic == "rain") {
     plot(x$date, x$rain, xlab = "Year", ylab = "milimeters")
     lines(x$date, x$rain, col = "gray")
@@ -76,13 +76,13 @@ plot.oxfordWeather <- function(x, statistic = "temperature", ...) {
       col = "red", pch = 16)
     axis(3, at = as.Date(sept[-2]), labels = NA, padj = 0.9, col.axis = "red",
       cex.axis = 0.75)
-    axis(3, at = as.Date(outbreak), labels = format(outbreak, "%b %Y"),
-      padj = 0.9, col.ticks = "red", cex.axis = 0.9)
+    axis(3, at = outbreak, labels = format(outbreak, "%b %Y"), padj = 0.9,
+      col.ticks = "red", cex.axis = 0.9)
     axis(4, at = mean(x$rain), labels = round(mean(x$rain), 1))
     abline(v = sept, col = "red", lty = "dotted")
     abline(v = outbreak, col = "red")
     abline(h = x[x$date == outbreak, "rain"], col = "red")
     abline(h = x[x$date == outbreak, statistic], col = "red")
-    title(main = paste("Monthly Rainfall in Oxford UK"))
+    title(main = "Monthly Rainfall in Oxford UK")
   } else stop('statistic must be "temperature" or "rain".')
 }
