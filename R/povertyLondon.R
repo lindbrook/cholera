@@ -26,8 +26,7 @@ povertyLondon <- function() {
   out <- data.frame(district = district,
                     poverty = poverty,
                     london.born = london.born)
-  out <- list(data = out)
-  class(out) <- "povertyLondon"
+  class(out) <- c("povertyLondon", class(out))
   out
 }
 
@@ -41,20 +40,21 @@ povertyLondon <- function() {
 plot.povertyLondon <- function(x, district = c("City", "Westminster",
   "Marylebone", "St. Giles"), ...) {
 
-  dat <- x$data
-  sel <- dat[dat$district %in% district, ]
-  tmp <- dat[!dat$district %in% district, ]
-  poor <- dat[dat$poverty == max(dat$poverty), ]
-  rich <- dat[dat$poverty == min(dat$poverty), ]
-  native <- dat[dat$london.born == max(dat$london.born), ]
-  nonnative <- dat[dat$london.born == min(dat$london.born), ]
+  sel <- x[x$district %in% district, ]
+  tmp <- x[!x$district %in% district, ]
+  poor <- x[x$poverty == max(x$poverty), ]
+  rich <- x[x$poverty == min(x$poverty), ]
+  native <- x[x$london.born == max(x$london.born), ]
+  nonnative <- x[x$london.born == min(x$london.born), ]
 
-  plot(dat$london.born, dat$poverty, pch = NA, xlab = "Percent London Born",
+  plot(x$london.born, x$poverty, pch = NA, xlab = "Percent London Born",
     ylab = "Percent Poverty")
   points(tmp$london.born, tmp$poverty)
   points(sel$london.born, sel$poverty, pch = 0, col = "red")
-  lines(stats::lowess(dat$london.born, dat$poverty), col = "dodgerblue")
-  text(sel$london.born, sel$poverty, labels = sel$district, pos = 2,
+  lines(stats::lowess(x$london.born, x$poverty), col = "dodgerblue")
+  text(sel$london.born[-4], sel$poverty[-4], labels = sel$district[-4], pos = 2,
+    col = "red", cex = 0.75)
+  text(sel$london.born[4], sel$poverty[4], labels = sel$district[4], pos = 4,
     col = "red", cex = 0.75)
   text(poor$london.born[1], poor$poverty[1], labels = poor$district[1],
     cex = 0.75, pos = 2, col = "gray")
@@ -66,15 +66,14 @@ plot.povertyLondon <- function(x, district = c("City", "Westminster",
     pos = 2, col = "gray")
   text(nonnative$london.born, nonnative$poverty, labels = nonnative$district,
     cex = 0.75, pos = 4, col = "gray")
-  abline(h = mean(dat$poverty), lty = "dotted")
-  abline(v = mean(dat$london.born), lty = "dotted")
-
-  textDistrict("Hackney", dat)
-  textDistrict("Mile End", dat)
+  abline(h = mean(x$poverty), lty = "dotted")
+  abline(v = mean(x$london.born), lty = "dotted")
+  textDistrict("Hackney", x)
+  textDistrict("Mile End", x)
 }
 
-textDistrict <- function(district = "Hackney", dat) {
-  tmp <- dat[dat$district == district, ]
+textDistrict <- function(district = "Hackney", x) {
+  tmp <- x[x$district == district, ]
   text(tmp$london.born, tmp$poverty, cex = 0.75, pos = 1, labels = district,
     col = "gray")
 }
