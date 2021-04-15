@@ -44,8 +44,7 @@ winterTemperatures <- function() {
     out <- out[order(out$date), ]
     row.names(out) <- NULL
     out$id <- rep(1:(length(Year)), each = 3)
-    out <- list(data = out)
-    class(out) <- "winterTemperatures"
+    class(out) <- c("winterTemperatures", class(out))
     out
   }
 }
@@ -61,16 +60,15 @@ winterTemperatures <- function() {
 #' plot(winterTemperatures(), "1859-6-1")
 
 plot.winterTemperatures <- function(x, end.date = NULL, ...) {
-  temperature <- x$data
   if (!is.null(end.date)) {
     end.date <- as.Date(end.date, optional = TRUE)
     if (!is.na(end.date)) {
-      t.data <- temperature[temperature$date < end.date, ]
+      t.data <- x[x$date < end.date, ]
     } else stop("Not a valid date.")
-  } else t.data <- temperature
+  } else t.data <- x
 
   plot(t.data$date, t.data$temp, xlab = "Date",
-    ylab = "Temperature (Farenheit)",
+    ylab = "Farenheit",
     main = "Winter Temperatures (Kew Observatory)")
   invisible(lapply(unique(t.data$id), function(z) {
     tmp <- t.data[t.data$id == z, ]
