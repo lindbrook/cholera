@@ -69,19 +69,19 @@ plot.oxfordWeather <- function(x, statistic = "temperature", ...) {
     axis(3, at = sept[-2], labels = NA, padj = 0.9, col.ticks = "red",
       cex.axis = 0.75)
   } else if (statistic == "rain") {
-    plot(x$date, x$rain, xlab = "Year", ylab = "milimeters")
-    lines(x$date, x$rain, col = "gray")
-    lines(stats::lowess(x$date, x$rain, f = 0.4), col = "black", lwd = 2)
+    dv <- x[, statistic]
+    plot(x$date, dv, xlab = "Year", ylab = "milimeters")
+    lines(x$date, dv, col = "gray")
+    lines(stats::lowess(x$date, dv, f = 0.4), col = "black", lwd = 2)
     points(x[x$date %in% sept, "date"], x[x$date %in% sept, statistic],
       col = "red", pch = 16)
     axis(3, at = as.Date(sept[-2]), labels = NA, padj = 0.9, col.axis = "red",
       cex.axis = 0.75)
     axis(3, at = outbreak, labels = format(outbreak, "%b %Y"), padj = 0.9,
       col.ticks = "red", cex.axis = 0.9)
-    axis(4, at = mean(x$rain), labels = round(mean(x$rain), 1))
+    axis(4, at = mean(dv), labels = round(mean(dv), 1))
     abline(v = sept, col = "red", lty = "dotted")
     abline(v = outbreak, col = "red")
-    abline(h = x[x$date == outbreak, "rain"], col = "red")
     abline(h = x[x$date == outbreak, statistic], col = "red")
     title(main = "Monthly Rainfall in Oxford UK")
   } else stop('statistic must be "temperature" or "rain".')
