@@ -1,262 +1,35 @@
-cholera 0.7.0.9039
+cholera 0.7.5
 ==================
 
-- add oxford.weather data.
-- add oxfordWeather().
+# New Data #
 
+- oxford.weather
 
-cholera 0.7.0.9038
-==================
+# New Functions #
 
-- add povertyLondon().
+- isoLines()
+- isoVertices()
+- oxfordWeather()
+- povertyLondon()
+- segmentHighlight()
+- winterTemperatures()
 
-
-cholera 0.7.0.9037
-==================
-
-- add winterTemperatures().
-
-
-cholera 0.7.0.9036
-==================
-
-- fix segmentHighlight().
-
-
-cholera 0.7.0.9035
-==================
-
-- add segmentHighlight().
-
-
-cholera 0.7.0.9034
-==================
-
-- use stop(call. = FALSE) with primary functions.
-
-
-cholera 0.7.0.9033
-==================
+# Function Changes #
 
 - add addCase(case = NULL).
-
-
-cholera 0.7.0.9032
-==================
-
-- migration prep.
-- amend GitHub "Roads" vignette.
-
-
-cholera 0.7.0.9031
-==================
-
-- use dontrun for examples with parallel code (R 4.0.0).
-
-
-cholera 0.7.0.9030
-==================
-
-- theta() -> radians().
-
-
-cholera 0.7.0.9029
-==================
-
-- road.segments2: "lon" and "lat" -> "longitude" and "latitude".
-
-
-cholera 0.7.0.9028
-==================
-
-- amend latitudeLongitude().
-- rotatePoint(point.type) -> rotatePoint(dataset).
-- amend referenceRadians().
-
-
-cholera 0.7.0.9027
-==================
-
-- consolidate of pointCentroids(), pointsFromGeoTIFF(), roadsLatLong() and
-  rotatePoint() into latitudeLongitude().
-
-
-cholera 0.7.0.9026
-==================
-
-- add rotatePoint(point.type = c("fatalities.address").
-- use :: in snowMap2() prototype.
-- add longitude and latitude to fatalities.address2 and pumps.vestry2 (experimental).
-
-
-cholera 0.7.0.9025
-==================
-
-- add longitude and latitude to pumps2 (experimental).
-- add snowMap2() prototype.
-
-
-cholera 0.7.0.9024
-==================
-
-- remove roadsPlot().
-- add rotatePoint(point.type = c("fatalities", "pumps", "pumps.vestry", "roads").
-- add longitude and latitude to fatalities2 (experimental).
-
-
-cholera 0.7.0.9023
-==================
-
-- "back of envelope" lat-long difference estimate.
-
-
-cholera 0.7.0.9022
-==================
-
-- add unitMeter(input.unit = "latlong").
-
-
-cholera 0.7.0.9021
-==================
-
-- roads2: x2 -> longitude; y2 -> latitude.
-- add roadsLatLong() prototype.
-- fix meter benchmnark typo: Silver Street -> Cross Street.
-- add roadSegments2() prototype.
-- add road.segments2 prototype.
-
-
-cholera 0.7.0.9020
-==================
-
-- add roads2 prototype.
-
-
-cholera 0.7.0.9019
-==================
-
-- amend roads2 (experimental).
-
-
-cholera 0.7.0.9018
-==================
-
-- add rotatePoint(unique.coords = TRUE).
-- use roads$id as index in rotatePoint().
-- fix quadrants I & IV in rotatePoint().
-
-
-cholera 0.7.0.9017
-==================
-
-- amend rotatePoint() prototype.
-
-
-cholera 0.7.0.9016
-==================
-
-- add rotatePoint() prototype.
-
-
-cholera 0.7.0.9015
-==================
-
-- add longitude and latitude to roads2 (experimental).
-
-
-cholera 0.7.0.9014
-==================
-
-- add pointCentroids() prototype.
-
-
-cholera 0.7.0.9013
-==================
-
-- add road.gcp.points (experimental).
-
-
-cholera 0.7.0.9012
-==================
-
-- add pointsFromGeoTIFF().
-- add roadsPlot().
-
-
-cholera 0.7.0.9011
-==================
-
-- change README figures from 6" to 5.5".
-- test multi.core = TRUE.
-
-
-cholera 0.7.0.9010
-==================
-
-- fix unneeded warnings in addEuclideanPath().
+- add and set neighborhoodVoronoi(case.location = "address").
+- add and set neighborhoodVoronoi(pump.location = "nominal").
 - add subtitles for selected pumps in plot.euclidean().
 
+# Fixes #
 
-cholera 0.7.0.9009
-==================
+- fix unneeded warnings in addEuclideanPath().
+- fix typo, from Silver Street to Cross Street, for meter benchmark in roads
+  vignette.
 
-- use 'viridisLite' in isoLines().
-- copyedit "note on computational performance".
+# Vignettes #
 
-
-cholera 0.7.0.9008
-==================
-
-- add discussion of Euclidean/Voronoi "expected" neighborhoods.
-
-
-cholera 0.7.0.9007
-==================
-
-- add parLapply() for isoVertices() for Windows.
-
-
-cholera 0.7.0.9006
-==================
-
-- change 'RColorBrewer' to 'viridisLite' in plot.iso().
-
-
-cholera 0.7.0.9005
-==================
-
-- add plot.iso(selected.post = "all").
-
-
-cholera 0.7.0.9004
-==================
-
-- add amended isoVertices() prototype.
-
-
-cholera 0.7.0.9003
-==================
-
-- note parallelization vignette in cholera-package.Rd.
-- add and set default neighborhoodVoronoi(pump.location = "nominal").
-
-
-cholera 0.7.0.9002
-==================
-
-- set neighborhoodVoronoi(case.location = "address") as default.
-
-
-cholera 0.7.0.9001
-==================
-
-- add amended isoLines() prototype.
-
-
-cholera 0.7.0.9000
-==================
-
-- amend references: Paumgarten and Winter.
+- add discussion of Euclidean and Voronoi "expected" neighborhoods.
 
 
 cholera 0.7.0
