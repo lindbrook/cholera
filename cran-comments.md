@@ -1,37 +1,25 @@
 ### Test environments
 
-* local OS X install, R 3.6.1 (2019-07-05)
-* win-builder ("R-devel", "R-oldrelease" and "R-release")
+* local: macOS 11.2.3; R 4.0.5 (2021-03-31)
+* win-builder: devel, oldrelease and release
+* R-hub: Windows Server; Ubuntu Linux 16.04 LTS; Debian Linux
 
-
-### CRAN Package Check Results for Package 'cholera'
-
-1 Note:
-
-Version: 0.6.5
-Check: installed package size
-Result: NOTE
-     installed size is 5.6Mb
-     sub-directories of 1Mb or more:
-     data 1.0Mb
-     doc 1.6Mb
-     help 2.3Mb
-Flavor: r-patched-solaris-x86
 
 ### R CMD check results
 
-R 3.6.1 (2019-07-05), x86_64-apple-darwin15.6.0 (64-bit):
+4.0.5 (2021-03-31), x86_64-apple-darwin17.0 (64-bit):
 * 0 errors | 0 warnings | 0 notes
 
-### R win-builder check results
 
-R-devel: R Under development (unstable) (2019-09-55 r77192): x86_64-w64-mingw32 (64-bit)
+### R win-builder check results - x86_64-w64-mingw32 (64-bit)
+
+R-devel: R Under development (unstable) (2021-04-18 r80182)
 * 0 errors | 0 warnings | 0 note
 
-R-release: 3.6.1 (2019-07-05): x86_64-w64-mingw32 (64-bit)
+R-release: 4.0.5 (2021-03-31)
 * 0 errors | 0 warnings | 0 notes
 
-R-oldrelease: R 3.5.3 (2019-03-11): x86_64-w64-mingw32 (64-bit)
+R-oldrelease: R 3.6.3 (2020-02-29)
 * 0 errors | 0 warnings | 0 notes
 
 
@@ -40,10 +28,7 @@ R-oldrelease: R 3.5.3 (2019-03-11): x86_64-w64-mingw32 (64-bit)
 Windows Server 2008 R2 SP1, R-devel, 32/64 bit
 * 0 errors | 0 warnings | 0 note
 
-Ubuntu Linux 16.04 LTS, R-release, GCC
-* 0 errors | 0 warnings | 0 note
-
-Fedora Linux, R-devel, clang, gfortran
+Ubuntu Linux 20.04.1 LTS, R-release, GCC
 * 0 errors | 0 warnings | 0 note
 
 Debian Linux, R-release, GCC
