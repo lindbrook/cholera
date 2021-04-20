@@ -329,7 +329,7 @@ cholera 0.6.5
 
 # DESCRIPTION #
 
-- remove 'scales" from Imports.
+- remove 'scales' from Imports.
 
 
 cholera 0.6.0
