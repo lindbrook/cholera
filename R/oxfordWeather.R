@@ -50,7 +50,7 @@ plot.oxfordWeather <- function(x, statistic = "temperature", ...) {
                         hi.lo = unlist(x[, c("tmax", "tmin")]))
     plot(x$date, x$tmax, pch = NA, ylim = range(x[, c("tmax", "tmin")]),
       xlab = "Year", ylab = "Celsius")
-    title(main = "Monthly High and Low Temperatures in Oxford UK")
+    title(main = "Monthly High and Low Temperatures, Oxford UK")
     sel <- x$date %in% sept
     points(x[!sel, "date"], x[!sel, "tmin"], pch = 0)
     points(x[!sel, "date"], x[!sel, "tmax"], pch = 16, col = "gray")

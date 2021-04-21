@@ -48,7 +48,7 @@ plot.povertyLondon <- function(x, district = c("City", "Westminster",
   nonnative <- x[x$london.born == min(x$london.born), ]
 
   plot(x$london.born, x$poverty, pch = NA, xlab = "Percent London Born",
-    ylab = "Percent Poverty")
+    ylab = "Percent Poverty", main = "1881: Census and Charles Booth Data")
   points(tmp$london.born, tmp$poverty)
   points(sel$london.born, sel$poverty, pch = 0, col = "red")
   lines(stats::lowess(x$london.born, x$poverty), col = "dodgerblue")
