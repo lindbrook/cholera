@@ -52,14 +52,14 @@ winterTemperatures <- function() {
 #' Plot method for winterTemperatures().
 #'
 #' @param x object.
-#' @param end.date Date. "yyyy-mm-dd".
+#' @param end.date Date. "yyyy-mm-dd" or NULL.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 #' @examples
-#' plot(winterTemperatures(), "1859-6-1")
+#' plot(winterTemperatures())
 
-plot.winterTemperatures <- function(x, end.date = NULL, ...) {
+plot.winterTemperatures <- function(x, end.date = "1859-6-1", ...) {
   if (!is.null(end.date)) {
     end.date <- as.Date(end.date, optional = TRUE)
     if (!is.na(end.date)) {

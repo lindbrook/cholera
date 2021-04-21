@@ -4,12 +4,12 @@
 \alias{plot.winterTemperatures}
 \title{Plot method for winterTemperatures().}
 \usage{
-\method{plot}{winterTemperatures}(x, end.date = NULL, ...)
+\method{plot}{winterTemperatures}(x, end.date = "1859-6-1", ...)
 }
 \arguments{
 \item{x}{object.}
 
-\item{end.date}{Date. "yyyy-mm-dd".}
+\item{end.date}{Date. "yyyy-mm-dd" or NULL.}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -20,5 +20,5 @@ A base R plot.
 Plot method for winterTemperatures().
 }
 \examples{
-plot(winterTemperatures(), "1859-6-1")
+plot(winterTemperatures())
 }
