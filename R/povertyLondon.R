@@ -1,6 +1,6 @@
 #' Poverty and Born in London.
 #'
-#' Gareth Stedman Jones, p. 132.
+#' Gareth Stedman Jones, p. 132. Census and Charles Booth Data, 1881.
 #' @export
 
 povertyLondon <- function() {
