@@ -26,7 +26,7 @@ That said, with more recent versions of 'parallel', I have not experienced crash
 
 ## Benchmark timings
 
-The timings below (in seconds) were done on a 2.3 Ghz Intel Core i7 using the 'microbenchmark' package with R version 3.6.1 on macOS 10.14.6. This includes timings for parallel:parLapply(), which is the function used to support parallelization on Windows.
+The timings below (in seconds) were done on a 2.3 GHz Intel Core i7 using the 'microbenchmark' package with R version 3.6.1 on macOS 10.14.6. This includes timings for parallel:parLapply(), which is the function used to support parallelization on Windows.
 
 ### parallel::mclapply()
 

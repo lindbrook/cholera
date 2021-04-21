@@ -70,7 +70,7 @@ plot.oxfordWeather <- function(x, statistic = "temperature", ...) {
       cex.axis = 0.75)
   } else if (statistic == "rain") {
     dv <- x[, statistic]
-    plot(x$date, dv, xlab = "Year", ylab = "milimeters")
+    plot(x$date, dv, xlab = "Year", ylab = "millimeters")
     lines(x$date, dv, col = "gray")
     lines(stats::lowess(x$date, dv, f = 0.4), col = "black", lwd = 2)
     points(x[x$date %in% sept, "date"], x[x$date %in% sept, statistic],
