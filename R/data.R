@@ -179,7 +179,7 @@
 #' @docType data
 "ortho.proj.pump.vestry"
 
-#' Oxford monthly weather data, January 1853 - November 1860.
+#' Oxford monthly weather data, January 1853 - December 2019.
 #'
 #' Extract from UK Met Office (https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/oxforddata.txt): Lat 51.761 Lon -1.262, 63 metres amsl. Approximate 90 km (55 miles) northwest of Soho.
 #'
