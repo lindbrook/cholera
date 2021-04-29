@@ -34,6 +34,7 @@ monthEndDate <- function(start.yr = 1853, end.yr = NULL) {
 #'
 #' @param x object.
 #' @param statistic Character.
+#' @param month Character. "august" or "september".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
@@ -41,7 +42,9 @@ monthEndDate <- function(start.yr = 1853, end.yr = NULL) {
 #' plot(oxfordWeather())
 #' plot(oxfordWeather(), "rain")
 
-plot.oxfordWeather <- function(x, statistic = "temperature", ...) {
+plot.oxfordWeather <- function(x, statistic = "temperature",
+  month = "september", ...) {
+
   outbreak <- as.Date("1854-10-01") - 1
   sept <- as.Date(paste0(unique(x$year), "-09-30"))
 
@@ -69,20 +72,34 @@ plot.oxfordWeather <- function(x, statistic = "temperature", ...) {
     axis(3, at = sept[-2], labels = NA, padj = 0.9, col.ticks = "red",
       cex.axis = 0.75)
   } else if (statistic == "rain") {
-    dv <- x[, statistic]
-    plot(x$date, dv, xlab = "Year", ylab = "millimeters")
-    lines(x$date, dv, col = "gray")
-    lines(stats::lowess(x$date, dv, f = 0.4), col = "black", lwd = 2)
-    points(x[x$date %in% sept, "date"], x[x$date %in% sept, statistic],
-      col = "red", pch = 16)
-    axis(3, at = as.Date(sept[-2]), labels = NA, padj = 0.9, col.axis = "red",
-      cex.axis = 0.75)
-    axis(3, at = outbreak, labels = format(outbreak, "%b %Y"), padj = 0.9,
-      col.ticks = "red", cex.axis = 0.9)
-    axis(4, at = mean(dv), labels = round(mean(dv), 1))
-    abline(v = sept, col = "red", lty = "dotted")
-    abline(v = outbreak, col = "red")
-    abline(h = x[x$date == outbreak, statistic], col = "red")
-    title(main = "Monthly Rainfall in Oxford UK")
+    if (month == "august") {
+      august <- as.Date("1854-09-01") - 1
+      aug.sel <- x$date == august
+      augs <- x$date %in% as.Date(paste0(unique(x$year), "-08-31"))
+      plot(x$date, x$rain, xlab = "Year", ylab = "millimeters", col = "gray",
+        main = "Monthly Rainfall in Oxford UK (August)")
+      points(x[augs, "date"], x[augs, "rain"], col = "blue", pch = 16)
+      axis(3, at = august, labels = format(august, "%b %Y"), padj = 0.9,
+        col.ticks = "blue", cex.axis = 0.9, col.axis = "blue")
+      abline(v = august, col = "blue", lty = "solid")
+      abline(h = x[aug.sel, "rain"], col = "blue", lty = "solid")
+      axis(4, at = x[aug.sel, "rain"], labels = round(x[aug.sel, "rain"], 1),
+        col.axis = "blue", col = "blue")
+      rug(x[augs, "rain"], side = 4, col = "blue")
+    } else if (month == "september") {
+      september <- as.Date("1854-10-01") - 1
+      sep.sel <- x$date == september
+      seps <- x$date %in% as.Date(paste0(unique(x$year), "-09-30"))
+      plot(x$date, x$rain, xlab = "Year", ylab = "millimeters", col = "gray",
+        main = "Rainfall (September)")
+      points(x[seps, "date"], x[seps, "rain"], col = "red", pch = 16)
+      axis(3, at = september, labels = format(september, "%b %Y"), padj = 0.9,
+        col.ticks = "red", cex.axis = 0.9, col.axis = "red")
+      abline(v = september, col = "red", lty = "solid")
+      abline(h = x[sep.sel, "rain"], col = "red", lty = "solid")
+      axis(4, at = x[sep.sel, "rain"], labels = round(x[sep.sel, "rain"], 1),
+        col.axis = "red", col = "red")
+      rug(x[seps, "rain"], side = 4, col = "red")
+    }
   } else stop('statistic must be "temperature" or "rain".')
 }
