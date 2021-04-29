@@ -9,14 +9,14 @@
 
 oxfordWeather <- function() {
   ox <- cholera::oxford.weather
-  dts <- monthEndDate()
-  ox$date <- dts[-length(dts)]  # drop 1860-12.
+  ox$date <- monthEndDate()
   class(ox) <- c("oxfordWeather", class(ox))
   ox
 }
 
 # Compute last day of month.
-monthEndDate <- function(start.yr = 1853, end.yr = 1860) {
+monthEndDate <- function(start.yr = 1853, end.yr = NULL) {
+  if (is.null(end.yr)) end.yr <- max(cholera::oxford.weather$year)
   start <- paste0(start.yr, "-1-1")
   end <- paste0(end.yr, "-12-31")
   cal <- seq.Date(as.Date(start), as.Date(end), by = "day")
