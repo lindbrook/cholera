@@ -67,34 +67,34 @@ plot.oxfordWeather <- function(x, statistic = "temperature",
     axis(3, at = sept[-2], labels = NA, padj = 0.9, col.ticks = "red",
       cex.axis = 0.75)
   } else if (statistic == "rain") {
-    if (month == "august") {
-      august <- as.Date("1854-09-01") - 1
-      aug.sel <- x$date == august
-      augs <- x$date %in% as.Date(paste0(unique(x$year), "-08-31"))
-      plot(x$date, x$rain, xlab = "Year", ylab = "millimeters", col = "gray",
-        main = "Monthly Rainfall in Oxford UK (August)")
-      points(x[augs, "date"], x[augs, "rain"], col = "blue", pch = 16)
-      axis(3, at = august, labels = format(august, "%b %Y"), padj = 0.9,
-        col.ticks = "blue", cex.axis = 0.9, col.axis = "blue")
-      abline(v = august, col = "blue", lty = "solid")
-      abline(h = x[aug.sel, "rain"], col = "blue", lty = "solid")
-      axis(4, at = x[aug.sel, "rain"], labels = round(x[aug.sel, "rain"], 1),
-        col.axis = "blue", col = "blue")
-      rug(x[augs, "rain"], side = 4, col = "blue")
-    } else if (month == "september") {
-      september <- as.Date("1854-10-01") - 1
-      sep.sel <- x$date == september
-      seps <- x$date %in% as.Date(paste0(unique(x$year), "-09-30"))
-      plot(x$date, x$rain, xlab = "Year", ylab = "millimeters", col = "gray",
-        main = "Rainfall (September)")
-      points(x[seps, "date"], x[seps, "rain"], col = "red", pch = 16)
-      axis(3, at = september, labels = format(september, "%b %Y"), padj = 0.9,
-        col.ticks = "red", cex.axis = 0.9, col.axis = "red")
-      abline(v = september, col = "red", lty = "solid")
-      abline(h = x[sep.sel, "rain"], col = "red", lty = "solid")
-      axis(4, at = x[sep.sel, "rain"], labels = round(x[sep.sel, "rain"], 1),
-        col.axis = "red", col = "red")
-      rug(x[seps, "rain"], side = 4, col = "red")
-    }
-  } else stop('statistic must be "temperature" or "rain".')
+    rainPlot(x, month)
+  } else stop('statistic must be "temperature" or "rain".', call. = FALSE)
+}
+
+rainPlot <- function(x, month) {
+  if (month == "august") {
+    outbreak <- as.Date("1854-09-01") - 1
+    suffix <- "-08-31"
+    mo.col <- "blue"
+  } else if (month == "september") {
+    outbreak <- as.Date("1854-10-01") - 1
+    suffix <- "-09-30"
+    mo.col <- "red"
+  } else stop('month must be "august" or "september".', call. = FALSE)
+
+  mo.sel <- x$date == outbreak
+  mos <- x$date %in% as.Date(paste0(unique(x$year), suffix))
+  ttl <- paste0("Monthly Rainfall in Oxford UK (", tools::toTitleCase(month),
+    ")")
+
+  plot(x$date, x$rain, xlab = "Year", ylab = "millimeters", col = "gray",
+    main = ttl)
+  points(x[mos, "date"], x[mos, "rain"], col = mo.col, pch = 16)
+  axis(3, at = outbreak, labels = format(outbreak, "%b %Y"), padj = 0.9,
+    col.ticks = mo.col, cex.axis = 0.9, col.axis = mo.col)
+  abline(v = outbreak, col = mo.col)
+  abline(h = x[mo.sel, "rain"], col = mo.col)
+  axis(4, at = x[mo.sel, "rain"], labels = round(x[mo.sel, "rain"], 1),
+    col.axis = mo.col, col = mo.col)
+  rug(x[mos, "rain"], side = 4, col = mo.col)
 }
