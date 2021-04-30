@@ -4,8 +4,6 @@
 #' @note December 1860 observation is dropped due to missing "tmin" value.
 #' @return An R data frame.
 #' @export
-#' @examples
-#' plot(oxfordWeather())
 
 oxfordWeather <- function() {
   ox <- cholera::oxford.weather
@@ -38,9 +36,6 @@ monthEndDate <- function(start.yr = 1853, end.yr = NULL) {
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
-#' @examples
-#' plot(oxfordWeather())
-#' plot(oxfordWeather(), "rain")
 
 plot.oxfordWeather <- function(x, statistic = "temperature",
   month = "september", ...) {

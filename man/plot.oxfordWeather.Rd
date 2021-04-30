@@ -21,7 +21,3 @@ A base R plot.
 \description{
 Plot method for oxfordWeather().
 }
-\examples{
-plot(oxfordWeather())
-plot(oxfordWeather(), "rain")
-}
