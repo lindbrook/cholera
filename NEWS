@@ -1,3 +1,13 @@
+cholera 0.7.5.9001
+==================
+
+- amend oxford.weather data to use entire data set.
+- amend plot.oxfordWeather(statistic = "rain").
+- add/set plot.oxfordWeather(month = "september").
+- add/use rainPlot().
+- add/use temperaturePlot().
+
+
 cholera 0.7.5.9000
 ==================
 

@@ -15,6 +15,3 @@ Add and use last day of month as unit of observation to oxford.weather.
 \note{
 December 1860 observation is dropped due to missing "tmin" value.
 }
-\examples{
-plot(oxfordWeather())
-}

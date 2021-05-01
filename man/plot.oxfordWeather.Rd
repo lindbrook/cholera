@@ -4,12 +4,14 @@
 \alias{plot.oxfordWeather}
 \title{Plot method for oxfordWeather().}
 \usage{
-\method{plot}{oxfordWeather}(x, statistic = "temperature", ...)
+\method{plot}{oxfordWeather}(x, statistic = "temperature", month = "september", ...)
 }
 \arguments{
 \item{x}{object.}
 
 \item{statistic}{Character.}
+
+\item{month}{Character. "august" or "september".}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -18,8 +20,4 @@ A base R plot.
 }
 \description{
 Plot method for oxfordWeather().
-}
-\examples{
-plot(oxfordWeather())
-plot(oxfordWeather(), "rain")
 }

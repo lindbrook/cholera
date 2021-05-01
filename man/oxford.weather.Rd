@@ -3,7 +3,7 @@
 \docType{data}
 \name{oxford.weather}
 \alias{oxford.weather}
-\title{Oxford monthly weather data, January 1853 - November 1860.}
+\title{Oxford monthly weather data, January 1853 - December 2019.}
 \format{
 A data frame with 7 variables and 95 observations.
  \describe{
