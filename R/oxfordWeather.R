@@ -73,6 +73,8 @@ rainPlot <- function(x, month) {
   axis(4, at = x[mo.sel, "rain"], labels = round(x[mo.sel, "rain"], 1),
     col.axis = mo.col, col = mo.col)
   rug(x[mos, "rain"], side = 4, col = mo.col)
+  lines(stats::lowess(x[mos, "date"], x[mos, "rain"]), col = mo.col,
+      lty = "dashed", lwd = 2)
 }
 
 temperaturePlot <- function(x, month) {
