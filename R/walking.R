@@ -294,7 +294,7 @@ plot.walking <- function(x, type = "road", msg = FALSE, ...) {
     }
   }
 
-  pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type, x$paths)
+  pumpTokens(x, type)
 
   if (is.null(x$pump.select)) {
     title(main = "Pump Neighborhoods: Walking")

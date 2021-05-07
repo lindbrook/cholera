@@ -1,3 +1,9 @@
+cholera 0.7.5.9002
+==================
+
+- amend pumpTokens(); "gray" out unobserved and unselected pumps.
+
+
 cholera 0.7.5.9001
 ==================
 
