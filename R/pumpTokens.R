@@ -7,12 +7,15 @@ pumpTokens <- function(x, type) {
   else dat <- cholera::pumps
   all.data <- dat[, c("x", "y")]
   all.labels <- paste0("p", dat$id)
+  x$case.set <- ifelse(is.null(x$case.set), "observed") # for plot.voronoi()
 
   if (!is.null(x$pump.select)) {
     if (class(x) == "walking") {
       p.obs <- as.numeric(names(x$paths))
     } else if (class(x) == "euclidean") {
       p.obs <- sort(unique(x$nearest.pump))
+    } else if (class(x) == "voronoi") {
+      p.obs <- sort(x$pump.id)
     }
   }
 
