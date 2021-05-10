@@ -215,7 +215,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
     }))
   }
 
-  pumpTokens(x$pump.select, x$vestry, x$case.set, x$snow.colors, type)
+  pumpTokens(x, type)
 
   if (is.null(x$pump.select)) {
     title(main = "Pump Neighborhoods: Euclidean")
