@@ -7,7 +7,6 @@ pumpTokens <- function(x, type) {
   else dat <- cholera::pumps
   all.data <- dat[, c("x", "y")]
   all.labels <- paste0("p", dat$id)
-  x$case.set <- ifelse(is.null(x$case.set), "observed") # for plot.voronoi()
 
   if (!is.null(x$pump.select)) {
     if (class(x) == "walking") {
@@ -18,6 +17,8 @@ pumpTokens <- function(x, type) {
       p.obs <- sort(x$pump.id)
     }
   }
+
+  if (class(x) == "voronoi") x$case.set <-  "observed"
 
   if (x$case.set == "observed") {
     if (is.null(x$pump.select)) {
