@@ -115,7 +115,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for neighborhoodWalking().
 #'
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
-#' @param type Character. "road", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
+#' @param type Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param msg Logical. Toggle in-progress messages.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
@@ -129,9 +129,9 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.walking <- function(x, type = "road", msg = FALSE, ...) {
-  if (type %in% c("road", "area.points", "area.polygons") == FALSE) {
-    stop('type must be "road", "area.points", "area.polygons".')
+plot.walking <- function(x, type = "roads", msg = FALSE, ...) {
+  if (type %in% c("roads", "area.points", "area.polygons") == FALSE) {
+    stop('type must be "roads", "area.points", "area.polygons".')
   }
 
   if (type %in% c("area.points", "area.polygons")) {

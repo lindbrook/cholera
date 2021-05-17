@@ -4,12 +4,12 @@
 \alias{plot.walking}
 \title{Plot method for neighborhoodWalking().}
 \usage{
-\method{plot}{walking}(x, type = "road", msg = FALSE, ...)
+\method{plot}{walking}(x, type = "roads", msg = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "walking" created by \code{neighborhoodWalking()}.}
 
-\item{type}{Character. "road", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
+\item{type}{Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
 
 \item{msg}{Logical. Toggle in-progress messages.}
 
