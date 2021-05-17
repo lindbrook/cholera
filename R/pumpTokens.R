@@ -45,8 +45,13 @@ pumpTokens <- function(x, type) {
     }
   } else if (x$case.set == "expected") {
     if (is.null(x$pump.select)) {
-      points(all.data, pch = 24, lwd = 2, bg = x$snow.colors, col = "white")
-      text(all.data, pos = 1, cex = 0.9, labels = all.labels, col = "white")
+      if (type == "roads") {
+        points(all.data, pch = 24, lwd = 1.5, col = "black")
+        text(all.data, pos = 1, cex = 0.9, labels = all.labels, col = "black")
+      } else {
+        points(all.data, pch = 24, bg = x$snow.colors, col = "white")
+        text(all.data, pos = 1, cex = 0.9, labels = all.labels, col = "white")
+      }
     } else {
       if (all(x$pump.select > 0)) {
         sel <- dat$id %in% x$pump.select
@@ -59,16 +64,14 @@ pumpTokens <- function(x, type) {
       neg.data <- dat[!sel, c("x", "y")]
       neg.labels <- paste0("p", dat$id[!sel])
 
-      if (type == "road") {
+      if (type == "roads") {
         if (is.null(x$pump.select)) {
-          points(all.data, pch = 24, lwd = 2, bg = x$snow.colors)
-          text(all.data, pos = 1, cex = 0.9, col = x$snow.colors,
-            labels = all.labels)
+          points(all.data, pch = 24, col = "black")
+          text(all.data, pos = 1, cex = 0.9, col = "black", labels = all.labels)
         } else {
-          points(pos.data, pch = 24, lwd = 2, bg = x$snow.colors[sel])
-          text(pos.data, pos = 1, cex = 0.9, labels = pos.labels,
-            col = x$snow.colors[sel])
-          points(neg.data, pch = 24, lwd = 1, col = "gray")
+          points(pos.data, pch = 24, col = "black")
+          text(pos.data, pos = 1, cex = 0.9, labels = pos.labels, col = "black")
+          points(neg.data, pch = 24, col = "gray")
           text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
         }
       } else if (type %in% c("area.points", "area.polygons", "star")) {

@@ -1,3 +1,10 @@
+cholera 0.7.5.9003
+==================
+
+- change type = "road" to "roads" in plot.walking().
+- fix pumpTokens() for plot.walking(type = "roads").
+
+
 cholera 0.7.5.9002
 ==================
 
