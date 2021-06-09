@@ -1,3 +1,10 @@
+cholera 0.7.5.9005
+==================
+
+- add pumpsLatLong().
+- add pointsFromGeoTIFF().
+
+
 cholera 0.7.5.9004
 ==================
 
