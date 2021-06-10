@@ -2,12 +2,12 @@
 #'
 #' @param tif Character. Georeferenced QGIS TIFF file.
 #' @param cutpoint Numeric. Cutpoint for hierarchical cluster analysis.
+#' @param vestry Logical.
 #' @export
 
-pumpsLatLong <- function(tif, cutpoint = 0.001) {
+pumpsLatLong <- function(tif, cutpoint = 0.001, vestry = FALSE) {
   u.data <- pointsFromGeoTIFF(tif)
   names(u.data)[3] <- "modified"
-
   sel <- u.data$modified != 0 & u.data$modified != 255
   obs.x.min <- min(u.data[sel, "x"])
   obs.x.max <- max(u.data[sel, "x"])
@@ -20,7 +20,6 @@ pumpsLatLong <- function(tif, cutpoint = 0.001) {
 
   distances <- stats::dist(f.data)
   tree <- stats::hclust(distances)
-
   clusters <- stats::cutree(tree, h = cutpoint)
   cluster.id <- unique(clusters)
   pts <- lapply(cluster.id, function(grp) names(clusters[clusters == grp]))
@@ -35,15 +34,19 @@ pumpsLatLong <- function(tif, cutpoint = 0.001) {
       stringsAsFactors = FALSE)
     row.id <- kmeansRectanlge(row.element.ct$Freq)
     col.id <- kmeansRectanlge(col.element.ct$Freq)
-
     rect.x <- x.val[range(col.id)]
     rect.y <- y.val[range(row.id)]
     longitude <- mean(rect.x)
     latitude <- mean(rect.y)
-
-    data.frame(pump = i, long = longitude, lat = latitude)
+    data.frame(id = i, long = longitude, lat = latitude)
   })
-  do.call(rbind, coords)
+
+  out <- do.call(rbind, coords)
+  if (vestry) out$pump <- c(2, 1, 4:3, 5:6, 14, 7, 11:8, 13, 12)
+  else out$pump <- c(2, 1, 4:3, 5:7, 11:8, 13, 12)
+  out <- out[order(out$pump), ]
+  row.names(out) <- NULL
+  out
 }
 
 kmeansRectanlge <- function(x) {
