@@ -5,7 +5,7 @@
 #' @param vestry Logical.
 #' @export
 
-pumpsLatLong <- function(tif, cutpoint = 0.001, vestry = FALSE) {
+latlongPumps <- function(tif, cutpoint = 0.001, vestry = FALSE) {
   u.data <- pointsFromGeoTIFF(tif)
   names(u.data)[3] <- "modified"
   sel <- u.data$modified != 0 & u.data$modified != 255
@@ -48,6 +48,22 @@ pumpsLatLong <- function(tif, cutpoint = 0.001, vestry = FALSE) {
   row.names(out) <- NULL
   out
 }
+
+#' Extract points from GeoTiff (prototype).
+#'
+#' @param x Object. GeoTIFF.
+#' @export
+
+pointsFromGeoTIFF <- function(x) {
+  ras <- raster::raster(x)
+  pts <- raster::rasterToPoints(ras)
+  data.frame(pts)
+}
+
+#' Compute rectangle vertices (prototype).
+#'
+#' @param x Object. Points/pixel count.
+#' @export
 
 kmeansRectanlge <- function(x) {
   km <- stats::kmeans(x, 2)
