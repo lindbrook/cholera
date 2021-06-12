@@ -2,10 +2,9 @@
 #'
 #' @param tif Character. Georeferenced QGIS TIFF file.
 #' @param cutpoint Numeric. Cutpoint for hierarchical cluster analysis.
-#' @param vestry Logical.
 #' @export
 
-latlongPumps <- function(tif, cutpoint = 0.001, vestry = FALSE) {
+latlongCoordinates <- function(tif, cutpoint = 0.0001) {
   u.data <- pointsFromGeoTIFF(tif)
   names(u.data)[3] <- "modified"
   sel <- u.data$modified != 0 & u.data$modified != 255
@@ -41,35 +40,5 @@ latlongPumps <- function(tif, cutpoint = 0.001, vestry = FALSE) {
     data.frame(id = i, long = longitude, lat = latitude)
   })
 
-  out <- do.call(rbind, coords)
-  if (vestry) out$pump <- c(2, 1, 4:3, 5:6, 14, 7, 11:8, 13, 12)
-  else out$pump <- c(2, 1, 4:3, 5:7, 11:8, 13, 12)
-  out <- out[order(out$pump), ]
-  row.names(out) <- NULL
-  out
-}
-
-#' Extract points from GeoTiff (prototype).
-#'
-#' @param x Object. GeoTIFF.
-#' @export
-
-pointsFromGeoTIFF <- function(x) {
-  ras <- raster::raster(x)
-  pts <- raster::rasterToPoints(ras)
-  data.frame(pts)
-}
-
-#' Compute rectangle vertices (prototype).
-#'
-#' @param x Object. Points/pixel count.
-#' @export
-
-kmeansRectanlge <- function(x) {
-  if (length(unique(x)) > 1) {
-    km <- stats::kmeans(x, 2)
-    km.df <- data.frame(ct = x, cluster = km$cluster)
-    sel <- km.df[km.df$cluster == which.max(km$centers), ]
-    as.numeric(row.names(sel))
-  } else seq_along(x)
+  do.call(rbind, coords)
 }
