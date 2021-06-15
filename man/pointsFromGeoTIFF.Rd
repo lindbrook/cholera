@@ -2,7 +2,7 @@
 % Please edit documentation in R/latlongAuxilliaryFunctions.R
 \name{pointsFromGeoTIFF}
 \alias{pointsFromGeoTIFF}
-\title{Extract points from GeoTiff (prototype).}
+\title{Extract points from GeoTiff.}
 \usage{
 pointsFromGeoTIFF(x)
 }
@@ -10,5 +10,5 @@ pointsFromGeoTIFF(x)
 \item{x}{Object. GeoTIFF.}
 }
 \description{
-Extract points from GeoTiff (prototype).
+Extract points from GeoTiff.
 }

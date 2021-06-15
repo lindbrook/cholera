@@ -1,15 +1,4 @@
-#' Extract points from GeoTiff (prototype).
-#'
-#' @param x Object. GeoTIFF.
-#' @export
-
-pointsFromGeoTIFF <- function(x) {
-  ras <- raster::raster(x)
-  pts <- raster::rasterToPoints(ras)
-  data.frame(pts)
-}
-
-#' Compute rectangle vertices (prototype).
+#' Compute rectangle vertices.
 #'
 #' @param x Object. Points/pixel count.
 #' @export
@@ -23,7 +12,18 @@ kmeansRectanlge <- function(x) {
   } else seq_along(x)
 }
 
-#' Index between native and latlong coordinates (prototype).
+#' Extract points from GeoTiff.
+#'
+#' @param x Object. GeoTIFF.
+#' @export
+
+pointsFromGeoTIFF <- function(x) {
+  ras <- raster::raster(x)
+  pts <- raster::rasterToPoints(ras)
+  data.frame(pts)
+}
+
+#' Index between native and latlong coordinates.
 #'
 #' @param max.ct Integer. Upper count of observations.
 #' @export

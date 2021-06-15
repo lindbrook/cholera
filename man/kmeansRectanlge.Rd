@@ -2,7 +2,7 @@
 % Please edit documentation in R/latlongAuxilliaryFunctions.R
 \name{kmeansRectanlge}
 \alias{kmeansRectanlge}
-\title{Compute rectangle vertices (prototype).}
+\title{Compute rectangle vertices.}
 \usage{
 kmeansRectanlge(x)
 }
@@ -10,5 +10,5 @@ kmeansRectanlge(x)
 \item{x}{Object. Points/pixel count.}
 }
 \description{
-Compute rectangle vertices (prototype).
+Compute rectangle vertices.
 }

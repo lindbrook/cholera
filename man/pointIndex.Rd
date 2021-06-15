@@ -2,7 +2,7 @@
 % Please edit documentation in R/latlongAuxilliaryFunctions.R
 \name{pointIndex}
 \alias{pointIndex}
-\title{Index between native and latlong coordinates (prototype).}
+\title{Index between native and latlong coordinates.}
 \usage{
 pointIndex(max.ct = 321)
 }
@@ -10,5 +10,5 @@ pointIndex(max.ct = 321)
 \item{max.ct}{Integer. Upper count of observations.}
 }
 \description{
-Index between native and latlong coordinates (prototype).
+Index between native and latlong coordinates.
 }
