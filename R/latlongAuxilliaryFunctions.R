@@ -115,3 +115,24 @@ rotatePoint <- function(id = 1, dataset = "roads", unique.coords = TRUE) {
 
   data.frame(x = x.prime, y = y.prime, row.names = NULL)
 }
+
+#' Create subsetted PDFs (prototype).
+#'
+#' Reduce over-printing of points.
+#' @param path Character. e.g., "~/Documents/Data/"
+#' @export
+
+subsetPDF <- function(path) {
+  idx <- pointIndex(nrow(cholera::fatalities.address))
+  dat <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  invisible(lapply(seq_along(idx$start), function(i) {
+    pre <- paste0(path, "address.0")
+    post <- ".pdf"
+    grDevices::pdf(file = paste0(pre, i, post))
+    plot(dat$x, dat$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+      bty = "n")
+    sel <- idx[i, "start"]:idx[i, "stop"]
+    points(cholera::fatalities.address[sel, c("x", "y")], pch = 15, cex = 0.2)
+    grDevices::dev.off()
+  }))
+}
