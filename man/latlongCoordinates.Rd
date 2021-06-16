@@ -4,12 +4,12 @@
 \alias{latlongCoordinates}
 \title{Compute Georeferenced Latitude and Longitude (prototype).}
 \usage{
-latlongCoordinates(tif, cutpoint = 1e-04)
+latlongCoordinates(tif, k)
 }
 \arguments{
 \item{tif}{Character. Georeferenced QGIS TIFF file.}
 
-\item{cutpoint}{Numeric. Cutpoint for hierarchical cluster analysis.}
+\item{k}{Numeric. Number of clusters, k, to identify.}
 }
 \description{
 Compute Georeferenced Latitude and Longitude (prototype).
