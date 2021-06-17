@@ -2,13 +2,15 @@
 % Please edit documentation in R/latlongAuxilliaryFunctions.R
 \name{pointIndex}
 \alias{pointIndex}
-\title{Index between native and latlong coordinates.}
+\title{Index of subsets.}
 \usage{
-pointIndex(max.ct = 321)
+pointIndex(max.ct = 321, bin.size = 50)
 }
 \arguments{
 \item{max.ct}{Integer. Upper count of observations.}
+
+\item{bin.size}{Integer. bin size size of subgroups.}
 }
 \description{
-Index between native and latlong coordinates.
+Index of subsets.
 }

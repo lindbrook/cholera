@@ -23,13 +23,14 @@ pointsFromGeoTIFF <- function(x) {
   data.frame(pts)
 }
 
-#' Index between native and latlong coordinates.
+#' Index of subsets.
 #'
 #' @param max.ct Integer. Upper count of observations.
+#' @param bin.size Integer. bin size size of subgroups.
 #' @export
 
-pointIndex <- function(max.ct = 321) {
-  alpha <- seq(1, max.ct, 50)
+pointIndex <- function(max.ct = 321, bin.size = 50) {
+  alpha <- seq(1, max.ct, bin.size)
   omega <- c(alpha[-1] - 1, max.ct)
   data.frame(start = alpha, stop = omega)
 }
