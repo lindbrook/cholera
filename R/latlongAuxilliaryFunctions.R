@@ -121,19 +121,58 @@ rotatePoint <- function(id = 1, dataset = "roads", unique.coords = TRUE) {
 #'
 #' Reduce over-printing of points.
 #' @param path Character. e.g., "~/Documents/Data/"
+#' @param dataset Object. 'cholera' dataset.
 #' @export
 
-subsetPDF <- function(path) {
-  idx <- pointIndex(nrow(cholera::fatalities.address))
-  dat <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  invisible(lapply(seq_along(idx$start), function(i) {
-    pre <- paste0(path, "address.0")
-    post <- ".pdf"
-    grDevices::pdf(file = paste0(pre, i, post))
-    plot(dat$x, dat$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
-      bty = "n")
-    sel <- idx[i, "start"]:idx[i, "stop"]
-    points(cholera::fatalities.address[sel, c("x", "y")], pch = 15, cex = 0.2)
+subsetPDF <- function(path, dataset = "fatalities.address") {
+  framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
+
+  if (dataset == "roads") {
+    dat <- framework
+    dat$point.id <- paste0(dat$x, "-", dat$y)
+    dat <- dat[!duplicated(dat$point.id), ]
+    file.nm <- "road"
+  } else if (dataset == "fatalities") {
+    dat <- cholera::fatalities
+    file.nm <- "fatality"
+  } else if (dataset == "fatalities.address") {
+    dat <- cholera::fatalities.address
+    file.nm <- "address"
+  } else if (dataset == "pumps") {
+    dat <- cholera::pumps
+    file.nm <- "pump"
+  } else if (dataset == "pumps.vestry") {
+    dat <- cholera::pumps.vestry
+    file.nm <- "pump.vestry"
+  }
+
+  if (dataset %in% c("roads", "fatalities", "fatalities.address")) {
+    idx <- pointIndex(nrow(dat))
+    num.id <- seq_len(nrow(idx))
+
+    if (any(num.id >= 10)) {
+      num.id <- c(paste0("0", num.id[num.id < 10]), num.id[num.id >= 10])
+    } else {
+      num.id <- paste0("0", num.id)
+    }
+
+    invisible(lapply(seq_along(num.id), function(i) {
+      pre <- paste0(file.nm, ".")
+      post <- ".pdf"
+      grDevices::pdf(file = paste0(path, pre, num.id[i], post))
+      plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
+        xlab = NA, ylab = NA, bty = "n")
+      sel <- idx[i, "start"]:idx[i, "stop"]
+      points(dat[sel, c("x", "y")], pch = 15, cex = 0.2)
+      grDevices::dev.off()
+    }))
+  } else {
+    pre <- file.nm
+    post <- ".01.pdf"
+    grDevices::pdf(file = paste0(path, pre, post))
+    plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA,
+      ylab = NA, bty = "n")
+    points(dat[, c("x", "y")], pch = 15, cex = 0.2)
     grDevices::dev.off()
-  }))
+  }
 }

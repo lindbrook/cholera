@@ -4,10 +4,12 @@
 \alias{subsetPDF}
 \title{Create subsetted PDFs (prototype).}
 \usage{
-subsetPDF(path)
+subsetPDF(path, dataset = "fatalities.address")
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/"}
+
+\item{dataset}{Object. 'cholera' dataset.}
 }
 \description{
 Reduce over-printing of points.
