@@ -121,7 +121,7 @@ rotatePoint <- function(id = 1, dataset = "roads", unique.coords = TRUE) {
 #'
 #' Reduce over-printing of points.
 #' @param path Character. e.g., "~/Documents/Data/"
-#' @param dataset Object. 'cholera' dataset.
+#' @param dataset Object. A 'cholera' dataset e.g., roads.
 #' @export
 
 subsetPDF <- function(path, dataset = "fatalities.address") {
@@ -144,6 +144,10 @@ subsetPDF <- function(path, dataset = "fatalities.address") {
   } else if (dataset == "pumps.vestry") {
     dat <- cholera::pumps.vestry
     file.nm <- "pump.vestry"
+  } else {
+    msg1 <- 'dataset must be "roads", "fatalities", "fatalities.address", '
+    msg2 <- '"pumps" or "pumps.vestry".'
+    stop(msg1, msg2, call. = FALSE)
   }
 
   if (dataset %in% c("roads", "fatalities", "fatalities.address")) {

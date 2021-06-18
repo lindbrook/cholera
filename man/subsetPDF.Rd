@@ -9,7 +9,7 @@ subsetPDF(path, dataset = "fatalities.address")
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/"}
 
-\item{dataset}{Object. 'cholera' dataset.}
+\item{dataset}{Object. A 'cholera' dataset e.g., roads.}
 }
 \description{
 Reduce over-printing of points.
