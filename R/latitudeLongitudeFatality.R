@@ -146,9 +146,10 @@ stackCaseCount <- function() {
 #' Create PDFs of stratified non-anchor cases.
 #'
 #' For QGIS geo-referencing.
+#' @param path Character. e.g., "~/Documents/Data/"
 #' @export
 
-subsetFatalitiesPDF <- function() {
+subsetFatalitiesPDF <- function(path) {
   dat <- cholera::fatalities
   file.nm <- "fatality"
   stratified.fatalities <- stratifiedFatalities()
@@ -160,6 +161,8 @@ subsetFatalitiesPDF <- function() {
   } else {
     num.id <- paste0("0", num.id)
   }
+
+  framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
 
   invisible(lapply(seq_along(stratified.cases), function(i) {
     pre <- paste0(file.nm, ".")
