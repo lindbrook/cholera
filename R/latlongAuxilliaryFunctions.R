@@ -1,3 +1,10 @@
+#' Convert case IDs to numeric.
+#'
+#' @param x Object. table() object.
+#' @export
+
+caseNumber <- function(x) as.numeric(names(x))
+
 #' Compute rectangle vertices.
 #'
 #' @param x Object. Points/pixel count.
