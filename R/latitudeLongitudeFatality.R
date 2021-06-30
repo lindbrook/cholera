@@ -150,8 +150,11 @@ stackCaseCount <- function() {
 #' @export
 
 subsetFatalitiesPDF <- function(path) {
-  dat <- cholera::fatalities
   file.nm <- "fatality"
+  pre <- paste0(file.nm, ".")
+  post <- ".pdf"
+
+  dat <- cholera::fatalities
   stratified.fatalities <- stratifiedFatalities()
   stratified.cases <- stratified.fatalities$cases
   num.id <- stratified.fatalities$num.id
@@ -165,8 +168,6 @@ subsetFatalitiesPDF <- function(path) {
   framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
 
   invisible(lapply(seq_along(stratified.cases), function(i) {
-    pre <- paste0(file.nm, ".")
-    post <- ".pdf"
     grDevices::pdf(file = paste0(path, pre, num.id[i], post))
     plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
       xlab = NA, ylab = NA, bty = "n")
