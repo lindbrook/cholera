@@ -80,7 +80,6 @@ radians <- function(points.data) {
 
 rotatePoint <- function(id = 1, dataset = "roads", unique.coords = TRUE) {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  rd <- rd[order(rd$x, rd$y), ]
 
   if (unique.coords) {
     rd$point.id <- paste0(rd$x, "-", rd$y)
@@ -90,7 +89,7 @@ rotatePoint <- function(id = 1, dataset = "roads", unique.coords = TRUE) {
   center <- data.frame(x = mean(range(rd$x)), y = mean(range(rd$y)))
 
   if (dataset == "roads") {
-    points.data <- rbind(center, rd[rd$id == id, c("x", "y")])
+    points.data <- rbind(center, rd[rd$point.id == id, c("x", "y")])
   } else if (dataset == "fatalities") {
     sel <- cholera::fatalities$case == id
     points.data <- rbind(center, cholera::fatalities[sel, c("x", "y")])
