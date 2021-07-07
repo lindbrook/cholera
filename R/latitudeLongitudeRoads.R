@@ -119,7 +119,7 @@ latitudeLongitudeRoads <- function(path, multi.core = TRUE) {
   out <- merge(out, geo.coords, by = "geo.id")
   out <- out[order(out$geo.id), ]
   out$geo.id <- NULL
-  out$point.id <- NULL
+  # out$point.id <- NULL
   out
 }
 
