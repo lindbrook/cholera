@@ -119,7 +119,13 @@ latitudeLongitudeRoads <- function(path, multi.core = TRUE) {
   out <- merge(out, geo.coords, by = "geo.id")
   out <- out[order(out$geo.id), ]
   out$geo.id <- NULL
-  # out$point.id <- NULL
+
+  dat <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  dat$point.id <- paste0(dat$x, "-", dat$y)
+  out <- merge(dat, out[, c("long", "lat", "point.id")], by = "point.id")
+  out$point.id <- NULL
+  out <- out[order(out$id), ]
+  row.names(out) <- NULL
   out
 }
 
