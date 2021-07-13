@@ -19,7 +19,7 @@ subsetFramePDF <- function(path) {
     num.id <- paste0("0", num.id)
   }
 
-  dat <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
 
   invisible(lapply(seq_along(num.id), function(i) {
     grDevices::pdf(file = paste0(path, pre, num.id[i], post))
