@@ -39,6 +39,7 @@ subsetFramePDF <- function(path, cex = 0.2) {
 mapFrameSamples <- function() {
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
   dat$point.id <- paste0(dat$x, "-", dat$y)
+  dat <- dat[!duplicated(dat$point.id), ]
   sample(dat$id)
 }
 
