@@ -4,10 +4,12 @@
 \alias{subsetFramePDF}
 \title{Create PDFs of map frame points.}
 \usage{
-subsetFramePDF(path)
+subsetFramePDF(path, cex = 0.2)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/"}
+
+\item{cex}{Numeric.}
 }
 \description{
 For QGIS geo-referencing.

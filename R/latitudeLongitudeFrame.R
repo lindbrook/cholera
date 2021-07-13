@@ -2,9 +2,10 @@
 #'
 #' For QGIS geo-referencing.
 #' @param path Character. e.g., "~/Documents/Data/"
+#' @param cex Numeric.
 #' @export
 
-subsetFramePDF <- function(path) {
+subsetFramePDF <- function(path, cex = 0.2) {
   file.nm <- "frame"
   pre <- paste0(file.nm, ".")
   post <- ".pdf"
@@ -26,7 +27,7 @@ subsetFramePDF <- function(path) {
     plot(dat$x, dat$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
       bty = "n")
     sel <- idx[i, "start"]:idx[i, "stop"]
-    points(dat[dat$id %in% pts[sel], c("x", "y")], pch = 15, cex = 0.2)
+    points(dat[dat$id %in% pts[sel], c("x", "y")], pch = 15, cex = cex)
     grDevices::dev.off()
   }))
 }
