@@ -20,11 +20,12 @@ subsetFramePDF <- function(path, cex = 0.2) {
     num.id <- paste0("0", num.id)
   }
 
+  dat0 <- cholera::roads[cholera::roads$name != "Map Frame", ]
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
 
   invisible(lapply(seq_along(num.id), function(i) {
     grDevices::pdf(file = paste0(path, pre, num.id[i], post))
-    plot(dat$x, dat$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+    plot(dat0$x, dat0$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
       bty = "n")
     sel <- idx[i, "start"]:idx[i, "stop"]
     points(dat[dat$id %in% pts[sel], c("x", "y")], pch = 15, cex = cex)
