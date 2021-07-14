@@ -1,10 +1,11 @@
 #' Compute Georeferenced Latitude and Longitude (prototype).
 #'
 #' @param tif Character. Georeferenced QGIS TIFF file.
-#' @param cutpoint Numeric. Cutpoint for hierarchical cluster analysis.
+# #' @param cutpoint Numeric. Cutpoint for hierarchical cluster analysis.
+#' @param k Numeric. Number of clusters, k, to identify.
 #' @export
 
-latlongCoordinates <- function(tif, cutpoint = 0.0001) {
+latlongCoordinates <- function(tif, k) {
   u.data <- pointsFromGeoTIFF(tif)
   names(u.data)[3] <- "modified"
   sel <- u.data$modified != 0 & u.data$modified != 255
@@ -19,7 +20,7 @@ latlongCoordinates <- function(tif, cutpoint = 0.0001) {
 
   distances <- stats::dist(f.data)
   tree <- stats::hclust(distances)
-  clusters <- stats::cutree(tree, h = cutpoint)
+  clusters <- stats::cutree(tree, k = k)
   cluster.id <- unique(clusters)
   pts <- lapply(cluster.id, function(grp) names(clusters[clusters == grp]))
 

@@ -134,6 +134,25 @@
 #' @docType data
 "ortho.proj"
 
+#' Sample of road intersections (segment endpoints).
+#'
+#' @format A list with 2 variables that list randomly re-arranges unique road intersections (segment endpoints).
+#'  \describe{
+#'     \item{\code{one}}{endpoints with 1 intersection}
+#'     \item{\code{three}}{endpoints with 3 intersections}
+#'  }
+#' @docType data
+"rd.sample"
+
+#' Sample of map framework points (segment endpoints).
+#'
+#' @format A vector of length 106 of cholera::roads$id
+#'  \describe{
+#'     \item{\code{frame.sample}}{cholera::roads$id }
+#'  }
+#' @docType data
+"frame.sample"
+
 #' Road "address" of simulated (i.e., "expected") cases.
 #'
 #' @format A data frame with 6 variables that records the "address" of 19,993 simulate cases along the network of roads.

@@ -1,3 +1,15 @@
+cholera 0.7.5.9007
+==================
+
+- add/use latlongAuxilliaryFunctions.R
+- add latitudeLongitudeFatality().
+- add latitudeLongitudeAddress().
+- add rd.sample data.
+- add latitudeLongitudeRoads().
+- add frame.sample data.
+- add latitudeLongitudeFrame().
+
+
 cholera 0.7.5.9006
 ==================
 
