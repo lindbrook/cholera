@@ -79,7 +79,7 @@ radians <- function(points.data) {
 #' @export
 
 rotatePoint <- function(id = 1, dataset = "roads", unique.coords = TRUE) {
-  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rd <- cholera::roads
 
   if (unique.coords) {
     rd$point.id <- paste0(rd$x, "-", rd$y)
