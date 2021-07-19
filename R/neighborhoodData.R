@@ -213,8 +213,8 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
       cases <- road.fatalities[sel, "case"]
       road.address <- road.fatalities[road.fatalities$case %in% cases, ]
       case.data <- data.frame(road.address[, c("x.proj", "y.proj")],
-                        anchor = road.address$case,
-                        pump = 0)
+                              anchor = road.address$case,
+                              pump = 0)
     }
   } else {
     if (CaseExp) {
@@ -222,8 +222,8 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
       sel <- road.fatalities$case[road.fatalities$case %in% sim.proj$case]
       road.address <- road.fatalities[road.fatalities$case %in% sel, ]
       case.data <- data.frame(road.address[, c("x.proj", "y.proj")],
-                        anchor = road.address$case,
-                        pump = 0)
+                              anchor = road.address$case,
+                              pump = 0)
     }
   }
 
@@ -231,8 +231,8 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
     sel <- cholera::landmarks$road.segment %in% id
     road.landmarks <- cholera::landmarks[sel, ]
     landmark.data <- data.frame(road.landmarks[, c("x.proj", "y.proj")],
-                      anchor = road.landmarks$case,
-                      pump = 0)
+                                anchor = road.landmarks$case,
+                                pump = 0)
   }
 
   endptA <- data.frame(x.proj = road.data$x1,
