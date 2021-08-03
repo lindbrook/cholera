@@ -2,6 +2,7 @@
 #'
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.
 #' @param highlight Logical. Color segment.
+#' @param col Character. Highlight color.
 #' @param angled Logical. Rotate segment ID label.
 #' @return A base R graphics segment(s).
 #' @export
@@ -10,7 +11,9 @@
 #' ids <- road.segments[road.segments$name == "Soho Square", "id"]
 #' invisible(lapply(ids, function(x) segmentHighlight(x, highlight = FALSE)))
 
-segmentHighlight <- function(id, highlight = TRUE, angled = FALSE) {
+segmentHighlight <- function(id, highlight = TRUE, col = "red",
+  angled = FALSE) {
+
   if (is.character(id) == FALSE) stop('id\'s type must be character.',
     call. = FALSE)
 
@@ -19,7 +22,7 @@ segmentHighlight <- function(id, highlight = TRUE, angled = FALSE) {
   }
 
   st <- cholera::road.segments[cholera::road.segments$id == id, ]
-  if (highlight) segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
+  if (highlight) segments(st$x1, st$y1, st$x2, st$y2, col = col, lwd = 3)
 
   seg.data <- data.frame(x = unlist(st[, c("x1", "x2")]),
                          y = unlist(st[, c("y1", "y2")]),
@@ -31,8 +34,8 @@ segmentHighlight <- function(id, highlight = TRUE, angled = FALSE) {
 
   if (angled) {
     angle <- atan(intercept.slope["x"]) * 180L / pi
-    text(x.prime, y.prime, labels = id, srt = angle, col = "red")
+    text(x.prime, y.prime, labels = id, srt = angle, col = col)
   } else {
-    text(x.prime, y.prime, labels = id, col = "red")
+    text(x.prime, y.prime, labels = id, col = col)
   }
 }
