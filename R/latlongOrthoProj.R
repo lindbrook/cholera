@@ -90,12 +90,21 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.0005) {
   sel <- cholera::ortho.proj$case %in% cholera::fatalities.address$anchor
   xy.ortho <- cholera::ortho.proj[sel, ]
 
+
+  # Classfication determined by bar orientation
   unclassified <- setdiff(xy.ortho$case, latlong.ortho$case)
 
   vars <- c("case", "road.segment")
   seg.test <- merge(xy.ortho[, vars], latlong.ortho[, vars], by = "case")
   sel <- seg.test$road.segment.x != seg.test$road.segment.y
   misclassified <- seg.test[sel, "case"]
+
+  ## "Misclassified" addresses
+  # snowMap(add.cases = FALSE, add.pumps = FALSE)
+  # points(fatalities[!fatalities$case %in% misclassified, c("x", "y")],
+  #   col = "gray")
+  # points(fatalities[fatalities$case %in% misclassified, c("x", "y")],
+  #   col = "red", pch = 16)
 
   errors.case <- sort(c(misclassified, unclassified))
   vars <- c("long", "lat")
