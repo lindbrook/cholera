@@ -62,7 +62,8 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
       dist <- stats::dist(rbind(seg.df[1, ], c(long.proj, lat.proj))) +
               stats::dist(rbind(seg.df[2, ], c(long.proj, lat.proj)))
 
-      bisect.test <- signif(stats::dist(seg.df)) == signif(dist)
+      bisect.segment <- signif(stats::dist(seg.df)) == signif(dist)
+      bisect.test <- ifelse(is.na(bisect.segment), FALSE, bisect.segment)
 
       if (bisect.test) {
         dat <- rbind(c(case.data$long, case.data$lat), c(long.proj, lat.proj))
