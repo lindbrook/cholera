@@ -7,7 +7,7 @@
 #' @return An R data frame.
 #' @export
 
-latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.0005) {
+latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
   cores <- multiCore(multi.core)
   vars <- c("long", "lat")
   addr <- latitudeLongitudeAddress(path)
@@ -89,10 +89,6 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.0005) {
 
   sel <- cholera::ortho.proj$case %in% cholera::fatalities.address$anchor
   xy.ortho <- cholera::ortho.proj[sel, ]
-
-
-  # Classfication determined by bar orientation
-  unclassified <- setdiff(xy.ortho$case, latlong.ortho$case)
 
   vars <- c("case", "road.segment")
   seg.test <- merge(xy.ortho[, vars], latlong.ortho[, vars], by = "case")

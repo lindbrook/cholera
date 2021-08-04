@@ -4,7 +4,7 @@
 \alias{latlongOrthoProj}
 \title{Compute orthogonal projection of fatality addresses (prototype).}
 \usage{
-latlongOrthoProj(path, multi.core = TRUE, radius = 5e-04)
+latlongOrthoProj(path, multi.core = TRUE, radius = 0.001)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/"}
