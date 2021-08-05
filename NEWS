@@ -2,6 +2,8 @@ cholera 0.7.5.9008
 ==================
 
 - add/set segmentHighlight(col = "red").
+- add segmentTheta().
+- add latlongOrthoProj().
 
 
 cholera 0.7.5.9007

@@ -85,28 +85,28 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
   soln <- do.call(rbind, soln)
   row.names(soln) <- NULL
 
-  # second pass: classification error fix
+  ## Second pass: classification error fix ##
   latlong.ortho <- soln
 
   sel <- cholera::ortho.proj$case %in% cholera::fatalities.address$anchor
   xy.ortho <- cholera::ortho.proj[sel, ]
 
+  ## "Misclassified" addresses
+
   vars <- c("case", "road.segment")
   seg.test <- merge(xy.ortho[, vars], latlong.ortho[, vars], by = "case")
-  sel <- seg.test$road.segment.x != seg.test$road.segment.y
-  misclassified <- seg.test[sel, "case"]
+  chk <- seg.test[seg.test$road.segment.x != seg.test$road.segment.y, ]
 
-  ## "Misclassified" addresses
-  # snowMap(add.cases = FALSE, add.pumps = FALSE)
-  # points(fatalities[!fatalities$case %in% misclassified, c("x", "y")],
-  #   col = "gray")
-  # points(fatalities[fatalities$case %in% misclassified, c("x", "y")],
-  #   col = "red", pch = 16)
+  theta <- vapply(seq_along(chk$case), function(i) {
+    segmentTheta(chk[i, "road.segment.x"], chk[i, "road.segment.y"])
+  }, numeric(1L))
 
-  errors.case <- sort(c(misclassified, unclassified))
+  # keep original xy segment (due to bar orientation) and new ortho coords
+  case.keep.segment <- chk$case[theta < 120]
+
   vars <- c("long", "lat")
 
-  correct.latlong <- lapply(errors.case, function(case) {
+  keep.segment <- lapply(case.keep.segment, function(case) {
     case.data <- addr[addr$anchor == case, vars]
     correct.seg <- xy.ortho[xy.ortho$case == case, "road.segment"]
     sel <- rd.segs$id == correct.seg
@@ -122,7 +122,7 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
     lat.proj <- road.slope * long.proj + road.intercept
 
     seg.df <- data.frame(x = c(segment.data$long1, segment.data$long2),
-                        y = c(segment.data$lat1, segment.data$lat2))
+                         y = c(segment.data$lat1, segment.data$lat2))
 
     dist <- stats::dist(rbind(seg.df[1, ], c(long.proj, lat.proj))) +
             stats::dist(rbind(seg.df[2, ], c(long.proj, lat.proj)))
@@ -131,22 +131,14 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
       ortho.dist = c(dist), case = case, row.names = NULL)
   })
 
-  correct.latlong <- do.call(rbind, correct.latlong)
-
-  unclassified.data <- do.call(rbind, lapply(unclassified, function(case) {
-    correct.latlong[correct.latlong$case == case, ]
-  }))
-
-  latlong.ortho <- rbind(latlong.ortho, unclassified.data)
+  keep.segment <- do.call(rbind, keep.segment)
 
   vars <- c("road.segment", "long.proj", "lat.proj", "ortho.dist")
 
-  for (case in misclassified) {
-    tmp <- correct.latlong[correct.latlong$case == case, vars]
+  for (case in case.keep.segment) {
+    tmp <- keep.segment[keep.segment$case == case, vars]
     latlong.ortho[latlong.ortho$case == case, vars] <- tmp
   }
 
-  latlong.ortho <- latlong.ortho[order(latlong.ortho$case), ]
-  row.names(latlong.ortho) <- NULL
-  latlong.ortho
+  latlong.ortho[order(latlong.ortho$case), ]
 }
