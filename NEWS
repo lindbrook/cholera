@@ -1,9 +1,12 @@
 cholera 0.7.5.9008
 ==================
 
+- add latlongOrthoProj().
+- add latlongSnowMap().
+- add latlongNeighborhoodData().
 - add/set segmentHighlight(col = "red").
 - add segmentTheta().
-- add latlongOrthoProj().
+- add latlongOrthoProjPumps().
 
 
 cholera 0.7.5.9007
