@@ -186,3 +186,37 @@ subsetPDF <- function(path, dataset = "fatalities.address") {
     grDevices::dev.off()
   }
 }
+
+#' Angle between road segments.
+#'
+#' For latitude longitude audit.
+#' @param id1 Character. First segment ID.
+#' @param id2 Character. Second segment ID.
+#' @export
+
+segmentTheta <- function(id1 = "297-1", id2 = "290-1") {
+  seg <- cholera::road.segments
+  coordA <- "x"
+  coordB <- "y"
+
+  seg.data <- lapply(c(id1, id2), function(z) {
+    dat <- seg[seg$id == z, ]
+    data.frame(x = unlist(dat[, paste0(coordA, 1:2)]),
+               y = unlist(dat[, paste0(coordB, 1:2)]))
+  })
+
+  ols <- lapply(seg.data, function(data) stats::lm(y ~ x, data = data))
+
+  rads <- vapply(ols, function(x) {
+    segment.slope <- stats::coef(x)[2]
+    atan(segment.slope)
+  }, numeric(1L))
+
+  thetas <- rads * 180 / pi
+
+  if (all(sign(thetas) == 1 | sign(thetas) == -1)) {
+    180 - abs(thetas[1] - thetas[2])
+  } else {
+    sum(abs(thetas))
+  }
+}
