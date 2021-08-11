@@ -1,7 +1,7 @@
 #' Embed anchors and pumps into road segments (prototype).
 #'
-#' @param tif Character. Georeferenced QGIS TIFF file.
 #' @param path Character. e.g., "~/Documents/Data/"
+#' @param tif Character. Georeferenced QGIS TIFF file.
 #' @param vestry Logical.
 #' @export
 
