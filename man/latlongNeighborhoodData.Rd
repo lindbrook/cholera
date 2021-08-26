@@ -4,10 +4,14 @@
 \alias{latlongNeighborhoodData}
 \title{Compute network graph of roads, cases and pumps.}
 \usage{
-latlongNeighborhoodData(path)
+latlongNeighborhoodData(path, tif, vestry = FALSE)
 }
 \arguments{
-\item{path}{Character. e.g., "~/Documents/Data/".}
+\item{path}{Character. e.g., "~/Documents/Data/"}
+
+\item{tif}{Character. Georeferenced QGIS TIFF file.}
+
+\item{vestry}{Logical.}
 }
 \description{
 Assembles cases, pumps and road into a network graph.

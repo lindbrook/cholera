@@ -1,3 +1,9 @@
+cholera 0.7.5.9009
+==================
+
+- use latlongEmbed() in latlongNeighborhoodData().
+
+
 cholera 0.7.5.9008
 ==================
 

@@ -10,16 +10,19 @@ latitudeLongitudeRoads <- function(path, multi.core = TRUE) {
   dat <- cholera::roads[cholera::roads$name != "Map Frame", ]
   dat$point.id <- paste0(dat$x, "-", dat$y)
   intersections <- table(dat$point.id)
+
   dat <- dat[!duplicated(dat$point.id), ]
 
+  # parttion 551 unique points by number of intersections
   pts <- list(one = cholera::rd.sample$one,
               two = names(intersections[intersections == 2]),
               three = cholera::rd.sample$three,
               four = names(intersections[intersections == 4]))
 
-  idx1 <- pointIndex(length(cholera::rd.sample$one), 25)
+  idx1 <- pointIndex(length(cholera::rd.sample$one), 26) # avoids singleton
   idx3 <- pointIndex(length(cholera::rd.sample$three), 25)
 
+  # count of strata in intersection strata
   k <- list(one = idx1$stop - idx1$start + 1,
             two = length(intersections[intersections == 2]),
             three = idx3$stop - idx3$start + 1,
@@ -88,11 +91,7 @@ latitudeLongitudeRoads <- function(path, multi.core = TRUE) {
 
   strata.ct <- vapply(rds, nrow, integer(1L))
 
-  # exclude singletons, scale() returns NA
-  multi.id <- seq_along(strata.ct)[strata.ct != 1]
-  single.id <- which(strata.ct == 1)
-
-  match.points <- parallel::mclapply(multi.id, function(i) {
+  match.points <- parallel::mclapply(seq_along(strata.ct), function(i) {
     rd <- rds.rotate.scale[[i]]
     alters <- geo.coords.scale[[i]]
     names(alters)[-1] <- c("x", "y")
@@ -109,10 +108,6 @@ latitudeLongitudeRoads <- function(path, multi.core = TRUE) {
   }, mc.cores = cores)
 
   match.points <- do.call(rbind, match.points)
-  singleton <- data.frame(point.id = rds[[single.id]]$point.id,
-                          geo.id = geo.coords[[single.id]]$geo.id)
-  match.points <- rbind(match.points, singleton)
-
   geo.coords <- do.call(rbind, geo.coords)
 
   out <- merge(dat, match.points, by = "point.id")
@@ -152,7 +147,7 @@ subsetRoadsPDF <- function(path) {
 
   one <- cholera::rd.sample$one
   three <- cholera::rd.sample$three
-  idx1 <- pointIndex(length(one), 25)
+  idx1 <- pointIndex(length(one), 26) # avoids singleton
   idx3 <- pointIndex(length(three), 25)
   intersection.ct <- sort(unique(intersections))
 
