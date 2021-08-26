@@ -124,13 +124,94 @@ subsetFramePDF <- function(path, cex = 0.2) {
 
 #' Sample for map frame segment endpoints.
 #'
+#' @param cutpoint Numeric.
 #' @export
 
-mapFrameSamples <- function() {
-  dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  dat$point.id <- paste0(dat$x, "-", dat$y)
-  dat <- dat[!duplicated(dat$point.id), ]
-  sample(dat$id)
+mapFrameSamples <- function(cutpoint = 0.1) {
+  data1 <- cholera::roads[cholera::roads$name == "Map Frame", ]
+  data1$point.id <- paste0(data1$x, "-", data1$y)
+  data1 <- data1[!duplicated(data1$point.id), ]
+
+  center <- data.frame(x = mean(range(data1$x)), y = mean(range(data1$y)))
+
+  data2 <- data1
+  data2$x <- data2$x - center$x
+  data2$y <- data2$y - center$y
+
+  theta <- vapply(data2$id, function(id) {
+    pt.data <- data2[data2$id == id, c("x", "y")]
+    angle <- atan(pt.data$y/pt.data$x) * 180L / pi
+    if (all(sign(pt.data) == c(-1, 1)) | all(sign(pt.data) == c(-1, -1))) {
+      180L + angle
+    } else if (all(sign(pt.data) == c(1, -1))) {
+      360L + angle
+    } else if (all(sign(pt.data) == c(1, 1))) {
+      angle
+    }
+  }, numeric(1L))
+
+  data2 <- data2[order(theta), ]
+  vars <- c("x", "y")
+
+  # Distance between neighboring points on map frame
+
+  point.delta <- vapply(seq_along(data2$x)[-length(data2$x)], function(i) {
+    stats::dist(rbind(data2[i + 1, vars], data2[i, vars]))
+  }, numeric(1L))
+
+  point.delta0 <- stats::dist(rbind(data2[nrow(data2), vars], data2[1, vars]))
+  point.delta <- c(point.delta, point.delta0)
+
+  # Identify "overlapping" points
+
+  pair.ego <- which(point.delta < cutpoint)
+  pair.alter <- pair.ego + 1
+
+  pairs <- lapply(seq_along(pair.ego), function(i) {
+    data2[c(pair.ego[i], pair.alter[i]), ]
+  })
+
+  pair.id <- lapply(pairs, function(x) x$id)
+  single.id <- setdiff(data2$id, unlist(pair.id))
+
+  # Triplet check
+
+  idx <- data.frame(t(utils::combn(length(pair.id), 2)))
+  names(idx) <- c("v1", "v2")
+
+  triplet.test <- vapply(seq_len(nrow(idx)), function(i) {
+    any(pair.id[[idx[i, "v1"]]] %in% pair.id[[idx[i, "v2"]]])
+  }, logical(1L))
+
+  triplet.sel <- unlist(idx[which(triplet.test), ])
+  pair.sel <- setdiff(seq_along(pair.id), triplet.sel)
+
+  # Data components
+
+  overlapping <- c(pair.id[pair.sel], list(unique(unlist(pair.id[triplet.sel]))))
+  singles <- setdiff(data2$id, unlist(overlapping))
+  pairs <- pair.id[pair.sel]
+  triplet <- unique(unlist(pair.id[triplet.sel]))
+
+  # Assemble data
+
+  init.data <- matrix(unlist(pairs[1:3]), ncol = 3, byrow = TRUE)
+  dataA <- rbind(triplet, init.data)
+
+  sgl.smpl <- sample(singles)
+  p.data <- c(pairs[[4]], sgl.smpl)
+  dataB <- matrix(p.data[1:45], ncol = 3, byrow = TRUE)
+
+  smpl <- c(data.frame(rbind(dataA, dataB)))
+
+  leftovers <- p.data[46:length(p.data)]
+
+  dataC <- lapply(seq_along(leftovers), function(i) {
+    c(smpl[[i]], leftovers[i])
+  })
+
+  smpl[1:2] <- dataC
+  stats::setNames(smpl, paste0("s", 1:3))
 }
 
 # frame.sample <- mapFrameSamples()
