@@ -144,11 +144,11 @@
 #' @docType data
 "rd.sample"
 
-#' Sample of map framework points (segment endpoints).
+#' Partitioned map frame points (segment endpoints).
 #'
-#' @format A vector of length 106 of cholera::roads$id
+#' @format A list of 3 vectors length 19, 19 and 18 from cholera::roads$id.
 #'  \describe{
-#'     \item{\code{frame.sample}}{cholera::roads$id }
+#'     \item{\code{frame.sample}}{cholera::roads$id}
 #'  }
 #' @docType data
 "frame.sample"
