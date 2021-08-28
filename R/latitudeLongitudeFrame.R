@@ -90,18 +90,18 @@ latitudeLongitudeFrame <- function(path, multi.core = TRUE) {
 #' Create PDFs of map frame points.
 #'
 #' For QGIS geo-referencing.
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path Character. e.g., "~/Documents/Data/".
+#' @param pch Integer. R pch.
 #' @param cex Numeric.
 #' @export
 
-subsetFramePDF <- function(path, cex = 0.2) {
+subsetFramePDF <- function(path, pch = 16, cex = 0.2) {
   file.nm <- "frame"
   pre <- paste0(file.nm, ".")
   post <- ".pdf"
 
   pts <- cholera::frame.sample
-  idx <- pointIndex(length(pts), 25)
-  num.id <- seq_len(nrow(idx))
+  num.id <- seq_along(pts)
 
   if (any(num.id >= 10)) {
     num.id <- c(paste0("0", num.id[num.id < 10]), num.id[num.id >= 10])
@@ -109,15 +109,14 @@ subsetFramePDF <- function(path, cex = 0.2) {
     num.id <- paste0("0", num.id)
   }
 
-  dat0 <- cholera::roads[cholera::roads$name != "Map Frame", ]
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
+  rng <-  mapRange()
 
   invisible(lapply(seq_along(num.id), function(i) {
     grDevices::pdf(file = paste0(path, pre, num.id[i], post))
-    plot(dat0$x, dat0$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
-      bty = "n")
-    sel <- idx[i, "start"]:idx[i, "stop"]
-    points(dat[dat$id %in% pts[sel], c("x", "y")], pch = 15, cex = cex)
+    plot(dat$x, dat$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+      bty = "n", xlim = rng$x, ylim = rng$y)
+    points(dat[dat$id %in% pts[[i]], c("x", "y")], pch = pch, cex = cex)
     grDevices::dev.off()
   }))
 }

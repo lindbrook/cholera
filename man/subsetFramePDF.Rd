@@ -4,10 +4,12 @@
 \alias{subsetFramePDF}
 \title{Create PDFs of map frame points.}
 \usage{
-subsetFramePDF(path, cex = 0.2)
+subsetFramePDF(path, pch = 16, cex = 0.2)
 }
 \arguments{
-\item{path}{Character. e.g., "~/Documents/Data/"}
+\item{path}{Character. e.g., "~/Documents/Data/".}
+
+\item{pch}{Integer. R pch.}
 
 \item{cex}{Numeric.}
 }
