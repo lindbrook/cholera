@@ -4,7 +4,7 @@
 \alias{subsetFramePDF}
 \title{Create PDFs of map frame points.}
 \usage{
-subsetFramePDF(path, pch = 16, cex = 0.2)
+subsetFramePDF(path, pch = 15, cex = 0.2)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/".}

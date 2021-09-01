@@ -95,7 +95,7 @@ latitudeLongitudeFrame <- function(path, multi.core = TRUE) {
 #' @param cex Numeric.
 #' @export
 
-subsetFramePDF <- function(path, pch = 16, cex = 0.2) {
+subsetFramePDF <- function(path, pch = 15, cex = 0.2) {
   file.nm <- "frame"
   pre <- paste0(file.nm, ".")
   post <- ".pdf"
