@@ -7,40 +7,31 @@
 
 latitudeLongitudeFrame <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
+
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
   dat$point.id <- paste0(dat$x, "-", dat$y)
   dat <- dat[!duplicated(dat$point.id), ]
 
   pts <- cholera::frame.sample
-  idx <- pointIndex(length(pts), 25)
-  num.id <- seq_len(nrow(idx))
-
-  k <- idx$stop - idx$start + 1
-
-  p <- lapply(seq_along(idx$start), function(i) {
-    pts[idx[i, "start"]:idx[i, "stop"]]
-  })
+  k <- vapply(pts, length, integer(1L))
+  geo.id <- geoID(k)
 
   post <- "_modified.tif"
-  pre <- paste0("frame.", paste0("0", seq_len(nrow(idx))))
+  pre <- paste0("frame.", paste0("0", seq_along(pts)))
   tiff <- paste0(path, pre, post)
 
   geo.coords <- parallel::mclapply(seq_along(tiff), function(i) {
-    latlongCoordinates(tiff[i], k[i])
+    latlongCoordinatesB(tiff[i], k[i])
   }, mc.cores = cores)
-
-  start <- c(1, cumsum(k)[-length(k)] + 1)
-  stop <- cumsum(k)
-  idx <- data.frame(start = start, stop = stop)
 
   geo.coords <- lapply(seq_along(geo.coords), function(i) {
     tmp <- geo.coords[[i]]
-    tmp$geo.id <- idx[i, "start"]:idx[i, "stop"]
+    tmp$geo.id <- geo.id[[i]]
     tmp$id <- NULL
     tmp
   })
 
-  rds <- lapply(p, function(x) dat[dat$id %in% x, ])
+  rds <- lapply(pts, function(x) dat[dat$id %in% x, ])
 
   rds.rotate.scale <- parallel::mclapply(rds, function(x) {
     tmp <- lapply(x$point.id, function(y) {
@@ -58,7 +49,6 @@ latitudeLongitudeFrame <- function(path, multi.core = TRUE) {
     rd <- rds.rotate.scale[[i]]
     alters <- geo.coords.scale[[i]]
     names(alters)[-1] <- c("x", "y")
-
     out <- lapply(rd$point.id, function(z) {
       ego <- rd[rd$point.id == z, c("x", "y")]
       d <- vapply(seq_len(nrow(alters)), function(i) {
