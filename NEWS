@@ -2,6 +2,10 @@ cholera 0.7.5.9010
 ==================
 
 - amend mapFrameSamples().
+- amend subsetFramePDF().
+- amend latitudeLongitudeFrame().
+- add geoID().
+- add latlongCoordinatesB().
 
 
 cholera 0.7.5.9009
