@@ -87,6 +87,14 @@ latitudeLongitudeFrame <- function(path, multi.core = TRUE) {
   out
 }
 
+geoID <- function(k) {
+  id <- cumsum(k)
+  lapply(seq_along(id), function(i) {
+    if (i == 1) 1:id[i]
+    else (id[i - 1] + 1):id[i]
+  })
+}
+
 #' Create PDFs of map frame points.
 #'
 #' For QGIS geo-referencing.
