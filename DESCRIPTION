@@ -1,8 +1,8 @@
 Package: cholera
 Type: Package
 Title: Amend, Augment and Aid Analysis of John Snow's Cholera Map
-Version: 0.7.5.9009
-Date: 2021-08-11
+Version: 0.7.5.9010
+Date: 2021-09-02
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
   role = c("aut", "cre"))
 Description: Amends errors, augments data and aids analysis of John Snow's map
@@ -26,6 +26,7 @@ Imports: deldir (>= 0.0-18),
          tools,
          threejs,
          TSP,
+         utils,
          viridisLite
 Suggests: knitr,
           rmarkdown

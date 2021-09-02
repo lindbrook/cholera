@@ -4,7 +4,10 @@
 \alias{mapFrameSamples}
 \title{Sample for map frame segment endpoints.}
 \usage{
-mapFrameSamples()
+mapFrameSamples(cutpoint = 0.1)
+}
+\arguments{
+\item{cutpoint}{Numeric.}
 }
 \description{
 Sample for map frame segment endpoints.
