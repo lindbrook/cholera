@@ -145,6 +145,8 @@ subsetRoadsPDF <- function(path) {
   #   1   2   3   4
   # 276  10 221  44
 
+  rng <-  mapRange()
+
   one <- cholera::rd.sample$one
   three <- cholera::rd.sample$three
   idx1 <- pointIndex(length(one), 26) # avoids singleton
@@ -170,14 +172,14 @@ subsetRoadsPDF <- function(path) {
         nm <- paste0(path, pre, paste0(file.num, sub.id[i]), post)
         grDevices::pdf(file = nm)
         plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
-          xlab = NA, ylab = NA, bty = "n")
+          xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
         points(dat[dat$point.id %in% sel, c("x", "y")], pch = 15, cex = 0.2)
         grDevices::dev.off()
       })
     } else {
       grDevices::pdf(file = paste0(path, pre, file.num, post))
       plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
-        xlab = NA, ylab = NA, bty = "n")
+        xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
       sel <- names(intersections[intersections == ct])
       points(dat[dat$point.id %in% sel, c("x", "y")], pch = 15, cex = 0.2)
       grDevices::dev.off()
