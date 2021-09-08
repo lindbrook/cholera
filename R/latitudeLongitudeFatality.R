@@ -147,9 +147,11 @@ stackCaseCount <- function() {
 #'
 #' For QGIS geo-referencing.
 #' @param path Character. e.g., "~/Documents/Data/"
+#' @param pch Integer. R pch.
+#' @param cex Numeric.
 #' @export
 
-subsetFatalitiesPDF <- function(path) {
+subsetFatalitiesPDF <- function(path, pch = 15, cex = 0.2) {
   file.nm <- "fatality"
   pre <- paste0(file.nm, ".")
   post <- ".pdf"
@@ -166,13 +168,14 @@ subsetFatalitiesPDF <- function(path) {
   }
 
   framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rng <-  mapRange()
 
   invisible(lapply(seq_along(stratified.cases), function(i) {
     grDevices::pdf(file = paste0(path, pre, num.id[i], post))
     plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
-      xlab = NA, ylab = NA, bty = "n")
+      xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
     sel <- dat$case %in% stratified.cases[[i]]
-    points(dat[sel, c("x", "y")], pch = 15, cex = 0.2)
+    points(dat[sel, c("x", "y")], pch = pch, cex = cex)
     grDevices::dev.off()
   }))
 }

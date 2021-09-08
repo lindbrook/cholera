@@ -4,10 +4,14 @@
 \alias{subsetFatalitiesPDF}
 \title{Create PDFs of stratified non-anchor cases.}
 \usage{
-subsetFatalitiesPDF(path)
+subsetFatalitiesPDF(path, pch = 15, cex = 0.2)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/"}
+
+\item{pch}{Integer. R pch.}
+
+\item{cex}{Numeric.}
 }
 \description{
 For QGIS geo-referencing.
