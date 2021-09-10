@@ -8,11 +8,28 @@
 
 latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
-  stratified.fatalities <- stratifiedFatalities()
-  strata <- stratified.fatalities$cases
-  num.id <- stratified.fatalities$num.id
 
-  k <- vapply(strata, length, integer(1L))
+  partitioned.fatalities <- partitionFatalities()
+  partition.ct <- vapply(partitioned.fatalities, length, integer(1L))
+
+  idx <- lapply(seq_along(partition.ct), function(i) {
+    x <- partition.ct[i]
+    q <- round(quantile(1:x, probs = c(0.25, 0.5, 0.75)))
+    list(s1 = 1:q[1],
+         s2 = (q[1] + 1):q[2],
+         s3 = (q[2] + 1):q[3],
+         s4 = (q[3] + 1):x)
+  })
+
+  split.partitions <- lapply(seq_along(partitioned.fatalities), function(i) {
+    dat <- partitioned.fatalities[[i]]
+    indices <- idx[[i]]
+    lapply(seq_along(indices), function(i) dat[indices[[i]]])
+  })
+
+  split.partitions <- do.call(c, split.partitions)
+  k <- vapply(split.partitions, length, integer(1L))
+  num.id <- seq_along(split.partitions)
 
   if (any(num.id >= 10)) {
     num.id <- c(paste0("0", num.id[num.id < 10]), num.id[num.id >= 10])
@@ -20,11 +37,12 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
     num.id <- paste0("0", num.id)
   }
 
-  coords <- parallel::mclapply(seq_along(strata), function(i) {
-    pre <- paste0(path, "fatality.")
-    post <- "_modified.tif"
+  pre <- paste0(path, "fatality.")
+  post <- "_modified.tif"
+
+  coords <- parallel::mclapply(seq_along(split.partitions), function(i) {
     tif <- paste0(pre, num.id[i], post)
-    latlongCoordinates(tif, k[i])
+    latlongCoordinatesB(tif, k[i])
   }, mc.cores = cores)
 
   start <- c(1, cumsum(k)[-length(k)] + 1)
@@ -37,8 +55,8 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
     tmp
   })
 
-  address.groups <- lapply(seq_along(strata), function(i) {
-    sel <- strata[[i]]
+  address.groups <- lapply(seq_along(partitioned.fatalities), function(i) {
+    sel <- cholera::fatalities$case %in% partitioned.fatalities[[i]]
     cholera::fatalities[sel, ]
   })
 
