@@ -173,11 +173,28 @@ subsetFatalitiesPDF <- function(path, pch = 15, cex = 0.2) {
   file.nm <- "fatality"
   pre <- paste0(file.nm, ".")
   post <- ".pdf"
-
   dat <- cholera::fatalities
-  stratified.fatalities <- stratifiedFatalities()
-  stratified.cases <- stratified.fatalities$cases
-  num.id <- stratified.fatalities$num.id
+
+  partitioned.fatalities <- partitionFatalities()
+  partition.ct <- vapply(partitioned.fatalities, length, integer(1L))
+
+  idx <- lapply(seq_along(partition.ct), function(i) {
+    x <- partition.ct[i]
+    q <- round(quantile(1:x, probs = c(0.25, 0.5, 0.75)))
+    list(s1 = 1:q[1],
+         s2 = (q[1] + 1):q[2],
+         s3 = (q[2] + 1):q[3],
+         s4 = (q[3] + 1):x)
+  })
+
+  split.partitions <- lapply(seq_along(partitioned.fatalities), function(i) {
+    dat <- partitioned.fatalities[[i]]
+    indices <- idx[[i]]
+    lapply(seq_along(indices), function(i) dat[indices[[i]]])
+  })
+
+  split.partitions <- do.call(c, split.partitions)
+  num.id <- seq_along(split.partitions)
 
   if (any(num.id >= 10)) {
     num.id <- c(paste0("0", num.id[num.id < 10]), num.id[num.id >= 10])
@@ -186,13 +203,13 @@ subsetFatalitiesPDF <- function(path, pch = 15, cex = 0.2) {
   }
 
   framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  rng <-  mapRange()
+  rng <- mapRange()
 
-  invisible(lapply(seq_along(stratified.cases), function(i) {
+  invisible(lapply(seq_along(split.partitions), function(i) {
     grDevices::pdf(file = paste0(path, pre, num.id[i], post))
     plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
       xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
-    sel <- dat$case %in% stratified.cases[[i]]
+    sel <- dat$case %in% split.partitions[[i]]
     points(dat[sel, c("x", "y")], pch = pch, cex = cex)
     grDevices::dev.off()
   }))
