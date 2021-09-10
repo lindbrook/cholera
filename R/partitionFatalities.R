@@ -56,7 +56,7 @@ partitionFatalities <- function() {
   two.stack.leftover <- length(two.stack) * 2 - two.stack.include * 3
   two.data <- unlist(two.stack)
   two.idx <- 1:(two.stack.include * 3)
-  two.transformed <- matrix(two.data[two.idx], ncol = 3)
+  two.transformed <- matrix(two.data[two.idx], ncol = 3, byrow = TRUE)
 
   sets <- lapply(1:3, function(i) {
     unname(c(get(paste0("set", i)), two.transformed[, i]))
