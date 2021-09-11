@@ -106,6 +106,15 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
   out
 }
 
+partitionIndex <- function(x, parts) {
+  size <- 1 / parts
+  p <- seq(size, 1 - size, size)
+  q <- round(stats::quantile(1:x, probs = p))
+  start <- c(1, q)
+  stop <- c(q + 1, x)
+  lapply(seq_along(start), function(i) start[i]:stop[i])
+}
+
 #' Case by strata and strata numeric ID.
 #'
 #' Cases at address, excluding anchor; in the stack, excluding the base fatality.
