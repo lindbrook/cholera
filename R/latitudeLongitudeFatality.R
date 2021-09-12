@@ -106,12 +106,12 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
   out
 }
 
-partitionIndex <- function(x, parts) {
-  size <- 1 / parts
+partitionIndex <- function(x, subparts) {
+  size <- 1 / subparts
   p <- seq(size, 1 - size, size)
   q <- round(stats::quantile(1:x, probs = p))
-  start <- c(1, q)
-  stop <- c(q + 1, x)
+  start <- c(1, q + 1)
+  stop <- c(q, x)
   lapply(seq_along(start), function(i) start[i]:stop[i])
 }
 
