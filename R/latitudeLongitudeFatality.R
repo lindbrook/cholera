@@ -174,36 +174,29 @@ stackCaseCount <- function() {
 #'
 #' For QGIS geo-referencing.
 #' @param path Character. e.g., "~/Documents/Data/"
+#' @param subparts Integer. Subdivide the three primary partitions in number of subparts.
 #' @param pch Integer. R pch.
 #' @param cex Numeric.
 #' @export
 
-subsetFatalitiesPDF <- function(path, pch = 15, cex = 0.2) {
+subsetFatalitiesPDF <- function(path, subparts = 4, pch = 15, cex = 0.2) {
   file.nm <- "fatality"
   pre <- paste0(file.nm, ".")
   post <- ".pdf"
   dat <- cholera::fatalities
 
-  partitioned.fatalities <- partitionFatalities()
-  partition.ct <- vapply(partitioned.fatalities, length, integer(1L))
+  partitioned.cases <- partitionFatalities()
+  partition.ct <- vapply(partitioned.cases, length, integer(1L))
+  idx <- lapply(partition.ct, function(x) partitionIndex(x, subparts))
 
-  idx <- lapply(seq_along(partition.ct), function(i) {
-    x <- partition.ct[i]
-    q <- round(quantile(1:x, probs = c(0.25, 0.5, 0.75)))
-    list(s1 = 1:q[1],
-         s2 = (q[1] + 1):q[2],
-         s3 = (q[2] + 1):q[3],
-         s4 = (q[3] + 1):x)
-  })
-
-  split.partitions <- lapply(seq_along(partitioned.fatalities), function(i) {
-    dat <- partitioned.fatalities[[i]]
+  subdivided.partitions <- lapply(seq_along(partitioned.cases), function(i) {
+    dat <- partitioned.cases[[i]]
     indices <- idx[[i]]
     lapply(seq_along(indices), function(i) dat[indices[[i]]])
   })
 
-  split.partitions <- do.call(c, split.partitions)
-  num.id <- seq_along(split.partitions)
+  subdivided.partitions <- do.call(c, subdivided.partitions)
+  num.id <- seq_along(subdivided.partitions)
 
   if (any(num.id >= 10)) {
     num.id <- c(paste0("0", num.id[num.id < 10]), num.id[num.id >= 10])
@@ -214,11 +207,11 @@ subsetFatalitiesPDF <- function(path, pch = 15, cex = 0.2) {
   framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
   rng <- mapRange()
 
-  invisible(lapply(seq_along(split.partitions), function(i) {
+  invisible(lapply(seq_along(subdivided.partitions), function(i) {
     grDevices::pdf(file = paste0(path, pre, num.id[i], post))
     plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
       xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
-    sel <- dat$case %in% split.partitions[[i]]
+    sel <- dat$case %in% subdivided.partitions[[i]]
     points(dat[sel, c("x", "y")], pch = pch, cex = cex)
     grDevices::dev.off()
   }))
