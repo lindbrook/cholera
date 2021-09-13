@@ -9,9 +9,10 @@ latitudeLongitudeAddress <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
   idx <- pointIndex(nrow(cholera::fatalities.address))
 
+  pre <- paste0(path, "address.0")
+  post <- "_modified.tif"
+  
   coords <- parallel::mclapply(seq_len(nrow(idx)), function(i) {
-    pre <- paste0(path, "address.0")
-    post <- "_modified.tif"
     tif <- paste0(pre, i, post)
     k <- idx[i, "stop"] - idx[i, "start"] + 1
     latlongCoordinates(tif, k)

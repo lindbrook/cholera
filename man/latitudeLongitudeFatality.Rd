@@ -4,10 +4,12 @@
 \alias{latitudeLongitudeFatality}
 \title{Compute latitude and longitude for fatalities cases (prototype).}
 \usage{
-latitudeLongitudeFatality(path, multi.core = TRUE)
+latitudeLongitudeFatality(path, subparts = 4, multi.core = TRUE)
 }
 \arguments{
-\item{path}{Character. e.g., "~/Documents/Data/"}
+\item{path}{Character. e.g., "~/Documents/Data/".}
+
+\item{subparts}{Integer. Subdivide the three primary partitions in number of subparts.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }

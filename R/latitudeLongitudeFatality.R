@@ -1,18 +1,28 @@
 #' Compute latitude and longitude for fatalities cases (prototype).
 #'
 #' Non-anchor points: in stack, not at base of stack.
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path Character. e.g., "~/Documents/Data/".
+#' @param subparts Integer. Subdivide the three primary partitions in number of subparts.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
 #' @export
 
-latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
+latitudeLongitudeFatality <- function(path, subparts = 4, multi.core = TRUE) {
   cores <- multiCore(multi.core)
-  stratified.fatalities <- stratifiedFatalities()
-  strata <- stratified.fatalities$cases
-  num.id <- stratified.fatalities$num.id
 
-  k <- vapply(strata, length, integer(1L))
+  partitioned.cases <- partitionFatalities()
+  partition.ct <- vapply(partitioned.cases, length, integer(1L))
+  idx <- lapply(partition.ct, function(x) partitionIndex(x, subparts))
+
+  subdivided.partitions <- lapply(seq_along(partitioned.cases), function(i) {
+    dat <- partitioned.cases[[i]]
+    indices <- idx[[i]]
+    lapply(seq_along(indices), function(i) dat[indices[[i]]])
+  })
+
+  subdivided.partitions <- do.call(c, subdivided.partitions)
+  k <- vapply(subdivided.partitions, length, integer(1L))
+  num.id <- seq_along(subdivided.partitions)
 
   if (any(num.id >= 10)) {
     num.id <- c(paste0("0", num.id[num.id < 10]), num.id[num.id >= 10])
@@ -20,11 +30,12 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
     num.id <- paste0("0", num.id)
   }
 
-  coords <- parallel::mclapply(seq_along(strata), function(i) {
-    pre <- paste0(path, "fatality.")
-    post <- "_modified.tif"
+  pre <- paste0(path, "fatality.")
+  post <- "_modified.tif"
+
+  coords <- parallel::mclapply(seq_along(subdivided.partitions), function(i) {
     tif <- paste0(pre, num.id[i], post)
-    latlongCoordinates(tif, k[i])
+    latlongCoordinatesB(tif, k[i])
   }, mc.cores = cores)
 
   start <- c(1, cumsum(k)[-length(k)] + 1)
@@ -37,15 +48,16 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
     tmp
   })
 
-  address.groups <- lapply(seq_along(strata), function(i) {
-    sel <- strata[[i]]
+  sub.idx <- seq_along(subdivided.partitions)
+  subdivided.fatalities <- lapply(seq_along(sub.idx), function(i) {
+    sel <- cholera::fatalities$case %in% subdivided.partitions[[i]]
     cholera::fatalities[sel, ]
   })
 
-  addr.grp.ct <- vapply(address.groups, nrow, integer(1L))
-  ag <- address.groups[addr.grp.ct > 1]
+  sub.ct <- vapply(subdivided.fatalities, nrow, integer(1L))
+  subdivided.data <- subdivided.fatalities[sub.ct > 1]
 
-  address.rotate.scale <- parallel::mclapply(ag, function(x) {
+  fatalities.rotate.scale <- parallel::mclapply(subdivided.data, function(x) {
     tmp <- lapply(x$case, function(y) {
       rotatePoint(y, dataset = "fatalities")
     })
@@ -54,7 +66,7 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
     else data.frame(case = x$case, tmp)
   }, mc.cores = cores)
 
-  coords.ct <- vapply(address.groups, nrow, integer(1L))
+  coords.ct <- vapply(subdivided.fatalities, nrow, integer(1L))
   cs <- coords[coords.ct > 1]
 
   coords.scale <- lapply(cs, function(x){
@@ -62,12 +74,12 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
   })
 
   match.points <- parallel::mclapply(seq_along(coords.scale), function(i) {
-    addr <- address.rotate.scale[[i]]
+    dat <- fatalities.rotate.scale[[i]]
     alters <- coords.scale[[i]]
     names(alters)[-1] <- c("x", "y")
 
-    out <- lapply(addr$case, function(case) {
-      ego <- addr[addr$case == case, c("x", "y")]
+    out <- lapply(dat$case, function(case) {
+      ego <- dat[dat$case == case, c("x", "y")]
       d <- vapply(seq_len(nrow(alters)), function(i) {
         stats::dist(rbind(ego, alters[i, c("x", "y")]))
       }, numeric(1L))
@@ -86,6 +98,15 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
   out$geo.id <- NULL
   row.names(out) <- NULL
   out
+}
+
+partitionIndex <- function(x, subparts) {
+  size <- 1 / subparts
+  p <- seq(size, 1 - size, size)
+  q <- round(stats::quantile(1:x, probs = p))
+  start <- c(1, q + 1)
+  stop <- c(q, x)
+  lapply(seq_along(start), function(i) start[i]:stop[i])
 }
 
 #' Case by strata and strata numeric ID.
@@ -147,17 +168,29 @@ stackCaseCount <- function() {
 #'
 #' For QGIS geo-referencing.
 #' @param path Character. e.g., "~/Documents/Data/"
+#' @param subparts Integer. Subdivide the three primary partitions in number of subparts.
+#' @param pch Integer. R pch.
+#' @param cex Numeric.
 #' @export
 
-subsetFatalitiesPDF <- function(path) {
+subsetFatalitiesPDF <- function(path, subparts = 4, pch = 15, cex = 0.2) {
   file.nm <- "fatality"
   pre <- paste0(file.nm, ".")
   post <- ".pdf"
-
   dat <- cholera::fatalities
-  stratified.fatalities <- stratifiedFatalities()
-  stratified.cases <- stratified.fatalities$cases
-  num.id <- stratified.fatalities$num.id
+
+  partitioned.cases <- partitionFatalities()
+  partition.ct <- vapply(partitioned.cases, length, integer(1L))
+  idx <- lapply(partition.ct, function(x) partitionIndex(x, subparts))
+
+  subdivided.partitions <- lapply(seq_along(partitioned.cases), function(i) {
+    dat <- partitioned.cases[[i]]
+    indices <- idx[[i]]
+    lapply(seq_along(indices), function(i) dat[indices[[i]]])
+  })
+
+  subdivided.partitions <- do.call(c, subdivided.partitions)
+  num.id <- seq_along(subdivided.partitions)
 
   if (any(num.id >= 10)) {
     num.id <- c(paste0("0", num.id[num.id < 10]), num.id[num.id >= 10])
@@ -166,13 +199,14 @@ subsetFatalitiesPDF <- function(path) {
   }
 
   framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rng <- mapRange()
 
-  invisible(lapply(seq_along(stratified.cases), function(i) {
+  invisible(lapply(seq_along(subdivided.partitions), function(i) {
     grDevices::pdf(file = paste0(path, pre, num.id[i], post))
     plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
-      xlab = NA, ylab = NA, bty = "n")
-    sel <- dat$case %in% stratified.cases[[i]]
-    points(dat[sel, c("x", "y")], pch = 15, cex = 0.2)
+      xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
+    sel <- dat$case %in% subdivided.partitions[[i]]
+    points(dat[sel, c("x", "y")], pch = pch, cex = cex)
     grDevices::dev.off()
   }))
 }
