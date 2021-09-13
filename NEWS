@@ -6,6 +6,7 @@ cholera 0.7.5.9010
 - amend latitudeLongitudeFrame().
 - add geoID().
 - add latlongCoordinatesB().
+- amend latitudeLongitudeFatality().
 
 
 cholera 0.7.5.9009

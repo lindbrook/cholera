@@ -1,35 +1,28 @@
 #' Compute latitude and longitude for fatalities cases (prototype).
 #'
 #' Non-anchor points: in stack, not at base of stack.
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path Character. e.g., "~/Documents/Data/".
+#' @param subparts Integer. Subdivide the three primary partitions in number of subparts.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
 #' @export
 
-latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
+latitudeLongitudeFatality <- function(path, subparts = 4, multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
-  partitioned.fatalities <- partitionFatalities()
-  partition.ct <- vapply(partitioned.fatalities, length, integer(1L))
+  partitioned.cases <- partitionFatalities()
+  partition.ct <- vapply(partitioned.cases, length, integer(1L))
+  idx <- lapply(partition.ct, function(x) partitionIndex(x, subparts))
 
-  idx <- lapply(seq_along(partition.ct), function(i) {
-    x <- partition.ct[i]
-    q <- round(quantile(1:x, probs = c(0.25, 0.5, 0.75)))
-    list(s1 = 1:q[1],
-         s2 = (q[1] + 1):q[2],
-         s3 = (q[2] + 1):q[3],
-         s4 = (q[3] + 1):x)
-  })
-
-  split.partitions <- lapply(seq_along(partitioned.fatalities), function(i) {
-    dat <- partitioned.fatalities[[i]]
+  subdivided.partitions <- lapply(seq_along(partitioned.cases), function(i) {
+    dat <- partitioned.cases[[i]]
     indices <- idx[[i]]
     lapply(seq_along(indices), function(i) dat[indices[[i]]])
   })
 
-  split.partitions <- do.call(c, split.partitions)
-  k <- vapply(split.partitions, length, integer(1L))
-  num.id <- seq_along(split.partitions)
+  subdivided.partitions <- do.call(c, subdivided.partitions)
+  k <- vapply(subdivided.partitions, length, integer(1L))
+  num.id <- seq_along(subdivided.partitions)
 
   if (any(num.id >= 10)) {
     num.id <- c(paste0("0", num.id[num.id < 10]), num.id[num.id >= 10])
@@ -40,7 +33,7 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
   pre <- paste0(path, "fatality.")
   post <- "_modified.tif"
 
-  coords <- parallel::mclapply(seq_along(split.partitions), function(i) {
+  coords <- parallel::mclapply(seq_along(subdivided.partitions), function(i) {
     tif <- paste0(pre, num.id[i], post)
     latlongCoordinatesB(tif, k[i])
   }, mc.cores = cores)
@@ -55,15 +48,16 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
     tmp
   })
 
-  address.groups <- lapply(seq_along(partitioned.fatalities), function(i) {
-    sel <- cholera::fatalities$case %in% partitioned.fatalities[[i]]
+  sub.idx <- seq_along(subdivided.partitions)
+  subdivided.fatalities <- lapply(seq_along(sub.idx), function(i) {
+    sel <- cholera::fatalities$case %in% subdivided.partitions[[i]]
     cholera::fatalities[sel, ]
   })
 
-  addr.grp.ct <- vapply(address.groups, nrow, integer(1L))
-  ag <- address.groups[addr.grp.ct > 1]
+  sub.ct <- vapply(subdivided.fatalities, nrow, integer(1L))
+  subdivided.data <- subdivided.fatalities[sub.ct > 1]
 
-  address.rotate.scale <- parallel::mclapply(ag, function(x) {
+  fatalities.rotate.scale <- parallel::mclapply(subdivided.data, function(x) {
     tmp <- lapply(x$case, function(y) {
       rotatePoint(y, dataset = "fatalities")
     })
@@ -72,7 +66,7 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
     else data.frame(case = x$case, tmp)
   }, mc.cores = cores)
 
-  coords.ct <- vapply(address.groups, nrow, integer(1L))
+  coords.ct <- vapply(subdivided.fatalities, nrow, integer(1L))
   cs <- coords[coords.ct > 1]
 
   coords.scale <- lapply(cs, function(x){
@@ -80,12 +74,12 @@ latitudeLongitudeFatality <- function(path, multi.core = TRUE) {
   })
 
   match.points <- parallel::mclapply(seq_along(coords.scale), function(i) {
-    addr <- address.rotate.scale[[i]]
+    dat <- fatalities.rotate.scale[[i]]
     alters <- coords.scale[[i]]
     names(alters)[-1] <- c("x", "y")
 
-    out <- lapply(addr$case, function(case) {
-      ego <- addr[addr$case == case, c("x", "y")]
+    out <- lapply(dat$case, function(case) {
+      ego <- dat[dat$case == case, c("x", "y")]
       d <- vapply(seq_len(nrow(alters)), function(i) {
         stats::dist(rbind(ego, alters[i, c("x", "y")]))
       }, numeric(1L))
