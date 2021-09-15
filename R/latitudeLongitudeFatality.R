@@ -69,7 +69,7 @@ latitudeLongitudeFatality <- function(path, subparts = 4, multi.core = TRUE) {
   coords.ct <- vapply(subdivided.fatalities, nrow, integer(1L))
   cs <- coords[coords.ct > 1]
 
-  coords.scale <- lapply(cs, function(x){
+  coords.scale <- lapply(cs, function(x) {
     data.frame(id = x$id, scale(x[, c("long", "lat")]))
   })
 
