@@ -1,3 +1,11 @@
+cholera 0.7.5.9011
+==================
+
+- amend latlongPumps().
+- add pumpsPDF().
+- amend latlongSnowMap().
+
+
 cholera 0.7.5.9010
 ==================
 
