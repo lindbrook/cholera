@@ -43,3 +43,32 @@ latlongPumps <- function(path, vestry = FALSE) {
   row.names(out) <- NULL
   out
 }
+
+#' Create PDFs of pumps.
+#'
+#' For QGIS geo-referencing.
+#' @param path Character. e.g., "~/Documents/Data/"
+#' @param vestry Logical.
+#' @param pch Integer. R pch.
+#' @param cex Numeric.
+#' @export
+
+pumpsPDF <- function(path, vestry = FALSE, pch = 15, cex = 0.2) {
+  file.nm <- "pump"
+
+  if (vestry) pre <- paste0(file.nm, ".vestry.")
+  else pre <- paste0(file.nm, ".")
+
+  post <- "pdf"
+  if (vestry) dat <- cholera::pumps.vestry
+  else dat <- cholera::pumps
+
+  framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rng <- mapRange()
+
+  grDevices::pdf(file = paste0(path, pre, post))
+  plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
+    xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
+  points(dat[, c("x", "y")], pch = pch, cex = cex)
+  grDevices::dev.off()
+}
