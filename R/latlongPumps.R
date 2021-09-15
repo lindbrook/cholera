@@ -1,50 +1,45 @@
 #' Compute Georeferenced Latitude and Longitude (prototype).
 #'
-#' @param tif Character. Georeferenced QGIS TIFF file.
-#' @param cutpoint Numeric. Cutpoint for hierarchical cluster analysis.
+#' @param path Character. e.g., "~/Documents/Data/"
 #' @param vestry Logical.
 #' @export
 
-latlongPumps <- function(tif, cutpoint = 0.001, vestry = FALSE) {
-  u.data <- pointsFromGeoTIFF(tif)
-  names(u.data)[3] <- "modified"
-  sel <- u.data$modified != 0 & u.data$modified != 255
-  obs.x.min <- min(u.data[sel, "x"])
-  obs.x.max <- max(u.data[sel, "x"])
-  obs.y.min <- min(u.data[sel, "y"])
-  obs.y.max <- max(u.data[sel, "y"])
-  obs.x <- u.data$x >= obs.x.min & u.data$x <= obs.x.max
-  obs.y <- u.data$y >= obs.y.min & u.data$y <= obs.y.max
-  filter <- obs.x & obs.y & u.data$modified != 255
-  f.data <- u.data[filter, c("x", "y")]
+latlongPumps <- function(path, vestry = FALSE) {
+  if (vestry) {
+    tif <- "pump.vestry_modified.tif"
+    k <- 14
+    dat <- cholera::pumps.vestry
+    dataset <- "pumps.vestry"
+  } else {
+    tif <- "pump_modified.tif"
+    k <- 13
+    dat <- cholera::pumps
+    dataset <- "pumps"
+  }
 
-  distances <- stats::dist(f.data)
-  tree <- stats::hclust(distances)
-  clusters <- stats::cutree(tree, h = cutpoint)
-  cluster.id <- unique(clusters)
-  pts <- lapply(cluster.id, function(grp) names(clusters[clusters == grp]))
+  coords <- latlongCoordinatesB(paste0(path, tif), k)
+  coords.scale <- data.frame(id = coords$id, scale(coords[, c("long", "lat")]))
 
-  coords <- lapply(seq_along(pts), function(i) {
-    rect.data <- f.data[pts[[i]], ]
-    y.val <- sort(unique(rect.data$y), decreasing = FALSE) # quadrant II adj
-    x.val <- sort(unique(rect.data$x))
-    row.element.ct <- as.data.frame(table(rect.data$y),
-      stringsAsFactors = FALSE)
-    col.element.ct <- as.data.frame(table(rect.data$x),
-      stringsAsFactors = FALSE)
-    row.id <- kmeansRectanlge(row.element.ct$Freq)
-    col.id <- kmeansRectanlge(col.element.ct$Freq)
-    rect.x <- x.val[range(col.id)]
-    rect.y <- y.val[range(row.id)]
-    longitude <- mean(rect.x)
-    latitude <- mean(rect.y)
-    data.frame(id = i, long = longitude, lat = latitude)
+  tmp <- lapply(dat$id, function(id) rotatePoint(id, dataset = dataset))
+  tmp <- do.call(rbind, tmp)
+  pumps.rotate.scale <- data.frame(pump.id = dat$id, scale(tmp))
+
+  alters <- coords.scale
+  names(alters)[-1] <- c("x", "y")
+
+  match.points <- lapply(pumps.rotate.scale$pump.id, function(id) {
+    ego <- pumps.rotate.scale[pumps.rotate.scale$pump.id == id, c("x", "y")]
+    d <- vapply(seq_len(nrow(alters)), function(i) {
+      stats::dist(rbind(ego, alters[i, c("x", "y")]))
+    }, numeric(1L))
+    data.frame(pump.id = id, geo.id = alters$id[which.min(d)])
   })
 
-  out <- do.call(rbind, coords)
-  if (vestry) out$pump <- c(2, 1, 4:3, 5:6, 14, 7, 11:8, 13, 12)
-  else out$pump <- c(2, 1, 4:3, 5:7, 11:8, 13, 12)
-  out <- out[order(out$pump), ]
+  match.points <- do.call(rbind, match.points)
+  out <- merge(dat, match.points, by.x = "id", by.y = "pump.id")
+  out <- merge(out, coords, by.x = "geo.id", by.y = "id")
+  out <- out[order(out$id), ]
+  out$geo.id <- NULL
   row.names(out) <- NULL
   out
 }

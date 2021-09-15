@@ -4,12 +4,10 @@
 \alias{latlongPumps}
 \title{Compute Georeferenced Latitude and Longitude (prototype).}
 \usage{
-latlongPumps(tif, cutpoint = 0.001, vestry = FALSE)
+latlongPumps(path, vestry = FALSE)
 }
 \arguments{
-\item{tif}{Character. Georeferenced QGIS TIFF file.}
-
-\item{cutpoint}{Numeric. Cutpoint for hierarchical cluster analysis.}
+\item{path}{Character. e.g., "~/Documents/Data/"}
 
 \item{vestry}{Logical.}
 }
