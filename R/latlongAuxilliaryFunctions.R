@@ -102,9 +102,12 @@ rotatePoint <- function(id = 1, dataset = "roads", unique.coords = TRUE) {
   } else if (dataset == "pumps.vestry") {
     sel <- cholera::pumps.vestry$id == id
     points.data <- rbind(center, cholera::pumps.vestry[sel, c("x", "y")])
+  } else if (dataset == "landmarks") {
+    sel <- which(cholera::landmarks$case == id)
+    points.data <- rbind(center, cholera::landmarks[sel, c("x", "y")])
   } else {
     msg1 <- 'dataset must be "roads", "fatalities", "fatalities.address",'
-    msg2 <- '"pumps", or "pumps.vestry".'
+    msg2 <- '"pumps", "pumps.vestry", or "landmarks".'
     stop(paste(msg1, msg2))
   }
 
