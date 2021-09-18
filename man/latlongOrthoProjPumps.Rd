@@ -4,12 +4,9 @@
 \alias{latlongOrthoProjPumps}
 \title{Compute orthogonal projection of pumps (prototype).}
 \usage{
-latlongOrthoProjPumps(tif, path, vestry = FALSE, radius = 0.001,
-  multi.core = TRUE)
+latlongOrthoProjPumps(path, vestry = FALSE, radius = 0.001, multi.core = TRUE)
 }
 \arguments{
-\item{tif}{Character. Georeferenced QGIS TIFF file.}
-
 \item{path}{Character. e.g., "~/Documents/Data/"}
 
 \item{vestry}{Logical.}
