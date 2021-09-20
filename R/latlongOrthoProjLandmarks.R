@@ -83,50 +83,5 @@ latlongOrthoProjLandmarks <- function(path, radius = 0.001, multi.core = TRUE) {
 
   soln <- do.call(rbind, soln)
   row.names(soln) <- NULL
-  # latlong.ortho <- soln
-
-  # if (vestry) {
-  #   xy.ortho <- cholera::ortho.proj.pump.vestry
-  # } else {
-  #   xy.ortho <- cholera::ortho.proj.pump
-  # }
-
-  # chk <- latlong.ortho$road.segment != xy.ortho$road.segment
-
-  # if (any(chk)) {
-  #   a <- latlong.ortho$road.segment[which(chk)]
-  #   b <- xy.ortho$road.segment[which(chk)]
-  #
-  #   theta <- vapply(seq_along(a), function(i) {
-  #     segmentTheta(a[i], b[i])
-  #   }, numeric(1L))
-  #
-  #   if (any(theta < 120)) {
-  #     pump.keep.segment <- latlong.ortho$pump[chk][theta < 120]
-  #
-  #     # Pump 14 exception
-  #     if (pump.keep.segment == 14) {
-  #       sel <- xy.ortho$pump.id == pump.keep.segment
-  #       segment.fix <- xy.ortho[sel, "road.segment"]
-  #       sel <- rd.segs$id == segment.fix
-  #       seg.data <- rd.segs[sel, c(paste0(vars, 1), paste0(vars, 2))]
-  #       seg.select <- which.min(seg.data[, c("long1", "long2")])
-  #
-  #       p.data <- rbind(pmp[pmp$id == pump.keep.segment, vars],
-  #         stats::setNames(seg.data[, paste0(vars, seg.select)], vars))
-  #
-  #       long_lat <- unlist(seg.data[, paste0(vars, seg.select)])
-  #
-  #       fix <- data.frame(road.segment = segment.fix,
-  #                         long.proj = long_lat[1],
-  #                         lat.proj = long_lat[2],
-  #                         ortho.dist = c(stats::dist(p.data)),
-  #                         pump = pump.keep.segment,
-  #                         row.names = NULL)
-  #
-  #       soln[soln$pump == pump.keep.segment, ] <- fix
-  #     }
-  #   }
-  # }
   soln
 }
