@@ -10,7 +10,8 @@
 latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
   cores <- multiCore(multi.core)
   vars <- c("long", "lat")
-  addr <- latitudeLongitudeAddress(path)
+  fatal <- latitudeLongitudeFatality(path)
+  anchor <- fatal[fatal$case %in% unique(cholera::anchor.case$anchor), ]
   rds <- latitudeLongitudeRoads(path)
 
   rd.segs <- lapply(unique(rds$street), function(i) {
@@ -27,8 +28,8 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
 
   rd.segs <- do.call(rbind, rd.segs)
 
-  soln <- parallel::mclapply(unique(addr$anchor), function(case) {
-    case.data <- addr[addr$anchor == case, vars]
+  soln <- parallel::mclapply(anchor$case, function(case) {
+    case.data <- anchor[anchor$case == case, vars]
 
     within.radius <- lapply(rd.segs$id, function(id) {
       seg.data <- rd.segs[rd.segs$id == id, ]
@@ -107,7 +108,7 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
   vars <- c("long", "lat")
 
   keep.segment <- lapply(case.keep.segment, function(case) {
-    case.data <- addr[addr$anchor == case, vars]
+    case.data <- anchor[anchor$case == case, vars]
     correct.seg <- xy.ortho[xy.ortho$case == case, "road.segment"]
     sel <- rd.segs$id == correct.seg
     segment.data <- rd.segs[sel, c(paste0(vars, 1), paste0(vars, 2))]

@@ -2,17 +2,14 @@
 #'
 #' Projection from fatality address to nearest road segment.
 #' @param path Character. e.g., "~/Documents/Data/"
-#' @param vestry Logical.
 #' @param radius Numeric.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 
-latlongOrthoProjPumps <- function(path, vestry = FALSE, radius = 0.001,
-  multi.core = TRUE) {
-
+latlongOrthoProjLandmarks <- function(path, radius = 0.001, multi.core = TRUE) {
   cores <- multiCore(multi.core)
   vars <- c("long", "lat")
-  pmp <- latlongPumps(path, vestry = vestry)
+  lnd <- latlongLandmarks(path)
   rds <- latitudeLongitudeRoads(path)
 
   rd.segs <- lapply(unique(rds$street), function(i) {
@@ -29,8 +26,8 @@ latlongOrthoProjPumps <- function(path, vestry = FALSE, radius = 0.001,
 
   rd.segs <- do.call(rbind, rd.segs)
 
-  soln <- parallel::mclapply(pmp$id, function(p) {
-    case.data <- pmp[pmp$id == p, vars]
+  soln <- parallel::mclapply(lnd$case, function(x) {
+    case.data <- lnd[lnd$case == x, vars]
 
     within.radius <- lapply(rd.segs$id, function(id) {
       seg.data <- rd.segs[rd.segs$id == id, ]
@@ -71,11 +68,11 @@ latlongOrthoProjPumps <- function(path, vestry = FALSE, radius = 0.001,
         dat <- rbind(c(case.data$long, case.data$lat), c(long.proj, lat.proj))
         ortho.dist <- c(stats::dist(dat))
         ortho.pts <- data.frame(long.proj, lat.proj)
-        data.frame(road.segment = seg.id, ortho.pts, ortho.dist, pump = p)
+        data.frame(road.segment = seg.id, ortho.pts, ortho.dist, case = x)
       } else {
         null.out <- data.frame(matrix(NA, ncol = 5))
         names(null.out) <- c("road.segment", "long.proj", "lat.proj",
-          "ortho.dist", "pump")
+          "ortho.dist", "case")
         null.out
       }
     })
@@ -86,50 +83,5 @@ latlongOrthoProjPumps <- function(path, vestry = FALSE, radius = 0.001,
 
   soln <- do.call(rbind, soln)
   row.names(soln) <- NULL
-  latlong.ortho <- soln
-
-  if (vestry) {
-    xy.ortho <- cholera::ortho.proj.pump.vestry
-  } else {
-    xy.ortho <- cholera::ortho.proj.pump
-  }
-
-  chk <- latlong.ortho$road.segment != xy.ortho$road.segment
-
-  if (any(chk)) {
-    a <- latlong.ortho$road.segment[which(chk)]
-    b <- xy.ortho$road.segment[which(chk)]
-
-    theta <- vapply(seq_along(a), function(i) {
-      segmentTheta(a[i], b[i])
-    }, numeric(1L))
-
-    if (any(theta < 120)) {
-      pump.keep.segment <- latlong.ortho$pump[chk][theta < 120]
-
-      # Pump 14 exception
-      if (pump.keep.segment == 14) {
-        sel <- xy.ortho$pump.id == pump.keep.segment
-        segment.fix <- xy.ortho[sel, "road.segment"]
-        sel <- rd.segs$id == segment.fix
-        seg.data <- rd.segs[sel, c(paste0(vars, 1), paste0(vars, 2))]
-        seg.select <- which.min(seg.data[, c("long1", "long2")])
-
-        p.data <- rbind(pmp[pmp$id == pump.keep.segment, vars],
-          stats::setNames(seg.data[, paste0(vars, seg.select)], vars))
-
-        long_lat <- unlist(seg.data[, paste0(vars, seg.select)])
-
-        fix <- data.frame(road.segment = segment.fix,
-                          long.proj = long_lat[1],
-                          lat.proj = long_lat[2],
-                          ortho.dist = c(stats::dist(p.data)),
-                          pump = pump.keep.segment,
-                          row.names = NULL)
-
-        soln[soln$pump == pump.keep.segment, ] <- fix
-      }
-    }
-  }
   soln
 }
