@@ -91,11 +91,7 @@ latlongCoordinatesB <- function(tif, k, multi.core = TRUE) {
       stringsAsFactors = FALSE)
     row.id <- kmeansRectanlge(row.element.ct$Freq)
     col.id <- kmeansRectanlge(col.element.ct$Freq)
-    rect.x <- x.val[range(col.id)]
-    rect.y <- y.val[range(row.id)]
-    longitude <- mean(rect.x)
-    latitude <- mean(rect.y)
-    data.frame(id = i, long = longitude, lat = latitude)
+    data.frame(id = i, long = mean(x.val[col.id]), lat = mean(y.val[row.id]))
   })
 
   do.call(rbind, coords)

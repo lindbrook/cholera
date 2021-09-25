@@ -1,9 +1,16 @@
+cholera 0.7.5.9014
+==================
+
+- return integer in kmeansRectanlge().
+
+
 cholera 0.7.5.9013
 ==================
 
 - estimate distance in latlongRoadSegments()
 - temp. fix latlongOrthoProj() and latlongOrthoProjPumps().
 - add latlongLandmarks(), landmarksPDF(), and latlongOrthoProjLandmarks()
+
 
 cholera 0.7.5.9012
 ==================
