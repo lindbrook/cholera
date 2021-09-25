@@ -15,7 +15,7 @@ kmeansRectanlge <- function(x) {
     km <- stats::kmeans(x, 2)
     km.df <- data.frame(ct = x, cluster = km$cluster)
     sel <- km.df[km.df$cluster == which.max(km$centers), ]
-    as.numeric(row.names(sel))
+    as.integer(row.names(sel))
   } else seq_along(x)
 }
 
