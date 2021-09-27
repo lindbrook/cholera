@@ -173,7 +173,7 @@ stackCaseCount <- function() {
 #' @param cex Numeric.
 #' @export
 
-subsetFatalitiesPDF <- function(path, subparts = 4, pch = 15, cex = 0.2) {
+subsetFatalitiesPDF <- function(path, subparts = 4, pch = 46, cex = 1) {
   file.nm <- "fatality"
   pre <- paste0(file.nm, ".")
   post <- ".pdf"

@@ -173,7 +173,7 @@ subsetRoadsPDF <- function(path) {
         grDevices::pdf(file = nm)
         plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
           xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
-        points(dat[dat$point.id %in% sel, c("x", "y")], pch = 15, cex = 0.2)
+        points(dat[dat$point.id %in% sel, c("x", "y")], pch = 46)
         grDevices::dev.off()
       })
     } else {
@@ -181,7 +181,7 @@ subsetRoadsPDF <- function(path) {
       plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
         xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
       sel <- names(intersections[intersections == ct])
-      points(dat[dat$point.id %in% sel, c("x", "y")], pch = 15, cex = 0.2)
+      points(dat[dat$point.id %in% sel, c("x", "y")], pch = 46)
       grDevices::dev.off()
     }
   }))
