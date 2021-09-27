@@ -53,7 +53,7 @@ latitudeLongitudeRoads <- function(path, multi.core = TRUE) {
   k <- unlist(k)
 
   geo.coords <- parallel::mclapply(seq_along(tiff), function(i) {
-    latlongCoordinates(tiff[i], k[i])
+    latlongCoordinatesB(tiff[i], k[i])
   }, mc.cores = cores)
 
   start <- c(1, cumsum(k)[-length(k)] + 1)
