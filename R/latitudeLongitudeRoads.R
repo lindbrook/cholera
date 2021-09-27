@@ -86,7 +86,7 @@ latitudeLongitudeRoads <- function(path, multi.core = TRUE) {
   }, mc.cores = cores)
 
   geo.coords.scale <- lapply(geo.coords, function(x){
-    data.frame(geo.id = x$geo.id, scale(x[, c("long", "lat")]))
+    data.frame(geo.id = x$geo.id, scale(x[, c("lon", "lat")]))
   })
 
   strata.ct <- vapply(rds, nrow, integer(1L))
@@ -117,7 +117,7 @@ latitudeLongitudeRoads <- function(path, multi.core = TRUE) {
 
   dat <- cholera::roads[cholera::roads$name != "Map Frame", ]
   dat$point.id <- paste0(dat$x, "-", dat$y)
-  out <- merge(dat, out[, c("long", "lat", "point.id")], by = "point.id")
+  out <- merge(dat, out[, c("lon", "lat", "point.id")], by = "point.id")
   out$point.id <- NULL
   out <- out[order(out$id), ]
   row.names(out) <- NULL
