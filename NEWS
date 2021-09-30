@@ -1,3 +1,10 @@
+cholera 0.7.5.9015
+==================
+
+- estimate coordinates in latlongCoordinatesB() assuming strong rectangle symmetry.
+- migrate to pch = 46.
+
+
 cholera 0.7.5.9014
 ==================
 

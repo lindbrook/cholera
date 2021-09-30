@@ -4,7 +4,7 @@
 \alias{subsetFatalitiesPDF}
 \title{Create PDFs of stratified non-anchor cases.}
 \usage{
-subsetFatalitiesPDF(path, subparts = 4, pch = 15, cex = 0.2)
+subsetFatalitiesPDF(path, subparts = 4, pch = 46, cex = 1)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/"}

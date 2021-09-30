@@ -17,6 +17,7 @@ latlongCoordinatesB <- function(tif, k, multi.core = TRUE) {
 
   map.data <- u.data[u.data$modified != 255, c("x", "y")]
 
+  # filter out frame "shadow"
   data.in.chull <- parallel::mclapply(seq_len(nrow(map.data)), function(i) {
     sp::point.in.polygon(map.data[i, ]$x, map.data[i, ]$y, image.chull$x,
       image.chull$y)
@@ -83,15 +84,48 @@ latlongCoordinatesB <- function(tif, k, multi.core = TRUE) {
 
   coords <- lapply(seq_along(pts), function(i) {
     rect.data <- f.data[pts[[i]], ]
-    y.val <- sort(unique(rect.data$y), decreasing = FALSE) # quadrant II adj
-    x.val <- sort(unique(rect.data$x))
+    tbl <- t(table(rect.data))
+    tbl <- tbl[order(as.numeric(rownames(tbl)), decreasing = TRUE), ]
+
+    # top to bottom point orientation
     row.element.ct <- as.data.frame(table(rect.data$y),
       stringsAsFactors = FALSE)
+    row.element.ct$Var1 <- as.numeric(row.element.ct$Var1)
+    sel <- order(row.element.ct$Var1, decreasing = TRUE)
+    row.element.ct <- row.element.ct[sel, ]
+    row.names(row.element.ct) <- NULL
+
+    # left to right point orientation
     col.element.ct <- as.data.frame(table(rect.data$x),
       stringsAsFactors = FALSE)
-    row.id <- kmeansRectanlge(row.element.ct$Freq)
-    col.id <- kmeansRectanlge(col.element.ct$Freq)
-    data.frame(id = i, long = mean(x.val[col.id]), lat = mean(y.val[row.id]))
+    col.element.ct$Var1 <- as.numeric(col.element.ct$Var1)
+    sel <- order(col.element.ct$Var1)
+    col.element.ct <- col.element.ct[sel, ]
+    row.names(col.element.ct) <- NULL
+
+    max.row <- max(row.element.ct$Freq)
+    max.col <- max(col.element.ct$Freq)
+
+    row.start <- nrow(row.element.ct) %% max.col + 1
+    col.start <- nrow(col.element.ct) %% max.row + 1
+
+    row.idx <- lapply(1:row.start, function(x) seq(x, x + max.col - 1))
+    col.idx <- lapply(1:col.start, function(x) seq(x, x + max.row - 1))
+    idxB <- expand.grid(seq_along(row.idx), seq_along(col.idx))
+
+    point.ct <- vapply(seq_len(nrow(idxB)), function(i) {
+      r.sel <- row.idx[[idxB[i, "Var1"]]]
+      c.sel <- col.idx[[idxB[i, "Var2"]]]
+      sum(tbl[r.sel, c.sel])
+    }, integer(1L))
+
+    sel <- which.max(point.ct)
+    row.id <- row.idx[[idxB[sel, "Var1"]]]
+    col.id <- col.idx[[idxB[sel, "Var2"]]]
+
+    lon <- mean(col.element.ct[col.id, "Var1"])
+    lat <- mean(row.element.ct[row.id, "Var1"])
+    data.frame(id = i, lon = lon, lat = lat)
   })
 
   do.call(rbind, coords)

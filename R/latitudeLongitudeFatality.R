@@ -70,7 +70,7 @@ latitudeLongitudeFatality <- function(path, subparts = 4, multi.core = TRUE) {
   cs <- coords[coords.ct > 1]
 
   coords.scale <- lapply(cs, function(x) {
-    data.frame(id = x$id, scale(x[, c("long", "lat")]))
+    data.frame(id = x$id, scale(x[, c("lon", "lat")]))
   })
 
   match.points <- parallel::mclapply(seq_along(coords.scale), function(i) {
@@ -173,7 +173,7 @@ stackCaseCount <- function() {
 #' @param cex Numeric.
 #' @export
 
-subsetFatalitiesPDF <- function(path, subparts = 4, pch = 15, cex = 0.2) {
+subsetFatalitiesPDF <- function(path, subparts = 4, pch = 46, cex = 1) {
   file.nm <- "fatality"
   pre <- paste0(file.nm, ".")
   post <- ".pdf"
