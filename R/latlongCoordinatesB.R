@@ -18,7 +18,6 @@ latlongCoordinatesB <- function(tif, k, multi.core = TRUE) {
   map.data <- u.data[u.data$modified != 255, c("x", "y")]
 
   # filter out frame "shadow"
-
   data.in.chull <- parallel::mclapply(seq_len(nrow(map.data)), function(i) {
     sp::point.in.polygon(map.data[i, ]$x, map.data[i, ]$y, image.chull$x,
       image.chull$y)
@@ -85,6 +84,8 @@ latlongCoordinatesB <- function(tif, k, multi.core = TRUE) {
 
   coords <- lapply(seq_along(pts), function(i) {
     rect.data <- f.data[pts[[i]], ]
+    tbl <- t(table(rect.data))
+    tbl <- tbl[order(as.numeric(rownames(tbl)), decreasing = TRUE), ]
 
     # top to bottom point orientation
     row.element.ct <- as.data.frame(table(rect.data$y),
@@ -102,55 +103,25 @@ latlongCoordinatesB <- function(tif, k, multi.core = TRUE) {
     col.element.ct <- col.element.ct[sel, ]
     row.names(col.element.ct) <- NULL
 
-    max.col <- max(row.element.ct$Freq)
-    max.row <- max(col.element.ct$Freq)
-    row.id <- kmeansRectanlge(row.element.ct$Freq)
-    col.id <- kmeansRectanlge(col.element.ct$Freq)
+    max.row <- max(row.element.ct$Freq)
+    max.col <- max(col.element.ct$Freq)
 
-    if (length(row.id) == max.row & length(col.id) != max.col) {
-      col.delta <- max.col - col.element.ct$Freq
-      col.candidate <- which(col.delta %in% min(col.delta[col.delta != 0]))
-      col.adjacent <- any(col.candidate - col.id == 1)
-      if (col.adjacent) col.id <- c(col.id, col.candidate)
+    row.start <- nrow(row.element.ct) %% max.col + 1
+    col.start <- nrow(col.element.ct) %% max.row + 1
 
-      # flat rectangle check
-      if (length(unique(col.element.ct$Freq)) == 1) {
-        v.dist <- vapply(col.element.ct$Var1, function(x) {
-          stats::dist(rect.data[rect.data$x == paste(x), "y"])
-        }, numeric(1L))
-        v.dist.table <- table(v.dist)
-        obs.dist <- as.numeric(names(v.dist.table))
-        col.id <- which(v.dist == paste(obs.dist[which.min(obs.dist)]))
-      }
-    } else if (length(row.id) != max.row & length(col.id) == max.col) {
-      row.delta <- max.row - row.element.ct$Freq
-      row.candidate <- which(row.delta %in% min(row.delta[row.delta != 0]))
-      row.adjacent <- any(row.candidate - row.id == 1)
-      if (row.adjacent) row.id <- c(row.id, row.candidate)
-    } else if (length(row.id) != max.row & length(col.id) != max.col) {
-      row.delta <- max.row - row.element.ct$Freq
-      row.candidate <- which(row.delta %in% min(row.delta[row.delta != 0]))
-      row.adjacent <- any(row.candidate - row.id == 1)
-      if (row.adjacent) row.id <- c(row.id, row.candidate)
-      col.delta <- max.col - col.element.ct$Freq
-      col.candidate <- which(col.delta %in% min(col.delta[col.delta != 0]))
-      col.adjacent <- any(col.candidate - col.id == 1)
-      if (col.adjacent) col.id <- c(col.id, col.candidate)
+    row.idx <- lapply(1:row.start, function(x) seq(x, x + max.col - 1))
+    col.idx <- lapply(1:col.start, function(x) seq(x, x + max.row - 1))
+    idxB <- expand.grid(seq_along(row.idx), seq_along(col.idx))
 
-      # complete flat rectangle with 2 rows and n cols
-      flat.rect.candidate <- row.element.ct$Freq == max.col
-      two.max.rows <- sum(flat.rect.candidate) == 2
-      if (two.max.rows) {
-        new.row.id <- which(flat.rect.candidate)
-        max.row.ys <- row.element.ct[new.row.id, "Var1"]
-        max.row.ys.in.rect <- paste(rect.data$y) %in% paste(max.row.ys)
-        complete.rect <- sum(max.row.ys.in.rect) == length(max.row.ys) * max.col
-        if (complete.rect) {
-          row.id <- new.row.id # identical(new.row.id, row.id)
-          col.id <- which(row.element.ct$Var %in% max.row.ys)
-        }
-      }
-    }
+    point.ct <- vapply(seq_len(nrow(idxB)), function(i) {
+      r.sel <- row.idx[[idxB[i, "Var1"]]]
+      c.sel <- col.idx[[idxB[i, "Var2"]]]
+      sum(tbl[r.sel, c.sel])
+    }, integer(1L))
+
+    sel <- which.max(point.ct)
+    row.id <- row.idx[[idxB[sel, "Var1"]]]
+    col.id <- col.idx[[idxB[sel, "Var2"]]]
 
     lon <- mean(col.element.ct[col.id, "Var1"])
     lat <- mean(row.element.ct[row.id, "Var1"])
