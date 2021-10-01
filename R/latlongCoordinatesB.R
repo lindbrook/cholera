@@ -106,11 +106,16 @@ latlongCoordinatesB <- function(tif, k, multi.core = TRUE) {
     max.row <- max(row.element.ct$Freq)
     max.col <- max(col.element.ct$Freq)
 
-    row.start <- nrow(row.element.ct) %% max.col + 1
-    col.start <- nrow(col.element.ct) %% max.row + 1
+    row.idx <- lapply(max.col:nrow(row.element.ct), function(endpt) {
+      delta <- max.col - 1
+      seq(endpt - delta, endpt)
+    })
 
-    row.idx <- lapply(1:row.start, function(x) seq(x, x + max.col - 1))
-    col.idx <- lapply(1:col.start, function(x) seq(x, x + max.row - 1))
+    col.idx <- lapply(max.row:nrow(col.element.ct), function(endpt) {
+      delta <- max.row - 1
+      seq(endpt - delta, endpt)
+    })
+
     idxB <- expand.grid(seq_along(row.idx), seq_along(col.idx))
 
     point.ct <- vapply(seq_len(nrow(idxB)), function(i) {
