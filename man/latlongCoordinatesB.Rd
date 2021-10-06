@@ -4,12 +4,14 @@
 \alias{latlongCoordinatesB}
 \title{Compute Georeferenced Latitude and Longitude (prototype).}
 \usage{
-latlongCoordinatesB(tif, k, multi.core = TRUE)
+latlongCoordinatesB(tif, k, path, multi.core = TRUE)
 }
 \arguments{
 \item{tif}{Character. Georeferenced QGIS TIFF file.}
 
 \item{k}{Numeric. Number of clusters, k, to identify.}
+
+\item{path}{Character. e.g., "~/Documents/Data/".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }

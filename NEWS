@@ -1,3 +1,10 @@
+cholera 0.7.5.9016
+==================
+
+- use orthogonal frame rectangle to filter out map "shadow".
+- fix/simplify rectangle indices (point clouds)
+
+
 cholera 0.7.5.9015
 ==================
 

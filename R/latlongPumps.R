@@ -18,7 +18,7 @@ latlongPumps <- function(path, vestry = FALSE) {
   }
 
   coords <- latlongCoordinatesB(paste0(path, tif), k)
-  coords.scale <- data.frame(id = coords$id, scale(coords[, c("long", "lat")]))
+  coords.scale <- data.frame(id = coords$id, scale(coords[, c("lon", "lat")]))
 
   tmp <- lapply(dat$id, function(id) rotatePoint(id, dataset = dataset))
   tmp <- do.call(rbind, tmp)
@@ -53,7 +53,7 @@ latlongPumps <- function(path, vestry = FALSE) {
 #' @param cex Numeric.
 #' @export
 
-pumpsPDF <- function(path, vestry = FALSE, pch = 15, cex = 0.2) {
+pumpsPDF <- function(path, vestry = FALSE, pch = 46, cex = 1) {
   file.nm <- "pump"
 
   if (vestry) pre <- paste0(file.nm, ".vestry.")
