@@ -4,7 +4,7 @@
 \alias{pumpsPDF}
 \title{Create PDFs of pumps.}
 \usage{
-pumpsPDF(path, vestry = FALSE, pch = 15, cex = 0.2)
+pumpsPDF(path, vestry = FALSE, pch = 46, cex = 1)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/"}
