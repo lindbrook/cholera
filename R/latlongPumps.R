@@ -18,7 +18,7 @@ latlongPumps <- function(path, vestry = FALSE) {
   }
 
   coords <- latlongCoordinatesB(paste0(path, tif), k)
-  coords.scale <- data.frame(id = coords$id, scale(coords[, c("long", "lat")]))
+  coords.scale <- data.frame(id = coords$id, scale(coords[, c("lon", "lat")]))
 
   tmp <- lapply(dat$id, function(id) rotatePoint(id, dataset = dataset))
   tmp <- do.call(rbind, tmp)
