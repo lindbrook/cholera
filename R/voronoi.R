@@ -164,7 +164,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @param x An object of class "voronoi" created by \code{neighborhoodVoronoi()}.
 #' @param voronoi.cells Logical. Plot Voronoi tessellation cells.
-#' @param delauny.triangles Logical. Plot Delauny triangles.
+#' @param delaunay.triangles Logical. Plot Delaunay triangles.
 #' @param euclidean.paths Logical. Plot all Euclidean paths (star graph).
 #' @param ... Additional plotting parameters.
 #' @return A base R graph.
@@ -178,7 +178,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #' @examples
 #' plot(neighborhoodVoronoi())
 
-plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
+plot.voronoi <- function(x, voronoi.cells = TRUE, delaunay.triangles = FALSE,
   euclidean.paths = FALSE, ...) {
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
@@ -213,7 +213,7 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
     plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
   }
 
-  if (delauny.triangles) {
+  if (delaunay.triangles) {
     plot(x$voronoi, add = TRUE, wline = "triang", wpoints = "none")
   }
 

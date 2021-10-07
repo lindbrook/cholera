@@ -1,10 +1,10 @@
 voronoiPolygons(): Tiles, Triangles and Polygons
 ================
 lindbrook
-2019-03-29
+2021-10-06
 
 `voronoiPolygons()` is a wrapper function that extracts the vertices of
-‘deldir’ Delauny triangles and Dirichelet (Voronoi) tiles for use with
+‘deldir’ Delaunay triangles and Dirichelet (Voronoi) tiles for use with
 functions like graphics::polygon(). The function returns a list of data
 frames of vertices. This makes tasks like coloring tiles or triangles or
 counting cases within those tiles or triangles easier.
@@ -52,7 +52,7 @@ vapply(census, sum, integer(1L))
 ## Count points within triangles
 
 ``` r
-# compute vertices of Delauny triangles
+# compute vertices of Delaunay triangles
 vertices <- voronoiPolygons(sites = cholera::pumps,
   rw.data = cholera::roads, type = "triangles")
 
@@ -94,7 +94,7 @@ invisible(lapply(seq_along(vertices), function(i) {
 ## Color triangles
 
 ``` r
-# compute vertices of Delauny triangles
+# compute vertices of Delaunay triangles
 vertices <- voronoiPolygons(sites = cholera::pumps,
   rw.data = cholera::roads, type = "triangles")
 
