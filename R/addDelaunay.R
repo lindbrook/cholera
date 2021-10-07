@@ -36,6 +36,6 @@ addDelaunay <- function(pump.select = NULL, vestry = FALSE, color = "black",
   dat <- deldir::deldir(pump.data, rw = c(range(cholera::roads$x),
     range(cholera::roads$y)), suppressMsge = TRUE)
 
-  plot(dat, add = TRUE, wline = "triang", wpoints = "none", col = color,
-    lty = line.type)
+  plot(dat, add = TRUE, wline = "triang", showpoints = FALSE,
+    cmpnt_col = c(tri = color), cmpnt_lty = line.type)
 }

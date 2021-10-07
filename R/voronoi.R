@@ -210,11 +210,12 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delaunay.triangles = FALSE,
   pumpTokens(x, NULL)
 
   if (voronoi.cells) {
-    plot(x$voronoi, add = TRUE, wline = "tess", wpoints = "none", lty = "solid")
+    plot(x$voronoi, add = TRUE, wline = "tess", showpoints = FALSE,
+      cmpnt_lty = "solid")
   }
 
   if (delaunay.triangles) {
-    plot(x$voronoi, add = TRUE, wline = "triang", wpoints = "none")
+    plot(x$voronoi, add = TRUE, wline = "triang", showpoints = FALSE)
   }
 
   voronoi.case.id <- pumpCase(x)
