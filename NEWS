@@ -1,3 +1,10 @@
+cholera 0.7.5.9017
+==================
+
+- fix typo: Delauny to Delaunay.
+- amend code for 'deldir' v1.0-2.
+
+
 cholera 0.7.5.9016
 ==================
 
