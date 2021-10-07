@@ -1,8 +1,8 @@
 Package: cholera
 Type: Package
 Title: Amend, Augment and Aid Analysis of John Snow's Cholera Map
-Version: 0.7.5.9016
-Date: 2021-10-06
+Version: 0.7.5.9017
+Date: 2021-10-07
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
   role = c("aut", "cre"))
 Description: Amends errors, augments data and aids analysis of John Snow's map
@@ -12,7 +12,7 @@ BugReports: https://github.com/lindbrook/cholera/issues
 License: GPL (>= 2)
 LazyData: true
 Depends: R (>= 3.4)
-Imports: deldir (>= 0.0-18),
+Imports: deldir (>= 1.0-2),
          ggplot2,
          grDevices,
          HistData (>= 0.7-8),
