@@ -1,4 +1,4 @@
-#' Add Delauny triangles.
+#' Add Delaunay triangles.
 #'
 #' @param pump.select Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6).
 #' @param vestry Logical. \code{FALSE} for original 13 pumps. TRUE for 14 pumps in Vestry Report.
@@ -9,9 +9,9 @@
 #' @export
 #' @examples
 #' snowMap()
-#' addDelauny()
+#' addDelaunay()
 
-addDelauny <- function(pump.select = NULL, vestry = FALSE, color = "black",
+addDelaunay <- function(pump.select = NULL, vestry = FALSE, color = "black",
   line.type = "solid") {
 
   if (vestry) {
@@ -36,6 +36,6 @@ addDelauny <- function(pump.select = NULL, vestry = FALSE, color = "black",
   dat <- deldir::deldir(pump.data, rw = c(range(cholera::roads$x),
     range(cholera::roads$y)), suppressMsge = TRUE)
 
-  plot(dat, add = TRUE, wline = "triang", wpoints = "none", col = color,
-    lty = line.type)
+  plot(dat, add = TRUE, wline = "triang", showpoints = FALSE,
+    cmpnt_col = c(tri = color), cmpnt_lty = line.type)
 }

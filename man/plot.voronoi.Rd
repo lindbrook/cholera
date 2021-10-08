@@ -4,7 +4,7 @@
 \alias{plot.voronoi}
 \title{Plot Voronoi neighborhoods.}
 \usage{
-\method{plot}{voronoi}(x, voronoi.cells = TRUE, delauny.triangles = FALSE,
+\method{plot}{voronoi}(x, voronoi.cells = TRUE, delaunay.triangles = FALSE,
   euclidean.paths = FALSE, ...)
 }
 \arguments{
@@ -12,7 +12,7 @@
 
 \item{voronoi.cells}{Logical. Plot Voronoi tessellation cells.}
 
-\item{delauny.triangles}{Logical. Plot Delauny triangles.}
+\item{delaunay.triangles}{Logical. Plot Delaunay triangles.}
 
 \item{euclidean.paths}{Logical. Plot all Euclidean paths (star graph).}
 

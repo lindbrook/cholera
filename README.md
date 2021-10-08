@@ -1,30 +1,30 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.5.9016-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.5.9017-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)  
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
 
-  - Fixes three apparent coding errors in Dodson and Tobler’s 1992
+-   Fixes three apparent coding errors in Dodson and Tobler’s 1992
     digitization of Snow’s map.
-  - “Unstacks” the data in two ways to make analysis and visualization
+-   “Unstacks” the data in two ways to make analysis and visualization
     easier and more meaningful.
-  - Computes and visualizes “pump neighborhoods” based on Euclidean
+-   Computes and visualizes “pump neighborhoods” based on Euclidean
     distance (Voronoi tessellation) and walking distance.
-  - Overlay graphical elements and features like kernel density
+-   Overlay graphical elements and features like kernel density
     estimates, Voronoi diagrams, Snow’s Broad Street neighborhood, and
     notable landmarks (John Snow’s residence, the Lion Brewery, etc.)
     via `add*()` functions.
-  - Includes a variety of functions to find and highlight cases, roads,
+-   Includes a variety of functions to find and highlight cases, roads,
     pumps and paths.
-  - Appends street names to the `roads` data set.
-  - Includes the revised pump data used in the second version of Snow’s
+-   Appends street names to the `roads` data set.
+-   Includes the revised pump data used in the second version of Snow’s
     map from the Vestry report, which also includes the “correct”
     location of the Broad Street pump.
-  - Adds two aggregate time series fatalities data sets, taken from the
+-   Adds two aggregate time series fatalities data sets, taken from the
     Vestry report.
-  - With ‘cholera’ version \>= 0.7.0, support for parallel computation
+-   With ‘cholera’ version >= 0.7.0, support for parallel computation
     now includes Windows in addition to Linux and macOS.
 
 #### getting started
@@ -35,8 +35,7 @@ To install ‘cholera’ from CRAN:
 install.packages("cholera")
 ```
 
-To install the current development version from
-GitHub:
+To install the current development version from GitHub:
 
 ``` r
 # You may need to first install the 'remotes' via install.packages("remotes").
@@ -81,12 +80,12 @@ Outbreak In The Parish Of St. James, Westminster, During The Autumn Of
 ![](vignettes/fig12-6.png)
 
 Despite its hand-drawn, back-of-the-envelope appearance, Snow writes:
-“The inner dotted line on the map shews \[sic\] the various points
-which have been found by careful measurement to be at an equal distance
-by the nearest road from the pump in Broad Street and the surrounding
-pumps …” (Ibid., p. 109). My interpretation of this statement is that,
-guided by the principle that all else being equal people tend to choose
-the closest pump, Snow is computing a *pump neighborhood*: the set of
+“The inner dotted line on the map shews \[sic\] the various points which
+have been found by careful measurement to be at an equal distance by the
+nearest road from the pump in Broad Street and the surrounding pumps …”
+(Ibid., p. 109). My interpretation of this statement is that, guided by
+the principle that all else being equal people tend to choose the
+closest pump, Snow is computing a *pump neighborhood*: the set of
 addresses or locations defined by their relative proximity to a specific
 water pump. By doing so, Snow’s annotation sets limits on where we
 should and should *not* find fatalities. In short, Snow’s annotation is
@@ -99,8 +98,8 @@ be lost to history, I reverse engineer what I infer to be his approach
 by doing the following. First, from the quotation above I assume that
 his measure of proximity is the walking distance along the streets of
 Soho. Second, putting aside aside questions about the map’s accuracy
-(it’s actually a commercial map that Snow annotated), I consider the
-map to be the definitive “text” and make it the de facto source of data.
+(it’s actually a commercial map that Snow annotated), I consider the map
+to be the definitive “text” and make it the de facto source of data.
 
 I then wrote functions that compute and visualize walking distances on
 the map. The value of these functions go beyond the ability to replicate
@@ -179,8 +178,7 @@ plot(neighborhoodWalking(pump.select = -7))
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-8-2.png" width="50%" />
 
 To explore “expected” walking neighborhoods, add the case.set =
-“expected”
-argument:
+“expected” argument:
 
 ``` r
 plot(neighborhoodWalking(pump.select =  6:7, case.set = "expected"), type = "area.polygons")
@@ -235,12 +233,11 @@ map.
 Bars](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/unstacking.bars.md)
 discusses the inferential and visual reasons to “unstack” bars. Then, it
 describes the two “unstacked” data sets: one using “fatalities” and one
-using “addresses” as the unit of
-observation.
+using “addresses” as the unit of observation.
 
 [Roads](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/roads.md)
 covers issues related to roads. This includes discussion of how and why
-I move pump \#5 from Queen Street (I) to Marlborough Mews, the overall
+I move pump #5 from Queen Street (I) to Marlborough Mews, the overall
 structure of the `roads` data set, “valid” road names, and my
 back-of-the-envelope translation from the map’s nominal scale to meters
 (and yards).
@@ -248,7 +245,7 @@ back-of-the-envelope translation from the map’s nominal scale to meters
 [voronoiPolygons(): Tiles, Triangles and
 Polygons](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/tiles.polygons.md)
 focuses on the `voronoiPolygons()` function, which extracts the vertices
-of triangles (Delauny triangulation) and tiles (Dirichelet or Voronoi
+of triangles (Delaunay triangulation) and tiles (Dirichelet or Voronoi
 tessellation) from `deldir::deldir()` for use with polygon() and other
 functions.
 
@@ -262,8 +259,7 @@ of the functions in ‘cholera’.
 Series](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/time.series.md)
 discusses functions and data related to the aggregate time series
 fatalities data and the questions surrounding the effect of the removal
-of the handle from the Broad Street
-pump.
+of the handle from the Broad Street pump.
 
 [Parallelization](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/parallelization.md)
 discusses the parallelization of selected functions and provides
@@ -292,8 +288,7 @@ and `neighborhoodVoronoi()`, for Euclidean distance based neighborhoods.
 [points v.
 polygons](https://github.com/lindbrook/cholera/blob/master/docs/notes/pump.neighborhoods.notes.md)
 discusses the tradeoff between using points() and polygon() to plot
-“expected” neighborhood using area plots and the computation of
-polygon
+“expected” neighborhood using area plots and the computation of polygon
 vertices.
 
 [references](https://github.com/lindbrook/cholera/blob/master/docs/notes/references.md)

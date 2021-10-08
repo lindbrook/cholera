@@ -54,6 +54,6 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE,
   dat <- deldir::deldir(pump.data, rw = c(range(cholera::roads$x),
     range(cholera::roads$y)), suppressMsge = TRUE)
 
-  plot(dat, add = TRUE, wline = "tess", wpoints = "none", col = color,
-    lty = line.type, lwd = line.width)
+  plot(dat, add = TRUE, wline = "tess", showpoints = FALSE,
+    cmpnt_col = c(tri = color), cmpnt_lty = line.type, lwd = line.width)
 }
