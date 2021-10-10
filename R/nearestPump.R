@@ -34,7 +34,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
     stop('case.set must be "observed", "expected" or "snow".')
   } else {
-    if (case.set == "observed") obs <- TRUE
+    if (case.set == "observed" | case.set == "snow") obs <- TRUE
     else if (case.set == "expected") obs <- FALSE
   }
 
@@ -48,18 +48,21 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
 
   cores <- multiCore(multi.core)
 
-  w1 <- (.Platform$OS.type == "windows" & metric == "euclidean" & cores > 1)
-  w2 <- (.Platform$OS.type == "windows" & case.set == "expected" & cores > 1)
-  win.exception <- (w1 | w2)
+  w1 <- .Platform$OS.type == "windows" & metric == "euclidean" & cores > 1
+  w2 <- .Platform$OS.type == "windows" & case.set == "expected" & cores > 1
+  win.exception <- w1 | w2
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
     stop('metric must either be "euclidean" or "walking".')
 
   } else if (metric == "euclidean") {
     if (case.set == "observed") {
-      anchors <- cholera::fatalities.unstacked$case
+      anchors <- cholera::fatalities.address$anchor
     } else if (case.set == "expected") {
       anchors <- seq_len(nrow(cholera::regular.cases))
+    } else if (case.set == "snow") {
+      anchors <- cholera::snow.neighborhood[cholera::snow.neighborhood %in%
+        cholera::fatalities.address$anchor]
     }
 
     if (dev.mode | win.exception) {
@@ -81,7 +84,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
   } else if (metric == "walking") {
     dat <- neighborhoodData(vestry, case.set)
 
-    if (case.set == "observed") {
+    if (case.set == "observed" | case.set == "snow") {
       path.data <- pathData(dat, weighted, case.set, cores, dev.mode,
         win.exception)
 
@@ -286,9 +289,11 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
     }
   }
 
-  if (case.set == "observed" & metric == "walking") {
+  if ((case.set == "observed" | case.set == "snow") & metric == "walking") {
     list(path = out.path, distance = out.distance)
-  } else list(distance = out.distance)
+  } else {
+    list(distance = out.distance)
+  }
 }
 
 pathData <- function(dat, weighted, case.set, cores, dev.mode, win.exception) {
