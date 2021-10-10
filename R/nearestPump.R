@@ -34,7 +34,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
     stop('case.set must be "observed", "expected" or "snow".')
   } else {
-    if (case.set == "observed") obs <- TRUE
+    if (case.set == "observed" | case.set == "snow") obs <- TRUE
     else if (case.set == "expected") obs <- FALSE
   }
 
