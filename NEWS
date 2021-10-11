@@ -1,3 +1,35 @@
+cholera 0.7.9
+==================
+
+# Note #
+
+- an interim release to address code changes in 'deldir' v1.0-2.
+
+# New Function #
+
+- add streetNames().
+
+# Data Change #
+
+- amend oxford.weather data to include entire data set.
+
+# Fixes #
+
+- amend code for 'deldir' v1.0-2: addDelaunay().
+- fix addSnow().
+- fix pumpTokens() for plot.walking(type = "roads").
+
+# Function Changes #
+
+- add/set addPump(cex = 1).
+- add/set segmentHighlight(col = "red").
+- add/set plot.oxfordWeather(month = "september").
+- amend plot.oxfordWeather(statistic = "rain").
+- change addDelauny() to addDelaunay().
+- change type = "road" to "roads" in plot.walking().
+- "gray" out unobserved and unselected pumps in pumpTokens().
+
+
 cholera 0.7.5.9018
 ==================
 
