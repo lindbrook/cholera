@@ -1,7 +1,7 @@
-#' Extract vertices of Delauny triangles and Dirichelet (Voronoi) tiles.
+#' Extract vertices of Delaunay triangles and Dirichelet (Voronoi) tiles.
 #'
-#' For construction and plotting of Delauny and Voronoi polygons.
-#' @param sites Object. Data frame of sites to compute Delauny triangulation and Dirichelet (Voronoi) tessellation with variables "x" and "y".
+#' For construction and plotting of Delaunay and Voronoi polygons.
+#' @param sites Object. Data frame of sites to compute Delaunay triangulation and Dirichelet (Voronoi) tessellation with variables "x" and "y".
 #' @param rw.data Object. Data frame of secondary source of data to set the rectangular window or bounding box: observations, cases, etc. with variables "x" and "y".
 #' @param rw Numeric. Alternative to rw.data: vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax.
 #' @param type Character. "tiles" (tessellation) or "triangles" (triangulation) vertices.
