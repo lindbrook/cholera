@@ -1,144 +1,29 @@
-cholera 0.7.5.9018
+cholera 0.7.9
 ==================
 
-- fix addSnow().
-
-
-cholera 0.7.5.9017
-==================
-
-- fix typo: Delauny to Delaunay.
-- amend code for 'deldir' v1.0-2.
-
-
-cholera 0.7.5.9016
-==================
-
-- use orthogonal frame rectangle to filter out map "shadow".
-- fix/simplify rectangle indices (point clouds)
-
-
-cholera 0.7.5.9015
-==================
-
-- estimate coordinates in latlongCoordinatesB() assuming strong rectangle symmetry.
-- migrate to pch = 46.
-
-
-cholera 0.7.5.9014
-==================
-
-- return integer in kmeansRectanlge().
-
-
-cholera 0.7.5.9013
-==================
-
-- estimate distance in latlongRoadSegments()
-- temp. fix latlongOrthoProj() and latlongOrthoProjPumps().
-- add latlongLandmarks(), landmarksPDF(), and latlongOrthoProjLandmarks()
-
-
-cholera 0.7.5.9012
-==================
-
-- estimate distance in latlongRoadSegments().
-
-
-cholera 0.7.5.9011
-==================
-
-- amend latlongPumps().
-- add pumpsPDF().
-- amend latlongSnowMap().
-
-
-cholera 0.7.5.9010
-==================
-
-- amend mapFrameSamples().
-- amend subsetFramePDF().
-- amend latitudeLongitudeFrame().
-- add geoID().
-- add latlongCoordinatesB().
-- amend latitudeLongitudeFatality().
-
-
-cholera 0.7.5.9009
-==================
-
-- use latlongEmbed() in latlongNeighborhoodData().
-
-
-cholera 0.7.5.9008
-==================
-
-- add latlongOrthoProj().
-- add latlongSnowMap().
-- add latlongNeighborhoodData().
-- add/set segmentHighlight(col = "red").
-- add segmentTheta().
-- add latlongOrthoProjPumps().
-- add latlongEmbed().
-
-
-cholera 0.7.5.9007
-==================
-
-- add/use latlongAuxilliaryFunctions.R
-- add latitudeLongitudeFatality().
-- add latitudeLongitudeAddress().
-- add rd.sample data.
-- add latitudeLongitudeRoads().
-- add frame.sample data.
-- add latitudeLongitudeFrame().
-
-
-cholera 0.7.5.9006
-==================
-
-- add latlongCoordinates().
-
-
-cholera 0.7.5.9005
-==================
-
-- add latlongPumps().
-
-
-cholera 0.7.5.9004
-==================
-
-- add/set addPump(cex = 1).
-
-
-cholera 0.7.5.9003
-==================
-
-- change type = "road" to "roads" in plot.walking().
-- fix pumpTokens() for plot.walking(type = "roads").
-
-
-cholera 0.7.5.9002
-==================
-
-- amend pumpTokens(); "gray" out unobserved and unselected pumps.
-
-
-cholera 0.7.5.9001
-==================
-
-- amend oxford.weather data to use entire data set.
-- amend plot.oxfordWeather(statistic = "rain").
-- add/set plot.oxfordWeather(month = "september").
-- add/use rainPlot().
-- add/use temperaturePlot().
-
-
-cholera 0.7.5.9000
-==================
+# New Function #
 
 - add streetNames().
+
+# Data Change #
+
+- amend oxford.weather data to include entire data set.
+
+# Fixes #
+
+- amend code for 'deldir' v1.0-2: addDelaunay().
+- fix addSnow().
+- fix pumpTokens() for plot.walking(type = "roads").
+
+# Function Changes #
+
+- add/set addPump(cex = 1).
+- add/set segmentHighlight(col = "red").
+- add/set plot.oxfordWeather(month = "september").
+- amend plot.oxfordWeather(statistic = "rain").
+- change addDelauny() to addDelaunay().
+- change type = "road" to "roads" in plot.walking().
+- "gray" out unobserved and unselected pumps in pumpTokens().
 
 
 cholera 0.7.5
