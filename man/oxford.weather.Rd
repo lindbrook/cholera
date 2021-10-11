@@ -12,7 +12,7 @@ A data frame with 7 variables and 95 observations.
     \item{\code{tmax}}{maximum temperature degrees Celsius}
     \item{\code{tmin}}{minimum temperature degrees Celsius}
     \item{\code{airfrost}}{days}
-    \item{\code{rain}}{milimeters (mm)}
+    \item{\code{rain}}{millimeters (mm)}
     \item{\code{sun}}{sunshine hours}
  }
 }

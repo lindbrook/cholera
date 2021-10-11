@@ -2,13 +2,13 @@
 % Please edit documentation in R/voronoiPolygons.R
 \name{voronoiPolygons}
 \alias{voronoiPolygons}
-\title{Extract vertices of Delauny triangles and Dirichelet (Voronoi) tiles.}
+\title{Extract vertices of Delaunay triangles and Dirichelet (Voronoi) tiles.}
 \usage{
 voronoiPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles",
   output = "vertices")
 }
 \arguments{
-\item{sites}{Object. Data frame of sites to compute Delauny triangulation and Dirichelet (Voronoi) tessellation with variables "x" and "y".}
+\item{sites}{Object. Data frame of sites to compute Delaunay triangulation and Dirichelet (Voronoi) tessellation with variables "x" and "y".}
 
 \item{rw.data}{Object. Data frame of secondary source of data to set the rectangular window or bounding box: observations, cases, etc. with variables "x" and "y".}
 
@@ -22,7 +22,7 @@ voronoiPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles",
 An R list of data frames or base R graphics polygon()'s'.
 }
 \description{
-For construction and plotting of Delauny and Voronoi polygons.
+For construction and plotting of Delaunay and Voronoi polygons.
 }
 \note{
 This function relies on the 'deldir' package.
