@@ -153,6 +153,22 @@
 #' @docType data
 "frame.sample"
 
+#' Map frame data c("x", "y") and c("lon", "lat").
+#'
+#' @format A data frame with 106 observations (points) and 8 variables.
+#'  \describe{
+#'     \item{\code{street}}{street number}
+#'     \item{\code{n}}{street street component number}
+#'     \item{\code{x}}{native x-coordinate}
+#'     \item{\code{y}}{native y-coordinate}
+#'     \item{\code{id}}{segment numeric ID}
+#'     \item{\code{name}}{street name}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
+#'  }
+#' @docType data
+"frame.data"
+
 #' Road "address" of simulated (i.e., "expected") cases.
 #'
 #' @format A data frame with 6 variables that records the "address" of 19,993 simulate cases along the network of roads.
