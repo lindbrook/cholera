@@ -19,15 +19,64 @@ latlongCoordinatesB <- function(tif, k, path, multi.core = TRUE) {
   map.data <- u.data[u.data$modified != 255, c("x", "y")]
 
   # filter out map "shadow" using orthogonal frame rectangle
-  frame <- latitudeLongitudeFrame(path)
-  ortho.rect <- expand.grid(range(frame$lon), range(frame$lat))
-  names(ortho.rect) <- c("x", "y")
-  ortho.rect <- ortho.rect[c(1, 2, 4, 3, 1), ]
 
-  ortho.rect.filter <- sp::point.in.polygon(map.data$x, map.data$y,
-    image.chull$x, image.chull$y)
+  data.in.chull <- parallel::mclapply(seq_len(nrow(map.data)), function(i) {
+    sp::point.in.polygon(map.data[i, ]$x, map.data[i, ]$y, image.chull$x,
+      image.chull$y)
+  }, mc.cores = cores)
 
-  f.data <- map.data[ortho.rect.filter, ]
+  data.in.chull <- unlist(data.in.chull)
+
+  xdata <- map.data[data.in.chull != 0, ]$x
+  ydata <- map.data[data.in.chull != 0, ]$y
+  xtable <- table(xdata)
+  ytable <- table(ydata)
+
+  xvals <- data.frame(coord = round(as.numeric(names(xtable)), 6),
+                      count = c(xtable),
+                      row.names = NULL)
+  yvals <- data.frame(coord = round(as.numeric(names(ytable)), 6),
+                      count = c(ytable),
+                      row.names = NULL)
+
+  xcbd <- coordsByDelta(xvals, deltaRank(xvals))
+  ycbd <- coordsByDelta(yvals, deltaRank(yvals))
+  xcbd <- xcbd[vapply(xcbd, nrow, integer(1L)) == 1]
+  ycbd <- ycbd[vapply(ycbd, nrow, integer(1L)) == 1]
+
+  x.rng <- range(xvals$coord)
+  y.rng <- range(yvals$coord)
+
+  x.minmax <- vapply(xcbd, function(z) {
+    which.min(c(stats::dist(c(z$coordA, x.rng[1])),
+                stats::dist(c(z$coordA, x.rng[2]))))
+  }, integer(1L))
+
+  y.minmax <- vapply(ycbd, function(z) {
+    which.min(c(stats::dist(c(z$coordA, y.rng[1])),
+                stats::dist(c(z$coordA, y.rng[2]))))
+  }, integer(1L))
+
+  xlist <- c(xcbd[x.minmax == 1][1], xcbd[x.minmax == 2][1])
+  ylist <- c(ycbd[y.minmax == 1][1], ycbd[x.minmax == 2][1])
+
+  x.cutpoints <- vapply(xlist, function(z) {
+    mean(c(z$coordA, xvals[as.numeric(row.names(z)) + 1, "coord"]))
+  }, numeric(1L))
+
+  y.cutpoints <- vapply(ylist, function(z) {
+    mean(c(z$coordA, yvals[as.numeric(row.names(z)) + 1, "coord"]))
+  }, numeric(1L))
+
+  x.lo <- x.cutpoints[1]
+  x.hi <- x.cutpoints[2]
+  y.lo <- y.cutpoints[1]
+  y.hi <- y.cutpoints[2]
+
+  filter <- map.data$x > x.lo & map.data$x < x.hi &
+            map.data$y > y.lo & map.data$y < y.hi
+
+  f.data <- map.data[filter, ]
 
   distances <- stats::dist(f.data)
   tree <- stats::hclust(distances)

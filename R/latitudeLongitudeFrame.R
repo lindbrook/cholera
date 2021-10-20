@@ -21,7 +21,7 @@ latitudeLongitudeFrame <- function(path, multi.core = TRUE) {
   tiff <- paste0(path, pre, post)
 
   geo.coords <- parallel::mclapply(seq_along(tiff), function(i) {
-    latlongCoordinatesB(tiff[i], k[i])
+    latlongCoordinatesB(tiff[i], k[i], path)
   }, mc.cores = cores)
 
   geo.coords <- lapply(seq_along(geo.coords), function(i) {
