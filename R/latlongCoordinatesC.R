@@ -18,14 +18,8 @@ latlongCoordinatesC <- function(tif, k, path, multi.core = TRUE) {
 
   map.data <- u.data[u.data$modified != 255, c("x", "y")]
 
-  # # filter out map "shadow" using orthogonal frame rectangle
-
-  # frame.data <- latitudeLongitudeFrame(path)
-  ortho.rect <- expand.grid(range(cholera::frame.data$lon),
-                            range(cholera::frame.data$lat))
-  names(ortho.rect) <- c("x", "y")
-  ortho.rect <- ortho.rect[c(1, 2, 4, 3, 1), ]
-
+  # use ortho.rect as polygon filter
+  ortho.rect <- cholera::ortho.rect
   ortho.rect.filter <- sp::point.in.polygon(map.data$x, map.data$y,
     ortho.rect$x, ortho.rect$y)
 
@@ -37,12 +31,7 @@ latlongCoordinatesC <- function(tif, k, path, multi.core = TRUE) {
   cluster.id <- unique(clusters)
   pts <- lapply(cluster.id, function(grp) names(clusters[clusters == grp]))
 
-
-  # plot(f.data, xlim = c(-0.138, -0.136), ylim = c(51.508, 51.510))
-
   coords <- lapply(seq_along(pts), function(i) {
-
-    # for (i in seq_along(pts)) {
     rect.data <- f.data[pts[[i]], ]
     tbl <- t(table(rect.data))
 
@@ -60,8 +49,6 @@ latlongCoordinatesC <- function(tif, k, path, multi.core = TRUE) {
       } else if (!row.chk & !col.chk) {
         tbl <- tbl[row.chk, col.order]
       }
-
-      # tbl <- tbl[order(as.numeric(rownames(tbl)), decreasing = TRUE), ]
 
       # top to bottom point orientation
       row.element.ct <- as.data.frame(table(rect.data$y),
