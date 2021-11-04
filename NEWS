@@ -1,7 +1,7 @@
 cholera 0.7.9.9002
 ==================
 
-- add ortho.rect.
+- add/use ortho.rect as polygon filter.
 
 
 cholera 0.7.9.9001
