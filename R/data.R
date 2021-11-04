@@ -220,8 +220,8 @@
 #' @format A data frame with 3 variables and 5 observations.
 #'  \describe{
 #'     \item{\code{id}}{vertex ID}
-#'     \item{\code{lon}}{longitude}
-#'     \item{\code{lat}}{latitude}
+#'     \item{\code{x}}{longitude}
+#'     \item{\code{y}}{latitude}
 #'  }
 #' @docType data
 "ortho.rect"
