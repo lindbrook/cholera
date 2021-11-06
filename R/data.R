@@ -217,7 +217,7 @@
 #' Orthogonal rectangle.
 #'
 #' Extent of map data to filter out frame shadow using sp::point.in.polygon().
-#' @format A data frame with 3 variables and 5 observations.
+#' @format A data frame with 3 variables and 4 observations.
 #'  \describe{
 #'     \item{\code{id}}{vertex ID}
 #'     \item{\code{x}}{longitude}
