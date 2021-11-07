@@ -5,7 +5,7 @@
 \alias{ortho.rect}
 \title{Orthogonal rectangle.}
 \format{
-A data frame with 3 variables and 5 observations.
+A data frame with 3 variables and 4 observations.
  \describe{
     \item{\code{id}}{vertex ID}
     \item{\code{x}}{longitude}

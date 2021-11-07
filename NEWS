@@ -2,6 +2,7 @@ cholera 0.7.9.9002
 ==================
 
 - add/use ortho.rect as polygon filter.
+- add orthogonalRectanlge() and associated functions.
 
 
 cholera 0.7.9.9001
