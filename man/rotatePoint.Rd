@@ -4,14 +4,12 @@
 \alias{rotatePoint}
 \title{Rotate points (prototype).}
 \usage{
-rotatePoint(id = 1, dataset = "roads", unique.coords = TRUE)
+rotatePoint(id = 1, dataset = "roads")
 }
 \arguments{
 \item{id}{Numeric. Road segment endpoint ID.}
 
 \item{dataset}{Character. "roads", "fatalities", "fatalities.address", "pumps", or "pumps.vestry".}
-
-\item{unique.coords}{Logical. Use unique coordinates.}
 }
 \description{
 Rotate points (prototype).
