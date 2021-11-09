@@ -14,6 +14,3 @@ partitionRoadEndpoints(path, multi.core = TRUE)
 \description{
 Partition road endpoints to avoid over-printing of points (prototype).
 }
-\note{
-Currenlty more script than function.
-}

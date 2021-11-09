@@ -3,7 +3,6 @@
 #' @param path Character. e.g., "~/Documents/Data/".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
-#' @note Currenlty more script than function.
 
 partitionRoadEndpoints <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
@@ -119,7 +118,7 @@ partitionRoadEndpoints <- function(path, multi.core = TRUE) {
 
   list(setA1 = setA.lst$v1, setA2 = setA.lst$v2,
        setB1 = setB.lst$v1, setB2 = setB.lst$v2,
-       setC = rds.sel3$id)
+       setC0 = rds.sel3$id)
 }
 
 endptDist <- function(a = 602, b = 624, meters = FALSE) {
