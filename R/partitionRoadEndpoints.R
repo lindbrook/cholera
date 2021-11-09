@@ -121,6 +121,12 @@ partitionRoadEndpoints <- function(path, multi.core = TRUE) {
        setC0 = rds.sel3$id)
 }
 
+#' Compute nominal distance between road endpoints.
+#'
+#' @param a Numeric. Road ID.
+#' @param b Numeric. Road ID.
+#' @noRd
+
 endptDist <- function(a = 602, b = 624, meters = FALSE) {
   d <- stats::dist(cholera::roads[cholera::roads$id %in% c(a, b), c("x", "y")])
   ifelse(meters, cholera::unitMeter(d), d)
