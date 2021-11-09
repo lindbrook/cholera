@@ -136,3 +136,27 @@ selectBridgeNode <- function(row.ids = 1:2, dat) {
   tmp <- table(unlist(dat[row.ids, c("v1", "v2")]))
   as.numeric(names(tmp[tmp != 1]))
 }
+
+#' Create PDFs of road endpoints partition (prototype).
+#'
+#' For georeferencing in QGIS .
+#' @param path Character. e.g., "~/Documents/Data/".
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @export
+
+pdfPartitionRoadEndpoints <- function(path, multi.core = TRUE) {
+  pt.ids <- partitionRoadEndpoints(path, multi.core = multi.core)
+  rng <- cholera::mapRange()
+
+  invisible(lapply(names(pt.ids), function(nm) {
+    pre <- "roads"
+    file.id <- unlist(strsplit(nm, "set"))[2]
+    post <- ".pdf"
+    file.nm <- paste0(path, pre, file.id, post)
+    dat <- cholera::roads[cholera::roads$id %in% pt.ids[[nm]], c("x", "y")]
+    grDevices::pdf(file = file.nm)
+    plot(dat, pch = 46, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+      xlim = rng$x, ylim = rng$y, bty = "n", asp = 1)
+    grDevices::dev.off()
+  }))
+}
