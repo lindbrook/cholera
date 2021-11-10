@@ -1,3 +1,69 @@
+#' Compute latitude and longitude for unique road segment endpoints (prototype).
+#'
+#' @param path Character. e.g., "~/Documents/Data/"
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @return An R data frame.
+#' @export
+
+latlongRoads <- function(path, multi.core = TRUE) {
+  cores <- multiCore(multi.core)
+  endpt.ids <- partitionRoadEndpoints(path, multi.core = cores)
+
+  coords <- parallel::mclapply(seq_along(endpt.ids), function(i) {
+    ids <- endpt.ids[[i]]
+    nm <- unlist(strsplit(names(endpt.ids[i]), "set"))[2]
+    tif <- paste0(path, "roads", nm, "_modified.tif")
+    k <- length(ids)
+    geo.coords <- latlongCoordinatesC(tif, k, path)
+    nom.coords <- cholera::roads[cholera::roads$id %in% ids, ]
+
+    # rotate nominal coords to approximate georeferenced coords
+    nom.rotate <- lapply(ids, rotatePoint)
+    nom.rotate <- do.call(rbind, nom.rotate)
+    nom.rotate.scale <- data.frame(id = ids, scale(nom.rotate))
+
+    vars <- c("lon", "lat")
+    geo.scale <- data.frame(id = geo.coords$id, scale(geo.coords[, vars]))
+
+    alters <- geo.scale
+    names(alters)[-1] <- c("x", "y")
+
+    translation <- lapply(ids, function(id) {
+      ego <- nom.rotate.scale[nom.rotate.scale$id == id, c("x", "y")]
+      d <- vapply(seq_len(nrow(alters)), function(i) {
+        stats::dist(rbind(ego, alters[i, c("x", "y")]))
+      }, numeric(1L))
+      data.frame(id = id, geo.id = alters$id[which.min(d)])
+    })
+
+    translation <- do.call(rbind, translation)
+    geo.coords <- merge(geo.coords, translation, by.x = "id", by.y = "geo.id")
+    names(geo.coords)[c(1, length(names(geo.coords)))] <- c("geo.id", "id")
+    merge(nom.coords, geo.coords[, -1], by = "id")
+  }, mc.cores = cores)
+
+  coords <- do.call(rbind, coords)
+
+  coords$id2 <- paste0(coords$x, "-", coords$y)
+  coords <- coords[, c(names(cholera::roads), "lon", "lat")]
+
+  rds <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rds$id2 <- paste0(rds$x, "-", rds$y)
+
+  duplicates <- duplicated(rds[, c("x", "y")])
+  rds.dup <- rds[duplicates, ]
+
+  rds.dup <- lapply(unique(rds.dup$id2), function(x) {
+    cbind(rds.dup[rds.dup$id2 == x, ], coords[coords$id2 == x, c("lon", "lat")])
+  })
+
+  rds.dup <- do.call(rbind, rds.dup)
+  rds.dup$id2 <- NULL
+
+  coords <- rbind(coords, rds.dup)
+  coords[order(coords$id), ]
+}
+
 #' Partition road endpoints to avoid over-printing of points (prototype).
 #'
 #' @param path Character. e.g., "~/Documents/Data/".

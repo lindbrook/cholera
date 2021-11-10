@@ -5,6 +5,7 @@ cholera 0.7.9.9002
 - add orthogonalRectanlge() and associated functions.
 - use "id" instead of "id2" in rotatePoint(dataset = "roads").
 - add partitionRoadEndpoints().
+- add latlongRoads().
 
 
 cholera 0.7.9.9001
