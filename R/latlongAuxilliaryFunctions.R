@@ -75,21 +75,14 @@ radians <- function(points.data) {
 #'
 #' @param id Numeric. Road segment endpoint ID.
 #' @param dataset Character. "roads", "fatalities", "fatalities.address", "pumps", or "pumps.vestry".
-#' @param unique.coords Logical. Use unique coordinates.
 #' @export
 
-rotatePoint <- function(id = 1, dataset = "roads", unique.coords = TRUE) {
+rotatePoint <- function(id = 1, dataset = "roads") {
   rd <- cholera::roads
-
-  if (unique.coords) {
-    rd$point.id <- paste0(rd$x, "-", rd$y)
-    rd <- rd[!duplicated(rd$point.id), ]
-  }
-
   center <- data.frame(x = mean(range(rd$x)), y = mean(range(rd$y)))
 
   if (dataset == "roads") {
-    points.data <- rbind(center, rd[rd$point.id == id, c("x", "y")])
+    points.data <- rbind(center, rd[rd$id == id, c("x", "y")])
   } else if (dataset == "fatalities") {
     sel <- cholera::fatalities$case == id
     points.data <- rbind(center, cholera::fatalities[sel, c("x", "y")])

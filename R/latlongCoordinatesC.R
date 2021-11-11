@@ -4,11 +4,9 @@
 # #' @param cutpoint Numeric. Cutpoint for hierarchical cluster analysis.
 #' @param k Numeric. Number of clusters, k, to identify.
 #' @param path Character. e.g., "~/Documents/Data/".
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 
-latlongCoordinatesC <- function(tif, k, path, multi.core = TRUE) {
-  cores <- multiCore(multi.core)
+latlongCoordinatesC <- function(tif, k, path) {
   u.data <- pointsFromGeoTIFF(tif)
   names(u.data)[3] <- "modified"
 
