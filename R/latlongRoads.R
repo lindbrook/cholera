@@ -22,8 +22,8 @@ latlongRoads <- function(path, multi.core = TRUE) {
     nom.rotate <- do.call(rbind, nom.rotate)
     nom.rotate.scale <- data.frame(id = ids, scale(nom.rotate))
 
-    vars <- c("lon", "lat")
-    geo.scale <- data.frame(id = geo.coords$id, scale(geo.coords[, vars]))
+    geo.scale <- data.frame(id = geo.coords$id,
+      scale(geo.coords[, c("lon", "lat")]))
 
     alters <- geo.scale
     names(alters)[-1] <- c("x", "y")
@@ -43,15 +43,13 @@ latlongRoads <- function(path, multi.core = TRUE) {
   }, mc.cores = cores)
 
   coords <- do.call(rbind, coords)
-
+  coords <- coords[, c(names(cholera::roads), c("lon", "lat"))]
   coords$id2 <- paste0(coords$x, "-", coords$y)
-  coords <- coords[, c(names(cholera::roads), "lon", "lat")]
 
   rds <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  rds$id2 <- paste0(rds$x, "-", rds$y)
-
   duplicates <- duplicated(rds[, c("x", "y")])
   rds.dup <- rds[duplicates, ]
+  rds.dup$id2 <- paste0(rds.dup$x, "-", rds.dup$y)
 
   rds.dup <- lapply(unique(rds.dup$id2), function(x) {
     cbind(rds.dup[rds.dup$id2 == x, ], coords[coords$id2 == x, c("lon", "lat")])
@@ -59,7 +57,7 @@ latlongRoads <- function(path, multi.core = TRUE) {
 
   rds.dup <- do.call(rbind, rds.dup)
   rds.dup$id2 <- NULL
-
+  coords$id2 <- NULL
   coords <- rbind(coords, rds.dup)
   coords[order(coords$id), ]
 }
