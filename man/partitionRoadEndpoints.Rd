@@ -4,12 +4,10 @@
 \alias{partitionRoadEndpoints}
 \title{Partition road endpoints to avoid over-printing of points (prototype).}
 \usage{
-partitionRoadEndpoints(path, multi.core = TRUE)
+partitionRoadEndpoints(path)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/".}
-
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
 \description{
 Partition road endpoints to avoid over-printing of points (prototype).

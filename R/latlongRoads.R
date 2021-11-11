@@ -7,7 +7,7 @@
 
 latlongRoads <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
-  endpt.ids <- partitionRoadEndpoints(path, multi.core = cores)
+  endpt.ids <- partitionRoadEndpoints(path)
 
   coords <- parallel::mclapply(seq_along(endpt.ids), function(i) {
     ids <- endpt.ids[[i]]
@@ -65,11 +65,9 @@ latlongRoads <- function(path, multi.core = TRUE) {
 #' Partition road endpoints to avoid over-printing of points (prototype).
 #'
 #' @param path Character. e.g., "~/Documents/Data/".
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 
-partitionRoadEndpoints <- function(path, multi.core = TRUE) {
-  cores <- multiCore(multi.core)
+partitionRoadEndpoints <- function(path) {
   rds <- cholera::roads[cholera::roads$name != "Map Frame", ]
   rds$id2 <- paste0(rds$x, "-", rds$y)
 
@@ -82,12 +80,8 @@ partitionRoadEndpoints <- function(path, multi.core = TRUE) {
   idx <- data.frame(t(utils::combn(rds.sel$id, 2)))
   names(idx) <- c("v1", "v2")
 
-  ds <- parallel::mclapply(seq_along(idx$v1), function(i) {
-    stats::dist(rbind(rds.sel[rds.sel$id == idx[i, "v1"], c("x", "y")],
-                      rds.sel[rds.sel$id == idx[i, "v2"], c("x", "y")]))
-  }, mc.cores = cores)
-
-  endpts <- data.frame(idx, d = unlist(ds))
+  ds <- stats::dist(rds.sel[, c("x", "y")])
+  endpts <- data.frame(idx, d = c(ds))
 
   setA <- endpts[endpts$d <= 0.1, ]
 
@@ -129,12 +123,8 @@ partitionRoadEndpoints <- function(path, multi.core = TRUE) {
   idx <- data.frame(t(utils::combn(rds.sel2$id, 2)))
   names(idx) <- c("v1", "v2")
 
-  ds <- parallel::mclapply(seq_along(idx$v1), function(i) {
-    stats::dist(rbind(rds.sel2[rds.sel2$id == idx[i, "v1"], c("x", "y")],
-                      rds.sel2[rds.sel2$id == idx[i, "v2"], c("x", "y")]))
-  }, mc.cores = cores)
-
-  endpts2 <- data.frame(idx, d = unlist(ds))
+  ds <- stats::dist(rds.sel2[, c("x", "y")])
+  endpts2 <- data.frame(idx, d = c(ds))
 
   setB <- endpts2[endpts2$d <= 0.16, ]
 
@@ -211,13 +201,11 @@ selectBridgeNode <- function(row.ids = 1:2, dat) {
 #'
 #' For georeferencing in QGIS .
 #' @param path Character. e.g., "~/Documents/Data/".
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 
-pdfPartitionRoadEndpoints <- function(path, multi.core = TRUE) {
-  pt.ids <- partitionRoadEndpoints(path, multi.core = multi.core)
+pdfPartitionRoadEndpoints <- function(path) {
+  pt.ids <- partitionRoadEndpoints(path)
   rng <- cholera::mapRange()
-
   invisible(lapply(names(pt.ids), function(nm) {
     pre <- "roads"
     file.id <- unlist(strsplit(nm, "set"))[2]
