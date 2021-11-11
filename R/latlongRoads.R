@@ -134,7 +134,7 @@ partitionRoadEndpoints <- function(path, multi.core = TRUE) {
   ds <- parallel::mclapply(seq_along(idx$v1), function(i) {
     stats::dist(rbind(rds.sel2[rds.sel2$id == idx[i, "v1"], c("x", "y")],
                       rds.sel2[rds.sel2$id == idx[i, "v2"], c("x", "y")]))
-  }, mc.cores = 4L)
+  }, mc.cores = cores)
 
   endpts2 <- data.frame(idx, d = unlist(ds))
 
