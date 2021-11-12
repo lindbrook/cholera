@@ -4,10 +4,7 @@
 \alias{partitionRoadEndpoints}
 \title{Partition road endpoints to avoid over-printing of points (prototype).}
 \usage{
-partitionRoadEndpoints(path)
-}
-\arguments{
-\item{path}{Character. e.g., "~/Documents/Data/".}
+partitionRoadEndpoints()
 }
 \description{
 Partition road endpoints to avoid over-printing of points (prototype).

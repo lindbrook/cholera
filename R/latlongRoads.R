@@ -7,7 +7,7 @@
 
 latlongRoads <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
-  endpt.ids <- partitionRoadEndpoints(path)
+  endpt.ids <- partitionRoadEndpoints()
 
   coords <- parallel::mclapply(seq_along(endpt.ids), function(i) {
     ids <- endpt.ids[[i]]
@@ -64,10 +64,9 @@ latlongRoads <- function(path, multi.core = TRUE) {
 
 #' Partition road endpoints to avoid over-printing of points (prototype).
 #'
-#' @param path Character. e.g., "~/Documents/Data/".
 #' @export
 
-partitionRoadEndpoints <- function(path) {
+partitionRoadEndpoints <- function() {
   rds <- cholera::roads[cholera::roads$name != "Map Frame", ]
   rds$id2 <- paste0(rds$x, "-", rds$y)
 
@@ -204,7 +203,7 @@ selectBridgeNode <- function(row.ids = 1:2, dat) {
 #' @export
 
 pdfPartitionRoadEndpoints <- function(path) {
-  pt.ids <- partitionRoadEndpoints(path)
+  pt.ids <- partitionRoadEndpoints()
   rng <- cholera::mapRange()
   invisible(lapply(names(pt.ids), function(nm) {
     pre <- "roads"
