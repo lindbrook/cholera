@@ -178,6 +178,7 @@ partitionRoadEndpoints <- function() {
 #'
 #' @param a Numeric. Road ID.
 #' @param b Numeric. Road ID.
+#' @param meters Logical. Compute metric (meters) or nominal distance.
 #' @noRd
 
 endptDist <- function(a = 602, b = 624, meters = FALSE) {
