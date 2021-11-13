@@ -2,10 +2,10 @@
 #'
 #' A best guess estimate.
 #' @param x Numeric. Nominal map distance.
-#' @param output.unit Character. Unit of distance: "meter", "yard" or "nominal". "nominal" returns the map's nominal scale. See \code{vignette("roads")} for information on conversion.
+#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" uses the map's nominal scale. See \code{vignette("roads")} for information on conversion.
 #' @export
 
-unitMeter <- function(x, output.unit = "meter") {
+unitMeter <- function(x, distance.unit = "meter") {
   if (is.numeric(x) == FALSE) stop('x must be numeric.')
 
   sel <- cholera::road.segments$name == "Carnaby Street"
@@ -17,13 +17,13 @@ unitMeter <- function(x, output.unit = "meter") {
   yard.unit <- foot.unit / 3
   meter.unit <- foot.unit / 3.281
 
-  if (output.unit == "meter") {
+  if (distance.unit == "meter") {
     x * meter.unit
-  } else if (output.unit == "yard") {
+  } else if (distance.unit == "yard") {
     x * yard.unit
-  } else if (output.unit == "nominal") {
+  } else if (distance.unit == "native") {
     x
-  } else stop('output.unit must be "meter", "yard" or "nominal".')
+  } else stop('distance.unit must be "meter", "yard" or "native".')
 }
 
 #' Compute total length of roads.
