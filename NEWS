@@ -1,7 +1,13 @@
-cholera 0.7.9.9003
+cholera 0.7.9.9004
 ==================
 
 - add caseDistance().
+
+
+cholera 0.7.9.9003
+==================
+
+- fix/change unitMeter(distance.unit = "native").
 
 
 cholera 0.7.9.9002
