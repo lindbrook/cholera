@@ -95,7 +95,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
         h <- seq(0, tot, unit.interval) / unitMeter(1)
       } else if (unit.posts == "time") {
         tot <- distanceTime(unitMeter(stats::dist(dat),
-          output.unit = "nominal"), walking.speed = x$walking.speed)
+          distance.unit = "nominal"), walking.speed = x$walking.speed)
         h <- seq(0, tot, unit.interval) * 1000 * x$walking.speed / 60^2 /
           unitMeter(1)
       } else {
