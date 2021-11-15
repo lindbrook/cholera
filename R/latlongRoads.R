@@ -98,7 +98,7 @@ partitionRoadEndpoints <- function() {
   } else if (any(table.v1 != 1) & !any(table.v2 != 1)) {
     same.side <- unique(as.numeric(names(table.v1[table.v1 != 1])))
   } else if (!any(table.v1 != 1) & any(table.v2 != 1)) {
-    same.side <- as.numeric(names(table.v2[table.v2 != 1]))
+    same.side <- unique(as.numeric(names(table.v2[table.v2 != 1])))
   } else {
     same.side <- NULL
   }
