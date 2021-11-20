@@ -10,6 +10,7 @@
 #' @param add.title Logical. Print title.
 #' @param add.subtitle Logical. Print subtitle.
 #' @param highlight Logical. Highlight selected road and its cases.
+#' @param cex.text Numeric.
 #' @return A base R graphics plot.
 #' @import graphics
 #' @note With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2").  See \code{cholera::road.segments}.
@@ -21,7 +22,7 @@
 
 segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  add.title = TRUE, add.subtitle = TRUE, highlight = TRUE) {
+  add.title = TRUE, add.subtitle = TRUE, highlight = TRUE, cex.text = 0.67) {
 
   if (is.character(id) == FALSE) stop('id\'s type must be a character.',
     call. = FALSE)
@@ -70,30 +71,31 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
 
       if (cases == "fatality") {
         text(cholera::fatalities[!seg.cases, c("x", "y")],
-          labels = cholera::fatalities$case[!seg.cases], cex = 0.5)
+          labels = cholera::fatalities$case[!seg.cases], cex = cex.text)
         if (any(seg.cases)) {
           if (highlight) {
             text(cholera::fatalities[seg.cases, c("x", "y")],
-              labels = cholera::fatalities$case[seg.cases], cex = 0.5,
+              labels = cholera::fatalities$case[seg.cases], cex = cex.text,
               col = "red")
           } else {
             text(cholera::fatalities[seg.cases, c("x", "y")],
-              labels = cholera::fatalities$case[seg.cases], cex = 0.5)
+              labels = cholera::fatalities$case[seg.cases], cex = cex.text)
           }
 
         }
       } else if (cases == "address") {
         text(cholera::fatalities.address[!seg.anchors, c("x", "y")],
-          labels = cholera::fatalities.address$anchor[!seg.anchors], cex = 0.5)
+          labels = cholera::fatalities.address$anchor[!seg.anchors],
+          cex = cex.text)
         if (any(seg.anchors)) {
           if (highlight) {
             text(cholera::fatalities.address[seg.anchors, c("x", "y")],
               labels = cholera::fatalities.address$anchor[seg.anchors],
-              cex = 0.5, col = "red")
+              cex = cex.text, col = "red")
           } else {
             text(cholera::fatalities.address[seg.anchors, c("x", "y")],
               labels = cholera::fatalities.address$anchor[seg.anchors],
-              cex = 0.5)
+              cex = cex.text)
           }
         }
       }

@@ -6,7 +6,8 @@
 \usage{
 segmentLocator(id = "216-1", zoom = 0.5, cases = "address",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  add.title = TRUE, add.subtitle = TRUE, highlight = TRUE)
+  add.title = TRUE, add.subtitle = TRUE, highlight = TRUE,
+  cex.text = 0.67)
 }
 \arguments{
 \item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
@@ -26,6 +27,8 @@ segmentLocator(id = "216-1", zoom = 0.5, cases = "address",
 \item{add.subtitle}{Logical. Print subtitle.}
 
 \item{highlight}{Logical. Highlight selected road and its cases.}
+
+\item{cex.text}{Numeric.}
 }
 \value{
 A base R graphics plot.
