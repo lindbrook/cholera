@@ -27,7 +27,7 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
   add.pump = TRUE, vestry = FALSE, highlight = TRUE, distance.unit = "meter",
   time.unit = "minute", walking.speed = 5) {
 
-  real.road.names <- unique(cholera::roads$name)
+  real.road.names <- streetNames()
   vars <- c("x", "y")
 
   if (is.character(road.name) == FALSE) {
