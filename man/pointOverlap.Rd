@@ -4,14 +4,10 @@
 \alias{pointOverlap}
 \title{Census of overlapping fatalties}
 \usage{
-pointOverlap(path, dist.between.pts = 0.15, output = "n-tuple")
+pointOverlap(inter.point.dist = 0.15)
 }
 \arguments{
-\item{path}{Character. e.g., "~/Documents/Data/"}
-
-\item{dist.between.pts}{Numeric. Ceiling for overlapping points.}
-
-\item{output}{Character. "dyad" (data frame) or "n-tuple" (PDF)}
+\item{inter.point.dist}{Numeric. Ceiling for overlapping points.}
 }
 \description{
 "Resolution" of georeferenced points with pch = 46 (i.e., pch = ".").
