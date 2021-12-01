@@ -55,3 +55,48 @@ partitionStringGraph <- function(g) {
                v2 = dat[seq_along(dat) %% 2 == 0])
   })
 }
+
+#' Network graph of addresses with selected inter-point distance.
+#'
+#' @param inter.point.dist Numeric. Ceiling for overlapping points.
+#' @return An 'igraph' object.
+#' @export
+
+thresholdAddressGraph <- function(inter.point.dist = 0.15) {
+  idx <- data.frame(t(utils::combn(cholera::fatalities.address$anchor, 2)))
+  names(idx) <- c("v1", "v2")
+  d <- stats::dist(cholera::fatalities.address[, c("x", "y")])
+  addr.dist <- data.frame(idx, d = c(d))
+  overlap <- addr.dist[addr.dist$d <= inter.point.dist, ]
+  edge.list <- overlap[, c("v1", "v2")]
+  igraph::graph_from_data_frame(edge.list, directed = FALSE)
+}
+
+#' Rotate, stack and partition open triads.
+#'
+#' @param subgraphs Object. 'igraph' list of subgraphs
+#' @param census Object. List of vertices of subgraphs.
+#' @param census.ct Object. Count of vertices in subgraphs.
+#' @return An R data frame.
+#' @export
+
+openTriads <- function(subgraphs, census, census.ct) {
+  dat <- subgraphs[names(census[census.ct == 3])]
+
+  triads <- lapply(names(dat), function(nm) {
+    v <- as.numeric(igraph::as_edgelist(subgraphs[[nm]]))
+    v.table <- table(v)
+    pivot <- as.numeric(names(v.table[which.max(v.table)]))
+    others <- setdiff(as.numeric(names(v.table)), pivot)
+    list(pivot = pivot, others = others)
+  })
+
+  even <- triads[seq_along(triads) %% 2 == 0]
+  odd <- triads[seq_along(triads) %% 2 == 1]
+
+  v1 <- c(unlist(lapply(even, function(x) x$others)),
+          unlist(lapply(odd, function(x) x$pivot)))
+  v2 <- c(unlist(lapply(odd, function(x) x$others)),
+          unlist(lapply(even, function(x) x$pivot)))
+  data.frame(v1, v2)
+}
