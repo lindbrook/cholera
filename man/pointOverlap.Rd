@@ -2,7 +2,7 @@
 % Please edit documentation in R/pointOverlap.R
 \name{pointOverlap}
 \alias{pointOverlap}
-\title{Census of overlapping fatalties}
+\title{Census of overlapping fatalties.}
 \usage{
 pointOverlap(inter.point.dist = 0.15)
 }
