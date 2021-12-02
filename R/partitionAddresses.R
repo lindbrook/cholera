@@ -74,9 +74,9 @@ thresholdAddressGraph <- function(inter.point.dist = 0.15) {
 
 #' Rotate, stack and partition open triads.
 #'
-#' @param subgraphs Object. 'igraph' list of subgraphs
-#' @param census Object. List of vertices of subgraphs.
-#' @param census.ct Object. Count of vertices in subgraphs.
+#' @param subgraphs Object. 'igraph' list of graphs.
+#' @param census Object. List of graph vertices.
+#' @param census.ct Object. Count of graph vertices.
 #' @return An R data frame.
 #' @export
 
@@ -98,5 +98,27 @@ openTriads <- function(subgraphs, census, census.ct) {
           unlist(lapply(odd, function(x) x$pivot)))
   v2 <- c(unlist(lapply(odd, function(x) x$others)),
           unlist(lapply(even, function(x) x$pivot)))
+  data.frame(v1, v2)
+}
+
+
+#' Decompose and partition star graphs.
+#'
+#' @param subgraphs Object. 'igraph' list of graphs.
+#' @param group Character. Vector of group IDs.
+#' @return An R data frame.
+#' @export
+
+starGraph <- function(subgraphs, group = c("25", "45")) {
+  dat <- subgraphs[group]
+  vertices <- lapply(dat, function(x) {
+    v <- as.numeric(igraph::as_edgelist(x))
+    v.table <- table(v)
+    core <- as.numeric(names(v.table[which.max(v.table)]))
+    periphery <- setdiff(as.numeric(names(v.table)), core)
+    list(core = core, periphery = periphery)
+  })
+  v1 <- c(vertices[[1]]$periphery, vertices[[2]]$core)
+  v2 <- c(vertices[[1]]$core, vertices[[2]]$periphery)
   data.frame(v1, v2)
 }

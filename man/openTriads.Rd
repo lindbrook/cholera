@@ -7,11 +7,11 @@
 openTriads(subgraphs, census, census.ct)
 }
 \arguments{
-\item{subgraphs}{Object. 'igraph' list of subgraphs}
+\item{subgraphs}{Object. 'igraph' list of graphs.}
 
-\item{census}{Object. List of vertices of subgraphs.}
+\item{census}{Object. List of graph vertices.}
 
-\item{census.ct}{Object. Count of vertices in subgraphs.}
+\item{census.ct}{Object. Count of graph vertices.}
 }
 \value{
 An R data frame.
