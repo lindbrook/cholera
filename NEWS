@@ -4,6 +4,7 @@ cholera 0.7.9.9008
 - add partitionStringGraph().
 - add thresholdAddressGraph().
 - add openTriads().
+- add starGraph().
 
 
 cholera 0.7.9.9007
