@@ -1,11 +1,11 @@
-#' Partition string-of-pearl fatality address graphs.
+#' Rotate, stack and partition even n-tuple strings (n >= 4).
 #'
 #' Separate even and odd vertices to avoid point overlap.
 #' @param g Object. 'igraph' list of graphs.
 #' @return An R data frame.
 #' @export
 
-partitionStringGraph <- function(g) {
+partitionEvenString <- function(g) {
   edge.list.ordered <- lapply(g, function(x) {
     edg.lst <- igraph::as_edgelist(x)
     edg.lst <- data.frame(v1 = as.numeric(edg.lst[, 1]),
