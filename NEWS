@@ -5,6 +5,8 @@ cholera 0.7.9.9008
 - add thresholdAddressGraph().
 - add openTriads().
 - add starGraph().
+- rename partitionStringGraph() to partitionEvenString().
+- add partitionOddString().
 
 
 cholera 0.7.9.9007

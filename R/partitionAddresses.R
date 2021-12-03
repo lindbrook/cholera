@@ -123,3 +123,54 @@ starGraph <- function(subgraphs, group = c("25", "45")) {
   v2 <- c(vertices[[1]]$core, vertices[[2]]$periphery)
   data.frame(v1, v2)
 }
+
+#' Rotate, stack and partition odd n-tuple strings (n >= 5).
+#'
+#' @param subgraphs Object. 'igraph' list of graphs.
+#' @param group Character. Vector of group IDs.
+#' @return An R data frame.
+#' @export
+
+partitionOddString <- function(subgraphs, group = c("6", "7")) {
+  dat <- subgraphs[group]
+
+  vertices <- lapply(dat, function(x) {
+    edg.lst <- igraph::as_edgelist(x)
+    edg.lst <- data.frame(v1 = as.numeric(edg.lst[, 1]),
+                          v2 = as.numeric(edg.lst[, 2]))
+    v.table <- table(unlist(edg.lst))
+    endpt <- as.numeric(names(v.table[v.table == 1]))[1]
+    row.id <- vector("integer", nrow(edg.lst))
+    link.id <- vector("integer", nrow(edg.lst))
+    for (i in seq_along(row.id)) {
+      if (i == 1) {
+        endpt.id <- vapply(seq_along(edg.lst$v1), function(i) {
+          any(endpt %in% edg.lst[i, ])
+        }, logical(1L))
+        sel <- which(endpt.id)
+        row.id[1] <- sel
+        alpha <- edg.lst[sel, ]
+        link.id[1] <- alpha[alpha != endpt]
+      } else {
+        id <- row.id[row.id != 0]
+        id <- id[length(id)]
+        link <- link.id[link.id != 0]
+        link <- link[length(link)]
+        candidate <- which(vapply(seq_along(edg.lst$v1), function(i) {
+          any(link %in% edg.lst[i, ])
+        }, logical(1L)))
+        new.id <- setdiff(candidate, id)
+        row.id[i] <- new.id
+        tmp <- edg.lst[new.id, ]
+        link.id[i] <- tmp[tmp != link]
+      }
+    }
+    c(endpt, link.id)
+  })
+
+  even <- lapply(vertices, function(x) x[seq_along(x) %% 2 == 0])
+  odd  <- lapply(vertices, function(x) x[seq_along(x) %% 2 == 1])
+  v1 <- c(odd[[1]], even[[2]])
+  v2 <- c(even[[1]], odd[[2]])
+  data.frame(v1, v2)
+}
