@@ -104,6 +104,7 @@ openTriads <- function(subgraphs, census, census.ct) {
 
 #' Decompose and partition star graphs.
 #'
+#' Used for graphs with 1 core and 3 peripheral (4) vertices.
 #' @param subgraphs Object. 'igraph' list of graphs.
 #' @param group Character. Vector of group IDs.
 #' @return An R data frame.

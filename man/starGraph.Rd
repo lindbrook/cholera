@@ -15,5 +15,5 @@ starGraph(subgraphs, group = c("25", "45"))
 An R data frame.
 }
 \description{
-Decompose and partition star graphs.
+Used for graphs with 1 core and 3 peripheral (4) vertices.
 }
