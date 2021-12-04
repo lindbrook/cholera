@@ -1,3 +1,156 @@
+#' Partiion overlapping fatality addresses.
+#'
+#' Based on set of subgraphs defined by selected inter-point distance.
+#' @param inter.point.dist Numeric. Ceiling for overlapping points.
+#' @return An R list.
+#' @export
+
+partitionAddresses <- function(inter.point.dist = 0.15) {
+  g <- thresholdAddressGraph(inter.point.dist = inter.point.dist)
+  subgraphs <- igraph::decompose(g)
+  names(subgraphs) <- seq_along(subgraphs)
+  census <- igraph::groups(igraph::components(g))
+  census.ct <- vapply(census, length, integer(1L))
+
+  ## dyads ##
+
+  dyads <- do.call(rbind, lapply(census[census.ct == 2], as.numeric))
+  dyads <- data.frame(group = as.numeric(row.names(dyads)), v1 = dyads[, 1],
+    v2 = dyads[, 2], row.names = NULL)
+
+  ## triads ##
+
+  triads <- openTriads(subgraphs, census, census.ct)
+
+  ## tetrads ##
+
+  string.four <- c("5", "10", "12", "20")
+  tetrad.string <- partitionEvenString(subgraphs[string.four])
+  tetrad.string <- do.call(rbind, tetrad.string)
+  row.names(tetrad.string) <- NULL
+
+  # star graph: 1 central, 3 peripheral vertices
+  star.four <- c("25", "45")
+  tetrad.stars <- starGraph(subgraphs, star.four)
+
+  # one complete graph all four vertices connect
+  complete.four <- t(names(igraph::V(subgraphs[["19"]])))
+  complete.four <- stats::setNames(data.frame(complete.four), paste0("v", 1:4))
+
+  ## pentads: five-in-a-row string ##
+
+  string.five <- subgraphs[names(census[census.ct == 5])]
+  pentads <- partitionOddString(string.five)
+
+  ## sextad: 6-in-a-row strings ##
+
+  string.six <- subgraphs[names(census[census.ct == 6])]
+  sextads <- partitionEvenString(string.six)
+  sextads <- do.call(rbind, sextads)
+  row.names(sextads) <- NULL
+
+  ## Group 1: 7 vertices (triadic) ##
+
+  septad <- list(v1 = c("507", "583", "348"),
+                 v2 = c("38", "1"),
+                 v3 = c("552", "393"))
+
+  ## Group 15: 10 vertices ##
+
+  decad <- list(v1 = c("224", "481", "213", "68"),
+                v2 = c("49", "325", "428", "296"),
+                v3 = c("449", "45"))
+
+  symmetric <- rbind(dyads[, -1], triads, tetrad.string, tetrad.stars, pentads,
+    sextads)
+
+  dat <- cbind(symmetric[1:35, ],
+    stats::setNames(symmetric[36:70, ], c("v3", "v4")))
+
+  dat <- rbind(dat, complete.four)
+
+  lst <- c(dat)
+
+  lst$v1 <- c(lst$v1, decad$v1)
+  lst$v2 <- c(lst$v2, decad$v2)
+  lst$v3 <- c(lst$v3, decad$v3)
+
+  lst$v4 <- c(lst$v4, septad$v1)
+  lst$v3 <- c(lst$v3, septad$v2)
+  lst$v1 <- c(lst$v1, septad$v3)
+
+  lst$v2 <- c(lst$v2, symmetric[71, "v1"])
+  lst$v3 <- c(lst$v3, symmetric[71, "v2"])
+  lst
+}
+
+#' Network graph of addresses with selected inter-point distance.
+#'
+#' @param inter.point.dist Numeric. Ceiling for overlapping points.
+#' @return An 'igraph' object.
+#' @export
+
+thresholdAddressGraph <- function(inter.point.dist = 0.15) {
+  idx <- data.frame(t(utils::combn(cholera::fatalities.address$anchor, 2)))
+  names(idx) <- c("v1", "v2")
+  d <- stats::dist(cholera::fatalities.address[, c("x", "y")])
+  addr.dist <- data.frame(idx, d = c(d))
+  overlap <- addr.dist[addr.dist$d <= inter.point.dist, ]
+  edge.list <- overlap[, c("v1", "v2")]
+  igraph::graph_from_data_frame(edge.list, directed = FALSE)
+}
+
+#' Rotate, stack and partition open triads.
+#'
+#' @param subgraphs Object. 'igraph' list of graphs.
+#' @param census Object. List of graph vertices.
+#' @param census.ct Object. Count of graph vertices.
+#' @return An R data frame.
+#' @export
+
+openTriads <- function(subgraphs, census, census.ct) {
+  dat <- subgraphs[names(census[census.ct == 3])]
+
+  triads <- lapply(names(dat), function(nm) {
+    v <- as.numeric(igraph::as_edgelist(subgraphs[[nm]]))
+    v.table <- table(v)
+    pivot <- as.numeric(names(v.table[which.max(v.table)]))
+    others <- setdiff(as.numeric(names(v.table)), pivot)
+    list(pivot = pivot, others = others)
+  })
+
+  even <- triads[seq_along(triads) %% 2 == 0]
+  odd <- triads[seq_along(triads) %% 2 == 1]
+
+  v1 <- c(unlist(lapply(even, function(x) x$others)),
+          unlist(lapply(odd, function(x) x$pivot)))
+  v2 <- c(unlist(lapply(odd, function(x) x$others)),
+          unlist(lapply(even, function(x) x$pivot)))
+  data.frame(v1, v2)
+}
+
+#' Decompose and partition star graphs.
+#'
+#' Used for graphs with 1 core and 3 peripheral (4) vertices.
+#' @param subgraphs Object. 'igraph' list of graphs.
+#' @param group Character. Vector of group IDs.
+#' @return An R data frame.
+#' @export
+
+starGraph <- function(subgraphs, group = c("25", "45")) {
+  dat <- subgraphs[group]
+  vertices <- lapply(dat, function(x) {
+    v <- as.numeric(igraph::as_edgelist(x))
+    v.table <- table(v)
+    core <- as.numeric(names(v.table[which.max(v.table)]))
+    periphery <- setdiff(as.numeric(names(v.table)), core)
+    list(core = core, periphery = periphery)
+  })
+  v1 <- c(vertices[[1]]$periphery, vertices[[2]]$core)
+  v2 <- c(vertices[[1]]$core, vertices[[2]]$periphery)
+  data.frame(v1, v2)
+}
+
 #' Rotate, stack and partition even n-tuple strings (n >= 4).
 #'
 #' Separate even and odd vertices to avoid point overlap.
@@ -54,74 +207,6 @@ partitionEvenString <- function(g) {
     data.frame(v1 = dat[seq_along(dat) %% 2 != 0],
                v2 = dat[seq_along(dat) %% 2 == 0])
   })
-}
-
-#' Network graph of addresses with selected inter-point distance.
-#'
-#' @param inter.point.dist Numeric. Ceiling for overlapping points.
-#' @return An 'igraph' object.
-#' @export
-
-thresholdAddressGraph <- function(inter.point.dist = 0.15) {
-  idx <- data.frame(t(utils::combn(cholera::fatalities.address$anchor, 2)))
-  names(idx) <- c("v1", "v2")
-  d <- stats::dist(cholera::fatalities.address[, c("x", "y")])
-  addr.dist <- data.frame(idx, d = c(d))
-  overlap <- addr.dist[addr.dist$d <= inter.point.dist, ]
-  edge.list <- overlap[, c("v1", "v2")]
-  igraph::graph_from_data_frame(edge.list, directed = FALSE)
-}
-
-#' Rotate, stack and partition open triads.
-#'
-#' @param subgraphs Object. 'igraph' list of graphs.
-#' @param census Object. List of graph vertices.
-#' @param census.ct Object. Count of graph vertices.
-#' @return An R data frame.
-#' @export
-
-openTriads <- function(subgraphs, census, census.ct) {
-  dat <- subgraphs[names(census[census.ct == 3])]
-
-  triads <- lapply(names(dat), function(nm) {
-    v <- as.numeric(igraph::as_edgelist(subgraphs[[nm]]))
-    v.table <- table(v)
-    pivot <- as.numeric(names(v.table[which.max(v.table)]))
-    others <- setdiff(as.numeric(names(v.table)), pivot)
-    list(pivot = pivot, others = others)
-  })
-
-  even <- triads[seq_along(triads) %% 2 == 0]
-  odd <- triads[seq_along(triads) %% 2 == 1]
-
-  v1 <- c(unlist(lapply(even, function(x) x$others)),
-          unlist(lapply(odd, function(x) x$pivot)))
-  v2 <- c(unlist(lapply(odd, function(x) x$others)),
-          unlist(lapply(even, function(x) x$pivot)))
-  data.frame(v1, v2)
-}
-
-
-#' Decompose and partition star graphs.
-#'
-#' Used for graphs with 1 core and 3 peripheral (4) vertices.
-#' @param subgraphs Object. 'igraph' list of graphs.
-#' @param group Character. Vector of group IDs.
-#' @return An R data frame.
-#' @export
-
-starGraph <- function(subgraphs, group = c("25", "45")) {
-  dat <- subgraphs[group]
-  vertices <- lapply(dat, function(x) {
-    v <- as.numeric(igraph::as_edgelist(x))
-    v.table <- table(v)
-    core <- as.numeric(names(v.table[which.max(v.table)]))
-    periphery <- setdiff(as.numeric(names(v.table)), core)
-    list(core = core, periphery = periphery)
-  })
-  v1 <- c(vertices[[1]]$periphery, vertices[[2]]$core)
-  v2 <- c(vertices[[1]]$core, vertices[[2]]$periphery)
-  data.frame(v1, v2)
 }
 
 #' Rotate, stack and partition odd n-tuple strings (n >= 5).
