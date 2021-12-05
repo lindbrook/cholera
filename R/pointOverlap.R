@@ -1,18 +1,11 @@
-#' Census of overlapping fatalties
+#' Census of overlapping fatalties.
 #'
 #' "Resolution" of georeferenced points with pch = 46 (i.e., pch = ".").
 #' @param inter.point.dist Numeric. Ceiling for overlapping points.
 #' @export
 
 pointOverlap <- function(inter.point.dist = 0.15) {
-  idx <- data.frame(t(utils::combn(cholera::fatalities.address$anchor, 2)))
-  names(idx) <- c("v1", "v2")
-  d <- stats::dist(cholera::fatalities.address[, c("x", "y")])
-  addr.dist <- data.frame(idx, d = c(d))
-  overlap <- addr.dist[addr.dist$d <= inter.point.dist, ]
-  edge.list <- overlap[, c("v1", "v2")]
-  g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
-
+  g <- thresholdAddressGraph(inter.point.dist = inter.point.dist)
   subgraphs <- igraph::decompose(g)
   names(subgraphs) <- seq_along(subgraphs)
 
