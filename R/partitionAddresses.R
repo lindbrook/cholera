@@ -88,7 +88,7 @@ partitionAddresses <- function(inter.point.dist = 0.15) {
 #'
 #' @param inter.point.dist Numeric. Ceiling for overlapping points.
 #' @return An 'igraph' object.
-#' @export
+#' @noRd
 
 thresholdAddressGraph <- function(inter.point.dist = 0.15) {
   idx <- data.frame(t(utils::combn(cholera::fatalities.address$anchor, 2)))
@@ -106,7 +106,7 @@ thresholdAddressGraph <- function(inter.point.dist = 0.15) {
 #' @param census Object. List of graph vertices.
 #' @param census.ct Object. Count of graph vertices.
 #' @return An R data frame.
-#' @export
+#' @noRd
 
 openTriads <- function(subgraphs, census, census.ct) {
   dat <- subgraphs[names(census[census.ct == 3])]
@@ -135,7 +135,7 @@ openTriads <- function(subgraphs, census, census.ct) {
 #' @param subgraphs Object. 'igraph' list of graphs.
 #' @param group Character. Vector of group IDs.
 #' @return An R data frame.
-#' @export
+#' @noRd
 
 starGraph <- function(subgraphs, group = c("25", "45")) {
   dat <- subgraphs[group]
@@ -156,7 +156,7 @@ starGraph <- function(subgraphs, group = c("25", "45")) {
 #' Separate even and odd vertices to avoid point overlap.
 #' @param g Object. 'igraph' list of graphs.
 #' @return An R data frame.
-#' @export
+#' @noRd
 
 partitionEvenString <- function(g) {
   edge.list.ordered <- lapply(g, function(x) {
@@ -214,7 +214,7 @@ partitionEvenString <- function(g) {
 #' @param subgraphs Object. 'igraph' list of graphs.
 #' @param group Character. Vector of group IDs.
 #' @return An R data frame.
-#' @export
+#' @noRd
 
 partitionOddString <- function(subgraphs, group = c("6", "7")) {
   dat <- subgraphs[group]
