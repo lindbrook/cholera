@@ -51,7 +51,7 @@ partitionAddresses <- function(inter.point.dist = 0.15) {
 
   ## Group 1: 7 vertices (triadic) ##
 
-  septad <- list(v1 = c("507", "583", "348"),
+  septad <- list(v1 = c("507", "553", "348"),
                  v2 = c("38", "1"),
                  v3 = c("552", "393"))
 
