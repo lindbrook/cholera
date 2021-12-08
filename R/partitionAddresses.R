@@ -81,6 +81,9 @@ partitionAddresses <- function(inter.point.dist = 0.15) {
 
   lst$v2 <- c(lst$v2, symmetric[71, "v1"])
   lst$v3 <- c(lst$v3, symmetric[71, "v2"])
+
+  # add addresses with distances above inter-point threshold
+  lst$v5 <- paste(setdiff(cholera::fatalities.address$anchor, unlist(lst)))
   lst
 }
 

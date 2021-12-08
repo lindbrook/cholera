@@ -8,6 +8,7 @@ cholera 0.7.9.9008
 - rename partitionStringGraph() to partitionEvenString().
 - add partitionOddString().
 - add partitionAddresses().
+- add latlongAddress().
 
 
 cholera 0.7.9.9007
