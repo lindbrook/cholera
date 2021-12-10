@@ -59,7 +59,7 @@ plot.pointOverlapRoad <- function(x, data = "ntuple", type = "map", ...) {
                                     v2 = as.numeric(sub.edge.list[, 2]))
 
         plot(cholera::roads[cholera::roads$id %in% ntuple[[nm]], vars],
-          pch = NA)
+          pch = NA, asp = 1.6)
         addRoads()
 
         invisible(lapply(seq_along(sub.edge.list$v1), function(i) {
