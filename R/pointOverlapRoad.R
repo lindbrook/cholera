@@ -72,9 +72,11 @@ plot.pointOverlapRoad <- function(x, data = "ntuple", type = "map", ...) {
                    col = grDevices::adjustcolor("red", alpha.f = 2/3))
         }))
 
+        invisible(lapply(ntuple[[nm]], function(id) {
+          text(cholera::roads[cholera::roads$id == id, vars], labels = id)
+        }))
+
         sel <- cholera::roads$id %in% ntuple[[nm]]
-        text(cholera::roads[sel, vars], col = "black", cex = 1,
-          labels = ntuple[[nm]])
         points(cholera::roads[!sel, vars], col = "gray")
         title(main = rd.nm, sub = paste("Group", nm))
       }))
