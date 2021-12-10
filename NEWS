@@ -2,6 +2,8 @@ cholera 0.7.9.9009
 ==================
 
 - add roadPointDistance().
+- add thresholdRoadGraph().
+- add pointOverlapRoad().
 
 
 cholera 0.7.9.9008
