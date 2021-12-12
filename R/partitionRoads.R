@@ -21,9 +21,7 @@ partitionRoads <- function(inter.point.dist = 0.15) {
   ## triads ##
 
   open.triads <- openRoadTriads(subgraphs, census, census.ct)
-
-  closed.triad <- data.frame(t(as.numeric(census$`11`)))
-  names(closed.triad) <- paste0("v", 1:3)
+  closed.triad <- as.numeric(census$`11`)
 
   ## tetrads ##
 
