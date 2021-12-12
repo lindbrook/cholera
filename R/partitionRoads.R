@@ -20,7 +20,7 @@ partitionRoads <- function(inter.point.dist = 0.15) {
 
   ## triads ##
 
-  open.triads <- openRoadTriads(subgraphs, census, census.ct)
+  open.triads <- openTriadRoads(subgraphs, census, census.ct)
   closed.triad <- as.numeric(census$`11`)
 
   ## tetrads ##
@@ -76,7 +76,7 @@ thresholdRoadGraph <- function(inter.point.dist = 0.15) {
 #' @return An R data frame.
 #' @noRd
 
-openRoadTriads <- function(subgraphs, census, census.ct) {
+openTriadRoads <- function(subgraphs, census, census.ct) {
   dat <- subgraphs[names(census[census.ct == 3])]
   dat <- dat[names(dat) != "11"]
 
