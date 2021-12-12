@@ -20,7 +20,7 @@ partitionAddresses <- function(inter.point.dist = 0.15) {
 
   ## triads ##
 
-  triads <- openTriads(subgraphs, census, census.ct)
+  triads <- openTriadAddresses(subgraphs, census, census.ct)
 
   ## tetrads ##
 
@@ -111,7 +111,7 @@ thresholdAddressGraph <- function(inter.point.dist = 0.15) {
 #' @return An R data frame.
 #' @noRd
 
-openTriads <- function(subgraphs, census, census.ct) {
+openTriadAddresses <- function(subgraphs, census, census.ct) {
   dat <- subgraphs[names(census[census.ct == 3])]
 
   triads <- lapply(names(dat), function(nm) {
