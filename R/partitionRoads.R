@@ -40,11 +40,14 @@ partitionRoads <- function(inter.point.dist = 0.15) {
     stats::setNames(symmetric[33:64, ], c("v3", "v4")))
 
   dat <- rbind(dat, triad.tail)
-
-  last.row <- data.frame(closed.triad, v4 = symmetric[nrow(symmetric), "v1"])
-  dat <- rbind(dat, last.row)
   lst <- c(dat)
-  lst$v1 <- c(lst$v1, symmetric[nrow(symmetric), "v2"])
+
+  lst$v1 <- c(lst$v1, closed.triad[1])
+  lst$v2 <- c(lst$v2, closed.triad[2])
+  lst$v3 <- c(lst$v3, closed.triad[3])
+
+  lst$v1 <- c(lst$v1, symmetric[nrow(symmetric), "v1"])
+  lst$v2 <- c(lst$v2, symmetric[nrow(symmetric), "v2"])
   lst
 }
 
