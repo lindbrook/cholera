@@ -3,20 +3,25 @@
 #' @param tif Character. Georeferenced QGIS TIFF file.
 # #' @param cutpoint Numeric. Cutpoint for hierarchical cluster analysis.
 #' @param k Numeric. Number of clusters, k, to identify.
+#' @param path Character. e.g., "~/Documents/Data/".
 #' @export
 
-latlongCoordinates <- function(tif, k) {
+latlongCoordinatesC <- function(tif, k, path) {
   u.data <- pointsFromGeoTIFF(tif)
   names(u.data)[3] <- "modified"
-  sel <- u.data$modified != 0 & u.data$modified != 255
-  obs.x.min <- min(u.data[sel, "x"])
-  obs.x.max <- max(u.data[sel, "x"])
-  obs.y.min <- min(u.data[sel, "y"])
-  obs.y.max <- max(u.data[sel, "y"])
-  obs.x <- u.data$x >= obs.x.min & u.data$x <= obs.x.max
-  obs.y <- u.data$y >= obs.y.min & u.data$y <= obs.y.max
-  filter <- obs.x & obs.y & u.data$modified != 255
-  f.data <- u.data[filter, c("x", "y")]
+
+  image.data <- u.data[u.data$modified == 255, c("x", "y")]
+  image.chull <- grDevices::chull(image.data)
+  image.chull <- image.data[image.chull, ]
+
+  map.data <- u.data[u.data$modified != 255, c("x", "y")]
+
+  # use ortho.rect as polygon filter
+  ortho.rect <- cholera::ortho.rect
+  ortho.rect.filter <- sp::point.in.polygon(map.data$x, map.data$y,
+    ortho.rect$x, ortho.rect$y)
+
+  f.data <- map.data[ortho.rect.filter != 0, ]
 
   distances <- stats::dist(f.data)
   tree <- stats::hclust(distances)
@@ -26,20 +31,94 @@ latlongCoordinates <- function(tif, k) {
 
   coords <- lapply(seq_along(pts), function(i) {
     rect.data <- f.data[pts[[i]], ]
-    y.val <- sort(unique(rect.data$y), decreasing = FALSE) # quadrant II adj
-    x.val <- sort(unique(rect.data$x))
-    row.element.ct <- as.data.frame(table(rect.data$y),
-      stringsAsFactors = FALSE)
-    col.element.ct <- as.data.frame(table(rect.data$x),
-      stringsAsFactors = FALSE)
-    row.id <- kmeansRectanlge(row.element.ct$Freq)
-    col.id <- kmeansRectanlge(col.element.ct$Freq)
-    rect.x <- x.val[range(col.id)]
-    rect.y <- y.val[range(row.id)]
-    longitude <- mean(rect.x)
-    latitude <- mean(rect.y)
-    data.frame(id = i, long = longitude, lat = latitude)
+    tbl <- t(table(rect.data))
+
+    if (all(dim(tbl) > 1)) {
+      row.order <- order(as.numeric(rownames(tbl)), decreasing = TRUE)
+      col.order <- order(as.numeric(colnames(tbl)))
+
+      row.chk <- identical(row.order, seq_len(nrow(tbl)))
+      col.chk <- identical(col.order, seq_len(ncol(tbl)))
+
+      if (row.chk & !col.chk) {
+        tbl <- tbl[, col.order]
+      } else if (!row.chk & col.chk) {
+        tbl <- tbl[row.order, ]
+      } else if (!row.chk & !col.chk) {
+        tbl <- tbl[row.chk, col.order]
+      }
+
+      # top to bottom point orientation
+      row.element.ct <- as.data.frame(table(rect.data$y),
+        stringsAsFactors = FALSE)
+      row.element.ct$Var1 <- as.numeric(row.element.ct$Var1)
+      sel <- order(row.element.ct$Var1, decreasing = TRUE)
+      row.element.ct <- row.element.ct[sel, ]
+      row.names(row.element.ct) <- NULL
+
+      # left to right point orientation
+      col.element.ct <- as.data.frame(table(rect.data$x),
+        stringsAsFactors = FALSE)
+      col.element.ct$Var1 <- as.numeric(col.element.ct$Var1)
+      sel <- order(col.element.ct$Var1)
+      col.element.ct <- col.element.ct[sel, ]
+      row.names(col.element.ct) <- NULL
+
+      max.row <- max(row.element.ct$Freq)
+      max.col <- max(col.element.ct$Freq)
+
+      row.idx <- lapply(max.col:nrow(row.element.ct), function(endpt) {
+        delta <- max.col - 1
+        seq(endpt - delta, endpt)
+      })
+
+      col.idx <- lapply(max.row:nrow(col.element.ct), function(endpt) {
+        delta <- max.row - 1
+        seq(endpt - delta, endpt)
+      })
+
+      idxB <- expand.grid(seq_along(row.idx), seq_along(col.idx))
+
+      point.ct <- vapply(seq_len(nrow(idxB)), function(i) {
+        r.sel <- row.idx[[idxB[i, "Var1"]]]
+        c.sel <- col.idx[[idxB[i, "Var2"]]]
+        sum(tbl[r.sel, c.sel])
+      }, integer(1L))
+
+      sel <- which.max(point.ct)
+      row.id <- row.idx[[idxB[sel, "Var1"]]]
+      col.id <- col.idx[[idxB[sel, "Var2"]]]
+
+      lon <- mean(col.element.ct[col.id, "Var1"])
+      lat <- mean(row.element.ct[row.id, "Var1"])
+      data.frame(id = i, lon = lon, lat = lat)
+
+    } else {
+      lonlat <- colMeans(rect.data)
+      data.frame(id = i, lon = lonlat["x"], lat = lonlat["y"])
+    }
   })
 
   do.call(rbind, coords)
+}
+
+deltaRank <- function(vals) {
+  idx <- seq_along(vals$coord)[-length(vals$coord)]
+  delta <- vapply(idx, function(i) {
+    abs(vals$coord[i] - vals$coord[i + 1])
+  }, numeric(1L))
+  delta.rank <- data.frame(delta = sort(unique(delta)))
+  delta.rank$rank <- order(delta.rank$delta)
+  delta.rank
+}
+
+coordsByDelta <- function(vals, delta.rank) {
+  idx <- seq_along(vals$coord)[-length(vals$coord)]
+  delta <- vapply(idx, function(i) {
+    abs(vals$coord[i] - vals$coord[i + 1])
+  }, numeric(1L))
+  dat <- data.frame(coordA = vals$coord[-length(vals$coord)], delta = delta)
+  lapply(rev(delta.rank$delta), function(d) {
+    dat[dat$delta == d, ]
+  })
 }
