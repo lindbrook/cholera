@@ -4,6 +4,7 @@ cholera 0.7.9.9009
 - add roadPointDistance().
 - add thresholdRoadGraph().
 - add pointOverlapRoad().
+- add partitionRoads() and openRoadTriads().
 
 
 cholera 0.7.9.9008
