@@ -18,7 +18,7 @@ latlongAddress <- function(path, multi.core = TRUE) {
   coords <- parallel::mclapply(seq_along(addr.partitions), function(i) {
     tif <- paste0(pre, i, post)
     k <- ks[i]
-    latlongCoordinatesC(tif, k, path)
+    latlongCoordinates(tif, k, path)
   }, mc.cores = cores)
 
   stop <- cumsum(ks)
