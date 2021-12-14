@@ -35,7 +35,7 @@ latitudeLongitudeFatality <- function(path, subparts = 4, multi.core = TRUE) {
 
   coords <- parallel::mclapply(seq_along(subdivided.partitions), function(i) {
     tif <- paste0(pre, num.id[i], post)
-    latlongCoordinatesC(tif, k[i], path)
+    latlongCoordinates(tif, k[i], path)
   }, mc.cores = cores)
 
   start <- c(1, cumsum(k)[-length(k)] + 1)

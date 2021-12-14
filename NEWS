@@ -1,10 +1,18 @@
+cholera 0.7.9.9010
+==================
+
+- archive latlongCoordinates() and latlongCoordinatesB().
+- rename latlongCoordinatesC() to latlongCoordinates().
+
+
 cholera 0.7.9.9009
 ==================
 
 - add roadPointDistance().
 - add thresholdRoadGraph().
 - add pointOverlapRoad().
-- add partitionRoads() and openRoadTriads().
+- add openRoadTriads().
+- add partitionRoads().
 
 
 cholera 0.7.9.9008

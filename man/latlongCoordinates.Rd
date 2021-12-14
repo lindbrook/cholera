@@ -4,12 +4,14 @@
 \alias{latlongCoordinates}
 \title{Compute Georeferenced Latitude and Longitude (prototype).}
 \usage{
-latlongCoordinates(tif, k)
+latlongCoordinates(tif, k, path)
 }
 \arguments{
 \item{tif}{Character. Georeferenced QGIS TIFF file.}
 
 \item{k}{Numeric. Number of clusters, k, to identify.}
+
+\item{path}{Character. e.g., "~/Documents/Data/".}
 }
 \description{
 Compute Georeferenced Latitude and Longitude (prototype).

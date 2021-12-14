@@ -14,7 +14,7 @@ latlongRoads <- function(path, multi.core = TRUE) {
     nm <- unlist(strsplit(names(endpt.ids[i]), "set"))[2]
     tif <- paste0(path, "roads", nm, "_modified.tif")
     k <- length(ids)
-    geo.coords <- latlongCoordinatesC(tif, k, path)
+    geo.coords <- latlongCoordinates(tif, k, path)
     nom.coords <- cholera::roads[cholera::roads$id %in% ids, ]
 
     # rotate nominal coords to approximate georeferenced coords
