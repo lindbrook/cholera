@@ -6,7 +6,7 @@
 #' @param path Character. e.g., "~/Documents/Data/".
 #' @export
 
-latlongCoordinatesC <- function(tif, k, path) {
+latlongCoordinates <- function(tif, k, path) {
   u.data <- pointsFromGeoTIFF(tif)
   names(u.data)[3] <- "modified"
 
