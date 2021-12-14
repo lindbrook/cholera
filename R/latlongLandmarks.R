@@ -7,8 +7,8 @@ latlongLandmarks <- function(path) {
   tif <- "landmarks_modified.tif"
   dat <- cholera::landmarks
   k <- nrow(dat)
-  coords <- latlongCoordinatesB(paste0(path, tif), k)
-  coords.scale <- data.frame(id = coords$id, scale(coords[, c("long", "lat")]))
+  coords <- latlongCoordinates(paste0(path, tif), k, path)
+  coords.scale <- data.frame(id = coords$id, scale(coords[, c("lon", "lat")]))
 
   tmp <- lapply(dat$case, function(id) rotatePoint(id, dataset = "landmarks"))
   tmp <- do.call(rbind, tmp)

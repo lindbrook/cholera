@@ -21,7 +21,7 @@ latitudeLongitudeFrame <- function(path, multi.core = TRUE) {
   tiff <- paste0(path, pre, post)
 
   geo.coords <- parallel::mclapply(seq_along(tiff), function(i) {
-    latlongCoordinatesB(tiff[i], k[i], path)
+    latlongCoordinates(tiff[i], k[i], path)
   }, mc.cores = cores)
 
   geo.coords <- lapply(seq_along(geo.coords), function(i) {
@@ -34,7 +34,7 @@ latitudeLongitudeFrame <- function(path, multi.core = TRUE) {
   rds <- lapply(pts, function(x) dat[dat$id %in% x, ])
 
   rds.rotate.scale <- parallel::mclapply(rds, function(x) {
-    tmp <- lapply(x$point.id, function(y) {
+    tmp <- lapply(x$id, function(y) {
       rotatePoint(y, dataset = "roads")
     })
     tmp <- do.call(rbind, tmp)
