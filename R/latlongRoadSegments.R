@@ -7,14 +7,15 @@
 #' @export
 
 latlongRoadSegments <- function(path) {
-  dat <- latitudeLongitudeRoads(path)
-  out <- lapply(unique(dat$street), function(i) {
+  vars <- c("lon", "lat")
+  dat <- latlongRoads(path)
+  out <- lapply(unique(dat$street), function(i) { # minor benefit from mclapply
     st <- dat[dat$street == i, ]
-    names(st)[names(st) %in% c("long", "lat")] <- c("long1", "lat1")
-    seg.end <- st[-1, c("long1", "lat1")]
-    names(seg.end) <- c("long2", "lat2")
+    names(st)[names(st) %in% vars] <- paste0(vars, 1)
+    seg.end <- st[-1, paste0(vars, 1)]
+    names(seg.end) <- paste0(vars, 2)
     st <- cbind(st[-nrow(st), c("street", "id", "name")],
-                st[-nrow(st), c("long1", "lat1")],
+                st[-nrow(st), paste0(vars, 1)],
                 seg.end)
     st$id <- paste0(st$street, "-", seq_len(nrow(st)))
     st
@@ -25,10 +26,10 @@ latlongRoadSegments <- function(path) {
 }
 
 segmentDistance <- function(dat) {
+  vars <- c("lon", "lat")
   vapply(seq_len(nrow(dat)), function(i) {
-    p1 <- dat[i, c("long1", "lat1")]
-    p2 <- dat[i, c("long2", "lat2")]
-    vars <- c("long", "lat")
+    p1 <- dat[i, paste0(vars, 1)]
+    p2 <- dat[i, paste0(vars, 2)]
     names(p1) <- vars
     names(p2) <- vars
     sp::spDistsN1(as.matrix(p1), as.matrix(p2), longlat = TRUE) * 1000L
