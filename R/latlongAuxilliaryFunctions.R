@@ -119,6 +119,27 @@ rotatePoint <- function(id = 1, dataset = "roads") {
   data.frame(x = x.prime, y = y.prime, row.names = NULL)
 }
 
+#' Compute estimated length of 'road.segments' in meters.
+#'
+#' @param dat Object. R data frame of road segments
+#' @param latlong Logical. Data use longitude/latitude or native map coordinates.
+#' @return An R data frame.
+#' @noRd
+
+segmentDistance <- function(dat, latlong = FALSE) {
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
+  vapply(seq_len(nrow(dat)), function(i) {
+    p1 <- dat[i, paste0(vars, 1)]
+    p2 <- dat[i, paste0(vars, 2)]
+    names(p1) <- vars
+    names(p2) <- vars
+    if (latlong) {
+      sp::spDistsN1(as.matrix(p1), as.matrix(p2), longlat = TRUE) * 1000L
+    } else unitMeter(stats::dist(rbind(p1, p2)))
+  }, numeric(1L))
+}
+
 #' Create subsetted PDFs (prototype).
 #'
 #' Reduce over-printing of points.
