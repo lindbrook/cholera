@@ -1,9 +1,8 @@
-#' Reshape 'roads' data frame into 'road.segments' data frame.
+#' Compute longitude and latitude version of 'road.segments' data frame.
 #'
 #' Used to integrate pumps and cases into road network when computing walking neighborhoods.
 #' @param path Character. e.g., "~/Documents/Data/"
 #' @return An R data frame.
-#' @note This function documents the code that generates \code{\link[cholera]{road.segments}}.
 #' @export
 
 latlongRoadSegments <- function(path) {

@@ -2,7 +2,7 @@
 % Please edit documentation in R/latlongRoadSegments.R
 \name{latlongRoadSegments}
 \alias{latlongRoadSegments}
-\title{Reshape 'roads' data frame into 'road.segments' data frame.}
+\title{Compute longitude and latitude version of 'road.segments' data frame.}
 \usage{
 latlongRoadSegments(path)
 }
@@ -14,7 +14,4 @@ An R data frame.
 }
 \description{
 Used to integrate pumps and cases into road network when computing walking neighborhoods.
-}
-\note{
-This function documents the code that generates \code{\link[cholera]{road.segments}}.
 }
