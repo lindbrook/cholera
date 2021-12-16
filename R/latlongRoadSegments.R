@@ -20,17 +20,6 @@ latlongRoadSegments <- function(path) {
     st
   })
   out <- do.call(rbind, out)
-  out$distance <- segmentDistance(out)
+  out$distance <- segmentDistance(out, latlong = TRUE)
   out
-}
-
-segmentDistance <- function(dat) {
-  vars <- c("lon", "lat")
-  vapply(seq_len(nrow(dat)), function(i) {
-    p1 <- dat[i, paste0(vars, 1)]
-    p2 <- dat[i, paste0(vars, 2)]
-    names(p1) <- vars
-    names(p2) <- vars
-    sp::spDistsN1(as.matrix(p1), as.matrix(p2), longlat = TRUE) * 1000L
-  }, numeric(1L))
 }
