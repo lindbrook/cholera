@@ -3,6 +3,8 @@ cholera 0.7.9.9012
 
 - add amended segmentDistance() auxilliary function.
 - use segmentDistance() in latlongRoadSegments().
+- amend latlongPumps() TIFF file names.
+- temporarily export segmentDistance().
 
 
 cholera 0.7.9.9011

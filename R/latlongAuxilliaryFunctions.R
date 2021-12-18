@@ -124,7 +124,7 @@ rotatePoint <- function(id = 1, dataset = "roads") {
 #' @param dat Object. R data frame of road segments
 #' @param latlong Logical. Data use longitude/latitude or native map coordinates.
 #' @return An R data frame.
-#' @noRd
+#' @export
 
 segmentDistance <- function(dat, latlong = FALSE) {
   if (latlong) vars <- c("lon", "lat")
