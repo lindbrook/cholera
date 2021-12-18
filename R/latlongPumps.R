@@ -6,12 +6,12 @@
 
 latlongPumps <- function(path, vestry = FALSE) {
   if (vestry) {
-    tif <- "pump.vestry_modified.tif"
+    tif <- "pumps.vestry_modified.tif"
     k <- 14
     dat <- cholera::pumps.vestry
     dataset <- "pumps.vestry"
   } else {
-    tif <- "pump_modified.tif"
+    tif <- "pumps_modified.tif"
     k <- 13
     dat <- cholera::pumps
     dataset <- "pumps"
