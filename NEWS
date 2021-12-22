@@ -3,6 +3,7 @@ cholera 0.7.9.9013
 
 - use partitionRoads() in latlongRoads().
 - match and append lat-long for duplicated "roads" points.
+- archive partitionRoadEndpoints() and related functions.
 
 
 cholera 0.7.9.9012
