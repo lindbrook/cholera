@@ -8,8 +8,8 @@
 latlongRoadSegments <- function(path) {
   vars <- c("lon", "lat")
   dat <- latlongRoads(path)
-  out <- lapply(unique(dat$street), function(i) { # minor benefit from mclapply
-    st <- dat[dat$street == i, ]
+  out <- lapply(unique(dat$street), function(x) { # minor benefit from mclapply
+    st <- dat[dat$street == x, ]
     names(st)[names(st) %in% vars] <- paste0(vars, 1)
     seg.end <- st[-1, paste0(vars, 1)]
     names(seg.end) <- paste0(vars, 2)
