@@ -2,6 +2,7 @@ cholera 0.7.9.9013
 ==================
 
 - use partitionRoads() in latlongRoads().
+- match and append lat-long for duplicated "roads" points.
 
 
 cholera 0.7.9.9012

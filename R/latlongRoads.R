@@ -8,8 +8,8 @@
 latlongRoads <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
-  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  rd <- rd[!duplicated(rd[, c("x", "y")]), ]
+  rd0 <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rd <- rd0[!duplicated(rd0[, c("x", "y")]), ]
 
   # endpt.ids <- partitionRoadEndpoints()
   partition.rds <- partitionRoads()
@@ -56,20 +56,13 @@ latlongRoads <- function(path, multi.core = TRUE) {
   coords <- coords[, c(names(cholera::roads), c("lon", "lat"))]
   coords$id2 <- paste0(coords$x, "-", coords$y)
 
-  rds <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  duplicates <- duplicated(rds[, c("x", "y")])
-  rds.dup <- rds[duplicates, ]
-  rds.dup$id2 <- paste0(rds.dup$x, "-", rds.dup$y)
+  rd0$id2 <- paste0(rd0$x, "-", rd0$y)
 
-  rds.dup <- lapply(unique(rds.dup$id2), function(x) {
-    cbind(rds.dup[rds.dup$id2 == x, ], coords[coords$id2 == x, c("lon", "lat")])
-  })
-
-  rds.dup <- do.call(rbind, rds.dup)
-  rds.dup$id2 <- NULL
-  coords$id2 <- NULL
-  coords <- rbind(coords, rds.dup)
-  coords[order(coords$id), ]
+  out <- merge(rd0, coords[, c("lon", "lat", "id2")], all.x = TRUE, by = "id2")
+  out$id2 <- NULL
+  row.names(out) <- NULL
+  out <- out[order(out$id), ]
+  out
 }
 
 #' Partition road endpoints to avoid over-printing of points (prototype).
