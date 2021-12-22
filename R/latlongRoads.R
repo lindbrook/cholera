@@ -7,12 +7,22 @@
 
 latlongRoads <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
-  endpt.ids <- partitionRoadEndpoints()
 
-  coords <- parallel::mclapply(seq_along(endpt.ids), function(i) {
-    ids <- endpt.ids[[i]]
-    nm <- unlist(strsplit(names(endpt.ids[i]), "set"))[2]
-    tif <- paste0(path, "roads", nm, "_modified.tif")
+  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rd <- rd[!duplicated(rd[, c("x", "y")]), ]
+
+  # endpt.ids <- partitionRoadEndpoints()
+  partition.rds <- partitionRoads()
+  unpartition.rds <- setdiff(rd$id, unlist(partition.rds))
+
+  partition.rds <- c(partition.rds, list(unpartition.rds))
+  names(partition.rds)[length(partition.rds)] <-  paste0("v",
+    length(partition.rds))
+
+  coords <- parallel::mclapply(seq_along(partition.rds), function(i) {
+    ids <- partition.rds[[i]]
+    nm <- names(partition.rds[i])
+    tif <- paste0(path, "roads.", nm, "_modified.tif")
     k <- length(ids)
     geo.coords <- latlongCoordinates(tif, k, path)
     nom.coords <- cholera::roads[cholera::roads$id %in% ids, ]

@@ -1,3 +1,9 @@
+cholera 0.7.9.9013
+==================
+
+- use partitionRoads() in latlongRoads().
+
+
 cholera 0.7.9.9012
 ==================
 
