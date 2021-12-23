@@ -45,35 +45,35 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
     ortho.proj.test <- lapply(within.radius, function(seg.id) {
       sel <- rd.segs$id == seg.id
       segment.data <- rd.segs[sel, c(paste0(vars, 1), paste0(vars, 2))]
-      road.segment <- data.frame(x = c(segment.data$long1, segment.data$long2),
+      road.segment <- data.frame(x = c(segment.data$lon1, segment.data$lon2),
                                  y = c(segment.data$lat1, segment.data$lat2))
 
       ols <- stats::lm(y ~ x, data = road.segment)
       road.intercept <- stats::coef(ols)[1]
       road.slope <- stats::coef(ols)[2]
       ortho.slope <- -1 / road.slope
-      ortho.intercept <- case.data$lat - ortho.slope * case.data$long
+      ortho.intercept <- case.data$lat - ortho.slope * case.data$lon
 
-      long.proj <- (ortho.intercept - road.intercept) /
+      lon.proj <- (ortho.intercept - road.intercept) /
                    (road.slope - ortho.slope)
-      lat.proj <- road.slope * long.proj + road.intercept
-      seg.df <- data.frame(x = c(segment.data$long1, segment.data$long2),
+      lat.proj <- road.slope * lon.proj + road.intercept
+      seg.df <- data.frame(x = c(segment.data$lon1, segment.data$lon2),
                            y = c(segment.data$lat1, segment.data$lat2))
 
-      dist <- stats::dist(rbind(seg.df[1, ], c(long.proj, lat.proj))) +
-              stats::dist(rbind(seg.df[2, ], c(long.proj, lat.proj)))
+      dist <- stats::dist(rbind(seg.df[1, ], c(lon.proj, lat.proj))) +
+              stats::dist(rbind(seg.df[2, ], c(lon.proj, lat.proj)))
 
       bisect.segment <- signif(stats::dist(seg.df)) == signif(dist)
       bisect.test <- ifelse(is.na(bisect.segment), FALSE, bisect.segment)
 
       if (bisect.test) {
-        dat <- rbind(c(case.data$long, case.data$lat), c(long.proj, lat.proj))
+        dat <- rbind(c(case.data$lon, case.data$lat), c(lon.proj, lat.proj))
         ortho.dist <- c(stats::dist(dat))
-        ortho.pts <- data.frame(long.proj, lat.proj)
+        ortho.pts <- data.frame(lon.proj, lat.proj)
         data.frame(road.segment = seg.id, ortho.pts, ortho.dist, case)
       } else {
         null.out <- data.frame(matrix(NA, ncol = 5))
-        names(null.out) <- c("road.segment", "long.proj", "lat.proj",
+        names(null.out) <- c("road.segment", "lon.proj", "lat.proj",
           "ortho.dist", "case")
         null.out
       }
@@ -105,36 +105,36 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
   # keep original xy segment (due to bar orientation) and new ortho coords
   case.keep.segment <- chk$case[theta < 120]
 
-  vars <- c("long", "lat")
+  vars <- c("lon", "lat")
 
   keep.segment <- lapply(case.keep.segment, function(case) {
-    case.data <- anchor[anchor$case == case, vars]
+    case.data <- anchor[anchor$anchor == case, vars]
     correct.seg <- xy.ortho[xy.ortho$case == case, "road.segment"]
     sel <- rd.segs$id == correct.seg
     segment.data <- rd.segs[sel, c(paste0(vars, 1), paste0(vars, 2))]
-    road.segment <- data.frame(x = c(segment.data$long1, segment.data$long2),
+    road.segment <- data.frame(x = c(segment.data$lon1, segment.data$lon2),
                                y = c(segment.data$lat1, segment.data$lat2))
     ols <- stats::lm(y ~ x, data = road.segment)
     road.intercept <- stats::coef(ols)[1]
     road.slope <- stats::coef(ols)[2]
     ortho.slope <- -1 / road.slope
-    ortho.intercept <- case.data$lat - ortho.slope * case.data$long
-    long.proj <- (ortho.intercept - road.intercept) / (road.slope - ortho.slope)
-    lat.proj <- road.slope * long.proj + road.intercept
+    ortho.intercept <- case.data$lat - ortho.slope * case.data$lon
+    lon.proj <- (ortho.intercept - road.intercept) / (road.slope - ortho.slope)
+    lat.proj <- road.slope * lon.proj + road.intercept
 
-    seg.df <- data.frame(x = c(segment.data$long1, segment.data$long2),
+    seg.df <- data.frame(x = c(segment.data$lon1, segment.data$lon2),
                          y = c(segment.data$lat1, segment.data$lat2))
 
-    dist <- stats::dist(rbind(seg.df[1, ], c(long.proj, lat.proj))) +
-            stats::dist(rbind(seg.df[2, ], c(long.proj, lat.proj)))
+    dist <- stats::dist(rbind(seg.df[1, ], c(lon.proj, lat.proj))) +
+            stats::dist(rbind(seg.df[2, ], c(lon.proj, lat.proj)))
 
-    data.frame(road.segment = correct.seg, long.proj, lat.proj,
+    data.frame(road.segment = correct.seg, lon.proj, lat.proj,
       ortho.dist = c(dist), case = case, row.names = NULL)
-  })
+    })
 
   keep.segment <- do.call(rbind, keep.segment)
 
-  vars <- c("road.segment", "long.proj", "lat.proj", "ortho.dist")
+  vars <- c("road.segment", "lon.proj", "lat.proj", "ortho.dist")
 
   for (case in case.keep.segment) {
     tmp <- keep.segment[keep.segment$case == case, vars]
