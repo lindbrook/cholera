@@ -9,27 +9,13 @@
 
 latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
   cores <- multiCore(multi.core)
-  vars <- c("long", "lat")
-  fatal <- latitudeLongitudeFatality(path)
-  anchor <- fatal[fatal$case %in% unique(cholera::anchor.case$anchor), ]
-  rds <- latitudeLongitudeRoads(path)
+  vars <- c("lon", "lat")
 
-  rd.segs <- lapply(unique(rds$street), function(i) {
-    st <- rds[rds$street == i, ]
-    names(st)[names(st) %in% vars] <- paste0(vars, 1)
-    seg.end <- st[-1, paste0(vars, 1)]
-    names(seg.end) <- paste0(vars, 2)
-    st <- cbind(st[-nrow(st), c("street", "id", "name")],
-                st[-nrow(st), paste0(vars, 1)],
-                seg.end)
-    st$id <- paste0(st$street, "-", seq_len(nrow(st)))
-    st
-  })
+  anchor <- latlongAddress(path)
+  rd.segs <- latlongRoadSegments(path)
 
-  rd.segs <- do.call(rbind, rd.segs)
-
-  soln <- parallel::mclapply(anchor$case, function(case) {
-    case.data <- anchor[anchor$case == case, vars]
+  soln <- parallel::mclapply(anchor$anchor, function(case) {
+    case.data <- anchor[anchor$anchor == case, vars]
 
     within.radius <- lapply(rd.segs$id, function(id) {
       seg.data <- rd.segs[rd.segs$id == id, ]
