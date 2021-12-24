@@ -2,6 +2,7 @@ cholera 0.7.9.9014
 ==================
 
 - use latlongAddress() and latlongRoadSegments() in latlongOrthoProj().
+- use latlongRoadSegments() in latlongOrthoProjPumps().
 
 
 cholera 0.7.9.9013

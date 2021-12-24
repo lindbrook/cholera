@@ -14,21 +14,7 @@ latlongOrthoProjPumps <- function(path, vestry = FALSE, radius = 0.001,
   vars <- c("lon", "lat")
 
   pmp <- latlongPumps(path, vestry = vestry)
-  rds <- latitudeLongitudeRoads(path)
-
-  rd.segs <- lapply(unique(rds$street), function(i) {
-    st <- rds[rds$street == i, ]
-    names(st)[names(st) %in% vars] <- paste0(vars, 1)
-    seg.end <- st[-1, paste0(vars, 1)]
-    names(seg.end) <- paste0(vars, 2)
-    st <- cbind(st[-nrow(st), c("street", "id", "name")],
-                st[-nrow(st), paste0(vars, 1)],
-                seg.end)
-    st$id <- paste0(st$street, "-", seq_len(nrow(st)))
-    st
-  })
-
-  rd.segs <- do.call(rbind, rd.segs)
+  rd.segs <- latlongRoadSegments(path)
 
   soln <- parallel::mclapply(pmp$id, function(p) {
     case.data <- pmp[pmp$id == p, vars]
