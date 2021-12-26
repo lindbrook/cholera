@@ -4,12 +4,10 @@
 \alias{latlongEmbed}
 \title{Embed anchors and pumps into road segments (prototype).}
 \usage{
-latlongEmbed(path, tif, vestry = FALSE)
+latlongEmbed(path, vestry = FALSE)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/"}
-
-\item{tif}{Character. Georeferenced QGIS TIFF file.}
 
 \item{vestry}{Logical.}
 }
