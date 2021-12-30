@@ -16,12 +16,13 @@ latlongCoordinates <- function(tif, k, path) {
 
   map.data <- u.data[u.data$modified != 255, c("x", "y")]
 
-  # use ortho.rect as polygon filter
-  ortho.rect <- cholera::ortho.rect
-  ortho.rect.filter <- sp::point.in.polygon(map.data$x, map.data$y,
-    ortho.rect$x, ortho.rect$y)
+  # use rectangular polygon filter
+  rectangle.filter <- cholera::rectangle.filter
 
-  f.data <- map.data[ortho.rect.filter != 0, ]
+  filter.sel <- sp::point.in.polygon(map.data$x, map.data$y,
+    rectangle.filter$x, rectangle.filter$y)
+
+  f.data <- map.data[filter.sel != 0, ]
 
   distances <- stats::dist(f.data)
   tree <- stats::hclust(distances)

@@ -214,17 +214,16 @@
 #' @docType data
 "ortho.proj.pump.vestry"
 
-#' Orthogonal rectangle.
+#' Rectangular filter data.
 #'
-#' Extent of map data to filter out frame shadow using sp::point.in.polygon().
-#' @format A data frame with 3 variables and 4 observations.
+#' Coordinates to filter out frame shadow using sp::point.in.polygon().
+#' @format A data frame with 2 variables and 4 observations.
 #'  \describe{
-#'     \item{\code{id}}{vertex ID}
 #'     \item{\code{x}}{longitude}
 #'     \item{\code{y}}{latitude}
 #'  }
 #' @docType data
-"ortho.rect"
+"rectangle.filter"
 
 #' Oxford monthly weather data, January 1853 - December 2019.
 #'
