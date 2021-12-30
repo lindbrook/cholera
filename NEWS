@@ -1,7 +1,7 @@
 cholera 0.7.9.9017
 ==================
 
-- add latlongFrame().
+- add latlongFrame() and related functions.
 
 
 cholera 0.7.9.9016
