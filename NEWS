@@ -1,3 +1,11 @@
+cholera 0.7.9.9016
+==================
+
+- add rectangleFilter().
+- replace ortho.rect with rectangle.filter.
+- archive orthogonalRectangle() and related functions.
+
+
 cholera 0.7.9.9015
 ==================
 
