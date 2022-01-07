@@ -388,3 +388,49 @@
 #' }
 #' @docType data
 "snow.neighborhood"
+
+#' Georeferenced Dodson and Tobler's road segments data.
+#'
+#' This data set transforms Dodson and Tobler's street data to give each straight line segment of a "road" a unique ID.
+#'
+#' @format A data frame with 657 observations and 8 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
+#' \describe{
+#'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
+#'   \item{\code{id}}{character segment ID}
+#'   \item{\code{name}}{road name}
+#'   \item{\code{lon1}}{longitude of first endpoint}
+#'   \item{\code{lat1}}{latitude of first endpoint}
+#'   \item{\code{lon2}}{longitude of second endpoint}
+#'   \item{\code{lat2}}{latitude of second endpoint}
+#'   \item{\code{distance}}{distance (meters)}
+#' }
+#' @docType data
+"latlong.road.segments"
+
+#' Orthogonal projection of georeferenced cases onto georeferenced road network.
+#'
+#' @format A data frame with 5 variables that records the position of the orthogonal projection of the 578 cases onto the network of roads.
+#'  \describe{
+#'     \item{\code{road.segment}}{"address" road segment}
+#'     \item{\code{lon.proj}}{longitude}
+#'     \item{\code{lat.proj}}{latitude}
+#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+#'     \item{\code{case}}{numeric case ID}
+#'  }
+#' @note \code{\link{unstackFatalities}} documents the code for these data.
+#' @docType data
+"latlong.ortho.proj"
+
+#' Orthogonal projection of georeferenced 13 original pumps.
+#'
+#' @format A data frame with 5 variables that records the position of the orthogonal projection of the 13 original pumps onto the network of roads.
+#'  \describe{
+#'     \item{\code{road.segment}}{"address" road segment}
+#'     \item{\code{lon.proj}}{longitude}
+#'     \item{\code{lat.proj}}{latitude}
+#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+#'     \item{\code{pump}}{numeric ID}
+#'  }
+#' @note \code{\link{pumpData}} documents the code for these data.
+#' @docType data
+"latlong.ortho.proj.pump"
