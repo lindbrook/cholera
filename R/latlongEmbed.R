@@ -6,9 +6,9 @@
 
 latlongEmbed <- function(path, vestry = FALSE) {
   vars <- c("lon", "lat")
-  road.data <- latlongRoadSegments(path)
-  ortho.addr <- latlongOrthoProj(path)
-  ortho.pump <- latlongOrthoProjPumps(path, vestry = vestry)
+  road.data <- cholera::latlong.road.segments
+  ortho.addr <- cholera::latlong.ortho.proj
+  ortho.pump <- cholera::latlong.ortho.proj.pump
 
   obs.segs <- unique(c(ortho.addr$road.segment, ortho.pump$road.segment))
   no_embeds <- road.data[!road.data$id %in% obs.segs, ]
