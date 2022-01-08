@@ -6,7 +6,7 @@
 #' @export
 
 latlongNeighborhoodData <- function(path, vestry = FALSE) {
-  dat <- latlongEmbed(path, vestry = FALSE)
+  dat <- latlongEmbed(path, vestry = vestry)
   dat$node1 <- paste0(dat$lon1, "-", dat$lat1)
   dat$node2 <- paste0(dat$lon2, "-", dat$lat2)
   edge.list <- dat[, c("node1", "node2")]
