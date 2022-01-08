@@ -434,3 +434,17 @@
 #' @note \code{\link{pumpData}} documents the code for these data.
 #' @docType data
 "latlong.ortho.proj.pump"
+
+#' Orthogonal projection of georeferenced 14 pumps from Vestry report.
+#'
+#' @format A data frame with 5 variables that records the position of the orthogonal projection of the 14 pumps onto the network of roads.
+#'  \describe{
+#'     \item{\code{road.segment}}{"address" road segment}
+#'     \item{\code{lon.proj}}{longitude}
+#'     \item{\code{lat.proj}}{latitude}
+#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+#'     \item{\code{pump}}{numeric ID}
+#'  }
+#' @note \code{\link{pumpData}} documents the code for these data.
+#' @docType data
+"latlong.ortho.proj.pump.vestry"
