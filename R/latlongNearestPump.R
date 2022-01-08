@@ -1,0 +1,85 @@
+#' Compute shortest georeferenced distances and paths to selected pumps (prototype).
+#'
+#' @param path Character. e.g., "~/Documents/Data/"
+#' @param pump.select Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
+#' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
+#' @param time.unit Character. "hour", "minute", or "second".
+#' @param walking.speed Numeric. Walking speed in km/hr.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @export
+#' @return An R data frame or list of 'igraph' path nodes.
+
+latlongNearestPump <- function(path, pump.select = NULL, vestry = FALSE,
+  weighted = TRUE, time.unit = "second", walking.speed = 5, multi.core = TRUE) {
+  cores <- multiCore(multi.core)
+
+  dat <- latlongNeighborhoodData(path, vestry)
+  path.data <- latlong_pathData(dat, pump.select, weighted, vestry, cores)
+
+  if (time.unit == "hour") {
+    walking.time <- path.data$distance / (1000L * walking.speed)
+  } else if (time.unit == "minute") {
+    walking.time <- (60L * path.data$distance) / (1000L * walking.speed)
+  } else if (time.unit == "second") {
+    walking.time <- (3600L * path.data$distance) / (1000L * walking.speed)
+  }
+
+  distance <-  data.frame(case = path.data$case, pump = path.data$pump,
+    d = path.data$distance, time = walking.time)
+
+  list(distance = distance, path = path.data$path)
+}
+
+latlong_pathData <- function(dat, pump.select, weighted, vestry, cores) {
+  g <- dat$g
+  edge.list <- dat$edge.list
+  edges <- dat$edges
+  ortho.addr <- cholera::latlong.ortho.proj
+
+  if (vestry) {
+    ortho.pump <- cholera::latlong.ortho.proj.pump.vestry
+  } else {
+    ortho.pump <- cholera::latlong.ortho.proj.pump
+  }
+
+  if (!is.null(pump.select)) {
+    if (all(pump.select > 0)) {
+      ortho.pump <- ortho.pump[ortho.pump$pump %in% pump.select, ]
+    } else if (all(pump.select < 0)) {
+      ortho.pump <- ortho.pump[!ortho.pump$pump %in% -pump.select, ]
+    } else {
+      stop('If not NULL, "pump.select" must be strictly positive or negative.',
+        call. = FALSE)
+    }
+  }
+
+  ortho.addr$node <- paste0(ortho.addr$lon, "-", ortho.addr$lat)
+  ortho.pump$node <- paste0(ortho.pump$lon, "-", ortho.pump$lat)
+
+  # all(ortho.addr$node %in% unlist(edge.list))
+  # all(ortho.pump$node %in% unlist(edge.list))
+
+  paths <- lapply(ortho.addr$node, function(case.node) {
+     p <- igraph::shortest_paths(g, case.node, ortho.pump$node,
+       weights = edges$d)$vpath
+     stats::setNames(p, ortho.pump$pump)
+  })
+
+  distances <- lapply(ortho.addr$node, function(case.node) {
+    igraph::distances(g, case.node, ortho.pump$node, weights = edges$d)
+  })
+
+  min.dist <- vapply(distances, function(x) x[which.min(x)], numeric(1L))
+  path.sel <- vapply(distances, which.min, integer(1L))
+
+  nearest.pump <- vapply(path.sel, function(i) ortho.pump[i, "pump"],
+    numeric(1L))
+
+  short.path <- lapply(seq_along(paths), function(i) {
+    paths[[i]][path.sel[i]]
+  })
+
+  list(case = ortho.addr$case, pump = nearest.pump, distance = min.dist,
+    path = short.path)
+}
