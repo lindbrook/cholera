@@ -689,6 +689,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #'
 #' @param x An object of class "walking_path" created by walkingPath().
 #' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.
+#' @param stacked Logical. Use stacked fatalities.
 #' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.
 #' @param unit.interval Numeric. Set interval between posts. When \code{unit.posts = "distance"}, \code{unit.interval} defaults to 50 meters. When \code{unit.posts = "time"}, \code{unit.interval} defaults to 60 seconds.
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
@@ -702,8 +703,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' plot(walkingPath(15), unit.posts = "time")
 #' }
 
-plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
-  unit.interval = NULL, alpha.level = 1, ...) {
+plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
+  unit.posts = "distance", unit.interval = NULL, alpha.level = 1, ...) {
 
   if (class(x) != "walking_path") {
     stop('x\'s class must be "walking_path".')
@@ -906,7 +907,15 @@ plot.walking_path <- function(x, zoom = 0.5, unit.posts = "distance",
     } else stop("If numeric, zoom must be >= 0.")
   } else stop("zoom must either be logical or numeric.")
 
-  plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
+
+if (stacked) {
+  plot.data <- cholera::fatalities[, c("x", "y")]
+} else {
+  plot.data <- cholera::fatalities.address[, c("x", "y")]
+}
+
+
+  plot(plot.data, xlim = x.rng, ylim = y.rng,
     xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(border.list, lines))
