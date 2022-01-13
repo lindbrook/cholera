@@ -88,9 +88,10 @@ latlong_pathData <- function(dat, pump.select, weighted, vestry, cores) {
 #'
 #' @param case Numeric.
 #' @param path Character. e.g., "~/Documents/Data/".
+#' @param zoom Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.
 #' @export
 
-latlongWalkingPath <- function(case, path) {
+latlongWalkingPath <- function(case = 1, path, zoom = TRUE) {
   vars <- c("lon", "lat")
 
   if (!case %in% cholera::fatalities.address$anchor) {
@@ -111,8 +112,25 @@ latlongWalkingPath <- function(case, path) {
   nodes <- do.call(rbind, strsplit(p, "-"))
   dat <- data.frame(x = -as.numeric(nodes[, 2]), y = as.numeric(nodes[, 3]))
 
-  plot(rd[, vars], pch = NA, asp = 1.6, xlim = range(dat$x),
-    ylim = range(dat$y))
+  if (is.logical(zoom)) {
+    if (zoom) {
+      padding <- 0.0001
+      xlim <- c(min(dat$x) - padding, max(dat$x) + padding)
+      ylim <- c(min(dat$y) - padding, max(dat$y) + padding)
+    } else {
+      map.data <- rbind(frame, rd)
+      xlim <- range(map.data$lon)
+      ylim <- range(map.data$lat)
+    }
+  } else if (is.numeric(zoom)) {
+    if (zoom >= 0) {
+      xlim <- c(min(dat$x) - zoom, max(dat$x) + zoom)
+      ylim <- c(min(dat$y) - zoom, max(dat$y) + zoom)
+    } else stop("If numeric, zoom must be >= 0.")
+  } else stop("zoom must either be logical or numeric.")
+
+
+  plot(rd[, vars], pch = NA, asp = 1.6, xlim = xlim, ylim = ylim)
   roads.list <- split(rd[, vars], rd$street)
   frame.list <- split(frame[, vars], frame$street)
   invisible(lapply(roads.list, lines, col = "gray"))

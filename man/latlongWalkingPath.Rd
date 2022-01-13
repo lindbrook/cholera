@@ -4,12 +4,14 @@
 \alias{latlongWalkingPath}
 \title{Plot walking path to nearest pump (prototype).}
 \usage{
-latlongWalkingPath(case, path)
+latlongWalkingPath(case = 1, path, zoom = TRUE)
 }
 \arguments{
 \item{case}{Numeric.}
 
 \item{path}{Character. e.g., "~/Documents/Data/".}
+
+\item{zoom}{Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.}
 }
 \description{
 Plot walking path to nearest pump (prototype).
