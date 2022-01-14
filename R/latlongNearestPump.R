@@ -114,7 +114,7 @@ latlongWalkingPath <- function(case = 1, path, zoom = TRUE) {
 
   if (is.logical(zoom)) {
     if (zoom) {
-      padding <- 0.00025
+      padding <- 0.00026
       xlim <- c(min(dat$x) - padding, max(dat$x) + padding)
       ylim <- c(min(dat$y) - padding, max(dat$y) + padding)
     } else {
