@@ -739,7 +739,11 @@ plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
   # St James Workhouse fix
   if (x$type == "case-pump") {
     if (nrow(ego.data) > 1) {
-      ego.data <- ego.data[ego.data$anchor > 20000, ]
+      if (is.numeric(x$origin)) {
+        ego.data <- ego.data[ego.data$anchor < 20000, ]
+      } else if (is.character(x$origin)) {
+        ego.data <- ego.data[ego.data$anchor > 20000, ]
+      }
     }
   } else if (x$type == "cases") {
     if (nrow(ego.data) > 1) {
