@@ -1,7 +1,7 @@
 cholera 0.7.9.9022
 ==================
 
-- fix origin = 369 verus origin = "St James Workhouse" in plot.walking_path().
+- fix origin = 369 v. origin = "St James Workhouse" in plot.walking_path().
 
 
 cholera 0.7.9.9021
