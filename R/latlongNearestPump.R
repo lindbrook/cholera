@@ -95,7 +95,7 @@ latlongWalkingPath <- function(case = 1, path, zoom = TRUE) {
   vars <- c("lon", "lat")
 
   if (!case %in% cholera::fatalities.address$anchor) {
-    stop("Invalid case. See cholera::fatalities.address")
+    stop("Invalid case. See cholera::fatalities.address.", call. = FALSE)
   } else {
     case.id <- which(cholera::fatalities.address$anchor == case)
   }
