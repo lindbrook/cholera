@@ -448,3 +448,67 @@
 #' @note \code{\link{pumpData}} documents the code for these data.
 #' @docType data
 "latlong.ortho.proj.pump.vestry"
+
+#' "Unstacked" amended cholera data with address as unit of observation.
+#'
+#' @format A data frame with 6 variables for 321 addresses
+#'  \describe{
+#'     \item{\code{anchor}}{numerical case ID of address}
+#'     \item{\code{x}}{x-coordinate}
+#'     \item{\code{y}}{y-coordinate}
+#'     \item{\code{case.count}}{number of fatalities at address}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
+#' }
+
+#' @docType data
+"latlong.fatalities.address"
+
+#' "Map Frame" data with and georeferenced longitude and latitude.
+#'
+#' @format A data frame with 106 observations and 8 variables. The data describe the roads on Snow's map.
+#' \describe{
+#'   \item{\code{street}}{street segment number, which range between 1 and 528}
+#'   \item{\code{n}}{number of points in this street line segment}
+#'   \item{\code{x}}{x-coordinate}
+#'   \item{\code{y}}{y-coordinate}
+#'   \item{\code{id}}{unique numeric ID}
+#'   \item{\code{name}}{road name}
+#'   \item{\code{lon}}{longitude}
+#'   \item{\code{lat}}{latitude}
+#' }
+#' @docType data
+"latlong.frame"
+
+#' Dodson and Tobler's pump data with street name.
+#'
+#' @format A data frame with 13 observations and 6 variables that describe the pumps on Snow's map.
+#' \describe{
+#'   \item{\code{id}}{pump number between 1 and 13}
+#'   \item{\code{street}}{nearest street}
+#'   \item{\code{x}}{x-coordinate}
+#'   \item{\code{y}}{y-coordinate}
+#'   \item{\code{lon}}{longitude}
+#'   \item{\code{lat}}{latitude}
+#' }
+#' @docType data
+"latlong.pumps"
+
+#' Dodson and Tobler's street data with appended road names and georeferenced longitude and latitude.
+#'
+#' @format A data frame with 1135 observations and 8 variables. The data describe the roads on Snow's map.
+#' \describe{
+#'   \item{\code{street}}{street segment number, which range between 1 and 528}
+#'   \item{\code{n}}{number of points in this street line segment}
+#'   \item{\code{x}}{x-coordinate}
+#'   \item{\code{y}}{y-coordinate}
+#'   \item{\code{id}}{unique numeric ID}
+#'   \item{\code{name}}{road name}
+#'   \item{\code{lon}}{longitude}
+#'   \item{\code{lat}}{latitude}
+#' }
+#' @docType data
+"latlong.roads"
+
+# usethis::use_data(latlong.fatalities.address)
+# usethis::use_data(landmarks, overwrite = TRUE   )

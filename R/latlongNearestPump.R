@@ -100,10 +100,10 @@ latlongWalkingPath <- function(case = 1, path, zoom = TRUE) {
     case.id <- which(cholera::fatalities.address$anchor == case)
   }
 
-  rd <- latlongRoads(path)
-  frame <- latlongFrame(path)
-  fatality <- latlongAddress(path)
-  pump <- latlongPumps(path)
+  rd <- cholera::latlong.roads
+  frame <- cholera::latlong.frame
+  fatality <- cholera::latlong.fatalities.address
+  pump <- cholera::latlong.pumps
   nearest.pump <- latlongNearestPump(path)
 
   p <- names(nearest.pump$path[[case.id]][[1]])
