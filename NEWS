@@ -1,3 +1,11 @@
+cholera 0.7.9.9024
+==================
+
+- use pre-computed data in latlongOrthoProj() and latlongOrthoProjPumps().
+- recompute latlong versions of ortho.proj, ortho.proj.pump and
+  ortho.proj.pump.vestry.
+
+
 cholera 0.7.9.9023
 ==================
 
