@@ -13,7 +13,9 @@ latlongOrthoProjPumps <- function(path, vestry = FALSE, radius = 0.001,
   cores <- multiCore(multi.core)
   vars <- c("lon", "lat")
 
-  pmp <- latlongPumps(path, vestry = vestry)
+  if (vestry) pmp <- cholera::latlong.pumps.vestry
+  else pmp <- cholera::latlong.pumps
+  
   rd.segs <- cholera::latlong.road.segments
 
   soln <- parallel::mclapply(pmp$id, function(p) {

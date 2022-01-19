@@ -11,8 +11,8 @@ latlongOrthoProj <- function(path, multi.core = TRUE, radius = 0.001) {
   cores <- multiCore(multi.core)
   vars <- c("lon", "lat")
 
-  anchor <- latlongAddress(path)
-  rd.segs <- latlongRoadSegments(path)
+  anchor <- cholera::latlong.fatalities.address
+  rd.segs <- cholera::latlong.road.segments
 
   soln <- parallel::mclapply(anchor$anchor, function(case) {
     case.data <- anchor[anchor$anchor == case, vars]
