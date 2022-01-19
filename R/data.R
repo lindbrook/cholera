@@ -509,6 +509,3 @@
 #' }
 #' @docType data
 "latlong.roads"
-
-# usethis::use_data(latlong.fatalities.address)
-# usethis::use_data(landmarks, overwrite = TRUE   )
