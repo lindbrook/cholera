@@ -7,7 +7,7 @@
 
 latlongRoadSegments <- function(path) {
   vars <- c("lon", "lat")
-  dat <- latlongRoads(path)
+  dat <- cholera::latlong.roads
   out <- lapply(unique(dat$street), function(x) { # minor benefit from mclapply
     st <- dat[dat$street == x, ]
     names(st)[names(st) %in% vars] <- paste0(vars, 1)
