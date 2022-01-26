@@ -494,6 +494,20 @@
 #' @docType data
 "latlong.pumps"
 
+#' Dodson and Tobler's pump data with street name (Vestry Report version).
+#'
+#' @format A data frame with 14 observations and 6 variables that describe the pumps on Snow's map.
+#' \describe{
+#'   \item{\code{id}}{pump number between 1 and 13}
+#'   \item{\code{street}}{nearest street}
+#'   \item{\code{x}}{x-coordinate}
+#'   \item{\code{y}}{y-coordinate}
+#'   \item{\code{lon}}{longitude}
+#'   \item{\code{lat}}{latitude}
+#' }
+#' @docType data
+"latlong.pumps.vestry"
+
 #' Dodson and Tobler's street data with appended road names and georeferenced longitude and latitude.
 #'
 #' @format A data frame with 1135 observations and 8 variables. The data describe the roads on Snow's map.
