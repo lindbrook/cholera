@@ -43,6 +43,9 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
   open.tetrads <- fours[tetrad.edge.ct != 6]
   closed.tetrads <- fours[tetrad.edge.ct == 6]
 
+  four.closed <- t(as.numeric(names(igraph::V(subgraphs[[closed.tetrads]]))))
+  four.closed <- stats::setNames(data.frame(four.closed), paste0("v", 1:4))
+
   four.string <- fours[tetrad.edge.ct == 3]
   # plotNtuple(four.string, subgraphs)
   stack.four.string <- partitionEvenString(subgraphs[four.string])
