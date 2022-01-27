@@ -1,7 +1,11 @@
 references
 ================
 lindbrook
-2021-03-18
+2022-01-27
+
+Herve Bazin. 2000. *The Eradication of Smallpox: Edward Jenner and the
+First and Only Eradication of a Human Infectious Disease*. San Diego:
+Academic Press.
 
 John Broich. 2013. *London: Water and the Making of the Modern City*.
 Pittsburgh: University of Pittsburgh Press.

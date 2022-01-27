@@ -12,6 +12,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+Herve Bazin. 2000. _The Eradication of Smallpox: Edward Jenner and the First and Only Eradication of a Human Infectious Disease_. San Diego: Academic Press.
+
 John Broich. 2013. _London: Water and the Making of the Modern City_. Pittsburgh: University of Pittsburgh Press.
 
 Muriel E. Chamberlain. 1983. _Lord Aberdeen: A political biography_. New York: Longman.
