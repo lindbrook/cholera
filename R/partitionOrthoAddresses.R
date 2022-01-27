@@ -25,7 +25,7 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
   ## triads ##
 
   threes <- names(census[census.ct == 3])
-  plotNtuple(threes, subgraphs)
+  # plotNtuple(threes, subgraphs)
 
   triad.edge.ct <- ntupleOpenClosed(threes, subgraphs)
   open.triads <- threes[triad.edge.ct != 3]
@@ -42,6 +42,9 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
   tetrad.edge.ct <- ntupleOpenClosed(fours, subgraphs)
   open.tetrads <- fours[tetrad.edge.ct != 6]
   closed.tetrads <- fours[tetrad.edge.ct == 6]
+
+  four.closed <- t(as.numeric(names(igraph::V(subgraphs[[closed.tetrads]]))))
+  four.closed <- stats::setNames(data.frame(four.closed), paste0("v", 1:4))
 
   four.string <- fours[tetrad.edge.ct == 3]
   # plotNtuple(four.string, subgraphs)
@@ -142,8 +145,8 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
                                v3 = c(239, 21, 231, 180, 418),
                                v4 = c(572, 242, 386, 141, 102))
 
-  all(unlist(partitioned.nineteen) %in%
-    as.numeric(names(igraph::V(subgraphs[["7"]]))))
+  # all(unlist(partitioned.nineteen) %in%
+  #   as.numeric(names(igraph::V(subgraphs[["7"]]))))
 
 }
 

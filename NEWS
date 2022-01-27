@@ -1,3 +1,9 @@
+cholera 0.7.9.9027
+==================
+
+- include closed tetrad (complete graph) in partitionOrthoAddresses().
+
+
 cholera 0.7.9.9026
 ==================
 
