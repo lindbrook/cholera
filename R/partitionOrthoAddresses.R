@@ -305,9 +305,9 @@ sixDoubleTriangleOneTail <- function(dat, subgraphs) {
   sel <- which(vapply(triangle.vs, function(x) !pivot %in% x, logical(1L)))
   primary.triangle <- unlist(triangle.vs[sel])
 
-  list(v1 = c(primary.triangle[1], tail[1]),
-       v2 = c(primary.triangle[2], tail[2]),
-       v3 = c(primary.triangle[3], pivot))
+  data.frame(v1 = c(primary.triangle[1], tail[1]),
+             v2 = c(primary.triangle[2], tail[2]),
+             v3 = c(primary.triangle[3], pivot))
 }
 
 sixDoubleTriangleTwoTail <- function(dat, subgraphs) {
@@ -335,7 +335,7 @@ sixDoubleTriangleTwoTail <- function(dat, subgraphs) {
   triangle1 <- triangle.vs$`1`
   # triangle2 <- triangle.vs$`2`
 
-  list(v1 = c(setdiff(triangle1, pivot1)[1], tail1),
-       v2 = c(setdiff(triangle1, pivot1)[2], tail2),
-       v3 = c(pivot1, pivot2))
+  data.frame(v1 = c(setdiff(triangle1, pivot1)[1], tail1),
+             v2 = c(setdiff(triangle1, pivot1)[2], tail2),
+             v3 = c(pivot1, pivot2))
 }
