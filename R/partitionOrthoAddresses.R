@@ -116,7 +116,7 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
   ## decad ##
 
   tens <- names(census[census.ct == 10])
-  plotNtuple(tens, subgraphs)
+  # plotNtuple(tens, subgraphs)
 
   partitioned.ten.linked.double.triangles <-
     list(v1 = c(246, 311, 236, 254),
