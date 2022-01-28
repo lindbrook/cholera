@@ -272,8 +272,8 @@ fiveDoubleTriangleTail <- function(dat, subgraphs) {
   # which(primary.triangle ==  peripheral.vertex)
 
   list(v1 = c(primary.triangle[1], tail),
-       v2 = primary.triangle[2],
-       v3 = c(primary.triangle[3], pivot))
+       v2 = c(primary.triangle[3], pivot),
+       v3 = primary.triangle[2])
 }
 
 sixDoubleTriangleOneTail <- function(dat, subgraphs) {
