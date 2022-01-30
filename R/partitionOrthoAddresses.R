@@ -148,6 +148,43 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
   # all(unlist(partitioned.nineteen) %in%
   #   as.numeric(names(igraph::V(subgraphs[["7"]]))))
 
+  ## Assemble output ##
+
+  two.cols <- rbind(dyads[, -1], stack.open.triads, stack.four.string)
+
+  #
+
+  four_five_1 <- appendNtupleLists(partitioned.four.triangle.tail,
+                                   partitioned.five.triangle.tail)
+
+  four_five_2 <- appendNtupleLists(partitioned.four.double.triangle[1],
+                                  list(partitioned.five.double.triangle.tail))
+
+  four_eight <- appendNtupleLists(partitioned.four.double.triangle[2],
+                                  list(partitioned.eight))
+
+  ptA <- partitioned.seven
+  ptB <- partitioned.ten.linked.double.triangles
+  ptC <- partitioned.ten.adjacent.double.triangles
+  seven_ten <- data.frame(v1 = c(ptA$v1, ptB$v1, ptC$v2),
+                          v2 = c(ptA$v2[1:2], ptB$v2, c(ptC$v3, ptA$v2[3])),
+                          v3 = c(ptA$v3, ptB$v3, ptC$v1))
+
+  three.cols <- rbind(stack.closed.triads[, -1],
+                      partitioned.six.double.triangle.one.tail,
+                      partitioned.six.double.triangle.two.tail,
+                      four_five_1,
+                      four_five_2,
+                      four_eight,
+                      seven_ten)
+
+  #
+
+  four.cols <- list(v1 = c(four.closed$v1, partitioned.nineteen$v1),
+                    v2 = c(four.closed$v2, partitioned.nineteen$v2),
+                    v3 = c(four.closed$v3, partitioned.nineteen$v3),
+                    v4 = c(four.closed$v4, partitioned.nineteen$v4))
+
 }
 
 plotNtuple <- function(ntuple, subgraphs) {
@@ -338,4 +375,13 @@ sixDoubleTriangleTwoTail <- function(dat, subgraphs) {
   data.frame(v1 = c(setdiff(triangle1, pivot1)[1], tail1),
              v2 = c(setdiff(triangle1, pivot1)[2], tail2),
              v3 = c(pivot1, pivot2))
+}
+
+appendNtupleLists <- function(x, y) {
+  out <- lapply(seq_along(x), function(i) {
+    a <- x[[i]]
+    b <- y[[i]]
+    data.frame(v1 = c(a$v1, b$v1), v2 = c(a$v2, b$v2), v3 = c(a$v3, b$v3))
+  })
+  do.call(rbind, out)
 }
