@@ -2,6 +2,7 @@ cholera 0.7.9.9028
 ==================
 
 - return data frames for 6-tuples in partitionOrthoAddresses().
+- use 4 sets (vertices) as common denominator for partitionOrthoAddresses().
 
 
 cholera 0.7.9.9027
