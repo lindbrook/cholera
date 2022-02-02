@@ -209,10 +209,21 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
 
   ptA <- as.list(rbind(two2four.cols, four.cols.df))
   ptB <- partitioned.five.triangle.tail[[2]]
-  list(v1 = c(ptA$v1, ptB$v1),
-       v2 = c(ptA$v2, ptB$v2),
-       v3 = c(ptA$v3, ptB$v3),
-       v4 = c(ptA$v4, ptB$v4))
+  partitions <- list(v1 = c(ptA$v1, ptB$v1),
+                     v2 = c(ptA$v2, ptB$v2),
+                     v3 = c(ptA$v3, ptB$v3),
+                     v4 = c(ptA$v4, ptB$v4))
+
+  tmp <- setdiff(cholera::fatalities.address$anchor, unlist(partitions))
+  # length(tmp) / 4
+  # [1] 28
+  tmp <- matrix(tmp, ncol = 4)
+  above.threshold <- stats::setNames(data.frame(tmp), paste0("v", 1:4))
+
+  list(v1 = c(partitions$v1, above.threshold$v1),
+       v2 = c(partitions$v2, above.threshold$v2),
+       v3 = c(partitions$v3, above.threshold$v3),
+       v4 = c(partitions$v4, above.threshold$v4))
 }
 
 plotNtuple <- function(ntuple, subgraphs) {
@@ -405,4 +416,3 @@ sixDoubleTriangleTwoTail <- function(dat, subgraphs) {
        v3 = as.numeric(triangle.vertices[2]),
        v4 = as.numeric(triangle.vertices[4]))
 }
-
