@@ -176,7 +176,7 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
   #
 
   tmp6 <- list(`12` = partitioned.six.double.triangle.one.tail,
-               `26`= partitioned.six.double.triangle.two.tail)
+               `26` = partitioned.six.double.triangle.two.tail)
   tmp10 <- list(`8` = partitioned.ten.linked.double.triangles,
                 `17` = partitioned.ten.adjacent.double.triangles)
 
