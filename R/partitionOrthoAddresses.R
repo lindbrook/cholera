@@ -95,8 +95,9 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
   # plotNtuple(sevens, subgraphs)
 
   partitioned.seven <- list(v1 = c(393, 552),
-                            v2 = c(507, 553, 348),
-                            v3 = c(38, 1))
+                            v2 = c(507, 553),
+                            v3 = c(38, 1),
+                            v4 = 348)
 
   # all(unlist(partitioned.seven) %in%
   #   as.numeric(names(igraph::V(subgraphs[["1"]]))))
@@ -106,9 +107,10 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
   eights <- names(census[census.ct == 8])
   # plotNtuple(eights, subgraphs)
 
-  partitioned.eight <- list(v1 = c(40, 165, 210),
-                            v2 = c(5, 512, 94),
-                            v3 = c(315, 28))
+  partitioned.eight <- data.frame(v1 = c(40, 165),
+                                  v2 = c(5, 94),
+                                  v3 = c(315, 28),
+                                  v4 = c(512, 210))
 
   # all(unlist(partitioned.eight) %in%
   #   as.numeric(names(igraph::V(subgraphs[["3"]]))))
@@ -116,20 +118,22 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
   ## decad ##
 
   tens <- names(census[census.ct == 10])
-  plotNtuple(tens, subgraphs)
+  # plotNtuple(tens, subgraphs)
 
   partitioned.ten.linked.double.triangles <-
-    list(v1 = c(246, 311, 236, 254),
-         v2 = c(26, 475, 204),
-         v3 = c(29, 266, 223))
+    list(v1 = c(26, 311, 223),
+         v2 = c(246, 204, 254),
+         v3 = c(29, 266),
+         v4 = c(475, 236))
 
   # all(unlist(partitioned.ten.linked.double.triangles) %in%
   #   as.numeric(names(igraph::V(subgraphs[["8"]]))))
 
   partitioned.ten.adjacent.double.triangles <-
-    list(v1 = c(45, 449, 481, 224),
-         v2 = c(296, 428, 325),
-         v3 = c(68, 213, 49))
+    list(v1 = c(45, 449, 49),
+         v2 = c(296, 325, 224),
+         v3 = c(68, 213),
+         v4 = c(428, 481))
 
   # all(unlist(partitioned.ten.adjacent.double.triangles) %in%
   #   as.numeric(names(igraph::V(subgraphs[["17"]]))))
@@ -148,6 +152,78 @@ partitionOrthoAddresses <- function(inter.point.dist = 0.15) {
   # all(unlist(partitioned.nineteen) %in%
   #   as.numeric(names(igraph::V(subgraphs[["7"]]))))
 
+  ## Assemble output ##
+
+  two.cols <- rbind(dyads[, -1], stack.open.triads, stack.four.string)
+
+  two2four.cols <- cbind(two.cols[1:(nrow(two.cols) / 2), ],
+                         two.cols[(1 + nrow(two.cols) / 2):nrow(two.cols), ])
+
+  names(two2four.cols) <- paste0("v", 1:4)
+
+  #
+
+  tmp5 <- partitioned.five.double.triangle.tail
+  names(tmp5) <- paste0("v", c(4, 1:3))
+
+  tmp7 <- partitioned.seven
+
+  five_seven <- data.frame(v1 = c(tmp5$v1, tmp7$v1),
+                           v2 = c(tmp5$v2, tmp7$v2),
+                           v3 = c(tmp5$v3, tmp7$v3),
+                           v4 = c(tmp5$v4, tmp7$v4))
+
+  #
+
+  tmp6 <- list(`12` = partitioned.six.double.triangle.one.tail,
+               `26` = partitioned.six.double.triangle.two.tail)
+  tmp10 <- list(`8` = partitioned.ten.linked.double.triangles,
+                `17` = partitioned.ten.adjacent.double.triangles)
+
+  six_ten <- lapply(seq_along(tmp6), function(i) {
+    ptA <- tmp6[[i]]
+    ptB <- stats::setNames(tmp10[[i]], paste0("v", c(3:4, 1:2)))
+    data.frame(v1 = c(ptA$v1, ptB$v1),
+               v2 = c(ptA$v2, ptB$v2),
+               v3 = c(ptA$v3, ptB$v3),
+               v4 = c(ptA$v4, ptB$v4))
+  })
+
+  six_ten <- do.call(rbind, six_ten)
+
+  #
+
+  tmp5 <-  partitioned.five.triangle.tail[[1]]
+  tmp19 <- partitioned.nineteen
+  five_nineteen <- data.frame(v1 = c(tmp5$v1, tmp19$v1),
+                              v2 = c(tmp5$v2, tmp19$v2),
+                              v3 = c(tmp5$v3, tmp19$v3),
+                              v4 = c(tmp5$v4, tmp19$v4))
+
+  four.cols.df <- rbind(partitioned.four.triangle.tail,
+                        partitioned.four.double.triangle,
+                        partitioned.eight,
+                        five_seven,
+                        six_ten,
+                        five_nineteen)
+
+  ptA <- as.list(rbind(two2four.cols, four.cols.df))
+  ptB <- partitioned.five.triangle.tail[[2]]
+  partitions <- list(v1 = c(ptA$v1, ptB$v1),
+                     v2 = c(ptA$v2, ptB$v2),
+                     v3 = c(ptA$v3, ptB$v3),
+                     v4 = c(ptA$v4, ptB$v4))
+
+  tmp <- setdiff(cholera::fatalities.address$anchor, unlist(partitions))
+  # length(tmp) / 4
+  # [1] 28
+  tmp <- matrix(tmp, ncol = 4)
+  above.threshold <- stats::setNames(data.frame(tmp), paste0("v", 1:4))
+
+  list(v1 = c(partitions$v1, above.threshold$v1),
+       v2 = c(partitions$v2, above.threshold$v2),
+       v3 = c(partitions$v3, above.threshold$v3),
+       v4 = c(partitions$v4, above.threshold$v4))
 }
 
 plotNtuple <- function(ntuple, subgraphs) {
@@ -203,12 +279,13 @@ fourTriangleTail <- function(dat, subgraphs) {
      tmp <- subgraphs[[nm]]
      e.lst <- igraph::as_edgelist(tmp)
      e.tbl <- table(c(e.lst))
-     center <- names(e.tbl[e.tbl == 3])
-     periphery <- names(e.tbl[e.tbl == 2])
-     tail <- names(e.tbl[e.tbl == 1])
-     list(v1 = c(periphery[1], tail), v2 = periphery[2], v3 = center)
+     center <- as.numeric(names(e.tbl[e.tbl == 3]))
+     periphery <- as.numeric(names(e.tbl[e.tbl == 2]))
+     tail <- as.numeric(names(e.tbl[e.tbl == 1]))
+     data.frame(v1 = periphery[1], v2 = periphery[2], v3 = center, v4 = tail)
   })
-  stats::setNames(out, dat)
+  # stats::setNames(out, dat)
+  do.call(rbind, out)
 }
 
 fourDoubleTriangle <- function(dat, subgraphs) {
@@ -216,11 +293,13 @@ fourDoubleTriangle <- function(dat, subgraphs) {
     tmp <- subgraphs[[nm]]
     e.lst <- igraph::as_edgelist(tmp)
     e.tbl <- table(c(e.lst))
-    center <- names(e.tbl[e.tbl == 3])
-    periphery <- names(e.tbl[e.tbl == 2])
-    list(v1 = center[1], v2 = center[2], v3 = periphery)
+    center <- as.numeric(names(e.tbl[e.tbl == 3]))
+    periphery <- as.numeric(names(e.tbl[e.tbl == 2]))
+    data.frame(v1 = center[1], v2 = center[2], v3 = periphery[1],
+      v4 = periphery[2])
   })
-  stats::setNames(out, dat)
+  # stats::setNames(out, dat)
+  do.call(rbind, out)
 }
 
 fiveTriangleTail <- function(dat, subgraphs) {
@@ -230,16 +309,17 @@ fiveTriangleTail <- function(dat, subgraphs) {
 
      e.lst <- igraph::as_edgelist(tmp)
      e.tbl <- table(c(e.lst))
-     center <- names(e.tbl[e.tbl == 3])
+     center <- as.numeric(names(e.tbl[e.tbl == 3]))
 
      sel <- igraph::count_triangles(tmp) == 1
      triangle <- vertices[sel]
 
-     tail <- setdiff(vertices, triangle)
+     tail <- as.numeric(setdiff(vertices, triangle))
 
-     list(v1 = center,
-          v2 = c(triangle[triangle != center][1], tail[1]),
-          v3 = c(triangle[triangle != center][2], tail[2]))
+     list(v1 = c(center, tail[2]),
+          v2 = as.numeric(triangle[triangle != center][1]),
+          v3 = as.numeric(c(triangle[triangle != center][2])),
+          v4 = tail[1])
   })
   stats::setNames(out, dat)
 }
@@ -271,9 +351,10 @@ fiveDoubleTriangleTail <- function(dat, subgraphs) {
   # peripheral.vertex <- names(which(e.tbl == 2))
   # which(primary.triangle ==  peripheral.vertex)
 
-  list(v1 = c(primary.triangle[1], tail),
-       v2 = primary.triangle[2],
-       v3 = c(primary.triangle[3], pivot))
+  list(v1 = as.numeric(c(primary.triangle[1], tail)),
+       v2 = as.numeric(primary.triangle[2]),
+       v3 = as.numeric(primary.triangle[3]),
+       v4 = as.numeric(pivot))
 }
 
 sixDoubleTriangleOneTail <- function(dat, subgraphs) {
@@ -305,9 +386,10 @@ sixDoubleTriangleOneTail <- function(dat, subgraphs) {
   sel <- which(vapply(triangle.vs, function(x) !pivot %in% x, logical(1L)))
   primary.triangle <- unlist(triangle.vs[sel])
 
-  list(v1 = c(primary.triangle[1], tail[1]),
-       v2 = c(primary.triangle[2], tail[2]),
-       v3 = c(primary.triangle[3], pivot))
+  list(v1 = as.numeric(c(primary.triangle[1], tail[1])),
+       v2 = as.numeric(c(primary.triangle[2], tail[2])),
+       v3 = as.numeric(primary.triangle[3]),
+       v4 = as.numeric(pivot))
 }
 
 sixDoubleTriangleTwoTail <- function(dat, subgraphs) {
@@ -326,16 +408,11 @@ sixDoubleTriangleTwoTail <- function(dat, subgraphs) {
   tail1 <- e.lst[e.lst[, 1] %in% pivot1 & e.lst[, 2] %in% tail, 2]
   tail2 <- e.lst[e.lst[, 2] %in% pivot2 & e.lst[, 1] %in% tail, 1]
 
-  endpt <- seq_along(triangles)[seq_along(triangles) %% 3 == 0]
-  startpt <- c(0, endpt[-length(endpt)]) + 1
-  id <- lapply(seq_along(startpt), function(i) seq(startpt[i], endpt[i]))
-  triangle.vs <- lapply(id, function(idx) triangles[idx])
-  triangle.vs <- stats::setNames(triangle.vs, paste(1:2))
+  triangle.vertices <- unique(triangles)
+  # which(!triangle.vertices %in% c(pivot1, pivot2))
 
-  triangle1 <- triangle.vs$`1`
-  # triangle2 <- triangle.vs$`2`
-
-  list(v1 = c(setdiff(triangle1, pivot1)[1], tail1),
-       v2 = c(setdiff(triangle1, pivot1)[2], tail2),
-       v3 = c(pivot1, pivot2))
+  list(v1 = as.numeric(c(triangle.vertices[1], tail1)),
+       v2 = as.numeric(c(triangle.vertices[3], tail2)),
+       v3 = as.numeric(triangle.vertices[2]),
+       v4 = as.numeric(triangle.vertices[4]))
 }
