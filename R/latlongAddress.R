@@ -36,9 +36,7 @@ latlongAddress <- function(path, multi.core = TRUE) {
   })
 
   address.rotate.scale <- parallel::mclapply(address.groups, function(x) {
-    tmp <- lapply(x$case, function(y) {
-      rotatePoint(y, dataset = "fatalities")
-    })
+    tmp <- lapply(x$case, function(y) rotatePoint(y, dataset = "fatalities"))
     tmp <- do.call(rbind, tmp)
     data.frame(id = x$case, scale(tmp))
   }, mc.cores = cores)
