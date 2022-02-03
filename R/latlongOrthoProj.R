@@ -6,7 +6,7 @@
 #' @param cex Numeric.
 #' @export
 
-orthoAddressPDF <- function(path, pch = 46, cex = 1) {
+latlongOrthoAddressPDF <- function(path, pch = 46, cex = 1) {
   file.nm <- "ortho.address"
   post <- ".pdf"
 
