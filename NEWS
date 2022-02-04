@@ -1,3 +1,11 @@
+cholera 0.7.9.9029
+==================
+
+- add latlongOrthoAddressPDF().
+- add rotatePoint(dataset = "ortho.proj").
+- add latlongOrthoAddress().
+
+
 cholera 0.7.9.9028
 ==================
 

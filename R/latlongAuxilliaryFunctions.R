@@ -74,7 +74,7 @@ radians <- function(points.data) {
 #' Rotate points (prototype).
 #'
 #' @param id Numeric. Road segment endpoint ID.
-#' @param dataset Character. "roads", "fatalities", "fatalities.address", "pumps", or "pumps.vestry".
+#' @param dataset Character. "roads", "fatalities", "fatalities.address", "pumps", "pumps.vestry", or "ortho.proj".
 #' @export
 
 rotatePoint <- function(id = 1, dataset = "roads") {
@@ -98,9 +98,15 @@ rotatePoint <- function(id = 1, dataset = "roads") {
   } else if (dataset == "landmarks") {
     sel <- which(cholera::landmarks$case == id)
     points.data <- rbind(center, cholera::landmarks[sel, c("x", "y")])
+  } else if (dataset == "ortho.proj") {
+    sel <- which(cholera::ortho.proj$case == id)
+    nm.sel <- names(cholera::ortho.proj) %in% c("x.proj", "y.proj")
+    ortho.projB <- cholera::ortho.proj
+    names(ortho.projB)[nm.sel] <- c("x", "y")
+    points.data <- rbind(center, ortho.projB[sel, c("x", "y")])
   } else {
     msg1 <- 'dataset must be "roads", "fatalities", "fatalities.address",'
-    msg2 <- '"pumps", "pumps.vestry", or "landmarks".'
+    msg2 <- '"pumps", "pumps.vestry", "landmarks", or "ortho.proj".'
     stop(paste(msg1, msg2))
   }
 
