@@ -103,3 +103,25 @@ openTriadRoads <- function(subgraphs, census, census.ct) {
           unlist(lapply(even, function(x) x$pivot)))
   data.frame(v1, v2)
 }
+
+#' Create PDFs of road endpoints partition (prototype).
+#'
+#' For georeferencing in QGIS.
+#' @param path Character. e.g., "~/Documents/Data/".
+#' @export
+
+partitionRoadsPDF <- function(path) {
+  pts <- partitionRoads()
+  rng <- cholera::mapRange()
+  pre <- "roads."
+  post <- ".pdf"
+
+  invisible(lapply(names(pts), function(nm) {
+    file.nm <- paste0(path, pre, nm, post)
+    dat <- cholera::roads[cholera::roads$id %in% pts[[nm]], c("x", "y")]
+    grDevices::pdf(file = file.nm)
+    plot(dat, pch = 46, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+      xlim = rng$x, ylim = rng$y, bty = "n", asp = 1)
+    grDevices::dev.off()
+  }))
+}
