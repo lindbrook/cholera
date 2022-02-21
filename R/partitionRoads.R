@@ -48,6 +48,12 @@ partitionRoads <- function(inter.point.dist = 0.15) {
 
   lst$v1 <- c(lst$v1, symmetric[nrow(symmetric), "v1"])
   lst$v2 <- c(lst$v2, symmetric[nrow(symmetric), "v2"])
+
+  tmp <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  tmp <- tmp[!duplicated(tmp[, c("x", "y")]), ]
+  vertices.above.threshold <- setdiff(tmp$id, unlist(lst))
+  lst$v5 <- vertices.above.threshold
+
   lst
 }
 
