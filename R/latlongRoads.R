@@ -7,17 +7,7 @@
 
 latlongRoads <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
-
-  rd0 <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  rd <- rd0[!duplicated(rd0[, c("x", "y")]), ]
-
-  # endpt.ids <- partitionRoadEndpoints()
   partition.rds <- partitionRoads()
-  unpartition.rds <- setdiff(rd$id, unlist(partition.rds))
-
-  partition.rds <- c(partition.rds, list(unpartition.rds))
-  names(partition.rds)[length(partition.rds)] <-  paste0("v",
-    length(partition.rds))
 
   coords <- parallel::mclapply(seq_along(partition.rds), function(i) {
     ids <- partition.rds[[i]]
@@ -56,9 +46,12 @@ latlongRoads <- function(path, multi.core = TRUE) {
   coords <- coords[, c(names(cholera::roads), c("lon", "lat"))]
   coords$id2 <- paste0(coords$x, "-", coords$y)
 
+  rd0 <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rd0 <- rd0[duplicated(rd0[, c("x", "y")]), ]
   rd0$id2 <- paste0(rd0$x, "-", rd0$y)
+  rd0 <- merge(rd0, coords[, c("lon", "lat", "id2")], all.x = TRUE, by = "id2")
 
-  out <- merge(rd0, coords[, c("lon", "lat", "id2")], all.x = TRUE, by = "id2")
+  out <- rbind(coords, rd0)
   out$id2 <- NULL
   row.names(out) <- NULL
   out <- out[order(out$id), ]
