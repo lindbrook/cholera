@@ -48,6 +48,12 @@ partitionRoads <- function(inter.point.dist = 0.15) {
 
   lst$v1 <- c(lst$v1, symmetric[nrow(symmetric), "v1"])
   lst$v2 <- c(lst$v2, symmetric[nrow(symmetric), "v2"])
+
+  tmp <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  tmp <- tmp[!duplicated(tmp[, c("x", "y")]), ]
+  vertices.above.threshold <- setdiff(tmp$id, unlist(lst))
+  lst$v5 <- vertices.above.threshold
+  
   lst
 }
 
@@ -96,4 +102,27 @@ openTriadRoads <- function(subgraphs, census, census.ct) {
   v2 <- c(unlist(lapply(odd, function(x) x$others)),
           unlist(lapply(even, function(x) x$pivot)))
   data.frame(v1, v2)
+}
+
+#' Create PDFs of road endpoints partition (prototype).
+#'
+#' For georeferencing in QGIS.
+#' @param path Character. e.g., "~/Documents/Data/".
+#' @param pch Numeric or Character.
+#' @export
+
+partitionRoadsPDF <- function(path, pch = 46) {
+  pts <- partitionRoads()
+  rng <- cholera::mapRange()
+  pre <- "roads."
+  post <- ".pdf"
+
+  invisible(lapply(names(pts), function(nm) {
+    file.nm <- paste0(path, pre, nm, post)
+    dat <- cholera::roads[cholera::roads$id %in% pts[[nm]], c("x", "y")]
+    grDevices::pdf(file = file.nm)
+    plot(dat, pch = pch, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+      xlim = rng$x, ylim = rng$y, bty = "n", asp = 1)
+    grDevices::dev.off()
+  }))
 }
