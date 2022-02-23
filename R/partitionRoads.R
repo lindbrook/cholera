@@ -111,9 +111,10 @@ openTriadRoads <- function(subgraphs, census, census.ct) {
 #'
 #' For georeferencing in QGIS.
 #' @param path Character. e.g., "~/Documents/Data/".
+#' @param pch Numeric or Character.
 #' @export
 
-partitionRoadsPDF <- function(path) {
+partitionRoadsPDF <- function(path, pch = 46) {
   pts <- partitionRoads()
   rng <- cholera::mapRange()
   pre <- "roads."
@@ -123,7 +124,7 @@ partitionRoadsPDF <- function(path) {
     file.nm <- paste0(path, pre, nm, post)
     dat <- cholera::roads[cholera::roads$id %in% pts[[nm]], c("x", "y")]
     grDevices::pdf(file = file.nm)
-    plot(dat, pch = 46, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+    plot(dat, pch = pch, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
       xlim = rng$x, ylim = rng$y, bty = "n", asp = 1)
     grDevices::dev.off()
   }))

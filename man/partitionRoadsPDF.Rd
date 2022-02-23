@@ -4,10 +4,12 @@
 \alias{partitionRoadsPDF}
 \title{Create PDFs of road endpoints partition (prototype).}
 \usage{
-partitionRoadsPDF(path)
+partitionRoadsPDF(path, pch = 46)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/".}
+
+\item{pch}{Numeric or Character.}
 }
 \description{
 For georeferencing in QGIS.
