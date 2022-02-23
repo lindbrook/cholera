@@ -52,11 +52,8 @@ partitionRoads <- function(inter.point.dist = 0.15) {
   tmp <- cholera::roads[cholera::roads$name != "Map Frame", ]
   tmp <- tmp[!duplicated(tmp[, c("x", "y")]), ]
   vertices.above.threshold <- setdiff(tmp$id, unlist(lst))
-  smpl <- sample(vertices.above.threshold)
-
-  lst$v5 <- smpl[1:(length(smpl) / 2)]
-  lst$v6 <- smpl[(1 + length(smpl) / 2):length(smpl)]
-
+  lst$v5 <- vertices.above.threshold
+  
   lst
 }
 
