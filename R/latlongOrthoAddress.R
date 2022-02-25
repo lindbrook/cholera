@@ -19,10 +19,6 @@ latlongOrthoAddress <- function(path, radius = 0.4, multi.core = TRUE) {
   lat.mean <- mean(pool$lat)
   lat.sd <- stats::sd(pool$lat)
 
-  # std <- function(dat, center = lon.mean, spread = lon.sd) {
-  #   (dat - center) / spread
-  # }
-
   rd$lon <- std(rd$lon, lon.mean, lon.sd)
   rd$lat <- std(rd$lat, lat.mean, lat.sd)
   addr$lon <- std(addr$lon, lon.mean, lon.sd)
@@ -96,10 +92,6 @@ latlongOrthoAddress <- function(path, radius = 0.4, multi.core = TRUE) {
 
   ortho.proj <- do.call(rbind, orthogonal.projection)
   row.names(ortho.proj) <- NULL
-
-  # unstd <- function(x, center = lon.mean, spread = lon.sd) {
-  #   x * spread + center
-  # }
 
   ortho.proj$lon <- unstd(ortho.proj$lon, lon.mean, lon.sd)
   ortho.proj$lat <- unstd(ortho.proj$lat, lat.mean, lat.sd)
