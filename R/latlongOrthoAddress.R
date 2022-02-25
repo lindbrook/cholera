@@ -1,97 +1,103 @@
 #' Compute latitude and longitude for orthogonal case projection (address).
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path Character. e.g., "~/Documents/Data/".
+#' @param radius Numeric. For withinRadius().
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
 #' @export
 
-latlongOrthoAddress <- function(path, multi.core = TRUE) {
-  pre <- paste0(path, "ortho.address")
-  post <- "_modified.tif"
+latlongOrthoAddress <- function(path, radius = 0.4, multi.core = TRUE) {
   cores <- multiCore(multi.core)
+  rd <- latlongRoads(path)
+  addr <- latlongAddress(path)
+  pump <- latlongPumps(path)
 
-  ortho.partitions <- partitionOrthoAddresses()
-  ks <- vapply(ortho.partitions, length, integer(1L))
+  vars <- c("lon", "lat")
+  pool <- rbind(rd[, vars], addr[, vars], pump[, vars])
+  lon.mean <- mean(pool$lon)
+  lon.sd <- stats::sd(pool$lon)
+  lat.mean <- mean(pool$lat)
+  lat.sd <- stats::sd(pool$lat)
 
-  coords <- parallel::mclapply(seq_along(ortho.partitions), function(i) {
-    tif <- paste0(pre, i, post)
-    k <- ks[i]
-    latlongCoordinates(tif, k, path)
-  }, mc.cores = cores)
+  rd$lon <- std(rd$lon, lon.mean, lon.sd)
+  rd$lat <- std(rd$lat, lat.mean, lat.sd)
+  addr$lon <- std(addr$lon, lon.mean, lon.sd)
+  addr$lat <- std(addr$lat, lat.mean, lat.sd)
+  pump$lon <- std(pump$lon, lon.mean, lon.sd)
+  pump$lat <- std(pump$lat, lat.mean, lat.sd)
 
-  stop <- cumsum(ks)
-  start <- c(1, stop[-length(stop)] + 1)
-  k.idx <- data.frame(start = start, stop = stop, row.names = NULL)
-
-  coords <- lapply(seq_along(coords), function(i) {
-    tmp <- coords[[i]]
-    tmp$id <- k.idx[i, "start"]:k.idx[i, "stop"]
-    tmp
+  road.segments <- lapply(unique(rd$street), function(i) {
+    dat <- rd[rd$street == i, ]
+    names(dat)[names(dat) %in% vars] <- paste0(vars, 1)
+    seg.data <- dat[-1, paste0(vars, 1)]
+    names(seg.data) <- paste0(vars, 2)
+    dat <- cbind(dat[-nrow(dat), ], seg.data)
+    dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
+    dat
   })
 
-  address.groups <- lapply(ortho.partitions, function(case) {
-    cholera::ortho.proj[cholera::ortho.proj$case %in% case, ]
-  })
+  road.segments <- do.call(rbind, road.segments)
 
-  address.rotate.scale <- parallel::mclapply(address.groups, function(x) {
-    tmp <- lapply(x$case, function(y) rotatePoint(y, dataset = "ortho.proj"))
-    tmp <- do.call(rbind, tmp)
-    data.frame(id = x$case, scale(tmp))
-  }, mc.cores = cores)
+  orthogonal.projection <- parallel::mclapply(addr$anchor, function(a) {
+    case <- addr[addr$anchor == a, vars]
 
-  coords.scale <- lapply(coords, function(x){
-    data.frame(id = x$id, scale(x[, c("lon", "lat")]))
-  })
-
-  match.points <- parallel::mclapply(seq_along(coords.scale), function(i) {
-    addr <- address.rotate.scale[[i]]
-    alters <- coords.scale[[i]]
-    names(alters)[-1] <- c("x", "y")
-    out <- lapply(addr$id, function(id) {
-      ego <- addr[addr$id == id, c("x", "y")]
-      d <- vapply(seq_len(nrow(alters)), function(i) {
-        stats::dist(rbind(ego, alters[i, c("x", "y")]))
-      }, numeric(1L))
-      data.frame(id = id, geo.id = alters$id[which.min(d)])
+    within.radius <- lapply(road.segments$id, function(x) {
+      dat <- road.segments[road.segments$id == x, ]
+      test1 <- withinRadius(case, dat[, c("lon1", "lat1")], radius = radius)
+      test2 <- withinRadius(case, dat[, c("lon2", "lat2")], radius = radius)
+      if (any(test1, test2)) unique(dat$id)
     })
-    do.call(rbind, out)
+
+    within.radius <- unlist(within.radius)
+
+    ortho.proj.test <- lapply(within.radius, function(x) {
+      seg.data <- road.segments[road.segments$id == x,
+        c("lon1", "lat1", "lon2", "lat2")]
+
+      seg.df <- data.frame(lon = c(seg.data$lon1, seg.data$lon2),
+                           lat = c(seg.data$lat1, seg.data$lat2))
+
+      ols <- stats::lm(lat ~ lon, data = seg.df)
+      segment.slope <- stats::coef(ols)[2]
+      segment.intercept <- stats::coef(ols)[1]
+
+      if (segment.slope == 0) {
+        lon.proj <- case$lon
+        lat.proj <- segment.intercept
+      } else {
+         orthogonal.slope <- -1 / segment.slope
+         orthogonal.intercept <- case$lat - orthogonal.slope * case$lon
+         lon.proj <- (orthogonal.intercept - segment.intercept) /
+                     (segment.slope - orthogonal.slope)
+         lat.proj <- segment.slope * lon.proj + segment.intercept
+      }
+
+      # segment bisection/intersection test
+      distB <- stats::dist(rbind(seg.df[1, ], c(lon.proj, lat.proj))) +
+               stats::dist(rbind(seg.df[2, ], c(lon.proj, lat.proj)))
+
+      bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
+
+      if (bisect.test) {
+        ortho.dist <- c(stats::dist(rbind(c(case$lon, case$lat),
+                                          c(lon.proj, lat.proj))))
+        ortho.pts <- data.frame(lon.proj, lat.proj)
+        data.frame(id = x, ortho.pts, ortho.dist, stringsAsFactors = FALSE)
+      } else NA
+    })
+
+    out <- do.call(rbind, ortho.proj.test)
+    out[which.min(out$ortho.dist), ]
   }, mc.cores = cores)
 
-  match.points <- do.call(rbind, match.points)
-  coords <- do.call(rbind, coords)
+  ortho.proj <- do.call(rbind, orthogonal.projection)
+  row.names(ortho.proj) <- NULL
 
-  out <- merge(cholera::fatalities.address, match.points, by.x = "anchor",
-    by.y = "id")
-  out <- merge(out, coords, by.x = "geo.id", by.y = "id")
-  out <- out[order(out$anchor), ]
-  out$geo.id <- NULL
-  row.names(out) <- NULL
-  out
+  ortho.proj$lon <- unstd(ortho.proj$lon, lon.mean, lon.sd)
+  ortho.proj$lat <- unstd(ortho.proj$lat, lat.mean, lat.sd)
+  ortho.proj <- data.frame(case = addr$anchor, ortho.proj)
+  ortho.proj
 }
 
-#' Create PDFs of orthogonal projection addresses.
-#'
-#' For QGIS geo-referencing.
-#' @param path Character. e.g., "~/Documents/Data/"
-#' @param pch Integer. R pch.
-#' @param cex Numeric.
-#' @export
-
-latlongOrthoAddressPDF <- function(path, pch = 46, cex = 1) {
-  file.nm <- "ortho.address"
-  post <- ".pdf"
-
-  parts <- partitionOrthoAddresses()
-  framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  rng <- mapRange()
-
-  invisible(lapply(seq_along(parts), function(i) {
-    dat <- cholera::ortho.proj[cholera::ortho.proj$case %in% parts[[i]], ]
-    # all(parts[[i]] %in% cholera::ortho.proj$case)
-    grDevices::pdf(file = paste0(path, file.nm, i, post))
-    plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
-      xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
-    points(dat[, c("x.proj", "y.proj")], pch = pch, cex = cex)
-    grDevices::dev.off()
-  }))
-}
+std <- function(dat, center, spread) (dat - center) / spread
+unstd <- function(x, center, spread) x * spread + center
