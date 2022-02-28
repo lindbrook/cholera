@@ -2,6 +2,8 @@ cholera 0.7.9.9031
 ==================
 
 - add new latlongOrthoAddress() prototype.
+- add/set latlongOrthoAddress(vestry = FALSE).
+- add latlongOrthoPump() prototype.
 
 
 cholera 0.7.9.9030
