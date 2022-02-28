@@ -4,10 +4,12 @@
 \alias{latlongOrthoAddress}
 \title{Compute latitude and longitude for orthogonal case projection (address).}
 \usage{
-latlongOrthoAddress(path, radius = 0.4, multi.core = TRUE)
+latlongOrthoAddress(path, vestry = FALSE, radius = 0.4, multi.core = TRUE)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/".}
+
+\item{vestry}{Logical.}
 
 \item{radius}{Numeric. For withinRadius().}
 
