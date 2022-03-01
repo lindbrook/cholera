@@ -1,13 +1,13 @@
-#' Compute latitude and longitude for orthogonal case projection (address).
+#' Compute orthogonal projection of pumps (prototype).
 #'
-#' @param path Character. e.g., "~/Documents/Data/".
+#' Projection from fatality address to nearest road segment.
+#' @param path Character. e.g., "~/Documents/Data/"
 #' @param vestry Logical.
-#' @param radius Numeric. For withinRadius().
+#' @param radius Numeric.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
-#' @return An R data frame.
 #' @export
 
-latlongOrthoAddress <- function(path, vestry = FALSE, radius = 0.4,
+latlongOrthoPump <- function(path, vestry = FALSE, radius = 0.001,
   multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
@@ -41,19 +41,12 @@ latlongOrthoAddress <- function(path, vestry = FALSE, radius = 0.4,
 
   road.segments <- do.call(rbind, road.segments)
 
-  orthogonal.projection <- parallel::mclapply(addr$anchor, function(a) {
-    case <- addr[addr$anchor == a, vars]
+  soln <- parallel::mclapply(pump$id, function(p) {
+    case <- pump[pump$id == p, vars]
+    case.st <-  pump[pump$id == p, "street"]
+    case.id <- road.segments[road.segments$name == case.st, "id"]
 
-    within.radius <- lapply(road.segments$id, function(x) {
-      dat <- road.segments[road.segments$id == x, ]
-      test1 <- withinRadius(case, dat[, c("lon1", "lat1")], radius = radius)
-      test2 <- withinRadius(case, dat[, c("lon2", "lat2")], radius = radius)
-      if (any(test1, test2)) unique(dat$id)
-    })
-
-    within.radius <- unlist(within.radius)
-
-    ortho.proj.test <- lapply(within.radius, function(x) {
+    ortho.proj.test <- lapply(case.id, function(x) {
       seg.data <- road.segments[road.segments$id == x,
         c("lon1", "lat1", "lon2", "lat2")]
 
@@ -93,14 +86,11 @@ latlongOrthoAddress <- function(path, vestry = FALSE, radius = 0.4,
     out[which.min(out$ortho.dist), ]
   }, mc.cores = cores)
 
-  ortho.proj <- do.call(rbind, orthogonal.projection)
-  row.names(ortho.proj) <- NULL
+  soln <- do.call(rbind, soln)
+  row.names(soln) <- NULL
 
-  ortho.proj$lon <- unstd(ortho.proj$lon, lon.mean, lon.sd)
-  ortho.proj$lat <- unstd(ortho.proj$lat, lat.mean, lat.sd)
-  ortho.proj <- data.frame(case = addr$anchor, ortho.proj)
-  ortho.proj
+  soln$lon <- unstd(soln$lon, lon.mean, lon.sd)
+  soln$lat <- unstd(soln$lat, lat.mean, lat.sd)
+  soln <- data.frame(pump = pump$id, soln)
+  soln
 }
-
-std <- function(dat, center, spread) (dat - center) / spread
-unstd <- function(x, center, spread) x * spread + center
