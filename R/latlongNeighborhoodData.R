@@ -20,9 +20,9 @@ latlongNeighborhoodData <- function(path, vestry = FALSE) {
     nms <- paste0(c("lon", "lat"), c(rep(1, 2), rep(2, 2)))
     out <- stats::setNames(data.frame(t(do.call(c, endpts))), nms)
     out[, grep("lon", names(out))] <- -1 * out[, grep("lon", names(out))]
-    out$d <- sp::spDistsN1(as.matrix(out[, grep(1, names(out))]),
-                           as.matrix(out[, grep(2, names(out))]),
-                           longlat = TRUE) * 1000L
+    m1 <- as.matrix(out[, grep(1, names(out))])
+    m2 <- as.matrix(out[, grep(2, names(out))])
+    out$d <- sp::spDistsN1(m1, m2, longlat = TRUE) * 1000L
     out
   })
   edges <- do.call(rbind, edges)
