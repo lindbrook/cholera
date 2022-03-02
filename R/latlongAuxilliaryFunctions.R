@@ -243,3 +243,21 @@ segmentTheta <- function(id1 = "297-1", id2 = "290-1") {
     sum(abs(thetas))
   }
 }
+
+#' Standardize data.
+#'
+#' @param dat Object. Data frame.
+#' @param center Numeric. Mean.
+#' @param spread Numeric. Standard deviation.
+#' @noRd
+
+std <- function(dat, center, spread) (dat - center) / spread
+
+#' Unstandardize data.
+#'
+#' @param dat Object. Data frame.
+#' @param center Numeric. Mean.
+#' @param spread Numeric. Standard deviation.
+#' @noRd
+
+unstd <- function(x, center, spread) x * spread + center
