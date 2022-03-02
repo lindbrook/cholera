@@ -101,6 +101,3 @@ latlongOrthoAddress <- function(path, vestry = FALSE, radius = 0.4,
   ortho.proj <- data.frame(case = addr$anchor, ortho.proj)
   ortho.proj
 }
-
-std <- function(dat, center, spread) (dat - center) / spread
-unstd <- function(x, center, spread) x * spread + center

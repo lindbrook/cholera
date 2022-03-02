@@ -1,3 +1,9 @@
+cholera 0.7.9.9032
+==================
+
+- use latlong*() prototypes in latlongEmbed().
+
+
 cholera 0.7.9.9031
 ==================
 
