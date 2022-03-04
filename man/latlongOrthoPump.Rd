@@ -4,14 +4,12 @@
 \alias{latlongOrthoPump}
 \title{Compute orthogonal projection of pumps (prototype).}
 \usage{
-latlongOrthoPump(path, vestry = FALSE, radius = 0.001, multi.core = TRUE)
+latlongOrthoPump(path, vestry = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/"}
 
 \item{vestry}{Logical.}
-
-\item{radius}{Numeric.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }

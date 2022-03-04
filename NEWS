@@ -2,6 +2,7 @@ cholera 0.7.9.9033
 ==================
 
 - use cholera::ortho.proj$road.segment in latlongOrthoAddress().
+- use cholera::ortho.proj.pump$road.segment in latlongOrthoPump().
 
 
 cholera 0.7.9.9032
