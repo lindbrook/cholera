@@ -2,14 +2,11 @@
 #'
 #' @param path Character. e.g., "~/Documents/Data/".
 #' @param vestry Logical.
-#' @param radius Numeric. For withinRadius().
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
 #' @export
 
-latlongOrthoAddress <- function(path, vestry = FALSE, radius = 0.4,
-  multi.core = TRUE) {
-
+latlongOrthoAddress <- function(path, vestry = FALSE, multi.core = TRUE) {
   cores <- multiCore(multi.core)
   rd <- latlongRoads(path)
   addr <- latlongAddress(path)
@@ -29,7 +26,7 @@ latlongOrthoAddress <- function(path, vestry = FALSE, radius = 0.4,
   pump$lon <- std(pump$lon, lon.mean, lon.sd)
   pump$lat <- std(pump$lat, lat.mean, lat.sd)
 
-  road.segments <- lapply(unique(rd$street), function(i) {
+  rd.segs <- lapply(unique(rd$street), function(i) {
     dat <- rd[rd$street == i, ]
     names(dat)[names(dat) %in% vars] <- paste0(vars, 1)
     seg.data <- dat[-1, paste0(vars, 1)]
@@ -39,65 +36,44 @@ latlongOrthoAddress <- function(path, vestry = FALSE, radius = 0.4,
     dat
   })
 
-  road.segments <- do.call(rbind, road.segments)
+  rd.segs <- do.call(rbind, rd.segs)
 
-  orthogonal.projection <- parallel::mclapply(addr$anchor, function(a) {
-    case <- addr[addr$anchor == a, vars]
+  sel <- cholera::ortho.proj$case %in% unique(cholera::anchor.case$anchor)
+  obs.segs <- cholera::ortho.proj[sel, "road.segment"]
+  idx <- seq_along(addr$anchor)
 
-    within.radius <- lapply(road.segments$id, function(x) {
-      dat <- road.segments[road.segments$id == x, ]
-      test1 <- withinRadius(case, dat[, c("lon1", "lat1")], radius = radius)
-      test2 <- withinRadius(case, dat[, c("lon2", "lat2")], radius = radius)
-      if (any(test1, test2)) unique(dat$id)
-    })
+  orthogonal.projection <- parallel::mclapply(idx, function(i) {
+    case <- addr[addr$anchor == addr$anchor[i], vars]
+    seg.data <- rd.segs[rd.segs$id == obs.segs[i],
+      c("lon1", "lat1", "lon2", "lat2")]
+    seg.df <- data.frame(lon = c(seg.data$lon1, seg.data$lon2),
+                         lat = c(seg.data$lat1, seg.data$lat2))
 
-    within.radius <- unlist(within.radius)
+    ols <- stats::lm(lat ~ lon, data = seg.df)
+    segment.slope <- stats::coef(ols)[2]
+    segment.intercept <- stats::coef(ols)[1]
 
-    ortho.proj.test <- lapply(within.radius, function(x) {
-      seg.data <- road.segments[road.segments$id == x,
-        c("lon1", "lat1", "lon2", "lat2")]
+    if (segment.slope == 0) {
+      lon.proj <- case$lon
+      lat.proj <- segment.intercept
+    } else {
+      orthogonal.slope <- -1 / segment.slope
+      orthogonal.intercept <- case$lat - orthogonal.slope * case$lon
+      lon.proj <- (orthogonal.intercept - segment.intercept) /
+                  (segment.slope - orthogonal.slope)
+      lat.proj <- segment.slope * lon.proj + segment.intercept
+    }
 
-      seg.df <- data.frame(lon = c(seg.data$lon1, seg.data$lon2),
-                           lat = c(seg.data$lat1, seg.data$lat2))
+    case.data <- rbind(c(case$lon, case$lat), c(lon.proj, lat.proj))
+    ortho.dist <- c(stats::dist(case.data))
 
-      ols <- stats::lm(lat ~ lon, data = seg.df)
-      segment.slope <- stats::coef(ols)[2]
-      segment.intercept <- stats::coef(ols)[1]
-
-      if (segment.slope == 0) {
-        lon.proj <- case$lon
-        lat.proj <- segment.intercept
-      } else {
-         orthogonal.slope <- -1 / segment.slope
-         orthogonal.intercept <- case$lat - orthogonal.slope * case$lon
-         lon.proj <- (orthogonal.intercept - segment.intercept) /
-                     (segment.slope - orthogonal.slope)
-         lat.proj <- segment.slope * lon.proj + segment.intercept
-      }
-
-      # segment bisection/intersection test
-      distB <- stats::dist(rbind(seg.df[1, ], c(lon.proj, lat.proj))) +
-               stats::dist(rbind(seg.df[2, ], c(lon.proj, lat.proj)))
-
-      bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
-
-      if (bisect.test) {
-        ortho.dist <- c(stats::dist(rbind(c(case$lon, case$lat),
-                                          c(lon.proj, lat.proj))))
-        ortho.pts <- data.frame(lon.proj, lat.proj)
-        data.frame(id = x, ortho.pts, ortho.dist, stringsAsFactors = FALSE)
-      } else NA
-    })
-
-    out <- do.call(rbind, ortho.proj.test)
-    out[which.min(out$ortho.dist), ]
+    data.frame(lon.proj, lat.proj, ortho.dist, stringsAsFactors = FALSE)
   }, mc.cores = cores)
 
-  ortho.proj <- do.call(rbind, orthogonal.projection)
-  row.names(ortho.proj) <- NULL
-
-  ortho.proj$lon <- unstd(ortho.proj$lon, lon.mean, lon.sd)
-  ortho.proj$lat <- unstd(ortho.proj$lat, lat.mean, lat.sd)
-  ortho.proj <- data.frame(case = addr$anchor, ortho.proj)
-  ortho.proj
+  soln <- do.call(rbind, orthogonal.projection)
+  row.names(soln) <- NULL
+  soln$lon <- unstd(soln$lon, lon.mean, lon.sd)
+  soln$lat <- unstd(soln$lat, lat.mean, lat.sd)
+  soln <- data.frame(case = addr$anchor, seg = obs.segs, soln)
+  soln
 }
