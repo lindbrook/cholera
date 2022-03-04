@@ -2,14 +2,11 @@
 #'
 #' @param path Character. e.g., "~/Documents/Data/".
 #' @param vestry Logical.
-#' @param radius Numeric. For withinRadius().
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
 #' @export
 
-latlongOrthoAddress <- function(path, vestry = FALSE, radius = 0.4,
-  multi.core = TRUE) {
-
+latlongOrthoAddress <- function(path, vestry = FALSE, multi.core = TRUE) {
   cores <- multiCore(multi.core)
   rd <- latlongRoads(path)
   addr <- latlongAddress(path)

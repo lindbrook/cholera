@@ -4,14 +4,12 @@
 \alias{latlongOrthoAddress}
 \title{Compute latitude and longitude for orthogonal case projection (address).}
 \usage{
-latlongOrthoAddress(path, vestry = FALSE, radius = 0.4, multi.core = TRUE)
+latlongOrthoAddress(path, vestry = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/".}
 
 \item{vestry}{Logical.}
-
-\item{radius}{Numeric. For withinRadius().}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
