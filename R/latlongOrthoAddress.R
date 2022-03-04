@@ -26,7 +26,7 @@ latlongOrthoAddress <- function(path, vestry = FALSE, multi.core = TRUE) {
   pump$lon <- std(pump$lon, lon.mean, lon.sd)
   pump$lat <- std(pump$lat, lat.mean, lat.sd)
 
-  road.segments <- lapply(unique(rd$street), function(i) {
+  rd.segs <- lapply(unique(rd$street), function(i) {
     dat <- rd[rd$street == i, ]
     names(dat)[names(dat) %in% vars] <- paste0(vars, 1)
     seg.data <- dat[-1, paste0(vars, 1)]
@@ -36,7 +36,7 @@ latlongOrthoAddress <- function(path, vestry = FALSE, multi.core = TRUE) {
     dat
   })
 
-  road.segments <- do.call(rbind, road.segments)
+  rd.segs <- do.call(rbind, rd.segs)
 
   sel <- cholera::ortho.proj$case %in% unique(cholera::anchor.case$anchor)
   obs.segs <- cholera::ortho.proj[sel, "road.segment"]
@@ -44,7 +44,7 @@ latlongOrthoAddress <- function(path, vestry = FALSE, multi.core = TRUE) {
 
   orthogonal.projection <- parallel::mclapply(idx, function(i) {
     case <- addr[addr$anchor == addr$anchor[i], vars]
-    seg.data <- road.segments[road.segments$id == obs.segs[i],
+    seg.data <- rd.segs[rd.segs$id == obs.segs[i],
       c("lon1", "lat1", "lon2", "lat2")]
     seg.df <- data.frame(lon = c(seg.data$lon1, seg.data$lon2),
                          lat = c(seg.data$lat1, seg.data$lat2))
