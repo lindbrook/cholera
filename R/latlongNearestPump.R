@@ -15,7 +15,7 @@ latlongNearestPump <- function(path, pump.select = NULL, vestry = FALSE,
   cores <- multiCore(multi.core)
 
   dat <- latlongNeighborhoodData(path, vestry)
-  path.data <- latlong_pathData(dat, pump.select, weighted, vestry, cores)
+  path.data <- latlong_pathData(path, dat, pump.select, weighted, vestry, cores)
 
   if (time.unit == "hour") {
     walking.time <- path.data$distance / (1000L * walking.speed)
@@ -31,17 +31,12 @@ latlongNearestPump <- function(path, pump.select = NULL, vestry = FALSE,
   list(distance = distance, path = path.data$path)
 }
 
-latlong_pathData <- function(dat, pump.select, weighted, vestry, cores) {
+latlong_pathData <- function(path, dat, pump.select, weighted, vestry, cores) {
   g <- dat$g
   edge.list <- dat$edge.list
   edges <- dat$edges
-  ortho.addr <- cholera::latlong.ortho.proj
-
-  if (vestry) {
-    ortho.pump <- cholera::latlong.ortho.proj.pump.vestry
-  } else {
-    ortho.pump <- cholera::latlong.ortho.proj.pump
-  }
+  ortho.addr <- latlongOrthoAddress(path)
+  ortho.pump <- latlongOrthoPump(path, vestry = vestry)
 
   if (!is.null(pump.select)) {
     if (all(pump.select > 0)) {
@@ -59,6 +54,16 @@ latlong_pathData <- function(dat, pump.select, weighted, vestry, cores) {
 
   # all(ortho.addr$node %in% unlist(edge.list))
   # all(ortho.pump$node %in% unlist(edge.list))
+
+  ## Adam and Eve Court: isolate with pump (#2) ##
+  sel <- cholera::road.segments$name == "Adam and Eve Court"
+  adam.eve <- cholera::road.segments[sel, "id"]
+  adam.eve.pump <- ortho.pump[ortho.pump$seg == adam.eve, "node"]
+  ortho.pump <- ortho.pump[!ortho.pump$node %in% adam.eve.pump, ]
+
+  ## Falconberg Court and Mews: isolate without pump ##
+  # falconberg.court.mews <- c("40-1", "41-1", "41-2", "63-1")
+  # ortho.addr[ortho.addr$seg %in% falconberg.court.mews, ]
 
   paths <- lapply(ortho.addr$node, function(case.node) {
      p <- igraph::shortest_paths(g, case.node, ortho.pump$node,
