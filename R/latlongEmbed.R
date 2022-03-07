@@ -23,15 +23,15 @@ latlongEmbed <- function(path, vestry = FALSE) {
   })
 
   road.data <- do.call(rbind, road.segments)
-  obs.segs <- unique(c(ortho.addr$id, ortho.pump$id))
+  obs.segs <- unique(c(ortho.addr$seg, ortho.pump$seg))
 
   no_embeds <- road.data[!road.data$id %in% obs.segs, ]
   no_embeds$distance <- NULL
 
   embeds <- lapply(obs.segs, function(s) {
     rd.tmp <- road.data[road.data$id == s, ]
-    addr.tmp <- ortho.addr[ortho.addr$id == s, ]
-    pump.tmp <- ortho.pump[ortho.pump$id == s, ]
+    addr.tmp <- ortho.addr[ortho.addr$seg == s, ]
+    pump.tmp <- ortho.pump[ortho.pump$seg == s, ]
     endpts <- data.frame(lon = unlist(rd.tmp[, paste0(vars[1], 1:2)]),
                          lat = unlist(rd.tmp[, paste0(vars[2], 1:2)]),
                          case = 0,
