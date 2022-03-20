@@ -11,6 +11,8 @@ latlongAddress <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
   addr.partitions <- partitionAddresses()
+  # 299 in group 1
+  # 430 in group 4
 
   # values of k for stats::hclust()
   ks <- vapply(addr.partitions, length, integer(1L))
@@ -50,12 +52,27 @@ latlongAddress <- function(path, multi.core = TRUE) {
     alters <- coords.scale[[i]]
     names(alters)[-1] <- c("x", "y")
 
+    # points(addr[addr$id == 299, c("x", "y")], pch = 16, col = "dodgerblue",
+    #   cex = 0.75)
+    # points(addr[addr$id == 430, c("x", "y")], pch = 16, col = "dodgerblue",
+    #   cex = 0.75)
+
     out <- lapply(addr$id, function(id) {
       ego <- addr[addr$id == id, c("x", "y")]
       d <- vapply(seq_len(nrow(alters)), function(i) {
         stats::dist(rbind(ego, alters[i, c("x", "y")]))
       }, numeric(1L))
-      data.frame(id = id, geo.id = alters$id[which.min(d)])
+
+      # audit <- data.frame(alters, d)
+      # head(audit[order(audit$d), ])
+
+      if (id == 299) {
+        data.frame(id = id, geo.id = 17)
+      } else if (id == 430) {
+        data.frame(id = id, geo.id = 158)
+      } else {
+        data.frame(id = id, geo.id = alters$id[which.min(d)])
+      }
     })
 
     do.call(rbind, out)
