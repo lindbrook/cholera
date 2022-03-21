@@ -107,7 +107,8 @@ latlongWalkingPath <- function(case = 1, path, zoom = TRUE) {
 
   rd <- cholera::latlong.roads
   frame <- cholera::latlong.frame
-  fatality <- cholera::latlong.fatalities.address
+  # fatality <- cholera::latlong.fatalities.address
+  fatality <- latlongAddress(path)
   pump <- cholera::latlong.pumps
   nearest.pump <- latlongNearestPump(path)
 

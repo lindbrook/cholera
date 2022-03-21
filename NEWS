@@ -2,6 +2,7 @@ cholera 0.7.9.9035
 ==================
 
 - add temporary fix for cases 299 and 430 in latlongAddress().
+- temporarily use latlongAddress() in latlongWalkingPath().
 
 
 cholera 0.7.9.9034
