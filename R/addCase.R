@@ -5,6 +5,9 @@
 #' @param type Character. Type of case: "observed" or "expected".
 #' @param token Character. Type of token to plot: "point", "id" or "both".
 #' @param text.size Numeric. Size of case ID text.
+#' @param pch Numeric. pch.
+#' @param cex Numeric. cex.
+#' @param point.lwd Numeric. Point lwd.
 #' @param col Character. Color.
 #' @param pos Numeric. Text position.
 #' @export
@@ -16,7 +19,7 @@
 #' addCase(100)
 
 addCase <- function(case = 1, type = "observed", token = "both",
-  text.size = 0.5, col = "red", pos = 1) {
+  text.size = 0.5, pch = 1, cex = 1, point.lwd = 2, col = "red", pos = 1) {
 
   if (type %in% c("observed", "expected") == FALSE) {
     stop('type must be "observed" or "expected".', call. = FALSE)
@@ -43,11 +46,13 @@ addCase <- function(case = 1, type = "observed", token = "both",
     }
 
     if (token == "point") {
-      points(dat[case, c("x", "y")], lwd = 2, col = col)
+      points(dat[case, c("x", "y")], pch = pch, cex = cex, lwd = point.lwd,
+        col = col)
     } else if (token == "id") {
       text(dat[case, c("x", "y")], cex = text.size, col = col, labels = case)
     } else if (token == "both") {
-      points(dat[case, c("x", "y")], lwd = 2, col = col)
+      points(dat[case, c("x", "y")], pch = pch, cex = cex, lwd = point.lwd,
+        col = col)
       text(dat[case, c("x", "y")], cex = text.size, col = col, labels = case,
         pos = pos)
     }
