@@ -3,6 +3,7 @@ cholera 0.7.9.9035
 
 - add temporary fix for cases 299 and 430 in latlongAddress().
 - temporarily use latlongAddress() in latlongWalkingPath().
+- add/set addCase(pch = 1, cex = 1, point.lwd = 2).
 
 
 cholera 0.7.9.9034

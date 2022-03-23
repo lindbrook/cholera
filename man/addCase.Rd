@@ -5,7 +5,7 @@
 \title{Add observed case(s) to plot.}
 \usage{
 addCase(case = 1, type = "observed", token = "both", text.size = 0.5,
-  col = "red", pos = 1)
+  pch = 1, cex = 1, point.lwd = 2, col = "red", pos = 1)
 }
 \arguments{
 \item{case}{Numeric. Vector of case ID(s). NULL plots all cases.}
@@ -15,6 +15,12 @@ addCase(case = 1, type = "observed", token = "both", text.size = 0.5,
 \item{token}{Character. Type of token to plot: "point", "id" or "both".}
 
 \item{text.size}{Numeric. Size of case ID text.}
+
+\item{pch}{Numeric. pch.}
+
+\item{cex}{Numeric. cex.}
+
+\item{point.lwd}{Numeric. Point lwd.}
 
 \item{col}{Character. Color.}
 
