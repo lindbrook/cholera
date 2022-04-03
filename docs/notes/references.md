@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2022-01-27
+2022-04-03
 
 Herve Bazin. 2000. *The Eradication of Smallpox: Edward Jenner and the
 First and Only Eradication of a Human Infectious Disease*. San Diego:
@@ -44,6 +44,9 @@ Victorian Life*. New York: Liveright.
 David Graeber. 2011. *Debt: The First 5,000 Years*. Brooklyn: Melville
 House.
 
+Kyle Harper. 2021. *Plagues Upon the Earth: Disease and the Course of
+Human History*. Princeton: Princeton University Press.
+
 Brian Harrison. 1997. *Drink and the Victorians*. Edinburgh: Edinburgh
 University Press.
 
@@ -72,6 +75,9 @@ Margaret Pelling. 1978. *Cholera, Fever and English Medicine:
 
 Liza Picard. 2006. *Victorian London: The Life of A City, 1840-1870*.
 New York: St Martin’s Press.
+
+James C. Riley. 1987. *The Eighteenth-Century Campaign to Avoid
+Disease*. New York: St. Martin’s Press.
 
 Robert Skidelsky. 2018. *Money and Government: The Past and Future of
 Economics*. New Haven: Yale University Press.
