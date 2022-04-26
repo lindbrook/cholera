@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2022-04-03
+2022-04-25
 
 Herve Bazin. 2000. *The Eradication of Smallpox: Edward Jenner and the
 First and Only Eradication of a Human Infectious Disease*. San Diego:
@@ -43,6 +43,9 @@ Victorian Life*. New York: Liveright.
 
 David Graeber. 2011. *Debt: The First 5,000 Years*. Brooklyn: Melville
 House.
+
+Christopher Hamlin. 2009. *Cholera: The Biography*. New York: Oxford
+University Press.
 
 Kyle Harper. 2021. *Plagues Upon the Earth: Disease and the Course of
 Human History*. Princeton: Princeton University Press.
