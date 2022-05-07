@@ -9,16 +9,16 @@ pumpTokens <- function(x, type) {
   all.labels <- paste0("p", dat$id)
 
   if (!is.null(x$pump.select)) {
-    if (class(x) == "walking") {
+    if (inherits(x, "walking")) {
       p.obs <- as.numeric(names(x$paths))
-    } else if (class(x) == "euclidean") {
+    } else if (inherits(x, "euclidean")) {
       p.obs <- sort(unique(x$nearest.pump))
-    } else if (class(x) == "voronoi") {
+    } else if (inherits(x, "voronoi")) {
       p.obs <- sort(x$pump.id)
     }
   }
 
-  if (class(x) == "voronoi") x$case.set <-  "observed"
+  if (inherits(x, "voronoi")) x$case.set <-  "observed"
 
   if (x$case.set == "observed") {
     if (is.null(x$pump.select)) {
