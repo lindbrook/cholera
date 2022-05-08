@@ -68,7 +68,7 @@ pumpsPDF <- function(path, vestry = FALSE, pch = 46, cex = 1) {
 
   grDevices::pdf(file = paste0(path, pre, post))
   plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
-    xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
+    xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y, asp = 1)
   points(dat[, c("x", "y")], pch = pch, cex = cex)
   grDevices::dev.off()
 }

@@ -2,6 +2,7 @@ cholera 0.7.9.9038
 ==================
 
 - rename latlongFramePDF() to framePartitionPDF().
+- set asp = 1 in framePartitionPDF() and pumpsPDF().
 
 
 cholera 0.7.9.9037
