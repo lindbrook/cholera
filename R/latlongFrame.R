@@ -151,7 +151,7 @@ framePartitionPDF <- function(path, pch = 46, cex = 1) {
     grDevices::pdf(file = paste0(path, file.nm, i, post))
     dat <- cholera::roads[cholera::roads$id %in% frame.partitions[[i]], ]
     plot(dat$x, dat$y, pch = pch, xaxt = "n", yaxt = "n", cex = cex, xlab = NA,
-      ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y)
+      ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y, asp = 1)
     grDevices::dev.off()
   }))
 }
