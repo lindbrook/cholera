@@ -142,7 +142,7 @@ partitionFrame <- function(inter.point.dist = 0.15) {
 #' @param cex Numeric.
 #' @export
 
-latlongFramePDF <- function(path, pch = 46, cex = 1) {
+framePartitionPDF <- function(path, pch = 46, cex = 1) {
   file.nm <- "frame"
   post <- ".pdf"
   rng <- mapRange()
