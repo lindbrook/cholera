@@ -1,3 +1,10 @@
+cholera 0.7.9.9039
+==================
+
+- add partitionAddressesPDF().
+- amend latlongAddress() for OSM coordinates.
+
+
 cholera 0.7.9.9038
 ==================
 
