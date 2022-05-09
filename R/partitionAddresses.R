@@ -262,3 +262,26 @@ partitionOddString <- function(subgraphs, group = c("6", "7")) {
   v2 <- c(even[[1]], odd[[2]])
   data.frame(v1, v2)
 }
+
+#' Create PDFs of fatality address partitions (prototype).
+#'
+#' For georeferencing in QGIS.
+#' @param path Character. e.g., "~/Documents/Data/".
+#' @param pch Numeric or Character.
+#' @export
+
+partitionAddressesPDF <- function(path, pch = 46) {
+  pts <- partitionAddresses()
+  rng <- cholera::mapRange()
+  pre <- "address."
+  post <- ".pdf"
+  invisible(lapply(names(pts), function(nm) {
+    file.nm <- paste0(path, pre, nm, post)
+    sel <- cholera::fatalities.address$anchor %in% pts[[nm]]
+    dat <- cholera::fatalities.address[sel, c("x", "y")]
+    grDevices::pdf(file = file.nm)
+    plot(dat, pch = pch, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+      xlim = rng$x, ylim = rng$y, bty = "n", asp = 1)
+    grDevices::dev.off()
+  }))
+}
