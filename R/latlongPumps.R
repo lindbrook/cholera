@@ -55,19 +55,16 @@ latlongPumps <- function(path, vestry = FALSE) {
 
 pumpsPDF <- function(path, vestry = FALSE, pch = 46, cex = 1) {
   file.nm <- "pump"
-
   if (vestry) pre <- paste0(file.nm, ".vestry.")
   else pre <- paste0(file.nm, ".")
-
   post <- "pdf"
+
   if (vestry) dat <- cholera::pumps.vestry
   else dat <- cholera::pumps
 
-  framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
   rng <- mapRange()
-
   grDevices::pdf(file = paste0(path, pre, post))
-  plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
+  plot(dat$x, dat$y, pch = NA, xaxt = "n", yaxt = "n",
     xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y, asp = 1)
   points(dat[, c("x", "y")], pch = pch, cex = cex)
   grDevices::dev.off()
