@@ -416,3 +416,27 @@ sixDoubleTriangleTwoTail <- function(dat, subgraphs) {
        v3 = as.numeric(triangle.vertices[2]),
        v4 = as.numeric(triangle.vertices[4]))
 }
+
+#' Create PDFs of fatality address orthogonal projection partitions (prototype).
+#'
+#' For georeferencing in QGIS.
+#' @param path Character. e.g., "~/Documents/Data/".
+#' @param pch Numeric or Character.
+#' @export
+
+partitionOrthoAddressesPDF <- function(path, pch = 46) {
+  pts <- partitionOrthoAddresses()
+  rng <- cholera::mapRange()
+  pre <- "ortho.address."
+  post <- ".pdf"
+
+  invisible(lapply(names(pts), function(nm) {
+    file.nm <- paste0(path, pre, nm, post)
+    sel <- cholera::ortho.proj$case %in% pts[[nm]]
+    dat <- cholera::ortho.proj[sel, c("x.proj", "y.proj")]
+    grDevices::pdf(file = file.nm)
+    plot(dat, pch = pch, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+      xlim = rng$x, ylim = rng$y, bty = "n", asp = 1)
+    grDevices::dev.off()
+  }))
+}
