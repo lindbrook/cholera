@@ -72,22 +72,5 @@ partitionFatalities <- function() {
   sets
 }
 
-#' Network graph of non-address fatalities with selected inter-point distance.
-#'
-#' @param inter.point.dist Numeric. Ceiling for overlapping points.
-#' @return An 'igraph' object.
-#' @noRd
-
-thresholdFataltiesGraph <- function(inter.point.dist = 0.15) {
-  sel <- !cholera::fatalities$case %in% cholera::fatalities.address$anchor
-  dat <- cholera::fatalities[sel, ]
-  idx <- data.frame(t(utils::combn(dat$case, 2)))
-  names(idx) <- c("v1", "v2")
-  d <- stats::dist(dat[, c("x", "y")])
-  fatality.dist <- data.frame(idx, d = c(d))
-  overlap <- fatality.dist[fatality.dist$d <= inter.point.dist, ]
-  edge.list <- overlap[, c("v1", "v2")]
-  igraph::graph_from_data_frame(edge.list, directed = FALSE)
-}
 
 # plot(thresholdFataltiesGraph(), vertex.label = NA, vertex.size = 2)
