@@ -47,8 +47,6 @@ partitionFatalities <- function(inter.point.dist = 0.15) {
   # plotNtuple(open.tetrads, subgraphs)
   stack.open.tetrad <- fourTriangleTail(open.tetrads, subgraphs)
 
-  fourPlus <- rbind(stack.closed.tetrad, stack.open.tetrad, sll.s20)
-
   ## pentads ##
 
   fives <- names(census[census.ct == 5])
@@ -123,6 +121,8 @@ partitionFatalities <- function(inter.point.dist = 0.15) {
                         v2 = c(s11$v2, s20$v3),
                         v3 = c(s11$v3, s20$v2),
                         v4 = c(s11$v4, s20$v1))
+
+  fourPlus <- rbind(stack.closed.tetrad, stack.open.tetrad, sll.s20)
 
   s42 <- list(v1 = c(248, 308), v2 = c(306, 471), v3 = c(408, 335), v4 = 317,
     v5 = 329)
