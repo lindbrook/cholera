@@ -2,13 +2,16 @@
 % Please edit documentation in R/partitionFatalities.R
 \name{partitionFatalities}
 \alias{partitionFatalities}
-\title{Partition fatalities (prototype).}
+\title{Partition non-address fatalities (prototype).}
 \usage{
-partitionFatalities()
+partitionFatalities(inter.point.dist = 0.15)
+}
+\arguments{
+\item{inter.point.dist}{Numeric. Ceiling for overlapping points.}
 }
 \value{
 An R list.
 }
 \description{
-Minimize "adjacent" fatalities in stacks.
+Based on set of subgraphs defined by selected inter-point distance.
 }
