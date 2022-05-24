@@ -251,3 +251,26 @@ partitionFatalities <- function(inter.point.dist = 0.15) {
 
   out
 }
+
+#' Create PDFs of non-address fatalities (prototype).
+#'
+#' For georeferencing in QGIS.
+#' @param path Character. e.g., "~/Documents/Data/".
+#' @param pch Numeric or Character.
+#' @export
+
+partitionFatalitiesPDF <- function(path, pch = 46) {
+  pts <- partitionFatalities()
+  rng <- cholera::mapRange()
+  pre <- "fatalities."
+  post <- ".pdf"
+  invisible(lapply(names(pts), function(nm) {
+    file.nm <- paste0(path, pre, nm, post)
+    sel <- cholera::fatalities$case %in% pts[[nm]]
+    dat <- cholera::fatalities[sel, c("x", "y")]
+    grDevices::pdf(file = file.nm)
+    plot(dat, pch = pch, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+      xlim = rng$x, ylim = rng$y, bty = "n", asp = 1)
+    grDevices::dev.off()
+  }))
+}
