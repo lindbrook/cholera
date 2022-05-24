@@ -4,10 +4,12 @@
 \alias{latlongSnowMap}
 \title{Plot John Snow's cholera map.}
 \usage{
-latlongSnowMap(path, asp = 1.65)
+latlongSnowMap(path, stacked = TRUE, asp = 1.65)
 }
 \arguments{
-\item{path}{Character. e.g., "~/Documents/Data/"}
+\item{path}{Character. e.g., "~/Documents/Data/".}
+
+\item{stacked}{Logical. Use stacked fatalities.}
 
 \item{asp}{Numeric. Aspect ratio.}
 }
