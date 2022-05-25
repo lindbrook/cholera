@@ -2,6 +2,7 @@ cholera 0.7.9.9043
 ==================
 
 - add non-address fatalities to latlongSnowMap().
+- use inherits() instead of class().
 
 
 cholera 0.7.9.9042

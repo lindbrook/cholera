@@ -83,7 +83,7 @@ plot.time_series <- function(x, statistic = "fatal.attacks",
   pump.handle = TRUE, main = "Removal of the Broad Street Pump Handle",
   type = "o", xlab = "Date", ylab = "Fatalities", ...) {
 
-  if (class(x) != "time_series") stop('x\'s class needs to be "time_series".')
+  if (!inherits(x, "time_series")) stop('x\'s class needs to be "time_series".')
 
   if (all(statistic %in% c("deaths", "fatal.attacks")) == FALSE) {
     stop('statistic must either be "deaths" or "fatal.attacks".')
@@ -107,7 +107,7 @@ plot.time_series <- function(x, statistic = "fatal.attacks",
 #' print(timeSeries())
 
 print.time_series <- function(x, ...) {
-  if (class(x) != "time_series") {
+  if (!inherits(x, "time_series")) {
     stop('x\'s class needs to be "time_series".')
   }
   print(x$data)

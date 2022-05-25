@@ -85,7 +85,7 @@ classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE,
 #' print(classifierAudit(case = 483, segment = "326-2"))
 
 print.classifier_audit <- function(x, ...) {
-  if (class(x) != "classifier_audit") {
+  if (!inherits(x, "classifier_audit")) {
     stop('"x"\'s class needs to be "classifier_audit".')
   }
 
