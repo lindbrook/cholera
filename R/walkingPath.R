@@ -706,7 +706,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
   unit.posts = "distance", unit.interval = NULL, alpha.level = 1, ...) {
 
-  if (class(x) != "walking_path") {
+  if (!inherits(x, "walking_path")) {
     stop('x\'s class must be "walking_path".')
   }
 
@@ -1176,7 +1176,7 @@ if (stacked) {
 #' }
 
 print.walking_path <- function(x, ...) {
-  if (class(x) != "walking_path") {
+  if (!inherits(x, "walking_path")) {
     stop('"x"\'s class must be "walking_path".')
   }
 

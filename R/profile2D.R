@@ -239,7 +239,7 @@ profilePerspective <- function(output = "inside", pump = 7, angle = 0,
 #' @export
 
 plot.profile_perspective <- function(x, ...) {
-  if (class(x) != "profile_perspective") {
+  if (!inherits(x, "profile_perspective")) {
     stop('"x"\'s class needs to be "profile_perspective".')
   }
 

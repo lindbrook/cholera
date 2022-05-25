@@ -625,7 +625,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
   unit.interval = NULL, ...) {
 
-  if (class(x) != "euclidean_path") {
+  if (!inherits(x, "euclidean_path")) {
     stop('"x"\'s class must be "euclidean_path".', call. = FALSE)
   }
 
@@ -910,7 +910,7 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
 #' print(euclideanPath(1))
 
 print.euclidean_path <- function(x, ...) {
-  if (class(x) != "euclidean_path") {
+  if (!inherits(x, "euclidean_path")) {
     stop('"x"\'s class must be "euclidean_path".')
   }
 
