@@ -2,6 +2,7 @@ cholera 0.7.9.9044
 ==================
 
 - add orthoProjPumpPDF().
+- amend pumpsPDF() and subsetPDF().
 
 
 cholera 0.7.9.9043

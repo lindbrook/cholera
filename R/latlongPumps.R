@@ -54,7 +54,7 @@ latlongPumps <- function(path, vestry = FALSE) {
 #' @export
 
 pumpsPDF <- function(path, vestry = FALSE, pch = 46, cex = 1) {
-  file.nm <- "pump"
+  file.nm <- "pumps"
   if (vestry) pre <- paste0(file.nm, ".vestry.")
   else pre <- paste0(file.nm, ".")
   post <- "pdf"

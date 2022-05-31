@@ -154,7 +154,7 @@ segmentDistance <- function(dat, latlong = FALSE) {
 #' @export
 
 subsetPDF <- function(path, dataset = "fatalities.address") {
-  framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rng <- mapRange()
 
   if (dataset == "roads") {
     dat <- framework
@@ -169,10 +169,10 @@ subsetPDF <- function(path, dataset = "fatalities.address") {
     file.nm <- "address"
   } else if (dataset == "pumps") {
     dat <- cholera::pumps
-    file.nm <- "pump"
+    file.nm <- "pumps"
   } else if (dataset == "pumps.vestry") {
     dat <- cholera::pumps.vestry
-    file.nm <- "pump.vestry"
+    file.nm <- "pumps.vestry"
   } else {
     msg1 <- 'dataset must be "roads", "fatalities", "fatalities.address", '
     msg2 <- '"pumps" or "pumps.vestry".'
@@ -193,8 +193,8 @@ subsetPDF <- function(path, dataset = "fatalities.address") {
       pre <- paste0(file.nm, ".")
       post <- ".pdf"
       grDevices::pdf(file = paste0(path, pre, num.id[i], post))
-      plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n",
-        xlab = NA, ylab = NA, bty = "n")
+      plot(dat$x, dat$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+        xlim = rng$x, ylim = rng$y, bty = "n", asp = 1)
       sel <- idx[i, "start"]:idx[i, "stop"]
       points(dat[sel, c("x", "y")], pch = 15, cex = 0.2)
       grDevices::dev.off()
@@ -203,9 +203,9 @@ subsetPDF <- function(path, dataset = "fatalities.address") {
     pre <- file.nm
     post <- ".01.pdf"
     grDevices::pdf(file = paste0(path, pre, post))
-    plot(framework$x, framework$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA,
-      ylab = NA, bty = "n")
-    points(dat[, c("x", "y")], pch = 15, cex = 0.2)
+    plot(dat$x, dat$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+      xlim = rng$x, ylim = rng$y, bty = "n", asp = 1)
+    points(dat[, c("x", "y")], pch = 15, cex = 0.2, asp = 1)
     grDevices::dev.off()
   }
 }
