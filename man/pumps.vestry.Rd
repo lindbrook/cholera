@@ -11,6 +11,8 @@ A data frame with 14 observations and 4 variables.
   \item{\code{street}}{nearest street}
   \item{\code{x}}{x-coordinate}
   \item{\code{y}}{y-coordinate}
+  \item{\code{lon}}{longitude}
+  \item{\code{lat}}{latitude}
 }
 }
 \usage{

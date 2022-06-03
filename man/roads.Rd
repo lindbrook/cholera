@@ -13,6 +13,8 @@ A data frame with 206 observations and 5 variables. The data describe the roads 
   \item{\code{y}}{y-coordinate}
   \item{\code{id}}{unique numeric ID}
   \item{\code{name}}{road name}
+  \item{\code{lon}}{longitude}
+  \item{\code{lat}}{latitude}
 }
 }
 \usage{

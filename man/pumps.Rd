@@ -11,6 +11,8 @@ A data frame with 13 observations and 4 variables that describe the pumps on Sno
   \item{\code{street}}{nearest street}
   \item{\code{x}}{x-coordinate}
   \item{\code{y}}{y-coordinate}
+  \item{\code{lon}}{longitude}
+  \item{\code{lat}}{latitude}
 }
 }
 \usage{

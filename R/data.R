@@ -32,6 +32,8 @@
 #'     \item{\code{case}}{numeric case ID}
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
 #' }
 #' @seealso \code{\link{caseLocator}}
 #'
@@ -58,6 +60,8 @@
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
 #'     \item{\code{case.count}}{number of fatalities at address}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
 #' }
 #' @seealso
 #' \code{\link{caseLocator}}
@@ -264,6 +268,8 @@
 #'   \item{\code{street}}{nearest street}
 #'   \item{\code{x}}{x-coordinate}
 #'   \item{\code{y}}{y-coordinate}
+#'   \item{\code{lon}}{longitude}
+#'   \item{\code{lat}}{latitude}
 #' }
 #' @seealso \code{\link{pumpLocator}}
 #' @note \code{\link{pumpData}} documents the code for these data.
@@ -280,6 +286,8 @@
 #'   \item{\code{street}}{nearest street}
 #'   \item{\code{x}}{x-coordinate}
 #'   \item{\code{y}}{y-coordinate}
+#'   \item{\code{lon}}{longitude}
+#'   \item{\code{lat}}{latitude}
 #' }
 #' @seealso \code{\link{pumpLocator}}
 #' @note \code{\link{pumpData}} documents the code for these data.
@@ -338,6 +346,8 @@
 #'   \item{\code{y}}{y-coordinate}
 #'   \item{\code{id}}{unique numeric ID}
 #'   \item{\code{name}}{road name}
+#'   \item{\code{lon}}{longitude}
+#'   \item{\code{lat}}{latitude}
 #' }
 #' @docType data
 #' @seealso \code{\link{road.segments}}
@@ -388,138 +398,3 @@
 #' }
 #' @docType data
 "snow.neighborhood"
-
-#' Georeferenced Dodson and Tobler's road segments data.
-#'
-#' This data set transforms Dodson and Tobler's street data to give each straight line segment of a "road" a unique ID.
-#'
-#' @format A data frame with 657 observations and 8 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
-#' \describe{
-#'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
-#'   \item{\code{id}}{character segment ID}
-#'   \item{\code{name}}{road name}
-#'   \item{\code{lon1}}{longitude of first endpoint}
-#'   \item{\code{lat1}}{latitude of first endpoint}
-#'   \item{\code{lon2}}{longitude of second endpoint}
-#'   \item{\code{lat2}}{latitude of second endpoint}
-#'   \item{\code{distance}}{distance (meters)}
-#' }
-#' @docType data
-"latlong.road.segments"
-
-#' Orthogonal projection of georeferenced cases onto georeferenced road network.
-#'
-#' @format A data frame with 5 variables that records the position of the orthogonal projection of the 578 cases onto the network of roads.
-#'  \describe{
-#'     \item{\code{road.segment}}{"address" road segment}
-#'     \item{\code{lon.proj}}{longitude}
-#'     \item{\code{lat.proj}}{latitude}
-#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
-#'     \item{\code{case}}{numeric case ID}
-#'  }
-#' @note \code{\link{unstackFatalities}} documents the code for these data.
-#' @docType data
-"latlong.ortho.proj"
-
-#' Orthogonal projection of georeferenced 13 original pumps.
-#'
-#' @format A data frame with 5 variables that records the position of the orthogonal projection of the 13 original pumps onto the network of roads.
-#'  \describe{
-#'     \item{\code{road.segment}}{"address" road segment}
-#'     \item{\code{lon.proj}}{longitude}
-#'     \item{\code{lat.proj}}{latitude}
-#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
-#'     \item{\code{pump}}{numeric ID}
-#'  }
-#' @note \code{\link{pumpData}} documents the code for these data.
-#' @docType data
-"latlong.ortho.proj.pump"
-
-#' Orthogonal projection of georeferenced 14 pumps from Vestry report.
-#'
-#' @format A data frame with 5 variables that records the position of the orthogonal projection of the 14 pumps onto the network of roads.
-#'  \describe{
-#'     \item{\code{road.segment}}{"address" road segment}
-#'     \item{\code{lon.proj}}{longitude}
-#'     \item{\code{lat.proj}}{latitude}
-#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
-#'     \item{\code{pump}}{numeric ID}
-#'  }
-#' @note \code{\link{pumpData}} documents the code for these data.
-#' @docType data
-"latlong.ortho.proj.pump.vestry"
-
-#' "Unstacked" amended cholera data with address as unit of observation.
-#'
-#' @format A data frame with 6 variables for 321 addresses
-#'  \describe{
-#'     \item{\code{anchor}}{numerical case ID of address}
-#'     \item{\code{x}}{x-coordinate}
-#'     \item{\code{y}}{y-coordinate}
-#'     \item{\code{case.count}}{number of fatalities at address}
-#'     \item{\code{lon}}{longitude}
-#'     \item{\code{lat}}{latitude}
-#' }
-
-#' @docType data
-"latlong.fatalities.address"
-
-#' "Map Frame" data with and georeferenced longitude and latitude.
-#'
-#' @format A data frame with 106 observations and 8 variables. The data describe the roads on Snow's map.
-#' \describe{
-#'   \item{\code{street}}{street segment number, which range between 1 and 528}
-#'   \item{\code{n}}{number of points in this street line segment}
-#'   \item{\code{x}}{x-coordinate}
-#'   \item{\code{y}}{y-coordinate}
-#'   \item{\code{id}}{unique numeric ID}
-#'   \item{\code{name}}{road name}
-#'   \item{\code{lon}}{longitude}
-#'   \item{\code{lat}}{latitude}
-#' }
-#' @docType data
-"latlong.frame"
-
-#' Dodson and Tobler's pump data with street name.
-#'
-#' @format A data frame with 13 observations and 6 variables that describe the pumps on Snow's map.
-#' \describe{
-#'   \item{\code{id}}{pump number between 1 and 13}
-#'   \item{\code{street}}{nearest street}
-#'   \item{\code{x}}{x-coordinate}
-#'   \item{\code{y}}{y-coordinate}
-#'   \item{\code{lon}}{longitude}
-#'   \item{\code{lat}}{latitude}
-#' }
-#' @docType data
-"latlong.pumps"
-
-#' Dodson and Tobler's pump data with street name (Vestry Report version).
-#'
-#' @format A data frame with 14 observations and 6 variables that describe the pumps on Snow's map.
-#' \describe{
-#'   \item{\code{id}}{pump number between 1 and 13}
-#'   \item{\code{street}}{nearest street}
-#'   \item{\code{x}}{x-coordinate}
-#'   \item{\code{y}}{y-coordinate}
-#'   \item{\code{lon}}{longitude}
-#'   \item{\code{lat}}{latitude}
-#' }
-#' @docType data
-"latlong.pumps.vestry"
-
-#' Dodson and Tobler's street data with appended road names and georeferenced longitude and latitude.
-#'
-#' @format A data frame with 1135 observations and 8 variables. The data describe the roads on Snow's map.
-#' \describe{
-#'   \item{\code{street}}{street segment number, which range between 1 and 528}
-#'   \item{\code{n}}{number of points in this street line segment}
-#'   \item{\code{x}}{x-coordinate}
-#'   \item{\code{y}}{y-coordinate}
-#'   \item{\code{id}}{unique numeric ID}
-#'   \item{\code{name}}{road name}
-#'   \item{\code{lon}}{longitude}
-#'   \item{\code{lat}}{latitude}
-#' }
-#' @docType data
-"latlong.roads"
