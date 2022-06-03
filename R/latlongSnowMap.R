@@ -15,10 +15,10 @@ latlongSnowMap <- function(path, stacked = TRUE, asp = 1.65) {
   frame.list <- split(frame[, c("lon", "lat")], frame$street)
   invisible(lapply(roads.list, lines, col = "gray"))
   invisible(lapply(frame.list, lines))
-  points(addr[, c("lon", "lat")], col = "red", pch = 16, cex = 0.5)
+  points(addr[, c("lon", "lat")], col = "gray", pch = 15, cex = 0.5)
   if (stacked) {
     fatality <- latlongFatalities(path)
-    points(fatality[, c("lon", "lat")], col = "red", pch = 16, cex = 0.5)
+    points(fatality[, c("lon", "lat")], col = "gray", pch = 15, cex = 0.5)
   }
   points(pump[, c("lon", "lat")], col = "blue", pch = 24)
   text(pump[, c("lon", "lat")], col = "blue", pos = 1, labels = pump$id)
