@@ -11,6 +11,8 @@ A data frame with 4 variables for 321 addresses
     \item{\code{x}}{x-coordinate}
     \item{\code{y}}{y-coordinate}
     \item{\code{case.count}}{number of fatalities at address}
+    \item{\code{lon}}{longitude}
+    \item{\code{lat}}{latitude}
 }
 }
 \usage{

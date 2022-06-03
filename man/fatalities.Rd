@@ -11,6 +11,8 @@ A data frame with 3 variable that records the position and the nearest pump for 
     \item{\code{case}}{numeric case ID}
     \item{\code{x}}{x-coordinate}
     \item{\code{y}}{y-coordinate}
+    \item{\code{lon}}{longitude}
+    \item{\code{lat}}{latitude}
 }
 }
 \usage{
