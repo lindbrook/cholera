@@ -7,10 +7,11 @@
 #' @param label Logical. TRUE adds text label.
 #' @param pos Numeric. Position of label.
 #' @param cex Numeric. point cex.
+#' @param vars Character. Coordinates.
 #' @export
 
 addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
-  label = TRUE, pos = 1, cex = 1) {
+  label = TRUE, pos = 1, cex = 1, vars = c("x", "y")) {
 
   if (vestry) {
     p.data <- cholera::pumps.vestry
@@ -39,32 +40,31 @@ addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
 
     if (is.null(col)) {
       sel.col <- snowColors(vestry)[paste0("p", p.ID[sel])]
-      points(p.data[sel, c("x", "y")], pch = pch, col = sel.col, cex = cex)
+      points(p.data[sel, vars], pch = pch, col = sel.col, cex = cex)
 
       if (label) {
-        text(p.data[sel, c("x", "y")], pos = pos,
-          labels = paste0("p", p.ID[sel]), col = sel.col)
+        text(p.data[sel, vars], pos = pos, labels = paste0("p", p.ID[sel]),
+          col = sel.col)
       }
     } else {
-      points(p.data[sel, c("x", "y")], pch = pch, col = col, cex = cex)
+      points(p.data[sel, vars], pch = pch, col = col, cex = cex)
 
       if (label) {
-        text(p.data[sel, c("x", "y")], pos = pos,
-          labels = paste0("p", p.ID[sel]), col = col)
+        text(p.data[sel, vars], pos = pos, labels = paste0("p", p.ID[sel]),
+          col = col)
       }
     }
 
   } else {
     if (is.null(col)) {
       sel.col <- snowColors(vestry)[paste0("p", p.ID)]
-      points(p.data[, c("x", "y")], pch = pch, col = sel.col, cex = cex)
+      points(p.data[, vars], pch = pch, col = sel.col, cex = cex)
     } else {
-      points(p.data[, c("x", "y")], pch = pch, col = col, cex = cex)
+      points(p.data[, vars], pch = pch, col = col, cex = cex)
     }
 
     if (label) {
-      text(p.data[, c("x", "y")], pos = pos, labels = paste0("p", p.ID),
-        col = col)
+      text(p.data[, vars], pos = pos, labels = paste0("p", p.ID), col = col)
     }
   }
 }

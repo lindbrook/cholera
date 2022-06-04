@@ -4,9 +4,11 @@
 \alias{addRoads}
 \title{Add all streets and roads to plot.}
 \usage{
-addRoads(col = "gray")
+addRoads(vars = c("x", "y"), col = "gray")
 }
 \arguments{
+\item{vars}{Character. Coordinates.}
+
 \item{col}{Character. Color}
 }
 \description{

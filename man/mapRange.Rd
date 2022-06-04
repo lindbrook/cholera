@@ -4,7 +4,10 @@
 \alias{mapRange}
 \title{Compute xlim and ylim of Snow's map.}
 \usage{
-mapRange()
+mapRange(latlong = FALSE)
+}
+\arguments{
+\item{latlong}{Logical. Use estimated longitude and latitude.}
 }
 \description{
 Compute xlim and ylim of Snow's map.
