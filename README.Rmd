@@ -140,6 +140,13 @@ plot(neighborhoodVoronoi(pump.select = -7))
 
 Parallel computation is implemented using the 'parallel' package, which is part of the base R distribution. To enable parallelization, set `multi.core = TRUE` where available. Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("Parallelization")` for details.
 
+#### longitude and latitude (prototype)
+
+```{r latlong, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
+snowMap()
+snowMap(latlong = TRUE)
+```
+
 #### vignettes
 
 The vignettes are available in the package as well as online at the links below.
