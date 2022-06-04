@@ -84,6 +84,8 @@
 #'     \item{\code{case}}{numerical case ID}
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
 #' }
 #' @seealso \code{\link{caseLocator}}
 #'
