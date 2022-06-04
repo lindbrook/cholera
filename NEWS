@@ -3,6 +3,7 @@ cholera 0.7.9.9046
 
 - add/set snowMap(latlong = FALSE).
 - add experimental longitude and latitude to fatalities.unstacked.
+- add/set roadSegments(latlong = FALSE).
 
 
 cholera 0.7.9.9045

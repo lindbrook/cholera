@@ -4,7 +4,10 @@
 \alias{roadSegments}
 \title{Reshape 'roads' data frame into 'road.segments' data frame.}
 \usage{
-roadSegments()
+roadSegments(latlong = FALSE)
+}
+\arguments{
+\item{latlong}{Logical. Use estimated longitude and latitude.}
 }
 \value{
 An R data frame.
