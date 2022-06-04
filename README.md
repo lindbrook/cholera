@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9045-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)  
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9046-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)  
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -24,7 +24,7 @@
     location of the Broad Street pump.
 -   Adds two aggregate time series fatalities data sets, taken from the
     Vestry report.
--   With ‘cholera’ version >= 0.7.0, support for parallel computation
+-   With ‘cholera’ version \>= 0.7.0, support for parallel computation
     now includes Windows in addition to Linux and macOS.
 
 #### getting started
@@ -218,6 +218,15 @@ are taken in R.app on macOS, the developers of the ‘parallel’ package
 strongly discourage against using parallelization within a GUI or
 embedded environment. See `vignette("Parallelization")` for details.
 
+#### longitude and latitude (prototype)
+
+``` r
+snowMap()
+snowMap(latlong = TRUE)
+```
+
+<img src="man/figures/README-latlong-1.png" width="50%" /><img src="man/figures/README-latlong-2.png" width="50%" />
+
 #### vignettes
 
 The vignettes are available in the package as well as online at the
@@ -237,7 +246,7 @@ using “addresses” as the unit of observation.
 
 [Roads](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/roads.md)
 covers issues related to roads. This includes discussion of how and why
-I move pump #5 from Queen Street (I) to Marlborough Mews, the overall
+I move pump \#5 from Queen Street (I) to Marlborough Mews, the overall
 structure of the `roads` data set, “valid” road names, and my
 back-of-the-envelope translation from the map’s nominal scale to meters
 (and yards).

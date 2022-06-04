@@ -10,6 +10,7 @@
 #' @param main Character. Title of graph.
 #' @param case.col Character. Color of fatalities.
 #' @param case.pch Character. Color of fatalities.
+#' @param latlong Logical. Use estimated longitude and latitude.
 #' @param ... Additional plotting parameters.
 #' @note Uses amended version of Dodson and Tobler's data included in this package.
 #' @return A base R graphics plot.
@@ -20,10 +21,15 @@
 
 snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
   add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE, add.frame = TRUE,
-  main = NA, case.col = "gray", case.pch = 15, ...) {
+  main = NA, case.col = "gray", case.pch = 15, latlong = FALSE, ...) {
 
-  rng <- mapRange()
-  vars <- c("x", "y")
+  if (latlong) {
+    vars <- c("lon", "lat")
+    asp <- 1.65
+  } else {
+    vars <- c("x", "y")
+    asp <- 1
+  }
 
   if (stacked) {
     cases <- cholera::fatalities
@@ -31,44 +37,54 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
     cases <- cholera::fatalities.address
   }
 
-  plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = 1,
+  rng <- mapRange(latlong)
+
+  plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp,
     main = main, ...)
-  if (add.roads) addRoads()
+  if (add.roads) addRoads(vars)
   if (add.cases) points(cases[, vars], pch = case.pch, col = case.col,
     cex = 0.5)
-  if (add.pumps) addPump(vestry = vestry, col = "blue", pch = 2)
-  if (add.landmarks) addLandmarks()
-  if (add.frame) addFrame()
+  if (add.pumps) addPump(vestry = vestry, col = "blue", pch = 2, vars = vars)
+  # if (add.landmarks) addLandmarks()
+  if (add.frame) addFrame(vars)
 }
 
 #' Add all streets and roads to plot.
 #'
+#' @param vars Character. Coordinates.
 #' @param col Character. Color
 #' @export
 
-addRoads <- function(col = "gray") {
+addRoads <- function(vars = c("x", "y"), col = "gray") {
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  roads.list <- split(rd[, c("x", "y")], rd$street)
+  roads.list <- split(rd[, vars], rd$street)
   invisible(lapply(roads.list, lines, col = col))
 }
 
 #' Add map border to plot.
 #'
+#' @param vars Character. Coordinate.
 #' @param ... Additional plotting parameters.
 #' @export
 
-addFrame <- function(...) {
+addFrame <- function(vars = c("x", "y"), ...) {
   borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  border.list <- split(borders[, c("x", "y")], borders$street)
+  border.list <- split(borders[, vars], borders$street)
   invisible(lapply(border.list, lines, ...))
 }
 
 #' Compute xlim and ylim of Snow's map.
 #'
+#' @param latlong Logical. Use estimated longitude and latitude.
 #' @export
 
-mapRange <- function() {
-  x.range <- range(cholera::roads$x)
-  y.range <- range(cholera::roads$y)
+mapRange <- function(latlong = FALSE) {
+  if (latlong) {
+    x.range <- range(cholera::roads$lon)
+    y.range <- range(cholera::roads$lat)
+  } else {
+    x.range <- range(cholera::roads$x)
+    y.range <- range(cholera::roads$y)
+  }
   data.frame(x = x.range, y = y.range)
 }
