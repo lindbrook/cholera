@@ -157,7 +157,7 @@ subsetPDF <- function(path, dataset = "fatalities.address") {
   rng <- mapRange()
 
   if (dataset == "roads") {
-    dat <- framework
+    dat <- cholera::roads
     dat$point.id <- paste0(dat$x, "-", dat$y)
     dat <- dat[!duplicated(dat$point.id), ]
     file.nm <- "road"
