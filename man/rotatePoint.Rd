@@ -9,7 +9,7 @@ rotatePoint(id = 1, dataset = "roads")
 \arguments{
 \item{id}{Numeric. Road segment endpoint ID.}
 
-\item{dataset}{Character. "roads", "fatalities", "fatalities.address", "pumps", "pumps.vestry", or "ortho.proj".}
+\item{dataset}{Character. "roads", "fatalities", "fatalities.address", "pumps", "pumps.vestry", "ortho.proj", "ortho.proj.pump", or "ortho.proj.pump.vestry".}
 }
 \description{
 Rotate points (prototype).

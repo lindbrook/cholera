@@ -74,39 +74,54 @@ radians <- function(points.data) {
 #' Rotate points (prototype).
 #'
 #' @param id Numeric. Road segment endpoint ID.
-#' @param dataset Character. "roads", "fatalities", "fatalities.address", "pumps", "pumps.vestry", or "ortho.proj".
+#' @param dataset Character. "roads", "fatalities", "fatalities.address", "pumps", "pumps.vestry", "ortho.proj", "ortho.proj.pump", or "ortho.proj.pump.vestry".
 #' @export
 
 rotatePoint <- function(id = 1, dataset = "roads") {
   rd <- cholera::roads
   center <- data.frame(x = mean(range(rd$x)), y = mean(range(rd$y)))
+  oldvars <- c("x.proj", "y.proj")
+  newvars <- c("x", "y")
 
   if (dataset == "roads") {
-    points.data <- rbind(center, rd[rd$id == id, c("x", "y")])
+    points.data <- rbind(center, rd[rd$id == id, newvars])
   } else if (dataset == "fatalities") {
     sel <- cholera::fatalities$case == id
-    points.data <- rbind(center, cholera::fatalities[sel, c("x", "y")])
+    points.data <- rbind(center, cholera::fatalities[sel, newvars])
   } else if (dataset == "fatalities.address") {
     sel <- cholera::fatalities.address$anchor == id
-    points.data <- rbind(center, cholera::fatalities.address[sel, c("x", "y")])
+    points.data <- rbind(center, cholera::fatalities.address[sel, newvars])
   } else if (dataset == "pumps") {
     sel <- cholera::pumps$id == id
-    points.data <- rbind(center, cholera::pumps[sel, c("x", "y")])
+    points.data <- rbind(center, cholera::pumps[sel, newvars])
   } else if (dataset == "pumps.vestry") {
     sel <- cholera::pumps.vestry$id == id
-    points.data <- rbind(center, cholera::pumps.vestry[sel, c("x", "y")])
+    points.data <- rbind(center, cholera::pumps.vestry[sel, newvars])
   } else if (dataset == "landmarks") {
     sel <- which(cholera::landmarks$case == id)
-    points.data <- rbind(center, cholera::landmarks[sel, c("x", "y")])
+    points.data <- rbind(center, cholera::landmarks[sel, newvars])
   } else if (dataset == "ortho.proj") {
     sel <- which(cholera::ortho.proj$case == id)
-    nm.sel <- names(cholera::ortho.proj) %in% c("x.proj", "y.proj")
+    nm.sel <- names(cholera::ortho.proj) %in% oldvars
     ortho.projB <- cholera::ortho.proj
-    names(ortho.projB)[nm.sel] <- c("x", "y")
-    points.data <- rbind(center, ortho.projB[sel, c("x", "y")])
+    names(ortho.projB)[nm.sel] <- newvars
+    points.data <- rbind(center, ortho.projB[sel, newvars])
+  } else if (dataset == "ortho.proj.pump") {
+    sel <- which(cholera::ortho.proj.pump$pump.id == id)
+    nm.sel <- names(cholera::ortho.proj.pump) %in% oldvars
+    ortho.projB <- cholera::ortho.proj.pump
+    names(ortho.projB)[nm.sel] <- newvars
+    points.data <- rbind(center, ortho.projB[sel, newvars])
+  } else if (dataset == "ortho.proj.pump.vestry") {
+    sel <- which(cholera::ortho.proj.pump.vestry$pump.id == id)
+    nm.sel <- names(cholera::ortho.proj.pump.vestry) %in% oldvars
+    ortho.projB <- cholera::ortho.proj.pump.vestry
+    names(ortho.projB)[nm.sel] <- newvars
+    points.data <- rbind(center, ortho.projB[sel, newvars])
   } else {
     msg1 <- 'dataset must be "roads", "fatalities", "fatalities.address",'
-    msg2 <- '"pumps", "pumps.vestry", "landmarks", or "ortho.proj".'
+    msg2 <- '"pumps", "pumps.vestry", "landmarks", "ortho.proj",'
+    msg3 <- '"ortho.proj.pump", or "ortho.proj.pump.vestry".'
     stop(paste(msg1, msg2))
   }
 
