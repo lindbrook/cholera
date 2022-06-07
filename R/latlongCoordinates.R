@@ -100,7 +100,9 @@ latlongCoordinates <- function(tif, k, path) {
     }
   })
 
-  do.call(rbind, coords)
+  out <- do.call(rbind, coords)
+  row.names(out) <- NULL
+  out
 }
 
 deltaRank <- function(vals) {
