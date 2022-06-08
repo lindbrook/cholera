@@ -56,4 +56,5 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE,
 
   plot(dat, add = TRUE, wline = "tess", showpoints = FALSE, cmpnt_col = color,
     cmpnt_lty = line.type, lwd = line.width)
+    # cmpnt_col = c(tri = color) wants number?
 }
