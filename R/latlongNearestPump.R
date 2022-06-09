@@ -90,9 +90,10 @@ latlong_pathData <- function(path, dat, pump.select, weighted, vestry, cores) {
 #' @param case Numeric.
 #' @param path Character. e.g., "~/Documents/Data/".
 #' @param zoom Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @export
 
-latlongWalkingPath <- function(case = 1, path, zoom = TRUE) {
+latlongWalkingPath <- function(case = 1, path, zoom = TRUE, vestry = FALSE) {
   vars <- c("lon", "lat")
 
   if (!case %in% cholera::fatalities.address$anchor) {
@@ -101,12 +102,14 @@ latlongWalkingPath <- function(case = 1, path, zoom = TRUE) {
     case.id <- which(cholera::fatalities.address$anchor == case)
   }
 
-  rd <- cholera::latlong.roads
-  frame <- cholera::latlong.frame
-  # fatality <- cholera::latlong.fatalities.address
-  fatality <- latlongAddress(path)
-  pump <- cholera::latlong.pumps
-  nearest.pump <- latlongNearestPump(path)
+  rd <- cholera::roads[cholera::roads$name == "Map Frame", ]
+  frame <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  fatality <- cholera::fatalities.address
+
+  if (vestry) pump <- cholera::pumps.vestry
+  else pump <- cholera::pumps
+
+  nearest.pump <- latlongNearestPump(path, vestry = vestry)
 
   p <- names(nearest.pump$path[[case.id]][[1]])
   destination.pump <- names(nearest.pump$path[[case.id]])
@@ -131,7 +134,6 @@ latlongWalkingPath <- function(case = 1, path, zoom = TRUE) {
     } else stop("If numeric, zoom must be >= 0.")
   } else stop("zoom must either be logical or numeric.")
 
-
   plot(rd[, vars], pch = NA, asp = 1.6, xlim = xlim, ylim = ylim)
   roads.list <- split(rd[, vars], rd$street)
   frame.list <- split(frame[, vars], frame$street)
@@ -142,6 +144,18 @@ latlongWalkingPath <- function(case = 1, path, zoom = TRUE) {
   text(pump[, vars], col = "blue", pos = 1, labels = pump$id)
   points(dat[1, c("x", "y")], col = "dodgerblue", pch = 0)
   points(dat[nrow(dat), c("x", "y")], col = "dodgerblue", pch = 0)
-  drawPath(dat, "dodgerblue", compute.coords = FALSE)
+  drawPathB(dat, "dodgerblue", compute.coords = FALSE)
   title(main = paste("Case", case, "to Pump", destination.pump))
+}
+
+drawPathB <- function(x, case.color, compute.coords = TRUE) {
+  if (compute.coords) {
+    path.data <- numericNodeCoordinates(x)
+  } else {
+    path.data <- x
+  }
+  n1 <- path.data[1:(nrow(path.data) - 1), ]
+  n2 <- path.data[2:nrow(path.data), ]
+  segments(n1$x, n1$y, n2$x, n2$y, lwd = 3,
+    col = grDevices::adjustcolor(case.color, alpha.f = 1/2))
 }

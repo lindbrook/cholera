@@ -4,7 +4,7 @@
 \alias{latlongWalkingPath}
 \title{Plot walking path to nearest pump (prototype).}
 \usage{
-latlongWalkingPath(case = 1, path, zoom = TRUE)
+latlongWalkingPath(case = 1, path, zoom = TRUE, vestry = FALSE)
 }
 \arguments{
 \item{case}{Numeric.}
@@ -12,6 +12,8 @@ latlongWalkingPath(case = 1, path, zoom = TRUE)
 \item{path}{Character. e.g., "~/Documents/Data/".}
 
 \item{zoom}{Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.}
+
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 }
 \description{
 Plot walking path to nearest pump (prototype).
