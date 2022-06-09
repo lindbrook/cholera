@@ -13,7 +13,6 @@
 latlongNearestPump <- function(path, pump.select = NULL, vestry = FALSE,
   weighted = TRUE, time.unit = "second", walking.speed = 5, multi.core = TRUE) {
   cores <- multiCore(multi.core)
-
   dat <- latlongNeighborhoodData(path, vestry)
   path.data <- latlong_pathData(path, dat, pump.select, weighted, vestry, cores)
 
@@ -27,7 +26,6 @@ latlongNearestPump <- function(path, pump.select = NULL, vestry = FALSE,
 
   distance <-  data.frame(case = path.data$case, pump = path.data$pump,
     d = path.data$distance, time = walking.time)
-
   list(distance = distance, path = path.data$path)
 }
 
@@ -37,6 +35,7 @@ latlong_pathData <- function(path, dat, pump.select, weighted, vestry, cores) {
   edges <- dat$edges
   ortho.addr <- latlongOrthoAddress(path)
   ortho.pump <- latlongOrthoPump(path, vestry = vestry)
+  names(ortho.pump)[names(ortho.pump) == "pump.id"] <- "pump"
 
   if (!is.null(pump.select)) {
     if (all(pump.select > 0)) {
@@ -52,13 +51,10 @@ latlong_pathData <- function(path, dat, pump.select, weighted, vestry, cores) {
   ortho.addr$node <- paste0(ortho.addr$lon, "-", ortho.addr$lat)
   ortho.pump$node <- paste0(ortho.pump$lon, "-", ortho.pump$lat)
 
-  # all(ortho.addr$node %in% unlist(edge.list))
-  # all(ortho.pump$node %in% unlist(edge.list))
-
   ## Adam and Eve Court: isolate with pump (#2) ##
   sel <- cholera::road.segments$name == "Adam and Eve Court"
   adam.eve <- cholera::road.segments[sel, "id"]
-  adam.eve.pump <- ortho.pump[ortho.pump$seg == adam.eve, "node"]
+  adam.eve.pump <- ortho.pump[ortho.pump$road.segment == adam.eve, "node"]
   ortho.pump <- ortho.pump[!ortho.pump$node %in% adam.eve.pump, ]
 
   ## Falconberg Court and Mews: isolate without pump ##
