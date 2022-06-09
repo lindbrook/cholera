@@ -6,32 +6,18 @@
 
 latlongEmbed <- function(path, vestry = FALSE) {
   vars <- c("lon", "lat")
-  rd <- latlongRoads(path)
-  addr <- latlongAddress(path)
-  pump <- latlongPumps(path)
   ortho.addr <- latlongOrthoAddress(path)
   ortho.pump <- latlongOrthoPump(path, vestry = vestry)
+  names(ortho.pump)[names(ortho.pump) == "pump.id"] <- "pump"
+  road.data <- roadSegments(latlong = TRUE)
 
-  road.segments <- lapply(unique(rd$street), function(i) {
-    dat <- rd[rd$street == i, ]
-    names(dat)[names(dat) %in% vars] <- paste0(vars, 1)
-    seg.data <- dat[-1, paste0(vars, 1)]
-    names(seg.data) <- paste0(vars, 2)
-    dat <- cbind(dat[-nrow(dat), ], seg.data)
-    dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
-    dat
-  })
-
-  road.data <- do.call(rbind, road.segments)
-  obs.segs <- unique(c(ortho.addr$seg, ortho.pump$seg))
-
+  obs.segs <- unique(c(ortho.addr$road.segment, ortho.pump$road.segment))
   no_embeds <- road.data[!road.data$id %in% obs.segs, ]
-  no_embeds$distance <- NULL
 
   embeds <- lapply(obs.segs, function(s) {
     rd.tmp <- road.data[road.data$id == s, ]
-    addr.tmp <- ortho.addr[ortho.addr$seg == s, ]
-    pump.tmp <- ortho.pump[ortho.pump$seg == s, ]
+    addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
+    pump.tmp <- ortho.pump[ortho.pump$road.segment == s, ]
     endpts <- data.frame(lon = unlist(rd.tmp[, paste0(vars[1], 1:2)]),
                          lat = unlist(rd.tmp[, paste0(vars[2], 1:2)]),
                          case = 0,
