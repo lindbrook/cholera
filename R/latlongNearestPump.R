@@ -102,8 +102,8 @@ latlongWalkingPath <- function(case = 1, path, zoom = TRUE, vestry = FALSE) {
     case.id <- which(cholera::fatalities.address$anchor == case)
   }
 
-  rd <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  frame <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
   fatality <- cholera::fatalities.address
 
   if (vestry) pump <- cholera::pumps.vestry
