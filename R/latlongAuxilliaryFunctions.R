@@ -25,9 +25,8 @@ kmeansRectanlge <- function(x) {
 #' @export
 
 pointsFromGeoTIFF <- function(x) {
-  ras <- raster::raster(x)
-  pts <- raster::rasterToPoints(ras)
-  data.frame(pts)
+  ras <- terra::rast(x)
+  terra::as.data.frame(ras, xy = TRUE)
 }
 
 #' Index of subsets.
