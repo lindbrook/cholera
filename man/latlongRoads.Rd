@@ -17,3 +17,6 @@ An R data frame.
 \description{
 Compute latitude and longitude for unique road segment endpoints (prototype).
 }
+\note{
+This documents the computation of the lat-long version of the roads data frame.
+}

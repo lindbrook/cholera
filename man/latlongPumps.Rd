@@ -14,3 +14,6 @@ latlongPumps(path, vestry = FALSE)
 \description{
 Compute Georeferenced Latitude and Longitude (prototype).
 }
+\note{
+This documents the computation of the latlong version of the pumps and pumps.vestry data frames.
+}

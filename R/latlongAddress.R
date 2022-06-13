@@ -4,8 +4,15 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
 #' @export
+#' @note This documents the computation of the latlong version of the fatalities.address data frame.
 
 latlongAddress <- function(path, multi.core = TRUE) {
+  # recreate original fatalities and fatalities.address
+  sel <- !names(cholera::fatalities) %in% c("lon", "lat")
+  fatalities.original <- cholera::fatalities[, sel]
+  sel <- !names(cholera::fatalities.address) %in% c("lon", "lat")
+  address.original <- cholera::fatalities.address[, sel]
+
   pre <- paste0(path, "address.v")
   post <- "_modified.tif"
   cores <- multiCore(multi.core)
@@ -32,7 +39,7 @@ latlongAddress <- function(path, multi.core = TRUE) {
   })
 
   address.groups <- lapply(addr.partitions, function(case) {
-    cholera::fatalities[cholera::fatalities$case %in% case, ]
+    fatalities.original[fatalities.original$case %in% case, ]
   })
 
   address.rotate.scale <- parallel::mclapply(address.groups, function(x) {
@@ -62,11 +69,40 @@ latlongAddress <- function(path, multi.core = TRUE) {
   match.points <- do.call(rbind, match.points)
   coords <- do.call(rbind, coords)
 
-  out <- merge(cholera::fatalities.address, match.points, by.x = "anchor",
-    by.y = "id")
+  out <- merge(address.original, match.points, by.x = "anchor", by.y = "id")
   out <- merge(out, coords, by.x = "geo.id", by.y = "id")
   out <- out[order(out$anchor), ]
   out$geo.id <- NULL
+  row.names(out) <- NULL
+  out
+}
+
+#' Compute latitude and longitude version fatalities.unstacked.
+#'
+#' @return An R data frame.
+#' @noRd
+#' @note This documents the computation of the lat-long version of the fatalities.unstacked data frame.
+
+latlongFatalitiesUnstacked <- function() {
+  sel.rows <- cholera::fatalities.address$case.count == 1
+  sel.vars <- names(cholera::fatalities.address) != "case.count"
+  single.stack <- cholera::fatalities.address[sel.rows, sel.vars]
+  names(single.stack)[1] <- "case"
+
+  sel.rows <- cholera::fatalities.address$case.count > 1
+  multi.stack <- cholera::fatalities.address[sel.rows, sel.vars]
+
+  multiples <- lapply(multi.stack$anchor, function(a) {
+    tmp <- cholera::fatalities
+    vars <- !names(cholera::fatalities.unstacked) %in% c("lon", "lat")
+    tmp.unstacked <- cholera::fatalities.unstacked[, vars]
+    stack <- cholera::anchor.case[cholera::anchor.case$anchor == a, "case"]
+    anchor.coords <- tmp[tmp$case == a, c("lon", "lat")]
+    cbind(tmp.unstacked[tmp.unstacked$case %in% stack, ], anchor.coords)
+  })
+
+  out <- rbind(single.stack, do.call(rbind, multiples))
+  out <- out[order(out$case), ]
   row.names(out) <- NULL
   out
 }
