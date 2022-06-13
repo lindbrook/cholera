@@ -17,3 +17,6 @@ An R data frame.
 \description{
 Compute latitude and longitude of case "addresses" (prototype).
 }
+\note{
+This documents the computation of the latlong version of the fatalities.address data frame.
+}

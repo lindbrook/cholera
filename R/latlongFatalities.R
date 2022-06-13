@@ -4,8 +4,13 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
 #' @export
+#' @note This documents the computation of the latlong version of the fatalities data frame.
 
 latlongFatalities <- function(path, multi.core = TRUE) {
+  # recreate original fatalities and fatalities.address
+  sel <- !names(cholera::fatalities) %in% c("lon", "lat")
+  fatalities.original <- cholera::fatalities[, sel]
+
   pre <- paste0(path, "fatalities.v")
   post <- "_modified.tif"
   cores <- multiCore(multi.core)
@@ -32,7 +37,7 @@ latlongFatalities <- function(path, multi.core = TRUE) {
   })
 
   fatality.groups <- lapply(fatality.partitions, function(case) {
-    cholera::fatalities[cholera::fatalities$case %in% case, ]
+    fatalities.original[fatalities.original$case %in% case, ]
   })
 
   fatality.rotate.scale <- parallel::mclapply(fatality.groups, function(x) {
@@ -62,8 +67,8 @@ latlongFatalities <- function(path, multi.core = TRUE) {
   match.points <- do.call(rbind, match.points)
   coords <- do.call(rbind, coords)
 
-  sel <- cholera::fatalities$case %in% unlist(fatality.partitions)
-  fatality.data <- cholera::fatalities[sel, ]
+  sel <- fatalities.original$case %in% unlist(fatality.partitions)
+  fatality.data <- fatalities.original[sel, ]
 
   out <- merge(fatality.data, match.points, by.x = "case", by.y = "id")
   out <- merge(out, coords, by.x = "geo.id", by.y = "id")

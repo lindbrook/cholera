@@ -4,6 +4,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
 #' @export
+#' @note This documents the computation of the lat-long version of the roads data frame.
 
 latlongRoads <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
@@ -15,7 +16,10 @@ latlongRoads <- function(path, multi.core = TRUE) {
     tif <- paste0(path, "roads.", nm, "_modified.tif")
     k <- length(ids)
     geo.coords <- latlongCoordinates(tif, k, path)
-    nom.coords <- cholera::roads[cholera::roads$id %in% ids, ]
+
+    # post-fix
+    vars <- !names(cholera::roads) %in% c("lon", "lat")
+    nom.coords <- cholera::roads[cholera::roads$id %in% ids, vars]
 
     # rotate nominal coords to approximate georeferenced coords
     nom.rotate <- lapply(ids, rotatePoint)
@@ -34,15 +38,13 @@ latlongRoads <- function(path, multi.core = TRUE) {
     # points(alters[, vars], pch = 16, cex = 0.5, col = "red")
     # summary(duplicated(translation$geo.id))
 
-    translation <- lapply(ids, function(id) {
+    translation <- do.call(rbind, lapply(ids, function(id) {
       ego <- nom.rotate.scale[nom.rotate.scale$id == id, c("x", "y")]
       d <- vapply(seq_len(nrow(alters)), function(i) {
         stats::dist(rbind(ego, alters[i, c("x", "y")]))
       }, numeric(1L))
       data.frame(id = id, geo.id = alters$id[which.min(d)])
-    })
-
-    translation <- do.call(rbind, translation)
+    }))
 
     geo.coords <- merge(geo.coords, translation, by.x = "id", by.y = "geo.id")
     names(geo.coords)[c(1, length(names(geo.coords)))] <- c("geo.id", "id")
@@ -50,10 +52,13 @@ latlongRoads <- function(path, multi.core = TRUE) {
   }, mc.cores = cores)
 
   coords <- do.call(rbind, coords)
-  coords <- coords[, c(names(cholera::roads), c("lon", "lat"))]
+  # coords <- coords[, c(names(cholera::roads), c("lon", "lat"))]
   coords$id2 <- paste0(coords$x, "-", coords$y)
 
-  rd0 <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  # post-fix
+  vars <- !names(cholera::roads) %in% c("lon", "lat")
+  rd0 <- cholera::roads[cholera::roads$name != "Map Frame", vars]
+
   rd0 <- rd0[duplicated(rd0[, c("x", "y")]), ]
   rd0$id2 <- paste0(rd0$x, "-", rd0$y)
   rd0 <- merge(rd0, coords[, c("lon", "lat", "id2")], all.x = TRUE, by = "id2")
