@@ -76,3 +76,33 @@ latlongAddress <- function(path, multi.core = TRUE) {
   row.names(out) <- NULL
   out
 }
+
+#' Compute latitude and longitude version fatalities.unstacked.
+#'
+#' @return An R data frame.
+#' @noRd
+#' @note This documents the computation of the lat-long version of the fatalities.unstacked data frame.
+
+latlongFatalitiesUnstacked <- function() {
+  sel.rows <- cholera::fatalities.address$case.count == 1
+  sel.vars <- names(cholera::fatalities.address) != "case.count"
+  single.stack <- cholera::fatalities.address[sel.rows, sel.vars]
+  names(single.stack)[1] <- "case"
+
+  sel.rows <- cholera::fatalities.address$case.count > 1
+  multi.stack <- cholera::fatalities.address[sel.rows, sel.vars]
+
+  multiples <- lapply(multi.stack$anchor, function(a) {
+    tmp <- cholera::fatalities
+    vars <- !names(cholera::fatalities.unstacked) %in% c("lon", "lat")
+    tmp.unstacked <- cholera::fatalities.unstacked[, vars]
+    stack <- cholera::anchor.case[cholera::anchor.case$anchor == a, "case"]
+    anchor.coords <- tmp[tmp$case == a, c("lon", "lat")]
+    cbind(tmp.unstacked[tmp.unstacked$case %in% stack, ], anchor.coords)
+  })
+
+  out <- rbind(single.stack, do.call(rbind, multiples))
+  out <- out[order(out$case), ]
+  row.names(out) <- NULL
+  out
+}
