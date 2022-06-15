@@ -35,22 +35,32 @@ latlongLandmarks <- function(path) {
   out[, sel]
 }
 
-#' Create PDFs of landmark addreses.
+# usethis::use_data(landmarks, overwrite = TRUE)
+
+#' Create PDFs of landmarks
 #'
 #' For QGIS geo-referencing.
 #' @param path Character. e.g., "~/Documents/Data/"
+#' @param orthogonal Logical. Use orthogonal projection coordinates.
 #' @param pch Integer. R pch.
 #' @param cex Numeric.
 #' @export
 
-landmarksPDF <- function(path, pch = 15, cex = 0.2) {
-  dat <- cholera::landmarks
-  file.nm <- "landmarks."
+landmarksPDF <- function(path, orthogonal = FALSE, pch = 15, cex = 0.2) {
+  if (orthogonal) {
+    coords <- c("x.proj", "y.proj")
+    file.nm <- "ortho.landmark"
+  } else {
+    coords <- c("x", "y")
+    file.nm <- "landmark"
+  }
+  pre <- paste0(file.nm, ".")
   post <- "pdf"
+  dat <- cholera::landmarkData()
   rng <- mapRange()
-  grDevices::pdf(file = paste0(path, file.nm, post))
-  plot(dat$x, dat$y, pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
-    bty = "n", xlim = rng$x, ylim = rng$y)
-  points(dat[, c("x", "y")], pch = pch, cex = cex)
+  grDevices::pdf(file = paste0(path, pre, post))
+  plot(dat[, coords], pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
+    bty = "n", xlim = rng$x, ylim = rng$y, asp = 1)
+  points(dat[, coords], pch = pch, cex = cex)
   grDevices::dev.off()
 }

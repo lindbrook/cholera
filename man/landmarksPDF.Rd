@@ -2,12 +2,14 @@
 % Please edit documentation in R/latlongLandmarks.R
 \name{landmarksPDF}
 \alias{landmarksPDF}
-\title{Create PDFs of landmark addreses.}
+\title{Create PDFs of landmarks}
 \usage{
-landmarksPDF(path, pch = 15, cex = 0.2)
+landmarksPDF(path, orthogonal = FALSE, pch = 15, cex = 0.2)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/"}
+
+\item{orthogonal}{Logical. Use orthogonal projection coordinates.}
 
 \item{pch}{Integer. R pch.}
 
