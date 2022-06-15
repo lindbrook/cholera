@@ -15,6 +15,8 @@ A data frame with 6 variables that records the position of the orthogonal projec
     \item{\code{y}}{nominal y-coordinate}
     \item{\code{name}}{landmark name}
     \item{\code{case}}{numeric case ID}
+    \item{\code{lon}}{longitude}
+    \item{\code{lat}}{latitude}
  }
 }
 \usage{
@@ -24,6 +26,6 @@ landmarks
 Orthogonal projection of landmarks onto road network.
 }
 \note{
-\code{\link{landmarkData}} documents the code for these data.
+\code{\link{landmarkData}} and \code{\link{latlongLandmarks}} document the code for these data.
 }
 \keyword{datasets}
