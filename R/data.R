@@ -109,8 +109,10 @@
 #'     \item{\code{y}}{nominal y-coordinate}
 #'     \item{\code{name}}{landmark name}
 #'     \item{\code{case}}{numeric case ID}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
 #'  }
-#' @note \code{\link{landmarkData}} documents the code for these data.
+#' @note \code{\link{landmarkData}} and \code{\link{latlongLandmarks}} document the code for these data.
 #' @docType data
 "landmarks"
 
