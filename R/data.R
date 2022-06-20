@@ -402,3 +402,23 @@
 #' }
 #' @docType data
 "snow.neighborhood"
+
+#' Coordinates of Voronoi polygon vertices.
+#'
+#' @format A list of 13 data frames frames with 2 variables.
+#' \describe{
+#'   \item{\code{x}}{x-coordinate}
+#'   \item{\code{y}}{y-coordinate}
+#' }
+#' @docType data
+"voronoi.polygons"
+
+#' Coordinates of Voronoi polygon vertices for Vestry Report map.
+#'
+#' @format A list of 14 data frames frames with 2 variables.
+#' \describe{
+#'   \item{\code{x}}{x-coordinate}
+#'   \item{\code{y}}{y-coordinate}
+#' }
+#' @docType data
+"voronoi.polygons.vestry"
