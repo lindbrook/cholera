@@ -27,9 +27,9 @@ voronoiPDF <- function(path, vestry = FALSE, pch = 46, cex = 1) {
   rng <- mapRange()
 
   invisible(lapply(seq_along(vertices), function(i) {
+    dat <- vertices[[i]]
     i <- ifelse(i < 10, paste0("0", i), paste(i))
     grDevices::pdf(file = paste0(path, pre, i, post))
-    dat <- vertices[[i]]
     plot(dat[, c("x", "y")], pch = pch, cex = cex, xaxt = "n", yaxt = "n",
       xlab = NA, ylab = NA, bty = "n", xlim = rng$x, ylim = rng$y, asp = 1)
     grDevices::dev.off()
