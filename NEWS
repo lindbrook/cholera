@@ -3,6 +3,7 @@ cholera 0.7.9.9054
 
 - Voronoi experiment.
 - add voronoi.polygons and voronoi.polygons.vestry data.
+- add voronoiPDF().
 
 
 cholera 0.7.9.9053
