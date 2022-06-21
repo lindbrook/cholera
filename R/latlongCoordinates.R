@@ -10,10 +10,6 @@ latlongCoordinates <- function(tif, k, path) {
   u.data <- pointsFromGeoTIFF(tif)
   names(u.data)[3] <- "modified"
 
-  image.data <- u.data[u.data$modified == 255, c("x", "y")]
-  image.chull <- grDevices::chull(image.data)
-  image.chull <- image.data[image.chull, ]
-
   map.data <- u.data[u.data$modified != 255, c("x", "y")]
 
   # use rectangular polygon filter
