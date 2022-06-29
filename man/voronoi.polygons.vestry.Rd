@@ -5,10 +5,13 @@
 \alias{voronoi.polygons.vestry}
 \title{Coordinates of Voronoi polygon vertices for Vestry Report map.}
 \format{
-A list of 14 data frames frames with 2 variables.
+A list of 14 data frames frames with 5 variables.
 \describe{
+  \item{\code{vertex}}{vertex ID}
   \item{\code{x}}{x-coordinate}
   \item{\code{y}}{y-coordinate}
+    \item{\code{lon}}{longitude}
+    \item{\code{lat}}{latitude}
 }
 }
 \usage{

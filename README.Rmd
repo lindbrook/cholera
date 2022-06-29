@@ -147,6 +147,45 @@ snowMap()
 snowMap(latlong = TRUE)
 ```
 
+```{r latlong_voronoi, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%", echo = FALSE}
+plot(neighborhoodVoronoi(), euclidean.path = TRUE)
+
+vars <- c("lon", "lat")
+asp <- 1.65
+cases <- cholera::fatalities.address
+rng <- mapRange(latlong = TRUE)
+snow.colors <- snowColors(vestry = FALSE)
+
+plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
+addRoads(vars)
+points(cases[, vars], pch = 16, col = "gray", cex = 0.5)
+points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
+
+# Great Circle Distance (WGS 84)
+nearest.pump <- do.call(rbind, lapply(cases$anchor, function(x) {
+  m1 <- as.matrix(cases[cases$anchor == x, vars])
+  d <- vapply(pumps$id, function(p) {
+    m2 <- as.matrix(pumps[pumps$id == p, vars])
+    sp::spDistsN1(m1, m2, longlat = TRUE) * 1000L
+  }, numeric(1L))
+  nearest <- which.min(d)
+  data.frame(case = x, pump = pumps$id [pumps$id == nearest], 
+    meters = d[nearest])
+}))
+
+invisible(lapply(nearest.pump$case, function(x) {
+  ego <- cases[cases$anchor == x, vars]
+  p <- nearest.pump[nearest.pump$case == x, "pump"]
+  alter <- pumps[pumps$id == p, vars]
+  segments(ego$lon, ego$lat, alter$lon, alter$lat, 
+    col = snow.colors[paste0("p", p)])
+}))
+
+invisible(lapply(cholera::voronoi.polygons, function(x) {
+  polygon(x[, vars])
+}))
+```
+
 #### vignettes
 
 The vignettes are available in the package as well as online at the links below.
