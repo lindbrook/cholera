@@ -1,3 +1,12 @@
+cholera 0.7.9.9056
+==================
+
+- add pumpsVoronoiPolygons() and latlongVoronoi().
+- add longitude and latitude voronoi.polygons and voronoi.polygons.vestry.
+- add "voronoi.polygons" and "voronoi.polygons.vestry" to rotatePoint().
+- add latlong Voronoi example to README.
+
+
 cholera 0.7.9.9055
 ==================
 
