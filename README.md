@@ -227,6 +227,8 @@ snowMap(latlong = TRUE)
 
 <img src="man/figures/README-latlong-1.png" width="50%" /><img src="man/figures/README-latlong-2.png" width="50%" />
 
+<img src="man/figures/README-latlong_voronoi-1.png" width="50%" /><img src="man/figures/README-latlong_voronoi-2.png" width="50%" />
+
 #### vignettes
 
 The vignettes are available in the package as well as online at the
