@@ -96,6 +96,12 @@ rotatePoint <- function(id = 1, dataset = "roads") {
   } else if (dataset == "pumps.vestry") {
     sel <- cholera::pumps.vestry$id == id
     points.data <- rbind(center, cholera::pumps.vestry[sel, newvars])
+  } else if (dataset == "voronoi.polygons") {
+    tmp <- do.call(rbind, cholera::voronoi.polygons)
+    points.data <- rbind(center, tmp[tmp$vertex == id, newvars])
+  } else if (dataset == "voronoi.polygons.vestry") {
+    tmp <- do.call(rbind, cholera::voronoi.polygons.vestry)
+    points.data <- rbind(center, tmp[tmp$vertex == id, newvars])
   } else if (dataset == "landmarks") {
     sel <- which(cholera::landmarks$case == id)
     points.data <- rbind(center, cholera::landmarks[sel, newvars])
@@ -120,8 +126,9 @@ rotatePoint <- function(id = 1, dataset = "roads") {
   } else {
     msg1 <- 'dataset must be "roads", "fatalities", "fatalities.address",'
     msg2 <- '"pumps", "pumps.vestry", "landmarks", "ortho.proj",'
-    msg3 <- '"ortho.proj.pump", or "ortho.proj.pump.vestry".'
-    stop(paste(msg1, msg2))
+    msg3 <- '"ortho.proj.pump", "ortho.proj.pump.vestry". "voronoi.polygons",'
+    msg4 <- 'or "voronoi.polygons.vestry".'
+    stop(paste(msg1, msg2, msg3, msg4))
   }
 
   theta <- radians(points.data)
