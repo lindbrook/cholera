@@ -3,18 +3,21 @@
 \docType{data}
 \name{voronoi.polygons}
 \alias{voronoi.polygons}
-\title{Coordinates of Voronoi polygon vertices.}
+\title{Coordinates of Voronoi polygon vertices for original map.}
 \format{
-A list of 13 data frames frames with 2 variables.
+A list of 13 data frames frames with 5 variables.
 \describe{
+  \item{\code{vertex}}{vertex ID}
   \item{\code{x}}{x-coordinate}
   \item{\code{y}}{y-coordinate}
+    \item{\code{lon}}{longitude}
+    \item{\code{lat}}{latitude}
 }
 }
 \usage{
 voronoi.polygons
 }
 \description{
-Coordinates of Voronoi polygon vertices.
+Coordinates of Voronoi polygon vertices for original map.
 }
 \keyword{datasets}
