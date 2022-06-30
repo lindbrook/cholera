@@ -7,12 +7,14 @@
 \format{
 A data frame with 6 variables that records the position of the orthogonal projection of the 14 pumps onto the network of roads.
  \describe{
+    \item{\code{pump.id}}{numeric ID}
     \item{\code{road.segment}}{"address" road segment}
     \item{\code{x.proj}}{x-coordinate}
     \item{\code{y.proj}}{y-coordinate}
     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
     \item{\code{node}}{node ID}
-    \item{\code{pump.id}}{numeric ID}
+    \item{\code{lon}}{longitude}
+    \item{\code{lat}}{latitude}
  }
 }
 \usage{
