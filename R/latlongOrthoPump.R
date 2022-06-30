@@ -6,7 +6,6 @@
 #' @export
 
 latlongOrthoPump <- function(path, vestry = FALSE) {
-  # source("~/Documents/Data IV/cholera/R/latlongAuxilliaryFunctions.R")
   rd <- cholera::roads
   addr <- cholera::fatalities.address
 
@@ -16,6 +15,11 @@ latlongOrthoPump <- function(path, vestry = FALSE) {
   } else {
     pre <- "ortho.proj.pump"
     ortho <- cholera::ortho.proj.pump
+  }
+
+  # reset data
+  if (any(c("lon", "lat") %in% names(ortho))) {
+    ortho <- ortho[, !names(ortho) %in% c("lon", "lat")]
   }
 
   post <- "_modified.tif"
