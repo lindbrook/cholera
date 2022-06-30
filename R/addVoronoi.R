@@ -1,6 +1,5 @@
 #' Add Voronoi cells.
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
 #' @param pump.select Numeric. Default is NULL; all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Exclusion (negative selection) is possible (e.g., -6).
 #' @param vestry Logical. \code{FALSE} for original 13 pumps. TRUE for 14 pumps in Vestry Report.
 #' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.
@@ -15,7 +14,7 @@
 #' snowMap()
 #' # addVoronoi()
 
-addVoronoi <- function(path, pump.select = NULL, vestry = FALSE,
+addVoronoi <- function(pump.select = NULL, vestry = FALSE,
   case.location = "nominal", color = "black", line.type = "solid",
   line.width = 1, latlong = FALSE) {
 
@@ -33,12 +32,12 @@ addVoronoi <- function(path, pump.select = NULL, vestry = FALSE,
 
   if (case.location == "address") {
     if (vestry) {
-      # p.data <- cholera::ortho.proj.pump.vestry
-      p.data <- latlongOrthoPump(path, vestry = vestry)
+      p.data <- cholera::ortho.proj.pump.vestry
+      # p.data <- latlongOrthoPump(path, vestry = vestry)
       p.data$street <- cholera::pumps.vestry$street
     } else {
-      # p.data <- cholera::ortho.proj.pump
-      p.data <- latlongOrthoPump(path, vestry = vestry)
+      p.data <- cholera::ortho.proj.pump
+      # p.data <- latlongOrthoPump(path, vestry = vestry)
       p.data$street <- cholera::pumps$street
       names(p.data)[names(p.data) %in% c("x.proj", "y.proj")] <- vars
     }
