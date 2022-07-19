@@ -4,7 +4,8 @@
 \alias{plot.povertyLondon}
 \title{Plot method for povertyLondon().}
 \usage{
-\method{plot}{povertyLondon}(x, district = c("City", "Westminster", "Marylebone", "St. Giles"), ...)
+\method{plot}{povertyLondon}(x, district = c("City", "Westminster",
+  "Marylebone", "St. Giles"), ...)
 }
 \arguments{
 \item{x}{object.}

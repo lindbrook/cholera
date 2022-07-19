@@ -4,7 +4,8 @@
 \alias{plot.oxfordWeather}
 \title{Plot method for oxfordWeather().}
 \usage{
-\method{plot}{oxfordWeather}(x, statistic = "temperature", month = "september", ...)
+\method{plot}{oxfordWeather}(x, statistic = "temperature",
+  month = "september", ...)
 }
 \arguments{
 \item{x}{object.}

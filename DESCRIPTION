@@ -31,7 +31,7 @@ Imports: deldir (>= 1.0-2),
 Suggests: knitr,
           rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Roxygen: list(old_usage = TRUE)
 Encoding: UTF-8
 Language: en-US
