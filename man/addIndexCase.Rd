@@ -4,7 +4,8 @@
 \alias{addIndexCase}
 \title{Highlight index case at 40 Broad Street.}
 \usage{
-addIndexCase(cex = 2, col = "red", pch = 1, add.label = FALSE, text.size = 0.5)
+addIndexCase(cex = 2, col = "red", pch = 1, add.label = FALSE,
+  text.size = 0.5)
 }
 \arguments{
 \item{cex}{Numeric. Size of point.}
