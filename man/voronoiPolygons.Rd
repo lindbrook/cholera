@@ -5,7 +5,7 @@
 \title{Extract vertices of Delaunay triangles and Dirichelet (Voronoi) tiles.}
 \usage{
 voronoiPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles",
-  output = "vertices")
+  output = "vertices", latlong = FALSE)
 }
 \arguments{
 \item{sites}{Object. Data frame of sites to compute Delaunay triangulation and Dirichelet (Voronoi) tessellation with variables "x" and "y".}
@@ -17,6 +17,8 @@ voronoiPolygons(sites, rw.data = NULL, rw = NULL, type = "tiles",
 \item{type}{Character. "tiles" (tessellation) or "triangles" (triangulation) vertices.}
 
 \item{output}{Character. "vertices" or "polygons". "vertices" re "polygons" will draw base R polygons() to an existing plot.}
+
+\item{latlong}{Logical. Use estimated longitude and latitude.}
 }
 \value{
 An R list of data frames or base R graphics polygon()'s'.

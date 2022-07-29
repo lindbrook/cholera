@@ -1,9 +1,15 @@
+cholera 0.7.9.9058
+==================
+
+- add/set voronoiPolygons(latlong = FALSE).
+
+
 cholera 0.7.9.9057
 ==================
 
-- add longitude and latitude to ortho.proj.pump and ortho.proj.pump.
+- add longitude and latitude to ortho.proj.pump and ortho.proj.pump.vestry.
 - add data reset exception to latlongOrthoPump().
-- remove path argument and use ortho.proj.pump and ortho.proj.pump in
+- remove path argument and use ortho.proj.pump and ortho.proj.pump.vestry in
   addVoronoi().
 
 

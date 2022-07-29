@@ -6,6 +6,7 @@
 #' @param rw Numeric. Alternative to rw.data: vector of corners to define the rectangular window or bounding box: xmin, xmax, ymin, ymax.
 #' @param type Character. "tiles" (tessellation) or "triangles" (triangulation) vertices.
 #' @param output Character. "vertices" or "polygons". "vertices" re "polygons" will draw base R polygons() to an existing plot.
+#' @param latlong Logical. Use estimated longitude and latitude.
 #' @return An R list of data frames or base R graphics polygon()'s'.
 #' @note This function relies on the 'deldir' package.
 #' @export
@@ -27,24 +28,27 @@
 #' }))
 
 voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles",
-  output = "vertices") {
+  output = "vertices", latlong = FALSE) {
 
   if (type %in% c("tiles", "triangles") == FALSE) {
-    stop('type must be "tiles" or "triangles".')
+    stop('type must be "tiles" or "triangles".',  call. = FALSE)
   }
 
+  xvar <- ifelse(latlong, "lon", "x")
+  yvar <- ifelse(latlong, "lat", "y")
+
   if (is.null(rw.data) & is.null(rw)) {
-    x.rng <- range(sites$x)
-    y.rng <- range(sites$y)
+    x.rng <- range(sites[, xvar])
+    y.rng <- range(sites[, yvar])
   } else if (is.null(rw.data) == FALSE & is.null(rw)) {
-    x.rng <- range(rw.data$x)
-    y.rng <- range(rw.data$y)
+    x.rng <- range(rw.data[, xvar])
+    y.rng <- range(rw.data[, yvar])
   } else if (is.null(rw.data) & is.null(rw) == FALSE) {
     x.rng <- rw[1:2]
     y.rng <- rw[3:4]
-  } else stop("Use either 'rw.data' or 'rw', not both.")
+  } else stop("Use either 'rw.data' or 'rw', not both.",  call. = FALSE)
 
-  tile.triangle <- deldir::deldir(sites[, c("x", "y")], rw = c(x.rng, y.rng),
+  tile.triangle <- deldir::deldir(sites[, c(xvar, yvar)], rw = c(x.rng, y.rng),
     suppressMsge = TRUE)
 
   if (type == "tiles") {
@@ -54,10 +58,12 @@ voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles",
   }
 
   vertices <- lapply(vertex.data, function(dat) {
-    data.frame(x = dat$x, y = dat$y)
+    out <- data.frame(x = dat$x, y = dat$y)
+    if (latlong) names(out) <- c("lon", "lat")
+    out
   })
 
   if (output == "vertices") vertices
   else if (output == "polygons") invisible(lapply(vertices, polygon))
-  else stop('output must either be "vertices" or "polygons".')
+  else stop('output must either be "vertices" or "polygons".',  call. = FALSE)
 }
