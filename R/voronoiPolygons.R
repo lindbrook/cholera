@@ -31,7 +31,7 @@ voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles",
   output = "vertices", latlong = FALSE) {
 
   if (type %in% c("tiles", "triangles") == FALSE) {
-    stop('type must be "tiles" or "triangles".',  call. = FALSE)
+    stop('type must be "tiles" or "triangles".', call. = FALSE)
   }
 
   xvar <- ifelse(latlong, "lon", "x")
@@ -46,7 +46,7 @@ voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles",
   } else if (is.null(rw.data) & is.null(rw) == FALSE) {
     x.rng <- rw[1:2]
     y.rng <- rw[3:4]
-  } else stop("Use either 'rw.data' or 'rw', not both.",  call. = FALSE)
+  } else stop("Use either 'rw.data' or 'rw', not both.", call. = FALSE)
 
   tile.triangle <- deldir::deldir(sites[, c(xvar, yvar)], rw = c(x.rng, y.rng),
     suppressMsge = TRUE)
@@ -65,5 +65,5 @@ voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles",
 
   if (output == "vertices") vertices
   else if (output == "polygons") invisible(lapply(vertices, polygon))
-  else stop('output must either be "vertices" or "polygons".',  call. = FALSE)
+  else stop('output must either be "vertices" or "polygons".', call. = FALSE)
 }
