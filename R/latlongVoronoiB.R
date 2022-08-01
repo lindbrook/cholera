@@ -1,12 +1,14 @@
 #' Compute Georeferenced Latitude and Longitude of vertices of Voronoi polygons.
 #'
+#' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @export
 #' @examples
 #' snowMap(latlong = TRUE)
 #' cells <- latlongVoronoiB()
 #' invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
 
-latlongVoronoiB <- function() {
+latlongVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
   origin <- matrix(c(min(cholera::roads$lon), min(cholera::roads$lat)),
     nrow = 1, ncol = 2)
   topleft <- matrix(c(min(cholera::roads$lon), max(cholera::roads$lat)),
@@ -16,8 +18,31 @@ latlongVoronoiB <- function() {
   topright <- matrix(c(max(cholera::roads$lon), max(cholera::roads$lat)),
     nrow = 1, ncol = 2)
 
-  pump.meters <- do.call(rbind, lapply(cholera::pumps$id, function(p) {
-    pmp <- as.matrix(cholera::pumps[cholera::pumps$id == p, c("lon", "lat")])
+  if (vestry) {
+    pump.data <- cholera::pumps.vestry
+  } else {
+    pump.data <- cholera::pumps
+  }
+
+  if (!is.null(pump.select)) {
+    if (is.numeric(pump.select) == FALSE) {
+      stop("pump.select must be numeric.", call. = FALSE)
+    }
+    p.count <- nrow(pump.data)
+    p.ID <- seq_len(p.count)
+    if (any(abs(pump.select) %in% p.ID == FALSE)) {
+      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count,
+        call. = FALSE)
+    }
+    msg1 <- 'If specified,'
+    msg2 <- "'pump.select' must include at least 2 different pumps."
+    if (length(unique(p.ID[pump.select])) < 2) {
+      stop(paste(msg1, msg2), call. = FALSE)
+    }
+  }
+
+  pump.meters <- do.call(rbind, lapply(pump.data$id, function(p) {
+    pmp <- as.matrix(pump.data[pump.data$id == p, c("lon", "lat")])
     x.proj <- matrix(c(pmp[, "lon"], origin[, 2]), nrow = 1, ncol = 2)
     y.proj <- matrix(c(origin[, 1], pmp[, "lat"]), nrow = 1, ncol = 2)
     m.lon <- sp::spDistsN1(y.proj, pmp, longlat = TRUE) * 1000L
@@ -31,7 +56,12 @@ latlongVoronoiB <- function() {
   width <- sp::spDistsN1(origin, bottomright, longlat = TRUE) * 1000L
   bounding.box <- c(0, width, 0, height)
 
-  cells <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box)
+  if (is.null(pump.select)) {
+    cells <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box)
+  } else {
+    cells <- voronoiPolygons(pump.meters[pump.select, c("x", "y")],
+      rw = bounding.box)
+  }
 
   # cells DF
 

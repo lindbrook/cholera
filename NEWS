@@ -2,6 +2,7 @@ cholera 0.7.9.9059
 ==================
 
 - add latlongVoronoiB() prototype.
+- add/set latlongVoronoiB(pump.select = NULL, vestry = FALSE).
 
 
 cholera 0.7.9.9058
