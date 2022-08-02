@@ -44,7 +44,9 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
   if (add.roads) addRoads(vars)
   if (add.cases) points(cases[, vars], pch = case.pch, col = case.col,
     cex = 0.5)
-  if (add.pumps) addPump(vestry = vestry, col = "blue", pch = 2, vars = vars)
+  if (add.pumps) {
+    addPump(vestry = vestry, col = "blue", pch = 2, latlong = latlong)
+  }
   # if (add.landmarks) addLandmarks()
   if (add.frame) addFrame(vars)
 }

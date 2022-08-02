@@ -1,3 +1,9 @@
+cholera 0.7.9.9060
+==================
+
+- add/set addPump(latlong = FALSE).
+
+
 cholera 0.7.9.9059
 ==================
 
