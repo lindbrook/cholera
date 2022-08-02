@@ -7,11 +7,11 @@
 #' @param label Logical. TRUE adds text label.
 #' @param pos Numeric. Position of label.
 #' @param cex Numeric. point cex.
-#' @param vars Character. Coordinates.
+#' @param latlong Logical. Use c("lon". "lat") or c("x", "y").
 #' @export
 
 addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
-  label = TRUE, pos = 1, cex = 1, vars = c("x", "y")) {
+  label = TRUE, pos = 1, cex = 1, latlong = FALSE) {
 
   if (vestry) {
     p.data <- cholera::pumps.vestry
@@ -19,17 +19,23 @@ addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
     p.data <- cholera::pumps
   }
 
+  if (latlong) {
+    vars <- c("lon", "lat")
+  } else {
+    vars <- c("x", "y")
+  }
+
   p.count <- nrow(p.data)
   p.ID <- seq_len(p.count)
 
   if (is.null(pump.select) == FALSE) {
     if (is.numeric(pump.select) == FALSE) {
-      stop('pump.select must be numeric.')
+      stop('pump.select must be numeric.', call. = FALSE)
     }
 
     if (any(abs(pump.select) %in% p.ID == FALSE)) {
       stop("With vestry = ", vestry, ", ", "1 >= |pump.select| <= ", p.count,
-        ".")
+        ".", call. = FALSE)
     }
 
     if (all(pump.select > 0)) {
@@ -43,8 +49,7 @@ addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
       points(p.data[sel, vars], pch = pch, col = sel.col, cex = cex)
 
       if (label) {
-        text(p.data[sel, vars], pos = pos, labels = paste0("p", p.ID[sel]),
-          col = sel.col)
+        text(p.data[sel, vars], pos = pos, labels = paste0("p", p.ID[sel]))
       }
     } else {
       points(p.data[sel, vars], pch = pch, col = col, cex = cex)
