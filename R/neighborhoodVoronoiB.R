@@ -40,7 +40,12 @@ neighborhoodVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
     cholera::fatalities.address$anchor[dat == 1]
   })
 
-  snow.colors <- snowColors()[paste0("p", pump.select)]
+  if (!is.null(pump.select)) {
+    snow.colors <- snowColors()[paste0("p", pump.select)]
+  } else {
+    snow.colors <- snowColors()
+  }
+
   vars <- c("lon", "lat")
 
   if (!is.null(pump.select))  {
