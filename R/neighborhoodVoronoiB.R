@@ -3,9 +3,12 @@
 #' Group cases into neighborhoods using Voronoi tessellation.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
+#' @param euclidean.paths Logical. Currently separate classification check.
 #' @export
 
-neighborhoodVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
+neighborhoodVoronoiB <- function(pump.select = NULL, vestry = FALSE,
+  euclidean.paths = FALSE) {
+
   snowMap(vestry = vestry, latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
   cells <- latlongVoronoiB(pump.select = pump.select, vestry = vestry)
   invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
@@ -41,9 +44,9 @@ neighborhoodVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
   })
 
   if (!is.null(pump.select)) {
-    snow.colors <- snowColors()[paste0("p", pump.select)]
+    snow.colors <- snowColors(vestry = vestry)[paste0("p", pump.select)]
   } else {
-    snow.colors <- snowColors()
+    snow.colors <- snowColors(vestry = vestry)
   }
 
   vars <- c("lon", "lat")
@@ -54,9 +57,35 @@ neighborhoodVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
       col = "gray")
   }
 
-  invisible(lapply(seq_along(case.partition), function(i) {
-    sel <- cholera::fatalities.address$anchor %in% case.partition[[i]]
-    points(cholera::fatalities.address[sel, vars], col = snow.colors[i],
-      pch = 20, cex = 0.75)
-  }))
+  if (euclidean.paths) {
+    cases <- cholera::fatalities.address
+    if (is.null(pump.select)) p.id <- pmp$id
+    else p.id <- pump.select
+
+    nearest.pump <- do.call(rbind, lapply(cases$anchor, function(x) {
+      m1 <- as.matrix(cases[cases$anchor == x, vars])
+      d <- vapply(p.id, function(p) {
+        m2 <- as.matrix(pmp[pmp$id == p, vars])
+        sp::spDistsN1(m1, m2, longlat = TRUE) * 1000L
+      }, numeric(1L))
+      near.id <- which.min(d)
+      if (is.null(pump.select)) p.nr <- pmp$id[near.id]
+      else p.nr <- p.id[near.id]
+      data.frame(case = x, pump = p.nr, meters = d[near.id])
+    }))
+
+    invisible(lapply(nearest.pump$case, function(x) {
+      ego <- cases[cases$anchor == x, vars]
+      p <- nearest.pump[nearest.pump$case == x, "pump"]
+      alter <- pmp[pmp$id == p, vars]
+      segments(ego$lon, ego$lat, alter$lon, alter$lat,
+               col = snow.colors[paste0("p", p)], lwd = 0.5)
+    }))
+  } else {
+    invisible(lapply(seq_along(case.partition), function(i) {
+      sel <- cholera::fatalities.address$anchor %in% case.partition[[i]]
+      points(cholera::fatalities.address[sel, vars], col = snow.colors[i],
+        pch = 20, cex = 0.75)
+    }))
+  }
 }
