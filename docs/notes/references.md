@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2022-04-25
+2022-08-11
 
 Herve Bazin. 2000. *The Eradication of Smallpox: Edward Jenner and the
 First and Only Eradication of a Human Infectious Disease*. San Diego:
@@ -9,6 +9,9 @@ Academic Press.
 
 John Broich. 2013. *London: Water and the Making of the Modern City*.
 Pittsburgh: University of Pittsburgh Press.
+
+David Cannadine. 2017. *Victorious Century: The United Kingdom,
+1800-1906*. New York: Viking.
 
 Muriel E. Chamberlain. 1983. *Lord Aberdeen: A political biography*. New
 York: Longman.
