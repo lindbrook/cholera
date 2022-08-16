@@ -73,19 +73,26 @@ latlongVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
   cells.df$vertex <- as.numeric(ids[, 3])
   row.names(cells.df) <- NULL
 
-  ## cell vertices estimate latitudes (y) ##
+  est.lonlat <- meterLatLong(cells.df, origin, topleft, bottomright)
+  split(est.lonlat, est.lonlat$cell)
+}
 
-  # uniformly spaced points along y-axis (latitude)
-  lat.val <- seq(origin[, 2], topleft[, 2], 0.000025)
+#' Convert meters-North to latitude.
+#'
+#' @param cells.df Object. Data frame of coordinates of Voronoi cells
+#' @param origin Object. Bottom left corner of map.
+#' @param topleft Object. Top left corner of map.
+#' @param delta Numeric. Increment between simulated values.
+#' @note Vertical delta distances are uniform between lines of latitues so use of OLS linear fit to estimate latitude is appropriate.
 
-  meter.latitudes <- vapply(lat.val, function(y) {
+meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
+  lat <- seq(origin[, 2], topleft[, 2], delta)
+
+  m <- vapply(lat, function(y) {
     sp::spDistsN1(origin, cbind(origin[, 1], y), longlat = TRUE) * 1000L
   }, numeric(1L))
 
-  lat <- lat.val
-  m <- meter.latitudes
-
-  # vertical distances are uniform between lines of latitues
+  # vertical distances are uniform between lines of latitues -> linear fit
   ols.lat <- stats::lm(lat ~ m)
 
   y.unique <- sort(unique(cells.df$y))
@@ -94,31 +101,43 @@ latlongVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
     stats::predict(ols.lat, newdata = data.frame(m = m))
   }, numeric(1L))
 
-  est.latitudes <- data.frame(m = y.unique, lat = est.lat)
+  data.frame(m = y.unique, lat = est.lat)
+}
 
-  ## cell vertices estimate longitudes (x) ##
+#' Convert meters-East to longiude.
+#'
+#' @param est.latitude Object. Estimated latitudes from meters-North.
+#' @param cells.df Object. Data frame of coordinates of Voronoi cells
+#' @param origin Object. Bottom left corner of map.
+#' @param topleft Object. Top left corner of map.
+#' @param bottomright Object. Bottom right corner of map.
+#' @param delta Numeric. Increment between simulated values.
+#' @note Vertical delta distances are uniform between lines of latitues so use of OLS linear fit to estimate latitude is appropriate.
 
-  # unique estimated vertices latitudes
-  lat.val.est <- est.latitudes$lat
+meterLatLong <- function(cells.df, origin, topleft, bottomright,
+  delta = 0.000025) {
+
+  est.lat <-  meterLatitude(cells.df, origin, topleft)
 
   # uniformly spaced points along x-axis (longitude)
-  lon.val <- seq(origin[, 1], bottomright[, 1], 0.000025)
+  lon <- seq(origin[, 1], bottomright[, 1], delta)
 
-  # horizontal distances along x-axis decrease with increasing latitude.
-  meter.longitudes <- lapply(lat.val.est, function(y) {
+  m.lon <- lapply(est.lat, function(y) {
     y.axis.origin <- cbind(origin[, 1], y)
-    vapply(lon.val, function(x) {
+    vapply(lon, function(x) {
       sp::spDistsN1(y.axis.origin, cbind(x, y), longlat = TRUE) * 1000L
     }, numeric(1L))
   })
 
-  # use stats::loess as function to account for changing, nonlinear horiz.
-  # distanaces
-  loess.lon <- lapply(meter.longitudes, function(m) {
-    dat <- data.frame(lon = lon.val, m)
+  # horizontal distances along x-axis decrease with increasing latitude ->
+  # nonlinear fit
+  loess.lon <- lapply(m.lon, function(m) {
+    dat <- data.frame(lon = lon, m)
     stats::loess(lon ~ m, data = dat,
       control = stats::loess.control(surface = "direct"))
   })
+
+  y.unique <- sort(unique(cells.df$y))
 
   # estimate longitudes, append estimated latitudes
   est.lonlat <- do.call(rbind, lapply(seq_along(y.unique), function(i) {
@@ -131,6 +150,5 @@ latlongVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
     dat
   }))
 
-  est.lonlat <- est.lonlat[order(est.lonlat$cell, est.lonlat$vertex), ]
-  split(est.lonlat, est.lonlat$cell)
+  est.lonlat[order(est.lonlat$cell, est.lonlat$vertex), ]
 }

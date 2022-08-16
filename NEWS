@@ -1,3 +1,9 @@
+cholera 0.7.9.9064
+==================
+
+- add/use meterLatitude() and meterLatLong() in latlongVoronoiB().
+
+
 cholera 0.7.9.9063
 ==================
 
