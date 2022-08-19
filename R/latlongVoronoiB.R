@@ -85,29 +85,28 @@ latlongVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
 #' @param origin Object. Bottom left corner of map.
 #' @param topleft Object. Top left corner of map.
 #' @param delta Numeric. Increment between simulated values.
-#' @note Vertical delta distances are uniform between lines of latitues so use of OLS linear fit to estimate latitude is appropriate.
 #' @noRd
 
 meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
   lat <- seq(origin[, 2], topleft[, 2], delta)
 
-  m <- vapply(lat, function(y) {
+  meters.north <- vapply(lat, function(y) {
     sp::spDistsN1(origin, cbind(origin[, 1], y), longlat = TRUE) * 1000L
   }, numeric(1L))
 
-  loess.lat <- stats::loess(lat ~ m,
+  loess.lat <- stats::loess(lat ~ meters.north,
     control = stats::loess.control(surface = "direct"))
 
   y.unique <- sort(unique(cells.df$y))
 
   est.lat <- vapply(y.unique, function(m) {
-    stats::predict(loess.lat, newdata = data.frame(m = m))
+    stats::predict(loess.lat, newdata = data.frame(meters.north = m))
   }, numeric(1L))
 
   data.frame(m = y.unique, lat = est.lat)
 }
 
-#' Convert meters-East to longiude.
+#' Convert meters-East to longitude.
 #'
 #' @param est.latitude Object. Estimated latitudes from meters-North.
 #' @param cells.df Object. Data frame of coordinates of Voronoi cells
@@ -115,25 +114,25 @@ meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
 #' @param topleft Object. Top left corner of map.
 #' @param bottomright Object. Bottom right corner of map.
 #' @param delta Numeric. Increment between simulated values.
-#' @note Vertical delta distances are uniform between lines of latitues so use of OLS linear fit to estimate latitude is appropriate.
 #' @noRd
 
 meterLatLong <- function(cells.df, origin, topleft, bottomright,
   delta = 0.000025) {
 
-  est.lat <-  meterLatitude(cells.df, origin, topleft)
+  est.lat <- meterLatitude(cells.df, origin, topleft)
 
   # uniformly spaced points along x-axis (longitude)
   lon <- seq(origin[, 1], bottomright[, 1], delta)
 
-  m.lon <- lapply(est.lat$lat, function(y) {
+  # a set of horizontal distances (East-West) for each estimated latitude
+  meters.east <- lapply(est.lat$lat, function(y) {
     y.axis.origin <- cbind(origin[, 1], y)
     vapply(lon, function(x) {
       sp::spDistsN1(y.axis.origin, cbind(x, y), longlat = TRUE) * 1000L
     }, numeric(1L))
   })
 
-  loess.lon <- lapply(m.lon, function(m) {
+  loess.lon <- lapply(meters.east, function(m) {
     dat <- data.frame(lon = lon, m)
     stats::loess(lon ~ m, data = dat,
       control = stats::loess.control(surface = "direct"))
