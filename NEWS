@@ -1,3 +1,9 @@
+cholera 0.7.9.9065
+==================
+
+- use loess() instead of lm() in meterLatitude().
+
+
 cholera 0.7.9.9064
 ==================
 

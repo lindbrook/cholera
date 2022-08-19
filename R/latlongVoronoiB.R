@@ -41,6 +41,8 @@ latlongVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
     }
   }
 
+  # compute geodesic distance from origin to pump and decompose result to
+  # horizontal (East-West) and vertical (North-South) components.
   pump.meters <- do.call(rbind, lapply(pump.data$id, function(p) {
     pmp <- as.matrix(pump.data[pump.data$id == p, c("lon", "lat")])
     x.proj <- matrix(c(pmp[, "lon"], origin[, 2]), nrow = 1, ncol = 2)
@@ -84,6 +86,7 @@ latlongVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
 #' @param topleft Object. Top left corner of map.
 #' @param delta Numeric. Increment between simulated values.
 #' @note Vertical delta distances are uniform between lines of latitues so use of OLS linear fit to estimate latitude is appropriate.
+#' @noRd
 
 meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
   lat <- seq(origin[, 2], topleft[, 2], delta)
@@ -92,13 +95,13 @@ meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
     sp::spDistsN1(origin, cbind(origin[, 1], y), longlat = TRUE) * 1000L
   }, numeric(1L))
 
-  # vertical distances are uniform between lines of latitues -> linear fit
-  ols.lat <- stats::lm(lat ~ m)
+  loess.lat <- stats::loess(lat ~ m,
+    control = stats::loess.control(surface = "direct"))
 
   y.unique <- sort(unique(cells.df$y))
 
   est.lat <- vapply(y.unique, function(m) {
-    stats::predict(ols.lat, newdata = data.frame(m = m))
+    stats::predict(loess.lat, newdata = data.frame(m = m))
   }, numeric(1L))
 
   data.frame(m = y.unique, lat = est.lat)
@@ -113,6 +116,7 @@ meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
 #' @param bottomright Object. Bottom right corner of map.
 #' @param delta Numeric. Increment between simulated values.
 #' @note Vertical delta distances are uniform between lines of latitues so use of OLS linear fit to estimate latitude is appropriate.
+#' @noRd
 
 meterLatLong <- function(cells.df, origin, topleft, bottomright,
   delta = 0.000025) {
@@ -122,15 +126,13 @@ meterLatLong <- function(cells.df, origin, topleft, bottomright,
   # uniformly spaced points along x-axis (longitude)
   lon <- seq(origin[, 1], bottomright[, 1], delta)
 
-  m.lon <- lapply(est.lat, function(y) {
+  m.lon <- lapply(est.lat$lat, function(y) {
     y.axis.origin <- cbind(origin[, 1], y)
     vapply(lon, function(x) {
       sp::spDistsN1(y.axis.origin, cbind(x, y), longlat = TRUE) * 1000L
     }, numeric(1L))
   })
 
-  # horizontal distances along x-axis decrease with increasing latitude ->
-  # nonlinear fit
   loess.lon <- lapply(m.lon, function(m) {
     dat <- data.frame(lon = lon, m)
     stats::loess(lon ~ m, data = dat,
@@ -146,7 +148,7 @@ meterLatLong <- function(cells.df, origin, topleft, bottomright,
     dat$lon <- vapply(dat$x, function(x) {
       stats::predict(loess.fit, newdata = data.frame(m = x))
     }, numeric(1L))
-    dat$lat <- est.latitudes[est.latitudes$m == y.unique[i], "lat"]
+    dat$lat <- est.lat[est.lat$m == y.unique[i], "lat"]
     dat
   }))
 
