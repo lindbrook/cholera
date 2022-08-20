@@ -4,9 +4,11 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @export
 #' @examples
+#' \dontrun{
 #' snowMap(latlong = TRUE)
 #' cells <- latlongVoronoiB()
 #' invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
+#' }
 
 latlongVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
   origin <- matrix(c(min(cholera::roads$lon), min(cholera::roads$lat)),
@@ -87,24 +89,24 @@ latlongVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
 #' @param delta Numeric. Increment between simulated values.
 #' @noRd
 
-meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
-  lat <- seq(origin[, 2], topleft[, 2], delta)
-
-  meters.north <- vapply(lat, function(y) {
-    sp::spDistsN1(origin, cbind(origin[, 1], y), longlat = TRUE) * 1000L
-  }, numeric(1L))
-
-  loess.lat <- stats::loess(lat ~ meters.north,
-    control = stats::loess.control(surface = "direct"))
-
-  y.unique <- sort(unique(cells.df$y))
-
-  est.lat <- vapply(y.unique, function(m) {
-    stats::predict(loess.lat, newdata = data.frame(meters.north = m))
-  }, numeric(1L))
-
-  data.frame(m = y.unique, lat = est.lat)
-}
+# meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
+#   lat <- seq(origin[, 2], topleft[, 2], delta)
+#
+#   meters.north <- vapply(lat, function(y) {
+#     sp::spDistsN1(origin, cbind(origin[, 1], y), longlat = TRUE) * 1000L
+#   }, numeric(1L))
+#
+#   loess.lat <- stats::loess(lat ~ meters.north,
+#     control = stats::loess.control(surface = "direct"))
+#
+#   y.unique <- sort(unique(cells.df$y))
+#
+#   est.lat <- vapply(y.unique, function(m) {
+#     stats::predict(loess.lat, newdata = data.frame(meters.north = m))
+#   }, numeric(1L))
+#
+#   data.frame(m = y.unique, lat = est.lat)
+# }
 
 #' Convert meters-East to longitude.
 #'
@@ -116,40 +118,40 @@ meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
 #' @param delta Numeric. Increment between simulated values.
 #' @noRd
 
-meterLatLong <- function(cells.df, origin, topleft, bottomright,
-  delta = 0.000025) {
-
-  est.lat <- meterLatitude(cells.df, origin, topleft)
-
-  # uniformly spaced points along x-axis (longitude)
-  lon <- seq(origin[, 1], bottomright[, 1], delta)
-
-  # a set of horizontal distances (East-West) for each estimated latitude
-  meters.east <- lapply(est.lat$lat, function(y) {
-    y.axis.origin <- cbind(origin[, 1], y)
-    vapply(lon, function(x) {
-      sp::spDistsN1(y.axis.origin, cbind(x, y), longlat = TRUE) * 1000L
-    }, numeric(1L))
-  })
-
-  loess.lon <- lapply(meters.east, function(m) {
-    dat <- data.frame(lon = lon, m)
-    stats::loess(lon ~ m, data = dat,
-      control = stats::loess.control(surface = "direct"))
-  })
-
-  y.unique <- sort(unique(cells.df$y))
-
-  # estimate longitudes, append estimated latitudes
-  est.lonlat <- do.call(rbind, lapply(seq_along(y.unique), function(i) {
-    dat <- cells.df[cells.df$y == y.unique[i], ]
-    loess.fit <- loess.lon[[i]]
-    dat$lon <- vapply(dat$x, function(x) {
-      stats::predict(loess.fit, newdata = data.frame(m = x))
-    }, numeric(1L))
-    dat$lat <- est.lat[est.lat$m == y.unique[i], "lat"]
-    dat
-  }))
-
-  est.lonlat[order(est.lonlat$cell, est.lonlat$vertex), ]
-}
+# meterLatLong <- function(cells.df, origin, topleft, bottomright,
+#   delta = 0.000025) {
+#
+#   est.lat <- meterLatitude(cells.df, origin, topleft)
+#
+#   # uniformly spaced points along x-axis (longitude)
+#   lon <- seq(origin[, 1], bottomright[, 1], delta)
+#
+#   # a set of horizontal distances (East-West) for each estimated latitude
+#   meters.east <- lapply(est.lat$lat, function(y) {
+#     y.axis.origin <- cbind(origin[, 1], y)
+#     vapply(lon, function(x) {
+#       sp::spDistsN1(y.axis.origin, cbind(x, y), longlat = TRUE) * 1000L
+#     }, numeric(1L))
+#   })
+#
+#   loess.lon <- lapply(meters.east, function(m) {
+#     dat <- data.frame(lon = lon, m)
+#     stats::loess(lon ~ m, data = dat,
+#       control = stats::loess.control(surface = "direct"))
+#   })
+#
+#   y.unique <- sort(unique(cells.df$y))
+#
+#   # estimate longitudes, append estimated latitudes
+#   est.lonlat <- do.call(rbind, lapply(seq_along(y.unique), function(i) {
+#     dat <- cells.df[cells.df$y == y.unique[i], ]
+#     loess.fit <- loess.lon[[i]]
+#     dat$lon <- vapply(dat$x, function(x) {
+#       stats::predict(loess.fit, newdata = data.frame(m = x))
+#     }, numeric(1L))
+#     dat$lat <- est.lat[est.lat$m == y.unique[i], "lat"]
+#     dat
+#   }))
+#
+#   est.lonlat[order(est.lonlat$cell, est.lonlat$vertex), ]
+# }
