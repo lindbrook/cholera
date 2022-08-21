@@ -10,7 +10,7 @@ neighborhoodVoronoiB <- function(pump.select = NULL, vestry = FALSE,
   euclidean.paths = FALSE) {
 
   snowMap(vestry = vestry, latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
-  cells <- latlongVoronoiB(pump.select = pump.select, vestry = vestry)
+  cells <- latlongVoronoiC(pump.select = pump.select, vestry = vestry)
   invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
   addPump(pump.select = pump.select, vestry = vestry, latlong = TRUE)
 
