@@ -162,7 +162,7 @@ segmentDistance <- function(dat, latlong = FALSE) {
     names(p1) <- vars
     names(p2) <- vars
     if (latlong) {
-      sp::spDistsN1(as.matrix(p1), as.matrix(p2), longlat = TRUE) * 1000L
+      geosphere::distGeo(p1, p2)
     } else unitMeter(stats::dist(rbind(p1, p2)))
   }, numeric(1L))
 }
