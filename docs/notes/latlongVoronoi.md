@@ -1,7 +1,53 @@
 Voronoi Diagrams with Longitude and Latitude Data
 ================
 
-## Voronoi diagram with nominal coordinates
+## introduction
+
+This is a work-in-progress note about how I’m approaching the
+computation and visualization of Voronoi diagrams with geographic data
+(with longitude and latitude).
+
+The elephant-in-the-room is why not use [spatial](https://rspatial.org/)
+or [GIS](https://qgis.org/) tools and approaches? Here’re two answers.
+First, right now I’m simply trying to extend the existing functionality
+of ‘cholera’ to include geographic data. Second, I’m not sure whether I
+can or should port that functionality to those tools and approaches.
+
+If I’m wrong about any of this (be it obvious or subtle, technical or
+conceptual), please let me know.
+
+## georeferencing
+
+Dodson and Tobler (1992) digitized John Snow’s map by applying an
+arbitrary set of Cartesian coordinates to features on the map (e.g.,
+roads, pumps, fatalities). I estimated the longitude and latitude of
+those “nominal” coordinates by using the “Georeferencer” tool and the
+[OpenStreetMap](https://www.openstreetmap.org) XYZ tiles in
+[QGIS](https://qgis.org/).
+
+## Voronoi diagrams
+
+Voronoi diagrams carve up a space into regiions based on the distance
+(typically Euclidean) to some set of sites of interest. A good example
+is how the coffee shops in your town carve up the clientele creating
+exclusive “neighborhoods” (i.e., catchment areas) for each shop. How do
+these neighborhoods emerge?
+
+For the sake of illustration, let’s make the usual all else being equal
+assumption (e.g., coffee quality, barista banter, etc.) so that the only
+thing that affects your choice is the shop’s distance from your home. If
+you were thinking algorithmically, you might compute the distance to
+each store and pick the closest one. If we were to repeat this for
+everyone in town, distinct neighborhoods will emerge. These are the
+cells in a Voronoi diagram. The edges of the polygons are the cutpoint
+of equal distance between coffee shops with adjacent neighborhoods.
+
+In my case, I’m interested in how the water pumps in 1854 Soho,
+Westminster (UK) created distinct neighborhoods that identify who we’d
+expect to use one pump rather than another.
+
+Here’s Voronoi diagram when I apply deldir::deldir() to the nominal
+coordinates:
 
 ``` r
 snowMap(latlong = FALSE)
@@ -10,11 +56,16 @@ vars <- c("x", "y")
 cells <- cholera::voronoiPolygons(pmp[, vars], rw.data = cholera::roads[, vars],
   latlong = FALSE )
 invisible(lapply(cells, polygon))
+title(main = "Nominal Coordinates")
 ```
 
-![](latlongVoronoi_files/figure-gfm/voronoi-1.png)<!-- -->
+![](latlongVoronoi_files/figure-gfm/voronoi_nominal-1.png)<!-- -->
 
-## Voronoi diagram with geographic coordinates
+## the problem
+
+The problem is that we can’t simply apply deldir::deldir(), a 2D
+algorithm, to data with geographic coordinates. You’ll get the “wrong”
+answer:
 
 ``` r
 snowMap(latlong = TRUE)
@@ -23,9 +74,32 @@ vars <- c("lon", "lat")
 cells <- cholera::voronoiPolygons(pmp[, vars], rw.data = cholera::roads[, vars],
   latlong = TRUE )
 invisible(lapply(cells, polygon))
+title(main = "Geographic Coordinates")
 ```
 
 ![](latlongVoronoi_files/figure-gfm/voronoi_naive-1.png)<!-- -->
+
+While the two diagrams above are different, why do I believe the former
+is “right” but the latter is “wrong”? Might this be the result of the
+fact that the former uses nominal “xy” coordinates while the latter uses
+longitude-latitude?
+
+This is partially true. Put aside the Voronoi diagrame for a moment.
+Other than the aspect ratio used to create the graphs (the geographic
+plot uses asp = 1.65; the nominal plot uses asp = 1), the underlying
+features of graphs (the shape of road network and the locations of the
+water pumps) essentially look the same:
+
+``` r
+snowMap()
+snowMap(latlong = TRUE)
+```
+
+<img src="latlongVoronoi_files/figure-gfm/latlong-1.png" width="50%" /><img src="latlongVoronoi_files/figure-gfm/latlong-2.png" width="50%" />
+
+In fact, since the relative positions of the pumps are quite similar,
+one might expect that the Voronoi diagrams, for reasons discussed in the
+previous section, should also look similar.
 
 ## “brute force” Voronoi diagram
 
@@ -293,3 +367,4 @@ points(cholera::pumps[, c("lon", "lat")])
 text(cholera::pumps[, c("lon", "lat")], labels = paste0("p", 1:13), pos = 1)
 ```
 
+<img src="latlongVoronoi_files/figure-gfm/terra2-1.png" style="display: block; margin: auto;" />
