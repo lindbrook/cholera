@@ -261,3 +261,35 @@ longlat[[1]]
     ## 2   0.0000 826.3265    1      2 -0.1437639 51.51670
     ## 3   0.0000 703.0100    1      3 -0.1437639 51.51559
     ## 4 373.7472 707.5590    1      4 -0.1383798 51.51563
+
+## ‘terra’ implementation
+
+``` r
+dat <- cholera::pumps[, c("lon", "lat")]
+
+sv.data <- terra::vect(dat, crs = "+proj=longlat")
+proj <- "+proj=lcc +lat_1=51.510 +lat_2=51.516 +lat_0=51.513 +lon_0=-0.1367 +units=m"
+sv.proj <- project(sv.data, proj)
+
+v1 <- terra::voronoi(sv.proj)
+v2 <- terra::voronoi(sv.data)
+out1 <- terra::project(v1, "+proj=longlat")
+out2 <- terra::project(v2, "+proj=longlat")
+```
+
+``` r
+plot(out1, xlim = range(cholera::roads$lon), ylim = range(cholera::roads$lat))
+addRoads(c("lon", "lat"))
+points(cholera::pumps[, c("lon", "lat")])
+text(cholera::pumps[, c("lon", "lat")], labels = paste0("p", 1:13), pos = 1)
+```
+
+<img src="latlongVoronoi_files/figure-gfm/terra1-1.png" style="display: block; margin: auto;" />
+
+``` r
+plot(out2, xlim = range(cholera::roads$lon), ylim = range(cholera::roads$lat))
+addRoads(c("lon", "lat"))
+points(cholera::pumps[, c("lon", "lat")])
+text(cholera::pumps[, c("lon", "lat")], labels = paste0("p", 1:13), pos = 1)
+```
+
