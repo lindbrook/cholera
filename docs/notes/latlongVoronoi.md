@@ -13,41 +13,75 @@ First, right now I’m simply trying to extend the existing functionality
 of ‘cholera’ to include geographic data. Second, I’m not sure whether I
 can or should port that functionality to those tools and approaches.
 
-If I’m wrong about any of this (be it obvious or subtle, technical or
-conceptual), please let me know.
-
-## georeferencing
+## georeferencing Dodson and Tobler (1992)
 
 Dodson and Tobler (1992) digitized John Snow’s map by applying an
-arbitrary set of Cartesian coordinates to features on the map (e.g.,
-roads, pumps, fatalities). I estimated the longitude and latitude of
-those “nominal” coordinates by using the “Georeferencer” tool and the
+arbitrary, “nominal” Cartesian coordinates to the map (e.g., roads,
+pumps, fatalities). Using a modified version of those data, I estimated
+the longitude and latitude of those nominal coordinates by using the
+“Georeferencer” tool and the
 [OpenStreetMap](https://www.openstreetmap.org) XYZ tiles in
 [QGIS](https://qgis.org/).
 
-## Voronoi diagrams
+## what are Voronoi diagrams?
 
-Voronoi diagrams carve up a space into regiions based on the distance
-(typically Euclidean) to some set of sites of interest. A good example
-is how the coffee shops in your town carve up the clientele creating
-exclusive “neighborhoods” (i.e., catchment areas) for each shop. How do
-these neighborhoods emerge?
+The best way to understand what a Voronoi diagram is and how it works is
+through an example. Consider the coffee shops in your town. For the sake
+of illustration, we’ll assume that “all else being equal” (price,
+quality, banter, etc. are the same) and that the only thing that affects
+your choice will be a shop’s proximity to your front door. If everyone
+in town were to do this computation (i.e., compute the distance to each
+shop and pick the nearest), distinct neighborhoods will emerge. These
+neighborhoods make up the cells of a Voronoi diagram.
 
-For the sake of illustration, let’s make the usual all else being equal
-assumption (e.g., coffee quality, barista banter, etc.) so that the only
-thing that affects your choice is the shop’s distance from your home. If
-you were thinking algorithmically, you might compute the distance to
-each store and pick the closest one. If we were to repeat this for
-everyone in town, distinct neighborhoods will emerge. These are the
-cells in a Voronoi diagram. The edges of the polygons are the cutpoint
-of equal distance between coffee shops with adjacent neighborhoods.
+In my case, I’m interested in how the location of water pumps in 1854
+Soho (Westminster, UK) create neighborhoods that identify which people
+should use which pump. The plot below is a Voronoi diagram that
+identifies the neighborhoods of the 13 pumps.
 
-In my case, I’m interested in how the water pumps in 1854 Soho,
-Westminster (UK) created distinct neighborhoods that identify who we’d
-expect to use one pump rather than another.
+``` r
+snowMap()
+addVoronoi()
+```
 
-Here’s Voronoi diagram when I apply deldir::deldir() to the nominal
-coordinates:
+![](latlongVoronoi_files/figure-gfm/voronoi-1.png)<!-- -->
+
+The boundaries or edges of the polygons that form the cutpoints between
+adjacent neighborhoods.
+
+## “brute force” computation of Voronoi diagrams
+
+The neat thing about the standard Voronoi algorithm is that it only uses
+the location of the 13 pumps to do the computation. It doesn’t do the
+“brute force” computation described above.
+
+That said, because the “brute force” will give you the same answer, it
+give us a separate, independent way to validate a Voronoi diagram. This
+will help us assess whether my effort to compute Voronoi diagrams with
+geographic data is reasonable if not “right”.
+
+As “proof” of the “brute force”, consider this diagram.
+
+``` r
+plot(neighborhoodEuclidean(case.set = "expected"), type = "star")
+```
+
+![](latlongVoronoi_files/figure-gfm/euclidean_paths-1.png)<!-- -->
+
+It’s created using data simulation. I placed 20,000 regularly spaced
+points across the face of the map. I then computed the Euclidean
+distance from each point or “address” to the 13 water pumps. Finally,
+lines (color-coded by pump) are drawn from an address to that address’s
+nearest pump. What emerges is a kind of photographic negative of the
+Voronoi diagram plotted above.
+
+## the problem
+
+The problem is that we can’t simply apply deldir::deldir(), a 2D
+algorithm, to data with geographic coordinates. You’ll get the “wrong”
+answer.
+
+Compare the following.
 
 ``` r
 snowMap(latlong = FALSE)
@@ -61,12 +95,6 @@ title(main = "Nominal Coordinates")
 
 ![](latlongVoronoi_files/figure-gfm/voronoi_nominal-1.png)<!-- -->
 
-## the problem
-
-The problem is that we can’t simply apply deldir::deldir(), a 2D
-algorithm, to data with geographic coordinates. You’ll get the “wrong”
-answer:
-
 ``` r
 snowMap(latlong = TRUE)
 pmp <- cholera::pumps
@@ -79,16 +107,12 @@ title(main = "Geographic Coordinates")
 
 ![](latlongVoronoi_files/figure-gfm/voronoi_naive-1.png)<!-- -->
 
-While the two diagrams above are different, why do I believe the former
-is “right” but the latter is “wrong”? Might this be the result of the
-fact that the former uses nominal “xy” coordinates while the latter uses
-longitude-latitude?
+Code-wise, the only difference between the two is that the former uses
+the nominal coordinates while the latter uses geographic coordinates.
+Visually, the difference lies with the Voronoi diagrams.
 
-This is partially true. Put aside the Voronoi diagrame for a moment.
-Other than the aspect ratio used to create the graphs (the geographic
-plot uses asp = 1.65; the nominal plot uses asp = 1), the underlying
-features of graphs (the shape of road network and the locations of the
-water pumps) essentially look the same:
+I’m going to argue that we should expect to get similar Voronoi diagrams
+regardless of the coordinates used. Put aside the diagrams for a moment:
 
 ``` r
 snowMap()
@@ -97,19 +121,15 @@ snowMap(latlong = TRUE)
 
 <img src="latlongVoronoi_files/figure-gfm/latlong-1.png" width="50%" /><img src="latlongVoronoi_files/figure-gfm/latlong-2.png" width="50%" />
 
-In fact, since the relative positions of the pumps are quite similar,
-one might expect that the Voronoi diagrams, for reasons discussed in the
-previous section, should also look similar.
+Other than the aspect ratio used to create the graphs (the nominal plot
+uses asp = 1, the geographic plot uses asp = 1.65), when we look at the
+shape of road network and the locations of the water pumps the
+underlying graphs essentially look the same. The relative location of
+the pumps is key since they are only the data used by the Voronoi
+diagram algorithm. Because they are similar, we should expect to get
+similar Voronoi diagrams.
 
-## “brute force” Voronoi diagram
-
-``` r
-plot(neighborhoodEuclidean(case.set = "expected"), type = "star")
-```
-
-![](latlongVoronoi_files/figure-gfm/euclidean_paths-1.png)<!-- -->
-
-## graph variables
+### graph variables
 
 ``` r
 vars <- c("lon", "lat")
@@ -119,7 +139,7 @@ rng <- mapRange(latlong = TRUE)
 snow.colors <- snowColors(vestry = FALSE)
 ```
 
-## geodesic or great circle distances (WGS 84 ellipsoid)
+### geodesic or great circle distances
 
 ``` r
 nearest.pump <- do.call(rbind, lapply(cases$anchor, function(x) {
@@ -163,8 +183,6 @@ invisible(lapply(cells, polygon))
 ```
 
 ![](latlongVoronoi_files/figure-gfm/euclidean_paths_latlong_naive-1.png)<!-- -->
-
-## “correct” diagram
 
 ``` r
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
