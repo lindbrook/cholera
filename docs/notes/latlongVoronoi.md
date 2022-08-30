@@ -121,7 +121,7 @@ Other than the aspect ratio used to create the graphs (the nominal plot
 uses asp = 1, the geographic plot uses asp = 1.65), the shape of road
 network and the relative locations of the water pumps essentially look
 the same. And because the location of pumps is the only data used by the
-Voronoi algorithm, you might expect to get similar rather than differen
+Voronoi algorithm, you might expect to get similar rather than different
 Voronoi diagrams.
 
 These facts raise two questions. First, why then are the two diagrams
@@ -135,7 +135,7 @@ geographic data leads to what we might call classification errors.
 The diagrams are not just different. One is “wrong”. To show this, I
 leverage the fact that there is a separate, independent way from the
 algorithm to compute a Voronoi diagram: the “brute force” method
-described above. By doing so, it’s pretty straighforward to show that
+described above. By doing so, it’s pretty straightforward to show that
 the diagram computed using geographic coordinate mis-classifies the
 data.
 
@@ -154,10 +154,10 @@ snow.colors <- snowColors(vestry = FALSE)
 ```
 
 To compute and visualize the nearest pumps, I don’t directly use the
-geographic coordinates. Instead, I compute the actualy physical distance
-between the coordinates along the Earth’s surface based on a 3D model
-(WGS84 ellipsoid model). This is known as the geodesic or great circle
-distance. I compute this using via geosphere::distGeo().
+geographic coordinates. Instead, I compute the actually physical
+distance between the coordinates along the Earth’s surface based on a 3D
+model (WGS84 ellipsoid model). This is known as the geodesic or great
+circle distance. I compute this using via geosphere::distGeo().
 
 For each residence in the dataset that witnessed at least one fatality,
 I compute which pump is nearest:
@@ -177,11 +177,12 @@ nearest.pump <- do.call(rbind, lapply(cases$anchor, function(x) {
 }))
 ```
 
-In the code below, I plot the Voronoi cells. Then, using `nearst.pump`,
-I draw a line segment from the fatality’s location to the nearest pump
-(color-code the segment by which pump is closest). You can see the
-discrepancy between the cells and the lines. This show the
-mis-classification.
+In the code below, I first plot the Voronoi cells using the raw
+geographic coordinates. Then, using the results of the “brute force”
+approach in `nearest.pump`, I draw line segments from the “address” of
+each fatality to its nearest pump (lines are color-coded by pump). In
+the plot, you can see the discrepancies between the cells and lines: the
+cells do not correctly capture each fatality’s closest pump.
 
 ``` r
 # plot roads and pumps
@@ -217,26 +218,27 @@ invisible(lapply(nearest.pump$case, function(x) {
 
 ## numerical expectations
 
-The reason why the direct application of the algorithm to geographic
-data leads to the mis-classification is essentially numerical.
-
-It stems from the fact that even though the Earth is round, the sees the
+Why does the direct application of the algorithm to geographic data
+leads to the mis-classification? The answer is essentially numerical. It
+stems from the fact that even though the Earth is round, the sees the
 Earth as flat. The algorithm expects a 2D Cartesian world where the only
 difference between the two axes is that they are perpendicular or
-orthogonal to one another. To be specific, it expects that the distance
-covered by a one unit move North or South (a unit change in latitude)
-will equal the distance covered by a one unit move East or West (a unit
-change in longitude). Due to the Earth’s geometry, this is not the case.
-As you move North or South, away the equator and toward the poles, the
-distance covered as you move one unit East or West (longitude) will
-actually decrease: even though they cover the same number of degrees of
-longitude, the distance along the Equator is greater than that along
-either the Tropic of Cancer or Capricorn.
+orthogonal to one another. To be specific, the algorithm expects that
+the distance covered by a one unit move North or South (a unit change in
+latitude) will equal the distance covered by a one unit move East or
+West (a unit change in longitude). Due to the Earth’s geometry, this is
+not the case. As you move North or South, away the equator and toward
+the poles, the distance covered as you move one unit East or West
+(longitude) actually decreases. You can see this if you compare the
+Equator with the Tropic of Cancer: even though all three cover the same
+number of degrees of longitude, the distance along former is greater
+than that along the latter.
 
 ## a solution
 
 In the graph below, I plot my solution. Here you can see the concordance
-between the line segments and the Voronoi diagram.
+between he algorithm-generated Voronoi diagram and the “brute
+force”-generated line segments.
 
 ``` r
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
@@ -259,16 +261,29 @@ invisible(lapply(nearest.pump$case, function(x) {
   p <- nearest.pump[nearest.pump$case == x, "pump"]
   points(ego, pch = 16, col = snow.colors[paste0("p", p)], cex = 0.5)
 }))
-
-cells <- cholera::latlongVoronoiC()
-invisible(lapply(cells, function(dat) polygon(dat[, vars])))
 ```
 
 ![](latlongVoronoi_files/figure-gfm/euclidean_paths_latlong-1.png)<!-- -->
 
-# latlongVoronoiC()
+This solution employs a familiar strategy. Transform the data so that
+you use the algorithm. Then translate the results back to original units
+(longitude and latitude). The devil (and possible objections) lies in
+the details.
 
-## four corners
+First, to capture the effect of the Earth’s shape, I compute the
+geodesic distance between an arbitrary point of reference (a “corner of
+the map”) and the location of the 13 water pumps. Second, I break down
+these distances into two components: meters-North and meters-East of the
+reference point. These components, which are our analogs of latitude and
+longitude, serve as the new set of coordinates.
+
+The virtue of these new coordinates is that they obey the algorithm’s
+expectation about distance (the distance covered by a unit move North
+equals that covered by a unit move East). More importantly, when I use
+them to compute the Voronoi diagrams, I get “right” results we see in
+the graph above.
+
+#### four corners
 
 Origin is bottom left; graph in quadrant I
 
@@ -283,7 +298,7 @@ topright <- data.frame(lon = max(cholera::roads$lon),
                        lat = max(cholera::roads$lat))
 ```
 
-## decompose geodesic distance into horizontal and vertical
+#### break down geodesic distance into horizontal and vertical components
 
 Compute geodesic distance from origin to points and decompose
 
@@ -300,7 +315,7 @@ pump.meters <- do.call(rbind, lapply(pump.data$id, function(p) {
 }))
 ```
 
-## bounding box of Voronoi diagram
+#### bounding box of Voronoi diagram
 
 ``` r
 height <- geosphere::distGeo(origin, topleft)
@@ -308,16 +323,16 @@ width <- geosphere::distGeo(origin, bottomright)
 bounding.box <- c(0, width, 0, height)
 ```
 
-## cell coordinates
+#### cell coordinates
 
-Apply deldir::deldir() and extract coordinates of cells, with an eye to
-using polygon().
+Apply deldir::deldir() and extract coordinates of cells, for use with
+polygon().
 
 ``` r
 cells <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box)
 ```
 
-## reshape and reformat into data frame
+#### reshape and reformat into data frame
 
 ``` r
 cells.df <- do.call(rbind, cells)
@@ -329,7 +344,19 @@ cells.df$vertex <- as.numeric(ids[, 3])
 row.names(cells.df) <- NULL
 ```
 
-## meterLatitude()
+## translating back to longitude and latitude
+
+To translate the results (the coordinates of Voronoi cells) from
+meters-East and meters-North back to longitude and latitude, I use data
+simulation to uncover the relationship between geodesic distance and
+units of longitude and latitude.
+
+While the measure of geodesic distance I use, geosphere::distGeo(), use
+an ellipsoid model of the Earth (WGS 84), the relationship between
+meters-North and latitude is perfectly linear for Soho, Westminster
+(UK). Nevertheless, I play it conservatively and use a fitted loess
+function to translate meters-North to latitude. The details are in the
+meterLatitude():
 
 ``` r
 meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
@@ -352,7 +379,11 @@ meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
 }
 ```
 
-## meterLatLong()
+East-West (horizontal) distance is a function of how far North or South
+(latitude) you are. This means that the relationship between meters-East
+and longitude will be nonlinear. While analysis indicates that a fitted
+OLS line might be adequate, I fit a separate loess function for each
+observed meters-North value. The details are in the meterLatLong():
 
 ``` r
 meterLatLong <- function(cells.df, origin, topleft, bottomright,
@@ -394,7 +425,9 @@ meterLatLong <- function(cells.df, origin, topleft, bottomright,
 }
 ```
 
-## translate back to longitude and latitude
+The code below shows the data that translates the coordinates for the
+cell for pump 1 from meters-East and meters-North to longitude and
+latitude.
 
 ``` r
 est.lonlat <- meterLatLong(cells.df, origin, topleft, bottomright)
@@ -411,13 +444,17 @@ longlat[[1]]
     ## 3   0.0000 703.0100    1      3 -0.1437639 51.51559
     ## 4 373.7472 707.5590    1      4 -0.1383798 51.51563
 
-## ‘terra’ implementation
+Finally, as a sanity check, I replicate the “right” and “wrong” diagrams
+using [‘terra’](https://cran.r-project.org/package=terra)
 
 ``` r
 dat <- cholera::pumps[, c("lon", "lat")]
 
 sv.data <- terra::vect(dat, crs = "+proj=longlat")
-proj <- "+proj=lcc +lat_1=51.510 +lat_2=51.516 +lat_0=51.513 +lon_0=-0.1367 +units=m"
+
+pt1 <- "+proj=lcc +lat_1=51.510 +lat_2=51.516"
+pt2 <- "+lat_0=51.513 +lon_0=-0.1367 +units=m"
+proj <- paste(pt1, pt2)
 sv.proj <- project(sv.data, proj)
 
 v1 <- terra::voronoi(sv.proj)
@@ -433,7 +470,7 @@ points(cholera::pumps[, c("lon", "lat")])
 text(cholera::pumps[, c("lon", "lat")], labels = paste0("p", 1:13), pos = 1)
 ```
 
-<img src="latlongVoronoi_files/figure-gfm/terra1-1.png" style="display: block; margin: auto;" />
+![](latlongVoronoi_files/figure-gfm/terra1-1.png)<!-- -->
 
 ``` r
 plot(out2, xlim = range(cholera::roads$lon), ylim = range(cholera::roads$lat))
@@ -442,4 +479,4 @@ points(cholera::pumps[, c("lon", "lat")])
 text(cholera::pumps[, c("lon", "lat")], labels = paste0("p", 1:13), pos = 1)
 ```
 
-<img src="latlongVoronoi_files/figure-gfm/terra2-1.png" style="display: block; margin: auto;" />
+![](latlongVoronoi_files/figure-gfm/terra2-1.png)<!-- -->
