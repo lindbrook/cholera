@@ -307,6 +307,11 @@ discusses the tradeoff between using points() and polygon() to plot
 “expected” neighborhood using area plots and the computation of polygon
 vertices.
 
+[Voronoi Diagrams with Longitude and Latitude
+Data](https://github.com/lindbrook/cholera/blob/master/docs/notes/latlongVoronoi.md)
+describes my working solution for computing Voronoi diagrams with
+geographic data.
+
 [references](https://github.com/lindbrook/cholera/blob/master/docs/notes/references.md)
 is an informal list of articles and books about cholera, John Snow and
 the 1854 outbreak.
