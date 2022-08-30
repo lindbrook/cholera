@@ -12,40 +12,36 @@ library(terra)
 
 ## introduction
 
-This is a work-in-progress note about how I'm approaching the computation and visualization of Voronoi diagrams with geographic data (with longitude and latitude).
-
-The elephant-in-the-room is why not use [spatial](https://rspatial.org/) or [GIS](https://qgis.org/) tools and approaches? Here're two answers. First, right now I'm simply trying to extend the existing functionality of 'cholera' to include geographic data. Second, I'm not sure whether I can or should port that functionality to those tools and approaches.
+This is a work-in-progress note about how I compute Voronoi diagrams with geographic data (data with longitude and latitude). The elephant-in-the-room is why not use [spatial](https://rspatial.org/) or [GIS](https://qgis.org/) tools and approaches? Right now, my preference is to try to extend the functionality of the existing code to include geographic data. In the long run, this may not turn out to be the best strategy. If any of the below seems wrong (be it obvious or subtle, technical or conceptual), feel free to share your insights.
 
 ## georeferencing Dodson and Tobler (1992)
 
-Dodson and Tobler (1992) digitized John Snow's map by applying an arbitrary, "nominal" Cartesian coordinates to the map (e.g., roads, pumps, fatalities). Using a modified version of those data, I estimated the longitude and latitude of those nominal coordinates by using the "Georeferencer" tool and the [OpenStreetMap](https://www.openstreetmap.org) XYZ tiles in [QGIS](https://qgis.org/).
+Dodson and Tobler (1992) digitized John Snow's map by applying an arbitrary "nominal" set of Cartesian coordinates to the data. Using a modified version of those data, I estimated the longitude and latitude of the nominal coordinates by using the "Georeferencer" tool and the [OpenStreetMap](https://www.openstreetmap.org) XYZ tiles in [QGIS](https://qgis.org/).
 
 ## what are Voronoi diagrams?
 
-The best way to understand what a Voronoi diagram is and how it works is through an example. Consider the coffee shops in your town. For the sake of illustration, we'll assume that "all else being equal" (price, quality, banter, etc. are the same) and that the only thing that affects your choice will be a shop's proximity to your front door. If everyone in town were to do this computation (i.e., compute the distance to each shop and pick the nearest), distinct neighborhoods will emerge. These neighborhoods make up the cells of a Voronoi diagram.
+The best way to understand what a Voronoi diagram is and how it works is through an example.
 
-In my case, I'm interested in how the location of water pumps in 1854 Soho (Westminster, UK) create neighborhoods that identify which people should use which pump. The plot below is a Voronoi diagram that identifies the neighborhoods of the 13 pumps.
+Consider the coffee shops in your town. For the sake of illustration, we'll assume that "all else being equal" (price, quality, banter, etc., are all the same), the only thing that affects your choice will be a shop's proximity. Now, if we were to repeat this computation for everyone in town, we'll see that distinct neighborhoods will emerge. In the diagram below, 13 coffee shops carve up the town's clientele into 13 neighborhoods:
 
 ```{r voronoi}
 snowMap()
 addVoronoi()
 ```
 
-The boundaries or edges of the polygons that form the cutpoints between adjacent neighborhoods.
+In my case, the data above are not coffee shops but water pumps in 1854 Soho (Westminster, UK). The cells identify which people should use which pump (a residence on a boundary (cell edge) is equally close to the pump's in adjacent neighborhoods).
 
-## "brute force" computation of Voronoi diagrams
+## the "brute force" computation of Voronoi diagrams
 
-The neat thing about the standard Voronoi algorithm is that it only uses the location of the 13 pumps to do the computation. It doesn't do the "brute force" computation described above.
+The neat thing about Voronoi algorithms is that they don't use the "brute force" method described above. They don't compute the proximity for each individual. Instead, they generate the same result using only the locations of water pumps (or coffee houses, etc.).
 
-That said, because the "brute force" will give you the same answer, it give us a separate, independent way to validate a Voronoi diagram. This will help us assess whether my effort to compute Voronoi diagrams with geographic data is reasonable if not "right".
-
-As "proof" of the "brute force", consider this diagram.
+As "proof", compare the diagram above, which only leverages pump location, with the one below, which uses the "brute force" approach.
 
 ```{r euclidean_paths}
 plot(neighborhoodEuclidean(case.set = "expected"), type = "star")
 ```
 
-It's created using data simulation. I placed 20,000 regularly spaced points across the face of the map. I then computed the Euclidean distance from each point or "address" to the 13 water pumps. Finally, lines (color-coded by pump) are drawn from an address to that address's nearest pump. What emerges is a kind of photographic negative of the Voronoi diagram plotted above.
+To create the "brute force" diagram, I place 20,000 regularly spaced points across the face of the map. I then computed the (Euclidean) distance from each of these points to each of the 13 water pumps. A line (color-coded by pump) is then plotted between a point and its closest water pump. What emerges is a kind of photographic negative or inverse of the first Voronoi diagram, which only used pump location. This not only demonstrates the equivalence of the two approaches, it also gives us a separate, independent way to validate a Voronoi diagram. This is what will help us assess whether my effort to compute Voronoi diagrams with geographic data is reasonable if not "right".
 
 ## the problem
 
@@ -73,19 +69,24 @@ invisible(lapply(cells, polygon))
 title(main = "Geographic Coordinates")
 ```
 
-Code-wise, the only difference between the two is that the former uses the nominal coordinates while the latter uses geographic coordinates. Visually, the difference lies with the Voronoi diagrams.
-
-I'm going to argue that we should expect to get similar Voronoi diagrams regardless of the coordinates used. Put aside the diagrams for a moment:
+Code-wise, the only difference between the two is that the former uses the nominal coordinates while the latter uses geographic ones. Visually, the difference lies with the Voronoi diagrams. You can see this, if we remove them:
 
 ```{r latlong, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
 snowMap()
 snowMap(latlong = TRUE)
 ```
 
-Other than the aspect ratio used to create the graphs (the nominal plot uses asp = 1, the geographic plot uses asp = 1.65), when we look at the shape of road network and the locations of the water pumps the underlying graphs essentially look the same. The relative location of the pumps is key since they are only the data used by the Voronoi diagram algorithm. Because they are similar, we should expect to get similar Voronoi diagrams.
+Other than the aspect ratio used to create the graphs (the nominal plot uses asp = 1, the geographic plot uses asp = 1.65), the shape of road network and the relative locations of the water pumps essentially look the same. And because the location of pumps is the only data used by the Voronoi algorithm, you might expect to get similar rather than differen Voronoi diagrams.
 
+These facts raise two questions. First, why then are the two diagrams different? Second, does that difference matter? The answer to the first question is that is essentially a numerical issue. The answer to the second question is that the naive application of the algorithm to geographic data leads to what we might call classification errors.
 
-### graph variables
+## classification error
+
+The diagrams are not just different. One is "wrong". To show this, I leverage the fact that there is a separate, independent way from the algorithm to compute a Voronoi diagram: the "brute force" method described above. By doing so, it's pretty straighforward to show that the diagram computed using geographic coordinate mis-classifies the data.
+
+The tasks. First, directly apply the Voronoi diagram algorithm to geographic data. Second, separately compute the geodesic distance from each observed fatality to its nearest pump.
+
+#### some variables and parameters
 
 ```{r variables}
 vars <- c("lon", "lat")
@@ -95,7 +96,11 @@ rng <- mapRange(latlong = TRUE)
 snow.colors <- snowColors(vestry = FALSE)
 ```
 
-### geodesic or great circle distances
+To compute and visualize the nearest pumps, I don't directly use the geographic coordinates. Instead, I compute the actualy physical distance between the coordinates along the Earth's surface based on a 3D model (WGS84 ellipsoid model). This is known as the geodesic or great circle distance. I compute this using via geosphere::distGeo().
+
+For each residence in the dataset that witnessed at least one fatality, I compute which pump is nearest:
+
+#### computation of geodesic distance to nearest pump
 
 ```{r geodesic_distance}
 nearest.pump <- do.call(rbind, lapply(cases$anchor, function(x) {
@@ -110,14 +115,22 @@ nearest.pump <- do.call(rbind, lapply(cases$anchor, function(x) {
 }))
 ```
 
-## classification error
+In the code below, I plot the Voronoi cells. Then, using `nearst.pump`, I draw a line segment from the fatality's location to the nearest pump  (color-code the segment by which pump is closest). You can see the discrepancy between the cells and the lines. This show the mis-classification.
 
 ```{r euclidean_paths_latlong_naive}
+# plot roads and pumps
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
 addRoads(vars)
-
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
 
+# compute Voronoi cells by directly applying the algorithm to geographic data
+cells <- cholera::voronoiPolygons(cholera::pumps[, vars],
+  rw.data = cholera::roads[, vars], latlong = TRUE)
+
+# plot Voronoi cells
+invisible(lapply(cells, polygon))
+
+# plot color-coded line segment from fatality to pump
 invisible(lapply(nearest.pump$case, function(x) {
   ego <- cases[cases$anchor == x, vars]
   p <- nearest.pump[nearest.pump$case == x, "pump"]
@@ -126,22 +139,31 @@ invisible(lapply(nearest.pump$case, function(x) {
     col = snow.colors[paste0("p", p)])
 }))
 
+# plot color-coded fatalities
 invisible(lapply(nearest.pump$case, function(x) {
   ego <- cases[cases$anchor == x, vars]
   p <- nearest.pump[nearest.pump$case == x, "pump"]
   points(ego, pch = 16, col = snow.colors[paste0("p", p)], cex = 2/3)
 }))
-
-cells <- cholera::voronoiPolygons(cholera::pumps[, vars],
-  rw.data = cholera::roads[, vars], latlong = TRUE)
-
-invisible(lapply(cells, polygon))
 ```
+
+## numerical expectations
+
+The reason why the direct application of the algorithm to geographic data leads to the mis-classification is essentially numerical.
+
+It stems from the fact that even though the Earth is round, the \emph{algorithm} sees the Earth as flat. The algorithm expects a 2D Cartesian world where the only difference between the two axes is that they are perpendicular or orthogonal to one another. To be specific, it expects that the distance covered by a one unit move North or South (a unit change in latitude) will equal the distance covered by a one unit move East or West (a unit change in longitude). Due to the Earth's geometry, this is not the case. As you move North or South, away the equator and toward the poles, the distance covered as you move one unit East or West (longitude) will actually decrease: even though they cover the same number of degrees of longitude, the distance along the Equator is greater than that along either the Tropic of Cancer or Capricorn.
+
+## a solution
+
+In the graph below, I plot my solution. Here you can see the concordance between the line segments and the Voronoi diagram.
 
 ```{r euclidean_paths_latlong}
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
 addRoads(vars)
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
+
+cells <- cholera::latlongVoronoiC()
+invisible(lapply(cells, function(dat) polygon(dat[, vars])))
 
 invisible(lapply(nearest.pump$case, function(x) {
   ego <- cases[cases$anchor == x, vars]
