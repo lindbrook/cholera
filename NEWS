@@ -2,6 +2,7 @@ cholera 0.7.9.9068
 ==================
 
 - exclude latlong variables in profilePerspective() for profile2D().
+- amend ggplot2 syntax in profile2D().
 
 
 cholera 0.7.9.9067
