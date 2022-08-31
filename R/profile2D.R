@@ -204,8 +204,10 @@ profilePerspective <- function(output = "inside", pump = 7, angle = 0,
   coords <- lapply(cases, function(x) orthogonalCoordinates(x, angle = angle))
   coords <- stats::setNames(do.call(rbind, coords), vars)
 
-  dat <- cholera::fatalities.address[cholera::fatalities.address$anchor %in%
-    cases, ]
+  sel <- cholera::fatalities.address$anchor %in% cases
+  dat <- cholera::fatalities.address[sel, ]
+  dat <- dat[, setdiff(names(dat), c("lon", "lat"))]
+
   dat <- cbind(dat, coords)
 
   pump.data <- cholera::pumps[cholera::pumps$id == pump, c("x", "y")]
@@ -213,7 +215,7 @@ profilePerspective <- function(output = "inside", pump = 7, angle = 0,
   pump.data$ortho.y <- pump.data$y
   pump.data$anchor <- 0
   pump.data$case.count <- 0
-  pump.data <- pump.data[, names(dat)]
+  pump.data <- pump.data[, setdiff(names(dat), c("lon", "lat"))]
 
   dat <- rbind(pump.data, dat)
   dat <- dat[order(dat$ortho.x, dat$ortho.y), ]
