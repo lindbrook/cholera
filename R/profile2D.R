@@ -68,8 +68,8 @@ profile2D <- function(angle = 0, pump = 7, vestry = FALSE, type = "base",
     facet <- c("Inside", "Outside", "In & Out")
     profile.data$facet <- factor(profile.data$facet, levels = facet)
     p <- ggplot(data = profile.data, aes(x = axis, xend = axis, y = 0,
-                yend = profile.data$count)) +
-      geom_segment(aes(color = profile.data$Location)) +
+                yend = count)) +
+      geom_segment(aes(color = Location)) +
       scale_colour_manual(values = c("red", "blue"),
                           guide = guide_legend(title = "Location")) +
       facet_wrap(~ facet, nrow = 3) +
