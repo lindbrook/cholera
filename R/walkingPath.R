@@ -912,12 +912,11 @@ plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
   } else stop("zoom must either be logical or numeric.")
 
 
-if (stacked) {
-  plot.data <- cholera::fatalities[, c("x", "y")]
-} else {
-  plot.data <- cholera::fatalities.address[, c("x", "y")]
-}
-
+  if (stacked) {
+    plot.data <- cholera::fatalities[, c("x", "y")]
+  } else {
+    plot.data <- cholera::fatalities.address[, c("x", "y")]
+  }
 
   plot(plot.data, xlim = x.rng, ylim = y.rng,
     xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
