@@ -1,7 +1,8 @@
 cholera 0.7.9.9072
 ==================
 
-- add latlongNearestPump(metric = "euclidean").
+- add latlongNearestPump(metric = "euclidean")
+- enable pump.select in latlongNearestPump(metric = "euclidean").
 
 
 cholera 0.7.9.9071

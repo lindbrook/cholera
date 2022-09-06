@@ -19,15 +19,26 @@ latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
 
   if (metric == "euclidean") {
     vars <- c("lon", "lat")
+    if (vestry) p.id <- cholera::pumps.vestry$id
+    else p.id <- cholera::pumps$id
+    p.count <- max(p.id)
+
+    if (is.null(pump.select) == FALSE) {
+      if (any(abs(pump.select) %in% p.id == FALSE)) {
+        stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count, ".")
+      } else if (all(pump.select < 0)) {
+        p.sel <- p.id[p.id %in% abs(pump.select) == FALSE]
+      } else if (all(pump.select > 0)) p.sel <- pump.select
+    } else p.sel <- p.id
 
     out <- parallel::mclapply(cholera::fatalities.address$anchor, function(x) {
       sel <- cholera::fatalities.address$anchor == x
       ego <- cholera::fatalities.address[sel, vars]
+
       if (is.null(pump.select)) {
         alters <- cholera::pumps[, c("id", vars)]
       } else {
-        sel <- cholera::pumps$id %in% pump.select
-        alters <- cholera::pumps[sel, c("id", vars)]
+        alters <- cholera::pumps[cholera::pumps$id %in% p.sel, c("id", vars)]
       }
 
       d <- vapply(alters$id, function(id) {
