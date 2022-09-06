@@ -2,6 +2,7 @@
 #'
 #' @param path Character. e.g., "~/Documents/Data/"
 #' @param pump.select Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
+#' @param metric Character. "eucldidean" or "walking".
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param time.unit Character. "hour", "minute", or "second".
@@ -10,23 +11,53 @@
 #' @export
 #' @return An R data frame or list of 'igraph' path nodes.
 
-latlongNearestPump <- function(path, pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, time.unit = "second", walking.speed = 5, multi.core = TRUE) {
-  cores <- multiCore(multi.core)
-  dat <- latlongNeighborhoodData(path, vestry)
-  path.data <- latlong_pathData(path, dat, pump.select, weighted, vestry, cores)
+latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
+  vestry = FALSE, weighted = TRUE, time.unit = "second", walking.speed = 5,
+  multi.core = TRUE) {
 
-  if (time.unit == "hour") {
-    walking.time <- path.data$distance / (1000L * walking.speed)
-  } else if (time.unit == "minute") {
-    walking.time <- (60L * path.data$distance) / (1000L * walking.speed)
-  } else if (time.unit == "second") {
-    walking.time <- (3600L * path.data$distance) / (1000L * walking.speed)
+  cores <- multiCore(multi.core)
+
+  if (metric == "euclidean") {
+    vars <- c("lon", "lat")
+
+    out <- parallel::mclapply(cholera::fatalities.address$anchor, function(x) {
+      sel <- cholera::fatalities.address$anchor == x
+      ego <- cholera::fatalities.address[sel, vars]
+      if (is.null(pump.select)) {
+        alters <- cholera::pumps[, c("id", vars)]
+      } else {
+        sel <- cholera::pumps$id %in% pump.select
+        alters <- cholera::pumps[sel, c("id", vars)]
+      }
+
+      d <- vapply(alters$id, function(id) {
+        geosphere::distGeo(ego, alters[alters$id == id, vars])
+      }, numeric(1L))
+
+      sel <- which.min(d)
+      data.frame(case = x, pump = alters$id[sel], dist = d[sel])
+    }, mc.cores = cores)
+
+    out <- do.call(rbind, out)
+
+  } else if (metric == "walking") {
+    dat <- latlongNeighborhoodData(path, vestry)
+    path.data <- latlong_pathData(path, dat, pump.select, weighted, vestry, cores)
+
+    if (time.unit == "hour") {
+      walking.time <- path.data$distance / (1000L * walking.speed)
+    } else if (time.unit == "minute") {
+      walking.time <- (60L * path.data$distance) / (1000L * walking.speed)
+    } else if (time.unit == "second") {
+      walking.time <- (3600L * path.data$distance) / (1000L * walking.speed)
+    }
+
+    distance <-  data.frame(case = path.data$case, pump = path.data$pump,
+      d = path.data$distance, time = walking.time)
+    out <- list(distance = distance, path = path.data$path)
   }
 
-  distance <-  data.frame(case = path.data$case, pump = path.data$pump,
-    d = path.data$distance, time = walking.time)
-  list(distance = distance, path = path.data$path)
+  out
 }
 
 latlong_pathData <- function(path, dat, pump.select, weighted, vestry, cores) {
