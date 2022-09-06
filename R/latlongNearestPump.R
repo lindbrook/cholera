@@ -66,7 +66,8 @@ latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
     distance <-  data.frame(case = path.data$case, pump = path.data$pump,
       d = path.data$distance, time = walking.time)
     out <- list(distance = distance, path = path.data$path)
-  }
+
+  } else stop('metric must be  "euclidean" or "walking".', call. = FALSE)
 
   out
 }
