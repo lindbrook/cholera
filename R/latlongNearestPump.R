@@ -52,6 +52,14 @@ latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
 
     out <- do.call(rbind, out)
 
+    if (time.unit == "hour") {
+      out$time <- out$distance / (1000L * walking.speed)
+    } else if (time.unit == "minute") {
+      out$time <- (60L * out$distance) / (1000L * walking.speed)
+    } else if (time.unit == "second") {
+      out$time <- (3600L * out$distance) / (1000L * walking.speed)
+    }
+
   } else if (metric == "walking") {
     dat <- latlongNeighborhoodData(path, vestry)
     path.data <- latlong_pathData(path, dat, pump.select, weighted, vestry,
