@@ -18,7 +18,6 @@ latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
   cores <- multiCore(multi.core)
 
   if (metric == "euclidean") {
-    vars <- c("lon", "lat")
     if (vestry) p.id <- cholera::pumps.vestry$id
     else p.id <- cholera::pumps$id
     p.count <- max(p.id)
@@ -30,6 +29,8 @@ latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
         p.sel <- p.id[p.id %in% abs(pump.select) == FALSE]
       } else if (all(pump.select > 0)) p.sel <- pump.select
     } else p.sel <- p.id
+
+    vars <- c("lon", "lat")
 
     out <- parallel::mclapply(cholera::fatalities.address$anchor, function(x) {
       sel <- cholera::fatalities.address$anchor == x
@@ -46,14 +47,23 @@ latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
       }, numeric(1L))
 
       sel <- which.min(d)
-      data.frame(case = x, pump = alters$id[sel], dist = d[sel])
+      data.frame(case = x, pump = alters$id[sel], distance = d[sel])
     }, mc.cores = cores)
 
     out <- do.call(rbind, out)
 
+    if (time.unit == "hour") {
+      out$time <- out$distance / (1000L * walking.speed)
+    } else if (time.unit == "minute") {
+      out$time <- (60L * out$distance) / (1000L * walking.speed)
+    } else if (time.unit == "second") {
+      out$time <- (3600L * out$distance) / (1000L * walking.speed)
+    }
+
   } else if (metric == "walking") {
     dat <- latlongNeighborhoodData(path, vestry)
-    path.data <- latlong_pathData(path, dat, pump.select, weighted, vestry, cores)
+    path.data <- latlong_pathData(path, dat, pump.select, weighted, vestry,
+      cores)
 
     if (time.unit == "hour") {
       walking.time <- path.data$distance / (1000L * walking.speed)
@@ -64,7 +74,7 @@ latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
     }
 
     distance <-  data.frame(case = path.data$case, pump = path.data$pump,
-      d = path.data$distance, time = walking.time)
+      distance = path.data$distance, time = walking.time)
     out <- list(distance = distance, path = path.data$path)
 
   } else stop('metric must be  "euclidean" or "walking".', call. = FALSE)
