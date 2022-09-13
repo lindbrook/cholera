@@ -5,7 +5,7 @@
 #' @param asp Numeric. Aspect ratio.
 #' @export
 
-latlongSnowMap <- function(path, stacked = TRUE, asp = 1.65) {
+latlongSnowMap <- function(path, stacked = TRUE, asp = 1.6) {
   rd <- latlongRoads(path)
   frame <- latlongFrame(path)
   addr <- latlongAddress(path)

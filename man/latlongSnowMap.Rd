@@ -4,7 +4,7 @@
 \alias{latlongSnowMap}
 \title{Plot John Snow's cholera map.}
 \usage{
-latlongSnowMap(path, stacked = TRUE, asp = 1.65)
+latlongSnowMap(path, stacked = TRUE, asp = 1.6)
 }
 \arguments{
 \item{path}{Character. e.g., "~/Documents/Data/".}
