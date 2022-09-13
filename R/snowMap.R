@@ -25,7 +25,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
 
   if (latlong) {
     vars <- c("lon", "lat")
-    asp <- 1.65
+    asp <- 1.6
   } else {
     vars <- c("x", "y")
     asp <- 1
