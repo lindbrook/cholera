@@ -1,6 +1,9 @@
 ---
-title: "Voronoi Diagrams with Longitude and Latitude Data"
-output: github_document
+title: "Computing Voronoi Diagrams with Geographic Data"
+output:
+  # pdf_document: default
+  # html_document: default
+  output: github_document
 ---
 
 ```{r setup, include = FALSE}
@@ -12,97 +15,129 @@ library(terra)
 
 ## introduction
 
-This is a work-in-progress note about how I compute Voronoi diagrams with geographic data (data with longitude and latitude). The elephant-in-the-room is why not use [spatial](https://rspatial.org/) or [GIS](https://qgis.org/) tools and approaches? Right now, my preference is to try to extend the functionality of the existing code to include geographic data. In the long run, this may not turn out to be the best strategy. If any of the below seems wrong (be it obvious or subtle, technical or conceptual), feel free to share your insights.
+This is a work-in-progress note about how I compute Voronoi diagrams with geographic data (data with longitude and latitude). The problem is that you can't directly apply the standard Voronoi algorithm, e.g., deldir::deldir(), to such data. Doing so will give you the "wrong" answer.
 
-## georeferencing Dodson and Tobler (1992)
+Part of the reason why is that even though the Earth is a 3D object and its surface is curved, the standard algorithm expects the "world" to be 2D flat. While there are [spatial](https://rspatial.org/) and GIS-style tools and methods that one can use to address this, I'm currently hesitant to adopt them. While doing so may be the wiser long term strategy, right now I'm simply going to try to extend the functionality of ['cholera'](https://github.com/lindbrook/cholera) to include georeferenced versions of the package's data. My strategy for addressing this problem is a familiar one: transform the data so that you _can_ use the algorithm; translate the results back to the original form (longitude and latitude).
 
-Dodson and Tobler (1992) digitized John Snow's map by applying an arbitrary "nominal" set of Cartesian coordinates to the data. Using a modified version of those data, I estimated the longitude and latitude of the nominal coordinates by using the "Georeferencer" tool and the [OpenStreetMap](https://www.openstreetmap.org) XYZ tiles in [QGIS](https://qgis.org/).
+If any of the below seems wrong (be it obvious or subtle, technical or conceptual), feel free to share your comments and insights.
 
 ## what are Voronoi diagrams?
 
-The best way to understand what a Voronoi diagram is and how it works is through an example.
+The best way to understand what a Voronoi diagram is and how it works is through an example. Consider the coffee shops in your town. Let's assume that "all else being equal" (price, quality, banter, etc.) and that the only thing that affects your choice is proximity. If you were an algorithm, you'd compute the distance to each coffee shop and adopt the closest one as your preferred choice. Now, if everyone in town were to do the same, distinct "neighborhoods", based on people's proximity to a shop, will emerge. In this way, the coffee shops would carve up your town.
 
-Consider the coffee shops in your town. For the sake of illustration, we'll assume that "all else being equal" (price, quality, banter, etc., are all the same), the only thing that affects your choice will be a shop's proximity. Now, if we were to repeat this computation for everyone in town, we'll see that distinct neighborhoods will emerge. In the diagram below, 13 coffee shops carve up the town's clientele into 13 neighborhoods:
+Here's a hypothetical example of a town where 13 coffee shops (blue triangles) create 13 "neighborhoods" (polygons or cells):
 
-```{r voronoi}
-snowMap()
+```{r voronoi, echo = FALSE, fig.align = "center"}
+snowMap(add.cases = FALSE)
 addVoronoi()
+title(main = "Figure 1 Voronoi Diagram")
 ```
 
-In my case, the data above are not coffee shops but water pumps in 1854 Soho (Westminster, UK). The cells identify which people should use which pump (a residence on a boundary (cell edge) is equally close to the pump's in adjacent neighborhoods).
+If you lived within the boundaries of a given cell then that cell's coffee shop will be the one that's closest to you If you lived on a boundary between two neighborhoods (a cell edge) then you'd happily go to either of those neighborhoods' shop because they'd be equally distant to your home.
 
-## the "brute force" computation of Voronoi diagrams
+## the data
 
-The neat thing about Voronoi algorithms is that they don't use the "brute force" method described above. They don't compute the proximity for each individual. Instead, they generate the same result using only the locations of water pumps (or coffee houses, etc.).
+The data in Figure 1 actually come from a digitization of John Snow's map of the 1854 London cholera outbreak done by Dodson and Tobler (1992). So instead of coffee houses, we're looking at water pumps, and instead of a hypothetical town, we're looking at the streets of Soho.
 
-As "proof", compare the diagram above, which only leverages pump location, with the one below, which uses the "brute force" approach.
-
-```{r euclidean_paths}
-plot(neighborhoodEuclidean(case.set = "expected"), type = "star")
-```
-
-To create the "brute force" diagram, I place 20,000 regularly spaced points across the face of the map. I then computed the (Euclidean) distance from each of these points to each of the 13 water pumps. A line (color-coded by pump) is then plotted between a point and its closest water pump. What emerges is a kind of photographic negative or inverse of the first Voronoi diagram, which only used pump location. This not only demonstrates the equivalence of the two approaches, it also gives us a separate, independent way to validate a Voronoi diagram. This is what will help us assess whether my effort to compute Voronoi diagrams with geographic data is reasonable if not "right".
+Dodson and Tobler applied a set of Cartesian coordinates to the data. I'll refer to data that use these coordinate as the _nominal_ data. I estimated longitude and latitude (i.e., georeferenced) of these data by using [QGIS](https://qgis.org/) and its `Georeferencer` tool and its [OpenStreetMap](https://www.openstreetmap.org) `XYZ` tiles. I'll refer to data that use longitude and latitude as _geographic_ data.
 
 ## the problem
 
-The problem is that we can't simply apply deldir::deldir(), a 2D algorithm, to data with geographic coordinates. You'll get the "wrong" answer.
+The problem I'm concerned with is that when you try to compute a Voronoi diagram by _directly_ applying the standard algorithm, e.g., deldir::deldir(), to  _geographic_ data you get the "wrong" result:
 
-Compare the following.
-
-```{r voronoi_nominal}
-snowMap(latlong = FALSE)
-pmp <- cholera::pumps
-vars <- c("x", "y")
-cells <- cholera::voronoiPolygons(pmp[, vars], rw.data = cholera::roads[, vars],
-  latlong = FALSE )
-invisible(lapply(cells, polygon))
-title(main = "Nominal Coordinates")
-```
-
-```{r voronoi_naive}
-snowMap(latlong = TRUE)
-pmp <- cholera::pumps
+```{r wrong, echo = FALSE, fig.align = "center"}
 vars <- c("lon", "lat")
-cells <- cholera::voronoiPolygons(pmp[, vars], rw.data = cholera::roads[, vars],
-  latlong = TRUE )
-invisible(lapply(cells, polygon))
-title(main = "Geographic Coordinates")
-```
-
-Code-wise, the only difference between the two is that the former uses the nominal coordinates while the latter uses geographic ones. Visually, the difference lies with the Voronoi diagrams. You can see this, if we remove them:
-
-```{r latlong, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
-snowMap()
-snowMap(latlong = TRUE)
-```
-
-Other than the aspect ratio used to create the graphs (the nominal plot uses asp = 1, the geographic plot uses asp = 1.65), the shape of road network and the relative locations of the water pumps essentially look the same. And because the location of pumps is the only data used by the Voronoi algorithm, you might expect to get similar rather than different Voronoi diagrams.
-
-These facts raise two questions. First, why then are the two diagrams different? Second, does that difference matter? The answer to the first question is that is essentially a numerical issue. The answer to the second question is that the naive application of the algorithm to geographic data leads to what we might call classification errors.
-
-## classification error
-
-The diagrams are not just different. One is "wrong". To show this, I leverage the fact that there is a separate, independent way from the algorithm to compute a Voronoi diagram: the "brute force" method described above. By doing so, it's pretty straightforward to show that the diagram computed using geographic coordinate mis-classifies the data.
-
-The tasks. First, directly apply the Voronoi diagram algorithm to geographic data. Second, separately compute the geodesic distance from each observed fatality to its nearest pump.
-
-#### some variables and parameters
-
-```{r variables}
-vars <- c("lon", "lat")
-asp <- 1.65
+asp <- 1.6
 cases <- cholera::fatalities.address
 rng <- mapRange(latlong = TRUE)
 snow.colors <- snowColors(vestry = FALSE)
+
+plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
+addRoads(vars)
+points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
+text(pumps[, vars], pos = 1, labels = pumps$id)
+points(cases[, vars], pch = 16, col = "gray", cex = 0.5)
+cells <- cholera::voronoiPolygons(cholera::pumps[, vars],
+  rw.data = cholera::roads[, vars], latlong = TRUE)
+invisible(lapply(cells, polygon))
+title(main = "Figure 2 Unadjusted Geographic")
 ```
 
-To compute and visualize the nearest pumps, I don't directly use the geographic coordinates. Instead, I compute the actually physical distance between the coordinates along the Earth's surface based on a 3D model (WGS84 ellipsoid model). This is known as the geodesic or great circle distance. I compute this using via geosphere::distGeo().
+While there's nothing obviously "wrong" with the diagram, I'm going to argue that there are two problems with it. First, it doesn't look like diagram fitted to the nominal data in Figure 1. Second, it actually places some people in the wrong neighborhood, which is something that, by definition, shouldn't happen.
 
-For each residence in the dataset that witnessed at least one fatality, I compute which pump is nearest:
+## what should the Voronoi diagram should look like?
 
-#### computation of geodesic distance to nearest pump
+The Voronoi diagram should actually look similar to the diagram in Figure 1 even though they're fitted to data with different coordinates, nominal and geographic. To understand why, we need to dig a little deeper into how Voronoi diagrams work. Above, I actually described the intuition behind them: find the closest pump for everyone in town and distinct neighborhoods will emerge. This _pumps-and-people_ approach is the "brute force" way to uncover neighborhoods. However, the implementation behind the standard algorithm actually uses a _pumps-only_ approach to the problem. This is one of the really neat things about the algorithm: you only need the location of water pumps to compute the Voronoi diagram (it's also makes algorithm efficient).
 
-```{r geodesic_distance}
+Because of this, the geographic Voronoi diagram _should_ look the nominal one. After all, as we can see in Figures 4 & 5, which exclude the Voronoi diagrams, the relative positions of the pumps for the nominal and geographic data are quite similar:
+
+```{r nominal_geographic, echo = TRUE, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
+cases <- cholera::fatalities.address
+snow.colors <- snowColors(vestry = FALSE)
+
+vars <- c("x", "y")
+rng <- mapRange()
+asp <- 1
+plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
+addRoads()
+points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
+text(pumps[, vars], pos = 1, labels = pumps$id)
+points(cases[, vars], pch = 16, col = "gray", cex = 0.5)
+title(main = "Figure 4 Nominal")
+
+vars <- c("lon", "lat")
+rng <- mapRange(latlong = TRUE)
+asp <- 1.6
+plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
+addRoads(vars)
+points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
+text(pumps[, vars], pos = 1, labels = pumps$id)
+points(cases[, vars], pch = 16, col = "gray", cex = 0.5)
+title(main = "Figure 5 Geographic")
+```
+
+As a result, the graph should look like this:
+
+```{r adjusted, echo = FALSE, fig.align = "center"}
+plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
+addRoads(vars)
+points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
+text(pumps[, vars], pos = 1, labels = 1:13)
+points(cases[, vars], pch = 16, cex = 0.5, col = "gray")
+cells <- cholera::latlongVoronoiC()
+invisible(lapply(cells, function(dat) polygon(dat[, vars])))
+title(main = "Figure 6 Adjusted Geographic")
+```
+
+As we'll see in the next section, that it looks like Figure 1 is no coincidence.
+
+### "brute force" pumps-and-people method behind the intuition
+
+While it may not be computationally efficient, the value of the "brute force" _pumps-and-people_ approach goes beyond its ability to illustrate the underlying intuition. For me, its value lies with the fact that it provides a separate, independent way to compute and validate a Voronoi diagram
+
+As "proof" of the equivalence of the _pumps-and-people_ (intuition) and the _pumps-only_ (implementation) methods, compare the _pumps-only_ diagram in Figure 1 with the illustration of the "brute force" method in Figure 6:
+
+```{r euclidean_paths, echo = FALSE, fig.align = "center"}
+plot(neighborhoodEuclidean(case.set = "expected"), type = "star",
+  add.title = FALSE)
+title(main = "Figure 7 Brute Force Pumps-and-People Voronoi Diagram")
+```
+
+I created this graph by placing 20,000 regularly spaced points across the face of the map. Next, I computed the distance from each point to the 13 water pumps. Then, I drew a line from each point to its closest pump (color-coded by pump). What emerges is evidence of equivalence in the form of a kind of photographic negative or inverse of the pump-only diagram.
+
+With this tool in hand, I'll show that the "Unadjusted Geographic" graph in Figure 2 is "wrong" because it places some people in the wrong neighborhood, which is something that shouldn't happen by definition.
+
+## classification error
+
+To show that the diagram in Figure 2 mis-classifies some people, we need to implement the "brute force" approach for geographic data. To do that we need a way compute to compute distances between pumps and people using geographic coordinates. I do so by using the geosphere::distGeo() function to compute the the geodesic or great circle distance. This is the distance between geographic coordinates along the curved surface of the Earth as determined by the WGS84 ellipsoid model.
+
+The key assumption here is that these geodesic distances represent the "truth on the ground". As such, they serve as the point of reference to compare diagrams in Figures 2 and 3. Figures 7 and 8 re-plot those diagrams and add the independently computed geodesic distances as color-coded line segments that connect a person to their nearest pump. Note that in contrast to the "brute force" plot in Figure 6, I'm only using the 321 unique locations in the data that had at least one fatality:
+
+```{r brute_force}
+# "brute force" computation of geodesic distance to nearest pump
+
+cases <- cholera::fatalities.address
+
 nearest.pump <- do.call(rbind, lapply(cases$anchor, function(x) {
   p1 <- cases[cases$anchor == x, vars]
   d <- vapply(pumps$id, function(p) {
@@ -113,24 +148,35 @@ nearest.pump <- do.call(rbind, lapply(cases$anchor, function(x) {
   data.frame(case = x, pump = pumps$id[pumps$id == nearest],
     meters = d[nearest])
 }))
+
 ```
 
-In the code below, I first plot the Voronoi cells using the raw geographic coordinates. Then, using the results of the "brute force" approach in `nearest.pump`, I draw line segments from the "address" of each fatality to its nearest pump (lines are color-coded by pump). In the plot, you can see the discrepancies between the cells and lines: the cells do not correctly capture each fatality's closest pump.
+```{r unadjusted_classification, echo = FALSE, fig.align = "center"}
+# variables
 
-```{r euclidean_paths_latlong_naive}
+vars <- c("lon", "lat")
+asp <- 1.6
+
+rng <- mapRange(latlong = TRUE)
+snow.colors <- snowColors(vestry = FALSE)
+
 # plot roads and pumps
+
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
 addRoads(vars)
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
 
 # compute Voronoi cells by directly applying the algorithm to geographic data
+
 cells <- cholera::voronoiPolygons(cholera::pumps[, vars],
   rw.data = cholera::roads[, vars], latlong = TRUE)
 
 # plot Voronoi cells
+
 invisible(lapply(cells, polygon))
 
 # plot color-coded line segment from fatality to pump
+
 invisible(lapply(nearest.pump$case, function(x) {
   ego <- cases[cases$anchor == x, vars]
   p <- nearest.pump[nearest.pump$case == x, "pump"]
@@ -140,22 +186,18 @@ invisible(lapply(nearest.pump$case, function(x) {
 }))
 
 # plot color-coded fatalities
+
 invisible(lapply(nearest.pump$case, function(x) {
   ego <- cases[cases$anchor == x, vars]
   p <- nearest.pump[nearest.pump$case == x, "pump"]
   points(ego, pch = 16, col = snow.colors[paste0("p", p)], cex = 2/3)
 }))
+
+title(main = "Figure 8 Undjusted Geographic")
 ```
 
-## numerical expectations
+```{r adjusted_classification, echo = FALSE, fig.align = "center"}
 
-Why does the direct application of the algorithm to geographic data leads to the mis-classification? The answer is essentially numerical. It stems from the fact that even though the Earth is round, the \emph{algorithm} sees the Earth as flat. The algorithm expects a 2D Cartesian world where the only difference between the two axes is that they are perpendicular or orthogonal to one another. To be specific, the algorithm expects that the distance covered by a one unit move North or South (a unit change in latitude) will equal the distance covered by a one unit move East or West (a unit change in longitude). Due to the Earth's geometry, this is not the case. As you move North or South, away the equator and toward the poles, the distance covered as you move one unit East or West (longitude) actually decreases. You can see this if you compare the Equator with the Tropic of Cancer: even though all three cover the same number of degrees of longitude, the distance along former is greater than that along the latter.
-
-## a solution
-
-In the graph below, I plot my solution. Here you can see the concordance between he algorithm-generated Voronoi diagram and the "brute force"-generated line segments.
-
-```{r euclidean_paths_latlong}
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
 addRoads(vars)
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
@@ -176,182 +218,45 @@ invisible(lapply(nearest.pump$case, function(x) {
   p <- nearest.pump[nearest.pump$case == x, "pump"]
   points(ego, pch = 16, col = snow.colors[paste0("p", p)], cex = 0.5)
 }))
+
+title(main = "Figure 9 Adjusted Geographic")
 ```
 
-This solution employs a familiar strategy. Transform the data so that you \emph{can} use the algorithm. Then translate the results back to original units (longitude and latitude). The devil (and possible objections) lies in the details.
+In the "Unadjusted Geographic" graph (Figure 8), you can see discrepancies between the cells and a person's closest pump, which by definition shouidn't occur. In the "Adjusted Geographic" graph (Figure 9) there are no discrepancies.
 
-First, to capture the effect of the Earth's shape, I compute the geodesic distance between an arbitrary point of reference (a "corner of the map") and the location of the 13 water pumps. Second, I break down these distances into two components: meters-North and meters-East of the reference point. These components, which are our analogs of latitude and longitude, serve as the new set of coordinates.
+## a solution
 
-The virtue of these new coordinates is that they obey the algorithm's expectation about distance (the distance covered by a unit move North equals that covered by a unit move East). More importantly, when I use them to compute the Voronoi diagrams, I get "right" results we see in the graph above.
+How does this adjustment in Figure 8 work? I use a familiar strategy: I transform the data so that I _can_ use the standard algorithm; I then translate the results back to their original form (longitude and latitude).
 
-#### four corners
+First, I transform the geographic coordinates so that they represent relative rather than absolute positions. I do so by computing the geodesic distance from an arbitrary point of reference (a "corner of the map") to the 13 water pumps. Second, I break down those distances into its horizontal and vertical components, _meters-North_ and _meters-East_ of the reference point. These components, the analogs of latitude and longitude, serve as our new set of coordinates. The virtues of these new coordinates is that they are Cartesian coordinates, which the standard algorithm "expects", and that they allow us to apply the standard algorithm and to get the "right" results (Figure 8). Third, I translate the results, which are the coordinates of the cell vertices, back to longitude and latitude. To do that, I use data simulation to uncover the relationship between geodesic distance and longitude, and the relationship between geodesic distance and latitude. While both relationships, for Soho at least, could statistically speaking be summarized with a linear model (OLS), I instead fit both to separate loess function. I then use those functions to translate the data back to longitude and latitude.
 
-Origin is bottom left; graph in quadrant I
+## spatial data approach via 'terra'
 
-```{r four_corners}
-origin <- data.frame(lon = min(cholera::roads$lon),
-                     lat = min(cholera::roads$lat))
-topleft <- data.frame(lon = min(cholera::roads$lon),
-                      lat = max(cholera::roads$lat))
-bottomright <- data.frame(lon = max(cholera::roads$lon),
-                          lat = min(cholera::roads$lat))
-topright <- data.frame(lon = max(cholera::roads$lon),
-                       lat = max(cholera::roads$lat))
-```
+Finally, as a sanity check and as additional piece of evidence that I may be on the right track, I replicate the "Unadjusted" and "Adjusted" diagrams using the [spatial](https://rspatial.org/) approach employed in the ['terra'](https://cran.r-project.org/package=terra) package.
 
-#### break down geodesic distance into horizontal and vertical components
-
-Compute geodesic distance from origin to points and decompose
-
-```{r decomposed_coordinates}
-pump.data <- cholera::pumps
-
-pump.meters <- do.call(rbind, lapply(pump.data$id, function(p) {
-  pmp <- pump.data[pump.data$id == p, c("lon", "lat")]
-  x.proj <- c(pmp$lon, origin$lat)
-  y.proj <- c(origin$lon, pmp$lat)
-  m.lon <- geosphere::distGeo(y.proj, pmp)
-  m.lat <- geosphere::distGeo(x.proj, pmp)
-  data.frame(pump = p, x = m.lon, y = m.lat)
-}))
-```
-
-#### bounding box of Voronoi diagram
-
-```{r, bounding_box}
-height <- geosphere::distGeo(origin, topleft)
-width <- geosphere::distGeo(origin, bottomright)
-bounding.box <- c(0, width, 0, height)
-```
-
-#### cell coordinates
-
-Apply deldir::deldir() and extract coordinates of cells, for use with polygon().
-
-```{r, cell_coords}
-cells <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box)
-```
-
-#### reshape and reformat into data frame
-
-```{r, format data}
-cells.df <- do.call(rbind, cells)
-cells.lat <- sort(unique(cells.df$y), decreasing = TRUE) # unique latitudes
-tmp <- row.names(cells.df)
-ids <- do.call(rbind, strsplit(tmp, "[.]"))
-cells.df$cell <- as.numeric(ids[, 2])
-cells.df$vertex <- as.numeric(ids[, 3])
-row.names(cells.df) <- NULL
-```
-
-## translating back to longitude and latitude
-
-To translate the results (the coordinates of Voronoi cells) from meters-East and meters-North back to longitude and latitude, I use data simulation to uncover the relationship between geodesic distance and units of longitude and latitude.
-
-While the measure of geodesic distance I use, geosphere::distGeo(), use an ellipsoid model of the Earth (WGS 84), the relationship between meters-North and latitude is perfectly linear for Soho, Westminster (UK). Nevertheless, I play it conservatively and use a fitted loess function to translate meters-North to latitude. The details are in the meterLatitude():
-
-```{r, meterLatitude}
-meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
-  lat <- seq(origin$lat, topleft$lat, delta)
-
-  meters.north <- vapply(lat, function(y) {
-    geosphere::distGeo(origin, cbind(origin$lon, y))
-  }, numeric(1L))
-
-  loess.lat <- stats::loess(lat ~ meters.north,
-    control = stats::loess.control(surface = "direct"))
-
-  y.unique <- sort(unique(cells.df$y))
-
-  est.lat <- vapply(y.unique, function(m) {
-    stats::predict(loess.lat, newdata = data.frame(meters.north = m))
-  }, numeric(1L))
-
-  data.frame(m = y.unique, lat = est.lat)
-}
-```
-
-East-West (horizontal) distance is a function of how far North or South (latitude) you are. This means that the relationship between meters-East and longitude will be nonlinear. While analysis indicates that a fitted OLS line might be adequate, I fit a separate loess function for each observed meters-North value. The details are in the meterLatLong():
-
-```{r meterLatLong}
-meterLatLong <- function(cells.df, origin, topleft, bottomright,
-  delta = 0.000025) {
-
-  est.lat <- meterLatitude(cells.df, origin, topleft)
-
-  # uniformly spaced points along x-axis (longitude)
-  lon <- seq(origin$lon, bottomright$lon, delta)
-
-  # a set of horizontal distances (East-West) for each estimated latitude
-  meters.east <- lapply(est.lat$lat, function(y) {
-    y.axis.origin <- cbind(origin$lon, y)
-    vapply(lon, function(x) {
-      geosphere::distGeo(y.axis.origin, cbind(x, y))
-    }, numeric(1L))
-  })
-
-  loess.lon <- lapply(meters.east, function(m) {
-    dat <- data.frame(lon = lon, m)
-    stats::loess(lon ~ m, data = dat,
-      control = stats::loess.control(surface = "direct"))
-  })
-
-  y.unique <- sort(unique(cells.df$y))
-
-  # estimate longitudes, append estimated latitudes
-  est.lonlat <- do.call(rbind, lapply(seq_along(y.unique), function(i) {
-    dat <- cells.df[cells.df$y == y.unique[i], ]
-    loess.fit <- loess.lon[[i]]
-    dat$lon <- vapply(dat$x, function(x) {
-      stats::predict(loess.fit, newdata = data.frame(m = x))
-    }, numeric(1L))
-    dat$lat <- est.lat[est.lat$m == y.unique[i], "lat"]
-    dat
-  }))
-
-  est.lonlat[order(est.lonlat$cell, est.lonlat$vertex), ]
-}
-```
-
-The code below shows the data that translates the coordinates for the cell for pump 1 from meters-East and meters-North to longitude and latitude.
-
-```{r, translation}
-est.lonlat <- meterLatLong(cells.df, origin, topleft, bottomright)
-longlat <- split(est.lonlat, est.lonlat$cell)
-```
-
-```{r sample_data}
-longlat[[1]]
-```
-
-Finally, as a sanity check, I replicate the "right" and "wrong" diagrams using ['terra'](https://cran.r-project.org/package=terra)
-
-```{r, terra_data}
+```{r, terra_data, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%", fig.cap = "Figure 7 Nominal Analog with 'terra' package"}
 dat <- cholera::pumps[, c("lon", "lat")]
-
 sv.data <- terra::vect(dat, crs = "+proj=longlat")
+v1 <- terra::voronoi(sv.data)
 
 pt1 <- "+proj=lcc +lat_1=51.510 +lat_2=51.516"
 pt2 <- "+lat_0=51.513 +lon_0=-0.1367 +units=m"
 proj <- paste(pt1, pt2)
-sv.proj <- project(sv.data, proj)
+sv.proj <- terra::project(sv.data, proj)
+v2 <- terra::voronoi(sv.proj)
 
-v1 <- terra::voronoi(sv.proj)
-v2 <- terra::voronoi(sv.data)
 out1 <- terra::project(v1, "+proj=longlat")
 out2 <- terra::project(v2, "+proj=longlat")
-```
 
-```{r, terra1, fig.heigh = 5, fig.width = 5}
 plot(out1, xlim = range(cholera::roads$lon), ylim = range(cholera::roads$lat))
 addRoads(c("lon", "lat"))
 points(cholera::pumps[, c("lon", "lat")])
-text(cholera::pumps[, c("lon", "lat")], labels = paste0("p", 1:13), pos = 1)
-```
+text(cholera::pumps[, c("lon", "lat")], labels = 1:13, pos = 1)
+title(main = "Figure 10 Undjusted Geographic")
 
-```{r, terra2, fig.heigh = 5, fig.width = 5}
 plot(out2, xlim = range(cholera::roads$lon), ylim = range(cholera::roads$lat))
 addRoads(c("lon", "lat"))
 points(cholera::pumps[, c("lon", "lat")])
-text(cholera::pumps[, c("lon", "lat")], labels = paste0("p", 1:13), pos = 1)
+text(cholera::pumps[, c("lon", "lat")], labels = 1:13, pos = 1)
+title(main = "Figure 11 Adjusted Geographic")
 ```
