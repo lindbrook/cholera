@@ -1,4 +1,4 @@
-Computing Voronoi Diagrams with Geographic Data
+computing Voronoi diagrams with geographic data
 ================
 
 ## introduction
@@ -222,8 +222,8 @@ relationship between geodesic distance and longitude, and the
 relationship between geodesic distance and latitude. While both
 relationships, for Soho at least, could statistically speaking be
 summarized with a linear model (OLS), I instead fit both to separate
-loess function. I then use those functions to translate the data back to
-longitude and latitude.
+loess functions. I then use those functions to translate the data back
+to longitude and latitude.
 
 ## spatial data approach via ‘terra’
 
@@ -260,3 +260,170 @@ title(main = "Figure 11 Adjusted Geographic")
 ```
 
 <img src="latlongVoronoi_files/figure-gfm/terra_data-1.png" alt="Figure 7 Nominal Analog with 'terra' package" width="50%" /><img src="latlongVoronoi_files/figure-gfm/terra_data-2.png" alt="Figure 7 Nominal Analog with 'terra' package" width="50%" />
+
+## appendix: solution
+
+The following walks through the code for the working solution, which can
+be found in
+[latlongVoronoiC.R](https://github.com/lindbrook/cholera/blob/master/R/latlongVoronoiC.R)
+
+#### four corners
+
+Origin is bottom left; graph is in quadrant I
+
+``` r
+origin <- data.frame(lon = min(cholera::roads$lon),
+                     lat = min(cholera::roads$lat))
+topleft <- data.frame(lon = min(cholera::roads$lon),
+                      lat = max(cholera::roads$lat))
+bottomright <- data.frame(lon = max(cholera::roads$lon),
+                          lat = min(cholera::roads$lat))
+topright <- data.frame(lon = max(cholera::roads$lon),
+                       lat = max(cholera::roads$lat))
+```
+
+#### break down geodesic distance into horizontal and vertical components
+
+Compute geodesic distance from origin to points and decompose
+
+``` r
+pump.data <- cholera::pumps
+
+pump.meters <- do.call(rbind, lapply(pump.data$id, function(p) {
+  pmp <- pump.data[pump.data$id == p, c("lon", "lat")]
+  x.proj <- c(pmp$lon, origin$lat)
+  y.proj <- c(origin$lon, pmp$lat)
+  m.lon <- geosphere::distGeo(y.proj, pmp)
+  m.lat <- geosphere::distGeo(x.proj, pmp)
+  data.frame(pump = p, x = m.lon, y = m.lat)
+}))
+```
+
+#### bounding box of Voronoi diagram
+
+``` r
+height <- geosphere::distGeo(origin, topleft)
+width <- geosphere::distGeo(origin, bottomright)
+bounding.box <- c(0, width, 0, height)
+```
+
+#### cell coordinates
+
+Apply deldir::deldir() and extract coordinates of cells, for use with
+polygon().
+
+``` r
+cells <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box)
+```
+
+#### reshape and reformat into data frame
+
+``` r
+cells.df <- do.call(rbind, cells)
+cells.lat <- sort(unique(cells.df$y), decreasing = TRUE) # unique latitudes
+tmp <- row.names(cells.df)
+ids <- do.call(rbind, strsplit(tmp, "[.]"))
+cells.df$cell <- as.numeric(ids[, 2])
+cells.df$vertex <- as.numeric(ids[, 3])
+row.names(cells.df) <- NULL
+```
+
+#### translating back to longitude and latitude
+
+To translate the results (the coordinates of Voronoi cells) from
+meters-East and meters-North back to longitude and latitude, I use data
+simulation to uncover the relationship between geodesic distance and
+units of longitude and latitude.
+
+While the measure of geodesic distance I use, geosphere::distGeo(), use
+an ellipsoid model of the Earth (WGS 84), the relationship between
+meters-North and latitude is perfectly linear for Soho, Westminster
+(UK). Nevertheless, I play it conservatively and use a fitted loess
+function to translate meters-North to latitude. The details are in the
+meterLatitude():
+
+``` r
+meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
+  lat <- seq(origin$lat, topleft$lat, delta)
+
+  meters.north <- vapply(lat, function(y) {
+    geosphere::distGeo(origin, cbind(origin$lon, y))
+  }, numeric(1L))
+
+  loess.lat <- stats::loess(lat ~ meters.north,
+    control = stats::loess.control(surface = "direct"))
+
+  y.unique <- sort(unique(cells.df$y))
+
+  est.lat <- vapply(y.unique, function(m) {
+    stats::predict(loess.lat, newdata = data.frame(meters.north = m))
+  }, numeric(1L))
+
+  data.frame(m = y.unique, lat = est.lat)
+}
+```
+
+East-West (horizontal) distance is a function of how far North or South
+(latitude) you are. This means that the relationship between meters-East
+and longitude will be nonlinear. While analysis indicates that a fitted
+OLS line might be adequate, I fit separate loess functions for each
+observed meters-North value. The details are in the meterLatLong():
+
+``` r
+meterLatLong <- function(cells.df, origin, topleft, bottomright,
+  delta = 0.000025) {
+
+  est.lat <- meterLatitude(cells.df, origin, topleft)
+
+  # uniformly spaced points along x-axis (longitude)
+  lon <- seq(origin$lon, bottomright$lon, delta)
+
+  # a set of horizontal distances (East-West) for each estimated latitude
+  meters.east <- lapply(est.lat$lat, function(y) {
+    y.axis.origin <- cbind(origin$lon, y)
+    vapply(lon, function(x) {
+      geosphere::distGeo(y.axis.origin, cbind(x, y))
+    }, numeric(1L))
+  })
+
+  loess.lon <- lapply(meters.east, function(m) {
+    dat <- data.frame(lon = lon, m)
+    stats::loess(lon ~ m, data = dat,
+      control = stats::loess.control(surface = "direct"))
+  })
+
+  y.unique <- sort(unique(cells.df$y))
+
+  # estimate longitudes, append estimated latitudes
+  est.lonlat <- do.call(rbind, lapply(seq_along(y.unique), function(i) {
+    dat <- cells.df[cells.df$y == y.unique[i], ]
+    loess.fit <- loess.lon[[i]]
+    dat$lon <- vapply(dat$x, function(x) {
+      stats::predict(loess.fit, newdata = data.frame(m = x))
+    }, numeric(1L))
+    dat$lat <- est.lat[est.lat$m == y.unique[i], "lat"]
+    dat
+  }))
+
+  est.lonlat[order(est.lonlat$cell, est.lonlat$vertex), ]
+}
+```
+
+The code below shows the data that translates the coordinates for the
+cell for pump 1 from meters-East and meters-North to longitude and
+latitude.
+
+``` r
+est.lonlat <- meterLatLong(cells.df, origin, topleft, bottomright)
+longlat <- split(est.lonlat, est.lonlat$cell)
+```
+
+``` r
+longlat[[1]]
+```
+
+    ##          x        y cell vertex        lon      lat
+    ## 1 343.3471 826.3265    1      1 -0.1388176 51.51670
+    ## 2   0.0000 826.3265    1      2 -0.1437639 51.51670
+    ## 3   0.0000 703.0100    1      3 -0.1437639 51.51559
+    ## 4 373.7472 707.5590    1      4 -0.1383798 51.51563
