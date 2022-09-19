@@ -307,8 +307,8 @@ discusses the tradeoff between using points() and polygon() to plot
 “expected” neighborhood using area plots and the computation of polygon
 vertices.
 
-[Computing Voronoi Diagrams with Geographic
-Data](https://github.com/lindbrook/cholera/blob/master/docs/notes/latlongVoronoi.md)
+[computing Voronoi diagrams with geographic
+data](https://github.com/lindbrook/cholera/blob/master/docs/notes/latlongVoronoi.md)
 describes my working solution for computing Voronoi diagrams with
 geographic data.
 

@@ -1,5 +1,5 @@
 ---
-title: "Computing Voronoi Diagrams with Geographic Data"
+title: "computing Voronoi diagrams with geographic data"
 output:
   # pdf_document: default
   # html_document: default
@@ -228,7 +228,7 @@ In the "Unadjusted Geographic" graph (Figure 8), you can see discrepancies betwe
 
 How does this adjustment in Figure 8 work? I use a familiar strategy: I transform the data so that I _can_ use the standard algorithm; I then translate the results back to their original form (longitude and latitude).
 
-First, I transform the geographic coordinates so that they represent relative rather than absolute positions. I do so by computing the geodesic distance from an arbitrary point of reference (a "corner of the map") to the 13 water pumps. Second, I break down those distances into its horizontal and vertical components, _meters-North_ and _meters-East_ of the reference point. These components, the analogs of latitude and longitude, serve as our new set of coordinates. The virtues of these new coordinates is that they are Cartesian coordinates, which the standard algorithm "expects", and that they allow us to apply the standard algorithm and to get the "right" results (Figure 8). Third, I translate the results, which are the coordinates of the cell vertices, back to longitude and latitude. To do that, I use data simulation to uncover the relationship between geodesic distance and longitude, and the relationship between geodesic distance and latitude. While both relationships, for Soho at least, could statistically speaking be summarized with a linear model (OLS), I instead fit both to separate loess function. I then use those functions to translate the data back to longitude and latitude.
+First, I transform the geographic coordinates so that they represent relative rather than absolute positions. I do so by computing the geodesic distance from an arbitrary point of reference (a "corner of the map") to the 13 water pumps. Second, I break down those distances into its horizontal and vertical components, _meters-North_ and _meters-East_ of the reference point. These components, the analogs of latitude and longitude, serve as our new set of coordinates. The virtues of these new coordinates is that they are Cartesian coordinates, which the standard algorithm "expects", and that they allow us to apply the standard algorithm and to get the "right" results (Figure 8). Third, I translate the results, which are the coordinates of the cell vertices, back to longitude and latitude. To do that, I use data simulation to uncover the relationship between geodesic distance and longitude, and the relationship between geodesic distance and latitude. While both relationships, for Soho at least, could statistically speaking be summarized with a linear model (OLS), I instead fit both to separate loess functions. I then use those functions to translate the data back to longitude and latitude.
 
 ## spatial data approach via 'terra'
 

@@ -1,4 +1,4 @@
-Computing Voronoi Diagrams with Geographic Data
+computing Voronoi diagrams with geographic data
 ================
 
 ## introduction
@@ -222,8 +222,8 @@ relationship between geodesic distance and longitude, and the
 relationship between geodesic distance and latitude. While both
 relationships, for Soho at least, could statistically speaking be
 summarized with a linear model (OLS), I instead fit both to separate
-loess function. I then use those functions to translate the data back to
-longitude and latitude.
+loess functions. I then use those functions to translate the data back
+to longitude and latitude.
 
 ## spatial data approach via ‘terra’
 
