@@ -309,8 +309,8 @@ vertices.
 
 [computing Voronoi diagrams with geographic
 data](https://github.com/lindbrook/cholera/blob/master/docs/notes/latlongVoronoi.md)
-describes my working solution for computing Voronoi diagrams with
-geographic data.
+describes the problems and a working solution for computing Voronoi
+diagrams with data that use latitude and longitude.
 
 [references](https://github.com/lindbrook/cholera/blob/master/docs/notes/references.md)
 is an informal list of articles and books about cholera, John Snow and
