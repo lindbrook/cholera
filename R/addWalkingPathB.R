@@ -42,7 +42,16 @@ addWalkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
   # geo.all.data <- latlongNearestPump(path)$distance
   geo.all.data <- cholera::latlong.nearest.pump
   geo.data <- geo.all.data[geo.all.data$case == origin, ]
-  dist.col <- ifelse(geo.data$distance > nom.data$distance, "red", "blue")
+
+  delta <- geo.data$distance - nom.data$distance
+
+  if (delta <= 0) {
+    dist.col <- "green"
+  } else if (delta > 0 & delta <= 2) {
+    dist.col <- "blue"
+  } else if (delta > 2) {
+    dist.col <- "red"
+  }
 
   if (is.na(x$alter.node)) {
     txt1 <- paste("Case", x$origin, "is part of an isolated subgraph.")
