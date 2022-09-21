@@ -432,3 +432,15 @@
 #' }
 #' @docType data
 "voronoi.polygons.vestry"
+
+#' Walking distance to Nearest Pump (latlong prototype).
+#'
+#' @format A data frames with 4 variables.
+#' \describe{
+#'   \item{\code{case}}{case ID}
+#'   \item{\code{pump}}{pump ID}
+#'   \item{\code{distance}}{walking distance in meters}
+#'   \item{\code{time}}{walking time in seconds based on 5 km/hr walking speed}
+#' }
+#' @docType data
+"latlong.nearest.pump"
