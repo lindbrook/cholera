@@ -41,16 +41,9 @@ latlongVoronoiC <- function(pump.select = NULL, vestry = FALSE) {
     }
   }
 
-  # compute geodesic distance from origin to pump and decompose result to
+  # compute geodesic distance from origin to pump and decompose result into
   # horizontal (East-West) and vertical (North-South) components.
-  pump.meters <- do.call(rbind, lapply(pump.data$id, function(p) {
-    pmp <- pump.data[pump.data$id == p, c("lon", "lat")]
-    x.proj <- c(pmp$lon, origin$lat)
-    y.proj <- c(origin$lon, pmp$lat)
-    m.lon <- geosphere::distGeo(y.proj, pmp)
-    m.lat <- geosphere::distGeo(x.proj, pmp)
-    data.frame(pump = p, x = m.lon, y = m.lat)
-  }))
+  pump.meters <- geodesicMeters(pump.data)
 
   # Voronoi cells
 
