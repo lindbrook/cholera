@@ -25,4 +25,4 @@ R-oldrelease: 4.0.5 (2021-03-31)
 ### Reverse dependencies
 
 There are no reverse dependencies:
-  tools::dependsOnPkgs("cholera") returns character(0)
+tools::package_dependencies("cholera", reverse = TRUE)
