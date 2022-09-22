@@ -2,6 +2,7 @@ cholera 0.7.9.9078
 ==================
 
 - add geodesicMeters().
+- use geodesicMeters() in latlongVoronoiC().
 
 
 cholera 0.7.9.9077
