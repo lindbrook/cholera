@@ -18,7 +18,7 @@ latlongOrthoPumpB <- function(vestry = FALSE, multi.core = TRUE) {
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
   geo.rd <- data.frame(street = rd$street, geodesicMeters(rd))
-  
+
   geo.rd.segs <- lapply(unique(geo.rd$street), function(st) {
     dat <- geo.rd[geo.rd$street == st, ]
     names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
@@ -108,5 +108,15 @@ latlongOrthoPumpB <- function(vestry = FALSE, multi.core = TRUE) {
     out
   }, mc.cores = cores)
 
-  do.call(rbind, orthogonal.projection)
+  coords <- do.call(rbind, orthogonal.projection)
+
+  origin <- data.frame(lon = min(cholera::roads$lon),
+                       lat = min(cholera::roads$lat))
+  topleft <- data.frame(lon = min(cholera::roads$lon),
+                        lat = max(cholera::roads$lat))
+  bottomright <- data.frame(lon = max(cholera::roads$lon),
+                            lat = min(cholera::roads$lat))
+
+  est.lonlat <- meterLatLong(coords, origin, topleft, bottomright)
+  est.lonlat[order(est.lonlat$pump.id), ]
 }
