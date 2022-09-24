@@ -1,3 +1,10 @@
+cholera 0.7.9.9079
+==================
+
+- add latlongOrthoPumpB() prototype.
+- translate coordinates back to longitude and latitude in latlongOrthoPumpB().
+
+
 cholera 0.7.9.9078
 ==================
 
