@@ -19,6 +19,79 @@ kmeansRectanlge <- function(x) {
   } else seq_along(x)
 }
 
+#' Convert meters-North to latitude.
+#'
+#' @param coords Object. Data frame of coordinates of Voronoi cells
+#' @param origin Object. Bottom left corner of map.
+#' @param topleft Object. Top left corner of map.
+#' @param delta Numeric. Increment between simulated values.
+#' @noRd
+
+meterLatitude <- function(coords, origin, topleft, delta = 0.000025) {
+  lat <- seq(origin$lat, topleft$lat, delta)
+
+  meters.north <- vapply(lat, function(y) {
+    geosphere::distGeo(origin, cbind(origin$lon, y))
+  }, numeric(1L))
+
+  loess.lat <- stats::loess(lat ~ meters.north,
+    control = stats::loess.control(surface = "direct"))
+
+  y.unique <- sort(unique(coords$y))
+
+  est.lat <- vapply(y.unique, function(m) {
+    stats::predict(loess.lat, newdata = data.frame(meters.north = m))
+  }, numeric(1L))
+
+  data.frame(m = y.unique, lat = est.lat)
+}
+
+#' Convert meters-East to longitude.
+#'
+#' @param est.latitude Object. Estimated latitudes from meters-North.
+#' @param coords Object. Data frame of coordinates.
+#' @param origin Object. Bottom left corner of map.
+#' @param topleft Object. Top left corner of map.
+#' @param bottomright Object. Bottom right corner of map.
+#' @param delta Numeric. Increment between simulated values.
+#' @noRd
+
+meterLatLong <- function(coords, origin, topleft, bottomright,
+  delta = 0.000025) {
+
+  est.lat <- meterLatitude(coords, origin, topleft)
+
+  # uniformly spaced points along x-axis (longitude)
+  lon <- seq(origin$lon, bottomright$lon, delta)
+
+  # a set of horizontal distances (East-West) for each estimated latitude
+  meters.east <- lapply(est.lat$lat, function(y) {
+    y.axis.origin <- cbind(origin$lon, y)
+    vapply(lon, function(x) {
+      geosphere::distGeo(y.axis.origin, cbind(x, y))
+    }, numeric(1L))
+  })
+
+  loess.lon <- lapply(meters.east, function(m) {
+    dat <- data.frame(lon = lon, m)
+    stats::loess(lon ~ m, data = dat,
+      control = stats::loess.control(surface = "direct"))
+  })
+
+  y.unique <- sort(unique(coords$y))
+
+  # estimate longitudes, append estimated latitudes
+  do.call(rbind, lapply(seq_along(y.unique), function(i) {
+    dat <- coords[coords$y == y.unique[i], ]
+    loess.fit <- loess.lon[[i]]
+    dat$lon <- vapply(dat$x, function(x) {
+      stats::predict(loess.fit, newdata = data.frame(m = x))
+    }, numeric(1L))
+    dat$lat <- est.lat[est.lat$m == y.unique[i], "lat"]
+    dat
+  }))
+}
+
 #' Extract points from GeoTiff.
 #'
 #' @param x Object. GeoTIFF.
