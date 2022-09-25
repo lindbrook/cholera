@@ -30,6 +30,7 @@ latlongOrthoPumpB <- function(vestry = FALSE, multi.core = TRUE) {
   })
 
   geo.rd.segs <- do.call(rbind, geo.rd.segs)
+  seg.endpts <- c("x1", "y1", "x2", "y2")
 
   # test <- rbind(case, stats::setNames(geo.rd.segs[geo.rd.segs$id == "19-1", c("x1", "y1")], c("x", "y")))
 
@@ -48,7 +49,6 @@ latlongOrthoPumpB <- function(vestry = FALSE, multi.core = TRUE) {
     })
 
     within.radius <- unlist(within.radius)
-    seg.endpts <- c("x1", "y1", "x2", "y2")
 
     ortho.proj.test <- lapply(within.radius, function(seg.id) {
       sel <- geo.rd.segs$id == seg.id
