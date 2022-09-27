@@ -218,7 +218,7 @@ are taken in R.app on macOS, the developers of the ‘parallel’ package
 strongly discourage against using parallelization within a GUI or
 embedded environment. See `vignette("Parallelization")` for details.
 
-#### longitude and latitude (prototype)
+#### longitude and latitude (prototypes)
 
 ``` r
 snowMap()
@@ -233,6 +233,13 @@ neighborhoodVoronoiB(euclidean.paths = TRUE)
 ```
 
 <img src="man/figures/README-latlong_voronoi-1.png" width="50%" /><img src="man/figures/README-latlong_voronoi-2.png" width="50%" />
+
+``` r
+plot(walkingPath())
+latlongWalkingPathB()
+```
+
+<img src="man/figures/README-latlong_walking_path-1.png" width="50%" /><img src="man/figures/README-latlong_walking_path-2.png" width="50%" />
 
 #### vignettes
 
