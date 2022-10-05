@@ -126,19 +126,21 @@ latlongWalkingPathB <- function(case = 1, zoom = TRUE, vestry = FALSE) {
   invisible(lapply(frame.list, lines))
   points(fatality[, vars], col = "gray", pch = 16, cex = 0.5)
   points(fatality[fatality$case == case, vars], col = "red", pch = 1)
+  text(fatality[fatality$case == case, vars], pos = 1, labels = case,
+    col = "red")
   points(pump[, vars], col = "blue", pch = 24)
-  text(pump[, vars], col = "blue", pos = 1, labels = pump$id)
+  text(pump[, vars], col = "blue", pos = 1, labels = paste0("p", pump$id))
   points(dat[1, c("x", "y")], col = "dodgerblue", pch = 0)
   points(dat[nrow(dat), c("x", "y")], col = "dodgerblue", pch = 0)
-  drawPathC(dat, "dodgerblue")
+  drawPathC(dat, "blue")
   title(main = paste("Case", case, "to Pump", destination.pump),
         sub = paste(round(path.length, 1), "m"))
   arrows(tail.data$lon, tail.data$lat,
          head.data$lon, head.data$lat,
-         length = 0.0875, col = "dodgerblue", lwd = 3)
+         length = 0.0875, col = "blue", lwd = 3)
   arrows(seg.data[1, "x2"], seg.data[1, "y2"],
          seg.data[1, "x1"], seg.data[1, "y1"],
-         length = 0.0875, col = "dodgerblue", lwd = 3)
+         length = 0.0875, col = "blue", lwd = 3)
 }
 
 drawPathC <- function(x, case.color) {
