@@ -136,6 +136,9 @@ latlongWalkingPathB <- function(case = 1, zoom = TRUE, vestry = FALSE) {
   arrows(tail.data$lon, tail.data$lat,
          head.data$lon, head.data$lat,
          length = 0.0875, col = "dodgerblue", lwd = 3)
+  arrows(seg.data[1, "x2"], seg.data[1, "y2"],
+         seg.data[1, "x1"], seg.data[1, "y1"],
+         length = 0.0875, col = "dodgerblue", lwd = 3)
 }
 
 drawPathC <- function(x, case.color) {
