@@ -97,6 +97,8 @@ latlongWalkingPathB <- function(case = 1, zoom = TRUE, vestry = FALSE) {
   head.data <- stats::setNames(arrow.data[, c("x2", "y2")], c("x", "y"))
   tail.data <- meterLatLong(tail.data, origin, topleft, bottomright)
   head.data <- meterLatLong(head.data, origin, topleft, bottomright)
+  tail.data <- tail.data[order(row.names(tail.data)), ]
+  head.data <- head.data[order(row.names(head.data)), ]
 
   if (is.logical(zoom)) {
     if (zoom) {
