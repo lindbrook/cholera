@@ -48,57 +48,59 @@ latlongWalkingPathB <- function(case = 1, zoom = TRUE, vestry = FALSE) {
   seg.data$d <- rev(ds)
   seg.data$cumulative.d <- cumsum(seg.data$d)
 
-  floor.id <- floor(seg.data$cumulative.d / 50)
+  if (path.length >= 50) {
+    floor.id <- floor(seg.data$cumulative.d / 50)
+    post.count <- unique(floor.id[floor.id != 0])
 
-  post.count <- unique(floor.id[floor.id != 0])
+    milepost.seg.id <- vapply(seq_along(post.count), function(post) {
+      which(floor.id == post)[1]
+    }, integer(1L))
 
-  milepost.seg.id <- vapply(seq_along(post.count), function(post) {
-    which(floor.id == post)[1]
-  }, integer(1L))
+    milepost.value <- seq_along(milepost.seg.id) * 50
 
-  milepost.value <- seq_along(milepost.seg.id) * 50
+    origin <- data.frame(lon = min(cholera::roads$lon),
+                         lat = min(cholera::roads$lat))
+    topleft <- data.frame(lon = min(cholera::roads$lon),
+                          lat = max(cholera::roads$lat))
+    bottomright <- data.frame(lon = max(cholera::roads$lon),
+                              lat = min(cholera::roads$lat))
 
-  origin <- data.frame(lon = min(cholera::roads$lon),
-                       lat = min(cholera::roads$lat))
-  topleft <- data.frame(lon = min(cholera::roads$lon),
-                        lat = max(cholera::roads$lat))
-  bottomright <- data.frame(lon = max(cholera::roads$lon),
-                            lat = min(cholera::roads$lat))
+    arrow.data <- lapply(seq_along(milepost.seg.id), function(i) {
+      milepost <- milepost.value[i]
+      tmp <- seg.data[seg.data$id == milepost.seg.id[i], ]
+      endpt1 <- stats::setNames(tmp[, grep("1", names(tmp))], c("lon", "lat"))
+      endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], c("lon", "lat"))
+      latlong.tmp <- rbind(endpt1, endpt2)
 
-  arrow.data <- do.call(rbind, lapply(seq_along(milepost.seg.id), function(i) {
-    milepost <- milepost.value[i]
-    tmp <- seg.data[seg.data$id == milepost.seg.id[i], ]
-    endpt1 <- stats::setNames(tmp[, grep("1", names(tmp))], c("lon", "lat"))
-    endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], c("lon", "lat"))
-    latlong.tmp <- rbind(endpt1, endpt2)
+      meter.coords <- lapply(seq_along(latlong.tmp$lon), function(i) {
+        tmp <- latlong.tmp[i, c("lon", "lat")]
+        x.proj <- c(tmp$lon, origin$lat)
+        y.proj <- c(origin$lon, tmp$lat)
+        m.lon <- geosphere::distGeo(y.proj, tmp)
+        m.lat <- geosphere::distGeo(x.proj, tmp)
+        data.frame(x = m.lon, y = m.lat)
+      })
 
-    meter.coords <- lapply(seq_along(latlong.tmp$lon), function(i) {
-      tmp <- latlong.tmp[i, c("lon", "lat")]
-      x.proj <- c(tmp$lon, origin$lat)
-      y.proj <- c(origin$lon, tmp$lat)
-      m.lon <- geosphere::distGeo(y.proj, tmp)
-      m.lat <- geosphere::distGeo(x.proj, tmp)
-      data.frame(x = m.lon, y = m.lat)
+      meter.coords <- do.call(rbind, meter.coords)
+
+      ols <- stats::lm(y ~ x, data = meter.coords )
+      seg.slope <- stats::coef(ols)[2]
+      theta <- atan(seg.slope)
+      h <- tmp$cumulative.d - milepost
+      arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
+
+      data.frame(x1 = meter.coords[2, "x"], y1 = meter.coords[2, "y"],
+        x2 = arrow.point$x, y2 = arrow.point$y)
     })
 
-    meter.coords <- do.call(rbind, meter.coords)
-
-    ols <- stats::lm(y ~ x, data = meter.coords )
-    seg.slope <- stats::coef(ols)[2]
-    theta <- atan(seg.slope)
-    h <- tmp$cumulative.d - milepost
-    arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
-
-    data.frame(x1 = meter.coords[2, "x"], y1 = meter.coords[2, "y"],
-      x2 = arrow.point$x, y2 = arrow.point$y)
-  }))
-
-  tail.data <- stats::setNames(arrow.data[, c("x1", "y1")], c("x", "y"))
-  head.data <- stats::setNames(arrow.data[, c("x2", "y2")], c("x", "y"))
-  tail.data <- meterLatLong(tail.data, origin, topleft, bottomright)
-  head.data <- meterLatLong(head.data, origin, topleft, bottomright)
-  tail.data <- tail.data[order(row.names(tail.data)), ]
-  head.data <- head.data[order(row.names(head.data)), ]
+    arrow.data <- do.call(rbind, arrow.data)
+    tail.data <- stats::setNames(arrow.data[, c("x1", "y1")], c("x", "y"))
+    head.data <- stats::setNames(arrow.data[, c("x2", "y2")], c("x", "y"))
+    tail.data <- meterLatLong(tail.data, origin, topleft, bottomright)
+    head.data <- meterLatLong(head.data, origin, topleft, bottomright)
+    tail.data <- tail.data[order(row.names(tail.data)), ]
+    head.data <- head.data[order(row.names(head.data)), ]
+  }
 
   if (is.logical(zoom)) {
     if (zoom) {
@@ -135,12 +137,13 @@ latlongWalkingPathB <- function(case = 1, zoom = TRUE, vestry = FALSE) {
   drawPathC(dat, "blue")
   title(main = paste("Case", case, "to Pump", destination.pump),
         sub = paste(round(path.length, 1), "m"))
-  arrows(tail.data$lon, tail.data$lat,
-         head.data$lon, head.data$lat,
-         length = 0.0875, col = "blue", lwd = 3)
   arrows(seg.data[1, "x2"], seg.data[1, "y2"],
          seg.data[1, "x1"], seg.data[1, "y1"],
          length = 0.0875, col = "blue", lwd = 3)
+  if (path.length >= 50) {
+    arrows(tail.data$lon, tail.data$lat, head.data$lon, head.data$lat,
+      length = 0.0875, col = "blue", lwd = 3)
+  }
 }
 
 drawPathC <- function(x, case.color) {
