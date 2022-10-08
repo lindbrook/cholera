@@ -1,5 +1,5 @@
 #' Common auxiliary functions for walking path functions.
-#' walking(), walkingPath(), addMilePosts(), milePosts(), addNeighborhood().
+#' walking(), walkingPath(), addMilePosts(), addNeighborhood().
 #' @noRd
 
 walkingAuxiliaryFunctions <- function() NULL
