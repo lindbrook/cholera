@@ -4,16 +4,19 @@
 \alias{latlongWalkingPath}
 \title{Plot walking path to nearest pump (prototype).}
 \usage{
-latlongWalkingPath(case = 1, path, zoom = TRUE, vestry = FALSE)
+latlongWalkingPath(case = 1, zoom = TRUE, vestry = FALSE,
+  mile.posts = TRUE, post.unit = 50)
 }
 \arguments{
 \item{case}{Numeric.}
 
-\item{path}{Character. e.g., "~/Documents/Data/".}
-
 \item{zoom}{Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
+
+\item{mile.posts}{Logical. Plot mile posts.}
+
+\item{post.unit}{Numeric. Mile post interval.}
 }
 \description{
 Plot walking path to nearest pump (prototype).
