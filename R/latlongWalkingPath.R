@@ -10,10 +10,11 @@
 latlongWalkingPath <- function(case = 1, zoom = TRUE, vestry = FALSE,
   mile.posts = TRUE, post.unit = 50) {
 
-  if (!case %in% cholera::fatalities.address$anchor) {
-    stop("Invalid case. See cholera::fatalities.address.", call. = FALSE)
+  if (!case %in% cholera::fatalities$case) {
+    stop("Valid cases range from 1 to 578.", call. = FALSE)
   } else {
-    case.id <- which(cholera::fatalities.address$anchor == case)
+    anchor <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor"]
+    case.id <- which(fatalities.address$anchor == anchor)
   }
 
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
