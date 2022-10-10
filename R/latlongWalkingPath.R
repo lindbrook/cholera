@@ -10,10 +10,11 @@
 latlongWalkingPath <- function(case = 1, zoom = TRUE, vestry = FALSE,
   mile.posts = TRUE, post.unit = 50) {
 
-  if (!case %in% cholera::fatalities.address$anchor) {
-    stop("Invalid case. See cholera::fatalities.address.", call. = FALSE)
+  if (!case %in% cholera::fatalities$case) {
+    stop("Valid cases range from 1 to 578.", call. = FALSE)
   } else {
-    case.id <- which(cholera::fatalities.address$anchor == case)
+    anchor <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor"]
+    case.id <- which(fatalities.address$anchor == anchor)
   }
 
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
@@ -120,8 +121,8 @@ milePosts <- function(dat, ds, path.length, post.unit = 50) {
     floor.id <- floor(seg.data$cumulative.d / post.unit)
     post.count <- unique(floor.id[floor.id != 0])
 
-    milepost.seg.id <- vapply(seq_along(post.count), function(post) {
-      which(floor.id == post)[1]
+    milepost.seg.id <- vapply(post.count, function(p) {
+      which(floor.id == p)[1]
     }, integer(1L))
 
     milepost.value <- seq_along(milepost.seg.id) * post.unit
