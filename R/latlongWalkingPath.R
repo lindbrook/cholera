@@ -21,10 +21,13 @@ latlongWalkingPath <- function(case = 1, zoom = TRUE, vestry = FALSE,
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
   fatality <- cholera::fatalities
 
-  if (vestry) pump <- cholera::pumps.vestry
-  else pump <- cholera::pumps
-
-  nearest.pump <- latlongNearestPumpB(vestry = vestry)
+  if (vestry) {
+    pump <- cholera::pumps.vestry
+    nearest.pump <- cholera::latlong.nearest.pump.vestry
+  } else {
+    pump <- cholera::pumps
+    nearest.pump <- cholera::latlong.nearest.pump
+  }
 
   p <- names(nearest.pump$path[[case.id]][[1]])
   destination.pump <- names(nearest.pump$path[[case.id]])
