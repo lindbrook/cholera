@@ -121,8 +121,8 @@ milePosts <- function(dat, ds, path.length, post.unit = 50) {
     floor.id <- floor(seg.data$cumulative.d / post.unit)
     post.count <- unique(floor.id[floor.id != 0])
 
-    milepost.seg.id <- vapply(seq_along(post.count), function(post) {
-      which(floor.id == post)[1]
+    milepost.seg.id <- vapply(post.count, function(p) {
+      which(floor.id == p)[1]
     }, integer(1L))
 
     milepost.value <- seq_along(milepost.seg.id) * post.unit
