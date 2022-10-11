@@ -4,15 +4,18 @@
 \alias{latlongVoronoi}
 \title{Compute Georeferenced Latitude and Longitude of vertices of Voronoi polygons.}
 \usage{
-latlongVoronoi(path, vestry = FALSE, multi.core = TRUE)
+latlongVoronoi(pump.select = NULL, vestry = FALSE)
 }
 \arguments{
-\item{path}{Character. e.g., "~/Documents/Data/"}
+\item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
 
-\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
-
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 }
 \description{
 Compute Georeferenced Latitude and Longitude of vertices of Voronoi polygons.
+}
+\examples{
+snowMap(latlong = TRUE)
+cells <- latlongVoronoi()
+invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
 }

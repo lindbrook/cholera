@@ -5,6 +5,6 @@
 #' @export
 
 addVoronoiB <- function(pump.select = NULL, vestry = FALSE) {
-  cells <- latlongVoronoiC(pump.select = pump.select, vestry = vestry)
+  cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
   invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
 }
