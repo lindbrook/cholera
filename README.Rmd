@@ -149,7 +149,7 @@ snowMap(latlong = TRUE)
 
 ```{r latlong_voronoi, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
 plot(neighborhoodVoronoi(), euclidean.paths = TRUE)
-neighborhoodVoronoiB(euclidean.paths = TRUE)
+latlongNeighborhoodVoronoi(euclidean.paths = TRUE)
 ```
 
 ```{r latlong_walking_path, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
