@@ -73,73 +73,80 @@ pumpsVoronoiPolygons <- function(vestry = FALSE) {
 
 #' Compute Georeferenced Latitude and Longitude of vertices of Voronoi polygons.
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
-#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @export
+#' @examples
+#' snowMap(latlong = TRUE)
+#' cells <- latlongVoronoi()
+#' invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
 
-latlongVoronoi <- function(path, vestry = FALSE, multi.core = TRUE) {
-  cores <- multiCore(multi.core)
-  frame.corners <- data.frame(x = range(cholera::frame.data$x),
-                              y = range(cholera::frame.data$y))
+latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
+  origin <- data.frame(lon = min(cholera::roads$lon),
+                       lat = min(cholera::roads$lat))
+  topleft <- data.frame(lon = min(cholera::roads$lon),
+                        lat = max(cholera::roads$lat))
+  bottomright <- data.frame(lon = max(cholera::roads$lon),
+                            lat = min(cholera::roads$lat))
+  topright <- data.frame(lon = max(cholera::roads$lon),
+                         lat = max(cholera::roads$lat))
 
   if (vestry) {
-    dat <- cholera::voronoi.polygons.vestry
-    pre <- "voronoi.polygon.vestry"
-    dataset <- "voronoi.polygons.vestry"
+    pump.data <- cholera::pumps.vestry
   } else {
-    dat <- cholera::voronoi.polygons
-    pre <- "voronoi.polygon"
-    dataset <- "voronoi.polygons"
+    pump.data <- cholera::pumps
   }
 
-  # reset data
-  dat <- lapply(dat, function(x) x[, !names(x) %in% c("lon", "lat")])
+  if (!is.null(pump.select)) {
+    if (is.numeric(pump.select) == FALSE) {
+      stop("pump.select must be numeric.", call. = FALSE)
+    }
+    p.count <- nrow(pump.data)
+    p.ID <- seq_len(p.count)
+    if (any(abs(pump.select) %in% p.ID == FALSE)) {
+      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count,
+        call. = FALSE)
+    }
+    msg1 <- 'If specified,'
+    msg2 <- "'pump.select' must include at least 2 different pumps."
+    if (length(unique(p.ID[pump.select])) < 2) {
+      stop(paste(msg1, msg2), call. = FALSE)
+    }
+  }
 
-  id <- seq_along(dat)
-  id <- ifelse(id < 10, paste0("0", id), paste(id))
-  post <- "_modified.tif"
-  tiffs <- paste0(pre, id, post)
-  vars <- c("x", "y")
+  # compute geodesic distance from origin to pump and decompose result into
+  # horizontal (East-West) and vertical (North-South) components.
+  pump.meters <- geodesicMeters(pump.data)
 
-  vs <- parallel::mclapply(seq_along(dat), function(i) {
-    vertices <- dat[[i]]
-    tif <- tiffs[i]
-    k <- nrow(vertices)
+  # Voronoi cells
 
-    # just scale computed latlong coordinates
-    coords <- latlongCoordinates(paste0(path, tif), k, path)
-    coords.scale <- data.frame(id = coords$id, scale(coords[, c("lon", "lat")]))
+  height <- geosphere::distGeo(origin, topleft)
+  width <- geosphere::distGeo(origin, bottomright)
+  bounding.box <- c(0, width, 0, height)
 
-    # rotate and scale nominal coordinates
-    tmp <- lapply(vertices$vertex, rotatePoint, dataset = dataset)
-    v.rotate <- do.call(rbind, tmp)
-    v.rotate.scale <- data.frame(vertex = vertices$vertex, scale(v.rotate))
+  if (is.null(pump.select)) {
+    cells <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box)
+  } else {
+    cells <- voronoiPolygons(pump.meters[pump.select, c("x", "y")],
+      rw = bounding.box)
+  }
 
-    alters <- coords.scale
-    names(alters)[-1] <- vars
+  # cells DF
 
-    match.points <- do.call(rbind, lapply(v.rotate.scale$vertex, function(v) {
-      ego <- v.rotate.scale[v.rotate.scale$vertex == v, vars]
-      d <- vapply(seq_len(nrow(alters)), function(i) {
-        stats::dist(rbind(ego, alters[i, vars]))
-      }, numeric(1L))
-      data.frame(vertex = v, geo.id = alters$id[which.min(d)])
-    }))
+  cells.df <- do.call(rbind, cells)
+  cells.lat <- sort(unique(cells.df$y), decreasing = TRUE) # unique latitudes
+  tmp <- row.names(cells.df)
+  ids <- do.call(rbind, strsplit(tmp, "[.]"))
+  cells.df$cell <- as.numeric(ids[, 2])
+  cells.df$vertex <- as.numeric(ids[, 3])
+  row.names(cells.df) <- NULL
 
-    out <- merge(vertices, match.points, by = "vertex")
-    out <- merge(out, coords, by.x = "geo.id", by.y = "id")
-    out <- out[order(out$vertex), ]
-    out$geo.id <- NULL
-    row.names(out) <- NULL
-    out
-  }, mc.cores = cores)
-
-  names(vs) <- paste0("p", seq_len(length(dat)))
-  vs
+  est.lonlat <- meterLatLong(cells.df, origin, topleft, bottomright)
+  est.lonlat <- est.lonlat[order(est.lonlat$cell, est.lonlat$vertex), ]
+  split(est.lonlat, est.lonlat$cell)
 }
 
-# voronoi.polygons <- latlongVoronoi(path)
-# voronoi.polygons.vestry <- latlongVoronoi(path, vestry = TRUE)
+# voronoi.polygons <- latlongVoronoi()
+# voronoi.polygons.vestry <- latlongVoronoi(vestry = TRUE)
 # usethis::use_data(voronoi.polygons, overwrite = TRUE)
 # usethis::use_data(voronoi.polygons.vestry, overwrite = TRUE)
