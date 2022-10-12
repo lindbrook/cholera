@@ -1,3 +1,9 @@
+cholera 0.7.9.9092
+==================
+
+- add/use S3 version of latlongWalkingPath().
+
+
 cholera 0.7.9.9091
 ==================
 
