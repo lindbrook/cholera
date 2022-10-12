@@ -118,7 +118,7 @@ drawPathB <- function(x, case.color) {
   n1 <- path.data[1:(nrow(path.data) - 1), ]
   n2 <- path.data[2:nrow(path.data), ]
   segments(n1$x, n1$y, n2$x, n2$y, lwd = 3,
-    col = grDevices::adjustcolor(case.color, alpha.f = 1/2))
+    col = grDevices::adjustcolor(case.color, alpha.f = 1))
 }
 
 milePosts <- function(dat, ds, path.length, post.unit = 50) {
