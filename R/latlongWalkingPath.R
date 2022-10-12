@@ -1,25 +1,16 @@
 #' Plot walking path to nearest pump (prototype).
 #'
 #' @param case Numeric.
-#' @param zoom Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
-#' @param mile.posts Logical. Plot mile posts.
-#' @param post.unit Numeric. Mile post interval.
 #' @export
 
-latlongWalkingPath <- function(case = 1, zoom = TRUE, vestry = FALSE,
-  mile.posts = TRUE, post.unit = 50) {
-
+latlongWalkingPath <- function(case = 1,  vestry = FALSE) {
   if (!case %in% cholera::fatalities$case) {
     stop("Valid cases range from 1 to 578.", call. = FALSE)
   } else {
     anchor <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor"]
     case.id <- which(cholera::fatalities.address$anchor == anchor)
   }
-
-  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  fatality <- cholera::fatalities
 
   if (vestry) {
     pump <- cholera::pumps.vestry
@@ -31,7 +22,6 @@ latlongWalkingPath <- function(case = 1, zoom = TRUE, vestry = FALSE,
 
   p <- names(nearest.pump$path[[case.id]][[1]])
   destination.pump <- names(nearest.pump$path[[case.id]])
-
   nodes <- do.call(rbind, strsplit(p, "-"))
   dat <- data.frame(x = -as.numeric(nodes[, 2]), y = as.numeric(nodes[, 3]))
 
@@ -40,14 +30,41 @@ latlongWalkingPath <- function(case = 1, zoom = TRUE, vestry = FALSE,
   }, numeric(1L))
 
   dat <- data.frame(id = seq_along(dat$x), dat)
+  output <- list(case = case, pump = pump, dat = dat,
+    destination.pump = destination.pump, ds = ds)
+  class(output) <- "latlong_walking_path"
+  output
+}
+
+#' Plot the walking path between selected cases and/or pumps.
+#'
+#' @param x An object of class "latlong_walking_path" created by latlongWalkingPath().
+#' @param zoom Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.
+#' @param mile.posts Logical. Plot mile posts.
+#' @param post.unit Numeric. Mile post interval (meters).
+#' @param ... Additional plotting parameters.
+#' @return A base R plot.
+#' @export
+
+plot.latlong_walking_path <- function(x, zoom = TRUE, mile.posts = TRUE,
+  post.unit = 50, ...) {
+
+  case <- x$case
+  destination.pump <- x$destination.pump
+  pump <- x$pump
+  dat <- x$dat
+  ds <- x$ds
   path.length <- sum(ds)
+  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
+  fatality <- cholera::fatalities
 
   if (mile.posts) {
     mile.post.data <- milePosts(dat, ds, path.length, post.unit)
     seg.data <- mile.post.data$seg.data
     if (path.length >= post.unit) {
-      head.data <- mile.post.data$head.data
-      tail.data <- mile.post.data$tail.data
+      arrow.head <- mile.post.data$arrow.head
+      arrow.tail <- mile.post.data$arrow.tail
     }
   }
 
@@ -69,7 +86,6 @@ latlongWalkingPath <- function(case = 1, zoom = TRUE, vestry = FALSE,
   } else stop("zoom must either be logical or numeric.")
 
   vars <- c("lon", "lat")
-
   plot(rd[, vars], pch = NA, asp = 1.6, xlim = xlim, ylim = ylim)
   roads.list <- split(rd[, vars], rd$street)
   frame.list <- split(frame[, vars], frame$street)
@@ -91,7 +107,7 @@ latlongWalkingPath <- function(case = 1, zoom = TRUE, vestry = FALSE,
            seg.data[1, "x1"], seg.data[1, "y1"],
            length = 0.0875, col = "blue", lwd = 3)
     if (path.length >= 50) {
-      arrows(tail.data$lon, tail.data$lat, head.data$lon, head.data$lat,
+      arrows(arrow.tail$lon, arrow.tail$lat, arrow.head$lon, arrow.head$lat,
         length = 0.0875, col = "blue", lwd = 3)
     }
   }
@@ -165,14 +181,14 @@ milePosts <- function(dat, ds, path.length, post.unit = 50) {
     })
 
     arrow.data <- do.call(rbind, arrow.data)
-    tail.data <- stats::setNames(arrow.data[, c("x1", "y1")], c("x", "y"))
-    head.data <- stats::setNames(arrow.data[, c("x2", "y2")], c("x", "y"))
-    tail.data <- meterLatLong(tail.data, origin, topleft, bottomright)
-    head.data <- meterLatLong(head.data, origin, topleft, bottomright)
-    tail.data <- tail.data[order(row.names(tail.data)), ]
-    head.data <- head.data[order(row.names(head.data)), ]
-    out <- list(seg.data = seg.data, head.data = head.data,
-      tail.data = tail.data)
+    arrow.tail <- stats::setNames(arrow.data[, c("x1", "y1")], c("x", "y"))
+    arrow.head <- stats::setNames(arrow.data[, c("x2", "y2")], c("x", "y"))
+    arrow.tail <- meterLatLong(arrow.tail, origin, topleft, bottomright)
+    arrow.head <- meterLatLong(arrow.head, origin, topleft, bottomright)
+    arrow.tail <- arrow.tail[order(row.names(arrow.tail)), ]
+    arrow.head <- arrow.head[order(row.names(arrow.head)), ]
+    out <- list(seg.data = seg.data, arrow.head = arrow.head,
+      arrow.tail = arrow.tail)
   }
   out
 }
