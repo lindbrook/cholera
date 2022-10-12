@@ -2,6 +2,7 @@ cholera 0.7.9.9092
 ==================
 
 - add/use S3 version of latlongWalkingPath().
+- set alpha.f = 1 in drawPathB().
 
 
 cholera 0.7.9.9091
