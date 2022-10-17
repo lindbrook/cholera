@@ -2,6 +2,7 @@ cholera 0.7.9.9093
 ==================
 
 - add detailed subtitle in latlongWalkingPath().
+- add print.latlongWalkingPath().
 
 
 cholera 0.7.9.9092

@@ -171,6 +171,21 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   }
 }
 
+#' Print method for latlongWalkingPath().
+#'
+#' Summary output.
+#' @param x An object of class "latlong_walking_path" created by latlongWalkingPath().
+#' @param ... Additional parameters.
+#' @return An R data frame.
+#' @export
+
+print.latlong_walking_path <- function(x, ...) {
+  if (!inherits(x, "latlong_walking_path")) {
+    stop('"x"\'s class must be "latlong_walking_path".')
+  }
+  print(x[c("path", "data")])
+}
+
 drawPathB <- function(x, case.color) {
   path.data <- x
   n1 <- path.data[1:(nrow(path.data) - 1), ]
