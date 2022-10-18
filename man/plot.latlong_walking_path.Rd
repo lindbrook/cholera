@@ -5,7 +5,7 @@
 \title{Plot the walking path between selected cases and/or pumps.}
 \usage{
 \method{plot}{latlong_walking_path}(x, zoom = TRUE, mileposts = TRUE,
-  milepost.unit = "distance", milepost.interval = 50, ...)
+  milepost.unit = "distance", milepost.interval = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class "latlong_walking_path" created by latlongWalkingPath().}

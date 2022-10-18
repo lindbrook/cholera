@@ -79,7 +79,7 @@ latlongWalkingPath <- function(case = 1, vestry = FALSE,
 #' @export
 
 plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
-  milepost.unit = "distance", milepost.interval = 50, ...) {
+  milepost.unit = "distance", milepost.interval = NULL, ...) {
 
   case <- x$data$case
   destination.pump <- x$data$pump
@@ -102,6 +102,13 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   fatality <- cholera::fatalities
 
   if (mileposts) {
+    if (is.null(milepost.interval)) {
+      if (milepost.unit == "distance") {
+        milepost.interval <- 50
+      } else if (milepost.unit == "time") {
+        milepost.interval <- 60
+      }
+    }
     milepost.data <- milePosts(dat, ds, milepost.unit, milepost.interval,
       distance.unit, time.unit)
     seg.data <- milepost.data$seg.data
@@ -152,6 +159,8 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
     }
   } else if (milepost.unit == "time") {
     post.info <- paste("posts at", milepost.interval, "sec intervals")
+  } else {
+    stop('"milepost.unit" muster either be "distance" or "time".')
   }
 
   d <- paste(round(path.length, 1), d.unit)
