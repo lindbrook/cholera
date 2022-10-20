@@ -110,7 +110,7 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
     milepost.data <- milePosts(path.data, dat, ds, milepost.unit,
       milepost.interval, distance.unit, time.unit, walking.speed)
     seg.data <- milepost.data$seg.data
-    if (path.length >= milepost.interval) {
+    if (path.length > milepost.interval) {
       arrow.head <- milepost.data$arrow.head
       arrow.tail <- milepost.data$arrow.tail
     }
