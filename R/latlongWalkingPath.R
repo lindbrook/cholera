@@ -285,6 +285,8 @@ milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
     arrow.head <- arrow.head[order(row.names(arrow.head)), ]
     out <- list(seg.data = seg.data, arrow.head = arrow.head,
       arrow.tail = arrow.tail)
+  } else {
+    out <- list(seg.data = seg.data)
   }
   out
 }
