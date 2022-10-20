@@ -81,8 +81,9 @@ latlongWalkingPath <- function(case = 1, vestry = FALSE,
 plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   milepost.unit = "distance", milepost.interval = NULL, ...) {
 
-  case <- x$data$case
-  destination.pump <- x$data$pump
+  path.data <- x$data
+  case <- path.data$case
+  destination.pump <- path.data$pump
   pump <- x$pump
   dat <- x$path
   ds <- x$ds
@@ -90,11 +91,8 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   time.unit <- x$time.unit
   walking.speed <- x$walking.speed
 
-  if (distance.unit == "meter") {
-    d.unit <- "m"
-  } else if (distance.unit == "yard") {
-    d.unit <- "yd"
-  }
+  if (distance.unit == "meter") d.unit <- "m"
+  else if (distance.unit == "yard") d.unit <- "yd"
 
   path.length <- sum(ds)
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
@@ -109,8 +107,8 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
         milepost.interval <- 60
       }
     }
-    milepost.data <- milePosts(dat, ds, milepost.unit, milepost.interval,
-      distance.unit, time.unit)
+    milepost.data <- milePosts(path.data, dat, ds, milepost.unit,
+      milepost.interval, distance.unit, time.unit, walking.speed)
     seg.data <- milepost.data$seg.data
     if (path.length >= milepost.interval) {
       arrow.head <- milepost.data$arrow.head
@@ -173,7 +171,7 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
     arrows(seg.data[1, "x2"], seg.data[1, "y2"],
            seg.data[1, "x1"], seg.data[1, "y1"],
            length = 0.0875, col = "blue", lwd = 3)
-    if (path.length >= 50) {
+    if (path.length >= milepost.interval) {
       arrows(arrow.tail$lon, arrow.tail$lat, arrow.head$lon, arrow.head$lat,
         length = 0.0875, col = "blue", lwd = 3)
     }
@@ -203,8 +201,8 @@ drawPathB <- function(x, case.color) {
     col = grDevices::adjustcolor(case.color, alpha.f = 1))
 }
 
-milePosts <- function(dat, ds, milepost.unit, milepost.interval,
-  distance.unit, time.unit) {
+milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
+  distance.unit, time.unit, walking.speed) {
 
   rev.data <- dat[order(dat$id, decreasing = TRUE), ]
   vars <- c("x", "y")
@@ -218,19 +216,27 @@ milePosts <- function(dat, ds, milepost.unit, milepost.interval,
 
   seg.data$d <- rev(ds)
   seg.data$cumulative.d <- cumsum(seg.data$d)
-  out <- list(seg.data = seg.data)
 
-  path.length <- sum(ds)
+  if (milepost.unit == "distance") {
+    path.length <- sum(ds)
+  } else if (milepost.unit == "time") {
+    path.length <- path.data$time
+    seg.data$t <- (3600L * seg.data$d) / (1000L * walking.speed)
+    seg.data$cumulative.t <- cumsum(seg.data$t)
+  }
 
-  if (path.length >= milepost.interval) {
-    floor.id <- floor(seg.data$cumulative.d / milepost.interval)
-    post.count <- unique(floor.id[floor.id != 0])
+  if (path.length > milepost.interval) {
+    if (milepost.unit == "distance") {
+      floor.id <- floor(seg.data$cumulative.d / milepost.interval)
+    } else if (milepost.unit == "time") {
+      floor.id <- floor(seg.data$cumulative.t / milepost.interval)
+    }
 
-    milepost.seg.id <- vapply(post.count, function(p) {
+    post.ids <- unique(floor.id[floor.id != 0])
+
+    milepost.seg.id <- vapply(post.ids, function(p) {
       which(floor.id == p)[1]
     }, integer(1L))
-
-    milepost.value <- seq_along(milepost.seg.id) * milepost.interval
 
     origin <- data.frame(lon = min(cholera::roads$lon),
                          lat = min(cholera::roads$lat))
@@ -239,8 +245,10 @@ milePosts <- function(dat, ds, milepost.unit, milepost.interval,
     bottomright <- data.frame(lon = max(cholera::roads$lon),
                               lat = min(cholera::roads$lat))
 
+    milepost.values <- seq_along(milepost.seg.id) * milepost.interval
+
     arrow.data <- lapply(seq_along(milepost.seg.id), function(i) {
-      milepost <- milepost.value[i]
+      milepost <- milepost.values[i]
       tmp <- seg.data[seg.data$id == milepost.seg.id[i], ]
       endpt1 <- stats::setNames(tmp[, grep("1", names(tmp))], c("lon", "lat"))
       endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], c("lon", "lat"))
@@ -259,9 +267,11 @@ milePosts <- function(dat, ds, milepost.unit, milepost.interval,
       ols <- stats::lm(y ~ x, data = meter.coords )
       seg.slope <- stats::coef(ols)[2]
       theta <- atan(seg.slope)
-      h <- tmp$cumulative.d - milepost
-      arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
 
+      if (milepost.unit == "distance") h <- tmp$cumulative.d - milepost
+      else if (milepost.unit == "time") h <- tmp$cumulative.t - milepost
+
+      arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
       data.frame(x1 = meter.coords[2, "x"], y1 = meter.coords[2, "y"],
         x2 = arrow.point$x, y2 = arrow.point$y)
     })
