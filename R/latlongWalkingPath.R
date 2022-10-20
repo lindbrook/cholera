@@ -2,15 +2,22 @@
 #'
 #' @param case Numeric.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
+#' @param distance.unit Character. Unit of distance: "meter" or "yard".
+#' @param time.unit Character. "hour", "minute", or "second".
+#' @param walking.speed Numeric. Walking speed in km/hr.
 #' @export
 
-latlongWalkingPath <- function(case = 1,  vestry = FALSE) {
+latlongWalkingPath <- function(case = 1, vestry = FALSE,
+  distance.unit = "meter", time.unit = "second", walking.speed = 5) {
+
   if (!case %in% cholera::fatalities$case) {
     stop("Valid cases range from 1 to 578.", call. = FALSE)
   } else {
     anchor <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor"]
     case.id <- which(cholera::fatalities.address$anchor == anchor)
   }
+
+  meter.to.yard <- 1.09361
 
   if (vestry) {
     pump <- cholera::pumps.vestry
@@ -29,9 +36,33 @@ latlongWalkingPath <- function(case = 1,  vestry = FALSE) {
     geosphere::distGeo(dat[i, ], dat[i + 1, ])
   }, numeric(1L))
 
-  dat <- data.frame(id = seq_along(dat$x), dat)
-  output <- list(case = case, pump = pump, dat = dat,
-    destination.pump = destination.pump, ds = ds)
+  if (distance.unit == "meter") {
+    speed <- walking.speed
+  } else if (distance.unit == "yard") {
+    speed <- walking.speed * meter.to.yard
+    ds <- ds * meter.to.yard
+  } else {
+    stop('distance.unit must be "meter" or "yard".')
+  }
+
+  path.length <- sum(ds)
+
+  if (time.unit == "hour") {
+    trip.time <- path.length / (1000L * speed)
+  } else if (time.unit == "minute") {
+    trip.time <- (60L * path.length) / (1000L * speed)
+  } else if (time.unit == "second") {
+    trip.time <- (3600L * path.length) / (1000L * speed)
+  }
+
+  path <- data.frame(id = seq_along(dat$x), dat)
+  data <- data.frame(case = case, anchor = anchor,
+    pump.name = pump[pump$id == destination.pump, "street"],
+    pump = destination.pump, distance = path.length, time = trip.time)
+
+  output <- list(path = path, data = data, pump = pump, ds = ds,
+                 distance.unit = distance.unit, time.unit = time.unit,
+                 walking.speed = walking.speed)
   class(output) <- "latlong_walking_path"
   output
 }
@@ -40,31 +71,54 @@ latlongWalkingPath <- function(case = 1,  vestry = FALSE) {
 #'
 #' @param x An object of class "latlong_walking_path" created by latlongWalkingPath().
 #' @param zoom Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.
-#' @param mile.posts Logical. Plot mile posts.
-#' @param post.unit Numeric. Mile post interval (meters).
+#' @param mileposts Logical. Plot mile/time posts.
+#' @param milepost.unit Character. "distance" or "time".
+#' @param milepost.interval Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.latlong_walking_path <- function(x, zoom = TRUE, mile.posts = TRUE,
-  post.unit = 50, ...) {
+plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
+  milepost.unit = "distance", milepost.interval = NULL, ...) {
 
-  case <- x$case
-  destination.pump <- x$destination.pump
+  path.data <- x$data
+  case <- path.data$case
+  destination.pump <- path.data$pump
   pump <- x$pump
-  dat <- x$dat
+  dat <- x$path
   ds <- x$ds
-  path.length <- sum(ds)
+  distance.unit <- x$distance.unit
+  time.unit <- x$time.unit
+  walking.speed <- x$walking.speed
+
+  if (distance.unit == "meter") d.unit <- "m"
+  else if (distance.unit == "yard") d.unit <- "yd"
+
+
+  if (milepost.unit == "distance") {
+    path.length <- sum(ds)
+  } else if (milepost.unit == "time") {
+    path.length <- (3600L * sum(ds)) / (1000L * walking.speed)
+  }
+
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
   fatality <- cholera::fatalities
 
-  if (mile.posts) {
-    mile.post.data <- milePosts(dat, ds, path.length, post.unit)
-    seg.data <- mile.post.data$seg.data
-    if (path.length >= post.unit) {
-      arrow.head <- mile.post.data$arrow.head
-      arrow.tail <- mile.post.data$arrow.tail
+  if (mileposts) {
+    if (is.null(milepost.interval)) {
+      if (milepost.unit == "distance") {
+        milepost.interval <- 50
+      } else if (milepost.unit == "time") {
+        milepost.interval <- 60
+      }
+    }
+    milepost.data <- milePosts(path.data, dat, ds, milepost.unit,
+      milepost.interval, distance.unit, time.unit, walking.speed)
+    seg.data <- milepost.data$seg.data
+    if (path.length > milepost.interval) {
+      arrow.head <- milepost.data$arrow.head
+      arrow.tail <- milepost.data$arrow.tail
     }
   }
 
@@ -100,17 +154,49 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mile.posts = TRUE,
   points(dat[1, c("x", "y")], col = "dodgerblue", pch = 0)
   points(dat[nrow(dat), c("x", "y")], col = "dodgerblue", pch = 0)
   drawPathB(dat, "blue")
+
+  if (milepost.unit == "distance") {
+    if (distance.unit == "meter") {
+      post.info <- paste("posts at", milepost.interval, "m intervals")
+    } else if (distance.unit == "yard") {
+      post.info <- paste("posts at", milepost.interval, "yd intervals")
+    }
+  } else if (milepost.unit == "time") {
+    post.info <- paste("posts at", milepost.interval, "sec intervals")
+  } else {
+    stop('"milepost.unit" muster either be "distance" or "time".')
+  }
+
+  d <- paste(round(path.length, 1), d.unit)
+  t <- paste(round(x$data$time), paste0(time.unit, "s"), "@", walking.speed,
+    "km/hr")
   title(main = paste("Case", case, "to Pump", destination.pump),
-        sub = paste(round(path.length, 1), "m"))
-  if (mile.posts) {
+        sub = paste(d, t, post.info, sep = "; "))
+
+  if (mileposts) {
     arrows(seg.data[1, "x2"], seg.data[1, "y2"],
            seg.data[1, "x1"], seg.data[1, "y1"],
            length = 0.0875, col = "blue", lwd = 3)
-    if (path.length >= 50) {
+    if (path.length >= milepost.interval) {
       arrows(arrow.tail$lon, arrow.tail$lat, arrow.head$lon, arrow.head$lat,
         length = 0.0875, col = "blue", lwd = 3)
     }
   }
+}
+
+#' Print method for latlongWalkingPath().
+#'
+#' Summary output.
+#' @param x An object of class "latlong_walking_path" created by latlongWalkingPath().
+#' @param ... Additional parameters.
+#' @return An R data frame.
+#' @export
+
+print.latlong_walking_path <- function(x, ...) {
+  if (!inherits(x, "latlong_walking_path")) {
+    stop('"x"\'s class must be "latlong_walking_path".')
+  }
+  print(x[c("path", "data")])
 }
 
 drawPathB <- function(x, case.color) {
@@ -121,7 +207,9 @@ drawPathB <- function(x, case.color) {
     col = grDevices::adjustcolor(case.color, alpha.f = 1))
 }
 
-milePosts <- function(dat, ds, path.length, post.unit = 50) {
+milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
+  distance.unit, time.unit, walking.speed) {
+
   rev.data <- dat[order(dat$id, decreasing = TRUE), ]
   vars <- c("x", "y")
   seg.vars <- c(paste0(vars, 1), paste0(vars, 2))
@@ -134,17 +222,27 @@ milePosts <- function(dat, ds, path.length, post.unit = 50) {
 
   seg.data$d <- rev(ds)
   seg.data$cumulative.d <- cumsum(seg.data$d)
-  out <- list(seg.data = seg.data)
 
-  if (path.length >= post.unit) {
-    floor.id <- floor(seg.data$cumulative.d / post.unit)
-    post.count <- unique(floor.id[floor.id != 0])
+  if (milepost.unit == "distance") {
+    path.length <- sum(ds)
+  } else if (milepost.unit == "time") {
+    path.length <- path.data$time
+    seg.data$t <- (3600L * seg.data$d) / (1000L * walking.speed)
+    seg.data$cumulative.t <- cumsum(seg.data$t)
+  }
 
-    milepost.seg.id <- vapply(post.count, function(p) {
+  if (path.length > milepost.interval) {
+    if (milepost.unit == "distance") {
+      floor.id <- floor(seg.data$cumulative.d / milepost.interval)
+    } else if (milepost.unit == "time") {
+      floor.id <- floor(seg.data$cumulative.t / milepost.interval)
+    }
+
+    post.ids <- unique(floor.id[floor.id != 0])
+
+    milepost.seg.id <- vapply(post.ids, function(p) {
       which(floor.id == p)[1]
     }, integer(1L))
-
-    milepost.value <- seq_along(milepost.seg.id) * post.unit
 
     origin <- data.frame(lon = min(cholera::roads$lon),
                          lat = min(cholera::roads$lat))
@@ -153,8 +251,10 @@ milePosts <- function(dat, ds, path.length, post.unit = 50) {
     bottomright <- data.frame(lon = max(cholera::roads$lon),
                               lat = min(cholera::roads$lat))
 
+    milepost.values <- seq_along(milepost.seg.id) * milepost.interval
+
     arrow.data <- lapply(seq_along(milepost.seg.id), function(i) {
-      milepost <- milepost.value[i]
+      milepost <- milepost.values[i]
       tmp <- seg.data[seg.data$id == milepost.seg.id[i], ]
       endpt1 <- stats::setNames(tmp[, grep("1", names(tmp))], c("lon", "lat"))
       endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], c("lon", "lat"))
@@ -173,9 +273,11 @@ milePosts <- function(dat, ds, path.length, post.unit = 50) {
       ols <- stats::lm(y ~ x, data = meter.coords )
       seg.slope <- stats::coef(ols)[2]
       theta <- atan(seg.slope)
-      h <- tmp$cumulative.d - milepost
-      arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
 
+      if (milepost.unit == "distance") h <- tmp$cumulative.d - milepost
+      else if (milepost.unit == "time") h <- tmp$cumulative.t - milepost
+
+      arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
       data.frame(x1 = meter.coords[2, "x"], y1 = meter.coords[2, "y"],
         x2 = arrow.point$x, y2 = arrow.point$y)
     })
@@ -189,6 +291,8 @@ milePosts <- function(dat, ds, path.length, post.unit = 50) {
     arrow.head <- arrow.head[order(row.names(arrow.head)), ]
     out <- list(seg.data = seg.data, arrow.head = arrow.head,
       arrow.tail = arrow.tail)
+  } else {
+    out <- list(seg.data = seg.data)
   }
   out
 }

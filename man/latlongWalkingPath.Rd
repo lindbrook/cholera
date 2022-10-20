@@ -4,12 +4,19 @@
 \alias{latlongWalkingPath}
 \title{Plot walking path to nearest pump (prototype).}
 \usage{
-latlongWalkingPath(case = 1, vestry = FALSE)
+latlongWalkingPath(case = 1, vestry = FALSE, distance.unit = "meter",
+  time.unit = "second", walking.speed = 5)
 }
 \arguments{
 \item{case}{Numeric.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
+
+\item{distance.unit}{Character. Unit of distance: "meter" or "yard".}
+
+\item{time.unit}{Character. "hour", "minute", or "second".}
+
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
 }
 \description{
 Plot walking path to nearest pump (prototype).

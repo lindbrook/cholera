@@ -1,3 +1,11 @@
+cholera 0.7.9.9093
+==================
+
+- add detailed subtitle in latlongWalkingPath().
+- add print.latlongWalkingPath().
+- enable time posts in latlongWalkingPath().
+
+
 cholera 0.7.9.9092
 ==================
 
