@@ -94,7 +94,13 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   if (distance.unit == "meter") d.unit <- "m"
   else if (distance.unit == "yard") d.unit <- "yd"
 
-  path.length <- sum(ds)
+
+  if (milepost.unit == "distance") {
+    path.length <- sum(ds)
+  } else if (milepost.unit == "time") {
+    path.length <- (3600L * sum(ds)) / (1000L * walking.speed)
+  }
+
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
   fatality <- cholera::fatalities
