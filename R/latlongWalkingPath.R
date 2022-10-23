@@ -91,9 +91,11 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   time.unit <- x$time.unit
   walking.speed <- x$walking.speed
 
-  if (distance.unit == "meter") d.unit <- "m"
-  else if (distance.unit == "yard") d.unit <- "yd"
-
+  if (distance.unit == "meter") {
+    d.unit <- "m"
+  } else if (distance.unit == "yard") {
+    d.unit <- "yd"
+  }
 
   if (milepost.unit == "distance") {
     path.length <- sum(ds)
