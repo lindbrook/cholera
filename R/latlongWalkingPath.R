@@ -227,25 +227,46 @@ milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
 
   if (milepost.unit == "distance") {
     path.length <- sum(ds)
+    cumulative <- seg.data$cumulative.d
   } else if (milepost.unit == "time") {
     path.length <- path.data$time
     seg.data$t <- (3600L * seg.data$d) / (1000L * walking.speed)
     seg.data$cumulative.t <- cumsum(seg.data$t)
+    cumulative <- seg.data$cumulative.t
+  }
+
+  posts <- seq(0, path.length, milepost.interval)
+  if (max(posts) > path.length) posts <- posts[-length(posts)]
+
+  bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
+                     hi = cumulative)
+
+  seg.select <- vapply(posts, function(x) {
+    which(vapply(seq_len(nrow(bins)), function(i) {
+      x >= bins[i, "lo"] & x < bins[i, "hi"]
+    }, logical(1L)))
+  }, integer(1L))
+
+  if (all(seg.select == 1) & length(seg.select) > 1) {
+    milepost.seg.id <- unique(seg.select)
+  } else {
+    if (sum(seg.select == 1) > 1) {
+      milepost.seg.id <- c(1, seg.select[seg.select != 1L])
+    } else {
+      milepost.seg.id <- seg.select[seg.select != 1L]
+    }
+  }
+
+  segment.census <- table(milepost.seg.id)
+
+  if (any(segment.census > 1)) {
+    single.post.seg <- as.numeric(names(segment.census[segment.census == 1]))
+    multi.post.seg <- as.numeric(names(segment.census[segment.census > 1]))
+  } else {
+    single.post.seg <- milepost.seg.id
   }
 
   if (path.length > milepost.interval) {
-    if (milepost.unit == "distance") {
-      floor.id <- floor(seg.data$cumulative.d / milepost.interval)
-    } else if (milepost.unit == "time") {
-      floor.id <- floor(seg.data$cumulative.t / milepost.interval)
-    }
-
-    post.ids <- unique(floor.id[floor.id != 0])
-
-    milepost.seg.id <- vapply(post.ids, function(p) {
-      which(floor.id == p)[1]
-    }, integer(1L))
-
     origin <- data.frame(lon = min(cholera::roads$lon),
                          lat = min(cholera::roads$lat))
     topleft <- data.frame(lon = min(cholera::roads$lon),
@@ -254,45 +275,113 @@ milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
                               lat = min(cholera::roads$lat))
 
     milepost.values <- seq_along(milepost.seg.id) * milepost.interval
+    census <- data.frame(seg = milepost.seg.id, post = milepost.values)
 
-    arrow.data <- lapply(seq_along(milepost.seg.id), function(i) {
-      milepost <- milepost.values[i]
-      tmp <- seg.data[seg.data$id == milepost.seg.id[i], ]
-      endpt1 <- stats::setNames(tmp[, grep("1", names(tmp))], c("lon", "lat"))
-      endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], c("lon", "lat"))
-      latlong.tmp <- rbind(endpt1, endpt2)
+    if (any(segment.census > 1)) {
+      single.arrow.data <- lapply(seq_along(single.post.seg), function(i) {
+        seg.id <- single.post.seg[i]
+        post <- census[census$seg == seg.id, "post"]
+        tmp <- seg.data[seg.data$id == seg.id, ]
+        endpt1 <- stats::setNames(tmp[, grep("1", names(tmp))], c("lon", "lat"))
+        endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], c("lon", "lat"))
+        latlong.tmp <- rbind(endpt1, endpt2)
+        idx <- seq_along(latlong.tmp$lon)
+        meter.coords <- do.call(rbind, lapply(idx, function(i) {
+          tmp <- latlong.tmp[i, c("lon", "lat")]
+          x.proj <- c(tmp$lon, origin$lat)
+          y.proj <- c(origin$lon, tmp$lat)
+          m.lon <- geosphere::distGeo(y.proj, tmp)
+          m.lat <- geosphere::distGeo(x.proj, tmp)
+          data.frame(x = m.lon, y = m.lat)
+        }))
+        ols <- stats::lm(y ~ x, data = meter.coords)
+        seg.slope <- stats::coef(ols)[2]
+        theta <- atan(seg.slope)
+        if (milepost.unit == "distance") h <- tmp$cumulative.d - post
+        else if (milepost.unit == "time") h <- tmp$cumulative.t - post
+        arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
+        data.frame(x1 = meter.coords[2, "x"], y1 = meter.coords[2, "y"],
+                   x2 = arrow.point$x, y2 = arrow.point$y)
+      })
 
-      idx <- seq_along(latlong.tmp$lon)
-      meter.coords <- do.call(rbind, lapply(idx, function(i) {
-        tmp <- latlong.tmp[i, c("lon", "lat")]
-        x.proj <- c(tmp$lon, origin$lat)
-        y.proj <- c(origin$lon, tmp$lat)
-        m.lon <- geosphere::distGeo(y.proj, tmp)
-        m.lat <- geosphere::distGeo(x.proj, tmp)
-        data.frame(x = m.lon, y = m.lat)
-      }))
+      single.arrow.data <- do.call(rbind, single.arrow.data)
 
-      ols <- stats::lm(y ~ x, data = meter.coords )
-      seg.slope <- stats::coef(ols)[2]
-      theta <- atan(seg.slope)
+      multi.arrow.data <- lapply(seq_along(multi.post.seg), function(i) {
+        seg.id <- multi.post.seg[i]
+        posts <- census[census$seg %in% seg.id, "post"]
+        tmp <- seg.data[seg.data$id == seg.id, ]
+        vars <- c("lon", "lat")
+        endpt1 <- stats::setNames(tmp[, grep("1", names(tmp))], vars)
+        endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], vars)
+        latlong.tmp <- rbind(endpt1, endpt2)
+        idx <- seq_along(latlong.tmp$lon)
+        meter.coords <- do.call(rbind, lapply(idx, function(i) {
+          tmp <- latlong.tmp[i, c("lon", "lat")]
+          x.proj <- c(tmp$lon, origin$lat)
+          y.proj <- c(origin$lon, tmp$lat)
+          m.lon <- geosphere::distGeo(y.proj, tmp)
+          m.lat <- geosphere::distGeo(x.proj, tmp)
+          data.frame(x = m.lon, y = m.lat)
+        }))
+        ols <- stats::lm(y ~ x, data = meter.coords)
+        seg.slope <- stats::coef(ols)[2]
+        theta <- atan(seg.slope)
+        out <- lapply(posts, function(p) {
+          if (milepost.unit == "distance") h <- tmp$cumulative.d - p
+          else if (milepost.unit == "time") h <- tmp$cumulative.t - p
+          arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
+          data.frame(x1 = meter.coords[2, "x"],
+                     y1 = meter.coords[2, "y"],
+                     x2 = arrow.point$x,
+                     y2 = arrow.point$y)
+        })
+        do.call(rbind, out)
+      })
 
-      if (milepost.unit == "distance") h <- tmp$cumulative.d - milepost
-      else if (milepost.unit == "time") h <- tmp$cumulative.t - milepost
+      multi.arrow.data <- do.call(rbind, multi.arrow.data)
+      arrow.data <- rbind(single.arrow.data, multi.arrow.data)
 
-      arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
-      data.frame(x1 = meter.coords[2, "x"], y1 = meter.coords[2, "y"],
-        x2 = arrow.point$x, y2 = arrow.point$y)
-    })
+    } else {
+      single.arrow.data <- lapply(seq_along(single.post.seg), function(i) {
+        seg.id <- single.post.seg[i]
+        post <- census[census$seg == seg.id, "post"]
+        tmp <- seg.data[seg.data$id == seg.id, ]
+        endpt1 <- stats::setNames(tmp[, grep("1", names(tmp))], c("lon", "lat"))
+        endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], c("lon", "lat"))
+        latlong.tmp <- rbind(endpt1, endpt2)
+        idx <- seq_along(latlong.tmp$lon)
+        meter.coords <- do.call(rbind, lapply(idx, function(i) {
+          tmp <- latlong.tmp[i, c("lon", "lat")]
+          x.proj <- c(tmp$lon, origin$lat)
+          y.proj <- c(origin$lon, tmp$lat)
+          m.lon <- geosphere::distGeo(y.proj, tmp)
+          m.lat <- geosphere::distGeo(x.proj, tmp)
+          data.frame(x = m.lon, y = m.lat)
+        }))
+        ols <- stats::lm(y ~ x, data = meter.coords)
+        seg.slope <- stats::coef(ols)[2]
+        theta <- atan(seg.slope)
+        if (milepost.unit == "distance") h <- tmp$cumulative.d - post
+        else if (milepost.unit == "time") h <- tmp$cumulative.t - post
+        arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
+        data.frame(x1 = meter.coords[2, "x"], y1 = meter.coords[2, "y"],
+                   x2 = arrow.point$x, y2 = arrow.point$y)
+      })
 
-    arrow.data <- do.call(rbind, arrow.data)
-    arrow.tail <- stats::setNames(arrow.data[, c("x1", "y1")], c("x", "y"))
-    arrow.head <- stats::setNames(arrow.data[, c("x2", "y2")], c("x", "y"))
+      arrow.data <- do.call(rbind, single.arrow.data)
+    }
+
+    vars <- c("x", "y")
+    arrow.tail <- stats::setNames(arrow.data[, paste0(vars, 1)], vars)
+    arrow.head <- stats::setNames(arrow.data[, paste0(vars, 2)], vars)
     arrow.tail <- meterLatLong(arrow.tail, origin, topleft, bottomright)
     arrow.head <- meterLatLong(arrow.head, origin, topleft, bottomright)
     arrow.tail <- arrow.tail[order(row.names(arrow.tail)), ]
     arrow.head <- arrow.head[order(row.names(arrow.head)), ]
-    out <- list(seg.data = seg.data, arrow.head = arrow.head,
-      arrow.tail = arrow.tail)
+    out <- list(seg.data = seg.data,
+                arrow.head = arrow.head,
+                arrow.tail = arrow.tail)
+
   } else {
     out <- list(seg.data = seg.data)
   }
