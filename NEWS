@@ -2,6 +2,7 @@ cholera 0.7.9.9094
 ==================
 
 - fix/amend milePosts() for distance and time.
+- add/use arrowData() in milePosts().
 
 
 cholera 0.7.9.9093
