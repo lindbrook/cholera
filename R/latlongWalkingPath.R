@@ -60,8 +60,8 @@ latlongWalkingPath <- function(case = 1, vestry = FALSE,
     pump.name = pump[pump$id == destination.pump, "street"],
     pump = destination.pump, distance = path.length, time = trip.time)
 
-  output <- list(path = path, data = data, pump = pump, ds = ds,
-                 distance.unit = distance.unit, time.unit = time.unit,
+  output <- list(path = path, data = data, pump = pump, vestry = vestry,
+                 ds = ds, distance.unit = distance.unit, time.unit = time.unit,
                  walking.speed = walking.speed)
   class(output) <- "latlong_walking_path"
   output
@@ -74,17 +74,19 @@ latlongWalkingPath <- function(case = 1, vestry = FALSE,
 #' @param mileposts Logical. Plot mile/time posts.
 #' @param milepost.unit Character. "distance" or "time".
 #' @param milepost.interval Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).
+#' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
 plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
-  milepost.unit = "distance", milepost.interval = NULL, ...) {
+  milepost.unit = "distance", milepost.interval = NULL, alpha.level = 1, ...) {
 
   path.data <- x$data
   case <- path.data$case
   destination.pump <- path.data$pump
   pump <- x$pump
+  colors <- snowColors(x$vestry)
   dat <- x$path
   ds <- x$ds
   distance.unit <- x$distance.unit
@@ -151,11 +153,14 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   points(fatality[fatality$case == case, vars], col = "red", pch = 1)
   text(fatality[fatality$case == case, vars], pos = 1, labels = case,
     col = "red")
-  points(pump[, vars], col = "blue", pch = 24)
-  text(pump[, vars], col = "blue", pos = 1, labels = paste0("p", pump$id))
+  points(pump[, vars], pch = 24, col = grDevices::adjustcolor(colors,
+    alpha.f = alpha.level))
+  text(pump[, vars], pos = 1, labels = paste0("p", pump$id))
   points(dat[1, c("x", "y")], col = "dodgerblue", pch = 0)
   points(dat[nrow(dat), c("x", "y")], col = "dodgerblue", pch = 0)
-  drawPathB(dat, "blue")
+
+  p.sel <- paste0("p", destination.pump)
+  drawPathB(dat, grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level))
 
   if (milepost.unit == "distance") {
     if (distance.unit == "meter") {
@@ -178,10 +183,12 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   if (mileposts) {
     arrows(seg.data[1, "x2"], seg.data[1, "y2"],
            seg.data[1, "x1"], seg.data[1, "y1"],
-           length = 0.0875, col = "blue", lwd = 3)
+           length = 0.0875, lwd = 3,
+           col = grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level))
     if (path.length >= milepost.interval) {
       arrows(arrow.tail$lon, arrow.tail$lat, arrow.head$lon, arrow.head$lat,
-        length = 0.0875, col = "blue", lwd = 3)
+        length = 0.0875, lwd = 3,
+        col = grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level))
     }
   }
 }

@@ -5,7 +5,8 @@
 \title{Plot the walking path between selected cases and/or pumps.}
 \usage{
 \method{plot}{latlong_walking_path}(x, zoom = TRUE, mileposts = TRUE,
-  milepost.unit = "distance", milepost.interval = NULL, ...)
+  milepost.unit = "distance", milepost.interval = NULL, alpha.level = 1,
+  ...)
 }
 \arguments{
 \item{x}{An object of class "latlong_walking_path" created by latlongWalkingPath().}
@@ -17,6 +18,8 @@
 \item{milepost.unit}{Character. "distance" or "time".}
 
 \item{milepost.interval}{Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).}
+
+\item{alpha.level}{Numeric. Alpha level transparency for path: a value in [0, 1].}
 
 \item{...}{Additional plotting parameters.}
 }

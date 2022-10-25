@@ -153,8 +153,8 @@ latlongNeighborhoodVoronoi(euclidean.paths = TRUE)
 ```
 
 ```{r latlong_walking_path, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
-plot(walkingPath())
-plot(latlongWalkingPath())
+plot(walkingPath(578))
+plot(latlongWalkingPath(578))
 ```
 
 #### vignettes
