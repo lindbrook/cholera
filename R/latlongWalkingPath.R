@@ -147,9 +147,9 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   plot(rd[, vars], pch = NA, asp = 1.6, xlim = xlim, ylim = ylim)
   roads.list <- split(rd[, vars], rd$street)
   frame.list <- split(frame[, vars], frame$street)
-  invisible(lapply(roads.list, lines, col = "gray"))
+  invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(frame.list, lines))
-  points(fatality[, vars], col = "gray", pch = 16, cex = 0.5)
+  points(fatality[, vars], col = "lightgray", pch = 16, cex = 0.5)
   points(fatality[fatality$case == case, vars], col = "red", pch = 1)
   text(fatality[fatality$case == case, vars], pos = 1, labels = case,
     col = "red")
