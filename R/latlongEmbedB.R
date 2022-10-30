@@ -17,6 +17,7 @@ latlongEmbedB <- function(vestry = FALSE, multi.core = TRUE) {
   no_embeds <- road.data[!road.data$id %in% obs.segs, ]
 
   vars <- c("lon", "lat")
+  vars2 <- c(vars, "case", "pump")
 
   embeds <- lapply(obs.segs, function(s) {
     rd.tmp <- road.data[road.data$id == s, ]
@@ -34,11 +35,11 @@ latlongEmbedB <- function(vestry = FALSE, multi.core = TRUE) {
     if (nrow(addr.tmp) > 0 & nrow(pump.tmp) > 0) {
       addr.embed$pump <- 0
       pump.embed$case <- 0
-      pump.embed <- pump.embed[, c("lon", "lat", "case", "pump")]
+      pump.embed <- pump.embed[, vars2]
       embed.data <- rbind(endpts, addr.embed, pump.embed)
     } else if (nrow(addr.tmp) == 0 & nrow(pump.tmp) > 0) {
       pump.embed$case <- 0
-      pump.embed <- pump.embed[, c("lon", "lat", "case", "pump")]
+      pump.embed <- pump.embed[, vars2]
       embed.data <- rbind(endpts, pump.embed)
     } else if (nrow(addr.tmp) > 0 & nrow(pump.tmp) == 0) {
       addr.embed$pump <- 0
@@ -51,10 +52,13 @@ latlongEmbedB <- function(vestry = FALSE, multi.core = TRUE) {
     coord.nms <- paste0(names(tmp), c(rep(1, 2), rep(2, 2)))
     names(tmp) <- coord.nms
     tmp <- cbind(tmp, rd.tmp[, c("street", "id", "name")])
-    tmp[, c("street", "id", "name", coord.nms)]
+    edges <- tmp[, c("street", "id", "name", coord.nms)]
+    list(edges = edges, nodes = out)
   })
 
-  embeds <- do.call(rbind, embeds)
-  out <- rbind(embeds, no_embeds[, names(embeds)])
-  out[order(out$street), ]
+  edges <- do.call(rbind, lapply(embeds, function(x) x$edges))
+  edges <- rbind(edges, no_embeds[, names(edges)])
+  edges <- edges[order(edges$street), ]
+  nodes <- do.call(rbind, lapply(embeds, function(x) x$nodes))
+  list(edges = edges, nodes = nodes)
 }
