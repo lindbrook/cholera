@@ -1,68 +1,143 @@
 #' Plot walking path to nearest pump (prototype).
 #'
 #' @param case Numeric.
+#' @param destination Numeric. Pump ID.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
+#' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 
-latlongWalkingPath <- function(case = 1, vestry = FALSE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5) {
+latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
+  weighted = TRUE, distance.unit = "meter", time.unit = "second",
+  walking.speed = 5, multi.core = TRUE) {
+
+  cores <- multiCore(multi.core)
 
   if (!case %in% cholera::fatalities$case) {
     stop("Valid cases range from 1 to 578.", call. = FALSE)
   } else {
     anchor <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor"]
-    case.id <- which(cholera::fatalities.address$anchor == anchor)
   }
 
   meter.to.yard <- 1.09361
 
-  if (vestry) {
-    pump <- cholera::pumps.vestry
-    nearest.pump <- cholera::latlong.nearest.pump.vestry
+  if (!is.null(destination)) {
+    if (any(destination == 2L)) {
+      message('Pump 2 is a technical isolate. Already not considered.')
+    }
+
+    network.data <- latlongNeighborhoodDataB()
+
+    edge.list <- network.data$edge.list
+    edges <- network.data$edges
+    g <- network.data$g
+    nodes <- network.data$nodes
+    nodes$node <- paste0(nodes$lon, "-", nodes$lat)
+
+    ego.node <- nodes[nodes$case == anchor, "node"]
+    alter.node <- nodes[nodes$pump == destination, "node"]
+
+    d <- c(igraph::distances(g, ego.node, alter.node, weights = edges$d))
+
+    p <- igraph::shortest_paths(g, ego.node, alter.node,
+      weights = edges$d)$vpath
+
+    p <- names(unlist(p))
+
+    p.data <- do.call(rbind, lapply(p, function(x) {
+      as.numeric(unlist(strsplit(x[1], "-"))[-1])
+    }))
+
+    path <- data.frame(id = seq_len(nrow(p.data)),
+                        x = -p.data[, 1],
+                        y = p.data[, 2])
+
+    vars <- c("x", "y")
+
+    ds <- vapply(seq_len(nrow(path[-1, ])), function(i) {
+      geosphere::distGeo(path[i, vars], path[i + 1, vars])
+    }, numeric(1L))
+
+    if (time.unit == "hour") {
+      walking.time <- d / (1000L * walking.speed)
+    } else if (time.unit == "minute") {
+      walking.time <- (60L * d) / (1000L * walking.speed)
+    } else if (time.unit == "second") {
+      walking.time <- (3600L * d) / (1000L * walking.speed)
+    }
+
+    p.nm <- cholera::pumps[cholera::pumps$id == destination, "street"]
+
+    data.summary <- data.frame(case = case, anchor = anchor, pump.name = p.nm,
+      pump = destination, distance = d, time = walking.time)
+
+    output <- list(path = path,
+                   data = data.summary,
+                   destination = destination,
+                   vestry = vestry,
+                   ds = ds,
+                   distance.unit = distance.unit,
+                   time.unit = time.unit,
+                   walking.speed = walking.speed)
+
   } else {
-    pump <- cholera::pumps
-    nearest.pump <- cholera::latlong.nearest.pump
+    case.id <- which(cholera::fatalities.address$anchor == anchor)
+
+    if (vestry) {
+      pump <- cholera::pumps.vestry
+      nearest.pump <- cholera::latlong.nearest.pump.vestry
+    } else {
+      pump <- cholera::pumps
+      nearest.pump <- cholera::latlong.nearest.pump
+    }
+
+    p <- names(nearest.pump$path[[case.id]][[1]])
+    destination.pump <- names(nearest.pump$path[[case.id]])
+    nodes <- do.call(rbind, strsplit(p, "-"))
+    dat <- data.frame(x = -as.numeric(nodes[, 2]), y = as.numeric(nodes[, 3]))
+
+    ds <- vapply(seq_len(nrow(dat[-1, ])), function(i) {
+      geosphere::distGeo(dat[i, ], dat[i + 1, ])
+    }, numeric(1L))
+
+    if (distance.unit == "meter") {
+      speed <- walking.speed
+    } else if (distance.unit == "yard") {
+      speed <- walking.speed * meter.to.yard
+      ds <- ds * meter.to.yard
+    } else {
+      stop('distance.unit must be "meter" or "yard".')
+    }
+
+    path.length <- sum(ds)
+
+    if (time.unit == "hour") {
+      trip.time <- path.length / (1000L * speed)
+    } else if (time.unit == "minute") {
+      trip.time <- (60L * path.length) / (1000L * speed)
+    } else if (time.unit == "second") {
+      trip.time <- (3600L * path.length) / (1000L * speed)
+    }
+
+    path <- data.frame(id = seq_along(dat$x), dat)
+
+    data.summary <- data.frame(case = case, anchor = anchor,
+      pump.name = pump[pump$id == destination.pump, "street"],
+      pump = destination.pump, distance = path.length, time = trip.time)
+
+    output <- list(path = path,
+                   data = data.summary,
+                   destination = destination,
+                   vestry = vestry,
+                   ds = ds,
+                   distance.unit = distance.unit,
+                   time.unit = time.unit,
+                   walking.speed = walking.speed)
   }
 
-  p <- names(nearest.pump$path[[case.id]][[1]])
-  destination.pump <- names(nearest.pump$path[[case.id]])
-  nodes <- do.call(rbind, strsplit(p, "-"))
-  dat <- data.frame(x = -as.numeric(nodes[, 2]), y = as.numeric(nodes[, 3]))
-
-  ds <- vapply(seq_len(nrow(dat[-1, ])), function(i) {
-    geosphere::distGeo(dat[i, ], dat[i + 1, ])
-  }, numeric(1L))
-
-  if (distance.unit == "meter") {
-    speed <- walking.speed
-  } else if (distance.unit == "yard") {
-    speed <- walking.speed * meter.to.yard
-    ds <- ds * meter.to.yard
-  } else {
-    stop('distance.unit must be "meter" or "yard".')
-  }
-
-  path.length <- sum(ds)
-
-  if (time.unit == "hour") {
-    trip.time <- path.length / (1000L * speed)
-  } else if (time.unit == "minute") {
-    trip.time <- (60L * path.length) / (1000L * speed)
-  } else if (time.unit == "second") {
-    trip.time <- (3600L * path.length) / (1000L * speed)
-  }
-
-  path <- data.frame(id = seq_along(dat$x), dat)
-  data <- data.frame(case = case, anchor = anchor,
-    pump.name = pump[pump$id == destination.pump, "street"],
-    pump = destination.pump, distance = path.length, time = trip.time)
-
-  output <- list(path = path, data = data, pump = pump, vestry = vestry,
-                 ds = ds, distance.unit = distance.unit, time.unit = time.unit,
-                 walking.speed = walking.speed)
   class(output) <- "latlong_walking_path"
   output
 }
@@ -84,8 +159,8 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
 
   path.data <- x$data
   case <- path.data$case
-  destination.pump <- path.data$pump
-  pump <- x$pump
+  destination <- x$destination
+  pump <- cholera::pumps
   colors <- snowColors(x$vestry)
   dat <- x$path
   ds <- x$ds
@@ -118,7 +193,7 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
       }
     }
     milepost.data <- milePosts(path.data, dat, ds, milepost.unit,
-      milepost.interval, distance.unit, time.unit, walking.speed)
+      milepost.interval, distance.unit, time.unit, walking.speed, destination)
     seg.data <- milepost.data$seg.data
     if (path.length > milepost.interval) {
       arrow.head <- milepost.data$arrow.head
@@ -159,7 +234,7 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   points(dat[1, c("x", "y")], col = "dodgerblue", pch = 0)
   points(dat[nrow(dat), c("x", "y")], col = "dodgerblue", pch = 0)
 
-  p.sel <- paste0("p", destination.pump)
+  p.sel <- paste0("p", path.data$pump)
   drawPathB(dat, grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level))
 
   if (milepost.unit == "distance") {
@@ -177,7 +252,8 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   d <- paste(round(path.length, 1), d.unit)
   t <- paste(round(x$data$time), paste0(time.unit, "s"), "@", walking.speed,
     "km/hr")
-  title(main = paste("Case", case, "to Pump", destination.pump),
+
+  title(main = paste("Case", case, "to Pump", path.data$pump),
         sub = paste(d, t, post.info, sep = "; "))
 
   if (mileposts) {
@@ -217,9 +293,10 @@ drawPathB <- function(x, case.color) {
 }
 
 milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
-  distance.unit, time.unit, walking.speed) {
+  distance.unit, time.unit, walking.speed, destination) {
 
   rev.data <- dat[order(dat$id, decreasing = TRUE), ]
+
   vars <- c("x", "y")
   seg.vars <- c(paste0(vars, 1), paste0(vars, 2))
 
@@ -243,6 +320,7 @@ milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
   }
 
   posts <- seq(0, path.length, milepost.interval)
+
   if (max(posts) > path.length) posts <- posts[-length(posts)]
 
   bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
@@ -295,16 +373,14 @@ milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
         milepost.unit)
     }
 
-    vars <- c("x", "y")
     arrow.tail <- stats::setNames(arrow.data[, paste0(vars, 1)], vars)
     arrow.head <- stats::setNames(arrow.data[, paste0(vars, 2)], vars)
     arrow.tail <- meterLatLong(arrow.tail, origin, topleft, bottomright)
     arrow.head <- meterLatLong(arrow.head, origin, topleft, bottomright)
     arrow.tail <- arrow.tail[order(row.names(arrow.tail)), ]
     arrow.head <- arrow.head[order(row.names(arrow.head)), ]
-    out <- list(seg.data = seg.data,
-                arrow.head = arrow.head,
-                arrow.tail = arrow.tail)
+    out <- list(seg.data = seg.data, arrow.head = arrow.head,
+      arrow.tail = arrow.tail)
 
   } else {
     out <- list(seg.data = seg.data)
