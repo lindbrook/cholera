@@ -4,19 +4,26 @@
 \alias{latlongWalkingPath}
 \title{Plot walking path to nearest pump (prototype).}
 \usage{
-latlongWalkingPath(case = 1, vestry = FALSE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5)
+latlongWalkingPath(case = 1, destination = NULL, vestry = FALSE,
+  weighted = TRUE, distance.unit = "meter", time.unit = "second",
+  walking.speed = 5, multi.core = TRUE)
 }
 \arguments{
 \item{case}{Numeric.}
 
+\item{destination}{Numeric. Pump ID.}
+
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
+
+\item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 
 \item{distance.unit}{Character. Unit of distance: "meter" or "yard".}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
 \description{
 Plot walking path to nearest pump (prototype).
