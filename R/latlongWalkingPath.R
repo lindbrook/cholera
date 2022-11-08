@@ -14,6 +14,7 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
   weighted = TRUE, distance.unit = "meter", time.unit = "second",
   walking.speed = 5, multi.core = TRUE) {
 
+  meter.to.yard <- 1.09361
   cores <- multiCore(multi.core)
 
   if (!case %in% cholera::fatalities$case) {
@@ -21,8 +22,6 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
   } else {
     anchor <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor"]
   }
-
-  meter.to.yard <- 1.09361
 
   if (!is.null(destination)) {
     if (any(destination == 2L)) {
@@ -219,6 +218,7 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   } else stop("zoom must either be logical or numeric.")
 
   vars <- c("lon", "lat")
+
   plot(rd[, vars], pch = NA, asp = 1.6, xlim = xlim, ylim = ylim)
   roads.list <- split(rd[, vars], rd$street)
   frame.list <- split(frame[, vars], frame$street)
@@ -235,7 +235,8 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   points(dat[nrow(dat), c("x", "y")], col = "dodgerblue", pch = 0)
 
   p.sel <- paste0("p", path.data$pump)
-  drawPathB(dat, grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level))
+  case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
+  drawPathB(dat, case.color)
 
   if (milepost.unit == "distance") {
     if (distance.unit == "meter") {
@@ -288,8 +289,7 @@ drawPathB <- function(x, case.color) {
   path.data <- x
   n1 <- path.data[1:(nrow(path.data) - 1), ]
   n2 <- path.data[2:nrow(path.data), ]
-  segments(n1$x, n1$y, n2$x, n2$y, lwd = 3,
-    col = grDevices::adjustcolor(case.color, alpha.f = 1))
+  segments(n1$x, n1$y, n2$x, n2$y, lwd = 3, col = case.color)
 }
 
 milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
@@ -381,7 +381,6 @@ milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
     arrow.head <- arrow.head[order(row.names(arrow.head)), ]
     out <- list(seg.data = seg.data, arrow.head = arrow.head,
       arrow.tail = arrow.tail)
-
   } else {
     out <- list(seg.data = seg.data)
   }
