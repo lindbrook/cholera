@@ -260,12 +260,38 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   if (mileposts) {
     arrows(seg.data[1, "x2"], seg.data[1, "y2"],
            seg.data[1, "x1"], seg.data[1, "y1"],
-           length = 0.0875, lwd = 3,
-           col = grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level))
+           length = 0.0875, lwd = 3, col = case.color)
     if (path.length >= milepost.interval) {
+      # dotchart(log(abs(arrow.tail$lon - arrow.head$lon)))
+      # dotchart(log(abs(arrow.tail$lat - arrow.head$lat)))
+      cutpoint <- -13
+
+      zero.length.lon <- log(abs(arrow.tail$lon - arrow.head$lon)) < cutpoint
+      zero.length.lat <- log(abs(arrow.tail$lat - arrow.head$lat)) < cutpoint
+
+      if (any(zero.length.lon | zero.length.lat)) {
+        zero.id <- unique(row.names(arrow.head[zero.length.lon, ]),
+                          row.names(arrow.head[zero.length.lat, ]))
+
+        angle <- vapply(zero.id, function(id) {
+          zero.arrow <- rbind(arrow.tail[id, vars], arrow.head[id, vars])
+          ols <- stats::lm(lat ~ lon, data = zero.arrow)
+          slope <- stats::coef(ols)[2]
+          theta <- atan(slope)
+          theta * 180L / pi
+        }, numeric(1L))
+
+        invisible(lapply(seq_along(zero.id), function(i) {
+          text(arrow.head[zero.id[i], vars], labels = "<", srt = angle[i],
+            col = case.color, cex = 1.25)
+        }))
+
+        arrow.head <- arrow.head[!row.names(arrow.head) %in% zero.id, ]
+        arrow.tail <- arrow.tail[!row.names(arrow.tail) %in% zero.id, ]
+      }
+
       arrows(arrow.tail$lon, arrow.tail$lat, arrow.head$lon, arrow.head$lat,
-        length = 0.0875, lwd = 3,
-        col = grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level))
+        length = 0.0875, lwd = 3, col = case.color)
     }
   }
 }
