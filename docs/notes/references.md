@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2022-08-31
+2022-11-09
 
 Herve Bazin. 2000. *The Eradication of Smallpox: Edward Jenner and the
 First and Only Eradication of a Human Infectious Disease*. San Diego:
@@ -71,6 +71,9 @@ Relationship Between Classes in Victorian Society*. London: Verso.
 
 Jill Lepore. 2020. “The Invention of the Police.” *The New Yorker*. July
 13.
+
+Deirdre Mask. 2020. *The Address Book: What Street Addresses Reveal
+about Identity, Race, Wealth, and Power*. New York: St Martin’s Griffin.
 
 R. J. Morris. 1976. *Cholera 1832: The Social Response to An Epidemic*.
 New York: Holmes & Meier.
