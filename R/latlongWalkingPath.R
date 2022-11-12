@@ -33,7 +33,7 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
 
   if (!is.null(destination)) {
     if (any(destination == 2L)) {
-      message('Pump 2 is a technical isolate. Already not considered.')
+      stop('Pump 2 is a technical isolate. Not reachable', call. = FALSE)
     }
 
     network.data <- latlongNeighborhoodDataB(vestry = vestry)

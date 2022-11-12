@@ -2,6 +2,7 @@ cholera 0.7.9.9101
 ==================
 
 - fix latlongWalkingPath(vestry = TRUE).
+- change message() to stop() for pump 2.
 
 
 cholera 0.7.9.9100
