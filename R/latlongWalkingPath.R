@@ -23,13 +23,20 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
     anchor <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor"]
   }
 
+  if (vestry) {
+    pmp <- cholera::pumps.vestry
+    nearest.pump <- cholera::latlong.nearest.pump.vestry
+  } else {
+    pmp <- cholera::pumps
+    nearest.pump <- cholera::latlong.nearest.pump
+  }
+
   if (!is.null(destination)) {
     if (any(destination == 2L)) {
       message('Pump 2 is a technical isolate. Already not considered.')
     }
 
-    network.data <- latlongNeighborhoodDataB()
-
+    network.data <- latlongNeighborhoodDataB(vestry = vestry)
     edge.list <- network.data$edge.list
     edges <- network.data$edges
     g <- network.data$g
@@ -68,7 +75,7 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
       walking.time <- (3600L * d) / (1000L * walking.speed)
     }
 
-    p.nm <- cholera::pumps[cholera::pumps$id == destination, "street"]
+    p.nm <- pmp[pmp$id == destination, "street"]
 
     data.summary <- data.frame(case = case, anchor = anchor, pump.name = p.nm,
       pump = destination, distance = d, time = walking.time)
@@ -79,20 +86,12 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
                    vestry = vestry,
                    ds = ds,
                    distance.unit = distance.unit,
+                   pmp = pmp,
                    time.unit = time.unit,
                    walking.speed = walking.speed)
 
   } else {
     case.id <- which(cholera::fatalities.address$anchor == anchor)
-
-    if (vestry) {
-      pump <- cholera::pumps.vestry
-      nearest.pump <- cholera::latlong.nearest.pump.vestry
-    } else {
-      pump <- cholera::pumps
-      nearest.pump <- cholera::latlong.nearest.pump
-    }
-
     p <- names(nearest.pump$path[[case.id]][[1]])
     destination.pump <- names(nearest.pump$path[[case.id]])
     nodes <- do.call(rbind, strsplit(p, "-"))
@@ -124,7 +123,7 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
     path <- data.frame(id = seq_along(dat$x), dat)
 
     data.summary <- data.frame(case = case, anchor = anchor,
-      pump.name = pump[pump$id == destination.pump, "street"],
+      pump.name = pmp[pmp$id == destination.pump, "street"],
       pump = destination.pump, distance = path.length, time = trip.time)
 
     output <- list(path = path,
@@ -133,6 +132,7 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
                    vestry = vestry,
                    ds = ds,
                    distance.unit = distance.unit,
+                   pmp = pmp,
                    time.unit = time.unit,
                    walking.speed = walking.speed)
   }
@@ -159,11 +159,11 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   path.data <- x$data
   case <- path.data$case
   destination <- x$destination
-  pump <- cholera::pumps
   colors <- snowColors(x$vestry)
   dat <- x$path
   ds <- x$ds
   distance.unit <- x$distance.unit
+  pmp <- x$pmp
   time.unit <- x$time.unit
   walking.speed <- x$walking.speed
 
@@ -228,9 +228,9 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   points(fatality[fatality$case == case, vars], col = "red", pch = 1)
   text(fatality[fatality$case == case, vars], pos = 1, labels = case,
     col = "red")
-  points(pump[, vars], pch = 24, col = grDevices::adjustcolor(colors,
+  points(pmp[, vars], pch = 24, col = grDevices::adjustcolor(colors,
     alpha.f = alpha.level))
-  text(pump[, vars], pos = 1, labels = paste0("p", pump$id))
+  text(pmp[, vars], pos = 1, labels = paste0("p", pmp$id))
   points(dat[1, c("x", "y")], col = "dodgerblue", pch = 0)
   points(dat[nrow(dat), c("x", "y")], col = "dodgerblue", pch = 0)
 
