@@ -25,15 +25,13 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
 
   if (vestry) {
     pmp <- cholera::pumps.vestry
-    nearest.pump <- cholera::latlong.nearest.pump.vestry
   } else {
     pmp <- cholera::pumps
-    nearest.pump <- cholera::latlong.nearest.pump
   }
 
   if (!is.null(destination)) {
     if (any(destination == 2L)) {
-      stop('Pump 2 is a technical isolate. Not reachable', call. = FALSE)
+      stop('Pump 2 is a technical isolate. Not reachable.', call. = FALSE)
     }
 
     network.data <- latlongNeighborhoodDataB(vestry = vestry)
@@ -89,8 +87,13 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
                    pmp = pmp,
                    time.unit = time.unit,
                    walking.speed = walking.speed)
-
   } else {
+    if (vestry) {
+      nearest.pump <- cholera::latlong.nearest.pump.vestry
+    } else {
+      nearest.pump <- cholera::latlong.nearest.pump
+    }
+
     case.id <- which(cholera::fatalities.address$anchor == anchor)
     p <- names(nearest.pump$path[[case.id]][[1]])
     destination.pump <- names(nearest.pump$path[[case.id]])
