@@ -12,6 +12,10 @@ knitr::opts_chunk$set(
 )
 ```
 
+Peter Ackroyd. 2000 (2003). _London: The Biography_. New York: Anchor Books.
+
+Peter Ackroyd. 2011. _London Under: The Secret History Beneath the Streets_. New York: Nan A. Talese/Doubleday.
+
 Herve Bazin. 2000. _The Eradication of Smallpox: Edward Jenner and the First and Only Eradication of a Human Infectious Disease_. San Diego: Academic Press.
 
 John Broich. 2013. _London: Water and the Making of the Modern City_. Pittsburgh: University of Pittsburgh Press.

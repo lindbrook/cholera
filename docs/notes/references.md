@@ -1,7 +1,13 @@
 references
 ================
 lindbrook
-2022-11-09
+2022-11-20
+
+Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
+Books.
+
+Peter Ackroyd. 2011. *London Under: The Secret History Beneath the
+Streets*. New York: Nan A. Talese/Doubleday.
 
 Herve Bazin. 2000. *The Eradication of Smallpox: Edward Jenner and the
 First and Only Eradication of a Human Infectious Disease*. San Diego:
