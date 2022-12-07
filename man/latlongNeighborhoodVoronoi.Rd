@@ -4,15 +4,12 @@
 \alias{latlongNeighborhoodVoronoi}
 \title{Compute Voronoi pump neighborhoods (lat-long prototype).}
 \usage{
-latlongNeighborhoodVoronoi(pump.select = NULL, vestry = FALSE,
-  euclidean.paths = FALSE)
+latlongNeighborhoodVoronoi(pump.select = NULL, vestry = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
-
-\item{euclidean.paths}{Logical. Currently separate classification check.}
 }
 \description{
 Group cases into neighborhoods using Voronoi tessellation.

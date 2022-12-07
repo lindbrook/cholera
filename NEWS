@@ -1,3 +1,10 @@
+cholera 0.7.9.9102
+==================
+
+- add latlongNeighborhoodVoronoiB().
+- add S3 implementation of latlongNeighborhoodVoronoi().
+
+
 cholera 0.7.9.9101
 ==================
 

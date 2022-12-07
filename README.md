@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9101-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9102-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -229,7 +229,7 @@ snowMap(latlong = TRUE)
 
 ``` r
 plot(neighborhoodVoronoi(), euclidean.paths = TRUE)
-latlongNeighborhoodVoronoi(euclidean.paths = TRUE)
+plot(latlongNeighborhoodVoronoi(), euclidean.paths = TRUE)
 ```
 
 <img src="man/figures/README-latlong_voronoi-1.png" width="50%" /><img src="man/figures/README-latlong_voronoi-2.png" width="50%" />
