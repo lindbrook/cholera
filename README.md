@@ -229,7 +229,7 @@ snowMap(latlong = TRUE)
 
 ``` r
 plot(neighborhoodVoronoi(), euclidean.paths = TRUE)
-latlongNeighborhoodVoronoi(euclidean.paths = TRUE)
+plot(latlongNeighborhoodVoronoi(), euclidean.paths = TRUE)
 ```
 
 <img src="man/figures/README-latlong_voronoi-1.png" width="50%" /><img src="man/figures/README-latlong_voronoi-2.png" width="50%" />
