@@ -68,8 +68,8 @@ plot.latlongNeighborhoodVoronoiB <- function(x, add.cases = TRUE,
     if (is.null(pump.select)) p.id <- x$pmp$id
     else p.id <- pump.select
 
-    nearest.pump <- do.call(rbind, lapply(cases$anchor, function(x) {
-      m1 <- as.matrix(cases[cases$anchor == x, vars])
+    nearest.pump <- do.call(rbind, lapply(cases$anchor, function(a) {
+      m1 <- as.matrix(cases[cases$anchor == a, vars])
       d <- vapply(p.id, function(p) {
         m2 <- as.matrix(x$pmp[x$pmp$id == p, vars])
         sp::spDistsN1(m1, m2, longlat = TRUE) * 1000L
@@ -77,12 +77,12 @@ plot.latlongNeighborhoodVoronoiB <- function(x, add.cases = TRUE,
       near.id <- which.min(d)
       if (is.null(pump.select)) p.nr <- x$pmp$id[near.id]
       else p.nr <- p.id[near.id]
-      data.frame(case = x, pump = p.nr, meters = d[near.id])
+      data.frame(case = a, pump = p.nr, meters = d[near.id])
     }))
 
-    invisible(lapply(nearest.pump$case, function(x) {
-      ego <- cases[cases$anchor == x, vars]
-      p <- nearest.pump[nearest.pump$case == x, "pump"]
+    invisible(lapply(nearest.pump$case, function(c) {
+      ego <- cases[cases$anchor == c, vars]
+      p <- nearest.pump[nearest.pump$case == c, "pump"]
       alter <- x$pmp[x$pmp$id == p, vars]
       segments(ego$lon, ego$lat, alter$lon, alter$lat,
                col = snow.colors[paste0("p", p)], lwd = 0.5)
