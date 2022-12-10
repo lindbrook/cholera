@@ -34,7 +34,7 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
       stop('Pump 2 is a technical isolate. Not reachable.', call. = FALSE)
     }
 
-    network.data <- latlongNeighborhoodDataB(vestry = vestry)
+    network.data <- latlongNeighborhoodData(vestry = vestry)
     edge.list <- network.data$edge.list
     edges <- network.data$edges
     g <- network.data$g

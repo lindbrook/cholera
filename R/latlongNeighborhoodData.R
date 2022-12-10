@@ -1,15 +1,17 @@
 #' Compute network graph of roads, cases and pumps.
 #'
 #' Assembles cases, pumps and road into a network graph.
-#' @param path Character. e.g., "~/Documents/Data/"
 #' @param vestry Logical.
 #' @export
 
-latlongNeighborhoodData <- function(path, vestry = FALSE) {
-  dat <- latlongEmbed(path, vestry = vestry)
-  dat$node1 <- paste0(dat$lon1, "-", dat$lat1)
-  dat$node2 <- paste0(dat$lon2, "-", dat$lat2)
-  edge.list <- dat[, c("node1", "node2")]
+latlongNeighborhoodData <- function(vestry = FALSE) {
+  dat <- latlongEmbed(vestry = vestry)
+
+  edges <- dat$edges
+  edges$node1 <- paste0(edges$lon1, "-", edges$lat1)
+  edges$node2 <- paste0(edges$lon2, "-", edges$lat2)
+  edge.list <- edges[, c("node1", "node2")]
+
   g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
 
   edges <- attributes(igraph::E(g))$vname
@@ -27,7 +29,7 @@ latlongNeighborhoodData <- function(path, vestry = FALSE) {
   })
   edges <- do.call(rbind, edges)
 
-  out <- list(edge.list = edge.list, g = g, edges = edges)
+  out <- list(edge.list = edge.list, g = g, edges = edges, nodes = dat$nodes)
   class(out) <- "latlong_neighborhood_data"
   out
 }

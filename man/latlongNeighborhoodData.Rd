@@ -4,11 +4,9 @@
 \alias{latlongNeighborhoodData}
 \title{Compute network graph of roads, cases and pumps.}
 \usage{
-latlongNeighborhoodData(path, vestry = FALSE)
+latlongNeighborhoodData(vestry = FALSE)
 }
 \arguments{
-\item{path}{Character. e.g., "~/Documents/Data/"}
-
 \item{vestry}{Logical.}
 }
 \description{

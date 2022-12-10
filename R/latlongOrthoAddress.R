@@ -1,71 +1,116 @@
 #' Compute latitude and longitude for orthogonal case projection (address).
 #'
-#' @param path Character. e.g., "~/Documents/Data/".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
 #' @export
 
-latlongOrthoAddress <- function(path, multi.core = TRUE) {
-  pre <- paste0(path, "ortho.address.v")
-  post <- "_modified.tif"
+latlongOrthoAddress <- function(multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
-  addr.partitions <- partitionOrthoAddresses()
+  geo.addr <- geodesicMeters(dat = cholera::fatalities.address,
+    case.address = TRUE)
 
-  # values of k for stats::hclust()
-  ks <- vapply(addr.partitions, length, integer(1L))
+  rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
+  geo.rd <- data.frame(street = rd$street, geodesicMeters(rd))
 
-  coords <- parallel::mclapply(seq_along(addr.partitions), function(i) {
-    tif <- paste0(pre, i, post)
-    k <- ks[i]
-    latlongCoordinates(tif, k, path)
-  }, mc.cores = cores)
-
-  stop <- cumsum(ks)
-  start <- c(1, stop[-length(stop)] + 1)
-  k.idx <- data.frame(start = start, stop = stop, row.names = NULL)
-
-  coords <- lapply(seq_along(coords), function(i) {
-    tmp <- coords[[i]]
-    tmp$id <- k.idx[i, "start"]:k.idx[i, "stop"]
-    tmp
+  geo.rd.segs <- lapply(unique(geo.rd$street), function(st) {
+    dat <- geo.rd[geo.rd$street == st, ]
+    names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
+    seg.data <- dat[-1, c("x1", "y1")]
+    names(seg.data) <- c("x2", "y2")
+    dat <- cbind(dat[-nrow(dat), ], seg.data)
+    dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
+    dat
   })
 
-  address.groups <- lapply(addr.partitions, function(case) {
-    cholera::ortho.proj[cholera::ortho.proj$case %in% case, ]
-  })
+  geo.rd.segs <- do.call(rbind, geo.rd.segs)
+  seg.endpts <- c("x1", "y1", "x2", "y2")
 
-  address.rotate.scale <- parallel::mclapply(address.groups, function(x) {
-    tmp <- lapply(x$case, function(y) rotatePoint(y, dataset = "ortho.proj"))
-    tmp <- do.call(rbind, tmp)
-    data.frame(id = x$case, scale(tmp))
-  }, mc.cores = cores)
+  # geo.addr$id[which(vapply(orthogonal.projection, length, numeric(1L)) != 5)]
 
-  coords.scale <- lapply(coords, function(x){
-    data.frame(id = x$id, scale(x[, c("lon", "lat")]))
-  })
+  orthogonal.projection <- parallel::mclapply(geo.addr$id, function(id) {
+    case <- geo.addr[geo.addr$id == id, c("x", "y")]
 
-  match.points <- parallel::mclapply(seq_along(coords.scale), function(i) {
-    addr <- address.rotate.scale[[i]]
-    alters <- coords.scale[[i]]
-    names(alters)[-1] <- c("x", "y")
-    out <- lapply(addr$id, function(id) {
-      ego <- addr[addr$id == id, c("x", "y")]
-      d <- vapply(seq_len(nrow(alters)), function(i) {
-        stats::dist(rbind(ego, alters[i, c("x", "y")]))
-      }, numeric(1L))
-      data.frame(id = id, geo.id = alters$id[which.min(d)])
+    within.radius <- lapply(geo.rd.segs$id, function(x) {
+      seg.data <- geo.rd.segs[geo.rd.segs$id == x, ]
+      test1 <- cholera::withinRadius(case, seg.data[, c("x1", "y1")], 55)
+      test2 <- cholera::withinRadius(case, seg.data[, c("x2", "y2")], 55)
+      if (any(test1, test2)) unique(seg.data$id)
     })
-    do.call(rbind, out)
+
+    within.radius <- unlist(within.radius)
+
+    ortho.proj.test <- lapply(within.radius, function(seg.id) {
+      sel <- geo.rd.segs$id == seg.id
+      segment.data <- geo.rd.segs[sel, seg.endpts]
+      road.segment <- data.frame(x = c(segment.data$x1, segment.data$x2),
+                                 y = c(segment.data$y1, segment.data$y2))
+
+      ols <- stats::lm(y ~ x, data = road.segment)
+      road.intercept <- stats::coef(ols)[1]
+      road.slope <- stats::coef(ols)[2]
+
+      if (road.slope == 0 | is.na(road.slope)) {
+        if (road.slope == 0) {
+          x.proj <- case$x
+          y.proj <- road.intercept
+        } else if (is.na(road.slope)) {
+          x.proj <- unique(road.segment$x)
+          y.proj <- case$y
+        }
+      } else {
+       ortho.slope <- -1 / road.slope
+       ortho.intercept <- case$y - ortho.slope * case$x
+       x.proj <- (ortho.intercept - road.intercept) / (road.slope - ortho.slope)
+       y.proj <- road.slope * x.proj + road.intercept
+      }
+
+      seg.data <- geo.rd.segs[geo.rd.segs$id == seg.id, seg.endpts]
+      seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                           y = c(seg.data$y1, seg.data$y2))
+
+      # segment bisection/intersection test
+      distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
+               stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
+
+      bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
+
+      if (bisect.test) {
+        ortho.dist <- c(stats::dist(rbind(c(case$x, case$y),
+          c(x.proj, y.proj))))
+        ortho.pts <- data.frame(x.proj, y.proj)
+        data.frame(road.segment = seg.id, ortho.pts, ortho.dist)
+      } else {
+        null.out <- data.frame(matrix(NA, ncol = 4))
+        names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
+        null.out
+      }
+    })
+
+    out <- do.call(rbind, ortho.proj.test)
+
+    if (all(is.na(out)) == FALSE) {
+      sel <- which.min(out$ortho.dist)
+      out <- out[sel, ]
+    } else {
+      # all candidate roads are NA so arbitrarily choose the first obs.
+      out <- out[1, ]
+    }
+
+    out$case <- id
+    row.names(out) <- NULL
+    out
   }, mc.cores = cores)
 
-  match.points <- do.call(rbind, match.points)
-  coords <- do.call(rbind, coords)
+  coords <- do.call(rbind, orthogonal.projection)
 
-  out <- merge(cholera::ortho.proj, match.points, by.x = "case", by.y = "id")
-  out <- merge(out, coords, by.x = "geo.id", by.y = "id")
-  out <- out[order(out$case), ]
-  out$geo.id <- NULL
-  row.names(out) <- NULL
-  out
+  origin <- data.frame(lon = min(cholera::roads$lon),
+                       lat = min(cholera::roads$lat))
+  topleft <- data.frame(lon = min(cholera::roads$lon),
+                        lat = max(cholera::roads$lat))
+  bottomright <- data.frame(lon = max(cholera::roads$lon),
+                            lat = min(cholera::roads$lat))
+
+  est.lonlat <- meterLatLong(coords, origin, topleft, bottomright)
+  est.lonlat[order(est.lonlat$case), ]
 }
