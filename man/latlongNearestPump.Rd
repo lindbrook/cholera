@@ -4,13 +4,11 @@
 \alias{latlongNearestPump}
 \title{Compute shortest georeferenced distances and paths to selected pumps (prototype).}
 \usage{
-latlongNearestPump(path, pump.select = NULL, metric = "walking",
+latlongNearestPump(pump.select = NULL, metric = "walking",
   vestry = FALSE, weighted = TRUE, time.unit = "second",
   walking.speed = 5, multi.core = TRUE)
 }
 \arguments{
-\item{path}{Character. e.g., "~/Documents/Data/"}
-
 \item{pump.select}{Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
 
 \item{metric}{Character. "eucldidean" or "walking".}

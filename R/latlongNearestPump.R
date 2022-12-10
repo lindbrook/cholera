@@ -1,6 +1,5 @@
 #' Compute shortest georeferenced distances and paths to selected pumps (prototype).
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
 #' @param pump.select Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param metric Character. "eucldidean" or "walking".
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
@@ -11,7 +10,7 @@
 #' @export
 #' @return An R data frame or list of 'igraph' path nodes.
 
-latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
+latlongNearestPump <- function(pump.select = NULL, metric = "walking",
   vestry = FALSE, weighted = TRUE, time.unit = "second", walking.speed = 5,
   multi.core = TRUE) {
 
@@ -61,8 +60,8 @@ latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
     }
 
   } else if (metric == "walking") {
-    dat <- latlongNeighborhoodData(path, vestry)
-    path.data <- latlong_pathData(path, dat, pump.select, weighted, vestry,
+    dat <- latlongNeighborhoodData(vestry)
+    path.data <- latlong_pathData(dat, pump.select, weighted, vestry,
       cores)
 
     if (time.unit == "hour") {
@@ -82,12 +81,12 @@ latlongNearestPump <- function(path, pump.select = NULL, metric = "walking",
   out
 }
 
-latlong_pathData <- function(path, dat, pump.select, weighted, vestry, cores) {
+latlong_pathData <- function(dat, pump.select, weighted, vestry, cores) {
   g <- dat$g
   edge.list <- dat$edge.list
   edges <- dat$edges
-  ortho.addr <- latlongOrthoAddress(path)
-  ortho.pump <- latlongOrthoPump(path, vestry = vestry)
+  ortho.addr <- latlongOrthoAddress()
+  ortho.pump <- latlongOrthoPump(vestry = vestry)
   names(ortho.pump)[names(ortho.pump) == "pump.id"] <- "pump"
 
   if (!is.null(pump.select)) {

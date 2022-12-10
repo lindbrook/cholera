@@ -2,15 +2,15 @@
 % Please edit documentation in R/latlongOrthoPump.R
 \name{latlongOrthoPump}
 \alias{latlongOrthoPump}
-\title{Compute orthogonal projection of pumps (prototype).}
+\title{Compute pump coordinates.}
 \usage{
-latlongOrthoPump(path, vestry = FALSE)
+latlongOrthoPump(vestry = FALSE, multi.core = TRUE)
 }
 \arguments{
-\item{path}{Character. e.g., "~/Documents/Data/"}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
-\item{vestry}{Logical.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.}
 }
 \description{
-Projection from fatality address to nearest road segment.
+Returns either the set of x-y coordinates for the pumps themselves or for their orthogonally projected "addresses" on the network of roads.
 }
