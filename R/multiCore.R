@@ -7,12 +7,14 @@ multiCore <- function(x = TRUE) {
   if (is.logical(x) | is.numeric(x)) {
     if (is.logical(x)) {
       if (x == TRUE) {
-        cores <- parallel::detectCores()
+        # cores <- parallel::detectCores()
+        cores <- max(1L, parallel::detectCores(), na.rm = TRUE)
       } else {
         cores <- 1L
       }
     } else if (is.numeric(x)) {
-      obs.cores <- parallel::detectCores()
+      # obs.cores <- parallel::detectCores()
+      obs.cores <- max(1L, parallel::detectCores(), na.rm = TRUE)
       if (x > obs.cores) {
         msg <- 'For your system, the number of specified cores must be <= '
         stop(paste0(msg, obs.cores, "."))
