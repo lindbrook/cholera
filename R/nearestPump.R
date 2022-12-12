@@ -69,12 +69,14 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
       cl <- parallel::makeCluster(cores)
       parallel::clusterExport(cl = cl, envir = environment(), varlist = "obs")
       distance.data <- parallel::parLapply(cl, anchors, function(x) {
-        cholera::euclideanPath(x, destination = p.sel, observed = obs)$data
+        cholera::euclideanPath(x, destination = p.sel, observed = obs,
+          vestry = vestry)$data
       })
       parallel::stopCluster(cl)
     } else {
       distance.data <- parallel::mclapply(anchors, function(x) {
-        cholera::euclideanPath(x, destination = p.sel, observed = obs)$data
+        cholera::euclideanPath(x, destination = p.sel, observed = obs,
+          vestry = vestry)$data
       }, mc.cores = cores)
     }
 
