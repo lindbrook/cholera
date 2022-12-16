@@ -2,7 +2,7 @@
 % Please edit documentation in R/latlongNearestPump.R
 \name{latlongNearestPump}
 \alias{latlongNearestPump}
-\title{Compute shortest georeferenced distances and paths to selected pumps (prototype).}
+\title{Compute shortest georeferenced distances (and walking paths) to selected pumps (prototype).}
 \usage{
 latlongNearestPump(pump.select = NULL, metric = "walking",
   vestry = FALSE, weighted = TRUE, time.unit = "second",
@@ -27,5 +27,5 @@ latlongNearestPump(pump.select = NULL, metric = "walking",
 An R data frame or list of 'igraph' path nodes.
 }
 \description{
-Compute shortest georeferenced distances and paths to selected pumps (prototype).
+Compute shortest georeferenced distances (and walking paths) to selected pumps (prototype).
 }

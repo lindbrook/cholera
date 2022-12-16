@@ -1,4 +1,4 @@
-#' Compute shortest georeferenced distances and paths to selected pumps (prototype).
+#' Compute shortest georeferenced distances (and walking paths) to selected pumps (prototype).
 #'
 #' @param pump.select Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param metric Character. "eucldidean" or "walking".
@@ -17,17 +17,17 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
   cores <- multiCore(multi.core)
 
   if (metric == "euclidean") {
-    if (vestry) p.id <- cholera::pumps.vestry$id
-    else p.id <- cholera::pumps$id
-    p.count <- max(p.id)
+    if (vestry) pmp <- cholera::pumps.vestry
+    else pmp <- cholera::pumps
+    p.count <- max(pmp$id)
 
     if (is.null(pump.select) == FALSE) {
-      if (any(abs(pump.select) %in% p.id == FALSE)) {
+      if (any(abs(pump.select) %in% pmp$id == FALSE)) {
         stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count, ".")
       } else if (all(pump.select < 0)) {
-        p.sel <- p.id[p.id %in% abs(pump.select) == FALSE]
+        p.sel <- pmp$id[pmp$id %in% abs(pump.select) == FALSE]
       } else if (all(pump.select > 0)) p.sel <- pump.select
-    } else p.sel <- p.id
+    } else p.sel <- pmp$id
 
     vars <- c("lon", "lat")
 
@@ -36,9 +36,9 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
       ego <- cholera::fatalities.address[sel, vars]
 
       if (is.null(pump.select)) {
-        alters <- cholera::pumps[, c("id", vars)]
+        alters <- pmp[, c("id", vars)]
       } else {
-        alters <- cholera::pumps[cholera::pumps$id %in% p.sel, c("id", vars)]
+        alters <- pmp[pmp$id %in% p.sel, c("id", vars)]
       }
 
       d <- vapply(alters$id, function(id) {
