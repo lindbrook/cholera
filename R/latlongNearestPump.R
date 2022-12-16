@@ -1,4 +1,4 @@
-#' Compute shortest georeferenced distances and paths to selected pumps (prototype).
+#' Compute shortest georeferenced distances (and walking paths) to selected pumps (prototype).
 #'
 #' @param pump.select Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param metric Character. "eucldidean" or "walking".
