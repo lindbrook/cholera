@@ -4,7 +4,8 @@
 \alias{pumpFatalities}
 \title{Compute fatalities by pump.}
 \usage{
-pumpFatalities(pump.select = NULL, metric = "walking", vestry = FALSE)
+pumpFatalities(pump.select = NULL, metric = "walking", vestry = FALSE,
+  latlong = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
@@ -12,6 +13,8 @@ pumpFatalities(pump.select = NULL, metric = "walking", vestry = FALSE)
 \item{metric}{Character. "eucldidean" or "walking".}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
+
+\item{latlong}{Logical. Use estimated longitude and latitude.}
 }
 \description{
 Compute fatalities by pump.
