@@ -17,7 +17,8 @@ pumpFatalities <- function(pump.select = NULL, metric = "walking",
 
   if (latlong) {
     nr.pump <- latlongNearestPump(pump.select = pump.select, metric = metric,
-      vestry = vestry)$distance
+        vestry = vestry)
+    if (metric == "walking") nr.pump <- nr.pump$distance  
   } else {
     nr.pump <- nearestPump(pump.select = pump.select, metric = metric,
       vestry = vestry)$distance    
