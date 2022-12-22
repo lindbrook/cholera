@@ -15,13 +15,17 @@
 pumpFatalities <- function(pump.select = NULL, metric = "walking",
   vestry = FALSE, latlong = FALSE) {
 
+  if (!metric %in% c("euclidean", "walking")) {
+    stop('metric must be "euclidean" or "walking".', call. = FALSE)
+  }
+
   if (latlong) {
     nr.pump <- latlongNearestPump(pump.select = pump.select, metric = metric,
-        vestry = vestry)
-    if (metric == "walking") nr.pump <- nr.pump$distance  
+      vestry = vestry)
+    if (metric == "walking") nr.pump <- nr.pump$distance
   } else {
     nr.pump <- nearestPump(pump.select = pump.select, metric = metric,
-      vestry = vestry)$distance    
+      vestry = vestry)$distance
   }
 
   tbl <- table(cholera::anchor.case$anchor)
