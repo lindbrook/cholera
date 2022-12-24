@@ -4,12 +4,17 @@
 \alias{orientationPlot}
 \title{Orientation plot.}
 \usage{
-orientationPlot(pumpID = 6, metric = "euclidean")
+orientationPlot(pumpID = 6, metric = "euclidean", pca.line = FALSE,
+  vestry = FALSE)
 }
 \arguments{
 \item{pumpID}{Numeric. Selected pump ID.}
 
 \item{metric}{Character. "eucldidean" or "walking".}
+
+\item{pca.line}{Logical. Add PCA (TSS) line through data.}
+
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 }
 \description{
 Orientation plot.
