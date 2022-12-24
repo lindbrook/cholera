@@ -4,11 +4,13 @@
 \alias{orientationPlot}
 \title{Orientation plot.}
 \usage{
-orientationPlot(pumpID = 6, metric = "euclidean", pca.line = FALSE,
-  vestry = FALSE)
+orientationPlot(pumpID = 6, cases = "ortho", metric = "euclidean",
+  pca.line = FALSE, vestry = FALSE)
 }
 \arguments{
 \item{pumpID}{Numeric. Selected pump ID.}
+
+\item{cases}{Character. "address" or "ortho".}
 
 \item{metric}{Character. "eucldidean" or "walking".}
 
