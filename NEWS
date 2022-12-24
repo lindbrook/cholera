@@ -1,7 +1,8 @@
 cholera 0.7.9.9111
 ==================
 
-- orientationPlot(): add 'vestry' argument; plot center of mass.
+- orientationPlot(): add 'vestry' arg and plot center of mass;
+  set pca.line = FALSE.
 
 
 cholera 0.7.9.9110
