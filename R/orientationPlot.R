@@ -1,12 +1,13 @@
 #' Orientation plot.
 #'
 #' @param pumpID Numeric. Selected pump ID.
+#' @param cases Character. "address" or "ortho".
 #' @param metric Character. "eucldidean" or "walking".
 #' @param pca.line Logical. Add PCA (TSS) line through data.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @export
 
-orientationPlot <- function(pumpID = 6, metric = "euclidean",
+orientationPlot <- function(pumpID = 6, cases = "ortho", metric = "euclidean",
   pca.line = FALSE, vestry = FALSE) {
 
   if (!vestry & pumpID %in% cholera::pumps$id == FALSE) {
@@ -17,6 +18,10 @@ orientationPlot <- function(pumpID = 6, metric = "euclidean",
   if (vestry & pumpID %in% cholera::pumps.vestry$id == FALSE) {
     stop('For vestry pumps, pumpID must lie be a whole number 1 and 14.',
       call. = FALSE)
+  }
+
+  if (!cases %in% c("address", "ortho")) {
+    stop('cases must be "address" or "ortho".', call. = FALSE)
   }
 
   if (metric == "euclidean") fn <- neighborhoodVoronoi(vestry = vestry)
@@ -30,7 +35,7 @@ orientationPlot <- function(pumpID = 6, metric = "euclidean",
   if (vestry) {
     pmp <- cholera::pumps.vestry[cholera::pumps.vestry$id == pumpID, vars]
   } else {
-    pmp <- cholera::pumps[cholera::pumps$id == pumpID, vars]    
+    pmp <- cholera::pumps[cholera::pumps$id == pumpID, vars]
   }
 
   snowMap(add.cases = FALSE, vestry = vestry)
@@ -45,9 +50,15 @@ orientationPlot <- function(pumpID = 6, metric = "euclidean",
   if (no.obs.cases) {
     title(sub = "No observed cases.")
   } else {
-    p.data <- cholera::fatalities[cholera::fatalities$case %in% p.case, vars]
+    if (cases == "ortho") {
+      vars2 <- c("x.proj", "y.proj")
+      p.data <- cholera::ortho.proj[cholera::ortho.proj$case %in% p.case, vars2]
+    } else if (cases == "address") {
+      p.data <- cholera::fatalities[cholera::fatalities$case %in% p.case, vars]
+    }
+    
     points(p.data, pch = 16, col = "red", cex = 0.75)
-
+    
     convex <- grDevices::chull(p.data)
     polygon(p.data[convex, ], border = "red")
     
