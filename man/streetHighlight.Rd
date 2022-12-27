@@ -4,10 +4,14 @@
 \alias{streetHighlight}
 \title{Highlight road by name.}
 \usage{
-streetHighlight(road.name)
+streetHighlight(road.name, col = "red", lwd = 3)
 }
 \arguments{
 \item{road.name}{Character vector. The functions tries to correct for case and to remove extra spaces.}
+
+\item{col}{Character. Highlight color.}
+
+\item{lwd}{Numeric. Line width.}
 }
 \value{
 A base R graphics segment(s).
