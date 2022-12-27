@@ -19,17 +19,8 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
   time.unit = "second", walking.speed = 5, multi.core = TRUE,
   dev.mode = FALSE) {
 
-  if (vestry) p.id <- cholera::pumps.vestry$id else p.id <- cholera::pumps$id
-
-  p.count <- max(p.id)
-
-  if (is.null(pump.select) == FALSE) {
-    if (any(abs(pump.select) %in% p.id == FALSE)) {
-      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count, ".")
-    } else if (all(pump.select < 0)) {
-      p.sel <- p.id[p.id %in% abs(pump.select) == FALSE]
-    } else if (all(pump.select > 0)) p.sel <- pump.select
-  } else p.sel <- p.id
+  p.sel <- selectPump(pump.select = pump.select, metric = metric, 
+    vestry = vestry)
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
     stop('case.set must be "observed", "expected" or "snow".')

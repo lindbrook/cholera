@@ -36,31 +36,10 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
     pump.data <- cholera::pumps
   }
 
-  p.count <- nrow(pump.data)
-  p.ID <- seq_len(p.count)
   snow.colors <- snowColors(vestry = vestry)
-
-  if (is.null(pump.select)) {
-    pump.id <- pump.data$id
-  } else {
-    if (is.numeric(pump.select) == FALSE) {
-      stop("pump.select must be numeric.", call. = FALSE)
-    }
-    if (any(abs(pump.select) %in% p.ID) == FALSE) {
-      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count, ".",
-        call. = FALSE)
-    }
-
-    if (all(pump.select > 0)) {
-      pump.id <- pump.data$id[pump.select]
-    } else if (all(pump.select < 0)) {
-      sel <- pump.data$id %in% abs(pump.select) == FALSE
-      pump.id <- pump.data$id[pump.select]
-    } else {
-      stop("Use all positive or all negative numbers for pump.select.",
-        call. = FALSE)
-    }
-  }
+  
+  pump.id <- selectPump(pump.select = pump.select, metric = "euclidean", 
+    vestry = vestry)
 
   if (case.set == "observed") {
     anchors <- cholera::fatalities.address$anchor

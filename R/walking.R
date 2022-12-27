@@ -28,31 +28,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   weighted = TRUE, case.set = "observed", multi.core = TRUE,
   dev.mode = FALSE) {
 
-  if (is.null(pump.select) == FALSE) {
-    if (is.numeric(pump.select) == FALSE) {
-      stop("pump.select must be numeric.", call. = FALSE)
-    }
-    if (length(pump.select) == 1) {
-      if (pump.select == 2) {
-        msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
-        msg2 <- " It's an isolate, unreachable for observed fatalities."
-        stop(msg1, msg2, call. = FALSE)
-      }
-    }
-
-    if (vestry) {
-      p.count <- nrow(cholera::pumps.vestry)
-    } else {
-      p.count <- nrow(cholera::pumps)
-    }
-
-    p.ID <- seq_len(p.count)
-
-    if (any(abs(pump.select) %in% p.ID == FALSE)) {
-      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count,
-        call. = FALSE)
-    }
-  }
+  pump.id <- selectPump(pump.select = pump.select, vestry = vestry)
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
     stop('case.set must be "observed", "expected" or "snow".', call. = FALSE)

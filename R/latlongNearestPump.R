@@ -17,17 +17,8 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
   cores <- multiCore(multi.core)
 
   if (metric == "euclidean") {
-    if (vestry) pmp <- cholera::pumps.vestry
-    else pmp <- cholera::pumps
-    p.count <- max(pmp$id)
-
-    if (is.null(pump.select) == FALSE) {
-      if (any(abs(pump.select) %in% pmp$id == FALSE)) {
-        stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count, ".")
-      } else if (all(pump.select < 0)) {
-        p.sel <- pmp$id[pmp$id %in% abs(pump.select) == FALSE]
-      } else if (all(pump.select > 0)) p.sel <- pump.select
-    } else p.sel <- pmp$id
+    p.sel <- selectPump(pump.select = pump.select, metric = "euclidean", 
+      vestry = vestry)
 
     vars <- c("lon", "lat")
 
