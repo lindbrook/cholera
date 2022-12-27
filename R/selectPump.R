@@ -6,6 +6,10 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 
 selectPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE) {
+  if (is.character(pump.select)) {
+    stop('pump.select must be numeric', call. = FALSE)
+  }
+
   if (vestry) {
     pump.data <- cholera::pumps.vestry
   } else {
