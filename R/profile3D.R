@@ -16,32 +16,10 @@
 profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
   drop.neg.subset = FALSE, multi.core = TRUE) {
 
-  if (vestry) {
-    pump.id <- cholera::pumps.vestry$id
-  } else {
-    pump.id <- cholera::pumps$id
-  }
-
   cores <- multiCore(multi.core)
 
-  if (is.null(pump.select) == FALSE) {
-    if (is.numeric(pump.select) == FALSE) {
-      stop("pump.select must be numeric.", call. = FALSE)
-    } else if (any(abs(pump.select) %in% pump.id) == FALSE) {
-      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ',
-        length(pump.id),  ".", call. = FALSE)
-    }
-
-    if (all(pump.select > 0)) {
-      pump.id <- pump.id[pump.select]
-    } else if (all(pump.select < 0)) {
-      pump.id <- pump.id[pump.id %in% abs(pump.select) == FALSE]
-    } else {
-      stop("Use all positive or all negative numbers for pump.select.",
-        call. = FALSE)
-    }
-  }
-
+  pump.id <- selectPump(pump.select = NULL, metric = "euclidean",
+    vestry = FALSE) 
   nearest.pump <- nearestPump(pump.id, multi.core = cores)$distance
 
   x <- cholera::fatalities.address$x
