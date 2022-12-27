@@ -17,6 +17,12 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
   cores <- multiCore(multi.core)
 
   if (metric == "euclidean") {
+    if (vestry) {
+      pmp <- cholera::pumps.vestry
+    } else {
+      pmp <- cholera::pumps
+    }
+    
     p.sel <- selectPump(pump.select = pump.select, metric = "euclidean", 
       vestry = vestry)
 

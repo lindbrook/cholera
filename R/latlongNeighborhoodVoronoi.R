@@ -8,6 +8,12 @@
 latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE) {
   cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
   
+  if (vestry) {
+    pmp <- cholera::pumps.vestry
+  } else {
+    pmp <- cholera::pumps
+  }
+  
   pump.id <- selectPump(pump.select = pump.select, metric = "euclidean", 
     vestry = vestry)
 

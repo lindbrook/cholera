@@ -18,7 +18,7 @@ selectPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE) {
 
   if (is.numeric(pump.select)) {
     if (any(abs(pump.select) %in% pump.data$id) == FALSE) {
-      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', 
+      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ',
         nrow(pump.data), ".", call. = FALSE)
     }
   }
@@ -37,15 +37,13 @@ selectPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE) {
     pump.id <- pump.data$id
   } else {
     if (all(pump.select > 0)) {
-      sel <- pump.data$id %in% pump.select
+      pump.id <- pump.data$id[pump.data$id %in% pump.select]
     } else if (all(pump.select < 0)) {
-      sel <- pump.data$id %in% abs(pump.select) == FALSE
+      pump.id <- setdiff(pump.data$id, abs(pump.select))
     } else {
       stop("Use all positive or all negative numbers for pump.select.",
         call. = FALSE)
     }
-    pump.id <- pump.data$id[sel]
   }
-
   pump.id
 }
