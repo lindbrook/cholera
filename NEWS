@@ -1,3 +1,10 @@
+cholera 0.7.9.9114
+==================
+
+- add/set streetHighlight(col = "red", lwd = 3).
+- archive roadHighlight().
+
+
 cholera 0.7.9.9113
 ==================
 

@@ -1,13 +1,15 @@
 #' Highlight road by name.
 #'
 #' @param road.name Character vector. The functions tries to correct for case and to remove extra spaces.
+#' @param col Character. Highlight color.
+#' @param lwd Numeric. Line width.
 #' @return A base R graphics segment(s).
 #' @export
 #' @examples
 #' snowMap()
 #' streetHighlight("Broad Street")
 
-streetHighlight <- function(road.name) {
+streetHighlight <- function(road.name, col = "red", lwd = 3) {
   real.road.names <- unique(cholera::roads$name)
   roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)
 
@@ -24,6 +26,6 @@ streetHighlight <- function(road.name) {
   } else name <- road.name
 
   selected.road <- cholera::roads[cholera::roads$name == name, "street"]
-  invisible(lapply(roads.list[paste(selected.road)], lines, col = "red",
-    lwd = 3))
+  invisible(lapply(roads.list[paste(selected.road)], lines, col = col,
+    lwd = lwd))
 }
