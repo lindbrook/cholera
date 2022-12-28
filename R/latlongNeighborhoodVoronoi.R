@@ -9,21 +9,21 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE) {
   cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
   
   if (vestry) {
-    pmp <- cholera::pumps.vestry
+    pump.data <- cholera::pumps.vestry
   } else {
-    pmp <- cholera::pumps
+    pump.data <- cholera::pumps
   }
   
-  pump.id <- selectPump(pump.select = pump.select, metric = "euclidean", 
-    vestry = vestry)
+  pump.id <- selectPump(pump.data, pump.select = pump.select, 
+    metric = "euclidean", vestry = vestry)
 
   statistic.data <- lapply(cells, function(c) {
       sp::point.in.polygon(cholera::fatalities.address$lon,
         cholera::fatalities.address$lat, c$lon, c$lat)
     })
 
-  out <- list(pump.select = pump.id, vestry = vestry, cells = cells, pmp = pmp, 
-    statistic.data = statistic.data)
+  out <- list(pump.select = pump.id, vestry = vestry, cells = cells, 
+    pump.data = pump.data, statistic.data = statistic.data)
   class(out) <- "latlongNeighborhoodVoronoi"
   out
 }
@@ -48,7 +48,7 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.cases = TRUE,
   if (add.pumps) addPump(pump.select, vestry = x$vestry, latlong = TRUE)
 
   if (!is.null(pump.select)) {
-    unselected <- x$pmp[!x$pmp$id %in% pump.select, ]
+    unselected <- x$pump.data[!x$pump.data$id %in% pump.select, ]
     names(x$statistic.data) <- pump.select
     snow.colors <- snowColors(vestry = x$vestry)[paste0("p", pump.select)]
     points(unselected[, vars], pch = 2, col = "gray")
@@ -61,17 +61,17 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.cases = TRUE,
   if (euclidean.paths) {
     cases <- cholera::fatalities.address
 
-    if (is.null(pump.select)) p.id <- x$pmp$id
+    if (is.null(pump.select)) p.id <- x$pump.data$id
     else p.id <- pump.select
 
     nearest.pump <- do.call(rbind, lapply(cases$anchor, function(a) {
       m1 <- as.matrix(cases[cases$anchor == a, vars])
       d <- vapply(p.id, function(p) {
-        m2 <- as.matrix(x$pmp[x$pmp$id == p, vars])
+        m2 <- as.matrix(x$pump.data[x$pump.data$id == p, vars])
         sp::spDistsN1(m1, m2, longlat = TRUE) * 1000L
       }, numeric(1L))
       near.id <- which.min(d)
-      if (is.null(pump.select)) p.nr <- x$pmp$id[near.id]
+      if (is.null(pump.select)) p.nr <- x$pump.data$id[near.id]
       else p.nr <- p.id[near.id]
       data.frame(case = a, pump = p.nr, meters = d[near.id])
     }))
@@ -79,7 +79,7 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.cases = TRUE,
     invisible(lapply(nearest.pump$case, function(c) {
       ego <- cases[cases$anchor == c, vars]
       p <- nearest.pump[nearest.pump$case == c, "pump"]
-      alter <- x$pmp[x$pmp$id == p, vars]
+      alter <- x$pump.data[x$pump.data$id == p, vars]
       segments(ego$lon, ego$lat, alter$lon, alter$lat,
                col = snow.colors[paste0("p", p)], lwd = 0.5)
     }))

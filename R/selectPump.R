@@ -1,19 +1,16 @@
 #' Select desired pump neighborhoods.
 #'
 #' Allows negative selection.
+#' @param pump.data Object. Pump data.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param metric Character. "eucldidean" or "walking".
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 
-selectPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE) {
+selectPump <- function(pump.data, pump.select = NULL, metric = "walking", 
+  vestry = FALSE) {
+  
   if (is.character(pump.select)) {
     stop('pump.select must be numeric', call. = FALSE)
-  }
-
-  if (vestry) {
-    pump.data <- cholera::pumps.vestry
-  } else {
-    pump.data <- cholera::pumps
   }
 
   if (is.numeric(pump.select)) {

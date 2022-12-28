@@ -18,13 +18,13 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
 
   if (metric == "euclidean") {
     if (vestry) {
-      pmp <- cholera::pumps.vestry
+      pump.data <- cholera::pumps.vestry
     } else {
-      pmp <- cholera::pumps
+      pump.data <- cholera::pumps
     }
     
-    p.sel <- selectPump(pump.select = pump.select, metric = "euclidean", 
-      vestry = vestry)
+    p.sel <- selectPump(pump.data, pump.select = pump.select, 
+      metric = "euclidean", vestry = vestry)
 
     vars <- c("lon", "lat")
 
@@ -33,9 +33,9 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
       ego <- cholera::fatalities.address[sel, vars]
 
       if (is.null(pump.select)) {
-        alters <- pmp[, c("id", vars)]
+        alters <- pump.data[, c("id", vars)]
       } else {
-        alters <- pmp[pmp$id %in% p.sel, c("id", vars)]
+        alters <- pump.data[pump.data$id %in% p.sel, c("id", vars)]
       }
 
       d <- vapply(alters$id, function(id) {
