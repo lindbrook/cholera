@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2022-11-20
+2022-12-28
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -47,6 +47,10 @@ London*. London: Atlantic Books.
 David Freedman. 1999. “From Association to Causation: Some Remarks on
 the History of Statistics”. *Statistical Science*. 14(3): 243-258.
 
+Michael Friendly and Howard Rainer. 2021. *A History of Data
+Visualization and Graphic Communication*. Cambridge: Harvard University
+Press.
+
 Mary Gabriel. 2011. *Love and Capital: Karl and Jenny Marx and the Birth
 of a Revolution*. New York: Little, Brown and Company.
 
@@ -74,6 +78,9 @@ World*. New York: Liveright.
 
 Gareth Stedman Jones. 1971 (2013). *Outcast London: A Study in the
 Relationship Between Classes in Victorian Society*. London: Verso.
+
+Tom Koch. 2011. *Disease Maps: Epidemics on the Ground*. Chicago: The
+University of Chicago Press.
 
 Jill Lepore. 2020. “The Invention of the Police.” *The New Yorker*. July
 13.
