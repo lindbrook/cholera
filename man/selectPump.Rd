@@ -4,9 +4,12 @@
 \alias{selectPump}
 \title{Select desired pump neighborhoods.}
 \usage{
-selectPump(pump.select = NULL, metric = "walking", vestry = FALSE)
+selectPump(pump.data, pump.select = NULL, metric = "walking",
+  vestry = FALSE)
 }
 \arguments{
+\item{pump.data}{Object. Pump data.}
+
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
 
 \item{metric}{Character. "eucldidean" or "walking".}
