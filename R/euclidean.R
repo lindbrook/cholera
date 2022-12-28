@@ -29,6 +29,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
   }
 
   cores <- multiCore(multi.core)
+  snow.colors <- snowColors(vestry = vestry)
 
   if (vestry) {
     pump.data <- cholera::pumps.vestry
@@ -36,10 +37,8 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
     pump.data <- cholera::pumps
   }
 
-  snow.colors <- snowColors(vestry = vestry)
-  
-  pump.id <- selectPump(pump.select = pump.select, metric = "euclidean", 
-    vestry = vestry)
+  pump.id <- selectPump(pump.data, pump.select = pump.select, 
+    metric = "euclidean", vestry = vestry)
 
   if (case.set == "observed") {
     anchors <- cholera::fatalities.address$anchor

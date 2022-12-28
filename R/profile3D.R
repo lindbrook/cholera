@@ -18,8 +18,15 @@ profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
 
   cores <- multiCore(multi.core)
 
-  pump.id <- selectPump(pump.select = NULL, metric = "euclidean",
+  if (vestry) {
+    pump.data <- cholera::pumps.vestry
+  } else {
+    pump.data <- cholera::pumps
+  }
+
+  pump.id <- selectPump(pump.data, pump.select = NULL, metric = "euclidean",
     vestry = FALSE) 
+  
   nearest.pump <- nearestPump(pump.id, multi.core = cores)$distance
 
   x <- cholera::fatalities.address$x

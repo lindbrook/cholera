@@ -28,7 +28,13 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   weighted = TRUE, case.set = "observed", multi.core = TRUE,
   dev.mode = FALSE) {
 
-  pump.id <- selectPump(pump.select = pump.select, vestry = vestry)
+  if (vestry) {
+    pump.data <- cholera::pumps.vestry
+  } else {
+    pump.data <- cholera::pumps
+  }
+
+  pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
     stop('case.set must be "observed", "expected" or "snow".', call. = FALSE)

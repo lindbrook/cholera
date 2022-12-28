@@ -19,7 +19,13 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
   time.unit = "second", walking.speed = 5, multi.core = TRUE,
   dev.mode = FALSE) {
 
-  p.sel <- selectPump(pump.select = pump.select, metric = metric, 
+  if (vestry) {
+    pump.data <- cholera::pumps.vestry
+  } else {
+    pump.data <- cholera::pumps
+  }
+
+  p.sel <- selectPump(pump.data, pump.select = pump.select, metric = metric, 
     vestry = vestry)
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
