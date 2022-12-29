@@ -4,13 +4,18 @@
 \alias{orientationPlot}
 \title{Orientation plot.}
 \usage{
-orientationPlot(pumpID = 6, cases = "ortho", metric = "euclidean",
-  pca.line = FALSE, vestry = FALSE)
+orientationPlot(pump.id = 6, pump.select = NULL, cases = "orthogonal",
+  convex.hull = TRUE, metric = "euclidean", pca.line = FALSE,
+  vestry = FALSE)
 }
 \arguments{
-\item{pumpID}{Numeric. Selected pump ID.}
+\item{pump.id}{Numeric. Select pump focus.}
 
-\item{cases}{Character. "address" or "ortho".}
+\item{pump.select}{Numeric. Pump neighborhoods.}
+
+\item{cases}{Character. "address" or "orthogonal".}
+
+\item{convex.hull}{Logical. Add convex hull.}
 
 \item{metric}{Character. "eucldidean" or "walking".}
 
