@@ -97,8 +97,8 @@ latlong_pathData <- function(dat, pump.select, weighted, vestry, cores) {
     }
   }
 
-  ortho.addr$node <- paste0(ortho.addr$lon, "-", ortho.addr$lat)
-  ortho.pump$node <- paste0(ortho.pump$lon, "-", ortho.pump$lat)
+  ortho.addr$node <- paste0(ortho.addr$lon, "_&_", ortho.addr$lat)
+  ortho.pump$node <- paste0(ortho.pump$lon, "_&_", ortho.pump$lat)
 
   ## Adam and Eve Court: isolate with pump (#2) ##
   sel <- cholera::road.segments$name == "Adam and Eve Court"

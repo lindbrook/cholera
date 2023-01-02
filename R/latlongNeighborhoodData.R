@@ -8,8 +8,8 @@ latlongNeighborhoodData <- function(vestry = FALSE) {
   dat <- latlongEmbed(vestry = vestry)
 
   edges <- dat$edges
-  edges$node1 <- paste0(edges$lon1, "-", edges$lat1)
-  edges$node2 <- paste0(edges$lon2, "-", edges$lat2)
+  edges$node1 <- paste0(edges$lon1, "_&_", edges$lat1)
+  edges$node2 <- paste0(edges$lon2, "_&_", edges$lat2)
   edge.list <- edges[, c("node1", "node2")]
 
   g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
@@ -17,11 +17,10 @@ latlongNeighborhoodData <- function(vestry = FALSE) {
   edges <- attributes(igraph::E(g))$vname
   edges <- strsplit(edges, "|", fixed = TRUE)
   edges <- lapply(edges, function(e) {
-    endpts <- lapply(e, function(x) unlist(strsplit(x, "-")))
-    endpts <- lapply(endpts, function(x) as.numeric(x[2:3]))
+    endpts <- lapply(e, function(x) unlist(strsplit(x, "_&_")))
+    endpts <- lapply(endpts, as.numeric)
     nms <- paste0(c("lon", "lat"), c(rep(1, 2), rep(2, 2)))
     out <- stats::setNames(data.frame(t(do.call(c, endpts))), nms)
-    out[, grep("lon", names(out))] <- -1 * out[, grep("lon", names(out))]
     p1 <- out[, grep(1, names(out))]
     p2 <- out[, grep(2, names(out))]
     out$d <- geosphere::distGeo(p1, p2)
@@ -29,7 +28,16 @@ latlongNeighborhoodData <- function(vestry = FALSE) {
   })
   edges <- do.call(rbind, edges)
 
-  out <- list(edge.list = edge.list, g = g, edges = edges, nodes = dat$nodes)
+  edges$node1 <- paste0(edges$lon1, "_&_", edges$lat1)
+  edges$node2 <- paste0(edges$lon2, "_&_", edges$lat2)
+
+  nodes <- dat$nodes
+  nodes.pump <- nodes[nodes$pump != 0, ]
+  nodes.pump$node <- paste0(nodes.pump$lon, "_&_", nodes.pump$lat)
+  nodes.pump <- nodes.pump[order(nodes.pump$pump), c("pump", "node")]
+
+  out <- list(edge.list = edge.list, g = g, edges = edges, nodes = nodes,
+              nodes.pump = nodes.pump)
   class(out) <- "latlong_neighborhood_data"
   out
 }
