@@ -102,7 +102,6 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = TRUE) {
       out <- out[1, ]
     }
 
-    out$node <- paste0(out$x.proj, "-", out$y.proj)
     out$pump.id <- p
     row.names(out) <- NULL
     out
