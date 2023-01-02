@@ -22,8 +22,8 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
     } else {
       pump.data <- cholera::pumps
     }
-    
-    p.sel <- selectPump(pump.data, pump.select = pump.select, 
+
+    p.sel <- selectPump(pump.data, pump.select = pump.select,
       metric = "euclidean", vestry = vestry)
 
     vars <- c("lon", "lat")
@@ -71,7 +71,7 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
 
     distance <-  data.frame(case = path.data$case, pump = path.data$pump,
       distance = path.data$distance, time = walking.time)
-    out <- list(distance = distance, path = path.data$path)
+    out <- list(neigh.data = dat, distance = distance, path = path.data$path)
 
   } else stop('metric must be  "euclidean" or "walking".', call. = FALSE)
 
@@ -97,8 +97,8 @@ latlong_pathData <- function(dat, pump.select, weighted, vestry, cores) {
     }
   }
 
-  ortho.addr$node <- paste0(ortho.addr$lon, "-", ortho.addr$lat)
-  ortho.pump$node <- paste0(ortho.pump$lon, "-", ortho.pump$lat)
+  ortho.addr$node <- paste0(ortho.addr$lon, "_&_", ortho.addr$lat)
+  ortho.pump$node <- paste0(ortho.pump$lon, "_&_", ortho.pump$lat)
 
   ## Adam and Eve Court: isolate with pump (#2) ##
   sel <- cholera::road.segments$name == "Adam and Eve Court"

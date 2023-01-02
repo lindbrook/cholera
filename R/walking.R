@@ -54,10 +54,9 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   nearest.path <- nearest.data$path
 
   if (case.set == "snow") {
-    snow.anchors <- cholera::snow.neighborhood[cholera::snow.neighborhood %in%
-      cholera::fatalities.address$anchor]
-    nearest.pump <- data.frame(case = snow.anchors,
-                               pump = nearest.dist$pump)
+    sel <- cholera::snow.neighborhood %in% cholera::fatalities.address$anchor
+    snow.anchors <- cholera::snow.neighborhood[sel]
+    nearest.pump <- data.frame(case = snow.anchors, pump = nearest.dist$pump)
   } else if (case.set == "observed") {
     nearest.pump <- data.frame(case = cholera::fatalities.address$anchor,
                                pump = nearest.dist$pump)
