@@ -22,8 +22,8 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
     } else {
       pump.data <- cholera::pumps
     }
-    
-    p.sel <- selectPump(pump.data, pump.select = pump.select, 
+
+    p.sel <- selectPump(pump.data, pump.select = pump.select,
       metric = "euclidean", vestry = vestry)
 
     vars <- c("lon", "lat")
