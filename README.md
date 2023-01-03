@@ -6,26 +6,26 @@
 
 #### package features
 
--   Fixes three apparent coding errors in Dodson and Tobler’s 1992
-    digitization of Snow’s map.
--   “Unstacks” the data in two ways to make analysis and visualization
-    easier and more meaningful.
--   Computes and visualizes “pump neighborhoods” based on Euclidean
-    distance (Voronoi tessellation) and walking distance.
--   Overlay graphical elements and features like kernel density
-    estimates, Voronoi diagrams, Snow’s Broad Street neighborhood, and
-    notable landmarks (John Snow’s residence, the Lion Brewery, etc.)
-    via `add*()` functions.
--   Includes a variety of functions to find and highlight cases, roads,
-    pumps and paths.
--   Appends street names to the `roads` data set.
--   Includes the revised pump data used in the second version of Snow’s
-    map from the Vestry report, which also includes the “correct”
-    location of the Broad Street pump.
--   Adds two aggregate time series fatalities data sets, taken from the
-    Vestry report.
--   With ‘cholera’ version \>= 0.7.0, support for parallel computation
-    now includes Windows in addition to Linux and macOS.
+- Fixes three apparent coding errors in Dodson and Tobler’s 1992
+  digitization of Snow’s map.
+- “Unstacks” the data in two ways to make analysis and visualization
+  easier and more meaningful.
+- Computes and visualizes “pump neighborhoods” based on Euclidean
+  distance (Voronoi tessellation) and walking distance.
+- Overlay graphical elements and features like kernel density estimates,
+  Voronoi diagrams, Snow’s Broad Street neighborhood, and notable
+  landmarks (John Snow’s residence, the Lion Brewery, etc.) via `add*()`
+  functions.
+- Includes a variety of functions to find and highlight cases, roads,
+  pumps and paths.
+- Appends street names to the `roads` data set.
+- Includes the revised pump data used in the second version of Snow’s
+  map from the Vestry report, which also includes the “correct” location
+  of the Broad Street pump.
+- Adds two aggregate time series fatalities data sets, taken from the
+  Vestry report.
+- With ‘cholera’ version \>= 0.7.0, support for parallel computation now
+  includes Windows in addition to Linux and macOS.
 
 #### getting started
 
@@ -240,6 +240,13 @@ plot(latlongWalkingPath(578))
 ```
 
 <img src="man/figures/README-latlong_walking_path-1.png" width="50%" /><img src="man/figures/README-latlong_walking_path-2.png" width="50%" />
+
+``` r
+plot(neighborhoodWalking())
+plot(latlongNeighborhoodWalking())
+```
+
+<img src="man/figures/README-latlong_walking-1.png" width="50%" /><img src="man/figures/README-latlong_walking-2.png" width="50%" />
 
 #### vignettes
 
