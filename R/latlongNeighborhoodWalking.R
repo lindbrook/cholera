@@ -75,6 +75,7 @@ plot.latlong_walking <- function(x, type = "roads", ...) {
   dat <- x$neigh.data
   edges <- dat$edges
   paths <- x$paths
+  vars <- c("lon", "lat")
 
   obs.edges <- lapply(paths, function(p) {
     oe <- lapply(p, function(x) {
@@ -86,7 +87,7 @@ plot.latlong_walking <- function(x, type = "roads", ...) {
 
   snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
 
- invisible(lapply(names(obs.edges), function(nm) {
+  invisible(lapply(names(obs.edges), function(nm) {
     n.edges <- edges[obs.edges[[nm]], ]
     segments(n.edges$lon1, n.edges$lat1, n.edges$lon2, n.edges$lat2, lwd = 2,
       col = x$snow.colors[paste0("p", nm)])
@@ -94,12 +95,9 @@ plot.latlong_walking <- function(x, type = "roads", ...) {
 
   invisible(lapply(names(x$cases), function(nm) {
     sel <- cholera::fatalities.address$anchor %in% x$cases[[nm]]
-    points(cholera::fatalities.address[sel, c("lon", "lat")], pch = 20,
-      cex = 0.75, col = x$snow.colors[nm])
+    points(cholera::fatalities.address[sel, vars], pch = 20, cex = 0.75,
+      col = x$snow.colors[nm])
   }))
-
-  addPump(x$pumpID, col = x$snow.colors[paste0("p", x$pumpID)],
-    latlong = TRUE, label = FALSE)
 
   if (x$vestry) {
     p.data <- cholera::pumps.vestry
@@ -107,11 +105,8 @@ plot.latlong_walking <- function(x, type = "roads", ...) {
     p.data <- cholera::pumps
   }
 
-  sel <- p.data$id %in% x$pumpID
-  text(p.data[sel, c("lon", "lat"), ], labels = p.data[sel, "id"], pos = 1)
-  points(p.data[!sel, c("lon", "lat"), ], col = "gray", pch = 24)
-  text(p.data[!sel, c("lon", "lat"), ], labels = p.data[!sel, "id"], pos = 1,
-    col = "gray")
+  points(p.data[, vars], col = x$snow.colors, lwd = 2, pch = 24)
+  text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
 
   if (is.null(x$pump.select)) {
     title(main = "Pump Neighborhoods: Walking")
@@ -119,7 +114,6 @@ plot.latlong_walking <- function(x, type = "roads", ...) {
     title(main = paste0("Pump Neighborhoods: Walking", "\n", "Pumps ",
       paste(sort(x$pump.select), collapse = ", ")))
   }
-
 }
 
 identifyEdgesB <- function(p, edges) {
