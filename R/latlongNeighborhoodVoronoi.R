@@ -7,22 +7,26 @@
 
 latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE) {
   cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
-  
+
   if (vestry) {
     pump.data <- cholera::pumps.vestry
   } else {
     pump.data <- cholera::pumps
   }
-  
-  pump.id <- selectPump(pump.data, pump.select = pump.select, 
-    metric = "euclidean", vestry = vestry)
+
+  if (!is.null(pump.select)) {
+    pump.id <- selectPump(pump.data, pump.select = pump.select,
+      metric = "euclidean", vestry = vestry)
+  } else {
+    pump.id <- pump.select
+  }
 
   statistic.data <- lapply(cells, function(c) {
       sp::point.in.polygon(cholera::fatalities.address$lon,
         cholera::fatalities.address$lat, c$lon, c$lat)
     })
 
-  out <- list(pump.select = pump.id, vestry = vestry, cells = cells, 
+  out <- list(pump.select = pump.id, vestry = vestry, cells = cells,
     pump.data = pump.data, statistic.data = statistic.data)
   class(out) <- "latlongNeighborhoodVoronoi"
   out
