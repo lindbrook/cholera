@@ -62,16 +62,11 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for latlongNeighborhoodWalking().
 #'
 #' @param x An object of class "latlong_walking" created by \code{latlongNeighborhoodWalking()}.
-#' @param type Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.latlong_walking <- function(x, type = "roads", ...) {
-  if (!type %in% c("roads", "area.points", "area.polygons")) {
-    stop('type must be "roads", "area.points", "area.polygons".')
-  }
-
+plot.latlong_walking <- function(x, ...) {
   dat <- x$neigh.data
   edges <- dat$edges
   paths <- x$paths
