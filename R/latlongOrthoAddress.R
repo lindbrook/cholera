@@ -210,14 +210,29 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
   coordsB <- data.frame(do.call(rbind, orthogonal.projectionB),
     case = manual.compute$addr, row.names = NULL)
 
-  # case 440 edge case
-  case <- geo.addr[geo.addr$id == 440, ]
-  rd.seg  <- "259-1"
+  ## Two manual address fixes ##
+
+  # case 286 @ "160-3" edge case
+  addr <- 286
+  rd.seg  <- "160-3"
+  case <- geo.addr[geo.addr$id == addr, ]
   x.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "x2"]
   y.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "y2"]
   ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
-  vars <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
-  coordsB[coordsB$case == 440, vars] <- c(rd.seg, x.proj, y.proj, ortho.dist)
+  vars <- c("x.proj", "y.proj", "ortho.dist")
+  coordsA[coordsA$case == addr, vars] <- c(x.proj, y.proj, ortho.dist)
+  coordsA[coordsA$case == addr, "road.segment"] <- rd.seg
+
+  # case 440 @ "259-1" edge case
+  addr <- 440
+  rd.seg  <- "259-1"
+  case <- geo.addr[geo.addr$id == addr, ]
+  x.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "x2"]
+  y.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "y2"]
+  ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
+  vars <- c("x.proj", "y.proj", "ortho.dist")
+  coordsB[coordsB$case == addr, vars] <- c(x.proj, y.proj, ortho.dist)
+  coordsB[coordsB$case == addr, "road.segment"] <- rd.seg
 
   coords <- rbind(coordsA, coordsB)
   coords <- coords[order(coords$case), ]
