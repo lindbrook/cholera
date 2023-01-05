@@ -26,9 +26,61 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
   geo.rd.segs <- do.call(rbind, geo.rd.segs)
   seg.endpts <- c("x1", "y1", "x2", "y2")
 
-  # geo.addr$id[which(vapply(orthogonal.projection, length, numeric(1L)) != 5)]
+  # classification errors due to bar orientation
+  road.segment.fix <- list(
+        "216-1" = c(290, 61, 174, 547, 523, 521, 138, 59, 340, 508),
+        "290-1" = c(409, 131, 18, 575, 566, 518, 297),
+        # "259-1" = 145,
+        "259-1" = 440,
+        "231-1" = c(329, 248, 408, 471),
+        "340-2" = c(172, 62, 111),
+        "128-1" = 302,
+        "141-1" = 163,
+        "169-1" = 516,
+        "188-1" = 372,
+        "222-1" = 520,
+        "237-1" = 308,
+        "330-1" = 453,
+        "207-1" = 277,
+        "196-1" = 346,
+        "186-1" = 278,
+        "261-1" = 69,
+        "270-1" = 267,
+        "159-1" = 165,
+        "193-1" = c(463, 423),
+        "216-1" = c(122, 91),
+        "203-1" = 287,
+        "259-2" = c(303, 513, 405, 175),
+        "297-1" = 117,
+        "224-1" = c(355, 253),
+        "234-1" = c(254, 367, 492, 406),
+        "193-1" = c(180, 452, 551),
+        "178-1" = 85,
+        "231-1" = 341,
+        "160-3" = 558,
+        "269-1" = 462,
+        "326-2" = 483)
 
-  orthogonal.projection <- parallel::mclapply(geo.addr$id, function(id) {
+  # check for segments with multiple cases
+  multi.audit <- vapply(road.segment.fix, function(x) {
+    sum(x %in% cholera::fatalities.address$anchor)
+  }, integer(1L))
+
+  no.multi <- all(multi.audit %in% c(0, 1))
+
+  if (no.multi) {
+    anchors.fix <- unlist(lapply(road.segment.fix, function(x) {
+      x[x %in% cholera::fatalities.address$anchor]
+    }))
+    manual.compute <- data.frame(addr = anchors.fix, seg = names(anchors.fix),
+      row.names = NULL)
+  } else stop()
+
+  classfication.err <- geo.addr$id %in% manual.compute$addr
+
+  no.err <- geo.addr$id[!classfication.err]
+
+  orthogonal.projection <- parallel::mclapply(no.err, function(id) {
     case <- geo.addr[geo.addr$id == id, c("x", "y")]
 
     within.radius <- lapply(geo.rd.segs$id, function(x) {
@@ -40,7 +92,7 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
 
     within.radius <- unlist(within.radius)
 
-    ortho.proj.test <- lapply(within.radius, function(seg.id) {
+    out <- lapply(within.radius, function(seg.id) {
       sel <- geo.rd.segs$id == seg.id
       segment.data <- geo.rd.segs[sel, seg.endpts]
       road.segment <- data.frame(x = c(segment.data$x1, segment.data$x2),
@@ -87,7 +139,7 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
       }
     })
 
-    out <- do.call(rbind, ortho.proj.test)
+    out <- do.call(rbind, out)
 
     if (all(is.na(out)) == FALSE) {
       sel <- which.min(out$ortho.dist)
@@ -102,7 +154,73 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
     out
   }, mc.cores = cores)
 
-  coords <- do.call(rbind, orthogonal.projection)
+  coordsA <- do.call(rbind, orthogonal.projection)
+
+  orthogonal.projectionB <- lapply(seq_len(nrow(manual.compute)), function(i) {
+    addr <- manual.compute[i, "addr"]
+    seg <- manual.compute[i, "seg"]
+
+    case <- geo.addr[geo.addr$id == addr, c("x", "y")]
+    segment.data <- geo.rd.segs[geo.rd.segs$id == seg, ]
+
+    road.segment <- data.frame(x = c(segment.data$x1, segment.data$x2),
+                               y = c(segment.data$y1, segment.data$y2))
+
+    ols <- stats::lm(y ~ x, data = road.segment)
+    road.intercept <- stats::coef(ols)[1]
+    road.slope <- stats::coef(ols)[2]
+
+    if (road.slope == 0 | is.na(road.slope)) {
+      if (road.slope == 0) {
+        x.proj <- case$x
+        y.proj <- road.intercept
+      } else if (is.na(road.slope)) {
+        x.proj <- unique(road.segment$x)
+        y.proj <- case$y
+      }
+    } else {
+      ortho.slope <- -1 / road.slope
+      ortho.intercept <- case$y - ortho.slope * case$x
+      x.proj <- (ortho.intercept - road.intercept) / (road.slope - ortho.slope)
+      y.proj <- road.slope * x.proj + road.intercept
+    }
+
+    seg.data <- geo.rd.segs[geo.rd.segs$id == seg, seg.endpts]
+    seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                         y = c(seg.data$y1, seg.data$y2))
+
+    # segment bisection/intersection test
+    distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
+      stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
+
+    bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
+
+    if (bisect.test) {
+      ortho.dist <- c(stats::dist(rbind(c(case$x, case$y),
+                                        c(x.proj, y.proj))))
+      ortho.pts <- data.frame(x.proj, y.proj)
+      data.frame(road.segment = seg, ortho.pts, ortho.dist)
+    } else {
+      null.out <- data.frame(matrix(NA, ncol = 4))
+      names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
+      null.out
+    }
+  })
+
+  coordsB <- data.frame(do.call(rbind, orthogonal.projectionB),
+    case = manual.compute$addr, row.names = NULL)
+
+  # case 440 edge case
+  case <- geo.addr[geo.addr$id == 440, ]
+  rd.seg  <- "259-1"
+  x.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "x2"]
+  y.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "y2"]
+  ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
+  vars <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
+  coordsB[coordsB$case == 440, vars] <- c(rd.seg, x.proj, y.proj, ortho.dist)
+
+  coords <- rbind(coordsA, coordsB)
+  coords <- coords[order(coords$case), ]
 
   origin <- data.frame(lon = min(cholera::roads$lon),
                        lat = min(cholera::roads$lat))
