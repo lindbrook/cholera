@@ -69,7 +69,7 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
       walking.time <- (3600L * path.data$distance) / (1000L * walking.speed)
     }
 
-    distance <-  data.frame(case = path.data$case, pump = path.data$pump,
+    distance <- data.frame(case = path.data$case, pump = path.data$pump,
       distance = path.data$distance, time = walking.time)
     out <- list(neigh.data = dat, distance = distance, path = path.data$path)
 
