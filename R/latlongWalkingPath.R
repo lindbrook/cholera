@@ -39,7 +39,7 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
     edges <- network.data$edges
     g <- network.data$g
     nodes <- network.data$nodes
-    nodes$node <- paste0(nodes$lon, "-", nodes$lat)
+    nodes$node <- paste0(nodes$lon, "_&_", nodes$lat)
 
     ego.node <- nodes[nodes$case == anchor, "node"]
     alter.node <- nodes[nodes$pump == destination, "node"]
@@ -52,7 +52,7 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
     p <- names(unlist(p))
 
     p.data <- do.call(rbind, lapply(p, function(x) {
-      as.numeric(unlist(strsplit(x[1], "-"))[-1])
+      as.numeric(unlist(strsplit(x[1], "_&_"))[-1])
     }))
 
     path <- data.frame(id = seq_len(nrow(p.data)),
@@ -88,17 +88,20 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
                    time.unit = time.unit,
                    walking.speed = walking.speed)
   } else {
-    if (vestry) {
-      nearest.pump <- cholera::latlong.nearest.pump.vestry
-    } else {
-      nearest.pump <- cholera::latlong.nearest.pump
-    }
+    # if (vestry) {
+    #   nearest.pump <- cholera::latlong.nearest.pump.vestry
+    # } else {
+    #   nearest.pump <- cholera::latlong.nearest.pump
+    # }
+
+    nearest.pump <- latlongNearestPump(vestry = vestry)
 
     case.id <- which(cholera::fatalities.address$anchor == anchor)
     p <- names(nearest.pump$path[[case.id]][[1]])
     destination.pump <- names(nearest.pump$path[[case.id]])
-    nodes <- do.call(rbind, strsplit(p, "-"))
-    dat <- data.frame(x = -as.numeric(nodes[, 2]), y = as.numeric(nodes[, 3]))
+
+    nodes <- do.call(rbind, strsplit(p, "_&_"))
+    dat <- data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
 
     ds <- vapply(seq_len(nrow(dat[-1, ])), function(i) {
       geosphere::distGeo(dat[i, ], dat[i + 1, ])
