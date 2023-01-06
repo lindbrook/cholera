@@ -53,7 +53,6 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
               snow.colors = snow.colors,
               pumpID = pumpID,
               cores = cores)
-              # metric = 1 / unitMeter(1))
 
   class(out) <- "latlong_walking"
   out
