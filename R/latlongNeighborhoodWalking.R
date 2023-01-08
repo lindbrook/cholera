@@ -99,21 +99,21 @@ plot.latlong_walking <- function(x, ...) {
     p.data <- cholera::pumps
   }
 
-if (is.null(x$pump.select)) {
-  points(p.data[, vars], col = x$snow.colors, lwd = 2, pch = 24)
-  text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
-} else {
-  pump.id <- selectPump(p.data, pump.select = x$pump.select, vestry = x$vestry)
-  sel <- p.data$id %in% pump.id
-  unsel <- setdiff(p.data$id, pump.id)
-  points(p.data[sel, vars], col = x$snow.colors[sel], lwd = 2, pch = 24)
-  text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
-    pos = 1)
-  points(p.data[unsel, vars], col = "gray", lwd = 2, pch = 24)
-  text(p.data[unsel, vars], labels = paste0("p", p.data$id[unsel]), cex = 0.9,
-    pos = 1, col = "gray")
-}
-
+  if (is.null(x$pump.select)) {
+    points(p.data[, vars], col = x$snow.colors, lwd = 2, pch = 24)
+    text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
+  } else {
+    pump.id <- selectPump(p.data, pump.select = x$pump.select, 
+      vestry = x$vestry)
+    sel <- p.data$id %in% pump.id
+    unsel <- setdiff(p.data$id, pump.id)
+    points(p.data[sel, vars], col = x$snow.colors[sel], lwd = 2, pch = 24)
+    text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
+      pos = 1)
+    points(p.data[unsel, vars], col = "gray", lwd = 2, pch = 24)
+    text(p.data[unsel, vars], labels = paste0("p", p.data$id[unsel]), cex = 0.9,
+      pos = 1, col = "gray")
+  }
 
   if (is.null(x$pump.select)) {
     title(main = "Pump Neighborhoods: Walking")
