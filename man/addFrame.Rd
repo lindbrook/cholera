@@ -4,10 +4,12 @@
 \alias{addFrame}
 \title{Add map border to plot.}
 \usage{
-addFrame(vars = c("x", "y"), ...)
+addFrame(vars = c("x", "y"), col = "black", ...)
 }
 \arguments{
 \item{vars}{Character. Coordinate.}
+
+\item{col}{Character. Color}
 
 \item{...}{Additional plotting parameters.}
 }
