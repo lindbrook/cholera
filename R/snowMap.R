@@ -66,13 +66,14 @@ addRoads <- function(vars = c("x", "y"), col = "gray") {
 #' Add map border to plot.
 #'
 #' @param vars Character. Coordinate.
+#' @param col Character. Color
 #' @param ... Additional plotting parameters.
 #' @export
 
-addFrame <- function(vars = c("x", "y"), ...) {
+addFrame <- function(vars = c("x", "y"), col = "black", ...) {
   borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
   border.list <- split(borders[, vars], borders$street)
-  invisible(lapply(border.list, lines, ...))
+  invisible(lapply(border.list, lines, col = col, ...))
 }
 
 #' Compute xlim and ylim of Snow's map.
