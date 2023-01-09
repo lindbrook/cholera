@@ -8,7 +8,7 @@ addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
   vestry = FALSE, weighted = TRUE, path = NULL, path.color = NULL,
   path.width = 3, alpha.level = 0.25, polygon.type = "solid",
   polygon.col = NULL, polygon.lwd = 2, multi.core = TRUE,
-  dev.mode = FALSE)
+  dev.mode = FALSE, latlong = FALSE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -36,6 +36,8 @@ addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
+
+\item{latlong}{Logical. Use estimated longitude and latititude.}
 }
 \description{
 Add expected walking neighborhoods.
