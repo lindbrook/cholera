@@ -3,7 +3,7 @@
 #' @param path Character. e.g., "~/Documents/Data/"
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
-#' @export
+#' @noRd
 
 latlongFrame <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
@@ -85,7 +85,7 @@ geoID <- function(k) {
 #'
 #' @param inter.point.dist Numeric. Ceiling for overlapping points.
 #' @return An 'igraph' object.
-#' @export
+#' @noRd
 
 thresholdFrameGraph <- function(inter.point.dist = 0.15) {
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
@@ -105,7 +105,7 @@ thresholdFrameGraph <- function(inter.point.dist = 0.15) {
 #'
 #' @param inter.point.dist Numeric. Ceiling for overlapping points.
 #' @return An R list.
-#' @export
+#' @noRd
 
 partitionFrame <- function(inter.point.dist = 0.15) {
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]

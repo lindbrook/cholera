@@ -5,7 +5,7 @@
 #' @param time.unit Character. Unit of measurement: "hour", "minute" or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @return An R vector.
-#' @export
+#' @noRd
 
 distanceTime <- function(x, distance.unit = "meter", time.unit = "second",
   walking.speed = 5) {

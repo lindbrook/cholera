@@ -2,7 +2,7 @@
 #'
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
-#' @export
+#' @noRd
 
 latlongOrthoAddress <- function(multi.core = TRUE) {
   cores <- multiCore(multi.core)
@@ -85,8 +85,8 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
 
     within.radius <- lapply(geo.rd.segs$id, function(x) {
       seg.data <- geo.rd.segs[geo.rd.segs$id == x, ]
-      test1 <- cholera::withinRadius(case, seg.data[, c("x1", "y1")], 55)
-      test2 <- cholera::withinRadius(case, seg.data[, c("x2", "y2")], 55)
+      test1 <- withinRadius(case, seg.data[, c("x1", "y1")], 55)
+      test2 <- withinRadius(case, seg.data[, c("x2", "y2")], 55)
       if (any(test1, test2)) unique(seg.data$id)
     })
 

@@ -3,7 +3,7 @@
 #' Returns either the set of x-y coordinates for the pumps themselves or for their orthogonally projected "addresses" on the network of roads.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.
-#' @export
+#' @noRd
 
 latlongOrthoPump <- function(vestry = FALSE, multi.core = TRUE) {
   cores <- multiCore(multi.core)
@@ -43,8 +43,8 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = TRUE) {
       # dist(rbind(case, stats::setNames(seg.data[, c("x1", "y1")], c("x", "y"))))
       # dist(rbind(case, stats::setNames(seg.data[, c("x2", "y2")], c("x", "y"))))
 
-      test1 <- cholera::withinRadius(case, seg.data[, c("x1", "y1")], 35)
-      test2 <- cholera::withinRadius(case, seg.data[, c("x2", "y2")], 35)
+      test1 <- withinRadius(case, seg.data[, c("x1", "y1")], 35)
+      test2 <- withinRadius(case, seg.data[, c("x2", "y2")], 35)
       if (any(test1, test2)) unique(seg.data$id)
     })
 

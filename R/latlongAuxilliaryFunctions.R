@@ -1,16 +1,16 @@
 #' Convert case IDs to numeric.
 #'
 #' @param x Object. table() object.
-#' @export
+#' @noRd
 
 caseNumber <- function(x) as.numeric(names(x))
 
 #' Compute rectangle vertices.
 #'
 #' @param x Object. Points/pixel count.
-#' @export
+#' @noRd
 
-kmeansRectanlge <- function(x) {
+kmeansRectangle <- function(x) {
   if (length(unique(x)) > 1) {
     km <- stats::kmeans(x, 2)
     km.df <- data.frame(ct = x, cluster = km$cluster)
@@ -95,7 +95,7 @@ meterLatLong <- function(coords, origin, topleft, bottomright,
 #' Extract points from GeoTiff.
 #'
 #' @param x Object. GeoTIFF.
-#' @export
+#' @noRd
 
 pointsFromGeoTIFF <- function(x) {
   ras <- terra::rast(x)
@@ -106,7 +106,7 @@ pointsFromGeoTIFF <- function(x) {
 #'
 #' @param max.ct Integer. Upper count of observations.
 #' @param bin.size Integer. bin size size of subgroups.
-#' @export
+#' @noRd
 
 pointIndex <- function(max.ct = 321, bin.size = 50) {
   alpha <- seq(1, max.ct, bin.size)
@@ -120,7 +120,7 @@ pointIndex <- function(max.ct = 321, bin.size = 50) {
 #' @param id1 Numeric. Road segment endpoint ID. Margaret Street.
 #' @param id2 Numeric. Road segment endpoint ID. Phoenix Yard.
 #' @note The two default points are the first two observations on the top left.
-#' @export
+#' @noRd
 
 referenceRadian <- function(id1 = 66, id2 = 171) {
   rd <- cholera::roads
@@ -135,7 +135,7 @@ referenceRadian <- function(id1 = 66, id2 = 171) {
 #' Compute radians between observed point and centroid of 'roads'.
 #'
 #' @param points.data Object. Data frame of centroid and point.
-#' @export
+#' @noRd
 
 radians <- function(points.data) {
   ols <- stats::lm(y ~ x, data = points.data)
@@ -147,7 +147,7 @@ radians <- function(points.data) {
 #'
 #' @param id Numeric. Road segment endpoint ID.
 #' @param dataset Character. "roads", "fatalities", "fatalities.address", "pumps", "pumps.vestry", "ortho.proj", "ortho.proj.pump", or "ortho.proj.pump.vestry".
-#' @export
+#' @noRd
 
 rotatePoint <- function(id = 1, dataset = "roads") {
   rd <- cholera::roads
@@ -309,7 +309,7 @@ subsetPDF <- function(path, dataset = "fatalities.address") {
 #' For latitude longitude audit.
 #' @param id1 Character. First segment ID.
 #' @param id2 Character. Second segment ID.
-#' @export
+#' @noRd
 
 segmentTheta <- function(id1 = "297-1", id2 = "290-1") {
   seg <- cholera::road.segments
