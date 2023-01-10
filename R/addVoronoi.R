@@ -19,52 +19,53 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE,
   line.width = 1, latlong = FALSE) {
 
   if (latlong) {
-    vars <- c("lon", "lat")
+    cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
+    invisible(lapply(cells, function(x) {
+      polygon(x[, c("lon", "lat")], border = color, lty = line.type, 
+        lwd = line.width)
+    }))
   } else {
+    rng <- mapRange(latlong = latlong)
+
+    if (case.location %in% c("address", "nominal") == FALSE) {
+      stop('case.location must be "address" or "nominal".')
+    }
+
+    if (case.location == "address") {
+      if (vestry) {
+        p.data <- cholera::ortho.proj.pump.vestry
+        p.data$street <- cholera::pumps.vestry$street
+      } else {
+        p.data <- cholera::ortho.proj.pump
+        p.data$street <- cholera::pumps$street
+        names(p.data)[names(p.data) %in% c("x.proj", "y.proj")] <- vars
+      }
+    } else if (case.location == "nominal") {
+      if (vestry) {
+        p.data <- cholera::pumps.vestry
+      } else {
+        p.data <- cholera::pumps
+      }
+    }
+
+    p.count <- nrow(p.data)
+    p.ID <- seq_len(p.count)
     vars <- c("x", "y")
-  }
 
-  rng <- mapRange(latlong = latlong)
-
-  if (case.location %in% c("address", "nominal") == FALSE) {
-    stop('case.location must be "address" or "nominal".')
-  }
-
-  if (case.location == "address") {
-    if (vestry) {
-      p.data <- cholera::ortho.proj.pump.vestry
-      # p.data <- latlongOrthoPump(path, vestry = vestry)
-      p.data$street <- cholera::pumps.vestry$street
+    if (is.null(pump.select)) {
+      pump.data <- p.data[, vars]
     } else {
-      p.data <- cholera::ortho.proj.pump
-      # p.data <- latlongOrthoPump(path, vestry = vestry)
-      p.data$street <- cholera::pumps$street
-      names(p.data)[names(p.data) %in% c("x.proj", "y.proj")] <- vars
+      if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
+      if (any(abs(pump.select) %in% p.ID == FALSE)) {
+        stop('With vestry = ', vestry, ", 1 >= |pump.select| <= ", p.count, ".")
+      }
+      pump.data <- cholera::pumps[pump.select, vars]
     }
-  } else if (case.location == "nominal") {
-    if (vestry) {
-      p.data <- cholera::pumps.vestry
-    } else {
-      p.data <- cholera::pumps
-    }
+
+    dat <- deldir::deldir(pump.data, rw = unlist(rng), suppressMsge = TRUE)
+
+    plot(dat, add = TRUE, wline = "tess", showpoints = FALSE, cmpnt_col = color,
+      cmpnt_lty = line.type, lwd = line.width)
+      # cmpnt_col = c(tri = color) wants number 1:8 ...
   }
-
-  p.count <- nrow(p.data)
-  p.ID <- seq_len(p.count)
-
-  if (is.null(pump.select)) {
-    pump.data <- p.data[, vars]
-  } else {
-    if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
-    if (any(abs(pump.select) %in% p.ID == FALSE)) {
-      stop('With vestry = ', vestry, ", 1 >= |pump.select| <= ", p.count, ".")
-    }
-    pump.data <- cholera::pumps[pump.select, vars]
-  }
-
-  dat <- deldir::deldir(pump.data, rw = unlist(rng), suppressMsge = TRUE)
-
-  plot(dat, add = TRUE, wline = "tess", showpoints = FALSE, cmpnt_col = color,
-    cmpnt_lty = line.type, lwd = line.width)
-    # cmpnt_col = c(tri = color) wants number 1:8 ...
 }
