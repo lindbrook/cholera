@@ -3,7 +3,7 @@
 #' Based on set of subgraphs defined by selected inter-point distance.
 #' @param inter.point.dist Numeric. Ceiling for overlapping points.
 #' @return An R list.
-#' @export
+#' @noRd
 
 partitionFatalities <- function(inter.point.dist = 0.15) {
   g <- thresholdFataltiesGraph(inter.point.dist = inter.point.dist)

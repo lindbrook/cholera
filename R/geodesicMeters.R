@@ -4,7 +4,7 @@
 #` horizontal (East-West) and vertical (North-South) components.
 #' @param dat Object. Data.
 #' @param case.address Logical. Use fatalities.address$anchor
-#' @export
+#' @noRd
 
 geodesicMeters <- function(dat = cholera::pumps, case.address = FALSE) {
   origin <- data.frame(lon = min(cholera::roads$lon),

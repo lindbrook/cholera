@@ -4,7 +4,7 @@
 # #' @param cutpoint Numeric. Cutpoint for hierarchical cluster analysis.
 #' @param k Numeric. Number of clusters, k, to identify.
 #' @param path Character. e.g., "~/Documents/Data/".
-#' @export
+#' @noRd
 
 latlongCoordinates <- function(tif, k, path) {
   u.data <- pointsFromGeoTIFF(tif)
