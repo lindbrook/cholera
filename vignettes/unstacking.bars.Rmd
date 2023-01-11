@@ -193,7 +193,7 @@ for (i in seq_along(roads.list)) {
 
 for (i in seq_along(bw)) {
   p <- p + geom_density_2d(data = Snow.deathsB2[[i]], aes(x = x, y = y),
-    color = "red", size = 1/3, h = bw[i])
+    color = "red", linewidth = 1/3, h = bw[i])
 }
 
 p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
@@ -245,7 +245,7 @@ for (i in seq_along(roads.list)) {
 
 for (i in seq_along(bw)) {
   p <- p + geom_density_2d(data = fatalities.unstackedB[[i]], aes(x = x, y = y),
-    color = "red", size = 1/3, h = bw[i])
+    color = "red", linewidth = 1/3, h = bw[i])
 }
 
 p + geom_text(data = broad.df, aes(x = x, y = y), label = "Broad St",
