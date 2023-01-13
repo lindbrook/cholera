@@ -41,23 +41,25 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
 
   plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp,
     main = main, ...)
-  if (add.roads) addRoads(vars)
+  if (add.roads) addRoads(latlong)
   if (add.cases) points(cases[, vars], pch = case.pch, col = case.col,
     cex = 0.5)
   if (add.pumps) {
     addPump(vestry = vestry, col = "blue", pch = 2, latlong = latlong)
   }
   # if (add.landmarks) addLandmarks()
-  if (add.frame) addFrame(vars)
+  if (add.frame) addFrame(latlong)
 }
 
 #' Add all streets and roads to plot.
 #'
-#' @param vars Character. Coordinates.
+#' @param latlong Logical. Use estimated longitude and latitude.
 #' @param col Character. Color
 #' @export
 
-addRoads <- function(vars = c("x", "y"), col = "gray") {
+addRoads <- function(latlong = FALSE, col = "gray") {
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   roads.list <- split(rd[, vars], rd$street)
   invisible(lapply(roads.list, lines, col = col))
@@ -65,12 +67,14 @@ addRoads <- function(vars = c("x", "y"), col = "gray") {
 
 #' Add map border to plot.
 #'
-#' @param vars Character. Coordinate.
+#' @param latlong Logical. Use estimated longitude and latitude.
 #' @param col Character. Color
 #' @param ... Additional plotting parameters.
 #' @export
 
-addFrame <- function(vars = c("x", "y"), col = "black", ...) {
+addFrame <- function(latlong = FALSE, col = "black", ...) {
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
   borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
   border.list <- split(borders[, vars], borders$street)
   invisible(lapply(border.list, lines, col = col, ...))

@@ -4,10 +4,10 @@
 \alias{addFrame}
 \title{Add map border to plot.}
 \usage{
-addFrame(vars = c("x", "y"), col = "black", ...)
+addFrame(latlong = FALSE, col = "black", ...)
 }
 \arguments{
-\item{vars}{Character. Coordinate.}
+\item{latlong}{Logical. Use estimated longitude and latitude.}
 
 \item{col}{Character. Color}
 
