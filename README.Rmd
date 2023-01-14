@@ -161,6 +161,12 @@ plot(latlongWalkingPath(578))
 plot(neighborhoodWalking())
 plot(latlongNeighborhoodWalking())
 ```
+```{r tanaka}
+tanakaContourPlot()
+addRoads(latlong = TRUE, col = "white")
+addPump(latlong = TRUE, col = "white")
+title("Tanaka contour elevation")
+```
 
 #### vignettes
 

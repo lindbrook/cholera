@@ -248,6 +248,18 @@ plot(latlongNeighborhoodWalking())
 
 <img src="man/figures/README-latlong_walking-1.png" width="50%" /><img src="man/figures/README-latlong_walking-2.png" width="50%" />
 
+``` r
+tanakaContourPlot()
+> Mosaicing & Projecting
+> Clipping DEM to locations
+> Note: Elevation units are in meters.
+addRoads(latlong = TRUE, col = "white")
+addPump(latlong = TRUE, col = "white")
+title("Tanaka contour elevation")
+```
+
+![](man/figures/README-tanaka-1.png)<!-- -->
+
 #### vignettes
 
 The vignettes are available in the package as well as online at the
