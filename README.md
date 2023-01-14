@@ -26,6 +26,8 @@
   Vestry report.
 - With ‘cholera’ version \>= 0.7.0, support for parallel computation now
   includes Windows in addition to Linux and macOS.
+- Preliminary support for georeferenced (longitude and latitude)
+  versions of data and functions.
 
 #### getting started
 
@@ -219,6 +221,21 @@ strongly discourage against using parallelization within a GUI or
 embedded environment. See `vignette("Parallelization")` for details.
 
 #### longitude and latitude (prototypes)
+
+‘cholera’ now has preliminary and limited support for a georeferenced
+(longitude and latitude) version of Dodson and Tobler’s digitization of
+John Snow’s map. This support goes a bit beyond a proof of concept but
+is currently a less than complete implementation of the package’s native
+(non-georeferenced) functionality.
+
+The georeferencing was done using [QGIS](https://qgis.org/);
+specifically its Georeferencer tool and its interface to
+[OpenStreetMap](https://www.openstreetmap.org). The target coordinate
+reference system (CRS) of these data is EPSG:4326.
+
+What makes the georeferencing preliminary is that the choice of ground
+control points, tranformation type (e.g., thin plate spine), and
+resampling method (e.g., nearest neighbor) are still in flux.
 
 ``` r
 snowMap()

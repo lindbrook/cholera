@@ -29,6 +29,7 @@ library(cholera)
 * Includes the revised pump data used in the second version of Snow's map from the Vestry report, which also includes the "correct" location of the Broad Street pump.
 * Adds two aggregate time series fatalities data sets, taken from the Vestry report.
 * With 'cholera' version >= 0.7.0, support for parallel computation now includes Windows in addition to Linux and macOS.
+* Preliminary support for georeferenced (longitude and latitude) versions of data and functions.
 
 #### getting started
 
@@ -141,6 +142,12 @@ plot(neighborhoodVoronoi(pump.select = -7))
 Parallel computation is implemented using the 'parallel' package, which is part of the base R distribution. To enable parallelization, set `multi.core = TRUE` where available. Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("Parallelization")` for details.
 
 #### longitude and latitude (prototypes)
+
+'cholera' now has preliminary and limited support for a georeferenced (longitude and latitude) version of Dodson and Tobler's digitization of John Snow's map. This support goes a bit beyond a proof of concept but is currently a less than complete implementation of the package's native (non-georeferenced) functionality.
+
+The georeferencing was done using [QGIS](https://qgis.org/); specifically its Georeferencer tool and its interface to [OpenStreetMap](https://www.openstreetmap.org). The target coordinate reference system (CRS) of these data is EPSG:4326.
+
+What makes the georeferencing preliminary is that the choice of ground control points, tranformation type (e.g., thin plate spine), and resampling method (e.g., nearest neighbor) are still in flux.
 
 ```{r latlong, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
 snowMap()
