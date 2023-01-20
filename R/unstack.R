@@ -78,7 +78,7 @@ unstackFatalities <- function(multi.core = TRUE, compute = FALSE,
     new.st <- "160-3"
 
     case.select <- 286
-    case <- fatalities[case.select, ]
+    case <- fixed.fatalities[case.select, ]
     x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x2"]
     y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y2"]
     ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
@@ -87,7 +87,7 @@ unstackFatalities <- function(multi.core = TRUE, compute = FALSE,
     ortho.projB <- rbind(ortho.projB, data.fix)
 
     case.select <- 56
-    case <- fatalities[case.select, ]
+    case <- fixed.fatalities[case.select, ]
     x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x2"]
     y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y2"]
     ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
@@ -95,41 +95,46 @@ unstackFatalities <- function(multi.core = TRUE, compute = FALSE,
       ortho.dist = c(ortho.dist), case = case.select)
     ortho.projB <- rbind(ortho.projB, data.fix)
 
+
+    ## Use orthogonal projection instead of segment endpoint
+    # stack440 <- c(440, 480, 500, 571, 444, 497, 145) # @ "259-1"
     ## William and Mary Yard: 440 ##
     # ortho.proj[ortho.proj$case == 440, ]
 
     # 259-2: |
     # 259-1:  _
 
-    old.st <- "317-3"
-    new.st <- "259-1"
+    # old.st <- "317-3"
+    # new.st <- "259-1"
 
-    case.select <- 440
-    case <- fatalities[case.select, ]
-    x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x2"]
-    y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y2"]
-    ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
-    data.fix <- data.frame(road.segment = new.st, x.proj, y.proj,
-      ortho.dist = c(ortho.dist), case = case.select)
-    ortho.projB <- rbind(ortho.projB, data.fix)
+    # case.select <- 440
+    # case <- fixed.fatalities[case.select, ]
+    # x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x2"]
+    # y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y2"]
+    # ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
+    # data.fix <- data.frame(road.segment = new.st, x.proj, y.proj,
+    #   ortho.dist = c(ortho.dist), case = case.select)
+    # ortho.projB <- rbind(ortho.projB, data.fix)
 
-    ## St James Workhouse: [369] 434, 11, 53, 193 ##
+
+    ## Use Poland Street address!
+    ## St James Workhouse: [369] 434, 11, 53, 193 
     # move anchor 369 and associated cases to endpoint of St James Workhouse
     # segment
 
-    old.st <- "194-1"
-    new.st <- "148-1"
+    # old.st <- "194-1"
+    # new.st <- "148-1"
 
-    case.select <- c(369, 434, 11, 53, 193)
-    case <- fatalities[fatalities$case %in% case.select, ]
-    x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x1"]
-    y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y1"]
-    ortho.dist <- vapply(case$case, function(x) {
-      stats::dist(rbind(case[case$case == x, c("x", "y")], c(x.proj, y.proj)))
-    }, numeric(1L))
-    data.fix <- data.frame(road.segment = new.st, x.proj, y.proj,
-      ortho.dist = ortho.dist, case = case$case)
-    ortho.projB <- rbind(ortho.projB, data.fix)
+    # case.select <- c(369, 434, 11, 53, 193)
+    # case <- fixed.fatalities[fixed.fatalities$case %in% case.select, ]
+    # x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x1"]
+    # y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y1"]
+    # ortho.dist <- vapply(case$case, function(x) {
+    #   stats::dist(rbind(case[case$case == x, c("x", "y")], c(x.proj, y.proj)))
+    # }, numeric(1L))
+    # data.fix <- data.frame(road.segment = new.st, x.proj, y.proj,
+    #   ortho.dist = ortho.dist, case = case$case)
+    # ortho.projB <- rbind(ortho.projB, data.fix)
 
     ## Re-assemble ##
 
