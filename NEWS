@@ -1,3 +1,9 @@
+cholera 0.7.9.9133
+==================
+
+- roadSegmentFix(): include cases 440 and 145 in road segment "259-1".
+
+
 cholera 0.7.9.9132
 ==================
 
