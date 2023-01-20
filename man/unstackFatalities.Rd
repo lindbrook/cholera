@@ -4,15 +4,12 @@
 \alias{unstackFatalities}
 \title{Unstack "stacks" in Snow's cholera map.}
 \usage{
-unstackFatalities(multi.core = TRUE, compute = FALSE,
-  fatalities = fixFatalities(), dev.mode = FALSE)
+unstackFatalities(multi.core = TRUE, compute = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 
 \item{compute}{Logical. \code{TRUE} computes data. \code{FALSE} uses pre-computed data.}
-
-\item{fatalities}{Corrected fatalities data from \code{cholera::fixFatalities()}. For original data, use \code{HistData::Snow.deaths}.}
 
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
