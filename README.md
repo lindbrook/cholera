@@ -228,7 +228,7 @@ John Snow’s map. This support goes a bit beyond a proof of concept but
 is currently a less than complete implementation of the package’s native
 (non-georeferenced) functionality.
 
-The georeferencing was done using [QGIS](https://qgis.org/);
+The georeferencing was done using [QGIS](https://qgis.org/en/site/);
 specifically its Georeferencer tool and its interface to
 [OpenStreetMap](https://www.openstreetmap.org). The target coordinate
 reference system (CRS) of these data is EPSG:4326.

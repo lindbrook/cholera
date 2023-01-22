@@ -1,17 +1,16 @@
 Duplicate and Missing Cases
 ================
 lindbrook
-2019-02-10
+2023-01-22
 
 John Snow’s map of the 1854 cholera outbreak in London is a canonical
-example of data visualization:\[1\]
+example of data visualization:[^1]
 
 ![](msu-snows-mapB.jpg)
 
 In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the
-original data are no longer available,\[2\] they have been preserved in
-Michael Friendly’s ‘HistData’ package. These data are plotted
-below:
+original data are no longer available,[^2] they have been preserved in
+Michael Friendly’s ‘HistData’ package. These data are plotted below:
 
 <img src="duplicate.missing.cases_files/figure-gfm/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
 
@@ -21,7 +20,7 @@ However, I would argue that there are two apparent coding errors in
 these data that stem from three misplaced cases.
 
 While the data record 578 bars, only 575 of them have a unique x-y
-coordinate.\[3\] Three pairs have identical coordinates: 1) 93 and 214;
+coordinate.[^3] Three pairs have identical coordinates: 1) 93 and 214;
 2) 91 and 241; and 3) 209 and 429. Within the scheme of stacking bars to
 represent the number of fatalities at a given “address”, this should not
 occur. Each bar should have its own unique x-y coordinate. For this
@@ -69,18 +68,18 @@ in this package’s GitHub repository.
 
 ## Notes
 
-1.  The map was originally published in Snow’s 1855 book, “On The Mode
+[^1]: The map was originally published in Snow’s 1855 book, “On The Mode
     Of Communication Of Cholera”, and was reprinted as John Snow et.
     al., 1936. *Snow on Cholera: Being a Reprint of Two Papers*. New
     York: The Common Wealth Fund. You can also find the map online (a
     high resolution version is available at
-    <http://www.ph.ucla.edu/epi/snow/highressnowmap.html>) and in many
+    <https://www.ph.ucla.edu/epi/snow/highressnowmap.html>) and in many
     books, including Edward Tufte’s 1997 “Visual Explanations: Images
     and Quantities, Evidence and Narrative”.
 
-2.  <http://www.ncgia.ucsb.edu/pubs/snow/snow.html>
+[^2]: <http://www.ncgia.ucsb.edu/pubs/snow/snow.html>
 
-3.  There is a lack of consensus about the actual number of cases
+[^3]: There is a lack of consensus about the actual number of cases
     represented in Snow’s map. For what it’s worth, I manually recounted
     the data on Snow’s map and the result I got matches Dodson and
     Tobler’s.

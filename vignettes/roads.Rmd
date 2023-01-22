@@ -49,7 +49,7 @@ length(border)
 
 ## Road names
 
-The primary source for road names is Snow's map (a high resolution version is available [here](http://www.ph.ucla.edu/epi/snow/highressnowmap.html). While great effort was made to correctly record and cross-reference names, there may still be errors. Error reports and suggestions for amendments are welcome.
+The primary source for road names is Snow's map (a high resolution version is available [here](https://www.ph.ucla.edu/epi/snow/highressnowmap.html). While great effort was made to correctly record and cross-reference names, there may still be errors. Error reports and suggestions for amendments are welcome.
 
 Some roads on the map do not have a name. In those cases, I attach unique labels like "Unknown-C".
 
@@ -57,7 +57,7 @@ Some names appear multiple times even though they lie at different locations. Fo
 
 ## Queen Street (I) and Marlborough Mews
 
-There is one apparent coding error in Dodson and Tobler's road data. Queen Street (I) extends too far: the water pump #5 is clearly located on Marlborough Mews (see [map](http://www.ph.ucla.edu/epi/snow/highressnowmap.html), cited above) but ends up on Queen Street (I).
+There is one apparent coding error in Dodson and Tobler's road data. Queen Street (I) extends too far: the water pump #5 is clearly located on Marlborough Mews (see [map](https://www.ph.ucla.edu/epi/snow/highressnowmap.html), cited above) but ends up on Queen Street (I).
 
 I amend this by moving the end point of Queen Street (I) westward so that the street only runs in a north-south direction. I do so by reassigning the segment that runs east-west to be part of Marlborough Mews.
 

@@ -1,7 +1,7 @@
 “Unstacking” Bars
 ================
 lindbrook
-2023-01-11
+2023-01-22
 
 ## Overview
 
@@ -177,7 +177,7 @@ in this package’s GitHub repository.
     al., 1936. *Snow on Cholera: Being a Reprint of Two Papers*. New
     York: The Common Wealth Fund. You can also find the map online (a
     high resolution version is available at
-    <http://www.ph.ucla.edu/epi/snow/highressnowmap.html>) and in many
+    <https://www.ph.ucla.edu/epi/snow/highressnowmap.html>) and in many
     books, including Edward Tufte’s 1997 “Visual Explanations: Images
     and Quantities, Evidence and Narrative”.
 
