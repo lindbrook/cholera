@@ -168,6 +168,22 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
                                         c(x.proj, y.proj))))
       ortho.pts <- data.frame(x.proj, y.proj)
       data.frame(road.segment = seg, ortho.pts, ortho.dist)
+    } else if (addr == 440) {
+      # Case 440 check; nominal (non-latlong) does bisect (intersect) #
+      # use nearest road segment endpoint #
+
+      # tmp <- rbind(case, seg.df, c(x.proj, y.proj))
+      # plot(seg.df, type = "l", xlim = range(tmp$x), ylim = range(tmp$y))
+      # points(seg.df, pch = 15)
+      # points(case, col = "red")
+      # points(x.proj, y.proj, col = "red", pch = 0)
+      # segments(case$x, case$y, x.proj, y.proj, col = "red")
+      # segments(case$x, case$y, seg.df[2, "x"], seg.df[2, "y"],
+      #   col = "dodgerblue")
+
+      nominal.dist <- c(stats::dist(rbind(case, seg.df[2, ])))
+      data.frame(road.segment = seg, x.proj = seg.df[2, "x"],
+        y.proj = seg.df[2, "y"], ortho.dist = nominal.dist)
     } else {
       null.out <- data.frame(matrix(NA, ncol = 4))
       names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
