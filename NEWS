@@ -1,7 +1,7 @@
 cholera 0.7.9.9136
 ==================
 
-latlongOrthoAddress(): use roadSegmentFix(), add exception for case 440.
+- latlongOrthoAddress(): use roadSegmentFix(), add exception for case 440.
 
 
 cholera 0.7.9.9135
