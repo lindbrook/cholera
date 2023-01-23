@@ -27,39 +27,7 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
   seg.endpts <- c("x1", "y1", "x2", "y2")
 
   # classification errors due to bar orientation
-  road.segment.fix <- list(
-        "216-1" = c(290, 61, 174, 547, 523, 521, 138, 59, 340, 508),
-        "290-1" = c(409, 131, 18, 575, 566, 518, 297),
-        # "259-1" = 145,
-        "259-1" = 440,
-        "231-1" = c(329, 248, 408, 471),
-        "340-2" = c(172, 62, 111),
-        "128-1" = 302,
-        "141-1" = 163,
-        "169-1" = 516,
-        "188-1" = 372,
-        "222-1" = 520,
-        "237-1" = 308,
-        "330-1" = 453,
-        "207-1" = 277,
-        "196-1" = 346,
-        "186-1" = 278,
-        "261-1" = 69,
-        "270-1" = 267,
-        "159-1" = 165,
-        "193-1" = c(463, 423),
-        "216-1" = c(122, 91),
-        "203-1" = 287,
-        "259-2" = c(303, 513, 405, 175),
-        "297-1" = 117,
-        "224-1" = c(355, 253),
-        "234-1" = c(254, 367, 492, 406),
-        "193-1" = c(180, 452, 551),
-        "178-1" = 85,
-        "231-1" = 341,
-        "160-3" = 558,
-        "269-1" = 462,
-        "326-2" = 483)
+  road.segment.fix <- roadSegmentFix()
 
   # check for segments with multiple cases
   multi.audit <- vapply(road.segment.fix, function(x) {
@@ -200,6 +168,22 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
                                         c(x.proj, y.proj))))
       ortho.pts <- data.frame(x.proj, y.proj)
       data.frame(road.segment = seg, ortho.pts, ortho.dist)
+    } else if (addr == 440) {
+      # Case 440 check; nominal (non-latlong) does bisect (intersect) #
+      # use nearest road segment endpoint #
+
+      # tmp <- rbind(case, seg.df, c(x.proj, y.proj))
+      # plot(seg.df, type = "l", xlim = range(tmp$x), ylim = range(tmp$y))
+      # points(seg.df, pch = 15)
+      # points(case, col = "red")
+      # points(x.proj, y.proj, col = "red", pch = 0)
+      # segments(case$x, case$y, x.proj, y.proj, col = "red")
+      # segments(case$x, case$y, seg.df[2, "x"], seg.df[2, "y"],
+      #   col = "dodgerblue")
+
+      nominal.dist <- c(stats::dist(rbind(case, seg.df[2, ])))
+      data.frame(road.segment = seg, x.proj = seg.df[2, "x"],
+        y.proj = seg.df[2, "y"], ortho.dist = nominal.dist)
     } else {
       null.out <- data.frame(matrix(NA, ncol = 4))
       names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
