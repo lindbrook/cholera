@@ -148,3 +148,52 @@ plot.classifier_audit <- function(x, zoom = 0.5, unit = "meter", ...) {
   title(main = paste0(nm, ": Segment # ", x$segment, ", Case # ", x$case),
         sub = paste(x$test, "; ortho.dist =", round(ortho.dist, 1), d.unit))
 }
+
+#' Visually check orthogonal projection of case fatalities to road segments (address).
+#'
+#' @param case Numeric. case ID from \code{fatalities}.
+#' @param rd.seg Character. Road segment ID.
+#' @export
+
+orthoProjector <- function(case = 483, rd.seg = "326-2") {
+  case.data <- cholera::fatalities[cholera::fatalities$case == case, ]
+  seg.data <- cholera::road.segments[cholera::road.segments$id == rd.seg,
+    c("x1", "y1", "x2", "y2")]
+  seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
+                       y = c(seg.data$y1, seg.data$y2))
+  ols <- stats::lm(y ~ x, data = seg.df)
+  segment.slope <- stats::coef(ols)[2]
+  segment.intercept <- stats::coef(ols)[1]
+  orthogonal.slope <- -1 / segment.slope
+  orthogonal.intercept <- case.data$y - orthogonal.slope * case.data$x
+
+  x.proj <- (orthogonal.intercept - segment.intercept) /
+            (segment.slope - orthogonal.slope)
+  y.proj <- segment.slope * x.proj + segment.intercept
+
+  x.rng <- range(seg.data[, c("x1", "x2")], case.data$x, x.proj)
+  y.rng <- range(seg.data[, c("y1", "y2")], case.data$y, y.proj)
+
+  distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
+    stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
+
+  bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
+
+  plot(seg.data[, c("x1", "y1")], xlim = x.rng, ylim = y.rng, xlab = "x",
+    ylab = "y", asp = 1)
+  points(seg.data[, c("x2", "y2")])
+  segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2)
+  text(case.data$x, case.data$y, pos = 1, labels = case)
+  title(main = rd.seg)
+
+  if (bisect.test) {
+    points(case.data$x, case.data$y, col = "green", pch = 16)
+    arrows(case.data$x, case.data$y, x.proj, y.proj, length = 0.1,
+      col = "green")
+  } else {
+    points(case.data$x, case.data$y, col = "red", pch = 16)
+    segments(seg.data$x2, seg.data$y2, x.proj, y.proj, lty = "dotted",
+      col = "gray")
+    arrows(case.data$x, case.data$y, x.proj, y.proj, length = 0.1, col = "red")
+  }
+}
