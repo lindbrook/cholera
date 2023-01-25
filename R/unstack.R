@@ -21,7 +21,7 @@ unstackFatalities <- function(multi.core = TRUE, compute = FALSE,
     border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
     fixed.fatalities <- fixFatalities()
-    
+
     orthogonal.projection <- orthoProj(fixed.fatalities, fixed.fatalities$case,
       cores, dev.mode)
     ortho.proj <- do.call(rbind, orthogonal.projection)
@@ -87,25 +87,21 @@ unstackFatalities <- function(multi.core = TRUE, compute = FALSE,
     #   ortho.dist = c(ortho.dist), case = case.select)
     # ortho.projB <- rbind(ortho.projB, data.fix)
 
+    ## St James Workhouse: [369] 434, 11, 53, 193
+    # move anchor 369 and associated cases to intersection of Poland Street and
+    # endpoint of St James Workhouse segment. Use Poland Street address!
 
-    ## Use Poland Street address!
-    ## St James Workhouse: [369] 434, 11, 53, 193 
-    # move anchor 369 and associated cases to endpoint of St James Workhouse
-    # segment
-
-    # old.st <- "194-1"
-    # new.st <- "148-1"
-
-    # case.select <- c(369, 434, 11, 53, 193)
-    # case <- fixed.fatalities[fixed.fatalities$case %in% case.select, ]
-    # x.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "x1"]
-    # y.proj <- cholera::road.segments[cholera::road.segments$id == new.st, "y1"]
-    # ortho.dist <- vapply(case$case, function(x) {
-    #   stats::dist(rbind(case[case$case == x, c("x", "y")], c(x.proj, y.proj)))
-    # }, numeric(1L))
-    # data.fix <- data.frame(road.segment = new.st, x.proj, y.proj,
-    #   ortho.dist = ortho.dist, case = case$case)
-    # ortho.projB <- rbind(ortho.projB, data.fix)
+    pl.st <- "194-1"
+    case.select <- c(369, 434, 11, 53, 193)
+    case <- fixed.fatalities[fixed.fatalities$case %in% case.select, ]
+    x.proj <- cholera::road.segments[cholera::road.segments$id == pl.st, "x1"]
+    y.proj <- cholera::road.segments[cholera::road.segments$id == pl.st, "y1"]
+    eucl.dist <- vapply(case$case, function(x) {
+      stats::dist(rbind(case[case$case == x, c("x", "y")], c(x.proj, y.proj)))
+    }, numeric(1L))
+    data.fix <- data.frame(road.segment = pl.st, x.proj, y.proj,
+      ortho.dist = eucl.dist, case = case$case)
+    ortho.projB <- rbind(ortho.projB, data.fix)
 
     ## Re-assemble ##
 
@@ -128,7 +124,7 @@ unstackFatalities <- function(multi.core = TRUE, compute = FALSE,
 
     cutpoint <- 0.05
     multiple.obs <- road.incidence[road.incidence$count > 1, ]
-    multiple.address <- multipleAddress(multiple.obs, ortho.proj, 
+    multiple.address <- multipleAddress(multiple.obs, ortho.proj,
       fixed.fatalities, cutpoint, cores, dev.mode)
 
     multiple.unstacked <- multipleUnstack(multiple.address, cores, dev.mode)
@@ -141,7 +137,7 @@ unstackFatalities <- function(multi.core = TRUE, compute = FALSE,
     single.unstacked$multiple.obs.seg <- "No"
 
     unstacked <- rbind(multiple.unstacked, single.unstacked)
-    unstacked <- merge(unstacked, fixed.fatalities, by.x = "anchor", 
+    unstacked <- merge(unstacked, fixed.fatalities, by.x = "anchor",
       by.y = "case")
 
     fatalities.unstacked <- unstacked[, c("case", "x", "y")]
@@ -182,6 +178,7 @@ unstackFatalities <- function(multi.core = TRUE, compute = FALSE,
     # identical(ortho.proj$y.proj, cholera::ortho.proj$y.proj)
     # ortho.proj[ortho.proj$x.proj != cholera::ortho.proj$x.proj, ]
     # cholera::ortho.proj[ortho.proj$x.proj != cholera::ortho.proj$x.proj, ]
+    # usethis::use_data(ortho.proj, overwrite = TRUE)
 
   } else {
     list(anchor.case = cholera::anchor.case,

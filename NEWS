@@ -1,3 +1,9 @@
+cholera 0.7.9.9138
+==================
+
+- use Poland Street as address for St James Workhouse.
+
+
 cholera 0.7.9.9137
 ==================
 
@@ -22,7 +28,6 @@ cholera 0.7.9.9134
 
 - unstackFatalities(): use roadSegmentFix().
 - use orthogonal projection instead of segment endpoint for case 440.
-- use Poland Street as address for St James Workhouse.
 
 
 cholera 0.7.9.9133
