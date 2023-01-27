@@ -55,9 +55,11 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
       as.numeric(unlist(strsplit(x[1], "_&_"))[-1])
     }))
 
+    p.data <- data.frame(do.call(rbind, strsplit(p, "_&_")))
+
     path <- data.frame(id = seq_len(nrow(p.data)),
-                        x = -p.data[, 1],
-                        y = p.data[, 2])
+                        x = as.numeric(p.data[, 1]),
+                        y = as.numeric(p.data[, 2]))
 
     vars <- c("x", "y")
 
