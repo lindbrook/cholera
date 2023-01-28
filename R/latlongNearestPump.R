@@ -133,3 +133,8 @@ latlong_pathData <- function(dat, pump.select, weighted, vestry, cores) {
   list(case = ortho.addr$case, pump = nearest.pump, distance = min.dist,
     path = short.path)
 }
+
+# latlong.nearest.pump <- latlongNearestPump()
+# latlong.nearest.pump.vestry <- latlongNearestPump(vestry = TRUE)
+# usethis::use_data(latlong.nearest.pump, overwrite = TRUE)
+# usethis::use_data(latlong.nearest.pump.vestry, overwrite = TRUE)

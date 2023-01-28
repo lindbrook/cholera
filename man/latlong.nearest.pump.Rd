@@ -5,7 +5,7 @@
 \alias{latlong.nearest.pump}
 \title{Walking distance to Nearest Pump (latlong prototype).}
 \format{
-An object of class \code{list} of length 2.
+An object of class \code{list} of length 3.
 }
 \usage{
 latlong.nearest.pump
