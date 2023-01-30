@@ -177,13 +177,7 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
     est.time <- distanceTime(street.length, distance.unit = distance.unit,
       time.unit = time.unit, walking.speed = walking.speed)
 
-    if (time.unit == "hour") {
-      nominal.time <- paste(round(est.time, 1), "hr")
-    } else if (time.unit == "minute") {
-      nominal.time <- paste(round(est.time, 1), "min")
-    } else if (time.unit == "second") {
-      nominal.time <- paste(round(est.time, 1), "sec")
-    }
+    nominal.time <- nominalTime(est.time, time.unit)
 
     if (distance.unit == "native") {
       subtitle <- paste(round(street.length, 1), "units;", nominal.time)
