@@ -1010,21 +1010,8 @@ plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
 
   drawPath(dat, case.color, compute.coords = FALSE)
 
-  if (x$time.unit == "hour") {
-    nominal.time <- paste(round(x$data$time, 1), "hr")
-  } else if (x$time.unit == "minute") {
-    nominal.time <- paste(round(x$data$time, 1), "min")
-  } else if (x$time.unit == "second") {
-    nominal.time <- paste(round(x$data$time), "sec")
-  }
-
-  if (x$distance.unit == "native") {
-    d.unit <- "units;"
-  } else if (x$distance.unit == "meter") {
-    d.unit <- "m;"
-  } else if (x$distance.unit == "yard") {
-    d.unit <- "yd;"
-  }
+  d.unit <- distanceUnit(x$distance.unit)
+  nominal.time <- nominalTime(x$data$time, x$time.unit)
 
   # mileposts #
 

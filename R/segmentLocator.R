@@ -119,13 +119,7 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
   est.time <- distanceTime(segment.length, distance.unit = distance.unit,
     time.unit = time.unit, walking.speed = walking.speed)
 
-  if (time.unit == "hour") {
-    nominal.time <- paste(round(est.time, 1), "hr.")
-  } else if (time.unit == "minute") {
-    nominal.time <- paste(round(est.time, 1), "mins.")
-  } else if (time.unit == "second") {
-    nominal.time <- paste(round(est.time, 1), "secs.")
-  }
+  nominal.time <- nominalTime(est.time, time.unit)
 
   if (add.subtitle) {
     if (distance.unit == "native") {

@@ -805,22 +805,9 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
     title(main = paste("Pump", x$data$pumpA, "to Pump", x$data$pumpB))
   }
 
-  if (x$time.unit == "hour") {
-    nominal.time <- paste(round(x$t, 1), "hr")
-  } else if (x$time.unit == "minute") {
-    nominal.time <- paste(round(x$t, 1), "min")
-  } else if (x$time.unit == "second") {
-    nominal.time <- paste(round(x$t, 1), "sec")
-  }
-
-  if (x$distance.unit == "native") {
-    d.unit <- "units;"
-  } else if (x$distance.unit == "meter") {
-    d.unit <- "m;"
-  } else if (x$distance.unit == "yard") {
-    d.unit <- "yd;"
-  }
-
+  d.unit <- distanceUnit(x$distance.unit)
+  nominal.time <- nominalTime(x$t, x$time.unit)
+  
   # mileposts #
 
   if (is.null(unit.posts)) {
