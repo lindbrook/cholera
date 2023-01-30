@@ -36,3 +36,38 @@ distanceTime <- function(x, distance.unit = "meter", time.unit = "second",
     (3600 * x) / (1000 * speed)
   }
 }
+
+#' Compute unit of distance (for labels and text).
+#'
+#' @param unit Character. Distance unit.
+#' @return An R character vector.
+#' @noRd
+
+distanceUnit <- function(unit) {
+  if (unit == "native") {
+    d.unit <- "units;"
+  } else if (unit == "meter") {
+    d.unit <- "m;"
+  } else if (unit == "yard") {
+    d.unit <- "yd;"
+  }
+  d.unit
+}
+
+#' Compute approximate travel time (for labels and text).
+#'
+#' @param time Numeric. Travel time.
+#' @param unit Character Time unit.
+#' @return An R character vector.
+#' @noRd
+
+nominalTime <- function(time, unit) {
+  if (unit == "hour") {
+    nominal.time <- paste(round(time, 1), "hr")
+  } else if (unit == "minute") {
+    nominal.time <- paste(round(time, 1), "min")
+  } else if (unit == "second") {
+    nominal.time <- paste(round(time, 1), "sec")
+  }
+  nominal.time
+}
