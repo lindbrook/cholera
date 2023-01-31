@@ -5,7 +5,7 @@
 #' @param vestry Logical.
 #' @param pch Integer. R pch.
 #' @param cex Numeric.
-#' @export
+#' @noRd
 
 voronoiPDF <- function(path, vestry = FALSE, pch = 46, cex = 1) {
   file.nm <- "voronoi.polygon"
@@ -39,7 +39,7 @@ voronoiPDF <- function(path, vestry = FALSE, pch = 46, cex = 1) {
 #' Compute Vertices of Voronoi Polygons.
 #'
 #' @param vestry Logical.
-#' @export
+#' @noRd
 #' @note This documents the computation of the voronoi.polygons and voronoi.polygons.vestry lists.
 
 pumpsVoronoiPolygons <- function(vestry = FALSE) {

@@ -109,11 +109,11 @@ openTriadRoads <- function(subgraphs, census, census.ct) {
 #' For georeferencing in QGIS.
 #' @param path Character. e.g., "~/Documents/Data/".
 #' @param pch Numeric or Character.
-#' @export
+#' @noRd
 
 partitionRoadsPDF <- function(path, pch = 46) {
   pts <- partitionRoads()
-  rng <- cholera::mapRange()
+  rng <- mapRange()
   pre <- "roads."
   post <- ".pdf"
 

@@ -140,7 +140,7 @@ partitionFrame <- function(inter.point.dist = 0.15) {
 #' @param path Character. e.g., "~/Documents/Data/"
 #' @param pch Integer. R pch.
 #' @param cex Numeric.
-#' @export
+#' @noRd
 
 framePartitionPDF <- function(path, pch = 46, cex = 1) {
   file.nm <- "frame"

@@ -257,11 +257,11 @@ partitionFatalities <- function(inter.point.dist = 0.15) {
 #' For georeferencing in QGIS.
 #' @param path Character. e.g., "~/Documents/Data/".
 #' @param pch Numeric or Character.
-#' @export
+#' @noRd
 
 partitionFatalitiesPDF <- function(path, pch = 46) {
   pts <- partitionFatalities()
-  rng <- cholera::mapRange()
+  rng <- mapRange()
   pre <- "fatalities."
   post <- ".pdf"
   invisible(lapply(names(pts), function(nm) {

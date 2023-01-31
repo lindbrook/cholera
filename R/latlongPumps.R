@@ -55,7 +55,7 @@ latlongPumps <- function(path, vestry = FALSE) {
 #' @param vestry Logical.
 #' @param pch Integer. R pch.
 #' @param cex Numeric.
-#' @export
+#' @noRd
 
 pumpsPDF <- function(path, vestry = FALSE, pch = 46, cex = 1) {
   file.nm <- "pumps"

@@ -422,11 +422,11 @@ sixDoubleTriangleTwoTail <- function(dat, subgraphs) {
 #' For georeferencing in QGIS.
 #' @param path Character. e.g., "~/Documents/Data/".
 #' @param pch Numeric or Character.
-#' @export
+#' @noRd
 
 partitionOrthoAddressesPDF <- function(path, pch = 46) {
   pts <- partitionOrthoAddresses()
-  rng <- cholera::mapRange()
+  rng <- mapRange()
   pre <- "ortho.address."
   post <- ".pdf"
 

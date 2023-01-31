@@ -7,7 +7,7 @@
 #' @param coordinates Logical. Orthogonal projection coordinates.
 #' @note This function is a diagnostic. It is not a guarantee of correct classification.
 #' @return Logical \code{TRUE} or \code{FALSE}
-#' @export
+#' @noRd
 #' @examples
 #' classifierAudit(case = 483, segment = "326-2")
 #' plot(classifierAudit(case = 483, segment = "326-2"))
@@ -79,7 +79,7 @@ classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE,
 #' @param x An object of class "classifier_audit" created by \code{classifierAudit()}.
 #' @param ... Additional parameters.
 #' @return An R data frame.
-#' @export
+#' @noRd
 #' @examples
 #' classifierAudit(case = 483, segment = "326-2")
 #' print(classifierAudit(case = 483, segment = "326-2"))
@@ -100,7 +100,7 @@ print.classifier_audit <- function(x, ...) {
 #' @param unit Character. Unit of distance: "meter" (the default), "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.
 #' @param ... Additional parameters.
 #' @return A base R graphic.
-#' @export
+#' @noRd
 #' @examples
 #' plot(classifierAudit(case = 483, segment = "326-2"))
 
@@ -153,7 +153,7 @@ plot.classifier_audit <- function(x, zoom = 0.5, unit = "meter", ...) {
 #'
 #' @param case Numeric. case ID from \code{fatalities}.
 #' @param rd.seg Character. Road segment ID.
-#' @export
+#' @noRd
 
 orthoProjector <- function(case = 483, rd.seg = "326-2") {
   case.data <- cholera::fatalities[cholera::fatalities$case == case, ]

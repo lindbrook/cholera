@@ -2,7 +2,7 @@
 #'
 #' @param x An object created by \code{neighborhoodEuclidean()}, \code{neighborhoodVoronoi()} or \code{neighborhoodWalking()}.
 #' @return An R vector.
-#' @export
+#' @noRd
 #' @examples
 #' \dontrun{
 #' pearsonResiduals(neighborhoodEuclidean())
@@ -14,7 +14,6 @@ pearsonResiduals <- function(x) UseMethod("pearsonResiduals", x)
 
 pearsonResiduals.default <- function(x) NULL
 
-#' @export
 pearsonResiduals.euclidean <- function(x) {
   obs <- unclass(table(x$nearest.pump))
   exp <- unclass(table(neighborhoodEuclidean(pump.select = x$pump.id,
@@ -34,7 +33,6 @@ pearsonResiduals.euclidean <- function(x) {
   output
 }
 
-#' @export
 pearsonResiduals.voronoi <- function(x) {
   census <- x$statistic.data
   count <- vapply(census, sum, numeric(1L))
@@ -49,7 +47,6 @@ pearsonResiduals.voronoi <- function(x) {
   output
 }
 
-#' @export
 pearsonResiduals.walking <- function(x) {
   dat <- expectedWalkingLength(x)
   obs <- dat$obs

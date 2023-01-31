@@ -2,7 +2,7 @@
 #'
 #' "Resolution" of georeferenced points with pch = 46 (i.e., pch = ".").
 #' @param inter.point.dist Numeric. Ceiling for overlapping points.
-#' @export
+#' @noRd
 
 pointOverlap <- function(inter.point.dist = 0.15) {
   g <- thresholdAddressGraph(inter.point.dist = inter.point.dist)
@@ -29,7 +29,7 @@ pointOverlap <- function(inter.point.dist = 0.15) {
 #' @param data Character. "ntuple" or "dyad".
 #' @param type Character. "map" or "graph".
 #' @param ... Additional plotting parameters.
-#' @export
+#' @noRd
 
 plot.pointOverlap <- function(x, data = "ntuple", type = "map", ...) {
   vars <- c("x", "y")

@@ -59,8 +59,7 @@ simulateFatalities <- function(compute = FALSE, multi.core = TRUE,
         within.radius <- unlist(within.radius)
 
         ortho.proj.test <- lapply(within.radius, function(seg.id) {
-          ortho.data <-
-            cholera::orthogonalProjection(as.numeric(row.names(case)),
+          ortho.data <- orthogonalProjection(as.numeric(row.names(case)),
             seg.id, observed = FALSE, case.data = case)
           x.proj <- ortho.data$x.proj
           y.proj <- ortho.data$y.proj
@@ -155,8 +154,7 @@ simulateFatalities <- function(compute = FALSE, multi.core = TRUE,
         within.radius <- unlist(within.radius)
 
         ortho.proj.test <- lapply(within.radius, function(seg.id) {
-          ortho.data <-
-            cholera::orthogonalProjection(as.numeric(row.names(case)),
+          ortho.data <- orthogonalProjection(as.numeric(row.names(case)),
             seg.id, observed = FALSE, case.data = case)
           x.proj <- ortho.data$x.proj
           y.proj <- ortho.data$y.proj
