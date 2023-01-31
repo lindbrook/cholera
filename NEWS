@@ -1,3 +1,9 @@
+cholera 0.7.9.9142
+==================
+
+- remove non-user facing functions from NAMESPACE.
+
+
 cholera 0.7.9.9141
 ==================
 

@@ -51,7 +51,7 @@ latlongLandmarks <- function(path, orthogonal = FALSE) {
 #' @param orthogonal Logical. Use orthogonal projection coordinates.
 #' @param pch Integer. R pch.
 #' @param cex Numeric.
-#' @export
+#' @noRd
 
 landmarksPDF <- function(path, orthogonal = FALSE, pch = 15, cex = 0.2) {
   if (orthogonal) {

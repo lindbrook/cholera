@@ -7,7 +7,7 @@
 #' @param case.data Object. For use with \code{simulateFatalities}.
 #' @param vestry Logical. Use vestry pump data.
 #' @return An R data frame.
-#' @export
+#' @noRd
 
 orthogonalProjection <- function(case = 12, segment.id = "216-1",
   observed = TRUE, use.pump = FALSE, vestry = FALSE, case.data = NULL) {

@@ -268,11 +268,11 @@ partitionOddString <- function(subgraphs, group = c("6", "7")) {
 #' For georeferencing in QGIS.
 #' @param path Character. e.g., "~/Documents/Data/".
 #' @param pch Numeric or Character.
-#' @export
+#' @noRd
 
 partitionAddressesPDF <- function(path, pch = 46) {
   pts <- partitionAddresses()
-  rng <- cholera::mapRange()
+  rng <- mapRange()
   pre <- "address."
   post <- ".pdf"
   invisible(lapply(names(pts), function(nm) {

@@ -4,7 +4,7 @@
 #' @param post.type Character. "distance or "time".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
-#' @export
+#' @noRd
 
 isoVertices <- function(post = 50, post.type = "distance", multi.core = TRUE,
   dev.mode = FALSE) {
@@ -86,7 +86,7 @@ iso_vertices <- function(i, isobands, pump.dist, ortho.dist, diag.dist) {
 #' @param alpha.level Numeric. Alpha level transparency
 #' @param ... Additional arguments.
 #' @return A vector with observed counts.
-#' @export
+#' @noRd
 
 plot.iso <- function(x, selected.post = "all", palette = "plasma",
   alpha.level = 1/2, ...) {

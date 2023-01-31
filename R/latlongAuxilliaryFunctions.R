@@ -249,7 +249,7 @@ rotatePoint <- function(id = 1, dataset = "roads") {
 #' @param dat Object. R data frame of road segments
 #' @param latlong Logical. Data use longitude/latitude or native map coordinates.
 #' @return An R data frame.
-#' @export
+#' @noRd
 
 segmentDistance <- function(dat, latlong = FALSE) {
   if (latlong) vars <- c("lon", "lat")
@@ -270,7 +270,7 @@ segmentDistance <- function(dat, latlong = FALSE) {
 #' Reduce over-printing of points.
 #' @param path Character. e.g., "~/Documents/Data/"
 #' @param dataset Object. A 'cholera' dataset e.g., roads.
-#' @export
+#' @noRd
 
 subsetPDF <- function(path, dataset = "fatalities.address") {
   rng <- mapRange()
