@@ -288,9 +288,18 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
     nodes <- nodes[order(nodes$x.proj), ]
 
   } else if (site.seg & !Pump) {
-    nodes <- rbind(endptA, rds, endptB)
+    pts <- rbind(endptA, rds, endptB)
+    duplicates <- duplicateNode(pts) # site at intersection
+    if (any(duplicates)) {
+      if (which(duplicates) == 1) {
+        nodes <- rbind(rds, endptB)
+      } else if (which(duplicates) == 2) {
+        nodes <- rbind(endptA, rds)
+      }
+    } else {
+      nodes <- rbind(endptA, rds, endptB)
+    }
     nodes <- nodes[order(nodes$x.proj), ]
-
   } else if (!site.seg & Pump) {
     nodes <- rbind(endptA, ps, endptB)
     nodes <- nodes[order(nodes$x.proj), ]
@@ -325,4 +334,13 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
   } else if (type == "edges") {
     edges
   }
+}
+
+duplicateNode <- function(dat, sig.fig = 5L) {
+  vars <- c("x.proj", "y.proj")
+  idx <- seq_len(nrow(dat[-1, ]))
+  idx <- list(idx, idx + 1)
+  vapply(idx, function(sel) {
+    all(round(dat[sel[1], vars], sig.fig) == round(dat[sel[2], vars], sig.fig))
+  }, logical(1L))
 }
