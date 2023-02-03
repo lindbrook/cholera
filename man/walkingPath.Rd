@@ -6,7 +6,8 @@
 \usage{
 walkingPath(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5)
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  null.origin.landmark = FALSE)
 }
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
@@ -26,6 +27,8 @@ walkingPath(origin = 1, destination = NULL, type = "case-pump",
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
+
+\item{null.origin.landmark}{Logical. Consider landmarks when origin = NULL and type = "case-pump".}
 }
 \value{
 An R list with two elements: a character vector of path nodes and a data frame summary.

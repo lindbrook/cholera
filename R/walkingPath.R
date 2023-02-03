@@ -9,6 +9,7 @@
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
+#' @param null.origin.landmark Logical. Consider landmarks when origin = NULL and type = "case-pump".
 #' @note The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using \code{distanceTime()}. Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
 #' @return An R list with two elements: a character vector of path nodes and a data frame summary.
 #' @export
@@ -44,7 +45,7 @@
 
 walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   observed = TRUE, weighted = TRUE, vestry = FALSE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5) {
+  time.unit = "second", walking.speed = 5, null.origin.landmark = FALSE) {
 
   if (is.null(origin) & is.null(destination)) {
     stop("If origin = NULL, you must supply a destination.")
@@ -133,7 +134,51 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   # ----- #
 
   if (type == "case-pump") {
-    if (!is.null(origin)) {
+    if (is.null(origin)) {
+      if (is.null(destination)) {
+        stop("You must provide a destination!")
+      } else if (length(destination) != 1) {
+        stop("If origin is NULL, select only one destination pump.")
+      } else if (destination < 0) {
+        stop("If origin is NULL, no negative selection for destination.")
+      } else {
+        if (is.numeric(destination)) {
+          if (any(abs(destination) %in% p.ID == FALSE)) {
+            txt1 <- 'With type = "case-pump" and vestry = '
+            txt2 <- ', 1 >= |destination| <= '
+            stop(txt1, vestry, txt2, p.count, ".")
+          } else {
+            if (all(destination < 0)) {
+              p.nodes <- nodes[nodes$pump != 0, ]
+              alter.node <- p.nodes[!p.nodes$pump %in% abs(destination), "node"]
+            } else if (all(destination > 0)) {
+              alter.node <- nodes[nodes$pump %in% destination, "node"]
+            }
+          }
+
+          if (null.origin.landmark) {
+            sel <- nodes$anchor > 0
+          } else {
+            sel <- nodes$anchor > 0 & nodes$anchor < 20000L
+          }
+
+          egos <- nodes[sel, "node"]
+        }
+
+        if (weighted) {
+          d <- vapply(egos, function(x) {
+            igraph::distances(g, x, alter.node, weights = edges$d)
+          }, numeric(1L))
+        } else {
+          d <- vapply(egos, function(x) {
+            igraph::distances(g, x, alter.node)
+          }, numeric(1L))
+        }
+
+        sel <- which.min(d)
+        ego.node <- nodes[nodes$node %in% names(sel), "node"]
+      }
+    } else {
       if (observed) {
         if (is.numeric(origin)) {
           if (origin %in% seq_len(ct)) {
@@ -223,47 +268,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
         alter.node <- names(sel)
       }
-
-    } else {
-      if (is.null(destination)) {
-        stop("You must provide a destination!")
-      } else if (length(destination) != 1) {
-        stop("If origin is NULL, select only one destination pump.")
-      } else if (destination < 0) {
-        stop("If origin is NULL, no negative selection for destination.")
-      } else {
-        if (is.numeric(destination)) {
-          if (any(abs(destination) %in% p.ID == FALSE)) {
-            txt1 <- 'With type = "case-pump" and vestry = '
-            txt2 <- ', 1 >= |destination| <= '
-            stop(txt1, vestry, txt2, p.count, ".")
-          } else {
-            if (all(destination < 0)) {
-              p.nodes <- nodes[nodes$pump != 0, ]
-              alter.node <- p.nodes[p.nodes$pump %in% abs(destination) == FALSE,
-                "node"]
-            } else if (all(destination > 0)) {
-              alter.node <- nodes[nodes$pump %in% destination, "node"]
-            }
-          }
-        }
-
-        egos <- nodes[nodes$anchor > 0, "node"]
-
-        if (weighted) {
-          d <- vapply(egos, function(x) {
-            igraph::distances(g, x, alter.node, weights = edges$d)
-          }, numeric(1L))
-        } else {
-          d <- vapply(egos, function(x) {
-            igraph::distances(g, x, alter.node)
-          }, numeric(1L))
-        }
-
-        sel <- which.min(d)
-        node.sel <- nodes$node %in% names(sel) & nodes$anchor != 0
-        ego.node <- nodes[node.sel, "node"]
-      }
     }
 
     if (weighted) {
@@ -274,54 +278,55 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         alter.node)$vpath))
     }
 
-  if (is.null(origin)) {
-    case <- nodes[nodes$node == ego.node & nodes$anchor > 0, "anchor"]
-    if (case > 20000) {
-      case.nm <- cholera::landmarks[cholera::landmarks$case == case, "name"]
-      if (grepl("Square", case.nm)) {
-        case.nm <- unlist(strsplit(case.nm, "-"))[1]
-      }
+    if (is.null(origin)) {
+      # case <- nodes[nodes$node == ego.node & nodes$anchor > 0, "anchor"]
+      case <- nodes[nodes$node == ego.node, "anchor"]
+      if (case > 20000) {
+        case.nm <- cholera::landmarks[cholera::landmarks$case == case, "name"]
+        if (grepl("Square", case.nm)) {
+          case.nm <- unlist(strsplit(case.nm, "-"))[1]
+        }
 
-      out <- list(path = rev(path),
-                  data = data.frame(case = case.nm,
-                                    anchor = case,
-                                    pump.name = p.data[p.data$id ==
-                                      destination, "street"],
-                                    pump = destination,
-                                    distance = d[sel],
-                                    stringsAsFactors = FALSE,
-                                    row.names = NULL))
+        out <- list(path = rev(path),
+                    data = data.frame(case = case.nm,
+                                      anchor = case,
+                                      pump.name = p.data[p.data$id ==
+                                        destination, "street"],
+                                      pump = destination,
+                                      distance = d[sel],
+                                      stringsAsFactors = FALSE,
+                                      row.names = NULL))
+      } else {
+        out <- list(path = rev(path),
+                    data = data.frame(case = case,
+                                      anchor = case,
+                                      pump.name = p.data[p.data$id ==
+                                        destination, "street"],
+                                      pump = destination,
+                                      distance = d[sel],
+                                      stringsAsFactors = FALSE,
+                                      row.names = NULL))
+      }
     } else {
-      out <- list(path = rev(path),
-                  data = data.frame(case = case,
-                                    anchor = case,
-                                    pump.name = p.data[p.data$id ==
-                                      destination, "street"],
-                                    pump = destination,
-                                    distance = d[sel],
-                                    stringsAsFactors = FALSE,
-                                    row.names = NULL))
-    }
-  } else {
-    if (grepl("Square", origin)) {
-      out <- list(path = path,
-                  data = data.frame(case = origin,
-                                    anchor = nodes[nodes$node == ego.node &
-                                      nodes$anchor != 0, "anchor"],
-                                    pump.name = p.name,
-                                    pump = alter.id,
-                                    distance = c.square[nr.pair, "distance"],
-                                    stringsAsFactors = FALSE,
-                                    row.names = NULL))
-    } else {
-      out <- list(path = path,
-                  data = data.frame(case = origin,
-                                    anchor = ego.id,
-                                    pump.name = p.name,
-                                    pump = alter.id,
-                                    distance = d[sel],
-                                    stringsAsFactors = FALSE,
-                                    row.names = NULL))
+      if (grepl("Square", origin)) {
+        out <- list(path = path,
+                    data = data.frame(case = origin,
+                                      anchor = nodes[nodes$node == ego.node &
+                                        nodes$anchor != 0, "anchor"],
+                                      pump.name = p.name,
+                                      pump = alter.id,
+                                      distance = c.square[nr.pair, "distance"],
+                                      stringsAsFactors = FALSE,
+                                      row.names = NULL))
+      } else {
+        out <- list(path = path,
+                    data = data.frame(case = origin,
+                                      anchor = ego.id,
+                                      pump.name = p.name,
+                                      pump = alter.id,
+                                      distance = d[sel],
+                                      stringsAsFactors = FALSE,
+                                      row.names = NULL))
       }
     }
 
