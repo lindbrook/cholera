@@ -1,3 +1,9 @@
+cholera 0.7.9.9143
+==================
+
+- add/set walkingPath(null.origin.landmark = FALSE).
+
+
 cholera 0.7.9.9142
 ==================
 
