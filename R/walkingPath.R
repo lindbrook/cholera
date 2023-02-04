@@ -51,6 +51,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     stop("If origin = NULL, you must supply a destination.")
   }
 
+  if (length(origin) > 1) stop("Select a single origin.")
+
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
     stop('distance.unit must be "meter", "yard" or "native".')
   }
@@ -67,38 +69,76 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     if (type != "cases") stop('type must be "cases".')
   }
 
-  if (type %in% c("case-pump", "pumps")) {
+  if (type == "case-pump") {
     if (is.null(destination) == FALSE) {
       if (length(destination) == 1) {
-        if (destination == 2) {
+        if (abs(destination) == 2) {
           stop('Pump 2 is a technical isolate. Choose another.')
         }
       }
       if (any(abs(destination) == 2)) {
-        message('Pump 2 is a technical isolate. Already not considered.')
+        message('Pump 2 is a technical isolate (not considered).')
       }
     }
-  }
+  
+  } else if (type == "cases") {  
+    if (is.numeric(origin) & all(is.numeric(destination))) {
+      sel <- cholera::anchor.case$case == origin
+      alpha <- cholera::anchor.case[sel, "anchor"]
 
-  if (type == "pumps") {
-    if (length(origin) == 1) {
-      if (origin == 2) stop('Pump 2 is a technical isolate. Choose another.')
-    }
+      sel <- cholera::anchor.case$case %in% destination
+      omega <- cholera::anchor.case[sel, "anchor"]
 
-    if (is.null(origin) == FALSE) {
-      if (any(abs(origin) == 2)) {
-        message('Pump 2 is a technical isolate. Already not considered.')
-      }
-    }
-  }
-
-  if (type %in% c("cases", "pumps")) {
-    if (is.null(origin) == FALSE & is.null(destination) == FALSE) {
-      alpha.omega <- c(origin, destination)
-      if (all(is.numeric(alpha.omega)) | all(is.character(alpha.omega))) {
-        if (origin == destination) {
-          stop("origin and destination are at same address!")
+      if (length(destination) > 1) {
+        if (alpha %in% omega) {
+          message("origin and destination include same address!")
+        }  
+      } else if (length(destination) == 1) {
+        if (alpha == omega) {
+          stop("origin and destination at same address!") 
         }
+      }
+    
+    } else if (is.character(origin) & any(is.character(destination))) {
+      origin <- caseAndSpace(origin)
+      destination <- caseAndSpace(destination)
+      
+      valid.origin <- origin %in% cholera::landmark.squares$name | 
+                      origin %in% cholera::landmarks$name
+      valid.destination <- destination %in% cholera::landmark.squares$name | 
+                           destination %in% cholera::landmarks$name
+       
+      if (!valid.origin) stop('Invalid origin landmark name.')
+      if (all(!valid.destination)) stop('Invalid origin landmark names.')
+
+      if (length(destination) > 1) {
+        if (any(origin %in% destination)) {
+          message("origin and destination include same address!")
+          destination <- destination[valid.destination]
+        }  
+      } else if (length(destination) == 1) {
+        if (origin == destination) {
+          stop("origin and destination are the same!") 
+        }
+      }
+    }
+
+  } else if (type == "pumps") {
+    if (origin == 2) {
+      stop('Pump 2 is an isolate (excluded). Choose another.')
+    }
+    
+    if (length(destination) > 1) {
+      if (2L %in% abs(destination)) {
+        message('Pump 2 is an isolate (excluded).')
+        destination <- destination[abs(destination) != 2L]
+      } else if (origin %in% abs(destination)) {
+        message("origin and destination include same pumps!")
+        destination <- destination[abs(destination) %in% origin]
+       } 
+    } else if (length(destination) == 1) {
+      if (identical(origin, destination)) {
+        stop("origin and destination are the same pump!")
       }
     }
   }
@@ -413,9 +453,9 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
             alter.case, "anchor"]
           stack.test <- vapply(c(ego.anchor, alter.anchor), length, numeric(1L))
 
-          if (all(stack.test== 1)) {
-            if (ego.anchor == alter.anchor) {
-              stop("origin and destination are at same address!")
+          if (all(stack.test == 1)) {
+            if (ego.anchor %in% alter.anchor) {
+              stop("origin and destination include the same address!")
             }
           }
         }
@@ -450,8 +490,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
       # post caseAndSpace()
       if (is.character(origin) & is.character(destination)) {
-        if (origin == destination) {
-          stop("origin and destination are at same address!")
+        if (origin %in% destination) {
+          stop("origin and destination include the same address!")
         }
       }
 
