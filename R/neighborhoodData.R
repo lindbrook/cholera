@@ -202,7 +202,7 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
 
   if (observed == FALSE) {
     sim.proj <- cholera::sim.ortho.proj
-    CaseExp <- id %in% sim.proj $road.segment
+    CaseExp <- id %in% sim.proj$road.segment
   }
 
   if (observed) {
