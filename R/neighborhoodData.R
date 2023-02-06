@@ -202,7 +202,7 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
 
   if (observed == FALSE) {
     sim.proj <- cholera::sim.ortho.proj
-    CaseExp <- id %in% sim.proj $road.segment
+    CaseExp <- id %in% sim.proj$road.segment
   }
 
   if (observed) {
@@ -288,13 +288,17 @@ embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
     nodes <- nodes[order(nodes$x.proj), ]
 
   } else if (site.seg & !Pump) {
-    pts <- rbind(endptA, rds, endptB)
-    duplicates <- duplicateNode(pts) # site at intersection
-    if (any(duplicates)) {
-      if (which(duplicates) == 1) {
-        nodes <- rbind(rds, endptB)
-      } else if (which(duplicates) == 2) {
-        nodes <- rbind(endptA, rds)
+    if (observed) {
+      pts <- rbind(endptA, rds, endptB)
+      duplicates <- duplicateNode(pts) # site at intersection
+      if (any(duplicates)) {
+        if (which(duplicates) == 1) {
+          nodes <- rbind(rds, endptB)
+        } else if (which(duplicates) == 2) {
+          nodes <- rbind(endptA, rds)
+        }
+      } else {
+        nodes <- rbind(endptA, rds, endptB)
       }
     } else {
       nodes <- rbind(endptA, rds, endptB)
