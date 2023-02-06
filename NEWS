@@ -1,7 +1,7 @@
 cholera 0.7.9.9146
 ==================
 
-- add excption for observed v. expected in neighborhoodData() via embedSites().
+- add exception for observed v. expected in neighborhoodData() via embedSites().
 
 
 cholera 0.7.9.9145
