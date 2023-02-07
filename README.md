@@ -1,7 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9146-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -26,8 +25,8 @@
   Vestry report.
 - With ‘cholera’ version \>= 0.7.0, support for parallel computation now
   includes Windows in addition to Linux and macOS.
-- Preliminary support for georeferenced (longitude and latitude)
-  versions of data and functions.
+- Preliminary and provisional support for georeferenced (longitude and
+  latitude) versions of data and functions.
 
 #### getting started
 
@@ -234,7 +233,7 @@ specifically its Georeferencer tool and its interface to
 reference system (CRS) of these data is EPSG:4326.
 
 What makes the georeferencing preliminary is that the choice of ground
-control points, tranformation type (e.g., thin plate spine), and
+control points, transformation type (e.g., thin plate spine), and
 resampling method (e.g., nearest neighbor) are still in flux.
 
 ``` r
