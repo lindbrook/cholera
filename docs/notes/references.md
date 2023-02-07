@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2022-12-28
+2023-02-07
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -71,6 +71,9 @@ University Press.
 
 Arthur Hill Hassall. 1876, *Food: Its Adulterations, and the Methods for
 their Detection*. London: Longmans, Green, and Co.
+
+Sandra Hempel. 2013. “Obituary: John Snow”. *The Lancet*. 381(9874):
+1269-1270.
 
 Steven Johnson. 2006. *The Ghost Map: The Story of London’s Most
 Terrifying Epidemic – and How it Changed Science, Cities and the Modern
