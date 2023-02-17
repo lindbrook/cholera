@@ -34,6 +34,7 @@ peripheryCases <- function(n.points, radius = pearlStringRadius()) {
 travelingSalesman <- function(vertices, tsp.method = "repetitive_nn") {
   methods <- c("identity", "random", "nearest_insertion", "farthest_insertion",
     "cheapest_insertion", "arbitrary_insertion", "nn", "repetitive_nn")
+    # "two_opt", "concorde", "linkern") # don't work in `parallel` implementation.
 
   if (tsp.method %in% methods == FALSE) {
     stop('tsp.method must be "identity", "random", "nearest_insertion",
