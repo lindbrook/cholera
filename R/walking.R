@@ -101,6 +101,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
 #' @param type Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param msg Logical. Toggle in-progress messages.
+#' @param tsp.method Character. Traveling salesperson problem algorithm.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods.
@@ -113,7 +114,9 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.walking <- function(x, type = "roads", msg = FALSE, ...) {
+plot.walking <- function(x, type = "roads", msg = FALSE, 
+  tsp.method = "repetitive_nn", ...) {
+  
   if (type %in% c("roads", "area.points", "area.polygons") == FALSE) {
     stop('type must be "roads", "area.points", "area.polygons".')
   }
@@ -240,13 +243,13 @@ plot.walking <- function(x, type = "roads", msg = FALSE, ...) {
         periphery.cases <- parallel::parLapply(cl, neighborhood.cases,
           peripheryCases)
         pearl.string <- parallel::parLapply(cl, periphery.cases,
-          travelingSalesman)
+          travelingSalesman, tsp.method = tsp.method)
         parallel::stopCluster(cl)
       } else {
         periphery.cases <- parallel::mclapply(neighborhood.cases,
           peripheryCases, mc.cores = x$core)
         pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
-          mc.cores = x$cores)
+          tsp.method = tsp.method, mc.cores = x$cores)
       }
 
       invisible(lapply(names(pearl.string), function(nm) {
