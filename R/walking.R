@@ -114,9 +114,9 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.walking <- function(x, type = "roads", msg = FALSE, 
+plot.walking <- function(x, type = "roads", msg = FALSE,
   tsp.method = "repetitive_nn", ...) {
-  
+
   if (type %in% c("roads", "area.points", "area.polygons") == FALSE) {
     stop('type must be "roads", "area.points", "area.polygons".')
   }
@@ -234,6 +234,32 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
       }
 
       names(neighborhood.cases) <- pearl.neighborhood
+
+      # plot(neighborhoodWalking(-(7:8), case.set = "expected"),
+      #   type = "area.polygons")
+      neg78 <- identical(as.integer(x$pumpID), c(1:6, 9:13)) |
+               identical(as.integer(x$pumpID), c(1:6, 9:14))
+
+      if (neg78) {
+        # Air Street: 2344, 2346
+        # Chapel Place: 7302
+        # Queen Street (III): 3390
+        sel <- !neighborhood.cases$`9` %in% c(2344, 2346, 3390, 7302)
+        neighborhood.cases$`9` <- neighborhood.cases$`9`[sel]
+      }
+
+      # plot(neighborhoodWalking( case.set = "expected"), "area.polygons")
+      all.pumps <- identical(as.integer(x$pumpID), c(1:13)) |
+                   identical(as.integer(x$pumpID), c(1:14))
+
+     if (all.pumps) {
+        # Air Street: 2344, 2346
+        # Queen Street (III): 3390
+        sel <- !neighborhood.cases$`8` %in% c(2344, 2346)
+        neighborhood.cases$`8` <- neighborhood.cases$`8`[sel]
+        sel <- !neighborhood.cases$`9` %in% 3390
+        neighborhood.cases$`9` <- neighborhood.cases$`9`[sel]
+      }
 
       if ((.Platform$OS.type == "windows" & x$cores > 1) | x$dev.mode) {
         cl <- parallel::makeCluster(x$cores)
