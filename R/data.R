@@ -432,13 +432,3 @@
 #' }
 #' @docType data
 "voronoi.polygons.vestry"
-
-#' Walking distance to Nearest Pump (latlong prototype).
-#'
-#' @docType data
-"latlong.nearest.pump"
-
-#' Walking distance to Nearest Pump (latlong prototype).
-#'
-#' @docType data
-"latlong.nearest.pump.vestry"
