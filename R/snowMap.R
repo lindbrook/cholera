@@ -83,7 +83,7 @@ addFrame <- function(latlong = FALSE, col = "black", ...) {
 #' Compute xlim and ylim of Snow's map.
 #'
 #' @param latlong Logical. Use estimated longitude and latitude.
-#' @noRd
+#' @export
 
 mapRange <- function(latlong = FALSE) {
   if (latlong) {
