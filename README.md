@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9150-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9151-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -238,28 +238,14 @@ control points, transformation type (e.g., thin plate spine), and
 resampling method (e.g., nearest neighbor) are still in flux.
 
 ``` r
-snowMap()
 snowMap(latlong = TRUE)
+plot(latlongNeighborhoodVoronoi(), euclidean.paths = TRUE)
 ```
 
 <img src="man/figures/README-latlong-1.png" width="50%" /><img src="man/figures/README-latlong-2.png" width="50%" />
 
 ``` r
-plot(neighborhoodVoronoi(), euclidean.paths = TRUE)
-plot(latlongNeighborhoodVoronoi(), euclidean.paths = TRUE)
-```
-
-<img src="man/figures/README-latlong_voronoi-1.png" width="50%" /><img src="man/figures/README-latlong_voronoi-2.png" width="50%" />
-
-``` r
-plot(walkingPath(578))
 plot(latlongWalkingPath(578))
-```
-
-<img src="man/figures/README-latlong_walking_path-1.png" width="50%" /><img src="man/figures/README-latlong_walking_path-2.png" width="50%" />
-
-``` r
-plot(neighborhoodWalking())
 plot(latlongNeighborhoodWalking())
 ```
 

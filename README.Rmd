@@ -150,22 +150,12 @@ The georeferencing was done using [QGIS](https://qgis.org/en/site/); specificall
 What makes the georeferencing preliminary is that the choice of ground control points, transformation type (e.g., thin plate spine), and resampling method (e.g., nearest neighbor) are still in flux.
 
 ```{r latlong, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
-snowMap()
 snowMap(latlong = TRUE)
-```
-
-```{r latlong_voronoi, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
-plot(neighborhoodVoronoi(), euclidean.paths = TRUE)
 plot(latlongNeighborhoodVoronoi(), euclidean.paths = TRUE)
 ```
 
-```{r latlong_walking_path, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
-plot(walkingPath(578))
-plot(latlongWalkingPath(578))
-```
-
 ```{r latlong_walking, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
-plot(neighborhoodWalking())
+plot(latlongWalkingPath(578))
 plot(latlongNeighborhoodWalking())
 ```
 ```{r tanaka, echo = FALSE, eval = FALSE}
