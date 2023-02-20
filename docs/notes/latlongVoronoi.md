@@ -98,9 +98,9 @@ nominal and geographic data are quite similar:
 cases <- cholera::fatalities.address
 snow.colors <- snowColors(vestry = FALSE)
 
-vars <- c("x", "y")
 rng <- mapRange()
 asp <- 1
+vars <- c("x", "y")
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
 addRoads()
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
@@ -112,7 +112,7 @@ vars <- c("lon", "lat")
 rng <- mapRange(latlong = TRUE)
 asp <- 1.6
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
-addRoads(vars)
+addRoads(latlong = TRUE)
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
 text(pumps[, vars], pos = 1, labels = pumps$id)
 points(cases[, vars], pch = 16, col = "gray", cex = 0.5)
@@ -247,25 +247,32 @@ out1 <- terra::project(v1, "+proj=longlat")
 out2 <- terra::project(v2, "+proj=longlat")
 
 plot(out1, xlim = range(cholera::roads$lon), ylim = range(cholera::roads$lat))
-addRoads(c("lon", "lat"))
+addRoads(latlong = TRUE)
 points(cholera::pumps[, c("lon", "lat")])
 text(cholera::pumps[, c("lon", "lat")], labels = 1:13, pos = 1)
 title(main = "Figure 10 Undjusted Geographic")
 
 plot(out2, xlim = range(cholera::roads$lon), ylim = range(cholera::roads$lat))
-addRoads(c("lon", "lat"))
+addRoads(latlong = TRUE)
 points(cholera::pumps[, c("lon", "lat")])
 text(cholera::pumps[, c("lon", "lat")], labels = 1:13, pos = 1)
 title(main = "Figure 11 Adjusted Geographic")
 ```
 
+<div class="figure">
+
 <img src="latlongVoronoi_files/figure-gfm/terra_data-1.png" alt="Figure 7 Nominal Analog with 'terra' package" width="50%" /><img src="latlongVoronoi_files/figure-gfm/terra_data-2.png" alt="Figure 7 Nominal Analog with 'terra' package" width="50%" />
+<p class="caption">
+Figure 7 Nominal Analog with ‘terra’ package
+</p>
+
+</div>
 
 ## appendix: solution
 
 The following walks through the code for the working solution, which can
 be found in
-[latlongVoronoiC.R](https://github.com/lindbrook/cholera/blob/master/R/latlongVoronoiC.R)
+[latlongVoronoi()](https://github.com/lindbrook/cholera/blob/master/R/latlongVoronoi.R)
 
 #### four corners
 
@@ -340,7 +347,7 @@ an ellipsoid model of the Earth (WGS 84), the relationship between
 meters-North and latitude is perfectly linear for Soho, Westminster
 (UK). Nevertheless, I play it conservatively and use a fitted loess
 function to translate meters-North to latitude. The details are in the
-meterLatitude():
+[meterLatitude()](https://github.com/lindbrook/cholera/blob/master/R/latlongAuxilliaryFunctions.R):
 
 ``` r
 meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
@@ -367,7 +374,8 @@ East-West (horizontal) distance is a function of how far North or South
 (latitude) you are. This means that the relationship between meters-East
 and longitude will be nonlinear. While analysis indicates that a fitted
 OLS line might be adequate, I fit separate loess functions for each
-observed meters-North value. The details are in the meterLatLong():
+observed meters-North value. The details are in the
+[meterLatLong()](https://github.com/lindbrook/cholera/blob/master/R/latlongAuxilliaryFunctions.R):
 
 ``` r
 meterLatLong <- function(cells.df, origin, topleft, bottomright,
