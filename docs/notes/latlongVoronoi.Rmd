@@ -53,7 +53,7 @@ rng <- mapRange(latlong = TRUE)
 snow.colors <- snowColors(vestry = FALSE)
 
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
-addRoads(vars)
+addRoads(latlong = TRUE)
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
 text(pumps[, vars], pos = 1, labels = pumps$id)
 points(cases[, vars], pch = 16, col = "gray", cex = 0.5)
@@ -75,9 +75,9 @@ Because of this, the geographic Voronoi diagram _should_ look the nominal one. A
 cases <- cholera::fatalities.address
 snow.colors <- snowColors(vestry = FALSE)
 
-vars <- c("x", "y")
 rng <- mapRange()
 asp <- 1
+vars <- c("x", "y")
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
 addRoads()
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
@@ -89,7 +89,7 @@ vars <- c("lon", "lat")
 rng <- mapRange(latlong = TRUE)
 asp <- 1.6
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
-addRoads(vars)
+addRoads(latlong = TRUE)
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
 text(pumps[, vars], pos = 1, labels = pumps$id)
 points(cases[, vars], pch = 16, col = "gray", cex = 0.5)
@@ -100,11 +100,11 @@ As a result, the graph should look like this:
 
 ```{r adjusted, echo = FALSE, fig.align = "center"}
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
-addRoads(vars)
+addRoads(latlong = TRUE)
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
 text(pumps[, vars], pos = 1, labels = 1:13)
 points(cases[, vars], pch = 16, cex = 0.5, col = "gray")
-cells <- cholera::latlongVoronoiC()
+cells <- cholera::latlongVoronoi()
 invisible(lapply(cells, function(dat) polygon(dat[, vars])))
 title(main = "Figure 6 Adjusted Geographic")
 ```
@@ -163,7 +163,7 @@ snow.colors <- snowColors(vestry = FALSE)
 # plot roads and pumps
 
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
-addRoads(vars)
+addRoads(latlong = TRUE)
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
 
 # compute Voronoi cells by directly applying the algorithm to geographic data
@@ -199,10 +199,10 @@ title(main = "Figure 8 Undjusted Geographic")
 ```{r adjusted_classification, echo = FALSE, fig.align = "center"}
 
 plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp)
-addRoads(vars)
+addRoads(latlong = TRUE)
 points(pumps[, vars], pch = 17, col = snow.colors, cex = 1)
 
-cells <- cholera::latlongVoronoiC()
+cells <- cholera::latlongVoronoi()
 invisible(lapply(cells, function(dat) polygon(dat[, vars])))
 
 invisible(lapply(nearest.pump$case, function(x) {
@@ -249,13 +249,13 @@ out1 <- terra::project(v1, "+proj=longlat")
 out2 <- terra::project(v2, "+proj=longlat")
 
 plot(out1, xlim = range(cholera::roads$lon), ylim = range(cholera::roads$lat))
-addRoads(c("lon", "lat"))
+addRoads(latlong = TRUE)
 points(cholera::pumps[, c("lon", "lat")])
 text(cholera::pumps[, c("lon", "lat")], labels = 1:13, pos = 1)
 title(main = "Figure 10 Undjusted Geographic")
 
 plot(out2, xlim = range(cholera::roads$lon), ylim = range(cholera::roads$lat))
-addRoads(c("lon", "lat"))
+addRoads(latlong = TRUE)
 points(cholera::pumps[, c("lon", "lat")])
 text(cholera::pumps[, c("lon", "lat")], labels = 1:13, pos = 1)
 title(main = "Figure 11 Adjusted Geographic")
@@ -263,7 +263,7 @@ title(main = "Figure 11 Adjusted Geographic")
 
 ## appendix: solution
 
-The following walks through the code for the working solution, which can be found in [latlongVoronoiC.R](https://github.com/lindbrook/cholera/blob/master/R/latlongVoronoiC.R)
+The following walks through the code for the working solution, which can be found in [latlongVoronoi()](https://github.com/lindbrook/cholera/blob/master/R/latlongVoronoi.R)
 
 #### four corners
 
@@ -329,7 +329,7 @@ row.names(cells.df) <- NULL
 
 To translate the results (the coordinates of Voronoi cells) from meters-East and meters-North back to longitude and latitude, I use data simulation to uncover the relationship between geodesic distance and units of longitude and latitude.
 
-While the measure of geodesic distance I use, geosphere::distGeo(), use an ellipsoid model of the Earth (WGS 84), the relationship between meters-North and latitude is perfectly linear for Soho, Westminster (UK). Nevertheless, I play it conservatively and use a fitted loess function to translate meters-North to latitude. The details are in the meterLatitude():
+While the measure of geodesic distance I use, geosphere::distGeo(), use an ellipsoid model of the Earth (WGS 84), the relationship between meters-North and latitude is perfectly linear for Soho, Westminster (UK). Nevertheless, I play it conservatively and use a fitted loess function to translate meters-North to latitude. The details are in the [meterLatitude()](https://github.com/lindbrook/cholera/blob/master/R/latlongAuxilliaryFunctions.R):
 
 ```{r, meterLatitude}
 meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
@@ -352,7 +352,7 @@ meterLatitude <- function(cells.df, origin, topleft, delta = 0.000025) {
 }
 ```
 
-East-West (horizontal) distance is a function of how far North or South (latitude) you are. This means that the relationship between meters-East and longitude will be nonlinear. While analysis indicates that a fitted OLS line might be adequate, I fit separate loess functions for each observed meters-North value. The details are in the meterLatLong():
+East-West (horizontal) distance is a function of how far North or South (latitude) you are. This means that the relationship between meters-East and longitude will be nonlinear. While analysis indicates that a fitted OLS line might be adequate, I fit separate loess functions for each observed meters-North value. The details are in the [meterLatLong()](https://github.com/lindbrook/cholera/blob/master/R/latlongAuxilliaryFunctions.R):
 
 ```{r meterLatLong}
 meterLatLong <- function(cells.df, origin, topleft, bottomright,
