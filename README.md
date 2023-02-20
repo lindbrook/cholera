@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9149-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9150-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -264,18 +264,6 @@ plot(latlongNeighborhoodWalking())
 ```
 
 <img src="man/figures/README-latlong_walking-1.png" width="50%" /><img src="man/figures/README-latlong_walking-2.png" width="50%" />
-
-``` r
-tanakaContourPlot()
-> Mosaicing & Projecting
-> Clipping DEM to locations
-> Note: Elevation units are in meters.
-addRoads(latlong = TRUE, col = "white")
-addPump(latlong = TRUE, col = "white")
-title("Tanaka contour elevation")
-```
-
-![](man/figures/README-tanaka-1.png)<!-- -->
 
 #### vignettes
 
