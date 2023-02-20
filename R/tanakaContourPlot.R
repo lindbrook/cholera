@@ -4,7 +4,7 @@
 #' @importFrom elevatr get_elev_raster
 #' @importFrom tanaka tanaka
 #' @importFrom terra rast
-#' @export
+#' @noRd
 
 tanakaContourPlot <- function() {
   vars <- c("lon", "lat")

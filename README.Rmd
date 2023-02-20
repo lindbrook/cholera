@@ -168,7 +168,7 @@ plot(latlongWalkingPath(578))
 plot(neighborhoodWalking())
 plot(latlongNeighborhoodWalking())
 ```
-```{r tanaka}
+```{r tanaka, echo = FALSE, eval = FALSE}
 tanakaContourPlot()
 addRoads(latlong = TRUE, col = "white")
 addPump(latlong = TRUE, col = "white")

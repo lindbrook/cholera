@@ -7,7 +7,7 @@
 #' @param metric Character. "eucldidean" or "walking".
 #' @param pca.line Logical. Add PCA (TSS) line through data.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
-#' @export
+#' @noRd
 
 orientationPlot <- function(pump.id = 6, pump.select = NULL,
     cases = "orthogonal", convex.hull = TRUE, metric = "euclidean",
