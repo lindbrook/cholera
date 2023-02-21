@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9152-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9153-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -211,45 +211,67 @@ plot(neighborhoodVoronoi(pump.select = -7))
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-11-2.png" width="50%" />
 
-#### note on computational performance
+#### note on parallelization
 
 Parallel computation is implemented using the ‘parallel’ package, which
-is part of the base R distribution. To enable parallelization, set
-`multi.core = TRUE` where available. Note that although some precautions
-are taken in R.app on macOS, the developers of the ‘parallel’ package
-strongly discourage against using parallelization within a GUI or
-embedded environment. See `vignette("Parallelization")` for details.
+is part of the base R distribution. Currently, where applicable,
+parallelization is enabled by default via `multi.core = TRUE` (you can
+also specify or limit the number of cores by passing an integer or by
+setting `multi.core = FALSE`. Note that although some precautions are
+taken in the R.app, the developers of the ‘parallel’ package strongly
+discourage against using parallelization within a GUI or embedded
+environment. See `vignette("Parallelization")` for details. That said,
+I’ve had few, if any, problems with using the package in parallel on
+MacOS with either the [R application](https://www.r-project.org/) or the
+[RStudio IDE](https://posit.co/products/open-source/rstudio/).
 
 #### longitude and latitude (prototypes)
 
-‘cholera’ now has preliminary and limited support for a georeferenced
-(longitude and latitude) version of Dodson and Tobler’s digitization of
-John Snow’s map. This support goes a bit beyond a proof of concept but
-is currently a less than complete implementation of the package’s native
-(non-georeferenced) functionality.
-
-The georeferencing was done using [QGIS](https://qgis.org/en/site/);
-specifically its Georeferencer tool and its interface to
+[‘cholera’](https://cran.r-project.org/package=cholera) now has
+preliminary, limited support for georeferenced (longitude and latitude)
+versions of some data and functions. This support goes beyond a proof of
+concept but is currently less than a complete re-implementation of the
+package’s native (non-georeferenced) functionality. The georeferencing
+was done manually using [QGIS](https://qgis.org/en/site/); specifically
+its Georeferencer tool and its interface to
 [OpenStreetMap](https://www.openstreetmap.org). The target coordinate
-reference system (CRS) of these data is EPSG:4326.
+reference system (CRS) of these data is EPSG:4326. What makes this
+effort preliminary is that the choice of ground control points,
+transformation type (e.g., thin plate spine), and resampling method
+(e.g., nearest neighbor) are still in flux. Thus, results and
+coordinates may change in the future.
 
-What makes the georeferencing preliminary is that the choice of ground
-control points, transformation type (e.g., thin plate spine), and
-resampling method (e.g., nearest neighbor) are still in flux.
+Four functions are available:
 
 ``` r
 snowMap(latlong = TRUE)
+```
+
+<img src="man/figures/README-latlong-1.png" width="50%" />
+
+``` r
 plot(latlongNeighborhoodVoronoi(), euclidean.paths = TRUE)
 ```
 
-<img src="man/figures/README-latlong-1.png" width="50%" /><img src="man/figures/README-latlong-2.png" width="50%" />
+<img src="man/figures/README-latlong_voronoi-1.png" width="50%" />
 
 ``` r
-plot(latlongWalkingPath(578))
+plot(latlongWalkingPath())
+```
+
+<img src="man/figures/README-latlong_walking_path-1.png" width="50%" />
+
+``` r
 plot(latlongNeighborhoodWalking())
 ```
 
-<img src="man/figures/README-latlong_walking-1.png" width="50%" /><img src="man/figures/README-latlong_walking-2.png" width="50%" />
+<img src="man/figures/README-latlong_walking-1.png" width="50%" />
+
+Note that computation times are longer than their non-georefereced
+counterparts. This is is part due to the fact that the package is not
+(yet) using any pre-computed data (results are computed from scratch)
+and to the fact that longitude and latitude need to be computed from the
+nominal coordinates.
 
 #### vignettes
 

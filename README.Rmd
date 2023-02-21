@@ -137,33 +137,41 @@ plot(neighborhoodVoronoi(pump.select = 6:7))
 plot(neighborhoodVoronoi(pump.select = -7))
 ```
 
-#### note on computational performance
+#### note on parallelization
 
-Parallel computation is implemented using the 'parallel' package, which is part of the base R distribution. To enable parallelization, set `multi.core = TRUE` where available. Note that although some precautions are taken in R.app on macOS, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("Parallelization")` for details.
+Parallel computation is implemented using the 'parallel' package, which is part of the base R distribution. Currently, where applicable, parallelization is enabled by default via `multi.core = TRUE` (you can also specify or limit the number of cores by passing an integer or by setting `multi.core = FALSE`. Note that although some precautions are taken in the R.app, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("Parallelization")` for details. That said, I've had few, if any, problems with using the package in parallel on MacOS with either the [R application](https://www.r-project.org/) or the [RStudio IDE](https://posit.co/products/open-source/rstudio/).
 
 #### longitude and latitude (prototypes)
 
-'cholera' now has preliminary and limited support for a georeferenced (longitude and latitude) version of Dodson and Tobler's digitization of John Snow's map. This support goes a bit beyond a proof of concept but is currently a less than complete implementation of the package's native (non-georeferenced) functionality.
+['cholera'](https://cran.r-project.org/package=cholera) now has preliminary, limited support for georeferenced (longitude and latitude) versions of some data and functions. This support goes beyond a proof of concept but is currently less than a complete re-implementation of the package's native (non-georeferenced) functionality. The georeferencing was done manually using [QGIS](https://qgis.org/en/site/); specifically its Georeferencer tool and its interface to [OpenStreetMap](https://www.openstreetmap.org). The target coordinate reference system (CRS) of these data is EPSG:4326. What makes this effort preliminary is that the choice of ground control points, transformation type (e.g., thin plate spine), and resampling method (e.g., nearest neighbor) are still in flux. Thus, results and coordinates may change in the future. 
 
-The georeferencing was done using [QGIS](https://qgis.org/en/site/); specifically its Georeferencer tool and its interface to [OpenStreetMap](https://www.openstreetmap.org). The target coordinate reference system (CRS) of these data is EPSG:4326.
+Four functions are available:
 
-What makes the georeferencing preliminary is that the choice of ground control points, transformation type (e.g., thin plate spine), and resampling method (e.g., nearest neighbor) are still in flux.
-
-```{r latlong, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
+```{r latlong, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
 snowMap(latlong = TRUE)
+```
+
+```{r latlong_voronoi, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
 plot(latlongNeighborhoodVoronoi(), euclidean.paths = TRUE)
 ```
 
-```{r latlong_walking, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
-plot(latlongWalkingPath(578))
+```{r latlong_walking_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
+plot(latlongWalkingPath())
+
+```
+
+```{r latlong_walking, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
 plot(latlongNeighborhoodWalking())
 ```
+
 ```{r tanaka, echo = FALSE, eval = FALSE}
 tanakaContourPlot()
 addRoads(latlong = TRUE, col = "white")
 addPump(latlong = TRUE, col = "white")
 title("Tanaka contour elevation")
 ```
+
+Note that computation times are longer than their non-georefereced counterparts. This is is part due to the fact that the package is not (yet) using any pre-computed data (results are computed from scratch) and to the fact that longitude and latitude need to be computed from the nominal coordinates.
 
 #### vignettes
 
