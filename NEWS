@@ -1,3 +1,10 @@
+cholera 0.7.9.9154
+==================
+
+- pass cores to nested latlongNearestPump().
+- add/set pumpFatalities(multi.core = TRUE).
+
+
 cholera 0.7.9.9153
 ==================
 
