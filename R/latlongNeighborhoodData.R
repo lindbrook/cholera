@@ -2,9 +2,10 @@
 #'
 #' Assembles cases, pumps and road into a network graph.
 #' @param vestry Logical.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 
-latlongNeighborhoodData <- function(vestry = FALSE) {
+latlongNeighborhoodData <- function(vestry = FALSE, multi.core = TRUE) {
   dat <- latlongEmbed(vestry = vestry)
 
   edges <- dat$edges
