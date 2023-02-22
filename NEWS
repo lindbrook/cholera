@@ -1,3 +1,9 @@
+cholera 0.7.9.9156
+==================
+
+- pass cores to nested latlongOrthoAddress() and latlongOrthoPump().
+
+
 cholera 0.7.9.9155
 ==================
 
