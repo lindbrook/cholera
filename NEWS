@@ -2,6 +2,7 @@ cholera 0.7.9.9155
 ==================
 
 - pass cores to nested latlongEmbed().
+- pass cores to nested latlongNeighborhoodData().
 - add/set latlongNeighborhoodData(multi.core = TRUE).
 
 

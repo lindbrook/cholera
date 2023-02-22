@@ -57,7 +57,7 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
     }
 
   } else if (metric == "walking") {
-    dat <- latlongNeighborhoodData(vestry)
+    dat <- latlongNeighborhoodData(vestry, multi.core = cores)
     path.data <- latlong_pathData(dat, pump.select, weighted, vestry,
       cores)
 
