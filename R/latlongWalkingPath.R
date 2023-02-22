@@ -90,7 +90,7 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
                    time.unit = time.unit,
                    walking.speed = walking.speed)
   } else {
-    nearest.pump <- latlongNearestPump(vestry = vestry)
+    nearest.pump <- latlongNearestPump(vestry = vestry, multi.core = cores)
 
     case.id <- which(cholera::fatalities.address$anchor == anchor)
     p <- names(nearest.pump$path[[case.id]][[1]])
