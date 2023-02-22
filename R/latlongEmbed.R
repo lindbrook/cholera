@@ -7,8 +7,8 @@
 latlongEmbed <- function(vestry = FALSE, multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
-  ortho.addr <- latlongOrthoAddress()
-  ortho.pump <- latlongOrthoPump(vestry = vestry)
+  ortho.addr <- latlongOrthoAddress(multi.core = cores)
+  ortho.pump <- latlongOrthoPump(vestry = vestry, multi.core = cores)
   names(ortho.pump)[names(ortho.pump) == "pump.id"] <- "pump"
 
   road.data <- roadSegments(latlong = TRUE)
