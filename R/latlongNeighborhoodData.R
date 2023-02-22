@@ -6,7 +6,8 @@
 #' @export
 
 latlongNeighborhoodData <- function(vestry = FALSE, multi.core = TRUE) {
-  dat <- latlongEmbed(vestry = vestry)
+  cores <- multiCore(multi.core)
+  dat <- latlongEmbed(vestry = vestry, multi.core = cores)
 
   edges <- dat$edges
   edges$node1 <- paste0(edges$lon1, "_&_", edges$lat1)
