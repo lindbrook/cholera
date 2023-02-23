@@ -1,3 +1,9 @@
+cholera 0.7.9.9157
+==================
+
+- use call. = FALSE in multiCore().
+
+
 cholera 0.7.9.9156
 ==================
 
