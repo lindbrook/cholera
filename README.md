@@ -267,12 +267,6 @@ plot(latlongNeighborhoodWalking())
 
 <img src="man/figures/README-latlong_walking-1.png" width="50%" />
 
-Note that computation times are longer than their non-georefereced
-counterparts. This is is part due to the fact that the package is not
-(yet) using any pre-computed data (results are computed from scratch)
-and to the fact that longitude and latitude need to be computed from the
-nominal coordinates.
-
 #### vignettes
 
 The vignettes are available in the package as well as online at the
