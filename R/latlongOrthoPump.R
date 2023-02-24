@@ -119,3 +119,9 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = TRUE) {
   est.lonlat <- meterLatLong(coords, origin, topleft, bottomright)
   est.lonlat[order(est.lonlat$pump.id), ]
 }
+
+# latlong.ortho.pump <- cholera:::latlongOrthoPump(vestry = FALSE, multi.core = TRUE)
+# latlong.ortho.pump.vestry <- cholera:::latlongOrthoPump(vestry = TRUE, multi.core = TRUE)
+
+# usethis::use_data(latlong.ortho.pump)
+# usethis::use_data(latlong.ortho.pump.vestry)
