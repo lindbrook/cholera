@@ -414,8 +414,8 @@
 #'   \item{\code{vertex}}{vertex ID}
 #'   \item{\code{x}}{x-coordinate}
 #'   \item{\code{y}}{y-coordinate}
-#'     \item{\code{lon}}{longitude}
-#'     \item{\code{lat}}{latitude}
+#'   \item{\code{lon}}{longitude}
+#'   \item{\code{lat}}{latitude}
 #' }
 #' @docType data
 "voronoi.polygons"
@@ -427,8 +427,8 @@
 #'   \item{\code{vertex}}{vertex ID}
 #'   \item{\code{x}}{x-coordinate}
 #'   \item{\code{y}}{y-coordinate}
-#'     \item{\code{lon}}{longitude}
-#'     \item{\code{lat}}{latitude}
+#'   \item{\code{lon}}{longitude}
+#'   \item{\code{lat}}{latitude}
 #' }
 #' @docType data
 "voronoi.polygons.vestry"

@@ -10,8 +10,8 @@ A list of 13 data frames frames with 5 variables.
   \item{\code{vertex}}{vertex ID}
   \item{\code{x}}{x-coordinate}
   \item{\code{y}}{y-coordinate}
-    \item{\code{lon}}{longitude}
-    \item{\code{lat}}{latitude}
+  \item{\code{lon}}{longitude}
+  \item{\code{lat}}{latitude}
 }
 }
 \usage{
