@@ -12,6 +12,8 @@ A data frame with 7 variables that records the position of the orthogonal projec
     \item{\code{y.proj}}{y-coordinate}
     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
     \item{\code{case}}{numeric case ID}
+    \item{\code{lon}}{longitude}
+    \item{\code{lat}}{latitude}
  }
 }
 \usage{

@@ -3,16 +3,15 @@
 \docType{data}
 \name{latlong.ortho.pump.vestry}
 \alias{latlong.ortho.pump.vestry}
-\title{Orthogonal projection of the 14 pumps from the Vestry Report.}
+\title{Orthogonal projection of the 14 pumps from the Vestry Report (latlong).}
 \format{
 A data frame with 7 variables that records the position of the orthogonal projection of the 14 pumps onto the network of roads.
  \describe{
-    \item{\code{pump.id}}{numeric ID}
     \item{\code{road.segment}}{"address" road segment}
     \item{\code{x.proj}}{x-coordinate}
     \item{\code{y.proj}}{y-coordinate}
     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
-    \item{\code{node}}{node ID}
+    \item{\code{pump.id}}{numeric ID}
     \item{\code{lon}}{longitude}
     \item{\code{lat}}{latitude}
  }
@@ -21,7 +20,7 @@ A data frame with 7 variables that records the position of the orthogonal projec
 latlong.ortho.pump.vestry
 }
 \description{
-Orthogonal projection of the 14 pumps from the Vestry Report.
+Orthogonal projection of the 14 pumps from the Vestry Report (latlong).
 }
 \note{
 \code{\link{pumpData}} documents the code for these data.
