@@ -7,10 +7,12 @@
 latlongEmbed <- function(vestry = FALSE, multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
-  ortho.addr <- latlongOrthoAddress(multi.core = cores)
-  ortho.pump <- latlongOrthoPump(vestry = vestry, multi.core = cores)
-  names(ortho.pump)[names(ortho.pump) == "pump.id"] <- "pump"
+  ortho.addr <- cholera::latlong.ortho.addr
 
+  if (vestry) ortho.pump <- cholera::latlong.ortho.pump
+  else ortho.pump <- cholera::latlong.ortho.pump.vestry  
+  names(ortho.pump)[names(ortho.pump) == "pump.id"] <- "pump"
+  
   road.data <- roadSegments(latlong = TRUE)
 
   obs.segs <- unique(c(ortho.addr$road.segment, ortho.pump$road.segment))

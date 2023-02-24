@@ -231,3 +231,7 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
   est.lonlat <- meterLatLong(coords, origin, topleft, bottomright)
   est.lonlat[order(est.lonlat$case), ]
 }
+
+# latlong.ortho.addr <- cholera:::latlongOrthoAddress(multi.core = TRUE)
+# usethis::use_data(latlong.ortho.addr)
+# usethis::use_data(latlong.ortho.addr, overwrite = TRUE)

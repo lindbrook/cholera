@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9158-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.7.9.9159-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -266,12 +266,6 @@ plot(latlongNeighborhoodWalking())
 ```
 
 <img src="man/figures/README-latlong_walking-1.png" width="50%" />
-
-Note that computation times are longer than their non-georefereced
-counterparts. This is is part due to the fact that the package is not
-(yet) using any pre-computed data (results are computed from scratch)
-and to the fact that longitude and latitude need to be computed from the
-nominal coordinates.
 
 #### vignettes
 

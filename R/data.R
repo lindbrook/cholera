@@ -432,3 +432,51 @@
 #' }
 #' @docType data
 "voronoi.polygons.vestry"
+
+#' Orthogonal projection of observed address (latlong) cases onto road network.
+#'
+#' @format A data frame with 7 variables that records the position of the orthogonal projection of the 321 cases onto the network of roads.
+#'  \describe{
+#'     \item{\code{road.segment}}{"address" road segment}
+#'     \item{\code{x.proj}}{x-coordinate}
+#'     \item{\code{y.proj}}{y-coordinate}
+#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+#'     \item{\code{case}}{numeric case ID}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
+#'  }
+#' @note \code{\link{unstackFatalities}} documents the code for these data.
+#' @docType data
+"latlong.ortho.addr"
+
+#' Orthogonal projection of 13 original pumps (latlong).
+#'
+#' @format A data frame with 7 variables that records the position of the orthogonal projection of the 13 original pumps onto the network of roads.
+#'  \describe{
+#'     \item{\code{road.segment}}{"address" road segment}
+#'     \item{\code{x.proj}}{x-coordinate}
+#'     \item{\code{y.proj}}{y-coordinate}
+#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+#'     \item{\code{pump.id}}{numeric ID}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
+#'  }
+#' @note \code{\link{pumpData}} documents the code for these data.
+#' @docType data
+"latlong.ortho.pump"
+
+#' Orthogonal projection of the 14 pumps from the Vestry Report (latlong).
+#'
+#' @format A data frame with 7 variables that records the position of the orthogonal projection of the 14 pumps onto the network of roads.
+#'  \describe{
+#'     \item{\code{road.segment}}{"address" road segment}
+#'     \item{\code{x.proj}}{x-coordinate}
+#'     \item{\code{y.proj}}{y-coordinate}
+#'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+#'     \item{\code{pump.id}}{numeric ID}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
+#'  }
+#' @note \code{\link{pumpData}} documents the code for these data.
+#' @docType data
+"latlong.ortho.pump.vestry"
