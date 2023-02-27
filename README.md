@@ -222,7 +222,7 @@ taken in the R.app, the developers of the ‘parallel’ package strongly
 discourage against using parallelization within a GUI or embedded
 environment. See `vignette("Parallelization")` for details. That said,
 I’ve had few, if any, problems with using the package in parallel on
-MacOS with either the [R application](https://www.r-project.org/) or the
+macOS with either the [R application](https://www.r-project.org/) or the
 [RStudio IDE](https://posit.co/products/open-source/rstudio/).
 
 #### longitude and latitude (prototypes)
