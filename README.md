@@ -24,10 +24,10 @@
   of the Broad Street pump.
 - Adds two aggregate time series fatalities data sets, taken from the
   Vestry report.
-- With ‘cholera’ version \>= 0.7.0, support for parallel computation now
-  includes Windows in addition to Linux and macOS.
-- Preliminary and provisional support for georeferenced (longitude and
-  latitude) versions of data and functions.
+- Support for parallel computation on Linux, macOS and Windows.
+- With ‘cholera’ version \>= 0.8.0, preliminary and provisional support
+  for georeferenced (longitude and latitude) versions of data and
+  functions. [Details below](#longitude-and-latitude).
 
 #### getting started
 
@@ -225,7 +225,7 @@ I’ve had few, if any, problems with using the package in parallel on
 macOS with either the [R application](https://www.r-project.org/) or the
 [RStudio IDE](https://posit.co/products/open-source/rstudio/).
 
-#### longitude and latitude (prototypes)
+#### longitude and latitude
 
 [‘cholera’](https://cran.r-project.org/package=cholera) now has
 preliminary, limited support for georeferenced (longitude and latitude)

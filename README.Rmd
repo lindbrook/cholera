@@ -28,8 +28,8 @@ library(cholera)
 * Appends street names to the `roads` data set.
 * Includes the revised pump data used in the second version of Snow's map from the Vestry report, which also includes the "correct" location of the Broad Street pump.
 * Adds two aggregate time series fatalities data sets, taken from the Vestry report.
-* With 'cholera' version >= 0.7.0, support for parallel computation now includes Windows in addition to Linux and macOS.
-* Preliminary and provisional support for georeferenced (longitude and latitude) versions of data and functions.
+* Support for parallel computation on Linux, macOS and Windows.
+* With 'cholera' version >= 0.8.0, preliminary and provisional support for georeferenced (longitude and latitude) versions of data and functions. [Details below](#longitude-and-latitude).
 
 #### getting started
 
@@ -141,7 +141,7 @@ plot(neighborhoodVoronoi(pump.select = -7))
 
 Parallel computation is implemented using the 'parallel' package, which is part of the base R distribution. Currently, where applicable, parallelization is enabled by default via `multi.core = TRUE` (you can also specify or limit the number of cores by passing an integer or by setting `multi.core = FALSE`. Note that although some precautions are taken in the R.app, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("Parallelization")` for details. That said, I've had few, if any, problems with using the package in parallel on macOS with either the [R application](https://www.r-project.org/) or the [RStudio IDE](https://posit.co/products/open-source/rstudio/).
 
-#### longitude and latitude (prototypes)
+#### longitude and latitude
 
 ['cholera'](https://cran.r-project.org/package=cholera) now has preliminary, limited support for georeferenced (longitude and latitude) versions of some data and functions. This support goes beyond a proof of concept but is currently less than a complete re-implementation of the package's native (non-georeferenced) functionality. The georeferencing was done manually using [QGIS](https://qgis.org/en/site/); specifically its Georeferencer tool and its interface to [OpenStreetMap](https://www.openstreetmap.org). The target coordinate reference system (CRS) of these data is EPSG:4326. What makes this effort preliminary is that the choice of ground control points, transformation type (e.g., thin plate spine), and resampling method (e.g., nearest neighbor) are still in flux. Thus, results and coordinates may change in the future. 
 
