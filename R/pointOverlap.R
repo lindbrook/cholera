@@ -1,4 +1,4 @@
-#' Census of overlapping fatalties.
+#' Census of overlapping fatalities.
 #'
 #' "Resolution" of georeferenced points with pch = 46 (i.e., pch = ".").
 #' @param inter.point.dist Numeric. Ceiling for overlapping points.

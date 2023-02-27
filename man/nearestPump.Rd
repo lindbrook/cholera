@@ -12,7 +12,7 @@ nearestPump(pump.select = NULL, metric = "walking", vestry = FALSE,
 \arguments{
 \item{pump.select}{Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
 
-\item{metric}{Character. "eucldidean" or "walking".}
+\item{metric}{Character. "euclidean" or "walking".}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 

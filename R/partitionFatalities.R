@@ -6,7 +6,7 @@
 #' @noRd
 
 partitionFatalities <- function(inter.point.dist = 0.15) {
-  g <- thresholdFataltiesGraph(inter.point.dist = inter.point.dist)
+  g <- thresholdFatalitiesGraph(inter.point.dist = inter.point.dist)
   subgraphs <- igraph::decompose(g)
   names(subgraphs) <- seq_along(subgraphs)
   census <- igraph::groups(igraph::components(g))

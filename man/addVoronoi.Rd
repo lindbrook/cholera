@@ -21,7 +21,7 @@ addVoronoi(pump.select = NULL, vestry = FALSE, case.location = "nominal",
 
 \item{line.width}{Numeric. Width of cell edges: lwd.}
 
-\item{latlong}{Logical. Use estimated longitude and latititude.}
+\item{latlong}{Logical. Use estimated longitude and latitude.}
 }
 \description{
 Add Voronoi cells.

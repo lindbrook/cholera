@@ -754,7 +754,7 @@ cholera 0.7.9.9042
 cholera 0.7.9.9041
 ==================
 
-- add thresholdFataltiesGraph().
+- add thresholdFatalitiesGraph().
 - add fatalitiesGraphData().
 - add partitionFatalities() prototype.
 - add partitionFatalitiesPDF().

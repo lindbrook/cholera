@@ -4,13 +4,13 @@
 #' @return An 'igraph' object.
 #' @noRd
 
-thresholdFataltiesGraph <- function(inter.point.dist = 0.15) {
+thresholdFatalitiesGraph <- function(inter.point.dist = 0.15) {
   dat <- fatalitiesGraphData(inter.point.dist = inter.point.dist)
   edge.list <- dat$proximate[, c("v1", "v2")]
   igraph::graph_from_data_frame(edge.list, directed = FALSE)
 }
 
-# plot(thresholdFataltiesGraph(), vertex.label = NA, vertex.size = 2)
+# plot(thresholdFatalitiesGraph(), vertex.label = NA, vertex.size = 2)
 
 #' Proximity data for non-address fatalities with selected inter-point distance.
 #'

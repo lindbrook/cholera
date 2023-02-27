@@ -37,7 +37,7 @@ addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
 
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 
-\item{latlong}{Logical. Use estimated longitude and latititude.}
+\item{latlong}{Logical. Use estimated longitude and latitude.}
 }
 \description{
 Add expected walking neighborhoods.

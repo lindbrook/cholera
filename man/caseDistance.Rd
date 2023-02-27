@@ -2,7 +2,7 @@
 % Please edit documentation in R/caseDistance.R
 \name{caseDistance}
 \alias{caseDistance}
-\title{Compute distance between case fatalties.}
+\title{Compute distance between case fatalities.}
 \usage{
 caseDistance(a = 19, b = 263, meters = FALSE)
 }
@@ -14,5 +14,5 @@ caseDistance(a = 19, b = 263, meters = FALSE)
 \item{meters}{Logical. Compute metric (meters) or nominal distance.}
 }
 \description{
-Compute distance between case fatalties.
+Compute distance between case fatalities.
 }

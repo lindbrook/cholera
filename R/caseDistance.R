@@ -1,4 +1,4 @@
-#' Compute distance between case fatalties.
+#' Compute distance between case fatalities.
 #'
 #' @param a Numeric. Case ID.
 #' @param b Numeric. Case ID.

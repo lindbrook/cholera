@@ -13,7 +13,7 @@
 #' @param polygon.lwd Numeric.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
-#' @param latlong Logical. Use estimated longitude and latititude.
+#' @param latlong Logical. Use estimated longitude and latitude.
 #' @import graphics
 #' @export
 #' @examples

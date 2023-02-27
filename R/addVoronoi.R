@@ -6,7 +6,7 @@
 #' @param color Character. Color of cell edges.
 #' @param line.type Character. Type of line for cell edges: lty.
 #' @param line.width Numeric. Width of cell edges: lwd.
-#' @param latlong Logical. Use estimated longitude and latititude.
+#' @param latlong Logical. Use estimated longitude and latitude.
 #' @note This function uses \code{deldir::deldir()}.
 #' @import graphics
 #' @export
