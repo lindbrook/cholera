@@ -183,7 +183,7 @@ To explore “expected” walking neighborhoods, add the case.set =
 “expected” argument:
 
 ``` r
-plot(neighborhoodWalking(pump.select =  6:7, case.set = "expected"), type = "area.polygons")
+plot(neighborhoodWalking(pump.select = 6:7, case.set = "expected"), type = "area.polygons")
 plot(neighborhoodWalking(pump.select = -7, case.set = "expected"), type = "area.polygons")
 ```
 
@@ -211,14 +211,14 @@ plot(neighborhoodVoronoi(pump.select = -7))
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-11-2.png" width="50%" />
 
-#### note on parallelization
+#### parallelization
 
-Parallel computation is implemented using the ‘parallel’ package, which
-is part of the base R distribution. Currently, where applicable,
-parallelization is enabled by default via `multi.core = TRUE` (you can
-also specify or limit the number of cores by passing an integer or by
-setting `multi.core = FALSE`. Note that although some precautions are
-taken in the R.app, the developers of the ‘parallel’ package strongly
+Parallelization is implemented using the ‘parallel’ package, which is
+part of the base R distribution. Where applicable, parallelization is
+enabled by default via `multi.core = TRUE` (you can also set or limit
+the number of cores by passing an integer or by setting
+`multi.core = FALSE`. Note that although some precautions are taken in
+the R application, the developers of the ‘parallel’ package strongly
 discourage against using parallelization within a GUI or embedded
 environment. See `vignette("Parallelization")` for details. That said,
 I’ve had few, if any, problems with using the package in parallel on
