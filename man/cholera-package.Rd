@@ -19,8 +19,8 @@ Features:
 \item Appends actual street names to roads data.
 \item Includes the revised pump data used in the second version of Snow's map from the Vestry report, which includes the "correct" location of the Broad Street pump.
 \item Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
-\item With ‘cholera’ version >= 0.7.0, support for parallel computation now includes Windows in addition to Linux and macOS.
-\item Preliminary and provisional support for georeferenced (longitude and latitude) versions of data and functions.
+\item Support for parallel computation on Linux, macOS and Windows.
+\item PWith 'cholera' version >= 0.8.0, preliminary and provisional support for georeferenced (longitude and latitude) versions of data and functions.
 }
 
 To learn more, see the vignettes:
