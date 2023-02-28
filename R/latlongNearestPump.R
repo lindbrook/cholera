@@ -84,8 +84,8 @@ latlong_pathData <- function(dat, pump.select, weighted, vestry, cores) {
   edges <- dat$edges
   ortho.addr <- cholera::latlong.ortho.addr
 
-  if (vestry) ortho.pump <- cholera::latlong.ortho.pump
-  else ortho.pump <- cholera::latlong.ortho.pump.vestry  
+  if (vestry) ortho.pump <- cholera::latlong.ortho.pump.vestry
+  else ortho.pump <- cholera::latlong.ortho.pump
   names(ortho.pump)[names(ortho.pump) == "pump.id"] <- "pump"
 
   if (!is.null(pump.select)) {
