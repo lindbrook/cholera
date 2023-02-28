@@ -30,8 +30,12 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
   }
 
   if (!is.null(destination)) {
-    if (any(destination == 2L)) {
-      stop('Pump 2 is a technical isolate. Not reachable.', call. = FALSE)
+
+    pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
+
+    if (any(pump.id == 2L)) {
+      # message("Pump 2 excluded because it's a technical isolate.")
+      pump.id <- pump.id[pump.id != 2L]
     }
 
     network.data <- latlongNeighborhoodData(vestry = vestry, multi.core = cores)
@@ -42,21 +46,22 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
     nodes$node <- paste0(nodes$lon, "_&_", nodes$lat)
 
     ego.node <- nodes[nodes$case == anchor, "node"]
-    alter.node <- nodes[nodes$pump == destination, "node"]
+
+    alters <- nodes[nodes$pump %in% pump.id & nodes$pump != 0, ]
+    alters <- alters[order(alters$pump),]
+    alter.node <- alters$node
+    names(alter.node) <- alters$pump
 
     d <- c(igraph::distances(g, ego.node, alter.node, weights = edges$d))
+    names(d) <- pump.id
 
-    p <- igraph::shortest_paths(g, ego.node, alter.node,
+    nr.pmp <- names(which.min(d))
+
+    p <- igraph::shortest_paths(g, ego.node, alter.node[nr.pmp],
       weights = edges$d)$vpath
-
     p <- names(unlist(p))
 
-    p.data <- do.call(rbind, lapply(p, function(x) {
-      as.numeric(unlist(strsplit(x[1], "_&_"))[-1])
-    }))
-
-    p.data <- data.frame(do.call(rbind, strsplit(p, "_&_")))
-
+    p.data <- do.call(rbind, strsplit(p, "_&_"))
     path <- data.frame(id = seq_len(nrow(p.data)),
                         x = as.numeric(p.data[, 1]),
                         y = as.numeric(p.data[, 2]))
@@ -68,17 +73,17 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
     }, numeric(1L))
 
     if (time.unit == "hour") {
-      walking.time <- d / (1000L * walking.speed)
+      walking.time <- d[nr.pmp] / (1000L * walking.speed)
     } else if (time.unit == "minute") {
-      walking.time <- (60L * d) / (1000L * walking.speed)
+      walking.time <- (60L * d[nr.pmp]) / (1000L * walking.speed)
     } else if (time.unit == "second") {
-      walking.time <- (3600L * d) / (1000L * walking.speed)
+      walking.time <- (3600L * d[nr.pmp]) / (1000L * walking.speed)
     }
 
-    p.nm <- pmp[pmp$id == destination, "street"]
+    p.nm <- pmp[pmp$id == as.integer(nr.pmp), "street"]
 
     data.summary <- data.frame(case = case, anchor = anchor, pump.name = p.nm,
-      pump = destination, distance = d, time = walking.time)
+      pump = as.integer(nr.pmp), distance = d[nr.pmp], time = walking.time)
 
     output <- list(path = path,
                    data = data.summary,
@@ -90,11 +95,11 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
                    time.unit = time.unit,
                    walking.speed = walking.speed)
   } else {
-    nearest.pump <- latlongNearestPump(vestry = vestry, multi.core = cores)
+    nr.pmp <- latlongNearestPump(vestry = vestry, multi.core = cores)
 
     case.id <- which(cholera::fatalities.address$anchor == anchor)
-    p <- names(nearest.pump$path[[case.id]][[1]])
-    destination.pump <- names(nearest.pump$path[[case.id]])
+    p <- names(nr.pmp$path[[case.id]][[1]])
+    destination.pump <- names(nr.pmp$path[[case.id]])
 
     nodes <- do.call(rbind, strsplit(p, "_&_"))
     dat <- data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
