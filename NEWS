@@ -51,11 +51,11 @@ cholera 0.8.0
 
 - add/set snowMap(latlong = FALSE).
 - add/set addPump(latlong = FALSE).
-- add/ser roadSegments(latlong = FALSE)
+- add/ser roadSegments(latlong = FALSE).
 - add/set voronoiPolygons(latlong = FALSE).
 - latlongNeighborhoodVoronoi().
-- latlongNeighborhoodWalking()
-- latlongWalkingPath()
+- latlongNeighborhoodWalking().
+- latlongWalkingPath().
 
 
 # Documentation #
