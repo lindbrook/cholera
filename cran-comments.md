@@ -13,7 +13,7 @@ R 4.2.2 (2022-10-31), x86_64-apple-darwin20.6.0 (64-bit):
 
 ### R win-builder check results - x86_64-w64-mingw32 (64-bit)
 
-R-devel: R Under development (unstable) (2023-02-25 r83903 ucrt)
+R-devel: R Under development (unstable) (2023-02-27 r83911 ucrt)
 * 0 errors | 0 warnings | 0 notes
 
 R-oldrelease: R 4.1.3 (2022-03-10):
