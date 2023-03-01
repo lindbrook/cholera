@@ -1,19 +1,18 @@
-cholera 0.8.0
-==================
+### cholera 0.8.0
 
-# New Functions #
+#### New Functions
 
 - caseDistance().
 - pumpFatalities().
 
 
-# New Data #
+#### New Data
 
 - latlong.ortho.addr, latlong.ortho.pump and latlong.ortho.pump.vestry.
 - frame.data.
 
 
-# Fixes #
+#### Fixes
 
 - fix addVoronoi(color).
 - fix nearestPump(metric = "euclidean", vestry = TRUE).
@@ -21,14 +20,14 @@ cholera 0.8.0
 - use aes_string() in profile2D().
 
 
-# Data Changes #
+#### Data Changes
 
 - use Poland Street as street address for St James Workhouse.
 - re-compute ortho.proj with amended unstackFatalities().
 - roadSegmentFix() places cases 440 and 145 on road segment "259-1".
 
 
-# Function Changes #
+#### Function Changes
 
 - add exception for observed v. expected in neighborhoodData() via embedSites().
 - add/set addCase(pch = 1, cex = 1, point.lwd = 2).
@@ -47,7 +46,7 @@ cholera 0.8.0
 - fix/amend milePosts() for distance and time.
 
 
-# Longitude and Latitude Prototypes #
+#### Longitude and Latitude Prototypes
 
 - add/set snowMap(latlong = FALSE).
 - add/set addPump(latlong = FALSE).
@@ -58,38 +57,37 @@ cholera 0.8.0
 - latlongWalkingPath().
 
 
-# Documentation #
+#### Documentation
 
 - note on "computing Voronoi diagrams with geographic data".
 
 
-# Archived/Deprecated Functions #
+#### Archived/Deprecated Functions
 
 - roadHighlight().
 
 
-cholera 0.7.9
-==================
+### cholera 0.7.9
 
-# Note #
+#### Note
 
 - an interim release to address code changes in 'deldir' v1.0-2.
 
-# New Function #
+#### New Function
 
 - add streetNames().
 
-# Data Change #
+#### Data Change
 
 - amend oxford.weather data to include entire data set.
 
-# Fixes #
+#### Fixes
 
 - amend code for 'deldir' v1.0-2: addDelaunay().
 - fix addSnow().
 - fix pumpTokens() for plot.walking(type = "roads").
 
-# Function Changes #
+#### Function Changes
 
 - add/set addPump(cex = 1).
 - add/set segmentHighlight(col = "red").
@@ -100,14 +98,13 @@ cholera 0.7.9
 - "gray" out unobserved and unselected pumps in pumpTokens().
 
 
-cholera 0.7.5
-==================
+### cholera 0.7.5
 
-# New Data #
+#### New Data
 
 - oxford.weather
 
-# New Functions #
+#### New Functions
 
 - isoLines()
 - isoVertices()
@@ -116,37 +113,36 @@ cholera 0.7.5
 - segmentHighlight()
 - winterTemperatures()
 
-# Function Changes #
+#### Function Changes
 
 - add addCase(case = NULL).
 - add and set neighborhoodVoronoi(case.location = "address").
 - add and set neighborhoodVoronoi(pump.location = "nominal").
 - add subtitles for selected pumps in plot.euclidean().
 
-# Fixes #
+#### Fixes
 
 - fix unneeded warnings in addEuclideanPath().
 - fix typo, from Silver Street to Cross Street, for meter benchmark in roads
   vignette.
 
-# Vignettes #
+#### Vignettes
 
 - add discussion of Euclidean and Voronoi "expected" neighborhoods.
 
 
-cholera 0.7.0
-==================
+### cholera 0.7.0
 
-# New Feature #
+#### New Feature
 
 - support for parallel computation on Windows.
 
-# Fixes #
+#### Fixes
 
 - fix computation of core in neighborhoodWalking().
 - fix nearestPump(metric = "euclidean", case.set = ("observed", "expected")).
 
-# Function Changes #
+#### Function Changes
 
 - rename and amend simWalkingDistance() to simulateWalkingDistance().
 - deprecate case.set argument in addNeighborhoodCases().
@@ -154,15 +150,14 @@ cholera 0.7.0
 - amend expectedCount() for summary.walking().
 - add unstackAuxiliaryFunctions.R
 
-# Vignettes #
+#### Vignettes
 
 - add Parallelization vignette.
 
 
-cholera 0.6.5
-==================
+### cholera 0.6.5
 
-# Fixes #
+#### Fixes
 
 - fix plot.walking_path() timeposts.
 - fix plot.walking_path(observed = FALSE).
@@ -171,11 +166,11 @@ cholera 0.6.5
 - fix city squares for plot.euclidean_path().
 - fix computed time in nearestPump() and amend sim.walking.distance.
 
-# New Data #
+#### New Data
 
 - add sim.walking.distance.
 
-# Function Changes #
+#### Function Changes
 
 - add nearestPump(metric = "euclidean").
 - add distance.unit argument to addWhitehead().
@@ -197,34 +192,33 @@ cholera 0.6.5
 - exclude landmarks from case.set - "expected".
 - rename deldirVertices() back to voronoiPolygons().
 
-# Vignettes #
+#### Vignettes
 
 - rename "deldirPolygons()" to "voronoiPolygons()".
 - remove Pump Neighborhoods vignette.
 
-# DESCRIPTION #
+#### DESCRIPTION
 
 - remove 'scales' from Imports.
 
 
-cholera 0.6.0
-==================
+### cholera 0.6.0
 
-# Fixes #
+#### Fixes
 
 - fix title in euclideanPath(type = "case-pump").
 - fix destination label for walkingPath(destination = NULL).
 
-# Data Changes #
+#### Data Changes
 
 - add Earl of Aberdeen residence (Argyll House).
 - nominal and orthogonal coordinates for landmarks.
 
-# Function Changes #
+#### Function Changes
 
 - addNeighborhood() -> addNeighborhoodWalking()
 
-# Function Changes - new arguments #
+#### Function Changes - new arguments
 
 - addSnow(type = "perimeter", line.width = 2)
 - neighborhoodData(embed = TRUE, embed.landmarks = TRUE)
@@ -234,7 +228,7 @@ cholera 0.6.0
 - streetNameLocator(add.subtitle = TRUE, token = id)
 - streetNumberLocator(add.subtitle = TRUE, token = id)
 
-# Function Changes - polygon.method argument #
+#### Function Changes - polygon.method argument
 
 - addNeighborhoodEuclidean(polygon.method = "traveling.salesman")
 - plot.euclidean(polygon.method = "traveling.salesman")
@@ -242,20 +236,20 @@ cholera 0.6.0
 - addNeighborhoodWalking(polygon.method = "pearl.string")
 - plot.walking(polygon.method = "pearl.string")
 
-# Function Change - landmarks as origin and/or destination (treated as cases) #
+#### Function Change - landmarks as origin and/or destination (treated as cases)
 
 - euclideanPath()
 - walkingPath()
 - find nearest case or landmark, given pump (i.e., reverse lookup)
 
-# Function Changes - case.location argument: "address" or "nominal" #
+#### Function Changes - case.location argument: "address" or "nominal"
 
 - addVoronoi(case.location = "nominal")
 - euclideanPath(case.location = "nominal")
 - neighborhoodEuclidean(case.location = "nominal")
 - addNeighborhoodEuclidean(case.location = "nominal")
 
-# New Functions #
+#### New Functions
 
 - addCase()
 - addDelauny()
@@ -266,57 +260,55 @@ cholera 0.6.0
 - profile3D()
 - streetHighlight()
 
-# New Exported Functions #
+#### New Exported Functions
 
 - fixFatalities()
 - landmarkData()
 
-# New S3 Function #
+#### New S3 Function
 
 - pearsonResiduals()
 - plot.neighborhood_data()
 
-# New Vignette #
+#### New Vignette
 
 - "deldirVertices(): Tiles, Triangles and Polygons"
 
-# Deprecated Functions #
+#### Deprecated Functions
 
 - euclideanDistance()
 - walkingDistance()
 
 
-cholera 0.5.1
-==================
+### cholera 0.5.1
 
-# Fixes #
+#### Fixes
 
 - backward compatibility (R 3.4.4) related to base::isFALSE() & bug fix.
 - fix for multiple results in walkingDistance() and walkingPath().
 
-# Function Changes #
+#### Function Changes
 
 - enable ellipses (...) in plot.time_series() (#1).
 - enable ellipses and negative selection in addPump().
 - consolidate addEuclideanPath(), euclideanDistance(), euclideanPath(),
   walkingDistance() and walkingPath()
 
-# New Functions #
+#### New Functions
 
 - addBorder()
 - addRoads()
 - mapRange()
 
 
-cholera 0.5.0
-==================
+### cholera 0.5.0
 
-# Data Changes #
+#### Data Changes
 
 - regular.cases and sim.ortho.proj:
   increase number of observations from 5K to 20K.
 
-# Function Changes #
+#### Function Changes
 
 - "alpha.level" argument to control path transparency
     addEuclideanPath() and addWalkingPath()
@@ -362,7 +354,7 @@ cholera 0.5.0
 - walkingDistance() no longer S3.
     generic S3 functionality moved to walkingPath().
 
-# New Functions #
+#### New Functions
 
 - addCase()
 - addEuclideanPath()
@@ -371,13 +363,13 @@ cholera 0.5.0
 - addWalkingPath()()
 - distanceTime()
 
-# New S3 Functions #
+#### New S3 Functions
 
 - euclideanPath()
 - walkingPath()
 - neighborhoodEuclidean()
 
-# Vignette Changes #
+#### Vignette Changes
 
 - Lab Notes available online and on GitHub:
   "duplicate.missing.cases.notes"
@@ -385,10 +377,9 @@ cholera 0.5.0
   "unstacking.bars.notes"
 
 
-cholera 0.4.0
-==================
+### cholera 0.4.0
 
-# Data Changes #
+#### Data Changes
 
 - ortho.proj.pump and ortho.proj.pump.vestry now include node ID.
 
@@ -397,7 +388,7 @@ cholera 0.4.0
     "Unknown-D" to "St James's Market" (https://maps.nls.uk).
     "Unknown-E" to "Market Street (II)" (https://maps.nls.uk).
 
-# Function Changes #
+#### Function Changes
 
 - addKernelDensity()
   uses "pump.subset" and "pump.select" arguments.
@@ -421,11 +412,11 @@ cholera 0.4.0
 - walkingDistance()
   add "simulated" expected cases.
 
-# New Functions #
+#### New Functions
 
 - addNeighborhood()
 
-# New S3 Implementations #
+#### New S3 Implementations
 
 - plot.walking
   type = "area.points" and type = "area-polygons".
@@ -433,16 +424,15 @@ cholera 0.4.0
 
 - print.walking() uses expectedCount().
 
-# Vignette Changes #
+#### Vignette Changes
 
 - add "Kernel Density Plot".
 - update "Pump Neighborhoods" with discussion of area plots.
 
 
-cholera 0.3.0
-==================
+### cholera 0.3.0
 
-# Data Changes #
+#### Data Changes
 
 - ortho.proj:
     reclassify case 483:
@@ -450,7 +440,7 @@ cholera 0.3.0
     reclassify cases 369, 434, 11, 53, 193:
       Poland Street ("194-1") -> St James Workhouse ("148-1").
 
-# Function Changes #
+#### Function Changes
 
 - addSnow()
     "area", "street" and "boundary" graphical annotation.
@@ -467,13 +457,13 @@ cholera 0.3.0
     highlight segment or street cases.
     option to plot all cases, anchor cases or no cases.
 
-# New S3 Implementations #
+#### New S3 Implementations
 
 - timeSeries()
 - walkingDistance()
     incorporates and deprecates walkingPath().
 
-# New Functions #
+#### New Functions
 
 - addIndexCase()
 - nearestPath()
@@ -484,13 +474,12 @@ cholera 0.3.0
 - streetLength()
 - unitMeter()
 
-# New S3 Functions #
+#### New S3 Functions
 
 - classifierAudit()
 - euclideanDistance()
 
 
-cholera 0.2.1
-=============
+### cholera 0.2.1
 
 - Initial CRAN release.
