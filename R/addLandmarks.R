@@ -26,8 +26,14 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
       else if (length(x) == 3L) paste(x[1], paste(x[-1], collapse = "\n"))
     }, character(1L))
 
-    text(cholera::landmarks[sel, vars], cex = text.size, col = text.col,
-      labels = lndmrks)
+    luke <- grepl("Church", cholera::landmarks$name)
+
+    text(cholera::landmarks[sel & !luke, vars], cex = text.size, col = text.col,
+      labels = lndmrks[!grepl("Church", lndmrks)])
+
+    points(cholera::landmarks[luke, vars], pch = 15, cex = 1/3)
+    text(cholera::landmarks[luke, vars], cex = text.size, col = text.col,
+      labels = lndmrks[grepl("Church", lndmrks)], pos = 4) 
 
     # Golden Square and Soho Square
     sel <- cholera::landmarks$name %in% c("Golden Square-N", "Golden Square-S")
