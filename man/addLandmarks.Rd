@@ -4,11 +4,13 @@
 \alias{addLandmarks}
 \title{Add landmarks to plot.}
 \usage{
-addLandmarks(text.size = 0.5, highlight.perimeter = TRUE,
-  latlong = FALSE)
+addLandmarks(text.size = 0.5, text.col = "black",
+  highlight.perimeter = TRUE, latlong = FALSE)
 }
 \arguments{
 \item{text.size}{Numeric. cex for text labels.}
+
+\item{text.col}{Character. col for text labels.}
 
 \item{highlight.perimeter}{Logical. Highlight Lion Brewery and Model Housing.}
 

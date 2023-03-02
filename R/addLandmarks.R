@@ -1,6 +1,7 @@
 #' Add landmarks to plot.
 #'
 #' @param text.size Numeric. cex for text labels.
+#' @param text.col Character. col for text labels.
 #' @param highlight.perimeter Logical. Highlight Lion Brewery and Model Housing.
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @note The location of 18 Sackville Street and 28 Dean Street are approximate. Falconberg Court & Mews form an isolate: they are not part of the network of roads and are technically unreachable. Adam and Eve Court and its pump also form an isolate.
@@ -11,8 +12,8 @@
 #' snowMap(add.landmarks = FALSE)
 #' addLandmarks()
 
-addLandmarks <- function(text.size = 0.5, highlight.perimeter = TRUE,
-  latlong = FALSE) {
+addLandmarks <- function(text.size = 0.5, text.col = "black", 
+  highlight.perimeter = TRUE, latlong = FALSE) {
 
   if (latlong) {
     vars <- c("lon", "lat")
@@ -24,7 +25,8 @@ addLandmarks <- function(text.size = 0.5, highlight.perimeter = TRUE,
       if (length(x) == 2L) paste(x, collapse = "\n")
       else if (length(x) == 3L) paste(x[1], paste(x[-1], collapse = "\n"))
     }, character(1L))
-    text(cholera::landmarks[sel, vars], cex = text.size, labels = lndmrks)
+    text(cholera::landmarks[sel, vars], cex = text.size, col = text.col,
+      labels = lndmrks)
   } else {
     # 28 Dean Street
     marx <- data.frame(x = 17.3855, y = 13.371)

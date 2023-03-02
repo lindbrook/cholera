@@ -2,7 +2,7 @@
 
 - enable snowMap(add.landmarks = TRUE).
 - add/set addLandmarks(latlong = FALSE).
-  
+- add/set addLandmarks(text.col = "black").
 
 ### cholera 0.8.0
 
