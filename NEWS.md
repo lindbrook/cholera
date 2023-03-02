@@ -1,3 +1,9 @@
+### cholera 0.8.0.9000
+
+- enable snowMap(add.landmarks = TRUE).
+- add/set addLandmarks(latlong = FALSE).
+  
+
 ### cholera 0.8.0
 
 #### New Functions
