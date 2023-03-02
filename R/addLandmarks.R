@@ -12,7 +12,7 @@
 #' snowMap(add.landmarks = FALSE)
 #' addLandmarks()
 
-addLandmarks <- function(text.size = 0.5, text.col = "black", 
+addLandmarks <- function(text.size = 0.5, text.col = "black",
   highlight.perimeter = TRUE, latlong = FALSE) {
 
   if (latlong) {
@@ -25,8 +25,29 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
       if (length(x) == 2L) paste(x, collapse = "\n")
       else if (length(x) == 3L) paste(x[1], paste(x[-1], collapse = "\n"))
     }, character(1L))
+
     text(cholera::landmarks[sel, vars], cex = text.size, col = text.col,
       labels = lndmrks)
+
+    # Golden Square and Soho Square
+    sel <- cholera::landmarks$name %in% c("Golden Square-N", "Golden Square-S")
+    golden.NS <- cholera::landmarks[sel, vars]
+
+    sel <- cholera::landmarks$name %in% c("Golden Square-E", "Golden Square-W")
+    golden.EW <- cholera::landmarks[sel, vars]
+
+    sel <- cholera::landmarks$name %in% c("Soho Square-N", "Soho Square-S2")
+    soho.NS <- cholera::landmarks[sel, vars]
+
+    sel <- cholera::landmarks$name %in% c("Soho Square-E", "Soho Square-W")
+    soho.EW <- cholera::landmarks[sel, vars]
+
+    golden <- squareCenter(golden.NS, golden.EW)
+    text(golden, labels = "Golden\nSquare", cex = text.size, col = text.col)
+
+    soho <- squareCenter(soho.NS, soho.EW)
+    text(soho, labels = "Soho\nSquare", cex = text.size, col = text.col)
+
   } else {
     # 28 Dean Street
     marx <- data.frame(x = 17.3855, y = 13.371)
@@ -151,30 +172,6 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
     # 7) Marshall Street Public Baths built 1851-2  (Marshall Street)
     # http://www.british-history.ac.uk/survey-london/vols31-2/pt2/pp196-208
 
-    intersectionPoint <- function(seg1, seg2, sel = 1) {
-      s1 <- cholera::road.segments[cholera::road.segments$id == seg1, ]
-      s2 <- cholera::road.segments[cholera::road.segments$id == seg2, ]
-      dat <- lapply(list(s1, s2), toDataFrame)
-      ols <- lapply(dat, stats::lm, formula = y ~ x)
-      coefs <- lapply(ols, stats::coef)
-      x <- (coefs[[1]][1] - coefs[[2]][1]) / (coefs[[2]][2] - coefs[[1]][2])
-      y <- coefs[[1]][1] + coefs[[1]][2] * x
-      h.data <- rbind(s2[, c(paste0("x", sel), paste0("y", sel))], c(x, y))
-      h <- c(stats::dist(h.data))
-      segment.slope <- stats::coef(ols[[2]])[2]
-      theta <- atan(segment.slope)
-      delta.x <- (h / 2) * cos(theta)
-      delta.y <- (h / 2) * sin(theta)
-      x.new <- x + delta.x
-      y.new <- y + delta.y
-      data.frame(x = x.new, y = y.new)
-    }
-
-    toDataFrame <- function(dat) {
-      out <- data.frame(rbind(c(dat$x1, dat$y1), c(dat$x2, dat$y2)))
-      stats::setNames(out, c("x", "y"))
-    }
-
     public.baths <- intersectionPoint("201-2", "217-2", 1)
     text(public.baths, labels = "Public\nBaths", cex = text.size)
 
@@ -223,3 +220,40 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
     }
   }
 }
+
+ squareCenter <- function(NS, EW) {
+   line.NS <- stats::lm(lat ~ lon, data = NS)
+   line.EW <- stats::lm(lat ~ lon, data = EW)
+   lon.x <- stats::coef(line.NS)["lon"] -
+            stats::coef(line.EW)["lon"]
+   int.b <- stats::coef(line.EW)["(Intercept)"] -
+            stats::coef(line.NS)["(Intercept)"]
+   x.val <- int.b / lon.x
+   y.val <- stats::coef(line.EW)["lon"] * x.val +
+            stats::coef(line.EW)["(Intercept)"]
+   data.frame(lon = x.val, lat = y.val, row.names = NULL)
+ }
+
+ intersectionPoint <- function(seg1, seg2, sel = 1) {
+   s1 <- cholera::road.segments[cholera::road.segments$id == seg1, ]
+   s2 <- cholera::road.segments[cholera::road.segments$id == seg2, ]
+   dat <- lapply(list(s1, s2), toDataFrame)
+   ols <- lapply(dat, stats::lm, formula = y ~ x)
+   coefs <- lapply(ols, stats::coef)
+   x <- (coefs[[1]][1] - coefs[[2]][1]) / (coefs[[2]][2] - coefs[[1]][2])
+   y <- coefs[[1]][1] + coefs[[1]][2] * x
+   h.data <- rbind(s2[, c(paste0("x", sel), paste0("y", sel))], c(x, y))
+   h <- c(stats::dist(h.data))
+   segment.slope <- stats::coef(ols[[2]])[2]
+   theta <- atan(segment.slope)
+   delta.x <- (h / 2) * cos(theta)
+   delta.y <- (h / 2) * sin(theta)
+   x.new <- x + delta.x
+   y.new <- y + delta.y
+   data.frame(x = x.new, y = y.new)
+ }
+
+ toDataFrame <- function(dat) {
+   out <- data.frame(rbind(c(dat$x1, dat$y1), c(dat$x2, dat$y2)))
+   stats::setNames(out, c("x", "y"))
+ }

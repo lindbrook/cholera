@@ -3,6 +3,8 @@
 - enable snowMap(add.landmarks = TRUE).
 - add/set addLandmarks(latlong = FALSE).
 - add/set addLandmarks(text.col = "black").
+- add Golden Square and Soho Square to addLandmarks(latlong = TRUE).
+
 
 ### cholera 0.8.0
 
