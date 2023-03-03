@@ -53,6 +53,20 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
     soho <- squareCenter(soho.NS, soho.EW)
     text(soho, labels = "Soho\nSquare", cex = text.size, col = text.col)
 
+    # Adam and Eve Court (isolate) #
+    adam.eve <- cholera::roads[cholera::roads$name == "Adam and Eve Court",
+                               c("lon", "lat")]
+    adam.eve.df <- data.frame(lon = mean(adam.eve$lon),
+                              lat = stats::quantile(adam.eve$lat, 0.25))
+    text(adam.eve.df, labels = "Adam & Eve\nCourt", cex = text.size)
+
+    # Falconberg Court and Mews (isolate) #
+    sel <- cholera::roads$name %in% c("Falconberg Court", "Falconberg Mews")
+    falconberg <- cholera::roads[sel, c("lon", "lat")]
+    falconberg.df <- data.frame(lon = mean(falconberg$lon),
+                                lat = mean(falconberg$lat))
+    text(falconberg.df, labels = "Falconberg\nCourt & Mews", cex = text.size)
+
   } else {
     # 28 Dean Street
     marx <- data.frame(x = 17.3855, y = 13.371)

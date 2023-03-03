@@ -8,6 +8,8 @@
 - add point and pos = 4 label for St Luke's Church in 
   addLandmarks(latlong = TRUE).
 - enable addLandmarks(highlight.perimeter = TRUE, latlong = TRUE).
+- add Adam and Eve Court and Falconberg Court and Mews to 
+  addLandmarks(latlong = TRUE).
 
 
 ### cholera 0.8.0
