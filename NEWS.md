@@ -6,8 +6,8 @@
 - add Golden Square and Soho Square to addLandmarks(latlong = TRUE).
 - add point only for St Luke's Church in addLandmarks(latlong = FALSE).
 - add point and pos = 4 label for St Luke's Church in 
-  addLandmarks(latlong = TRUE)
-
+  addLandmarks(latlong = TRUE).
+- enable addLandmarks(highlight.perimeter = TRUE, latlong = TRUE).
 
 
 ### cholera 0.8.0

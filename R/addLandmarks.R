@@ -196,33 +196,27 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
     x.new <- dat[1, "x"] + delta.x
     y.new <- dat[1, "y"] + delta.y
     text(x.new, y.new, labels = "Craven\nChapel", cex = text.size)
+  }
 
-    if (highlight.perimeter) {
-      lion.brewery.north <- "187-1"
-      lion.brewery.south <- "225-1"
-      lion.brewery.east <- c("197-1", "215-1")
-      lion.brewery.west <- c("224-1", "226-1")
+  if (highlight.perimeter) {
+    lion.brewery.north <- "187-1"
+    lion.brewery.south <- "225-1"
+    lion.brewery.east <- c("197-1", "215-1")
+    lion.brewery.west <- c("224-1", "226-1")
 
-      model.housing.north <- lion.brewery.south
-      model.housing.south <- "259-1"
-      model.housing.east <- c("245-1", "245-2")
-      model.housing.west <- "259-2"
+    model.housing.north <- lion.brewery.south
+    model.housing.south <- "259-1"
+    model.housing.east <- c("245-1", "245-2")
+    model.housing.west <- "259-2"
 
-      brewery <- c(lion.brewery.north, lion.brewery.south, lion.brewery.east,
-                   lion.brewery.west)
-      model <- c(model.housing.north, model.housing.south, model.housing.east,
-                 model.housing.west)
-      vars <- c("x1", "y1", "x2", "y2")
+    brewery <- c(lion.brewery.north, lion.brewery.south, lion.brewery.east,
+                 lion.brewery.west)
+    model <- c(model.housing.north, model.housing.south, model.housing.east,
+               model.housing.west)
 
-      landmarkPerimeter <- function(seg.id, col = "dodgerblue", lwd = 2) {
-        lapply(seg.id, function(seg) {
-          dat <- cholera::road.segments[cholera::road.segments$id == seg, vars]
-          segments(dat$x1, dat$y1, dat$x2, dat$y2, col = col, lwd = lwd)
-        })
-      }
-
-      invisible(lapply(c(brewery, model), landmarkPerimeter))
-    }
+    invisible(lapply(c(brewery, model), function(id) {
+      landmarkPerimeter(id, latlong = latlong)
+    }))
   }
 }
 
@@ -262,3 +256,22 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
    out <- data.frame(rbind(c(dat$x1, dat$y1), c(dat$x2, dat$y2)))
    stats::setNames(out, c("x", "y"))
  }
+
+landmarkPerimeter <- function(seg.id, col = "dodgerblue", latlong = FALSE,
+  lwd = 2) {
+
+  if (latlong) {
+    rd.segs <- roadSegments(latlong = TRUE)
+    vars <- names(rd.segs)[-(1:3)]
+    lapply(seg.id, function(seg) {
+      dat <- rd.segs[rd.segs$id == seg, vars]
+      segments(dat$lon1, dat$lat1, dat$lon2, dat$lat2, col = col, lwd = lwd)
+    })
+  } else {
+    vars <- c("x1", "y1", "x2", "y2")
+    lapply(seg.id, function(seg) {
+      dat <- cholera::road.segments[cholera::road.segments$id == seg, vars]
+      segments(dat$x1, dat$y1, dat$x2, dat$y2, col = col, lwd = lwd)
+    })
+  }
+}
