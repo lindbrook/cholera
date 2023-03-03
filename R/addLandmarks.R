@@ -109,7 +109,7 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
     # Adam and Eve Court (isolate)
     adam.eve <- cholera::roads[cholera::roads$name == "Adam and Eve Court",
                                c("x", "y")]
-    text(stats::quantile(adam.eve[, "x"], 0.25),
+    text(mean(adam.eve$x),
          stats::quantile(adam.eve[, "y"], 0.25),
          labels = "Adam & Eve\nCourt", cex = text.size)
 
