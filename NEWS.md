@@ -1,3 +1,17 @@
+### cholera 0.8.0.9000
+
+- enable snowMap(add.landmarks = TRUE).
+- add/set addLandmarks(latlong = FALSE).
+- add/set addLandmarks(text.col = "black").
+- add Golden Square and Soho Square to addLandmarks(latlong = TRUE).
+- add point only for St Luke's Church in addLandmarks(latlong = FALSE).
+- add point and pos = 4 label for St Luke's Church in 
+  addLandmarks(latlong = TRUE).
+- enable addLandmarks(highlight.perimeter = TRUE, latlong = TRUE).
+- add Adam and Eve Court and Falconberg Court and Mews to 
+  addLandmarks(latlong = TRUE).
+
+
 ### cholera 0.8.0
 
 #### New Functions

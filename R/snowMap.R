@@ -37,18 +37,19 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
     cases <- cholera::fatalities.address
   }
 
-  rng <- mapRange(latlong)
+  rng <- mapRange(latlong = latlong)
 
   plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp,
     main = main, ...)
-  if (add.roads) addRoads(latlong)
-  if (add.cases) points(cases[, vars], pch = case.pch, col = case.col,
-    cex = 0.5)
+  if (add.roads) addRoads(latlong = latlong)
+  if (add.cases) {
+    points(cases[, vars], pch = case.pch, col = case.col, cex = 0.5)
+  }
   if (add.pumps) {
     addPump(vestry = vestry, col = "blue", pch = 2, latlong = latlong)
   }
-  # if (add.landmarks) addLandmarks()
-  if (add.frame) addFrame(latlong)
+  if (add.landmarks) addLandmarks(latlong = latlong)
+  if (add.frame) addFrame(latlong = latlong)
 }
 
 #' Add all streets and roads to plot.
