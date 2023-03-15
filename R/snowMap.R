@@ -55,7 +55,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
       addPump(vestry = vestry, col = "white", pch = 2, latlong = latlong)
     }
   } else if (add.tanaka == FALSE) {
-    if (add.roads) addRoads(latlong = latlong, col = "black")
+    if (add.roads) addRoads(latlong = latlong)
     if (add.cases) {
       points(cases[, vars], pch = case.pch, col = case.col, cex = 0.5)
     }

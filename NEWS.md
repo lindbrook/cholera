@@ -1,3 +1,8 @@
+### cholera 0.8.0.9003
+
+- fix addRoads() in snowMap(add.tanaka = FALSE).
+
+
 ### cholera 0.8.0.9002
 
 - add tanakaContourPlot().
