@@ -4,12 +4,10 @@
 \alias{tanakaContourPlot}
 \title{Tanaka contour plot.}
 \usage{
-tanakaContourPlot(add = FALSE, alpha.level = 1)
+tanakaContourPlot(add = FALSE)
 }
 \arguments{
 \item{add}{Logical. Add to exisiting plot.}
-
-\item{alpha.level}{Numeric.}
 }
 \description{
 Soho elevation data.
