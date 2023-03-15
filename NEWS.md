@@ -1,3 +1,8 @@
+### cholera 0.8.0.9002
+
+- add tanakaContourPlot().
+
+
 ### cholera 0.8.0.9001
 
 - add latlongStreetNameLocator().
