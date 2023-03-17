@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2023-02-07
+2023-03-17
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -125,6 +125,9 @@ Says About Us)*. New York: Knopf.
 Peter Vinten-Johansen, et al. 2003. *Cholera, Chloroform, and the
 Science of Medicine: A Life of John Snow*. Oxford: Oxford University
 Press.
+
+Peter Whitfield. 2006. *London: A Life in Maps*. London: The British
+Library.
 
 Bee Wilson. 2008. *Swindled: The Dark History of Food Fraud, From
 Poisoned Candy to Counterfeit Coffee*. Princeton: Princeton University
