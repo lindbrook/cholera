@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2023-03-17
+2023-03-27
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -75,6 +75,9 @@ their Detection*. London: Longmans, Green, and Co.
 Sandra Hempel. 2013. “Obituary: John Snow”. *The Lancet*. 381(9874):
 1269-1270.
 
+Lee Jackson. 2014. *Dirty Old London: The Victorian Fight Against
+Filth*. New Haven: Yale University Press.
+
 Steven Johnson. 2006. *The Ghost Map: The Story of London’s Most
 Terrifying Epidemic – and How it Changed Science, Cities and the Modern
 World*. New York: Liveright.
@@ -88,11 +91,17 @@ University of Chicago Press.
 Jill Lepore. 2020. “The Invention of the Police.” *The New Yorker*. July
 13.
 
+Karl Marx and Friedrich Engels. 1983. *Collected Works: Letters*. Vols.
+38-39. London: Lawrence & Wishart.
+
 Deirdre Mask. 2020. *The Address Book: What Street Addresses Reveal
 about Identity, Race, Wealth, and Power*. New York: St Martin’s Griffin.
 
 R. J. Morris. 1976. *Cholera 1832: The Social Response to An Epidemic*.
 New York: Holmes & Meier.
+
+Donald J. Olsen. 1976. *The Growth of London*. London: B.T. Batsford
+Ltd.
 
 Nick Paumgarten. 2019. “The Message of Measles”. *The New Yorker*.
 September 2.
