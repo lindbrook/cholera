@@ -32,12 +32,6 @@ latlongRoads <- function(path, multi.core = TRUE) {
     alters <- geo.scale
     names(alters)[-1] <- c("x", "y")
 
-    ## classification error diagnostic ##
-    # vars <- c("x", "y")
-    # plot(nom.rotate.scale[, vars], pch = 16, cex = 0.5)
-    # points(alters[, vars], pch = 16, cex = 0.5, col = "red")
-    # summary(duplicated(translation$geo.id))
-
     translation <- do.call(rbind, lapply(ids, function(id) {
       ego <- nominal.rotate.scale[nominal.rotate.scale$id == id, c("x", "y")]
       d <- vapply(seq_len(nrow(alters)), function(i) {
@@ -45,6 +39,17 @@ latlongRoads <- function(path, multi.core = TRUE) {
       }, numeric(1L))
       data.frame(id = id, geo.id = alters$id[which.min(d)])
     }))
+
+    ## classification error diagnostic ##
+    # vars <- c("x", "y")
+    # plot(nominal.rotate.scale[, vars], pch = 16, cex = 0.5)
+    # points(alters[, vars], pch = 16, cex = 0.5, col = "red")
+    # dups <- duplicated(translation$geo.id)
+    # if (any(dups)) {
+    #   title(main = paste("err =", summary(dups)[2]))
+    # } else {
+    #   title(main = "OK")
+    # }
 
     geo.coords <- merge(geo.coords, translation, by.x = "id", by.y = "geo.id")
     names(geo.coords)[c(1, length(names(geo.coords)))] <- c("geo.id", "id")
