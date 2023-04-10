@@ -19,12 +19,12 @@ latlongRoads <- function(path, multi.core = TRUE) {
 
     # post-fix
     vars <- !names(cholera::roads) %in% c("lon", "lat")
-    nom.coords <- cholera::roads[cholera::roads$id %in% ids, vars]
+    nominal.coords <- cholera::roads[cholera::roads$id %in% ids, vars]
 
-    # rotate nominal coords to approximate georeferenced coords
-    nom.rotate <- lapply(ids, rotatePoint)
-    nom.rotate <- do.call(rbind, nom.rotate)
-    nom.rotate.scale <- data.frame(id = ids, scale(nom.rotate))
+    # rotate nominal coords to approximate and "match" georeferenced coords
+    nominal.rotate <- lapply(ids, rotatePoint)
+    nominal.rotate <- do.call(rbind, nominal.rotate)
+    nominal.rotate.scale <- data.frame(id = ids, scale(nominal.rotate))
 
     geo.scale <- data.frame(id = geo.coords$id,
       scale(geo.coords[, c("lon", "lat")]))
@@ -39,7 +39,7 @@ latlongRoads <- function(path, multi.core = TRUE) {
     # summary(duplicated(translation$geo.id))
 
     translation <- do.call(rbind, lapply(ids, function(id) {
-      ego <- nom.rotate.scale[nom.rotate.scale$id == id, c("x", "y")]
+      ego <- nominal.rotate.scale[nominal.rotate.scale$id == id, c("x", "y")]
       d <- vapply(seq_len(nrow(alters)), function(i) {
         stats::dist(rbind(ego, alters[i, c("x", "y")]))
       }, numeric(1L))
@@ -48,7 +48,7 @@ latlongRoads <- function(path, multi.core = TRUE) {
 
     geo.coords <- merge(geo.coords, translation, by.x = "id", by.y = "geo.id")
     names(geo.coords)[c(1, length(names(geo.coords)))] <- c("geo.id", "id")
-    merge(nom.coords, geo.coords[, -1], by = "id")
+    merge(nominal.coords, geo.coords[, -1], by = "id")
   }, mc.cores = cores)
 
   coords <- do.call(rbind, coords)
