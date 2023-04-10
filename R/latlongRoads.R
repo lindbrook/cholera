@@ -53,14 +53,14 @@ latlongRoads <- function(path, multi.core = TRUE) {
 
   coords <- do.call(rbind, coords)
   # coords <- coords[, c(names(cholera::roads), c("lon", "lat"))]
-  coords$id2 <- paste0(coords$x, "-", coords$y)
+  coords$id2 <- paste0(coords$x, "_&_", coords$y)
 
   # post-fix
   vars <- !names(cholera::roads) %in% c("lon", "lat")
   rd0 <- cholera::roads[cholera::roads$name != "Map Frame", vars]
 
   rd0 <- rd0[duplicated(rd0[, c("x", "y")]), ]
-  rd0$id2 <- paste0(rd0$x, "-", rd0$y)
+  rd0$id2 <- paste0(rd0$x, "_&_", rd0$y)
   rd0 <- merge(rd0, coords[, c("lon", "lat", "id2")], all.x = TRUE, by = "id2")
 
   out <- rbind(coords, rd0)
