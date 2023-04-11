@@ -1,3 +1,9 @@
+### cholera 0.8.0.9004
+
+- use "_&_" as coordinate delimeter in latlongRoads().
+- amend classification error diagnostic in latlongRoads().
+
+
 ### cholera 0.8.0.9003
 
 - fix addRoads() in snowMap(add.tanaka = FALSE).
