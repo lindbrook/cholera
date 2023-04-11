@@ -19,12 +19,12 @@ latlongRoads <- function(path, multi.core = TRUE) {
 
     # post-fix
     vars <- !names(cholera::roads) %in% c("lon", "lat")
-    nom.coords <- cholera::roads[cholera::roads$id %in% ids, vars]
+    nominal.coords <- cholera::roads[cholera::roads$id %in% ids, vars]
 
-    # rotate nominal coords to approximate georeferenced coords
-    nom.rotate <- lapply(ids, rotatePoint)
-    nom.rotate <- do.call(rbind, nom.rotate)
-    nom.rotate.scale <- data.frame(id = ids, scale(nom.rotate))
+    # rotate nominal coords to approximate and "match" georeferenced coords
+    nominal.rotate <- lapply(ids, rotatePoint)
+    nominal.rotate <- do.call(rbind, nominal.rotate)
+    nominal.rotate.scale <- data.frame(id = ids, scale(nominal.rotate))
 
     geo.scale <- data.frame(id = geo.coords$id,
       scale(geo.coords[, c("lon", "lat")]))
@@ -32,35 +32,40 @@ latlongRoads <- function(path, multi.core = TRUE) {
     alters <- geo.scale
     names(alters)[-1] <- c("x", "y")
 
-    ## classification error diagnostic ##
-    # vars <- c("x", "y")
-    # plot(nom.rotate.scale[, vars], pch = 16, cex = 0.5)
-    # points(alters[, vars], pch = 16, cex = 0.5, col = "red")
-    # summary(duplicated(translation$geo.id))
-
     translation <- do.call(rbind, lapply(ids, function(id) {
-      ego <- nom.rotate.scale[nom.rotate.scale$id == id, c("x", "y")]
+      ego <- nominal.rotate.scale[nominal.rotate.scale$id == id, c("x", "y")]
       d <- vapply(seq_len(nrow(alters)), function(i) {
         stats::dist(rbind(ego, alters[i, c("x", "y")]))
       }, numeric(1L))
       data.frame(id = id, geo.id = alters$id[which.min(d)])
     }))
 
+    ## classification error diagnostic ##
+    # vars <- c("x", "y")
+    # plot(nominal.rotate.scale[, vars], pch = 16, cex = 0.5)
+    # points(alters[, vars], pch = 16, cex = 0.5, col = "red")
+    # dups <- duplicated(translation$geo.id)
+    # if (any(dups)) {
+    #   title(main = paste("err =", summary(dups)[2]))
+    # } else {
+    #   title(main = "OK")
+    # }
+
     geo.coords <- merge(geo.coords, translation, by.x = "id", by.y = "geo.id")
     names(geo.coords)[c(1, length(names(geo.coords)))] <- c("geo.id", "id")
-    merge(nom.coords, geo.coords[, -1], by = "id")
+    merge(nominal.coords, geo.coords[, -1], by = "id")
   }, mc.cores = cores)
 
   coords <- do.call(rbind, coords)
   # coords <- coords[, c(names(cholera::roads), c("lon", "lat"))]
-  coords$id2 <- paste0(coords$x, "-", coords$y)
+  coords$id2 <- paste0(coords$x, "_&_", coords$y)
 
   # post-fix
   vars <- !names(cholera::roads) %in% c("lon", "lat")
   rd0 <- cholera::roads[cholera::roads$name != "Map Frame", vars]
 
   rd0 <- rd0[duplicated(rd0[, c("x", "y")]), ]
-  rd0$id2 <- paste0(rd0$x, "-", rd0$y)
+  rd0$id2 <- paste0(rd0$x, "_&_", rd0$y)
   rd0 <- merge(rd0, coords[, c("lon", "lat", "id2")], all.x = TRUE, by = "id2")
 
   out <- rbind(coords, rd0)
