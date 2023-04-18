@@ -1,3 +1,9 @@
+### cholera 0.8.0.9005
+
+- reset (delete) lon-lat for recomputation in latlongFrame() and latlongRoads().
+- remove ::: operators and un-export latlongRoads().
+
+
 ### cholera 0.8.0.9004
 
 - use "_&_" as coordinate delimeter in latlongRoads().
