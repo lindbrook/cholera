@@ -9,7 +9,7 @@ latlongFrame <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
   # match road IDs used to create the georeferenced TIFs
-  pts <- cholera:::partitionFrame()
+  pts <- partitionFrame()
 
   k <- vapply(pts, length, integer(1L))
   geo.id <- geoID(k)
@@ -19,7 +19,7 @@ latlongFrame <- function(path, multi.core = TRUE) {
   tiff <- paste0(path, pre, post)
 
   geo.coords <- parallel::mclapply(seq_along(tiff), function(i) {
-    cholera:::latlongCoordinates(tiff[i], k[i], path)
+    latlongCoordinates(tiff[i], k[i], path)
   }, mc.cores = cores)
 
   geo.coords <- lapply(seq_along(geo.coords), function(i) {
@@ -40,9 +40,7 @@ latlongFrame <- function(path, multi.core = TRUE) {
   frm <- lapply(pts, function(x) dat[dat$id %in% x, ])
 
   frm.rotate.scale <- parallel::mclapply(frm, function(x) {
-    tmp <- lapply(x$id, function(y) {
-      cholera:::rotatePoint(y, dataset = "roads")
-    })
+    tmp <- lapply(x$id, function(y) rotatePoint(y, dataset = "roads"))
     tmp <- do.call(rbind, tmp)
     data.frame(point.id = x$point.id, scale(tmp))
   }, mc.cores = cores)

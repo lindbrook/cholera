@@ -3,28 +3,28 @@
 #' @param path Character. e.g., "~/Documents/Data/"
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
-#' @export
+#' @noRd
 #' @note This documents the computation of the lat-long version of the roads data frame.
 
 latlongRoads <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
   # match road IDs used to create the georeferenced TIFs
-  partition.rds <- cholera:::partitionRoads()
+  partition.rds <- partitionRoads()
 
   coords <- parallel::mclapply(seq_along(partition.rds), function(i) {
     ids <- partition.rds[[i]]
     nm <- names(partition.rds[i])
     tif <- paste0(path, "roads.", nm, "_modified.tif")
     k <- length(ids)
-    geo.coords <- cholera:::latlongCoordinates(tif, k, path)
+    geo.coords <- latlongCoordinates(tif, k, path)
 
     # reset (delete) lon-lat for recomputation 
     vars <- !names(cholera::roads) %in% c("lon", "lat")
     nominal.coords <- cholera::roads[cholera::roads$id %in% ids, vars]
 
     # rotate nominal coords to approximate and "match" georeferenced coords
-    nominal.rotate <- lapply(ids, cholera:::rotatePoint)
+    nominal.rotate <- lapply(ids, rotatePoint)
     nominal.rotate <- do.call(rbind, nominal.rotate)
     nominal.rotate.scale <- data.frame(id = ids, scale(nominal.rotate))
 
