@@ -8,7 +8,9 @@
 latlongFrame <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
 
+  # match road IDs used to create the georeferenced TIFs
   pts <- partitionFrame()
+
   k <- vapply(pts, length, integer(1L))
   geo.id <- geoID(k)
 
@@ -28,16 +30,17 @@ latlongFrame <- function(path, multi.core = TRUE) {
     tmp
   })
 
+  # reset (delete) lon-lat for recomputation 
   dat0 <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  dat0$point.id <- paste0(dat0$x, "-", dat0$y)
+  dat0 <- dat0[, !names(dat0) %in% c("lon", "lat")]
+
+  dat0$point.id <- paste0(dat0$x, "_&_", dat0$y)
   dat <- dat0[!duplicated(dat0$point.id), ]
 
   frm <- lapply(pts, function(x) dat[dat$id %in% x, ])
 
   frm.rotate.scale <- parallel::mclapply(frm, function(x) {
-    tmp <- lapply(x$id, function(y) {
-      rotatePoint(y, dataset = "roads")
-    })
+    tmp <- lapply(x$id, function(y) rotatePoint(y, dataset = "roads"))
     tmp <- do.call(rbind, tmp)
     data.frame(point.id = x$point.id, scale(tmp))
   }, mc.cores = cores)

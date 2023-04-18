@@ -3,11 +3,13 @@
 #' @param path Character. e.g., "~/Documents/Data/"
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
-#' @export
+#' @noRd
 #' @note This documents the computation of the lat-long version of the roads data frame.
 
 latlongRoads <- function(path, multi.core = TRUE) {
   cores <- multiCore(multi.core)
+
+  # match road IDs used to create the georeferenced TIFs
   partition.rds <- partitionRoads()
 
   coords <- parallel::mclapply(seq_along(partition.rds), function(i) {
@@ -17,7 +19,7 @@ latlongRoads <- function(path, multi.core = TRUE) {
     k <- length(ids)
     geo.coords <- latlongCoordinates(tif, k, path)
 
-    # post-fix
+    # reset (delete) lon-lat for recomputation 
     vars <- !names(cholera::roads) %in% c("lon", "lat")
     nominal.coords <- cholera::roads[cholera::roads$id %in% ids, vars]
 
