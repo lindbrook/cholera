@@ -19,7 +19,7 @@ latlongRoads <- function(path, multi.core = TRUE) {
     k <- length(ids)
     geo.coords <- cholera:::latlongCoordinates(tif, k, path)
 
-    # post-fix
+    # reset (delete) lon-lat for recomputation 
     vars <- !names(cholera::roads) %in% c("lon", "lat")
     nominal.coords <- cholera::roads[cholera::roads$id %in% ids, vars]
 
