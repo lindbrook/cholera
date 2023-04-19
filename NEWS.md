@@ -1,3 +1,8 @@
+### cholera 0.8.0.9006
+
+- add/set snowMap(add.axes_box = FALSE).
+
+
 ### cholera 0.8.0.9005
 
 - reset (delete) lon-lat for recomputation in latlongFrame() and latlongRoads().
