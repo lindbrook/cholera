@@ -4,15 +4,17 @@
 \alias{snowMap}
 \title{Plot John Snow's cholera map.}
 \usage{
-snowMap(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
-  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE,
-  add.frame = TRUE, add.tanaka = FALSE, main = NA, case.col = "gray",
-  case.pch = 15, latlong = FALSE, ...)
+snowMap(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
+  add.cases = TRUE, add.landmarks = FALSE, add.pumps = TRUE,
+  add.roads = TRUE, add.frame = TRUE, add.tanaka = FALSE, main = NA,
+  case.col = "gray", case.pch = 15, latlong = FALSE, ...)
 }
 \arguments{
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
 \item{stacked}{Logical. Use stacked fatalities.}
+
+\item{add.axes_box}{Logical. Add plot axes and plot box.}
 
 \item{add.cases}{Logical. Add observed cases.}
 

@@ -2,6 +2,7 @@
 #'
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param stacked Logical. Use stacked fatalities.
+#' @param add.axes_box Logical. Add plot axes and plot box.
 #' @param add.cases Logical. Add observed cases.
 #' @param add.landmarks Logical. Add landmarks.
 #' @param add.pumps Logical. Add pumps.
@@ -20,10 +21,10 @@
 #' snowMap()
 #' snowMap(vestry = TRUE, stacked = FALSE)
 
-snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
-  add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE, add.frame = TRUE,
-  add.tanaka = FALSE, main = NA, case.col = "gray", case.pch = 15, 
-  latlong = FALSE, ...) {
+snowMap <- function(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
+  add.cases = TRUE, add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE,
+  add.frame = TRUE, add.tanaka = FALSE, main = NA, case.col = "gray",
+  case.pch = 15, latlong = FALSE, ...) {
 
   if (add.tanaka == TRUE & latlong == FALSE) latlong <- TRUE
 
@@ -43,8 +44,15 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.cases = TRUE,
 
   rng <- mapRange(latlong = latlong)
 
-  plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp,
-    main = main, ...)
+  if (add.axes_box) {
+    plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp,
+      main = main, ...)
+  } else {
+    plot(cases[, vars], xlim = rng$x, ylim = rng$y, pch = NA, asp = asp,
+      main = main, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA, bty = "n",
+      ...)
+  }
+
   if (latlong & add.tanaka) {
     tanakaContourPlot(add = TRUE)
     if (add.roads) addRoads(latlong = latlong, col = "black")
