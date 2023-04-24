@@ -61,9 +61,9 @@ latlongStreetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
   if (is.logical(zoom)) {
     if (zoom) {
       zoom.pct <- 0.00001
-      x.rng <- c(min(min(rng$lon), min(rng$lon) * (1 + zoom.pct)), 
+      x.rng <- c(min(min(rng$lon), min(rng$lon) * (1 + zoom.pct)),
                  max(max(rng$lon), max(rng$lon) * (1 - zoom.pct)))
-      y.rng <- c(min(min(rng$lat), min(rng$lat) * (1 + zoom.pct)), 
+      y.rng <- c(min(min(rng$lat), min(rng$lat) * (1 + zoom.pct)),
                  max(max(rng$lat), max(rng$lat) * (1 - zoom.pct)))
     } else {
       x.rng <- range(cholera::roads$lon)
@@ -71,7 +71,7 @@ latlongStreetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
     }
   } else stop("zoom must logical.", call. = FALSE)
 
-  plot(cholera::fatalities[, vars], xlim = x.rng, ylim = y.rng, pch = NA, 
+  plot(cholera::fatalities[, vars], xlim = x.rng, ylim = y.rng, pch = NA,
     asp = 1.6)
   invisible(lapply(roads.list, lines, col = "gray"))
 
@@ -164,15 +164,13 @@ latlongStreetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
   if (add.title) title(main = name)
 
   if (add.subtitle) {
-    street.length <- streetLength(name, distance.unit)
+    street.length <- streetLength(name, distance.unit, latlong = TRUE)
     est.time <- distanceTime(street.length, distance.unit = distance.unit,
       time.unit = time.unit, walking.speed = walking.speed)
 
     nominal.time <- nominalTime(est.time, time.unit)
 
-    if (distance.unit == "native") {
-      subtitle <- paste(round(street.length, 1), "units;", nominal.time)
-    } else if (distance.unit == "meter") {
+    if (distance.unit == "meter") {
       subtitle <- paste(round(street.length, 1), "m;", nominal.time)
     } else if (distance.unit == "yard") {
       subtitle <- paste(round(street.length, 1), "yd;", nominal.time)
