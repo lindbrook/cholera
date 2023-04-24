@@ -56,9 +56,6 @@ streetLength <- function(road = "Oxford Street", distance.unit = "meter",
       sum(distances)
     } else if (distance.unit == "yard") {
       1.093613 * sum(distances)
-    } else {
-      stop('If latlong = TRUE, distance.unit must be "meter"or "yard".', 
-        call. = FALSE)
     }
   } else {
     distances <- vapply(dat$id, function(i) {
