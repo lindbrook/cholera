@@ -1,3 +1,8 @@
+### cholera 0.8.0.9008
+
+- fix distanceTime(distance.unit = "native").
+
+
 ### cholera 0.8.0.9007
 
 - add/set streetLength(latlong = FALSE).
