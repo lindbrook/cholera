@@ -1,3 +1,8 @@
+### cholera 0.8.0.9010
+
+- remove unused functions from latlongCoordinates().
+
+
 ### cholera 0.8.0.9009
 
 - use streetLength(latlong = TRUE) and clean code in latlongStreetNameLocator().
