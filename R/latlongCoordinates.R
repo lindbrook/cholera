@@ -100,24 +100,3 @@ latlongCoordinates <- function(tif, k, path) {
   row.names(out) <- NULL
   out
 }
-
-deltaRank <- function(vals) {
-  idx <- seq_along(vals$coord)[-length(vals$coord)]
-  delta <- vapply(idx, function(i) {
-    abs(vals$coord[i] - vals$coord[i + 1])
-  }, numeric(1L))
-  delta.rank <- data.frame(delta = sort(unique(delta)))
-  delta.rank$rank <- order(delta.rank$delta)
-  delta.rank
-}
-
-coordsByDelta <- function(vals, delta.rank) {
-  idx <- seq_along(vals$coord)[-length(vals$coord)]
-  delta <- vapply(idx, function(i) {
-    abs(vals$coord[i] - vals$coord[i + 1])
-  }, numeric(1L))
-  dat <- data.frame(coordA = vals$coord[-length(vals$coord)], delta = delta)
-  lapply(rev(delta.rank$delta), function(d) {
-    dat[dat$delta == d, ]
-  })
-}
