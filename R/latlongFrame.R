@@ -30,7 +30,7 @@ latlongFrame <- function(path, multi.core = TRUE) {
     tmp
   })
 
-  # reset (delete) lon-lat for recomputation 
+  # reset (delete) lon-lat for recomputation
   dat0 <- cholera::roads[cholera::roads$name == "Map Frame", ]
   dat0 <- dat0[, !names(dat0) %in% c("lon", "lat")]
 

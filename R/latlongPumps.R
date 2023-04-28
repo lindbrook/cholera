@@ -2,18 +2,18 @@
 #'
 #' @param path Character. e.g., "~/Documents/Data/"
 #' @param vestry Logical.
-#' @export
+#' @noRd
 #' @note This documents the computation of the latlong version of the pumps and pumps.vestry data frames.
 
 latlongPumps <- function(path, vestry = FALSE) {
   if (vestry) {
-    # post-fix
+    # reset (delete) lon-lat for recomputation
     vars <- !names(cholera::pumps.vestry) %in% c("lon", "lat")
     dat <- cholera::pumps.vestry[, vars]
     tif <- "pumps.vestry_modified.tif"
     dataset <- "pumps.vestry"
   } else {
-    # post-fix
+    # reset (delete) lon-lat for recomputation
     vars <- !names(cholera::pumps) %in% c("lon", "lat")
     dat <- cholera::pumps[, vars]
     tif <- "pumps_modified.tif"

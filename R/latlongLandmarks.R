@@ -1,7 +1,7 @@
 #' Compute Georeferenced Latitude and Longitude (prototype).
 #'
 #' @param path Character. e.g., "~/Documents/Data/"
-#' @export
+#' @noRd
 #' @note This documents the computation of the latlong version of the landmarks data frame.
 
 latlongLandmarks <- function(path) {
