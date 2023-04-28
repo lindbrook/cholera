@@ -112,7 +112,7 @@
 #'     \item{\code{lon}}{longitude}
 #'     \item{\code{lat}}{latitude}
 #'  }
-#' @note \code{\link{landmarkData}} and \code{\link{latlongLandmarks}} document the code for these data.
+#' @note \code{\link{landmarkData}} document the code for these data.
 #' @docType data
 "landmarks"
 

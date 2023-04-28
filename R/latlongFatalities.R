@@ -3,11 +3,11 @@
 #' @param path Character. e.g., "~/Documents/Data/"
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return An R data frame.
-#' @export
+#' @noRd
 #' @note This documents the computation of the latlong version of the fatalities data frame.
 
 latlongFatalities <- function(path, multi.core = TRUE) {
-  # recreate original fatalities and fatalities.address
+  # reset (delete) lon-lat for recomputation
   sel <- !names(cholera::fatalities) %in% c("lon", "lat")
   fatalities.original <- cholera::fatalities[, sel]
 
