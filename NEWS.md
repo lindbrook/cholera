@@ -1,3 +1,8 @@
+### cholera 0.8.0.9011
+
+- remove orthogonal code from latlongLandmarks().
+
+
 ### cholera 0.8.0.9010
 
 - remove unused functions from latlongCoordinates().
