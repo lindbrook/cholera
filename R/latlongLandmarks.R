@@ -1,19 +1,15 @@
 #' Compute Georeferenced Latitude and Longitude (prototype).
 #'
 #' @param path Character. e.g., "~/Documents/Data/"
-#' @param orthogonal Logical. Use orthogonal projection coordinates.
 #' @export
 #' @note This documents the computation of the latlong version of the landmarks data frame.
 
-latlongLandmarks <- function(path, orthogonal = FALSE) {
-  vars <- !names(cholera::pumps.vestry) %in% c("lon", "lat")
+latlongLandmarks <- function(path) {
+  # reset (delete) lon-lat for recomputation
+  vars <- !names(cholera::landmarks) %in% c("lon", "lat")
   dat <- cholera::landmarks[, vars]
-  if (orthogonal) {
-    tif <- "ortho.landmark_modified.tif"
-  } else {
-    tif <- "landmark_modified.tif"
-  }
 
+  tif <- "landmark_modified.tif"
   k <- nrow(dat)
   coords <- latlongCoordinates(paste0(path, tif), k, path)
   coords.scale <- data.frame(id = coords$id, scale(coords[, c("lon", "lat")]))
