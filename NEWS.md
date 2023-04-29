@@ -1,3 +1,8 @@
+### cholera 0.8.0.9013
+
+- add latlongOrthoLandmarks() prototype.
+
+
 ### cholera 0.8.0.9012
 
 - remove from NAMESPACE latlong functions that document data.
