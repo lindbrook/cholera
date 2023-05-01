@@ -4,14 +4,16 @@
 \alias{streetHighlight}
 \title{Highlight road by name.}
 \usage{
-streetHighlight(road.name, col = "red", lwd = 3)
+streetHighlight(road.name, col = "red", lwd = 3, latlong = FALSE)
 }
 \arguments{
-\item{road.name}{Character vector. The functions tries to correct for case and to remove extra spaces.}
+\item{road.name}{Character vector. The function tries to correct for case and remove extra spaces (includes "Map Frame").}
 
 \item{col}{Character. Highlight color.}
 
 \item{lwd}{Numeric. Line width.}
+
+\item{latlong}{Logical. Use estimated longitude and latitude.}
 }
 \value{
 A base R graphics segment(s).
