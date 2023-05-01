@@ -1,3 +1,8 @@
+### cholera 0.8.0.9015
+
+- use specific street IDs in unitMeter().
+
+
 ### cholera 0.8.0.9014
 
 - add/set streetHighlight(latlong = FALSE).
