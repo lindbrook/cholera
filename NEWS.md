@@ -1,3 +1,8 @@
+### cholera 0.8.0.9014
+
+- add/set streetHighlight(latlong = FALSE).
+
+
 ### cholera 0.8.0.9013
 
 - add latlongOrthoLandmarks() prototype.
