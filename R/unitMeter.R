@@ -10,7 +10,7 @@ unitMeter <- function(x, distance.unit = "meter") {
 
   sel <- cholera::road.segments$name == "Carnaby Street"
   carnaby <- cholera::road.segments[sel, ]
-  carnaby <- carnaby[-c(8:9), ]
+  carnaby <- carnaby[!carnaby$street %in% c(261, 301), ] # excl. last 2 st segs
 
   carnaby.ft <- 463
   foot.unit <- carnaby.ft / stLength(carnaby)
