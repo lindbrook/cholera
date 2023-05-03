@@ -1,3 +1,8 @@
+### cholera 0.8.0.9016
+
+- add cliffordStreet().
+
+
 ### cholera 0.8.0.9015
 
 - use specific street IDs in unitMeter().
