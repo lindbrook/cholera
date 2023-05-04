@@ -1,3 +1,8 @@
+### cholera 0.8.0.9017
+
+- add missing Clifford Street segment; use GCPs v.02.
+
+
 ### cholera 0.8.0.9016
 
 - add cliffordStreet().
