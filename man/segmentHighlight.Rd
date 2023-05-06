@@ -4,16 +4,19 @@
 \alias{segmentHighlight}
 \title{Highlight segment by ID.}
 \usage{
-segmentHighlight(id, highlight = TRUE, col = "red", angled = FALSE)
+segmentHighlight(id, highlight = TRUE, col = "red", rotate.label = FALSE,
+  latlong = FALSE)
 }
 \arguments{
-\item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
+\item{id}{Character. Segment ID: a concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
 
 \item{highlight}{Logical. Color segment.}
 
 \item{col}{Character. Highlight color.}
 
-\item{angled}{Logical. Rotate segment ID label.}
+\item{rotate.label}{Logical. Rotate segment ID label.}
+
+\item{latlong}{Logical. Use estimated longitude and latitude.}
 }
 \value{
 A base R graphics segment(s).
