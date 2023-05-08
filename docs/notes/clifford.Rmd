@@ -1,8 +1,8 @@
 ---
 title: "Clifford Street missing segment"
 author: "Peter Li"
-date: "2023-05-08"
-output: html_document
+date: "`r Sys.Date()`"
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
