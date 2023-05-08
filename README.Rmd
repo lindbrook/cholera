@@ -177,7 +177,7 @@ The vignettes are available in the package as well as online at the links below.
 
 [Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/duplicate.missing.cases.md) describes the two coding errors and the three misplaced cases that I argue are present in Dodson and Tobler's (1992) digitization of Snow's map.
 
-[Clifford Street missing segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/Clifford.Street.missing.segment.md) describes what I believe is far Western part (segment) of Clifford Street is missing from Dodson and Tobler's (1992) digitization of Snow's map.
+[Clifford Street missing segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md) describes what I believe is far Western part (segment) of Clifford Street is missing from Dodson and Tobler's (1992) digitization of Snow's map.
 
 ["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/unstacking.bars.md) discusses the inferential and visual reasons to "unstack" bars. Then, it describes the two "unstacked" data sets: one using "fatalities" and one using "addresses" as the unit of observation.
 

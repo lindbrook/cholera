@@ -280,7 +280,7 @@ argue are present in Dodson and Tobler’s (1992) digitization of Snow’s
 map.
 
 [Clifford Street missing
-segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/Clifford.Street.missing.segment.md)
+segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md)
 describes what I believe is far Western part (segment) of Clifford
 Street is missing from Dodson and Tobler’s (1992) digitization of Snow’s
 map.
