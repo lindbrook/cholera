@@ -177,8 +177,6 @@ The vignettes are available in the package as well as online at the links below.
 
 [Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/duplicate.missing.cases.md) describes the two coding errors and the three misplaced cases that I argue are present in Dodson and Tobler's (1992) digitization of Snow's map.
 
-[Clifford Street missing segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md) describes what I believe is far Western part (segment) of Clifford Street is missing from Dodson and Tobler's (1992) digitization of Snow's map.
-
 ["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/unstacking.bars.md) discusses the inferential and visual reasons to "unstack" bars. Then, it describes the two "unstacked" data sets: one using "fatalities" and one using "addresses" as the unit of observation.
 
 [Roads](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/roads.md) covers issues related to roads. This includes discussion of how and why I move pump #5 from Queen Street (I) to Marlborough Mews, the overall structure of the `roads` data set, "valid" road names, and my back-of-the-envelope translation from the map's nominal scale to meters (and yards).
@@ -196,6 +194,8 @@ The vignettes are available in the package as well as online at the links below.
 The lab notes, which are only available online, go into detail about certain issues and topics discussed in the vignettes:
 
 [note on duplicate and missing cases](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md) documents the specifics of how I fixed the two apparent coding errors and three apparently misplaced case in Dodson and Tobler's data.
+
+[Clifford Street missing segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md) describes what I believe is far Western part (segment) of Clifford Street is missing from Dodson and Tobler's (1992) digitization of Snow's map.
 
 [computing street addresses](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md) discusses how I use orthogonal projection and hierarchical cluster analysis to "unstack" bars and compute a stack's "address".
 

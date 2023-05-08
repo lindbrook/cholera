@@ -279,12 +279,6 @@ describes the two coding errors and the three misplaced cases that I
 argue are present in Dodson and Tobler’s (1992) digitization of Snow’s
 map.
 
-[Clifford Street missing
-segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md)
-describes what I believe is far Western part (segment) of Clifford
-Street is missing from Dodson and Tobler’s (1992) digitization of Snow’s
-map.
-
 [“Unstacking”
 Bars](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/unstacking.bars.md)
 discusses the inferential and visual reasons to “unstack” bars. Then, it
@@ -330,6 +324,12 @@ certain issues and topics discussed in the vignettes:
 cases](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md)
 documents the specifics of how I fixed the two apparent coding errors
 and three apparently misplaced case in Dodson and Tobler’s data.
+
+[Clifford Street missing
+segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md)
+describes what I believe is far Western part (segment) of Clifford
+Street is missing from Dodson and Tobler’s (1992) digitization of Snow’s
+map.
 
 [computing street
 addresses](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md)
