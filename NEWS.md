@@ -1,3 +1,8 @@
+### cholera 0.8.0.9019
+
+- add note about missing Clifford Street segment.
+
+
 ### cholera 0.8.0.9018
 
 - add/set segmentHighlight(latlong = FALSE, rotate.label = FALSE).

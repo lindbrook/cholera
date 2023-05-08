@@ -1,13 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9018-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9019-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
 
-- Fixes three apparent coding errors in Dodson and Tobler’s 1992
-  digitization of Snow’s map.
+- Fixes two sets of errors in Dodson and Tobler’s 1992 digitization of
+  Snow’s map: 1) three misplaced cases/fatalities and 2) one missing
+  road segment (Clifford Street).
 - “Unstacks” the data in two ways to make analysis and visualization
   easier and more meaningful.
 - Computes and visualizes “pump neighborhoods” based on Euclidean
@@ -276,6 +277,12 @@ links below.
 Cases](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/duplicate.missing.cases.md)
 describes the two coding errors and the three misplaced cases that I
 argue are present in Dodson and Tobler’s (1992) digitization of Snow’s
+map.
+
+[Clifford Street missing
+segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/Clifford.Street.missing.segment.md)
+describes what I believe is far Western part (segment) of Clifford
+Street is missing from Dodson and Tobler’s (1992) digitization of Snow’s
 map.
 
 [“Unstacking”

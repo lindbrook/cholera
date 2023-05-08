@@ -20,7 +20,7 @@ library(cholera)
 
 #### package features
 
-* Fixes three apparent coding errors in Dodson and Tobler's 1992 digitization of Snow's map.
+* Fixes two sets of errors in Dodson and Tobler's 1992 digitization of Snow's map: 1) three misplaced cases/fatalities and 2) one missing road segment (Clifford Street).
 * "Unstacks" the data in two ways to make analysis and visualization easier and more meaningful.
 * Computes and visualizes "pump neighborhoods" based on Euclidean distance (Voronoi tessellation) and walking distance.
 * Overlay graphical elements and features like kernel density estimates, Voronoi diagrams, Snow's Broad Street neighborhood, and notable landmarks (John Snow's residence, the Lion Brewery, etc.) via `add*()` functions.
@@ -176,6 +176,8 @@ title("Tanaka contour elevation")
 The vignettes are available in the package as well as online at the links below.
 
 [Duplicate and Missing Cases](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/duplicate.missing.cases.md) describes the two coding errors and the three misplaced cases that I argue are present in Dodson and Tobler's (1992) digitization of Snow's map.
+
+[Clifford Street missing segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/Clifford.Street.missing.segment.md) describes what I believe is far Western part (segment) of Clifford Street is missing from Dodson and Tobler's (1992) digitization of Snow's map.
 
 ["Unstacking" Bars](https://github.com/lindbrook/cholera/blob/master/docs/vignettes/unstacking.bars.md) discusses the inferential and visual reasons to "unstack" bars. Then, it describes the two "unstacked" data sets: one using "fatalities" and one using "addresses" as the unit of observation.
 
