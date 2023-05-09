@@ -1,3 +1,8 @@
+### cholera 0.8.0.9020
+
+- amend/update latlongOrthoAddress() for GCPs v.02.
+
+
 ### cholera 0.8.0.9019
 
 - add note about missing Clifford Street segment.

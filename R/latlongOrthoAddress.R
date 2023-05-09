@@ -26,7 +26,7 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
   geo.rd.segs <- do.call(rbind, geo.rd.segs)
   seg.endpts <- c("x1", "y1", "x2", "y2")
 
-  # classification errors due to bar orientation
+  # classification errors due to bar orientation (Dodson and Tobler - nominal)
   road.segment.fix <- roadSegmentFix()
 
   # check for segments with multiple cases
@@ -48,13 +48,15 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
 
   no.err <- geo.addr$id[!classfication.err]
 
+  radius <- 50
+
   orthogonal.projection <- parallel::mclapply(no.err, function(id) {
     case <- geo.addr[geo.addr$id == id, c("x", "y")]
 
     within.radius <- lapply(geo.rd.segs$id, function(x) {
       seg.data <- geo.rd.segs[geo.rd.segs$id == x, ]
-      test1 <- withinRadius(case, seg.data[, c("x1", "y1")], 55)
-      test2 <- withinRadius(case, seg.data[, c("x2", "y2")], 55)
+      test1 <- withinRadius(case, seg.data[, c("x1", "y1")], radius)
+      test2 <- withinRadius(case, seg.data[, c("x2", "y2")], radius)
       if (any(test1, test2)) unique(seg.data$id)
     })
 
@@ -124,6 +126,18 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
 
   coordsA <- do.call(rbind, orthogonal.projection)
 
+  ## One manual address fixes for coordsA (edge case) ##
+
+  addr <- 286
+  rd.seg  <- "160-3"
+  case <- geo.addr[geo.addr$id == addr, ]
+  x.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "x2"]
+  y.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "y2"]
+  ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
+  vars <- c("x.proj", "y.proj", "ortho.dist")
+  coordsA[coordsA$case == addr, vars] <- c(x.proj, y.proj, ortho.dist)
+  coordsA[coordsA$case == addr, "road.segment"] <- rd.seg
+
   orthogonal.projectionB <- lapply(seq_len(nrow(manual.compute)), function(i) {
     addr <- manual.compute[i, "addr"]
     seg <- manual.compute[i, "seg"]
@@ -168,22 +182,6 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
                                         c(x.proj, y.proj))))
       ortho.pts <- data.frame(x.proj, y.proj)
       data.frame(road.segment = seg, ortho.pts, ortho.dist)
-    } else if (addr == 440) {
-      # Case 440 check; nominal (non-latlong) does bisect (intersect) #
-      # use nearest road segment endpoint #
-
-      # tmp <- rbind(case, seg.df, c(x.proj, y.proj))
-      # plot(seg.df, type = "l", xlim = range(tmp$x), ylim = range(tmp$y))
-      # points(seg.df, pch = 15)
-      # points(case, col = "red")
-      # points(x.proj, y.proj, col = "red", pch = 0)
-      # segments(case$x, case$y, x.proj, y.proj, col = "red")
-      # segments(case$x, case$y, seg.df[2, "x"], seg.df[2, "y"],
-      #   col = "dodgerblue")
-
-      nominal.dist <- c(stats::dist(rbind(case, seg.df[2, ])))
-      data.frame(road.segment = seg, x.proj = seg.df[2, "x"],
-        y.proj = seg.df[2, "y"], ortho.dist = nominal.dist)
     } else {
       null.out <- data.frame(matrix(NA, ncol = 4))
       names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
@@ -194,22 +192,29 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
   coordsB <- data.frame(do.call(rbind, orthogonal.projectionB),
     case = manual.compute$addr, row.names = NULL)
 
-  ## Two manual address fixes ##
+  ## Two manual address fixes for coordsB (edge cases) ##
 
-  # case 286 @ "160-3" edge case
-  addr <- 286
-  rd.seg  <- "160-3"
+  coordsB.err.case <- coordsB[is.na(coordsB$road.segment), "case"]
+  recompute <- manual.compute[manual.compute$addr %in% coordsB.err.case, ]
+
+  #    addr   seg
+  # 5   175 259-2
+  # 12  462 269-1
+
+  # caseLocator(175)
+  addr <- 175
+  rd.seg  <- "259-2"
   case <- geo.addr[geo.addr$id == addr, ]
   x.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "x2"]
   y.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "y2"]
   ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
   vars <- c("x.proj", "y.proj", "ortho.dist")
-  coordsA[coordsA$case == addr, vars] <- c(x.proj, y.proj, ortho.dist)
-  coordsA[coordsA$case == addr, "road.segment"] <- rd.seg
+  coordsB[coordsB$case == addr, vars] <- c(x.proj, y.proj, ortho.dist)
+  coordsB[coordsB$case == addr, "road.segment"] <- rd.seg
 
-  # case 440 @ "259-1" edge case
-  addr <- 440
-  rd.seg  <- "259-1"
+  # caseLocator(462)
+  addr <- 462
+  rd.seg  <- "269-1"
   case <- geo.addr[geo.addr$id == addr, ]
   x.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "x2"]
   y.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "y2"]
