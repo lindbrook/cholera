@@ -1,3 +1,9 @@
+### cholera 0.8.0.9021
+
+- update latlong.ortho.addr, latlong.ortho.pump and latlong.ortho.pump.vestry 
+  (GCP v.02).
+
+
 ### cholera 0.8.0.9020
 
 - amend/update latlongOrthoAddress() for GCPs v.02.
