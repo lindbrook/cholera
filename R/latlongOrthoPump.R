@@ -123,5 +123,5 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = TRUE) {
 # latlong.ortho.pump <- cholera:::latlongOrthoPump(vestry = FALSE, multi.core = TRUE)
 # latlong.ortho.pump.vestry <- cholera:::latlongOrthoPump(vestry = TRUE, multi.core = TRUE)
 
-# usethis::use_data(latlong.ortho.pump)
-# usethis::use_data(latlong.ortho.pump.vestry)
+# usethis::use_data(latlong.ortho.pump, overwrite = TRUE)
+# usethis::use_data(latlong.ortho.pump.vestry, overwrite = TRUE)
