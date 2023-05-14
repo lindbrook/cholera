@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9021-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9022-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -242,7 +242,7 @@ transformation type (e.g., thin plate spine), and resampling method
 (e.g., nearest neighbor) are still in flux. Thus, results and
 coordinates may change in the future.
 
-Four functions are available:
+Five functions are available:
 
 ``` r
 snowMap(latlong = TRUE)
@@ -261,6 +261,12 @@ plot(latlongWalkingPath())
 ```
 
 <img src="man/figures/README-latlong_walking_path-1.png" width="50%" />
+
+``` r
+plot(latlongEuclideanPath())
+```
+
+<img src="man/figures/README-latlong_euclidean_path-1.png" width="50%" />
 
 ``` r
 plot(latlongNeighborhoodWalking())
