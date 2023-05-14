@@ -94,7 +94,13 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
     padding <- 0.00026
     xlim <- c(min(dat$lon) - padding, max(dat$lon) + padding)
     ylim <- c(min(dat$lat) - padding, max(dat$lat) + padding)
+
     plot(dat[, vars], pch = NA, asp = 1.6, xlim = xlim, ylim = ylim)
+    points(cholera::fatalities[, vars], pch = 16, col = "lightgray", cex = 0.5)
+    if (x$vestry) pmp <- cholera::pumps.vestry
+    else pmp <- cholera::pumps
+    points(pmp[, vars], pch = 2, col = colors)
+    text(pmp[, vars], labels = paste0("p", pmp$id), pos = 1)
     addRoads(latlong = TRUE, col = "lightgray")
     addFrame(latlong = TRUE)
   } else {
@@ -105,11 +111,9 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
   t.info <- paste(round(x$data$time), paste0(x$time.unit, "s"), "@",
     x$walking.speed, "km/hr")
 
-  p.col <- colors[paste0("p", x$data$pump)]
   points(x$case, col = "red")
-  points(x$pump, pch = 2, col = p.col)
   text(x$case, col = "red", labels = x$data$case, pos = 1)
-  text(x$pump, labels = paste0("p", x$data$pump), pos = 1)
+  p.col <- colors[paste0("p", x$data$pump)]
   arrows(x$case$lon, x$case$lat, x$pump$lon, x$pump$lat, col = p.col,
          length = 0.0875, lwd = 3)
 
@@ -131,7 +135,7 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
     } else if (milepost.unit == "time") {
       post.info <- paste("posts at", milepost.interval, "sec intervals")
     } else {
-      stop('"milepost.unit" muster either be "distance" or "time".', 
+      stop('"milepost.unit" muster either be "distance" or "time".',
         call. = FALSE)
     }
 
