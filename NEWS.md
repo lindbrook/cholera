@@ -1,3 +1,9 @@
+### cholera 0.8.0.9022
+
+- add latlongEuclideanPath().
+- add milepost graphic to latlongEuclideanPath().
+
+
 ### cholera 0.8.0.9021
 
 - update latlong.ortho.addr, latlong.ortho.pump and latlong.ortho.pump.vestry 
