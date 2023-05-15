@@ -21,13 +21,18 @@ latlongEuclideanPath <- function(case = 1, destination = NULL, vestry = FALSE,
   if (!case %in% cholera::fatalities$case) {
     stop("Valid cases range from 1 to 578.", call. = FALSE)
   } else {
-    case.data <- cholera::fatalities[cholera::fatalities$case == case, ]
-  }
-
-  if (vestry) {
-    pump.data <- cholera::pumps.vestry
-  } else {
-    pump.data <- cholera::pumps
+     if (case.location == "address") {
+       sel <- cholera::anchor.case$case == case
+       addr <- cholera::anchor.case[sel, "anchor"]
+       sel <- cholera::latlong.ortho.addr$case == addr
+       case.data <- cholera::latlong.ortho.addr[sel, ]
+       if (vestry) pump.data <- cholera::latlong.ortho.pump.vestry
+       else pump.data <- cholera::latlong.ortho.pump
+     } else if (case.location == "nominal") {
+       case.data <- cholera::fatalities[cholera::fatalities$case == case, ]
+       if (vestry) pump.data <- cholera::pumps.vestry
+       else pump.data <- cholera::pumps
+     } else stop('case.location must be "address" or "nominal".', call. = FALSE)
   }
 
   if (!is.null(destination)) {
@@ -62,6 +67,7 @@ latlongEuclideanPath <- function(case = 1, destination = NULL, vestry = FALSE,
 
   out <- list(case = case.data[, vars],
               pump = nr.pump[, vars],
+              case.location = case.location,
               data = eucl.data,
               distance.unit = distance.unit,
               time.unit = time.unit,
@@ -106,6 +112,7 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
     snowMap(latlong = TRUE, vestry = x$vestry)
   }
 
+
   d.info <- paste(round(x$data$distance, 1), x$distance.unit)
   t.info <- paste(round(x$data$time), paste0(x$time.unit, "s"), "@",
     x$walking.speed, "km/hr")
@@ -113,6 +120,10 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
   points(x$case, col = "red")
   text(x$case, col = "red", labels = x$data$case, pos = 1)
   p.col <- colors[paste0("p", x$data$pump)]
+  if (x$case.location == "address") {
+    points(x$pump[, vars], pch = 0, col = "red")
+  }
+
   arrows(x$case$lon, x$case$lat, x$pump$lon, x$pump$lat, col = p.col,
          length = 0.0875, lwd = 3)
 
