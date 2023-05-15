@@ -160,35 +160,38 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
     ols <- stats::lm(y ~ x, data = cartesian)
     theta <- atan(stats::coef(ols)["x"])
 
-    mileposts <- seq(milepost.interval, x$data$distance, milepost.interval)
-    milepost.ratios <- mileposts / x$data$distance
+    if (x$data$distance > milepost.interval) {
+      mileposts <- seq(milepost.interval, x$data$distance, milepost.interval)
+      milepost.ratios <- mileposts / x$data$distance
 
-    # compute milepost meter coordinates
-    milepost.coords <- lapply(milepost.ratios, function(r) {
-      milepostCoordinates(r, cartesian, theta)
-    })
+      # compute milepost meter coordinates
+      milepost.coords <- lapply(milepost.ratios, function(r) {
+        milepostCoordinates(r, cartesian, theta)
+      })
 
-    milepost.coords <- do.call(rbind, milepost.coords)
+      milepost.coords <- do.call(rbind, milepost.coords)
 
-    # compute milepost latlong coordinates
-    topleft <- data.frame(lon = min(cholera::roads$lon),
-                          lat = max(cholera::roads$lat))
-    bottomright <- data.frame(lon = max(cholera::roads$lon),
-                              lat = min(cholera::roads$lat))
-    milepost.coords <- meterLatLong(milepost.coords, origin, topleft, bottomright)
+      # compute milepost latlong coordinates
+      topleft <- data.frame(lon = min(cholera::roads$lon),
+                            lat = max(cholera::roads$lat))
+      bottomright <- data.frame(lon = max(cholera::roads$lon),
+                                lat = min(cholera::roads$lat))
+      milepost.coords <- meterLatLong(milepost.coords, origin, topleft, bottomright)
 
-    # mileposts as arrows
-    arrow.data <- rbind(milepost.coords[, vars], x$case)
-    idx <- seq_len(nrow(arrow.data[-nrow(arrow.data), ]))
+      # mileposts as arrows
+      arrow.data <- rbind(milepost.coords[, vars], x$case)
+      idx <- seq_len(nrow(arrow.data[-nrow(arrow.data), ]))
 
-    invisible(lapply(idx, function(i) {
-      arrows(arrow.data[i, "lon"], arrow.data[i, "lat"],
-             arrow.data[i + 1, "lon"], arrow.data[i + 1, "lat"],
-             code = 1, col = p.col, length = 0.0875, lwd = 3)
-    }))
+      invisible(lapply(idx, function(i) {
+        arrows(arrow.data[i, "lon"], arrow.data[i, "lat"],
+               arrow.data[i + 1, "lon"], arrow.data[i + 1, "lat"],
+               code = 1, col = p.col, length = 0.0875, lwd = 3)
+      }))
+    }
 
     title(main = paste("Case", x$data$case, "to Pump", x$data$pump),
           sub = paste(d.info, t.info, post.info, sep = "; "))
+
   } else {
     title(main = paste("Case", x$data$case, "to Pump", x$data$pump),
           sub = paste(d.info, t.info, sep = "; "))
