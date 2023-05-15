@@ -457,7 +457,7 @@
 #'     \item{\code{x.proj}}{x-coordinate}
 #'     \item{\code{y.proj}}{y-coordinate}
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
-#'     \item{\code{pump.id}}{numeric ID}
+#'     \item{\code{id}}{numeric ID}
 #'     \item{\code{lon}}{longitude}
 #'     \item{\code{lat}}{latitude}
 #'  }
@@ -473,7 +473,7 @@
 #'     \item{\code{x.proj}}{x-coordinate}
 #'     \item{\code{y.proj}}{y-coordinate}
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
-#'     \item{\code{pump.id}}{numeric ID}
+#'     \item{\code{id}}{numeric ID}
 #'     \item{\code{lon}}{longitude}
 #'     \item{\code{lat}}{latitude}
 #'  }
