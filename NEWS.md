@@ -1,3 +1,8 @@
+### cholera 0.8.0.9023
+
+- change "pump.id" to "id" in latlongOrthoPump().
+
+
 ### cholera 0.8.0.9022
 
 - add latlongEuclideanPath().

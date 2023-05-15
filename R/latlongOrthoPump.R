@@ -102,7 +102,7 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = TRUE) {
       out <- out[1, ]
     }
 
-    out$pump.id <- p
+    out$id <- p
     row.names(out) <- NULL
     out
   }, mc.cores = cores)
@@ -117,7 +117,7 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = TRUE) {
                             lat = min(cholera::roads$lat))
 
   est.lonlat <- meterLatLong(coords, origin, topleft, bottomright)
-  est.lonlat[order(est.lonlat$pump.id), ]
+  est.lonlat[order(est.lonlat$id), ]
 }
 
 # latlong.ortho.pump <- cholera:::latlongOrthoPump(vestry = FALSE, multi.core = TRUE)
