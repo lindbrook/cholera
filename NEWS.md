@@ -1,3 +1,10 @@
+### cholera 0.8.0.9024
+
+- enable latlongEuclideanPath(case.location).
+- amend eucl.data and format code.
+- make mileposts conditional on path distancce.
+
+
 ### cholera 0.8.0.9023
 
 - change "pump.id" to "id" in latlongOrthoPump().
