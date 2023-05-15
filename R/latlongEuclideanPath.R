@@ -3,7 +3,6 @@
 #' @param case Numeric.
 #' @param destination Numeric. Pump ID.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
-
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
@@ -22,13 +21,18 @@ latlongEuclideanPath <- function(case = 1, destination = NULL, vestry = FALSE,
   if (!case %in% cholera::fatalities$case) {
     stop("Valid cases range from 1 to 578.", call. = FALSE)
   } else {
-    case.data <- cholera::fatalities[cholera::fatalities$case == case, ]
-  }
-
-  if (vestry) {
-    pump.data <- cholera::pumps.vestry
-  } else {
-    pump.data <- cholera::pumps
+     if (case.location == "address") {
+       sel <- cholera::anchor.case$case == case
+       addr <- cholera::anchor.case[sel, "anchor"]
+       sel <- cholera::latlong.ortho.addr$case == addr
+       case.data <- cholera::latlong.ortho.addr[sel, ]
+       if (vestry) pump.data <- cholera::latlong.ortho.pump.vestry
+       else pump.data <- cholera::latlong.ortho.pump
+     } else if (case.location == "nominal") {
+       case.data <- cholera::fatalities[cholera::fatalities$case == case, ]
+       if (vestry) pump.data <- cholera::pumps.vestry
+       else pump.data <- cholera::pumps
+     } else stop('case.location must be "address" or "nominal".', call. = FALSE)
   }
 
   if (!is.null(destination)) {
@@ -49,7 +53,7 @@ latlongEuclideanPath <- function(case = 1, destination = NULL, vestry = FALSE,
   }
 
   eucl.data <- data.frame(case = case, pump = nr.pump$id,
-    pump.name = nr.pump$street, distance = euclidean.d)
+    distance = euclidean.d)
 
   if (distance.unit == "meter") {
     eucl.data$distance <- eucl.data$distance
@@ -63,6 +67,7 @@ latlongEuclideanPath <- function(case = 1, destination = NULL, vestry = FALSE,
 
   out <- list(case = case.data[, vars],
               pump = nr.pump[, vars],
+              case.location = case.location,
               data = eucl.data,
               distance.unit = distance.unit,
               time.unit = time.unit,
@@ -107,6 +112,7 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
     snowMap(latlong = TRUE, vestry = x$vestry)
   }
 
+
   d.info <- paste(round(x$data$distance, 1), x$distance.unit)
   t.info <- paste(round(x$data$time), paste0(x$time.unit, "s"), "@",
     x$walking.speed, "km/hr")
@@ -114,6 +120,10 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
   points(x$case, col = "red")
   text(x$case, col = "red", labels = x$data$case, pos = 1)
   p.col <- colors[paste0("p", x$data$pump)]
+  if (x$case.location == "address") {
+    points(x$pump[, vars], pch = 0, col = "red")
+  }
+
   arrows(x$case$lon, x$case$lat, x$pump$lon, x$pump$lat, col = p.col,
          length = 0.0875, lwd = 3)
 
@@ -161,35 +171,38 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
     ols <- stats::lm(y ~ x, data = cartesian)
     theta <- atan(stats::coef(ols)["x"])
 
-    mileposts <- seq(milepost.interval, x$data$distance, milepost.interval)
-    milepost.ratios <- mileposts / x$data$distance
+    if (x$data$distance > milepost.interval) {
+      mileposts <- seq(milepost.interval, x$data$distance, milepost.interval)
+      milepost.ratios <- mileposts / x$data$distance
 
-    # compute milepost meter coordinates
-    milepost.coords <- lapply(milepost.ratios, function(r) {
-      milepostCoordinates(r, cartesian, theta)
-    })
+      # compute milepost meter coordinates
+      milepost.coords <- lapply(milepost.ratios, function(r) {
+        milepostCoordinates(r, cartesian, theta)
+      })
 
-    milepost.coords <- do.call(rbind, milepost.coords)
+      milepost.coords <- do.call(rbind, milepost.coords)
 
-    # compute milepost latlong coordinates
-    topleft <- data.frame(lon = min(cholera::roads$lon),
-                          lat = max(cholera::roads$lat))
-    bottomright <- data.frame(lon = max(cholera::roads$lon),
-                              lat = min(cholera::roads$lat))
-    milepost.coords <- meterLatLong(milepost.coords, origin, topleft, bottomright)
+      # compute milepost latlong coordinates
+      topleft <- data.frame(lon = min(cholera::roads$lon),
+                            lat = max(cholera::roads$lat))
+      bottomright <- data.frame(lon = max(cholera::roads$lon),
+                                lat = min(cholera::roads$lat))
+      milepost.coords <- meterLatLong(milepost.coords, origin, topleft, bottomright)
 
-    # mileposts as arrows
-    arrow.data <- rbind(milepost.coords[, vars], x$case)
-    idx <- seq_len(nrow(arrow.data[-nrow(arrow.data), ]))
+      # mileposts as arrows
+      arrow.data <- rbind(milepost.coords[, vars], x$case)
+      idx <- seq_len(nrow(arrow.data[-nrow(arrow.data), ]))
 
-    invisible(lapply(idx, function(i) {
-      arrows(arrow.data[i, "lon"], arrow.data[i, "lat"],
-             arrow.data[i + 1, "lon"], arrow.data[i + 1, "lat"],
-             code = 1, col = p.col, length = 0.0875, lwd = 3)
-    }))
+      invisible(lapply(idx, function(i) {
+        arrows(arrow.data[i, "lon"], arrow.data[i, "lat"],
+               arrow.data[i + 1, "lon"], arrow.data[i + 1, "lat"],
+               code = 1, col = p.col, length = 0.0875, lwd = 3)
+      }))
+    }
 
     title(main = paste("Case", x$data$case, "to Pump", x$data$pump),
           sub = paste(d.info, t.info, post.info, sep = "; "))
+
   } else {
     title(main = paste("Case", x$data$case, "to Pump", x$data$pump),
           sub = paste(d.info, t.info, sep = "; "))
