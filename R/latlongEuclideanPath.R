@@ -3,7 +3,6 @@
 #' @param case Numeric.
 #' @param destination Numeric. Pump ID.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
-
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
@@ -49,7 +48,7 @@ latlongEuclideanPath <- function(case = 1, destination = NULL, vestry = FALSE,
   }
 
   eucl.data <- data.frame(case = case, pump = nr.pump$id,
-    pump.name = nr.pump$street, distance = euclidean.d)
+    distance = euclidean.d)
 
   if (distance.unit == "meter") {
     eucl.data$distance <- eucl.data$distance
