@@ -112,17 +112,18 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
     snowMap(latlong = TRUE, vestry = x$vestry)
   }
 
-
-  d.info <- paste(round(x$data$distance, 1), x$distance.unit)
-  t.info <- paste(round(x$data$time), paste0(x$time.unit, "s"), "@",
-    x$walking.speed, "km/hr")
+  d.round <- round(x$data$distance, 1)
+  t.round <- round(x$data$time, 1)
+  d.unit <- ifelse(d.round == 1, x$distance.unit, paste0(x$distance.unit, "s"))
+  t.unit <- ifelse(t.round == 1, x$time.unit, paste0(x$time.unit, "s"))
+  d.info <- paste(d.round, d.unit)
+  t.info <- paste(t.round, t.unit, "@", x$walking.speed, "km/hr")
 
   points(x$case, col = "red")
   text(x$case, col = "red", labels = x$data$case, pos = 1)
+
   p.col <- colors[paste0("p", x$data$pump)]
-  if (x$case.location == "address") {
-    points(x$pump[, vars], pch = 0, col = "red")
-  }
+  if (x$case.location == "address") points(x$pump[, vars], pch = 0, col = "red")
 
   arrows(x$case$lon, x$case$lat, x$pump$lon, x$pump$lat, col = p.col,
          length = 0.0875, lwd = 3)
