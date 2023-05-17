@@ -242,7 +242,7 @@ transformation type (e.g., thin plate spine), and resampling method
 (e.g., nearest neighbor) are still in flux. Thus, results and
 coordinates may change in the future.
 
-Five functions are available:
+Six functions are available:
 
 ``` r
 snowMap(latlong = TRUE)
@@ -273,6 +273,18 @@ plot(latlongNeighborhoodWalking())
 ```
 
 <img src="man/figures/README-latlong_walking-1.png" width="50%" />
+
+``` r
+tanakaContourPlot()
+> Mosaicing & Projecting
+> Clipping DEM to locations
+> Note: Elevation units are in meters.
+addRoads(latlong = TRUE, col = "white")
+addPump(latlong = TRUE, col = "white")
+title("Tanaka contour elevation")
+```
+
+![](man/figures/README-tanaka-1.png)<!-- -->
 
 #### vignettes
 

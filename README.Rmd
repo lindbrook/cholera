@@ -145,7 +145,7 @@ Parallelization is implemented using the 'parallel' package, which is part of th
 
 ['cholera'](https://cran.r-project.org/package=cholera) now has preliminary, limited support for georeferenced (longitude and latitude) versions of some data and functions. This support goes beyond a proof of concept but is currently less than a complete re-implementation of the package's native (non-georeferenced) functionality. The georeferencing was done manually using [QGIS](https://qgis.org/en/site/); specifically its Georeferencer tool and its interface to [OpenStreetMap](https://www.openstreetmap.org). The target coordinate reference system (CRS) of these data is EPSG:4326. What makes this effort preliminary is that the choice of ground control points, transformation type (e.g., thin plate spine), and resampling method (e.g., nearest neighbor) are still in flux. Thus, results and coordinates may change in the future. 
 
-Five functions are available:
+Six functions are available:
 
 ```{r latlong, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
 snowMap(latlong = TRUE)
@@ -169,7 +169,7 @@ plot(latlongEuclideanPath())
 plot(latlongNeighborhoodWalking())
 ```
 
-```{r tanaka, echo = FALSE, eval = FALSE}
+```{r tanaka}
 tanakaContourPlot()
 addRoads(latlong = TRUE, col = "white")
 addPump(latlong = TRUE, col = "white")
