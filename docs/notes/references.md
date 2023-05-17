@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2023-03-27
+2023-05-17
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -74,6 +74,9 @@ their Detection*. London: Longmans, Green, and Co.
 
 Sandra Hempel. 2013. “Obituary: John Snow”. *The Lancet*. 381(9874):
 1269-1270.
+
+Stephen Inwood. 1998 *A History of London*. New York: Carroll & Graf
+Publishers.
 
 Lee Jackson. 2014. *Dirty Old London: The Victorian Fight Against
 Filth*. New Haven: Yale University Press.
