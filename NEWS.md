@@ -1,3 +1,8 @@
+### cholera 0.8.0.9026
+
+- change "pump.id" to "id" in latlongEmbed() and latlongNearestPump().
+
+
 ### cholera 0.8.0.9025
 
 - amend subtitle in latlongEuclideanPath().
