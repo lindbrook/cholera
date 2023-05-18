@@ -190,6 +190,11 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
   fatality <- cholera::fatalities
 
+  case.address <- cholera::latlong.ortho.addr
+  addr <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor"]
+  if (x$vestry) pump.address <- cholera::latlong.ortho.pump.vestry
+  else pump.address <- cholera::latlong.ortho.pump
+
   if (mileposts) {
     if (is.null(milepost.interval)) {
       if (milepost.unit == "distance") {
@@ -226,23 +231,28 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
 
   vars <- c("lon", "lat")
 
+  p.sel <- paste0("p", path.data$pump)
+  case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
+
   plot(rd[, vars], pch = NA, asp = 1.6, xlim = xlim, ylim = ylim)
   roads.list <- split(rd[, vars], rd$street)
   frame.list <- split(frame[, vars], frame$street)
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(frame.list, lines))
   points(fatality[, vars], col = "lightgray", pch = 16, cex = 0.5)
-  points(fatality[fatality$case == case, vars], col = "red", pch = 1)
+  points(fatality[fatality$case == case, vars], col = "red")
   text(fatality[fatality$case == case, vars], pos = 1, labels = case,
     col = "red")
   points(pmp[, vars], pch = 24, col = grDevices::adjustcolor(colors,
     alpha.f = alpha.level))
   text(pmp[, vars], pos = 1, labels = paste0("p", pmp$id))
+  points(case.address[case.address$case == addr, vars], pch = 0,
+    col = case.color)
+  points(pump.address[pump.address$id == path.data$pump, vars], pch = 0,
+    col = case.color)
   points(dat[1, c("x", "y")], col = "dodgerblue", pch = 0)
   points(dat[nrow(dat), c("x", "y")], col = "dodgerblue", pch = 0)
 
-  p.sel <- paste0("p", path.data$pump)
-  case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
   drawPathB(dat, case.color)
 
   if (milepost.unit == "distance") {

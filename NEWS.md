@@ -1,3 +1,8 @@
+### cholera 0.8.0.9027
+
+- plot case and pump addresses in plot.latlong_walking_path().
+
+
 ### cholera 0.8.0.9026
 
 - change "pump.id" to "id" in latlongEmbed() and latlongNearestPump().
