@@ -1108,12 +1108,12 @@ plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
 
       post.coordinates <- lapply(seq_along(edge.select), function(i) {
         node1.node2 <-
-        edge.data[edge.select[i], "node1"] == post.nodes[i, "node1"] &
-        edge.data[edge.select[i], "node2"] == post.nodes[i, "node2"]
-
-        node2.node1 <-
         edge.data[edge.select[i], "node1"] == post.nodes[i, "node2"] &
         edge.data[edge.select[i], "node2"] == post.nodes[i, "node1"]
+
+        node2.node1 <-
+        edge.data[edge.select[i], "node1"] == post.nodes[i, "node1"] &
+        edge.data[edge.select[i], "node2"] == post.nodes[i, "node2"]
 
         sel.data <- edge.data[edge.select[i], ]
 
@@ -1153,11 +1153,11 @@ plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
 
       invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
         if (start[i] == 1) {
-          dataB <- data.frame(x = c(arrow.data[i, "x2"], coords[i, "x"]),
-                              y = c(arrow.data[i, "y2"], coords[i, "y"]))
-        } else if (start[i] == 2) {
           dataB <- data.frame(x = c(arrow.data[i, "x1"], coords[i, "x"]),
                               y = c(arrow.data[i, "y1"], coords[i, "y"]))
+        } else if (start[i] == 2) {
+          dataB <- data.frame(x = c(arrow.data[i, "x2"], coords[i, "x"]),
+                              y = c(arrow.data[i, "y2"], coords[i, "y"]))
         }
 
         zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 2) == 0
@@ -1165,10 +1165,10 @@ plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
 
         if (any(zero.length.x | zero.length.y)) {
           if (start[i] == 1) {
-            text(dataB[1, c("x", "y")], labels = "<", srt = coords[i, "angle"],
+            text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
               col = case.color, cex = 1.25)
           } else if (start[i] == 2) {
-            text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
+            text(dataB[1, c("x", "y")], labels = "<", srt = coords[i, "angle"],
               col = case.color, cex = 1.25)
           } else stop("Draw error.")
         } else {
