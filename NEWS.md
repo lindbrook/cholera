@@ -1,3 +1,8 @@
+### cholera 0.8.0.9028
+
+- set/use quandrantCoordinatesB() as default quandrantCoordinates().
+
+
 ### cholera 0.8.0.9027
 
 - plot case and pump addresses in plot.latlong_walking_path().

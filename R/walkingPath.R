@@ -80,8 +80,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         message('Pump 2 is a technical isolate (not considered).')
       }
     }
-  
-  } else if (type == "cases") {  
+
+  } else if (type == "cases") {
     if (is.numeric(origin) & all(is.numeric(destination))) {
       sel <- cholera::anchor.case$case == origin
       alpha <- cholera::anchor.case[sel, "anchor"]
@@ -92,22 +92,22 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       if (length(destination) > 1) {
         if (alpha %in% omega) {
           message("origin and destination include same address!")
-        }  
+        }
       } else if (length(destination) == 1) {
         if (alpha == omega) {
-          stop("origin and destination at same address!") 
+          stop("origin and destination at same address!")
         }
       }
-    
+
     } else if (is.character(origin) & any(is.character(destination))) {
       origin <- caseAndSpace(origin)
       destination <- caseAndSpace(destination)
-      
-      valid.origin <- origin %in% cholera::landmark.squares$name | 
+
+      valid.origin <- origin %in% cholera::landmark.squares$name |
                       origin %in% cholera::landmarks$name
-      valid.destination <- destination %in% cholera::landmark.squares$name | 
+      valid.destination <- destination %in% cholera::landmark.squares$name |
                            destination %in% cholera::landmarks$name
-       
+
       if (!valid.origin) stop('Invalid origin landmark name.')
       if (all(!valid.destination)) stop('Invalid origin landmark names.')
 
@@ -115,10 +115,10 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         if (any(origin %in% destination)) {
           message("origin and destination include same address!")
           destination <- destination[valid.destination]
-        }  
+        }
       } else if (length(destination) == 1) {
         if (origin == destination) {
-          stop("origin and destination are the same!") 
+          stop("origin and destination are the same!")
         }
       }
     }
@@ -127,7 +127,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     if (origin == 2) {
       stop('Pump 2 is an isolate (excluded). Choose another.')
     }
-    
+
     if (length(destination) > 1) {
       if (2L %in% abs(destination)) {
         message('Pump 2 is an isolate (excluded).')
@@ -135,7 +135,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       } else if (origin %in% abs(destination)) {
         message("origin and destination include same pumps!")
         destination <- destination[abs(destination) %in% origin]
-       } 
+       }
     } else if (length(destination) == 1) {
       if (identical(origin, destination)) {
         stop("origin and destination are the same pump!")
@@ -1108,12 +1108,12 @@ plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
 
       post.coordinates <- lapply(seq_along(edge.select), function(i) {
         node1.node2 <-
-        edge.data[edge.select[i], "node1"] == post.nodes[i, "node1"] &
-        edge.data[edge.select[i], "node2"] == post.nodes[i, "node2"]
-
-        node2.node1 <-
         edge.data[edge.select[i], "node1"] == post.nodes[i, "node2"] &
         edge.data[edge.select[i], "node2"] == post.nodes[i, "node1"]
+
+        node2.node1 <-
+        edge.data[edge.select[i], "node1"] == post.nodes[i, "node1"] &
+        edge.data[edge.select[i], "node2"] == post.nodes[i, "node2"]
 
         sel.data <- edge.data[edge.select[i], ]
 
@@ -1153,11 +1153,11 @@ plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
 
       invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
         if (start[i] == 1) {
-          dataB <- data.frame(x = c(arrow.data[i, "x2"], coords[i, "x"]),
-                              y = c(arrow.data[i, "y2"], coords[i, "y"]))
-        } else if (start[i] == 2) {
           dataB <- data.frame(x = c(arrow.data[i, "x1"], coords[i, "x"]),
                               y = c(arrow.data[i, "y1"], coords[i, "y"]))
+        } else if (start[i] == 2) {
+          dataB <- data.frame(x = c(arrow.data[i, "x2"], coords[i, "x"]),
+                              y = c(arrow.data[i, "y2"], coords[i, "y"]))
         }
 
         zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 2) == 0
@@ -1165,10 +1165,10 @@ plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE,
 
         if (any(zero.length.x | zero.length.y)) {
           if (start[i] == 1) {
-            text(dataB[1, c("x", "y")], labels = "<", srt = coords[i, "angle"],
+            text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
               col = case.color, cex = 1.25)
           } else if (start[i] == 2) {
-            text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
+            text(dataB[1, c("x", "y")], labels = "<", srt = coords[i, "angle"],
               col = case.color, cex = 1.25)
           } else stop("Draw error.")
         } else {

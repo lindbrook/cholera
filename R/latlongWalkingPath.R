@@ -30,11 +30,10 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
   }
 
   if (!is.null(destination)) {
-
     pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
 
     if (any(pump.id == 2L)) {
-      # message("Pump 2 excluded because it's a technical isolate.")
+      # message("Note: Pump 2 excluded because it's a technical isolate.")
       pump.id <- pump.id[pump.id != 2L]
     }
 
@@ -462,7 +461,7 @@ arrowData <- function(segs, census, seg.data, origin, milepost.unit,
         } else if (milepost.unit == "time") {
           h <- tmp$cumulative.t - p
         }
-        arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
+        arrow.point <- quandrantCoordinates(meter.coords, h, theta)
         data.frame(x1 = meter.coords[2, "x"],
                    y1 = meter.coords[2, "y"],
                    x2 = arrow.point$x,
@@ -477,7 +476,7 @@ arrowData <- function(segs, census, seg.data, origin, milepost.unit,
       } else if (milepost.unit == "time") {
         h <- tmp$cumulative.t - post
       }
-      arrow.point <- quandrantCoordinatesB(meter.coords, h, theta)
+      arrow.point <- quandrantCoordinates(meter.coords, h, theta)
       data.frame(x1 = meter.coords[2, "x"],
                  y1 = meter.coords[2, "y"],
                  x2 = arrow.point$x,
@@ -486,51 +485,4 @@ arrowData <- function(segs, census, seg.data, origin, milepost.unit,
   })
 
   do.call(rbind, out)
-}
-
-quandrantCoordinatesB <- function(dat, h, theta) {
-  delta <- dat[2, ] - dat[1, ]
-
-  # Quadrant I
-  if (all(delta > 0)) {
-    post.x <- dat[2, "x"] - abs(h * cos(theta))
-    post.y <- dat[2, "y"] - abs(h * sin(theta))
-
-  # Quadrant II
-  } else if (delta[1] < 0 & delta[2] > 0) {
-    post.x <- dat[2, "x"] + abs(h * cos(theta))
-    post.y <- dat[2, "y"] - abs(h * sin(theta))
-
-  # Quadrant III
-  } else if (all(delta < 0)) {
-    post.x <- dat[2, "x"] + abs(h * cos(theta))
-    post.y <- dat[2, "y"] + abs(h * sin(theta))
-
-  # Quadrant IV
-  } else if (delta[1] > 0 & delta[2] < 0) {
-    post.x <- dat[2, "x"] - abs(h * cos(theta))
-    post.y <- dat[2, "y"] + abs(h * sin(theta))
-
-  # I:IV
-  } else if (delta[1] > 0 & delta[2] == 0) {
-    post.x <- dat[2, "x"] - abs(h * cos(theta))
-    post.y <- dat[2, "y"]
-
-  # I:II
-  } else if (delta[1] == 0 & delta[2] > 0) {
-    post.x <- dat[2, "x"]
-    post.y <- dat[2, "y"] - abs(h * sin(theta))
-
-  # II:III
-  } else if (delta[1] < 0 & delta[2] == 0) {
-    post.x <- dat[2, "x"] + abs(h * cos(theta))
-    post.y <- dat[2, "y"]
-
-  # III:IV
-  } else if (delta[1] == 0 & delta[2] < 0) {
-    post.x <- dat[2, "x"]
-    post.y <- dat[2, "y"] + abs(h * sin(theta))
-  }
-
-  data.frame(x = post.x, y = post.y)
 }
