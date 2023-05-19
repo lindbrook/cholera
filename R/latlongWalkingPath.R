@@ -30,11 +30,10 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
   }
 
   if (!is.null(destination)) {
-
     pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
 
     if (any(pump.id == 2L)) {
-      # message("Pump 2 excluded because it's a technical isolate.")
+      # message("Note: Pump 2 excluded because it's a technical isolate.")
       pump.id <- pump.id[pump.id != 2L]
     }
 
