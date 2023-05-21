@@ -1,3 +1,8 @@
+### cholera 0.8.0.9029
+
+- add/set plot.walking_path(mileposts = TRUE).
+
+
 ### cholera 0.8.0.9028
 
 - set/use quandrantCoordinatesB() as default quandrantCoordinates().
