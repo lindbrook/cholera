@@ -202,7 +202,7 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
         milepost.interval <- 60
       }
     }
-    milepost.data <- milePosts(path.data, dat, ds, milepost.unit,
+    milepost.data <- milePostsLatLong(path.data, dat, ds, milepost.unit,
       milepost.interval, distance.unit, time.unit, walking.speed, destination)
     seg.data <- milepost.data$seg.data
     if (path.length > milepost.interval) {
@@ -252,28 +252,25 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   points(dat[1, c("x", "y")], col = "dodgerblue", pch = 0)
   points(dat[nrow(dat), c("x", "y")], col = "dodgerblue", pch = 0)
 
-  drawPathB(dat, case.color)
-
-  if (milepost.unit == "distance") {
-    if (distance.unit == "meter") {
-      post.info <- paste("posts at", milepost.interval, "m intervals")
-    } else if (distance.unit == "yard") {
-      post.info <- paste("posts at", milepost.interval, "yd intervals")
-    }
-  } else if (milepost.unit == "time") {
-    post.info <- paste("posts at", milepost.interval, "sec intervals")
-  } else {
-    stop('"milepost.unit" muster either be "distance" or "time".')
-  }
+  drawPathLatLong(dat, case.color)
 
   d <- paste(round(path.length, 1), d.unit)
   t <- paste(round(x$data$time), paste0(time.unit, "s"), "@", walking.speed,
     "km/hr")
 
-  title(main = paste("Case", case, "to Pump", path.data$pump),
-        sub = paste(d, t, post.info, sep = "; "))
-
   if (mileposts) {
+    if (milepost.unit == "distance") {
+      if (distance.unit == "meter") {
+        post.info <- paste("posts at", milepost.interval, "m intervals")
+      } else if (distance.unit == "yard") {
+        post.info <- paste("posts at", milepost.interval, "yd intervals")
+      }
+    } else if (milepost.unit == "time") {
+      post.info <- paste("posts at", milepost.interval, "sec intervals")
+    } else {
+      stop('"milepost.unit" muster either be "distance" or "time".')
+    }
+
     arrows(seg.data[1, "x2"], seg.data[1, "y2"],
            seg.data[1, "x1"], seg.data[1, "y1"],
            length = 0.0875, lwd = 3, col = case.color)
@@ -309,6 +306,13 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
       arrows(arrow.tail$lon, arrow.tail$lat, arrow.head$lon, arrow.head$lat,
         length = 0.0875, lwd = 3, col = case.color)
     }
+  
+    title(main = paste("Case", case, "to Pump", path.data$pump),
+          sub = paste(d, t, post.info, sep = "; "))
+
+  } else {
+    title(main = paste("Case", case, "to Pump", path.data$pump),
+          sub = paste(d, t, sep = "; "))
   }
 }
 
@@ -327,15 +331,15 @@ print.latlong_walking_path <- function(x, ...) {
   print(x[c("path", "data")])
 }
 
-drawPathB <- function(x, case.color) {
+drawPathLatLong <- function(x, case.color) {
   path.data <- x
   n1 <- path.data[1:(nrow(path.data) - 1), ]
   n2 <- path.data[2:nrow(path.data), ]
   segments(n1$x, n1$y, n2$x, n2$y, lwd = 3, col = case.color)
 }
 
-milePosts <- function(path.data, dat, ds, milepost.unit, milepost.interval,
-  distance.unit, time.unit, walking.speed, destination) {
+milePostsLatLong <- function(path.data, dat, ds, milepost.unit, 
+  milepost.interval, distance.unit, time.unit, walking.speed, destination) {
 
   rev.data <- dat[order(dat$id, decreasing = TRUE), ]
 
