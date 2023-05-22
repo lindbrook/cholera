@@ -1,3 +1,8 @@
+### cholera 0.8.0.9030
+
+- rename drawPathB() and milePosts() to drawPathLatLong() and milePostsLatLong(); contextualize subtitle. 
+
+
 ### cholera 0.8.0.9029
 
 - add/set plot.walking_path(mileposts = TRUE).
