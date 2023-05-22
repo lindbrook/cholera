@@ -1060,132 +1060,25 @@ plot.walking_path <- function(x, zoom = 0.5, stacked = TRUE, mileposts = TRUE,
   nominal.time <- nominalTime(x$data$time, x$time.unit)
 
   if (mileposts) {
-    if (is.null(unit.posts) == FALSE) {
-      if (unit.posts %in% c("distance", "time") == FALSE) {
-        stop('If specified, unit.posts must be "distance" or "time".')
-      } else {
-        if (is.null(unit.interval)) {
-          if (unit.posts == "distance")  {
-            unit.interval <- 50 * x$walking.speed / 5
-          } else if (unit.posts == "time") {
-            unit.interval <- 60 * x$walking.speed / 5
-          }
-        } else {
-          if (!is.numeric(unit.interval)) {
-            stop('unit.interval must be numeric.')
-          }
-        }
-
-        path <- rev(x$path)
-        path.edge <- data.frame(node1 = path[1:(length(path) - 1)],
-                                node2 = path[2:length(path)],
-                                stringsAsFactors = FALSE)
-
-        edge.data <- identifyEdges(path.edge, edges)
-
-        if (unit.posts == "distance") {
-          cumulative <- unitMeter(cumsum(edge.data$d))
-        } else if (unit.posts == "time") {
-          cumulative <- distanceTime(unitMeter(cumsum(edge.data$d)),
-            walking.speed = x$walking.speed)
-        }
-
-        total <- cumulative[length(cumulative)]
-        posts <- seq(0, total, unit.interval)
-
-        if (max(posts) > total) posts <- posts[-length(posts)]
-
-        bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
-                           hi = cumulative)
-
-        edge.select <- vapply(posts, function(x) {
-          which(vapply(seq_len(nrow(bins)), function(i) {
-            x >= bins[i, "lo"] & x < bins[i, "hi"]
-          }, logical(1L)))
-        }, integer(1L))
-
-        post.nodes <- path.edge[edge.select, ]
-
-        post.coordinates <- lapply(seq_along(edge.select), function(i) {
-          node1.node2 <-
-          edge.data[edge.select[i], "node1"] == post.nodes[i, "node2"] &
-          edge.data[edge.select[i], "node2"] == post.nodes[i, "node1"]
-
-          node2.node1 <-
-          edge.data[edge.select[i], "node1"] == post.nodes[i, "node1"] &
-          edge.data[edge.select[i], "node2"] == post.nodes[i, "node2"]
-
-          sel.data <- edge.data[edge.select[i], ]
-
-          if (any(node1.node2)) {
-            e.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
-                                 y = c(sel.data$y1, sel.data$y2))
-          } else if (any(node2.node1)) {
-            e.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
-                                 y = c(sel.data$y2, sel.data$y1))
-          } else stop("Post error.")
-
-          ols <- stats::lm(y ~ x, data = e.data)
-          edge.slope <- stats::coef(ols)[2]
-          edge.intercept <- stats::coef(ols)[1]
-          theta <- atan(edge.slope)
-
-          if (unit.posts == "distance") {
-            h <- (posts[i] - bins[edge.select[i], "lo"]) / unitMeter(1)
-          } else if (unit.posts == "time") {
-            h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 *
-              x$walking.speed / 60^2 / unitMeter(1)
-          }
-
-          p.coords <- quandrantCoordinates(e.data, h, theta)
-
-          data.frame(post = i,
-                     x = p.coords$x,
-                     y = p.coords$y,
-                     angle = theta * 180L / pi,
-                     start = ifelse(node1.node2, 1, ifelse(node2.node1, 2, 0)),
-                     row.names = NULL)
-        })
-
-        coords <- do.call(rbind, post.coordinates)
-        arrow.data <- edge.data[edge.select, ]
-        start <- coords$start
-
-        invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
-          if (start[i] == 1) {
-            dataB <- data.frame(x = c(arrow.data[i, "x1"], coords[i, "x"]),
-                                y = c(arrow.data[i, "y1"], coords[i, "y"]))
-          } else if (start[i] == 2) {
-            dataB <- data.frame(x = c(arrow.data[i, "x2"], coords[i, "x"]),
-                                y = c(arrow.data[i, "y2"], coords[i, "y"]))
-          }
-
-          zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 2) == 0
-          zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 2) == 0
-
-          if (any(zero.length.x | zero.length.y)) {
-            if (start[i] == 1) {
-              text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
-                col = case.color, cex = 1.25)
-            } else if (start[i] == 2) {
-              text(dataB[1, c("x", "y")], labels = "<", srt = coords[i, "angle"],
-                col = case.color, cex = 1.25)
-            } else stop("Draw error.")
-          } else {
-            arrows(dataB[1, "x"], dataB[1, "y"],
-                   dataB[2, "x"], dataB[2, "y"],
-                   lwd = 3, length = 0.075, col = case.color, code = 2)
-          }
-        }))
+    if (is.null(unit.interval)) {
+      if (unit.posts == "distance")  {
+        unit.interval <- 50 * x$walking.speed / 5
+      } else if (unit.posts == "time") {
+        unit.interval <- 60 * x$walking.speed / 5
+      }
+    } else {
+      if (!is.numeric(unit.interval)) {
+        stop('unit.interval must be numeric.')
       }
     }
+
+    milePosts(x, case.color, edges, unit.posts, unit.interval) 
     
     if (unit.posts == "distance") {
       post.info <- paste("posts @", unit.interval, "m intervals")
     } else if (unit.posts == "time") {
       post.info <- paste("posts @", unit.interval, "sec intervals")
     }
-
     title(sub = paste(round(x$data$distance, 1), d.unit, nominal.time, "@",
       x$walking.speed, "km/hr;", post.info))
   } else {
@@ -1275,3 +1168,115 @@ citySquare <- function(ego.node, alters, g, nodes, edges, weighted, type) {
   }
   do.call(rbind, c.square)
 }
+
+milePosts <- function(x, case.color, edges, unit.posts, unit.interval) {
+  if (!is.null(unit.posts)) {
+    if (!unit.posts %in% c("distance", "time")) {
+      stop('If specified, unit.posts must be "distance" or "time".', 
+        call. = FALSE)
+    }
+  }
+
+  path <- rev(x$path)
+  path.edge <- data.frame(node1 = path[1:(length(path) - 1)],
+                          node2 = path[2:length(path)],
+                          stringsAsFactors = FALSE)
+
+  edge.data <- identifyEdges(path.edge, edges)
+
+  if (unit.posts == "distance") {
+    cumulative <- unitMeter(cumsum(edge.data$d))
+  } else if (unit.posts == "time") {
+    cumulative <- distanceTime(unitMeter(cumsum(edge.data$d)),
+      walking.speed = x$walking.speed)
+  }
+
+  total <- cumulative[length(cumulative)]
+  posts <- seq(0, total, unit.interval)
+
+  if (max(posts) > total) posts <- posts[-length(posts)]
+
+  bins <- data.frame(lo = c(0, cumulative[-length(cumulative)]),
+                     hi = cumulative)
+
+  edge.select <- vapply(posts, function(x) {
+    which(vapply(seq_len(nrow(bins)), function(i) {
+      x >= bins[i, "lo"] & x < bins[i, "hi"]
+    }, logical(1L)))
+  }, integer(1L))
+
+  post.nodes <- path.edge[edge.select, ]
+
+  post.coordinates <- lapply(seq_along(edge.select), function(i) {
+    node1.node2 <-
+    edge.data[edge.select[i], "node1"] == post.nodes[i, "node2"] &
+    edge.data[edge.select[i], "node2"] == post.nodes[i, "node1"]
+
+    node2.node1 <-
+    edge.data[edge.select[i], "node1"] == post.nodes[i, "node1"] &
+    edge.data[edge.select[i], "node2"] == post.nodes[i, "node2"]
+
+    sel.data <- edge.data[edge.select[i], ]
+
+    if (any(node1.node2)) {
+      e.data <- data.frame(x = c(sel.data$x1, sel.data$x2),
+                           y = c(sel.data$y1, sel.data$y2))
+    } else if (any(node2.node1)) {
+      e.data <- data.frame(x = c(sel.data$x2, sel.data$x1),
+                           y = c(sel.data$y2, sel.data$y1))
+    } else stop("Post error.")
+
+    ols <- stats::lm(y ~ x, data = e.data)
+    edge.slope <- stats::coef(ols)[2]
+    edge.intercept <- stats::coef(ols)[1]
+    theta <- atan(edge.slope)
+
+    if (unit.posts == "distance") {
+      h <- (posts[i] - bins[edge.select[i], "lo"]) / unitMeter(1)
+    } else if (unit.posts == "time") {
+      h <- (posts[i] - bins[edge.select[i], "lo"]) * 1000 *
+        x$walking.speed / 60^2 / unitMeter(1)
+    }
+
+    p.coords <- quandrantCoordinates(e.data, h, theta)
+
+    data.frame(post = i,
+               x = p.coords$x,
+               y = p.coords$y,
+               angle = theta * 180L / pi,
+               start = ifelse(node1.node2, 1, ifelse(node2.node1, 2, 0)),
+               row.names = NULL)
+  })
+
+  coords <- do.call(rbind, post.coordinates)
+  arrow.data <- edge.data[edge.select, ]
+  start <- coords$start
+
+  invisible(lapply(seq_len(nrow(arrow.data)), function(i) {
+    if (start[i] == 1) {
+      dataB <- data.frame(x = c(arrow.data[i, "x1"], coords[i, "x"]),
+                          y = c(arrow.data[i, "y1"], coords[i, "y"]))
+    } else if (start[i] == 2) {
+      dataB <- data.frame(x = c(arrow.data[i, "x2"], coords[i, "x"]),
+                          y = c(arrow.data[i, "y2"], coords[i, "y"]))
+    }
+
+    zero.length.x <- round(abs(dataB[1, "x"] - dataB[2, "x"]), 2) == 0
+    zero.length.y <- round(abs(dataB[1, "y"] - dataB[2, "y"]), 2) == 0
+
+    if (any(zero.length.x | zero.length.y)) {
+      if (start[i] == 1) {
+        text(dataB[1, c("x", "y")], labels = ">", srt = coords[i, "angle"],
+          col = case.color, cex = 1.25)
+      } else if (start[i] == 2) {
+        text(dataB[1, c("x", "y")], labels = "<", srt = coords[i, "angle"],
+          col = case.color, cex = 1.25)
+      } else stop("Draw error.")
+    } else {
+      arrows(dataB[1, "x"], dataB[1, "y"],
+             dataB[2, "x"], dataB[2, "y"],
+             lwd = 3, length = 0.075, col = case.color, code = 2)
+    }
+  }))
+}
+
