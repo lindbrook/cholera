@@ -194,23 +194,6 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   if (x$vestry) pump.address <- cholera::latlong.ortho.pump.vestry
   else pump.address <- cholera::latlong.ortho.pump
 
-  if (mileposts) {
-    if (is.null(milepost.interval)) {
-      if (milepost.unit == "distance") {
-        milepost.interval <- 50
-      } else if (milepost.unit == "time") {
-        milepost.interval <- 60
-      }
-    }
-    milepost.data <- milePostsLatLong(path.data, dat, ds, milepost.unit,
-      milepost.interval, distance.unit, time.unit, walking.speed, destination)
-    seg.data <- milepost.data$seg.data
-    if (path.length > milepost.interval) {
-      arrow.head <- milepost.data$arrow.head
-      arrow.tail <- milepost.data$arrow.tail
-    }
-  }
-
   if (is.logical(zoom)) {
     if (zoom) {
       padding <- 0.00026
@@ -259,6 +242,23 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
     "km/hr")
 
   if (mileposts) {
+    if (is.null(milepost.interval)) {
+      if (milepost.unit == "distance") {
+        milepost.interval <- 50
+      } else if (milepost.unit == "time") {
+        milepost.interval <- 60
+      }
+    }
+    
+    milepost.data <- milePostsLatLong(path.data, dat, ds, milepost.unit,
+      milepost.interval, distance.unit, time.unit, walking.speed, destination)
+    seg.data <- milepost.data$seg.data
+    
+    if (path.length > milepost.interval) {
+      arrow.head <- milepost.data$arrow.head
+      arrow.tail <- milepost.data$arrow.tail
+    }
+
     if (milepost.unit == "distance") {
       if (distance.unit == "meter") {
         post.info <- paste("posts at", milepost.interval, "m intervals")
