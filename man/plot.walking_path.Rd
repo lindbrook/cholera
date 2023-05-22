@@ -5,7 +5,8 @@
 \title{Plot the walking path between selected cases and/or pumps.}
 \usage{
 \method{plot}{walking_path}(x, zoom = 0.5, stacked = TRUE,
-  unit.posts = "distance", unit.interval = NULL, alpha.level = 1, ...)
+  mileposts = TRUE, unit.posts = "distance", unit.interval = NULL,
+  alpha.level = 1, ...)
 }
 \arguments{
 \item{x}{An object of class "walking_path" created by walkingPath().}
@@ -13,6 +14,8 @@
 \item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.}
 
 \item{stacked}{Logical. Use stacked fatalities.}
+
+\item{mileposts}{Logical. Plot mile/time posts.}
 
 \item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts; NULL for no posts.}
 
