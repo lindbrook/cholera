@@ -1,3 +1,8 @@
+### cholera 0.8.0.9032
+
+- amend fatalities and fatalities.address for GCP v.02.
+
+
 ### cholera 0.8.0.9031
 
 - use milePosts() in plot.walking_path().
