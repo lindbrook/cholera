@@ -1,3 +1,8 @@
+### cholera 0.8.0.9033
+
+- amend fatalities.unstacked for GCP v.02; add fatalitiesUnstack().
+
+
 ### cholera 0.8.0.9032
 
 - amend fatalities and fatalities.address for GCP v.02.
@@ -10,7 +15,8 @@
 
 ### cholera 0.8.0.9030
 
-- rename drawPathB() and milePosts() to drawPathLatLong() and milePostsLatLong(); contextualize subtitle. 
+- rename drawPathB() and milePosts() to drawPathLatLong() and 
+  milePostsLatLong(); contextualize subtitle. 
 
 
 ### cholera 0.8.0.9029
