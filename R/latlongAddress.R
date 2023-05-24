@@ -106,3 +106,27 @@ latlongFatalitiesUnstacked <- function() {
   row.names(out) <- NULL
   out
 }
+
+fatalitiesUnstack <- function() {
+  census <- table(cholera::anchor.case$anchor)
+  multiple <- names(census[census != 1])
+  single <- names(census[census == 1])
+  vars <- c("x", "y", "lon", "lat")
+
+  multi.data <- lapply(multiple, function(anchor) {
+    stack <- cholera::anchor.case[cholera::anchor.case$anchor == anchor, "case"]
+    others <- setdiff(stack, anchor)
+    coords <- cholera::fatalities[cholera::fatalities$case == anchor, vars]
+    tmp <- cholera::fatalities[cholera::fatalities$case %in% stack, ]
+    tmp[tmp$case %in% others, vars] <- coords
+    tmp
+  })
+
+  multi.data <- do.call(rbind, multi.data)
+  single.data <- cholera::fatalities[cholera::fatalities$case %in% single, ]
+  out <- rbind(multi.data, single.data)
+  out[order(out$case), ]
+}
+
+# fatalities.unstacked <- fatalitiesUnstack()
+
