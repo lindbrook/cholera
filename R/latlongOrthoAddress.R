@@ -1,10 +1,11 @@
 #' Compute latitude and longitude for orthogonal case projection (address).
 #'
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @param radius Numeric. Radius for \code{withinRadius()} to find road segment endpoints.
 #' @return An R data frame.
 #' @noRd
 
-latlongOrthoAddress <- function(multi.core = TRUE) {
+latlongOrthoAddress <- function(multi.core = TRUE, radius = 60) {
   cores <- multiCore(multi.core)
 
   geo.addr <- geodesicMeters(dat = cholera::fatalities.address,
@@ -47,8 +48,6 @@ latlongOrthoAddress <- function(multi.core = TRUE) {
   classfication.err <- geo.addr$id %in% manual.compute$addr
 
   no.err <- geo.addr$id[!classfication.err]
-
-  radius <- 50
 
   orthogonal.projection <- parallel::mclapply(no.err, function(id) {
     case <- geo.addr[geo.addr$id == id, c("x", "y")]
