@@ -1,3 +1,8 @@
+### cholera 0.8.0.9035
+
+- amend latlong.ortho.addr for GCP v.02.
+
+
 ### cholera 0.8.0.9034
 
 - add/set latlongOrthoAddress(radius = 60).
