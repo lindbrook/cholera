@@ -1,3 +1,8 @@
+### cholera 0.8.0.9034
+
+- add/set latlongOrthoAddress(radius = 60).
+
+
 ### cholera 0.8.0.9033
 
 - amend fatalities.unstacked for GCP v.02; add fatalitiesUnstack().
