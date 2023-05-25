@@ -182,46 +182,22 @@ latlongOrthoAddress <- function(multi.core = TRUE, radius = 60) {
       ortho.pts <- data.frame(x.proj, y.proj)
       data.frame(road.segment = seg, ortho.pts, ortho.dist)
     } else {
-      null.out <- data.frame(matrix(NA, ncol = 4))
-      names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
-      null.out
+      # pick nearest segment endpoint
+      
+      dist.to.endpts <- vapply(seq_len(nrow(seg.df)), function(i) {
+        stats::dist(rbind(case, seg.df[i, ]))
+      }, numeric(1L))
+
+      sel <- which.min(dist.to.endpts)
+      out <- data.frame(seg, seg.df[sel, ], dist.to.endpts[sel])
+      names(out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
+      out
     }
   })
 
   coordsB <- data.frame(do.call(rbind, orthogonal.projectionB),
     case = manual.compute$addr, row.names = NULL)
-
-  ## Two manual address fixes for coordsB (edge cases) ##
-
-  coordsB.err.case <- coordsB[is.na(coordsB$road.segment), "case"]
-  recompute <- manual.compute[manual.compute$addr %in% coordsB.err.case, ]
-
-  #    addr   seg
-  # 5   175 259-2
-  # 12  462 269-1
-
-  # caseLocator(175)
-  addr <- 175
-  rd.seg  <- "259-2"
-  case <- geo.addr[geo.addr$id == addr, ]
-  x.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "x2"]
-  y.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "y2"]
-  ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
-  vars <- c("x.proj", "y.proj", "ortho.dist")
-  coordsB[coordsB$case == addr, vars] <- c(x.proj, y.proj, ortho.dist)
-  coordsB[coordsB$case == addr, "road.segment"] <- rd.seg
-
-  # caseLocator(462)
-  addr <- 462
-  rd.seg  <- "269-1"
-  case <- geo.addr[geo.addr$id == addr, ]
-  x.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "x2"]
-  y.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "y2"]
-  ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
-  vars <- c("x.proj", "y.proj", "ortho.dist")
-  coordsB[coordsB$case == addr, vars] <- c(x.proj, y.proj, ortho.dist)
-  coordsB[coordsB$case == addr, "road.segment"] <- rd.seg
-
+  
   coords <- rbind(coordsA, coordsB)
   coords <- coords[order(coords$case), ]
 
