@@ -1,3 +1,8 @@
+### cholera 0.8.0.9037
+
+- amend latlong.ortho.addr using amended latlongOrthoAddress().
+
+
 ### cholera 0.8.0.9036
 
 - choose nearest road segment endpoint for manual reclassification cases that 
