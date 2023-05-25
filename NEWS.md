@@ -1,3 +1,9 @@
+### cholera 0.8.0.9036
+
+- choose nearest road segment endpoint for manual reclassification cases that 
+  fail bisection test in latlongOrthoAddress(). 
+
+
 ### cholera 0.8.0.9035
 
 - amend latlong.ortho.addr for GCP v.02.
