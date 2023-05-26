@@ -15,13 +15,10 @@ neighborhoodData <- function(vestry = FALSE, case.set = "observed",
     stop('case.set must be "observed", "expected" or "snow".')
   }
 
-  if (case.set == "expected") {
-    args <- list(embed = embed, embed.landmarks = embed.landmarks,
-      vestry = vestry, observed = FALSE)
-  } else {
-    args <- list(embed = embed, embed.landmarks = embed.landmarks,
-      vestry = vestry)
-  }
+  args <- list(embed = embed, embed.landmarks = embed.landmarks,
+    vestry = vestry)
+
+  if (case.set == "expected") args$observed <- FALSE
 
   node.data <- do.call("nodeData", args)
   nodes <- node.data$nodes
@@ -86,20 +83,23 @@ nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
 
     if (observed) {
       if (vestry) {
-        nodes <- lapply(edits, embedSites, vestry = TRUE)
-        edges <- lapply(edits, embedSites, type = "edges", vestry = TRUE)
+        nodes <- lapply(edits, embedSites, ortho.pump, vestry = TRUE)
+        edges <- lapply(edits, embedSites, ortho.pump, type = "edges",
+          vestry = TRUE)
       } else {
-        nodes <- lapply(edits, embedSites)
-        edges <- lapply(edits, embedSites, type = "edges")
+        nodes <- lapply(edits, embedSites, ortho.pump)
+        edges <- lapply(edits, embedSites, ortho.pump, type = "edges")
       }
     } else {
       if (vestry) {
-        nodes <- lapply(edits, embedSites, observed = FALSE, vestry = TRUE)
-        edges <- lapply(edits, embedSites, type = "edges", observed = FALSE,
+        nodes <- lapply(edits, embedSites, ortho.pump, observed = FALSE,
           vestry = TRUE)
+        edges <- lapply(edits, embedSites, ortho.pump, type = "edges",
+          observed = FALSE, vestry = TRUE)
       } else {
-        nodes <- lapply(edits, embedSites, observed = FALSE)
-        edges <- lapply(edits, embedSites, type = "edges", observed = FALSE)
+        nodes <- lapply(edits, embedSites, ortho.pump, observed = FALSE)
+        edges <- lapply(edits, embedSites, ortho.pump, type = "edges",
+          observed = FALSE)
       }
     }
 
@@ -185,12 +185,8 @@ nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
   }
 }
 
-embedSites <- function(id, type = "nodes", observed = TRUE, vestry = FALSE) {
-  if (vestry) {
-    ortho.pump <- cholera::ortho.proj.pump.vestry
-  } else {
-    ortho.pump <- cholera::ortho.proj.pump
-  }
+embedSites <- function(id, ortho.pump, type = "nodes", observed = TRUE,
+  vestry = FALSE) {
 
   road.data <- cholera::road.segments[cholera::road.segments$id == id, ]
 
