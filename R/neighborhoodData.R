@@ -108,8 +108,8 @@ nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
     edges <- do.call(rbind, edges)
     road.segments <- cholera::road.segments
     road.segments <- road.segments[road.segments$id %in% edits == FALSE, ]
-    road.segments$node1 <- paste0(road.segments$x1, "-", road.segments$y1)
-    road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
+    road.segments$node1 <- paste0(road.segments$x1, "_&_", road.segments$y1)
+    road.segments$node2 <- paste0(road.segments$x2, "_&_", road.segments$y2)
 
     if (observed) {
       road.segments$id2 <- paste0(road.segments$id, "a")
@@ -155,8 +155,8 @@ nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
     list(nodes = nodes, edges = edges, g = g)
 
   } else {
-    road.segments$node1 <- paste0(road.segments$x1, "-", road.segments$y1)
-    road.segments$node2 <- paste0(road.segments$x2, "-", road.segments$y2)
+    road.segments$node1 <- paste0(road.segments$x1, "_&_", road.segments$y1)
+    road.segments$node2 <- paste0(road.segments$x2, "_&_", road.segments$y2)
 
     if (observed) {
       road.segments$id2 <- paste0(road.segments$id, "a")
@@ -310,15 +310,15 @@ embedSites <- function(id, ortho.pump, type = "nodes", observed = TRUE,
   }
 
   row.names(nodes) <- NULL
-  nodes$node <- paste0(nodes$x.proj, "-", nodes$y.proj)
+  nodes$node <- paste0(nodes$x.proj, "_&_", nodes$y.proj)
 
   # Edges
 
   sel <- c("x.proj", "y.proj")
   edges <- cbind(nodes[-nrow(nodes), sel], nodes[-1, sel])
   names(edges) <- c("x1", "y1", "x2", "y2")
-  edges$node1 <- paste0(edges$x1, "-", edges$y1)
-  edges$node2 <- paste0(edges$x2, "-", edges$y2)
+  edges$node1 <- paste0(edges$x1, "_&_", edges$y1)
+  edges$node2 <- paste0(edges$x2, "_&_", edges$y2)
 
   edges <- cbind(road.data[1, c("street", "id", "name")], edges,
     row.names = NULL)

@@ -326,7 +326,7 @@ quandrantCoordinates <- function(dat, h, theta) {
 }
 
 numericNodeCoordinates <- function(x) {
-  nodes <- do.call(rbind, (strsplit(x, "-")))
+  nodes <- do.call(rbind, (strsplit(x, "_&_")))
   data.frame(x = as.numeric(nodes[, 1]), y = as.numeric(nodes[, 2]))
 }
 
