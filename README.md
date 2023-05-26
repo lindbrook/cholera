@@ -7,8 +7,11 @@
 #### package features
 
 - Fixes two sets of errors in Dodson and Tobler’s 1992 digitization of
-  Snow’s map: 1) three misplaced cases/fatalities and 2) one missing
-  road segment (Clifford Street).
+  Snow’s map: 1) [three misplaced
+  cases/fatalities](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md)
+  and 2) [one missing road
+  segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md)
+  (part of Clifford Street).
 - “Unstacks” the data in two ways to make analysis and visualization
   easier and more meaningful.
 - Computes and visualizes “pump neighborhoods” based on Euclidean
