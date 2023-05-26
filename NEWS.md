@@ -1,3 +1,9 @@
+### cholera 0.8.0.9039
+
+- use "_&_" as coordinate delimeter in embedSites(), nodeData() and 
+  numericNodeCoordinates().
+  
+
 ### cholera 0.8.0.9038
 
 - add/use embedSites(ortho.pump).
