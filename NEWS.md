@@ -1,3 +1,8 @@
+### cholera 0.8.0.9038
+
+- add/use embedSites(ortho.pump).
+
+
 ### cholera 0.8.0.9037
 
 - amend latlong.ortho.addr using amended latlongOrthoAddress().
