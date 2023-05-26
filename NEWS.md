@@ -1,3 +1,8 @@
+### cholera 0.8.0.9040
+
+- use serialization format version 3 for fatalities, fatalities.address and 
+  fatalities.unstacked.
+
 ### cholera 0.8.0.9039
 
 - use "_&_" as coordinate delimeter in embedSites(), nodeData() and 
