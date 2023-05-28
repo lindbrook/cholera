@@ -1,7 +1,13 @@
+### cholera 0.8.0.9041
+
+- set col = "gray" for roads in plot.voronoi().
+
+
 ### cholera 0.8.0.9040
 
 - use serialization format version 3 for fatalities, fatalities.address and 
   fatalities.unstacked.
+  
 
 ### cholera 0.8.0.9039
 

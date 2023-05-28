@@ -189,7 +189,7 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delaunay.triangles = FALSE,
 
   plot(cholera::fatalities.address[, c("x", "y")], xlim = x$x.rng,
     ylim = x$y.rng, pch = NA, asp = 1)
-  invisible(lapply(roads.list, lines, col = "lightgray"))
+  invisible(lapply(roads.list, lines, col = "gray"))
   invisible(lapply(border.list, lines))
 
   if (is.null(x$pump.select)) {
