@@ -1,3 +1,9 @@
+### cholera 0.8.0.9043
+
+- set case.location = c("address" "fatality"); use ortho.proj with 
+  case.location = "address".
+
+
 ### cholera 0.8.0.9042
 
 - use plotLatlongEuclideanPaths() in latlongNeighborhoodVoronoi().
