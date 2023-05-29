@@ -1,3 +1,8 @@
+### cholera 0.8.0.9042
+
+- use plotLatlongEuclideanPaths() in latlongNeighborhoodVoronoi().
+
+
 ### cholera 0.8.0.9041
 
 - set col = "gray" for roads in plot.voronoi().
