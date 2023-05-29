@@ -63,30 +63,7 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.cases = TRUE,
   }
 
   if (euclidean.paths) {
-    cases <- cholera::fatalities.address
-
-    if (is.null(pump.select)) p.id <- x$pump.data$id
-    else p.id <- pump.select
-
-    nearest.pump <- do.call(rbind, lapply(cases$anchor, function(a) {
-      m1 <- as.matrix(cases[cases$anchor == a, vars])
-      d <- vapply(p.id, function(p) {
-        m2 <- as.matrix(x$pump.data[x$pump.data$id == p, vars])
-        sp::spDistsN1(m1, m2, longlat = TRUE) * 1000L
-      }, numeric(1L))
-      near.id <- which.min(d)
-      if (is.null(pump.select)) p.nr <- x$pump.data$id[near.id]
-      else p.nr <- p.id[near.id]
-      data.frame(case = a, pump = p.nr, meters = d[near.id])
-    }))
-
-    invisible(lapply(nearest.pump$case, function(c) {
-      ego <- cases[cases$anchor == c, vars]
-      p <- nearest.pump[nearest.pump$case == c, "pump"]
-      alter <- x$pump.data[x$pump.data$id == p, vars]
-      segments(ego$lon, ego$lat, alter$lon, alter$lat,
-               col = snow.colors[paste0("p", p)], lwd = 0.5)
-    }))
+    plotLatlongEuclideanPaths(x, pump.select, snow.colors, vars)
   } else {
     case.partition <- lapply(x$statistic.data, function(dat) {
       cholera::fatalities.address$anchor[dat == 1]
@@ -97,6 +74,33 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.cases = TRUE,
         pch = 20, cex = 0.75)
     }))
   }
+}
+
+plotLatlongEuclideanPaths <- function(x, pump.select, snow.colors, vars) {
+  cases <- cholera::fatalities.address
+
+  if (is.null(pump.select)) p.id <- x$pump.data$id
+  else p.id <- pump.select
+
+  nearest.pump <- do.call(rbind, lapply(cases$anchor, function(a) {
+    m1 <- as.matrix(cases[cases$anchor == a, vars])
+    d <- vapply(p.id, function(p) {
+    m2 <- as.matrix(x$pump.data[x$pump.data$id == p, vars])
+      sp::spDistsN1(m1, m2, longlat = TRUE) * 1000L
+    }, numeric(1L))
+    near.id <- which.min(d)
+    if (is.null(pump.select)) p.nr <- x$pump.data$id[near.id]
+    else p.nr <- p.id[near.id]
+    data.frame(case = a, pump = p.nr, meters = d[near.id])
+  }))
+
+  invisible(lapply(nearest.pump$case, function(c) {
+    ego <- cases[cases$anchor == c, vars]
+    p <- nearest.pump[nearest.pump$case == c, "pump"]
+    alter <- x$pump.data[x$pump.data$id == p, vars]
+    segments(ego$lon, ego$lat, alter$lon, alter$lat,
+             col = snow.colors[paste0("p", p)], lwd = 0.5)
+  }))
 }
 
 #' Print method for latlongNeighborhoodVoronoi().
