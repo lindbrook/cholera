@@ -134,6 +134,8 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75) {
 # latlong.sim.ortho.proj <- cholera:::latlongSimulateFatalities()
 # usethis::use_data(latlong.sim.ortho.proj)
 # usethis::use_data(latlong.sim.ortho.proj, overwrite = TRUE)
+# usethis::use_data(latlong.regular.cases)
+# usethis::use_data(latlong.regular.cases, overwrite = TRUE)
 
 #' Compute Cartesian latitude and longitude for simulated regular cases.
 #'
