@@ -1,3 +1,8 @@
+### cholera 0.8.0.9044
+
+- add latlongSimulateFatalities() and latlongRegularCartesianCases().
+
+
 ### cholera 0.8.0.9043
 
 - set case.location = c("address" "fatality"); use ortho.proj with 
