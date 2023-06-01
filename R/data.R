@@ -480,3 +480,31 @@
 #' @note \code{\link{pumpData}} documents the code for these data.
 #' @docType data
 "latlong.ortho.pump.vestry"
+
+#' Road "address" of simulated (i.e., "expected") cases (latlong).
+#'
+#' @format A data frame with 8 variables that records the "address" of 20,000 regularly spaced simulated Cartesian/geodesic cases regularly spaced across map.
+#' \describe{
+#'     \item{\code{case}}{numeric case ID}
+#'     \item{\code{road.segment}}{"address" road segment}
+#'     \item{\code{x.proj}}{x-coordinate}
+#'     \item{\code{y.proj}}{y-coordinate}
+#'     \item{\code{dist}}{Euclidean or orthogonal distance to home road segment}
+#'     \item{\code{type}}{type of projection: Euclidean ("eucl") or orthogonal ("ortho")}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
+#'  }
+#' @docType data
+"latlong.sim.ortho.proj"
+
+#' "Expected" cases (latlong.
+#'
+#' The result of using sp::spsample() and sp::Polygon() to generate 20,000 regularly spaced simulated Cartesian/geodesic cases within the map's borders.
+#'
+#' @format A data frame with 2 variable that records the position of 20,000 "expected" cases fitted by sp::spsample().
+#'  \describe{
+#'     \item{\code{x}}{x-coordinate}
+#'     \item{\code{y}}{y-coordinate}
+#'  }
+#' @docType data
+"latlong.regular.cases"
