@@ -1,3 +1,8 @@
+### cholera 0.8.0.9045
+
+- add latlong.sim.ortho.proj and latlong.regular.cases.
+
+
 ### cholera 0.8.0.9044
 
 - add latlongSimulateFatalities() and latlongRegularCartesianCases().
