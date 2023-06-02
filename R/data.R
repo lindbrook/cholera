@@ -497,7 +497,7 @@
 #' @docType data
 "latlong.sim.ortho.proj"
 
-#' "Expected" cases (latlong.
+#' "Expected" cases (latlong).
 #'
 #' The result of using sp::spsample() and sp::Polygon() to generate 20,000 regularly spaced simulated Cartesian/geodesic cases within the map's borders.
 #'

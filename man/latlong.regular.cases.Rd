@@ -3,7 +3,7 @@
 \docType{data}
 \name{latlong.regular.cases}
 \alias{latlong.regular.cases}
-\title{"Expected" cases (latlong.}
+\title{"Expected" cases (latlong).}
 \format{
 A data frame with 2 variable that records the position of 20,000 "expected" cases fitted by sp::spsample().
  \describe{
