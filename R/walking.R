@@ -104,7 +104,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @param tsp.method Character. Traveling salesperson problem algorithm.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
-#' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods.
+#' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. type = "roads" inspired by Shiode et. al. (2015).
 #' @export
 #' @examples
 #' \dontrun{

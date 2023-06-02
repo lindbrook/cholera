@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2023-05-17
+2023-06-02
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -118,6 +118,10 @@ New York: St Martin’s Press.
 
 James C. Riley. 1987. *The Eighteenth-Century Campaign to Avoid
 Disease*. New York: St. Martin’s Press.
+
+Shiode et al. 2015. “The mortality rates and the space-time patterns of
+John Snow’s cholera epidemic map”. *International Journal of Health
+Geographics*. 14:21.
 
 Robert Skidelsky. 2018. *Money and Government: The Past and Future of
 Economics*. New Haven: Yale University Press.

@@ -25,7 +25,7 @@ A base R plot.
 Plot method for neighborhoodWalking().
 }
 \note{
-When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods.
+When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. type = "roads" inspired by Shiode et. al. (2015).
 }
 \examples{
 \dontrun{
