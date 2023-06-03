@@ -34,19 +34,18 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE) {
 
 #' Plot method for latlongNeighborhoodVoronoi()
 #' @param x Object. Currently separate classification check.
-#' @param add.cases Logical.
 #' @param add.pumps Logical.
 #' @param euclidean.paths Logical. Currently separate classification check.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.latlongNeighborhoodVoronoi <- function(x, add.cases = TRUE,
-  add.pumps = TRUE, euclidean.paths = FALSE, ...) {
+plot.latlongNeighborhoodVoronoi <- function(x, add.pumps = TRUE, 
+  euclidean.paths = FALSE, ...) {
 
   pump.select <- x$pump.select
   vars <- c("lon", "lat")
 
-  snowMap(vestry = x$vestry, latlong = TRUE, add.cases = add.cases,
+  snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE, 
     add.pumps = FALSE)
   invisible(lapply(x$cells, function(x) polygon(x[, vars])))
   if (add.pumps) addPump(pump.select, vestry = x$vestry, latlong = TRUE)

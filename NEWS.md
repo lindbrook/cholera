@@ -1,3 +1,8 @@
+### cholera 0.8.0.9047
+
+- remove add.case argument from plot.latlongNeighborhoodVoronoi().
+
+
 ### cholera 0.8.0.9046
 
 - migrate from sp::spDistsN1() to geosphere::distGeo() in 
