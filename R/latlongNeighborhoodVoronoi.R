@@ -83,10 +83,10 @@ plotLatlongEuclideanPaths <- function(x, pump.select, snow.colors, vars) {
   else p.id <- pump.select
 
   nearest.pump <- do.call(rbind, lapply(cases$anchor, function(a) {
-    m1 <- as.matrix(cases[cases$anchor == a, vars])
+    p1 <- cases[cases$anchor == a, vars]
     d <- vapply(p.id, function(p) {
-    m2 <- as.matrix(x$pump.data[x$pump.data$id == p, vars])
-      sp::spDistsN1(m1, m2, longlat = TRUE) * 1000L
+      p2 <- x$pump.data[x$pump.data$id == p, vars]
+      geosphere::distGeo(p1, p2)
     }, numeric(1L))
     near.id <- which.min(d)
     if (is.null(pump.select)) p.nr <- x$pump.data$id[near.id]

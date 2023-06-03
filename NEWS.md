@@ -1,3 +1,9 @@
+### cholera 0.8.0.9046
+
+- migrate from sp::spDistsN1() to geosphere::distGeo() in 
+  plotLatlongEuclideanPaths().
+
+
 ### cholera 0.8.0.9045
 
 - add latlong.sim.ortho.proj and latlong.regular.cases.
