@@ -4,8 +4,8 @@
 \alias{plot.latlongNeighborhoodVoronoi}
 \title{Plot method for latlongNeighborhoodVoronoi()}
 \usage{
-\method{plot}{latlongNeighborhoodVoronoi}(x, add.cases = TRUE,
-  add.pumps = TRUE, euclidean.paths = FALSE, ...)
+\method{plot}{latlongNeighborhoodVoronoi}(x, add.pumps = TRUE,
+  euclidean.paths = FALSE, ...)
 }
 \arguments{
 \item{x}{Object. Currently separate classification check.}

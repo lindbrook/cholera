@@ -1,3 +1,9 @@
+### cholera 0.8.0.9048
+
+- set neighborhoodVoronoi(case.location %in% c("address", "anchor")).
+- fix pumpTokens() for negative selection in plot.voronoi().
+
+
 ### cholera 0.8.0.9047
 
 - remove add.case argument from plot.latlongNeighborhoodVoronoi().
