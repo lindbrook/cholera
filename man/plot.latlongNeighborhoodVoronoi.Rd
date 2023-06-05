@@ -10,8 +10,6 @@
 \arguments{
 \item{x}{Object. Currently separate classification check.}
 
-\item{add.cases}{Logical.}
-
 \item{add.pumps}{Logical.}
 
 \item{euclidean.paths}{Logical. Currently separate classification check.}
