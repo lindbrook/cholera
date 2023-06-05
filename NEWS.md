@@ -2,6 +2,7 @@
 
 - set neighborhoodVoronoi(case.location %in% c("address", "anchor")).
 - fix pumpTokens() for negative selection in plot.voronoi().
+- use only address(es) or anchor(s) for plot.voronoi(euclidean.paths = TRUE).
 
 
 ### cholera 0.8.0.9047

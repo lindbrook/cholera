@@ -238,11 +238,13 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delaunay.triangles = FALSE,
     invisible(lapply(names(voronoi.case.id), function(nm) {
       p.data <- pump.data[paste0("p", pump.data$id) == nm, ]
       if (x$case.location == "address") {
-        sel <- cholera::ortho.proj$case %in% voronoi.case.id[[nm]]
-        n.data <- cholera::ortho.proj[sel, ]
+        sel <- voronoi.case.id[[nm]] %in% cholera::fatalities.address$anchor
+        n.anchor <- voronoi.case.id[[nm]][sel]
+        n.data <- cholera::ortho.proj[cholera::ortho.proj$case %in% n.anchor, ]
       } else if (x$case.location == "anchor") {
         sel <- cholera::fatalities.address$anchor %in% voronoi.case.id[[nm]]
         n.data <- cholera::fatalities.address[sel, ]
+        names(n.data)[names(n.data) == "anchor"] <- "case"
       }
 
       n.color <- x$snow.colors[nm]
