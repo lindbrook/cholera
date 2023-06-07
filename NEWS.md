@@ -1,3 +1,8 @@
+### cholera 0.8.0.9051
+
+- use plotLatlongVoronoiCases().
+
+
 ### cholera 0.8.0.9050
 
 - use "address" or "orthogonal" for case.location and pump.location.

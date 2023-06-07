@@ -87,25 +87,7 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.pumps = TRUE,
   if (euclidean.paths) {
     plotLatlongEuclideanPaths(x, pump.select, snow.colors, vars)
   } else {
-    if (x$case.location == "address") {
-      case.partition <- lapply(x$statistic.data, function(dat) {
-        cholera::fatalities.address$anchor[dat == 1]
-      })
-      invisible(lapply(seq_along(case.partition), function(i) {
-        sel <- cholera::fatalities.address$anchor %in% case.partition[[i]]
-        points(cholera::fatalities.address[sel, vars], col = snow.colors[i],
-          pch = 20, cex = 0.75)
-      }))
-    } else if (x$case.location == "orthogonal") {
-      case.partition <- lapply(x$statistic.data, function(dat) {
-        cholera::latlong.ortho.addr$case[dat == 1]
-      })
-      invisible(lapply(seq_along(case.partition), function(i) {
-        sel <- cholera::latlong.ortho.addr$case %in% case.partition[[i]]
-        points(cholera::latlong.ortho.addr[sel, vars], col = snow.colors[i],
-          pch = 20, cex = 0.75)
-      }))
-    }
+    plotLatlongVoronoiCases(x, snow.colors, vars)
   }
 }
 
@@ -134,6 +116,28 @@ plotLatlongEuclideanPaths <- function(x, pump.select, snow.colors, vars) {
     segments(ego$lon, ego$lat, alter$lon, alter$lat,
              col = snow.colors[paste0("p", p)], lwd = 0.5)
   }))
+}
+
+plotLatlongVoronoiCases <- function(x, snow.colors, vars) {
+  if (x$case.location == "address") {
+    case.partition <- lapply(x$statistic.data, function(dat) {
+      cholera::fatalities.address$anchor[dat == 1]
+    })
+    invisible(lapply(seq_along(case.partition), function(i) {
+      sel <- cholera::fatalities.address$anchor %in% case.partition[[i]]
+      points(cholera::fatalities.address[sel, vars], col = snow.colors[i],
+        pch = 20, cex = 0.75)
+    }))
+  } else if (x$case.location == "orthogonal") {
+    case.partition <- lapply(x$statistic.data, function(dat) {
+      cholera::latlong.ortho.addr$case[dat == 1]
+    })
+    invisible(lapply(seq_along(case.partition), function(i) {
+      sel <- cholera::latlong.ortho.addr$case %in% case.partition[[i]]
+      points(cholera::latlong.ortho.addr[sel, vars], col = snow.colors[i],
+        pch = 20, cex = 0.75)
+    }))
+  }
 }
 
 #' Print method for latlongNeighborhoodVoronoi().
