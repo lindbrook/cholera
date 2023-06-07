@@ -1,3 +1,9 @@
+### cholera 0.8.0.9049
+
+- add/set latlongNeighborhoodVoronoi(case.location = "anchor", 
+  pump.location = "nominal")
+
+
 ### cholera 0.8.0.9048
 
 - set neighborhoodVoronoi(case.location %in% c("address", "anchor")).
