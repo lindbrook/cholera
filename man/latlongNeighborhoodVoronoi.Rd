@@ -5,16 +5,16 @@
 \title{Compute Voronoi pump neighborhoods (lat-long prototype).}
 \usage{
 latlongNeighborhoodVoronoi(pump.select = NULL, vestry = FALSE,
-  case.location = "anchor", pump.location = "nominal")
+  case.location = "address", pump.location = "address")
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
-\item{case.location}{Character. "address" or "anchor". "address" uses the longitude and latitude of \code{latlong.ortho.address}. "anchor" uses the longitude and latitude of \code{fatalities.address}.}
+\item{case.location}{Character. "address" or "orthogonal". "address" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.}
 
-\item{pump.location}{Character. "address" or "nominal". "address" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}. "nominal" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}.}
+\item{pump.location}{Character. "address" or "orthogonal". "address" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}.}
 }
 \description{
 Group cases into neighborhoods using Voronoi tessellation.
