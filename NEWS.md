@@ -1,3 +1,8 @@
+### cholera 0.8.0.9050
+
+- use "address" or "orthogonal" for case.location and pump.location.
+
+
 ### cholera 0.8.0.9049
 
 - add/set latlongNeighborhoodVoronoi(case.location = "anchor", 
