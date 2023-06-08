@@ -80,8 +80,20 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.pumps = TRUE,
     points(unselected[, vars], pch = 2, col = "gray")
     text(unselected[, vars], labels = paste0("p", unselected$id), pos = 1,
       col = "gray")
+    if (x$case.location == "address") {
+      title(main = paste0("Pump Neighborhoods: Voronoi (address)", "\n",
+        "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+    } else if (x$case.location == "orthogonal") {
+      title(main = paste0("Pump Neighborhoods: Voronoi (orthogonal)", "\n",
+        "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+    }
   } else {
     snow.colors <- snowColors(vestry = x$vestry)
+    if (x$case.location == "address") {
+      title(main = "Pump Neighborhoods: Voronoi (address)")
+    } else if (x$case.location == "orthogonal") {
+      title(main = "Pump Neighborhoods: Voronoi (orthogonal)")
+    }
   }
 
   if (euclidean.paths) {
