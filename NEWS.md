@@ -1,3 +1,8 @@
+### cholera 0.8.0.9052
+
+- add title to plot.latlongNeighborhoodVoronoi().
+
+
 ### cholera 0.8.0.9051
 
 - use plotLatlongVoronoiCases().
