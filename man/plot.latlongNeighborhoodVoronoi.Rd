@@ -8,11 +8,11 @@
   euclidean.paths = FALSE, ...)
 }
 \arguments{
-\item{x}{Object. Currently separate classification check.}
+\item{x}{Object.}
 
 \item{add.pumps}{Logical.}
 
-\item{euclidean.paths}{Logical. Currently separate classification check.}
+\item{euclidean.paths}{Logical.}
 
 \item{...}{Additional plotting parameters.}
 }

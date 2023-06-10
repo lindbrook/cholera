@@ -56,9 +56,9 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 }
 
 #' Plot method for latlongNeighborhoodVoronoi()
-#' @param x Object. Currently separate classification check.
+#' @param x Object.
 #' @param add.pumps Logical.
-#' @param euclidean.paths Logical. Currently separate classification check.
+#' @param euclidean.paths Logical.
 #' @param ... Additional plotting parameters.
 #' @export
 
