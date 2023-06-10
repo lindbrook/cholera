@@ -1,3 +1,8 @@
+### cholera 0.8.0.9053
+
+- add latlongNeighborhoodEuclidean().
+
+
 ### cholera 0.8.0.9052
 
 - add title to plot.latlongNeighborhoodVoronoi().
