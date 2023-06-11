@@ -8,7 +8,6 @@
 #' @param add.pumps Logical. Add pumps.
 #' @param add.roads Logical. Add roads.
 #' @param add.frame Logical. Add map frame.
-#' @param add.tanaka Logical. Add latlong Tanaka contour plot.
 #' @param main Character. Title of graph.
 #' @param case.col Character. Color of fatalities.
 #' @param case.pch Character. Color of fatalities.
@@ -23,10 +22,8 @@
 
 snowMap <- function(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
   add.cases = TRUE, add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE,
-  add.frame = TRUE, add.tanaka = FALSE, main = NA, case.col = "gray",
+  add.frame = TRUE, main = NA, case.col = "gray",
   case.pch = 15, latlong = FALSE, ...) {
-
-  if (add.tanaka == TRUE & latlong == FALSE) latlong <- TRUE
 
   if (latlong) {
     vars <- c("lon", "lat")
@@ -53,23 +50,12 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
       ...)
   }
 
-  if (latlong & add.tanaka) {
-    tanakaContourPlot(add = TRUE)
-    if (add.roads) addRoads(latlong = latlong, col = "black")
-    if (add.cases) {
-      points(cases[, vars], pch = 16, col = "white", cex = 0.5)
-    }
-    if (add.pumps) {
-      addPump(vestry = vestry, col = "white", pch = 2, latlong = latlong)
-    }
-  } else if (add.tanaka == FALSE) {
-    if (add.roads) addRoads(latlong = latlong)
-    if (add.cases) {
-      points(cases[, vars], pch = case.pch, col = case.col, cex = 0.5)
-    }
-    if (add.pumps) {
-      addPump(vestry = vestry, col = "blue", pch = 2, latlong = latlong)
-    }
+  if (add.roads) addRoads(latlong = latlong)
+  if (add.cases) {
+    points(cases[, vars], pch = case.pch, col = case.col, cex = 0.5)
+  }
+  if (add.pumps) {
+    addPump(vestry = vestry, col = "blue", pch = 2, latlong = latlong)
   }
   if (add.landmarks) addLandmarks(latlong = latlong)
   if (add.frame) addFrame(latlong = latlong)

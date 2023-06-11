@@ -1,3 +1,8 @@
+### cholera 0.8.0.9054
+
+- temporarily archive tanakaContourPlot() for 'sp' evolution.
+
+
 ### cholera 0.8.0.9053
 
 - add latlongNeighborhoodEuclidean().
