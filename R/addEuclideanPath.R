@@ -94,7 +94,7 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
       edge.intercept <- stats::coef(ols)[1]
       theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
 
-      p.coords <- quandrantCoordinates(dat, h, theta)
+      p.coords <- quandrantCoordinates(dat[2:1, ], h, theta)
       post.data <- data.frame(x = c(p.coords$x, origin.xy$x.proj),
                               y = c(p.coords$y, origin.xy$y.proj))
 

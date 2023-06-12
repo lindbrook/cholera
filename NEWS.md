@@ -1,3 +1,8 @@
+### cholera 0.8.0.9055
+
+- fix euclideanPath() and addEuclideanPath() for revised quandrantCoordinates().
+
+
 ### cholera 0.8.0.9054
 
 - temporarily archive tanakaContourPlot() for 'sp' evolution.
