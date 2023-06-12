@@ -807,7 +807,7 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
 
   d.unit <- distanceUnit(x$distance.unit)
   nominal.time <- nominalTime(x$t, x$time.unit)
-  
+
   # mileposts #
 
   if (is.null(unit.posts)) {
@@ -849,7 +849,7 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
       edge.intercept <- stats::coef(ols)[1]
       theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
 
-      post.coords <- quandrantCoordinates(dat, h, theta)
+      post.coords <- quandrantCoordinates(dat[2:1, ], h, theta)
 
       arrow.data <- data.frame(x = c(post.coords$x, ego.xy$x),
                                y = c(post.coords$y, ego.xy$y))
