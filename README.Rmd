@@ -151,25 +151,27 @@ Six functions are available:
 snowMap(latlong = TRUE)
 ```
 
-```{r latlong_voronoi, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
-plot(latlongNeighborhoodVoronoi(), euclidean.paths = TRUE)
-```
-
 ```{r latlong_walking_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
 plot(latlongWalkingPath())
-
 ```
 
 ```{r latlong_euclidean_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
 plot(latlongEuclideanPath())
+```
 
+```{r latlong_euclidean, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
+plot(latlongNeighborhoodEuclidean())
+```
+
+```{r latlong_voronoi, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
+plot(latlongNeighborhoodVoronoi())
 ```
 
 ```{r latlong_walking, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
 plot(latlongNeighborhoodWalking())
 ```
 
-```{r tanaka}
+```{r tanaka, eval = FALSE, echo = FALSE}
 tanakaContourPlot()
 addRoads(latlong = TRUE, col = "white")
 addPump(latlong = TRUE, col = "white")
