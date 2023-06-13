@@ -151,12 +151,14 @@ Six functions are available:
 snowMap(latlong = TRUE)
 ```
 
-```{r latlong_walking_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
+```{r latlong_walking_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%", fig.show = "hold"}
 plot(latlongWalkingPath())
+plot(walkingPath())  # Dodson and Tobler native scale for comparison
 ```
 
-```{r latlong_euclidean_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
+```{r latlong_euclidean_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%", fig.show = "hold"}
 plot(latlongEuclideanPath())
+plot(euclideanPath())  # Dodson and Tobler native scale for comparison
 ```
 
 ```{r latlong_euclidean, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}

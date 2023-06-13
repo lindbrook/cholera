@@ -255,15 +255,17 @@ snowMap(latlong = TRUE)
 
 ``` r
 plot(latlongWalkingPath())
+plot(walkingPath())  # Dodson and Tobler native scale for comparison
 ```
 
-<img src="man/figures/README-latlong_walking_path-1.png" width="50%" />
+<img src="man/figures/README-latlong_walking_path-1.png" width="50%" /><img src="man/figures/README-latlong_walking_path-2.png" width="50%" />
 
 ``` r
 plot(latlongEuclideanPath())
+plot(euclideanPath())  # Dodson and Tobler native scale for comparison
 ```
 
-<img src="man/figures/README-latlong_euclidean_path-1.png" width="50%" />
+<img src="man/figures/README-latlong_euclidean_path-1.png" width="50%" /><img src="man/figures/README-latlong_euclidean_path-2.png" width="50%" />
 
 ``` r
 plot(latlongNeighborhoodEuclidean())
