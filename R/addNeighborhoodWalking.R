@@ -102,13 +102,6 @@ addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
       title(main = paste0("Pump Neighborhoods: Walking", "\n", "Pumps ",
         paste(sort(w$pump.select), collapse = ", ")))
     }
-  
-
-
-
-
-
-
 
   } else {
     if (is.null(path) == FALSE) {

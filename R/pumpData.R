@@ -109,7 +109,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = TRUE) {
         out <- out[1, ]
       }
 
-      out$node <- paste0(out$x.proj, "-", out$y.proj)
+      out$node <- paste0(out$x.proj, "_&_", out$y.proj)
       out$pump.id <- pump
       row.names(out) <- NULL
       out
@@ -118,3 +118,9 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = TRUE) {
   do.call(rbind, orthogonal.projection)
   }
 }
+
+# ortho.proj.pump <- pumpData(orthogonal = TRUE)
+# ortho.proj.pump.vestry <- pumpData(orthogonal = TRUE, vestry = TRUE)
+# usethis::use_data(ortho.proj.pump, overwrite = TRUE)
+# usethis::use_data(ortho.proj.pump.vestry, overwrite = TRUE)
+
