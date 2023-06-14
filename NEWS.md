@@ -1,3 +1,9 @@
+### cholera 0.8.0.9056
+
+- use "_&_" as coordinate delimeter in ortho.proj.pump and 
+  ortho.proj.pump.vestry.
+
+
 ### cholera 0.8.0.9055
 
 - fix euclideanPath() and addEuclideanPath() for revised quandrantCoordinates().

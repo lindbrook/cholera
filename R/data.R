@@ -202,8 +202,6 @@
 #'     \item{\code{y.proj}}{y-coordinate}
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{node}}{node ID}
-#'     \item{\code{lon}}{longitude}
-#'     \item{\code{lat}}{latitude}
 #'  }
 #' @note \code{\link{pumpData}} documents the code for these data.
 #' @docType data
@@ -219,8 +217,6 @@
 #'     \item{\code{y.proj}}{y-coordinate}
 #'     \item{\code{ortho.dist}}{orthogonal distance to home road segment}
 #'     \item{\code{node}}{node ID}
-#'     \item{\code{lon}}{longitude}
-#'     \item{\code{lat}}{latitude}
 #'  }
 #' @note \code{\link{pumpData}} documents the code for these data.
 #' @docType data
