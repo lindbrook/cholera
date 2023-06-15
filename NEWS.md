@@ -1,3 +1,8 @@
+### cholera 0.8.0.9057
+
+- amend pumpTokens() for negative selection.
+
+
 ### cholera 0.8.0.9056
 
 - use "_&_" as coordinate delimeter in ortho.proj.pump and 

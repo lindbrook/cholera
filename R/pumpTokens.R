@@ -38,7 +38,7 @@ pumpTokens <- function(x, type) {
       pos.labels <- paste0("p", dat$id[sel])
       neg.labels <- paste0("p", dat$id[!sel])
 
-      points(pos.data, pch = 24, lwd = 2, col = x$snow.colors)
+      points(pos.data, pch = 24, lwd = 2, col = x$snow.colors[sel])
       text(pos.data, pos = 1, cex = 0.9, labels = pos.labels)
       points(neg.data, pch = 24, lwd = 1, col = "gray")
       text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
