@@ -12,7 +12,7 @@
 #   map.frame <- cholera::roads[cholera::roads$name == "Map Frame", vars]
 #   map.range <- data.frame(x = range(map.frame$lon), y = range(map.frame$lat))
 #   elev.soho <- elevatr::get_elev_raster(locations = map.range, z = 10,
-#     prj = "EPSG:4326", clip = "locations")
+#     prj = "EPSG:4326", clip = "locations", verbose = TRUE)
 #   elev.raster <- terra::rast(elev.soho)
 #   tanaka::tanaka(elev.raster, add = add)
 # }
