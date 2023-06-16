@@ -3,8 +3,8 @@
 #' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
 #' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns the closest pump, "anchor" case or landmark.
 #' @param type Character "case-pump", "cases" or "pumps".
-#' @param observed Logical. Use observed or "simulated" expected data.
-#' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.
+#' @param case.location Character. "address" or "orthogonal". For \code{case.set = "observed"}: "address" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "address" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.
+#' @param case.set Character. "observed" or "expected".
 #' @param landmark.cases Logical. \code{TRUE} includes landmarks as cases.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
@@ -39,7 +39,7 @@
 #' plot(euclideanPath(1))
 
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, case.location = "nominal", landmark.cases = TRUE,
+  case.location = "address", case.set = "observed", landmark.cases = TRUE,
   vestry = FALSE, distance.unit = "meter", time.unit = "second",
   walking.speed = 5) {
 
@@ -63,20 +63,27 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     if (type != "cases") stop('type must be "cases".', call. = FALSE)
   }
 
-  if (case.location %in% c("address", "nominal") == FALSE) {
-    stop('case.location must be "address" or "nominal".', call. = FALSE)
+  if (!case.location %in% c("address", "orthogonal")) {
+    stop('case.location must be "address" or "orthogonal".', call. = FALSE)
   }
 
-  obs.ct <- nrow(cholera::fatalities)
-  exp.ct <- nrow(cholera::regular.cases)
+  if (!case.set %in% c("observed", "expected")) {
+    stop('case.set must be "observed" or "expected".', call. = FALSE)
+  }
 
-  if (observed) {
-    ct <- obs.ct
-  } else {
-    ct <- exp.ct
+  if (case.set == "observed") {
+    ct <- nrow(cholera::fatalities)
+  } else if (case.set == "expected") {
+    ct <- nrow(cholera::regular.cases)
   }
 
   if (case.location == "address") {
+    if (vestry) {
+      p.data <- cholera::pumps.vestry
+    } else {
+      p.data <- cholera::pumps
+    }
+  } else if (case.location == "orthogonal") {
     if (vestry) {
       p.data <- cholera::ortho.proj.pump.vestry
       p.data$street <- cholera::pumps.vestry$street
@@ -84,23 +91,17 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       p.data <- cholera::ortho.proj.pump
       p.data$street <- cholera::pumps$street
     }
-  } else if (case.location == "nominal") {
-    if (vestry) {
-      p.data <- cholera::pumps.vestry
-    } else {
-      p.data <- cholera::pumps
-    }
   }
 
   p.count <- nrow(p.data)
   p.ID <- seq_len(p.count)
 
   if (case.location == "address") {
-    coords <- c("x.proj", "y.proj")
-    pump.var <- "pump.id"
-  } else if (case.location == "nominal") {
     coords <- c("x", "y")
     pump.var <- "id"
+  } else if (case.location == "orthogonal") {
+    coords <- c("x.proj", "y.proj")
+    pump.var <- "pump.id"
   }
 
   case.coords <- c("case", coords)
@@ -125,18 +126,18 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }
 
     if (is.null(origin)) {
-      if (observed) {
+      if (case.set == "observed") {
         if (case.location == "address") {
-          egos <- cholera::ortho.proj[, case.coords]
-        } else if (case.location == "nominal") {
           egos <- cholera::fatalities[, case.coords]
+        } else if (case.location == "orthogonal") {
+          egos <- cholera::ortho.proj[, case.coords]
         }
-      } else {
+      } else if (case.set == "expected") {
         if (case.location == "address") {
-          egos <- cholera::sim.ortho.proj[, case.coords]
-        } else if (case.location == "nominal") {
           case.id <- seq_len(nrow(cholera::regular.cases))
           egos <- data.frame(case = case.id, cholera::regular.cases)
+        } else if (case.location == "orthogonal") {
+          egos <- cholera::sim.ortho.proj[, case.coords]
         }
       }
 
@@ -157,7 +158,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
         ego <- cholera::landmarks[anchor.sel, coords]
       } else {
         anchor <- nearest.case
-        if (observed) {
+        if (case.set == "observed") {
           if (case.location == "address") {
             ego.select <- cholera::ortho.proj$case == anchor
             ego <- cholera::ortho.proj[ego.select, ]
@@ -165,12 +166,12 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
             ego.select <- cholera::fatalities$case == anchor
             ego <- cholera::fatalities[ego.select, ]
           }
-        } else {
+        } else if (case.set == "expected") {
           if (case.location == "address") {
+            ego <- cholera::regular.cases[anchor, ]
+          } else if (case.location == "orthogonal") {
             ego.select <- cholera::sim.ortho.proj$case == anchor
             ego <- cholera::sim.ortho.proj[ego.select, ]
-          } else if (case.location == "nominal") {
-            ego <- cholera::regular.cases[anchor, ]
           }
         }
       }
@@ -188,30 +189,30 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     } else {
       if (is.numeric(origin)) {
         if (origin %in% seq_len(ct)) {
-          if (observed) {
+          if (case.set == "observed") {
             if (case.location == "address") {
-              ego.sel <- cholera::ortho.proj$case == origin
-              ego.id <- cholera::ortho.proj[ego.sel, "case"]
-              ego <- cholera::ortho.proj[ego.sel, coords]
-            } else if (case.location == "nominal") {
               ego.id <- origin
               ego.sel <- cholera::fatalities$case == origin
               ego <- cholera::fatalities[ego.sel, coords]
+            } else if (case.location == "orthogonal") {
+              ego.sel <- cholera::ortho.proj$case == origin
+              ego.id <- cholera::ortho.proj[ego.sel, "case"]
+              ego <- cholera::ortho.proj[ego.sel, coords]
             }
-          } else {
+          } else if (case.set == "expected") {
             if (case.location == "address") {
+              ego.id <- origin
+              ego <- cholera::regular.cases[origin, coords]
+            } else if (case.location == "orthogonal") {
               ego.sel <- cholera::sim.ortho.proj$case == origin
               ego.id <- cholera::sim.ortho.proj[ego.sel, "case"]
               ego <- cholera::sim.ortho.proj[ego.sel, coords]
-            } else if (case.location == "nominal") {
-              ego.id <- origin
-              ego <- cholera::regular.cases[origin, coords]
             }
           }
         } else {
-          txt1 <- 'With type = "case-pump" and observed = '
+          txt1 <- 'With type = "case-pump" and case.set = '
           txt2 <- 'origin must be between 1 and '
-          stop(txt1, observed, ", ", txt2, ct, ".", call. = FALSE)
+          stop(txt1, case.set, ", ", txt2, ct, ".", call. = FALSE)
         }
       }
 
@@ -284,18 +285,18 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       destination <- tmp
     }
 
-    if (observed) {
+    if (case.set == "observed") {
       if (case.location == "address") {
-        case.data <- cholera::ortho.proj[, case.coords]
-      } else if (case.location == "nominal") {
         case.data <- cholera::fatalities[, case.coords]
+      } else if (case.location == "orthogonal") {
+        case.data <- cholera::ortho.proj[, case.coords]
       }
-    } else {
+    } else if (case.set == "expected") {
       if (case.location == "address") {
-        case.data <- cholera::sim.ortho.proj[, case.coords]
-      } else if (case.location == "nominal") {
         case.id <- seq_len(nrow(cholera::regular.cases))
         case.data <- data.frame(case = case.id, cholera::regular.cases)
+      } else if (case.location == "orthogonal") {
+        case.data <- cholera::sim.ortho.proj[, case.coords]
       }
     }
 
@@ -525,10 +526,10 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }
 
     if (origin %in% p.ID == FALSE) {
-      txt1 <- 'With type = "pumps", observed = '
+      txt1 <- 'With type = "pumps", case.set = '
       txt2 <- 'and vestry = '
       txt3 <- ', the origin must be between 1 and '
-      stop(txt1, observed, ", ", txt2, vestry, txt3, ct, ".", call. = FALSE)
+      stop(txt1, case.set, ", ", txt2, vestry, txt3, ct, ".", call. = FALSE)
     } else {
       ego <- p.data[p.data[, pump.var] == origin, ]
     }
@@ -594,7 +595,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
                  origin = origin,
                  destination = destination,
                  type = type,
-                 observed = observed,
+                 case.set = case.set,
                  alters = alters,
                  vestry = vestry,
                  case.location = case.location,

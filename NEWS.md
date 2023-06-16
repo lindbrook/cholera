@@ -1,3 +1,9 @@
+### cholera 0.8.0.9058
+
+- use case.location %in% c("address", "orthogonal") and case.set %in% 
+  c("observed", "expected").
+
+
 ### cholera 0.8.0.9057
 
 - amend pumpTokens() for negative selection.
