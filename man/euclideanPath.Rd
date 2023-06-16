@@ -5,9 +5,9 @@
 \title{Compute path of the Euclidean distance between cases and/or pumps.}
 \usage{
 euclideanPath(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, case.location = "nominal", landmark.cases = TRUE,
-  vestry = FALSE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5)
+  case.location = "address", case.set = "observed",
+  landmark.cases = TRUE, vestry = FALSE, distance.unit = "meter",
+  time.unit = "second", walking.speed = 5)
 }
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
@@ -16,9 +16,9 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
-\item{observed}{Logical. Use observed or "simulated" expected data.}
+\item{case.location}{Character. "address" or "orthogonal". For \code{case.set = "observed"}: "address" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "address" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.}
 
-\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.}
+\item{case.set}{Character. "observed" or "expected".}
 
 \item{landmark.cases}{Logical. \code{TRUE} includes landmarks as cases.}
 
