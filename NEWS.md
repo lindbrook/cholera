@@ -1,3 +1,8 @@
+### cholera 0.8.0.9059
+
+- fix plot.latlong_euclidean_path(milepost.interval).
+
+
 ### cholera 0.8.0.9058
 
 - use case.location %in% c("address", "orthogonal") and case.set %in% 

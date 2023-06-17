@@ -173,11 +173,11 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
     theta <- atan(stats::coef(ols)["x"])
 
     if (x$data$distance > milepost.interval) {
-      mileposts <- seq(milepost.interval, x$data$distance, milepost.interval)
-      milepost.ratios <- mileposts / x$data$distance
+      mposts <- seq(milepost.interval, x$data$distance, milepost.interval)
+      mpost.ratios <- mposts / x$data$distance
 
       # compute milepost meter coordinates
-      milepost.coords <- lapply(milepost.ratios, function(r) {
+      milepost.coords <- lapply(mpost.ratios, function(r) {
         milepostCoordinates(r, cartesian, theta)
       })
 
@@ -191,13 +191,13 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
       milepost.coords <- meterLatLong(milepost.coords, origin, topleft, bottomright)
 
       # mileposts as arrows
-      arrow.data <- rbind(milepost.coords[, vars], x$case)
-      idx <- seq_len(nrow(arrow.data[-nrow(arrow.data), ]))
+      arrow.data <- milepost.coords[, vars]
+      idx <- seq_len(nrow(arrow.data) - 1)
 
       invisible(lapply(idx, function(i) {
         arrows(arrow.data[i, "lon"], arrow.data[i, "lat"],
                arrow.data[i + 1, "lon"], arrow.data[i + 1, "lat"],
-               code = 1, col = p.col, length = 0.0875, lwd = 3)
+               code = 2, col = p.col, length = 0.0875, lwd = 3)
       }))
     }
 
