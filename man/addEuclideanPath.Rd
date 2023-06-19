@@ -4,10 +4,11 @@
 \alias{addEuclideanPath}
 \title{Add the path for the Euclidean distance between cases and/or pumps.}
 \usage{
-addEuclideanPath(origin, destination = NULL, type = "case-pump",
-  observed = TRUE, case.location = "address", vestry = FALSE,
+addEuclideanPath(origin = 1, destination = NULL, type = "case-pump",
+  case.location = "address", case.set = "observed", vestry = FALSE,
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  unit.posts = "distance", unit.interval = NULL, alpha.level = 1)
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
+  alpha.level = 1)
 }
 \arguments{
 \item{origin}{Numeric or Integer. Numeric ID of case or pump.}
@@ -16,9 +17,9 @@ addEuclideanPath(origin, destination = NULL, type = "case-pump",
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
-\item{observed}{Logical. Use observed or simulated expected data.}
+\item{case.location}{Character. For \code{case.set = "observed"}: "address" or "orthogonal". "address" is the x-y coordinate of a bar. "orthogonal" is the x-y coordinate of a stack's "anchor" case.}
 
-\item{case.location}{Character. For \code{observed = FALSE}: "address" or "nominal". "address" is the x-y coordinate of a stack's "anchor" case. "nominal" is the x-y coordinate of a bar.}
+\item{case.set}{Character. "observed" or "expected".}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
@@ -28,9 +29,11 @@ addEuclideanPath(origin, destination = NULL, type = "case-pump",
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
-\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts; \code{NULL} for no posts.}
+\item{mileposts}{Logical. Plot mile/time posts.}
 
-\item{unit.interval}{Numeric. Sets interval between \code{unit.posts}.}
+\item{milepost.unit}{Character. "distance" for mileposts; "time" for timeposts.}
+
+\item{milepost.interval}{Numeric. Sets interval between \code{milepost.unit}.}
 
 \item{alpha.level}{Numeric. Alpha level transparency for path: a value in [0, 1].}
 }
