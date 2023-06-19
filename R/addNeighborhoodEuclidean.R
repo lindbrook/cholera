@@ -69,13 +69,13 @@ addNeighborhoodEuclidean <- function(pump.subset = NULL, pump.select = NULL,
       varlist = c("pump.id", "vestry", "case.location"))
     nearest.pump <- parallel::parLapply(cl, anchors, function(x) {
       cholera::euclideanPath(x, destination = pump.id, vestry = vestry,
-        observed = FALSE, case.location = case.location)$data$pump
+        case.set = "expected", case.location = case.location)$data$pump
     })
     parallel::stopCluster(cl)
   } else {
     nearest.pump <- parallel::mclapply(anchors, function(x) {
       euclideanPath(x, destination = pump.id, vestry = vestry,
-        observed = FALSE, case.location = case.location)$data$pump
+        case.set = "expected", case.location = case.location)$data$pump
     }, mc.cores = cores)
   }
 
