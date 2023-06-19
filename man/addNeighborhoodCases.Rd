@@ -33,7 +33,7 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 
 \item{color}{Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}}
 
-\item{case.location}{Character. For \code{metric = "euclidean"}: "address" uses \code{fatalities}; "orthogonal" uses \code{ortho.proj}.}
+\item{case.location}{Character. "address" uses \code{fatalities}; "orthogonal" uses \code{ortho.proj}.}
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
