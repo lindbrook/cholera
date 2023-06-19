@@ -3,29 +3,31 @@
 #' @param origin Numeric or Integer. Numeric ID of case or pump.
 #' @param destination Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case.
 #' @param type Character "case-pump", "cases" or "pumps".
-#' @param observed Logical. Use observed or simulated expected data.
-#' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "address" is the x-y coordinate of a stack's "anchor" case. "nominal" is the x-y coordinate of a bar.
+#' @param case.location Character. For \code{case.set = "observed"}: "address" or "orthogonal". "address" is the x-y coordinate of a bar. "orthogonal" is the x-y coordinate of a stack's "anchor" case.
+#' @param case.set Character. "observed" or "expected".
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
-#' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; \code{NULL} for no posts.
-#' @param unit.interval Numeric. Sets interval between \code{unit.posts}.
+#' @param mileposts Logical. Plot mile/time posts.
+#' @param milepost.unit Character. "distance" for mileposts; "time" for timeposts.
+#' @param milepost.interval Numeric. Sets interval between \code{milepost.unit}.
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @note Walking time is computed using \code{distanceTime()}.
 #' @return An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
 #' @export
 
-addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
-  observed = TRUE, case.location = "address", vestry = FALSE,
+addEuclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
+  case.location = "address", case.set = "observed", vestry = FALSE,
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  unit.posts = "distance", unit.interval = NULL, alpha.level = 1) {
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
+  alpha.level = 1) {
 
   arguments <- list(origin = origin,
                     destination = destination,
                     type = type,
-                    observed = observed,
                     case.location = case.location,
+                    case.set = case.set,
                     vestry = vestry,
                     distance.unit = distance.unit,
                     time.unit = time.unit,
@@ -34,22 +36,22 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
   x <- do.call(euclideanPath, arguments)
 
   colors <- snowColors(x$vestry)
-  origin.xy <- x$ego
-  alter.xy <- x$alter
-  dat <- stats::setNames(rbind(alter.xy, origin.xy), c("x", "y"))
+  origin.coords <- x$ego
+  alter.coords <- x$alter
+  dat <- stats::setNames(rbind(alter.coords, origin.coords), c("x", "y"))
 
   if (x$type == "case-pump") {
     destination.pump <- row.names(x$alter)
     case.color <- colors[paste0("p", destination.pump)]
-    points(origin.xy, col = "red")
-    text(origin.xy, labels = x$data$case, pos = 1, col = "red")
+    points(origin.coords, col = "red")
+    text(origin.coords, labels = x$data$case, pos = 1, col = "red")
   } else if (x$type == "cases" | x$type == "pumps") {
     case.color <- "blue"
     destination.case <- row.names(x$alter)
-    points(origin.xy, col = case.color)
-    points(alter.xy, col = case.color)
-    text(origin.xy, labels = x$origin, pos = 1, col = case.color)
-    text(alter.xy, labels = destination.case, pos = 1, col = case.color)
+    points(origin.coords, col = case.color)
+    points(alter.coords, col = case.color)
+    text(origin.coords, labels = x$origin, pos = 1, col = case.color)
+    text(alter.coords, labels = destination.case, pos = 1, col = case.color)
   }
 
   d.unit <- distanceUnit(x$distance.unit)
@@ -57,36 +59,33 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
 
   # mileposts #
 
-  if (is.null(unit.posts)) {
-    arrows(origin.xy$x.proj, origin.xy$y.proj,
-           alter.xy$x.proj, alter.xy$y.proj,
+  if (mileposts == FALSE) {
+    arrows(origin.coords$x, origin.coords$y, alter.coords$x, alter.coords$y,
            col = case.color, lwd = 3, length = 0.075)
   } else {
-    if (unit.posts %in% c("distance", "time") == FALSE) {
-      stop('If specified, unit.posts must be "distance" or "time".')
+    if (milepost.unit %in% c("distance", "time") == FALSE) {
+      stop('If specified, milepost.unit must be "distance" or "time".',
+        call. = FALSE)
     } else {
-      if (is.null(unit.interval)) {
-        if (unit.posts == "distance")  {
-          unit.interval <- 50
-        } else if (unit.posts == "time") {
-          unit.interval <- 60
-        }
+      if (is.null(milepost.interval)) {
+        if (milepost.unit == "distance") milepost.interval <- 50
+        else if (milepost.unit == "time") milepost.interval <- 60
       } else {
-        if (!is.numeric(unit.interval)) {
-          stop('unit.interval must be numeric.')
+        if (!is.numeric(milepost.interval)) {
+          stop('milepost.interval must be numeric.', call. = FALSE)
         }
       }
 
-      if (unit.posts == "distance") {
-        tot <- unitMeter(stats::dist(dat))
-        h <- seq(0, tot, unit.interval) / unitMeter(1)
-      } else if (unit.posts == "time") {
-        tot <- distanceTime(unitMeter(stats::dist(dat),
+      if (milepost.unit == "distance") {
+        tot <- cholera::unitMeter(stats::dist(dat))
+        h <- seq(0, tot, milepost.interval) / cholera::unitMeter(1)
+      } else if (milepost.unit == "time") {
+        tot <- distanceTime(cholera::unitMeter(stats::dist(dat),
           distance.unit = "nominal"), walking.speed = x$walking.speed)
-        h <- seq(0, tot, unit.interval) * 1000 * x$walking.speed / 60^2 /
-          unitMeter(1)
+        h <- seq(0, tot, milepost.interval) * 1000 * x$walking.speed / 60^2 /
+          cholera::unitMeter(1)
       } else {
-        stop('Specify a unit.posts')
+        stop('Specify a milepost.unit', call. = FALSE)
       }
 
       ols <- stats::lm(y ~ x, data = dat)
@@ -95,8 +94,8 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
       theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
 
       p.coords <- quandrantCoordinates(dat[2:1, ], h, theta)
-      post.data <- data.frame(x = c(p.coords$x, origin.xy$x.proj),
-                              y = c(p.coords$y, origin.xy$y.proj))
+      post.data <- data.frame(x = c(p.coords$x, origin.coords$x),
+                              y = c(p.coords$y, origin.coords$y))
 
       a.data <- cbind(post.data[-nrow(post.data), ], post.data[-1, ])
       a.data <- stats::setNames(a.data, c("x1", "y1", "x2", "y2"))
@@ -118,12 +117,6 @@ addEuclideanPath <- function(origin, destination = NULL, type = "case-pump",
                  length = 0.075, col = case.color, lwd = 3, code = 1)
         }
       }))
-    }
-
-    if (unit.posts == "distance") {
-      post.info <- paste("posts @", unit.interval, "m intervals")
-    } else if (unit.posts == "time") {
-      post.info <- paste("posts @", unit.interval, "sec intervals")
     }
   }
 }

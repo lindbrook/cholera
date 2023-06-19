@@ -1,3 +1,8 @@
+### cholera 0.8.0.9060
+
+- amend addEuclideanPath(case.location, case.set, mileposts, milepost.unit, 
+  milepost.interval).
+
 ### cholera 0.8.0.9059
 
 - fix plot.latlong_euclidean_path(milepost.interval).
