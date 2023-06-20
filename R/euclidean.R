@@ -51,16 +51,16 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
   if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
     cl <- parallel::makeCluster(cores)
     parallel::clusterExport(cl = cl, envir = environment(),
-      varlist = c("pump.id", "vestry", "observed", "case.location"))
+      varlist = c("pump.id", "vestry", "case.set", "case.location"))
     nearest.pump <- parallel::parLapply(cl, anchors, function(x) {
       cholera::euclideanPath(x, destination = pump.id, vestry = vestry,
-        observed = observed, case.location = case.location)$data$pump
+        case.set = case.set, case.location = case.location)$data$pump
     })
     parallel::stopCluster(cl)
   } else {
     nearest.pump <- parallel::mclapply(anchors, function(x) {
       euclideanPath(x, destination = pump.id, vestry = vestry,
-        observed = observed, case.location = case.location)$data$pump
+        case.set = case.set, case.location = case.location)$data$pump
     }, mc.cores = cores)
   }
 
