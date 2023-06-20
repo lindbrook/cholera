@@ -5,7 +5,7 @@
 \title{Compute Euclidean path pump neighborhoods.}
 \usage{
 neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
-  case.location = "nominal", case.set = "observed", multi.core = TRUE,
+  case.location = "address", case.set = "observed", multi.core = TRUE,
   dev.mode = FALSE)
 }
 \arguments{
@@ -13,7 +13,7 @@ neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
-\item{case.location}{Character. "address" or "nominal". For \code{observed = TRUE}: "address" uses \code{ortho.proj} and "nominal" uses \code{fatalities}. For \code{observed = TRUE}: "address" uses \code{sim.ortho.proj} and "nominal" uses \code{regular.cases}.}
+\item{case.location}{Character. "address" or "orthogonal". For \code{case.set = "observed"}: "address" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "address" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.}
 
 \item{case.set}{Character. "observed" or "expected".}
 

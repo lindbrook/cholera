@@ -1,7 +1,18 @@
+### cholera 0.8.0.9061
+
+- use case.location %in% c("address", "orthogonal") in addNeighborhoodCases().
+- use case.location %in% c("address", "orthogonal") in 
+  addNeighborhoodEuclidean(). 
+- set case.set = "expected" in euclideanPath() in addNeighborhoodEuclidean().
+- use case.location %in% c("address", "orthogonal") in neighborhoodEuclidean().
+- update parLapply() for amended addEuclideanPath().
+
+
 ### cholera 0.8.0.9060
 
 - amend addEuclideanPath(case.location, case.set, mileposts, milepost.unit, 
   milepost.interval).
+
 
 ### cholera 0.8.0.9059
 

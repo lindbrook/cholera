@@ -3,7 +3,7 @@
 #' Plots star graph from pump to its cases.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
-#' @param case.location Character. "address" or "nominal". For \code{observed = TRUE}: "address" uses \code{ortho.proj} and "nominal" uses \code{fatalities}. For \code{observed = TRUE}: "address" uses \code{sim.ortho.proj} and "nominal" uses \code{regular.cases}.
+#' @param case.location Character. "address" or "orthogonal". For \code{case.set = "observed"}: "address" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "address" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.
 #' @param case.set Character. "observed" or "expected".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
@@ -17,15 +17,15 @@
 #' }
 
 neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
-   case.location = "nominal", case.set = "observed", multi.core = TRUE,
+   case.location = "address", case.set = "observed", multi.core = TRUE,
    dev.mode = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".', call. = FALSE)
   }
 
-  if (case.location %in% c("address", "nominal") == FALSE) {
-    stop('case.location must be "address" or "nominal".', call. = FALSE)
+  if (case.location %in% c("address", "orthogonal") == FALSE) {
+    stop('case.location must be "address" or "orthogonal".', call. = FALSE)
   }
 
   cores <- multiCore(multi.core)
@@ -51,16 +51,16 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
   if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
     cl <- parallel::makeCluster(cores)
     parallel::clusterExport(cl = cl, envir = environment(),
-      varlist = c("pump.id", "vestry", "observed", "case.location"))
+      varlist = c("pump.id", "vestry", "case.set", "case.location"))
     nearest.pump <- parallel::parLapply(cl, anchors, function(x) {
       cholera::euclideanPath(x, destination = pump.id, vestry = vestry,
-        observed = observed, case.location = case.location)$data$pump
+        case.set = case.set, case.location = case.location)$data$pump
     })
     parallel::stopCluster(cl)
   } else {
     nearest.pump <- parallel::mclapply(anchors, function(x) {
       euclideanPath(x, destination = pump.id, vestry = vestry,
-        observed = observed, case.location = case.location)$data$pump
+        case.set = case.set, case.location = case.location)$data$pump
     }, mc.cores = cores)
   }
 

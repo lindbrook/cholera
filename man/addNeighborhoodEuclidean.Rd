@@ -5,7 +5,7 @@
 \title{Add expected Euclidean pump neighborhoods.}
 \usage{
 addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
-  vestry = FALSE, case.location = "nominal", type = "star",
+  vestry = FALSE, case.location = "address", type = "star",
   alpha.level = 0.5, multi.core = TRUE, dev.mode = FALSE)
 }
 \arguments{
@@ -15,7 +15,7 @@ addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
-\item{case.location}{Character. "address" or "nominal". "address" is the x-y coordinates of \code{sim.ortho.proj}. "nominal" is the x-y coordinates of \code{regular.cases}.}
+\item{case.location}{Character. "address" or "orthogonal". "orthogonal" is the x-y coordinates of \code{sim.ortho.proj}. "address" is the x-y coordinates of \code{regular.cases}.}
 
 \item{type}{Character. Type of plot: "star", "area.points" or "area.polygons".}
 
