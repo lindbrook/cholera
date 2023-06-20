@@ -5,6 +5,7 @@
   addNeighborhoodEuclidean(). 
 - set case.set = "expected" in euclideanPath() in addNeighborhoodEuclidean().
 - use case.location %in% c("address", "orthogonal") in neighborhoodEuclidean().
+- update parLapply() for amended addEuclideanPath().
 
 
 ### cholera 0.8.0.9060
