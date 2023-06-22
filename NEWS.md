@@ -1,6 +1,6 @@
 ### cholera 0.8.0.9063
 
-- compute latlong for latlong.regular.cases.
+- add latlong coordinates for latlong.regular.cases.
 
 
 ### cholera 0.8.0.9062
