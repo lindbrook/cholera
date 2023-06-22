@@ -2,11 +2,20 @@
 #'
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param radius Numeric. Radius for \code{withinRadius()} to find road segment endpoints.
+#' @param recompute Logical. Recompute regular cases.
 #' @noRd
 
-latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75) {
+latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
+  recompute = FALSE) {
+
   cores <- multiCore(multi.core)
-  regular.cases <- latlongRegularCartesianCases()
+
+  if (recompute) {
+    regular.cases <- latlongRegularCartesianCases()
+  } else {
+    regular.cases <- cholera::latlong.regular.cases
+  }
+
   rd <- cholera::roads[!cholera::roads$street %in% cholera::border, ]
   cart.rd <- data.frame(street = rd$street, geodesicMeters(rd))
 
@@ -119,19 +128,24 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75) {
   bottomright <- data.frame(lon = max(cholera::roads$lon),
                             lat = min(cholera::roads$lat))
 
-  out <- parallel::mclapply(seq_len(nrow(coords)), function(i) {
+  proj <- parallel::mclapply(seq_len(nrow(coords)), function(i) {
     meterLatLong(coords[i, ], origin, topleft, bottomright)
   }, mc.cores = cores)
 
-  list(latlong.sim.ortho.proj = do.call(rbind, out),
-       latlong.regular.cases = regular.cases)
+  reg <- parallel::mclapply(seq_len(nrow(regular.cases)), function(i) {
+    meterLatLong(regular.cases[i, ], origin, topleft, bottomright)
+  }, mc.cores = cores)
+
+
+  list(latlong.sim.ortho.proj = do.call(rbind, proj),
+       latlong.regular.cases = do.call(rbind, reg))
 }
 
-# > system.time(latlong.sim.ortho.proj <- cholera:::latlongSimulateFatalities())
+# > system.time(latlong.reg.sim <- cholera:::latlongSimulateFatalities())
 #     user   system  elapsed
 # 8793.615   29.496 2279.553
 
-# latlong.sim.ortho.proj <- cholera:::latlongSimulateFatalities()
+# latlong.reg.sim <- cholera:::latlongSimulateFatalities()
 # usethis::use_data(latlong.sim.ortho.proj)
 # usethis::use_data(latlong.sim.ortho.proj, overwrite = TRUE)
 # usethis::use_data(latlong.regular.cases)
