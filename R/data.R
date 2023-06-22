@@ -497,10 +497,12 @@
 #'
 #' The result of using sp::spsample() and sp::Polygon() to generate 20,000 regularly spaced simulated Cartesian/geodesic cases within the map's borders.
 #'
-#' @format A data frame with 2 variable that records the position of 20,000 "expected" cases fitted by sp::spsample().
+#' @format A data frame with 4 variables that records the position of 20,000 "expected" cases fitted by sp::spsample().
 #'  \describe{
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
+#'     \item{\code{lon}}{longitude}
+#'     \item{\code{lat}}{latitude}
 #'  }
 #' @docType data
 "latlong.regular.cases"

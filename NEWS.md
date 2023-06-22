@@ -1,3 +1,8 @@
+### cholera 0.8.0.9063
+
+- add latlong coordinates for latlong.regular.cases.
+
+
 ### cholera 0.8.0.9062
 
 - add/set latlongSimulateFatalities(recompute = FALSE).
