@@ -5,10 +5,12 @@
 \alias{latlong.regular.cases}
 \title{"Expected" cases (latlong).}
 \format{
-A data frame with 2 variable that records the position of 20,000 "expected" cases fitted by sp::spsample().
+A data frame with 4 variables that records the position of 20,000 "expected" cases fitted by sp::spsample().
  \describe{
     \item{\code{x}}{x-coordinate}
     \item{\code{y}}{y-coordinate}
+    \item{\code{lon}}{longitude}
+    \item{\code{lat}}{latitude}
  }
 }
 \usage{
