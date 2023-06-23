@@ -1,3 +1,8 @@
+### cholera 0.8.0.9064
+
+- add/set latlongNeighborhoodEuclidean(case.set = "observed").
+
+
 ### cholera 0.8.0.9063
 
 - add latlong coordinates for latlong.regular.cases.

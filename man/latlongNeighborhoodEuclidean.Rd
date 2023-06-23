@@ -5,7 +5,8 @@
 \title{Compute Euclidean pump neighborhoods (lat-long prototype).}
 \usage{
 latlongNeighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
-  case.location = "address", pump.location = "address")
+  case.location = "address", case.set = "observed",
+  pump.location = "address")
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
@@ -13,6 +14,8 @@ latlongNeighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
 \item{case.location}{Character. "address" or "orthogonal". "address" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.}
+
+\item{case.set}{Character. "observed" or "expected".}
 
 \item{pump.location}{Character. "address" or "orthogonal". "address" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}.}
 }
