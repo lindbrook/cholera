@@ -4,17 +4,22 @@
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param case.location Character. "address" or "orthogonal". "address" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
+#' @param case.set Character. "observed" or "expected".
 #' @param pump.location Character. "address" or "orthogonal". "address" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}.
 #' @export
 
 latlongNeighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
-  case.location = "address", pump.location = "address") {
+  case.location = "address", case.set = "observed", pump.location = "address") {
 
   if (case.location %in% c("address", "orthogonal") == FALSE) {
     stop('case.location must be "address" or "orthogonal".', call. = FALSE)
   } else {
     if (case.location == "orthogonal") statistic <- "orthogonal"
     else if (case.location == "address") statistic <- "address"
+  }
+
+  if (case.set %in% c("observed", "expected") == FALSE) {
+    stop('case.set must be "observed" or "expected".', call. = FALSE)
   }
 
   if (pump.location %in% c("address", "orthogonal") == FALSE) {
@@ -36,20 +41,26 @@ latlongNeighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
     pump.id <- pump.select
   }
 
-  if (statistic == "orthogonal") {
-    statistic.data <- lapply(cells, function(cell) {
-      sp::point.in.polygon(cholera::latlong.ortho.addr$lon,
-        cholera::latlong.ortho.addr$lat, cell$lon, cell$lat)
-    })
-  } else if (statistic == "address") {
-    statistic.data <- lapply(cells, function(c) {
-      sp::point.in.polygon(cholera::fatalities.address$lon,
-        cholera::fatalities.address$lat, c$lon, c$lat)
-    })
+  if (case.set == "observed") {
+    if (statistic == "address") {
+      case.data <- cholera::fatalities.address
+    } else if (statistic == "orthogonal") {
+      case.data <- cholera::latlong.ortho.addr
+    }
+  } else if (case.set == "expected") {
+    if (statistic == "address") {
+      case.data <- cholera::latlong.regular.cases
+    } else if (statistic == "orthogonal") {
+      case.data <- cholera::latlong.sim.ortho.proj
+    }
   }
 
+  statistic.data <- lapply(cells, function(cell) {
+    sp::point.in.polygon(case.data$lon, case.data$lat, cell$lon, cell$lat)
+  })
+
   out <- list(pump.select = pump.id, vestry = vestry, cells = cells,
-    pump.data = pump.data, case.location = case.location, 
+    pump.data = pump.data, case.location = case.location,
     statistic.data = statistic.data)
   class(out) <- "latlongNeighborhoodEuclidean"
   out
