@@ -115,7 +115,7 @@ appendixB <- function() {
 
   #
 
-  # Daily (column) totals in Appendix B
+  # Daily (column) totals from Appendix B
   daily.tot <- c(1, 1, 0, 1, 0, 1, 0, 0, 0, 2,
                  3, 0, 3, 0, 3, 1, 2, 2, 1, 2,
                  0, 2, 0, 0, 1, 0, 3, 2, 3, 34,
@@ -123,6 +123,12 @@ appendixB <- function() {
                  3, 1, 3, 0, 1, 3, 4, 0, 1, 0,
                  0, 2, 0, 1, 0, 1, 0, 2, 0, 0,
                  1)
+
+  # Road (row) totals from Appendix B
+  road.tot <- c(24, 0, rep(1, 2), 6, 7, 4, 0, 9, 3, 23, 18, 21, 5, 14, 7, 12, 4,
+    2, 1, 24, 5, 9, 8, 14, rep(15, 2), 90, 32, 13, 10, 12, 0, 3, 2, 14, 5, 11,
+    1, 18, 1, 4, rep(1, 2), 4, 0, 2, rep(3, 2), 22, 19, 4, 7, 2, 16, 3,
+    rep(0, 2), rep(1, 2), 2, 4, 1, 2, 1, rep(2, 2), rep(1, 5))
 
   ## Dates ##
 
