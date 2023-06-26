@@ -150,8 +150,7 @@ appendixB <- function() {
   aug_oct <- seq(as.Date("1854-08-03"), as.Date("1854-10-01"), by = 1)
   cal.dates <- c(jul, aug_oct)
 
-
-  ## audit - check for uniform count ##
+  ## check for uniform length of dates (columns) ##
   # date.list <- vector("list", length(vec.dates))
   # test <- lapply(seq_along(vec.dates), function(i) {
   #   date.list[[i]] <- get(vec.dates[i])
