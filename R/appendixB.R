@@ -10,40 +10,40 @@ appendixB <- function() {
 
   ## Table Data ##
 
-  jul_26 <- c(rep(0, 67), 1, rep(0, 4))
+  jul_26 <- c(rep(0, 68), 1, rep(0, 3))
   aug_03 <- c(rep(0, 29), 1, rep(0, 42))
   aug_04 <- rep(0, obs.ct)
   aug_05 <- c(rep(0, 39), 1, rep(0, 32))
   aug_06 <- rep(0, obs.ct)
 
-  aug_07 <- c(rep(0, 60), 1, rep(0, 11))
+  aug_07 <- c(rep(0, 61), 1, rep(0, 10))
   aug_08 <- rep(0, obs.ct)
   aug_09 <- rep(0, obs.ct)
   aug_10 <- rep(0, obs.ct)
   aug_11 <- c(rep(0, 31), 1, rep(0, 9), 1, rep(0, 30))
 
-  aug_12 <- c(rep(0, 27), 1, rep(0, 32), 1, rep(0, 4), 1, rep(0, 6))
+  aug_12 <- c(rep(0, 27), 1, rep(0, 33), 1, rep(0, 4), 1, rep(0, 5))
   aug_13 <- rep(0, obs.ct)
   aug_14 <- c(rep(0, 28), 1, rep(0, 10), 1, rep(0, 4), 1, rep(0, 27))
   aug_15 <- rep(0, obs.ct)
-  aug_16 <- c(rep(0, 10), 1, rep(0, 9), 1, rep(0, 43), 1, rep(0, 7))
+  aug_16 <- c(rep(0, 10), 1, rep(0, 9), 1, rep(0, 44), 1, rep(0, 6))
 
   aug_17 <- c(rep(0, 3), 1, rep(0, 68))
-  aug_18 <- c(rep(0, 28), 1, rep(0, 36), 1, rep(0, 6))
-  aug_19 <- c(rep(0, 10), 1, rep(0, 16), 1, rep(0, 44))
+  aug_18 <- c(rep(0, 28), 1, rep(0, 37), 1, rep(0, 5))
+  aug_19 <- c(rep(0, 10), 1, rep(0, 17), 1, rep(0, 43))
   aug_20 <- c(rep(0, 28), 1, rep(0, 43))
-  aug_21 <- c(rep(0, 39), 1, rep(0, 23), 1, rep(0, 8))
+  aug_21 <- c(rep(0, 39), 1, rep(0, 25), 1, rep(0, 6))
 
   aug_22 <- rep(0, obs.ct)
   aug_23 <- c(rep(0, 28), 1, rep(0, 6), 1, rep(0, 36))
   aug_24 <- rep(0, obs.ct)
   aug_25 <- rep(0, obs.ct)
-  aug_26 <- c(rep(0, 61), 1, rep(0, 10))
+  aug_26 <- c(rep(0, 62), 1, rep(0, 9))
 
   aug_27 <- rep(0, obs.ct)
-  aug_28 <- c(rep(0, 27), rep(1, 2), rep(0, 31), 1, rep(0, 11))
+  aug_28 <- c(rep(0, 27), rep(1, 2), rep(0, 32), 1, rep(0, 10))
   aug_29 <- c(rep(0, 46), 1, rep(0, 5), 1, rep(0, 19))
-  aug_30 <- c(rep(0, 26), 1, rep(0, 4), 1, rep(0, 12), 1, rep(0, 27))
+  aug_30 <- c(rep(0, 27), 1, rep(0, 3), 1, rep(0, 12), 1, rep(0, 27))
   aug_31 <- c(3, rep(0, 7), 1, rep(0, 2), 2, 1, 0, 2, 1, rep(0, 3), rep(1, 2),
     rep(0, 2), 2, rep(1, 2), 3, 6, 2, 1, rep(0, 6), 1, 0, 1, 2, rep(0, 4), 1,
     rep(0, 5), 1, rep(0, 21))
@@ -169,3 +169,8 @@ appendixB <- function() {
   appendix
 }
 
+## row (street) count audit ##
+# app <- appendixB()
+# road.tmp <- rowSums(app)
+# row.test <- data.frame(obs = road.tot, calc = road.tmp)
+# row.test[row.test$obs != row.test$calc, ]
