@@ -142,6 +142,8 @@ appendixB <- function() {
 
   # Supplementary Columns (by road) #
 
+  zone <- c(0, rep(1, 4), rep(2, 38), rep(3, 14), rep(4, 14))
+
   known.attack <- c(24, 0, rep(1, 2), 6, 7, 4, 0, 9, 3, 23, 18, 21, 5, 14, 7,
     12, 4, 2, 1, 24, 5, 9, 8, 14, rep(15, 2), 90, 32, 13, 10, 12, 0, 3, 2, 14,
     5, 11, 1, 18, 1, 4, rep(1, 2), 4, 0, 2, rep(3, 2), 22, 19, 4, 7, 2, 16, 3,
@@ -174,6 +176,29 @@ appendixB <- function() {
     rep(3, 2), 1, 14, 4, rep(3, 2), 8, 6, 7, 35, 23, 6, 7, 8, 1, rep(2, 2), 13,
     3, 5, 1, 18, 1, 3, rep(1, 2), 3, 1, 2, 3, 4, 13, 14, 1, 6, 2, 7, 4, 0, 1, 2,
     1, 2, 4, 1, 2, 1, rep(2, 3), rep(1, 4))
+
+  rd.name.short <- c("St Anns Court", "Oxford Street", "Marlborough Mews", 
+    "Marlborough Street", "Great Marlborough Street", "Wardour Street (North)",
+    "Noel Street", "Phillips Court", "Portland Street", "Portland Mews", 
+    "Berwick Street (North)", "Bentinck Street", "Poland Street", 
+    "St James Workhouse (inmates)", "St James Workhouse (casualties)", 
+    "Dufours Place", "Wardour Street (South)", "Edward Street", "Duck Lane", 
+    "Tyler Court", "Berwick Street (South)", "Kemps Court", "Hopkins Street", 
+    "Husband Street",  "New Street", "Pulteney Court", "Cambridge Street", 
+    "Broad Street", "Marshall Street", "South Row", "West Street", 
+    "Marlborough Row", "Tyler Court", "Marlborough Court", "Cross Court", 
+    "Carnaby Street", "Tyler Street", "Cross Street", "George Place", 
+    "Silver Street", "Naylors Yard", "King Street", "Regent Street", 
+    "Heddon Street", "Heddon Court", "Leicester Street", "Upper John Street", 
+    "Upper James Street", "Bridle Lane", "Great Pulteney Street", 
+    "Little Windmill Street", "Brewer Street", "Little Pulteney Street", 
+    "William and Mary Yard", "Peter Street", "Greens Court", "Pulteney Place", 
+    "Walkers Court", "Great Crown Court", "George Court", "Rupert Street", 
+    "Great Windmill Street", "Queens Head Court", "Ham Yard", "Angel Court", 
+    "Swallow Street", "Picadilly", "Jermyn Street", "St James's Market", 
+    "Eagle Place", "Duke Street", "Crown Court")
+
+  rd.name.check <- c(rep(1, 7), 0, rep(1, 61), rep(0, 2), 1)
 
   ## Dates ##
 
