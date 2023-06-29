@@ -1,3 +1,8 @@
+### cholera 0.8.0.9066
+
+- add zone, rd.name.short and rd.name.check variables (columns) to appendixB().
+
+
 ### cholera 0.8.0.9065
 
 - add appendixB().
