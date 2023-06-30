@@ -62,7 +62,7 @@ latlongNeighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
   out <- list(pump.select = pump.id, vestry = vestry, cells = cells,
     pump.data = pump.data, case.location = case.location,
     statistic.data = statistic.data)
-  class(out) <- "latlongNeighborhoodEuclidean"
+  class(out) <- "latlongEuclidean"
   out
 }
 
@@ -72,7 +72,7 @@ latlongNeighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.latlongNeighborhoodEuclidean <- function(x, euclidean.paths = TRUE, ...) {
+plot.latlongEuclidean <- function(x, euclidean.paths = TRUE, ...) {
   pump.select <- x$pump.select
   vars <- c("lon", "lat")
 

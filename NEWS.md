@@ -1,3 +1,8 @@
+### cholera 0.8.0.9068
+
+- change latlongNeighborhoodEuclidean() class to "latlongEuclidean".
+
+
 ### cholera 0.8.0.9067
 
 - use separate auxilliary plot functions in plot.euclidean().

@@ -2,7 +2,7 @@
 
 S3method(plot,euclidean)
 S3method(plot,euclidean_path)
-S3method(plot,latlongNeighborhoodEuclidean)
+S3method(plot,latlongEuclidean)
 S3method(plot,latlongNeighborhoodVoronoi)
 S3method(plot,latlong_euclidean_path)
 S3method(plot,latlong_neighborhood_data)
