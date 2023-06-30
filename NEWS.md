@@ -1,3 +1,8 @@
+### cholera 0.8.0.9067
+
+- use separate auxilliary plot functions in plot.euclidean().
+
+
 ### cholera 0.8.0.9066
 
 - add zone, rd.name.short and rd.name.check variables (columns) to appendixB().
