@@ -132,66 +132,11 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   invisible(lapply(border.list, lines))
 
   if (type == "star") {
-    invisible(lapply(road.list, lines, col = "gray"))
-
-    invisible(lapply(seq_along(anchors), function(i) {
-      p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
-      n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
-      if (x$observed) {
-        sel <- cholera::fatalities.address$anchor %in% anchors[i]
-        n.data <- cholera::fatalities.address[sel, ]
-        lapply(n.data$anchor, function(case) {
-          c.data <- n.data[n.data$anchor == case, ]
-          segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
-            lwd = 0.5)
-        })
-      } else {
-        n.data <- cholera::regular.cases[anchors[i], ]
-        lapply(seq_len(nrow(n.data)), function(case) {
-          c.data <- n.data[case, ]
-          segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
-            lwd = 0.5)
-        })
-      }
-    }))
-
-    if (add.observed.points) {
-      if (x$case.set == "observed") {
-        addNeighborhoodCases(pump.select = x$pump.select, vestry = x$vestry,
-          metric = "euclidean", case.location = x$case.location,
-          multi.core = x$cores)
-      }
-    }
-
+    euclideanStar(x, anchors, nearest.pump, pump.data, road.list, add.observed.points = add.observed.points)
   } else if (type == "area.points") {
-    invisible(lapply(seq_along(anchors), function(i) {
-      n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
-      n.data <- cholera::regular.cases[anchors[i], ]
-      lapply(seq_len(nrow(n.data)), function(case) {
-        c.data <- n.data[case, ]
-        points(c.data$x, c.data$y, col = n.color, pch = 15, cex = 1.25)
-      })
-    }))
-
-    invisible(lapply(road.list, lines))
-
+    euclideanAreaPoints(x, anchors, nearest.pump, road.list)
   } else if (type == "area.polygons") {
-    invisible(lapply(road.list, lines))
-    p.num <- sort(unique(nearest.pump))
-
-    neighborhood.cases <- lapply(p.num, function(n) {
-      which(nearest.pump == n)
-    })
-
-    periphery.cases <- lapply(neighborhood.cases, peripheryCases)
-    pearl.string <- lapply(periphery.cases, travelingSalesman)
-    names(pearl.string) <- p.num
-
-    invisible(lapply(names(pearl.string), function(nm) {
-      sel <- paste0("p", nm)
-      polygon(cholera::regular.cases[pearl.string[[nm]], ],
-        col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = 2/3))
-    }))
+    euclideanAreaPolygons(x, nearest.pump, road.list)
   }
 
   pumpTokens(x, type)
@@ -208,6 +153,65 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
       if (x$case.set == "expected") message("Done!")
     }
   }
+}
+
+euclideanStar <- function(x, anchors, nearest.pump, pump.data, road.list, add.observed.points = add.observed.points) {
+  invisible(lapply(road.list, lines, col = "gray"))
+  invisible(lapply(seq_along(anchors), function(i) {
+    p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
+    n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
+    if (x$observed) {
+      sel <- cholera::fatalities.address$anchor %in% anchors[i]
+      n.data <- cholera::fatalities.address[sel, ]
+      lapply(n.data$anchor, function(case) {
+        c.data <- n.data[n.data$anchor == case, ]
+        segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
+          lwd = 0.5)
+      })
+    } else {
+      n.data <- cholera::regular.cases[anchors[i], ]
+      lapply(seq_len(nrow(n.data)), function(case) {
+        c.data <- n.data[case, ]
+        segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
+          lwd = 0.5)
+      })
+    }
+  }))
+  if (add.observed.points) {
+    if (x$case.set == "observed") {
+      addNeighborhoodCases(pump.select = x$pump.select, vestry = x$vestry,
+        metric = "euclidean", case.location = x$case.location,
+        multi.core = x$cores)
+    }
+  }
+}
+
+euclideanAreaPoints <- function(x, anchors, nearest.pump, road.list) {
+  invisible(lapply(seq_along(anchors), function(i) {
+      n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
+      n.data <- cholera::regular.cases[anchors[i], ]
+      lapply(seq_len(nrow(n.data)), function(case) {
+        c.data <- n.data[case, ]
+        points(c.data$x, c.data$y, col = n.color, pch = 15, cex = 1.25)
+      })
+    }))
+  invisible(lapply(road.list, lines))
+}
+
+euclideanAreaPolygons <- function(x, nearest.pump, road.list) {
+  invisible(lapply(road.list, lines))
+  p.num <- sort(unique(nearest.pump))
+  neighborhood.cases <- lapply(p.num, function(n) {
+    which(nearest.pump == n)
+  })
+  periphery.cases <- lapply(neighborhood.cases, peripheryCases)
+  pearl.string <- lapply(periphery.cases, travelingSalesman)
+  names(pearl.string) <- p.num
+  invisible(lapply(names(pearl.string), function(nm) {
+    sel <- paste0("p", nm)
+    polygon(cholera::regular.cases[pearl.string[[nm]], ],
+      col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = 2/3))
+  }))
 }
 
 #' Print method for neighborhoodEuclidean().
