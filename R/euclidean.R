@@ -155,7 +155,8 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   }
 }
 
-euclideanStar <- function(x, anchors, nearest.pump, pump.data, road.list, add.observed.points = add.observed.points) {
+euclideanStar <- function(x, anchors, nearest.pump, pump.data, road.list, 
+  add.observed.points = add.observed.points) {
   invisible(lapply(road.list, lines, col = "gray"))
   invisible(lapply(seq_along(anchors), function(i) {
     p.data <- pump.data[pump.data$id == nearest.pump[[i]], ]
