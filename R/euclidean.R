@@ -37,7 +37,7 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
     pump.data <- cholera::pumps
   }
 
-  pump.id <- selectPump(pump.data, pump.select = pump.select, 
+  pump.id <- selectPump(pump.data, pump.select = pump.select,
     metric = "euclidean", vestry = vestry)
 
   if (case.set == "observed") {
@@ -132,7 +132,8 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   invisible(lapply(border.list, lines))
 
   if (type == "star") {
-    euclideanStar(x, anchors, nearest.pump, pump.data, road.list, add.observed.points = add.observed.points)
+    euclideanStar(x, anchors, nearest.pump, pump.data, road.list,
+      add.observed.points = add.observed.points)
   } else if (type == "area.points") {
     euclideanAreaPoints(x, anchors, nearest.pump, road.list)
   } else if (type == "area.polygons") {
@@ -155,7 +156,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   }
 }
 
-euclideanStar <- function(x, anchors, nearest.pump, pump.data, road.list, 
+euclideanStar <- function(x, anchors, nearest.pump, pump.data, road.list,
   add.observed.points = add.observed.points) {
   invisible(lapply(road.list, lines, col = "gray"))
   invisible(lapply(seq_along(anchors), function(i) {
