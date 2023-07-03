@@ -100,7 +100,6 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
     pump.id <- pump.data$id[pump.select]
     voronoi <- deldir::deldir(pump.data[pump.select, c("x", "y")],
       rw = c(x.rng, y.rng), suppressMsge = TRUE)
-    snow.colors <- snow.colors[pump.select]
     select.string <- paste(sort(pump.select), collapse = ", ")
   }
 
@@ -227,9 +226,9 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delaunay.triangles = FALSE,
     names(voronoi.colors) <- cholera::fatalities.address$anchor
   }
 
-  for (i in seq_along(voronoi.case.id)) {
-    id <- voronoi.case.id[[i]]
-    voronoi.colors[names(voronoi.colors) %in% id] <- x$snow.colors[i]
+  for (nm in names(voronoi.case.id)) {
+    id <- voronoi.case.id[[nm]]
+    voronoi.colors[names(voronoi.colors) %in% id] <- x$snow.colors[nm]
   }
 
   if (euclidean.paths) {

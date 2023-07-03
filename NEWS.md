@@ -1,3 +1,8 @@
+### cholera 0.8.0.9071
+
+- amend color selection in neighborhoodVoronoi().
+
+
 ### cholera 0.8.0.9070
 
 - use pump.id instead of pumpID in neighborhoodWalking().
