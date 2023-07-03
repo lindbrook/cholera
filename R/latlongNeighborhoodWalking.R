@@ -125,10 +125,8 @@ plot.latlong_walking <- function(x, ...) {
 
 identifyEdgesB <- function(p, edges) {
   vapply(seq_along(p[-1]), function(i) {
-    ab <- edges$node1 %in% p[i] &
-      edges$node2 %in% p[i + 1]
-    ba <- edges$node2 %in% p[i] &
-      edges$node1 %in% p[i + 1]
+    ab <- edges$node1 %in% p[i] & edges$node2 %in% p[i + 1]
+    ba <- edges$node2 %in% p[i] & edges$node1 %in% p[i + 1]
     which(ab | ba)
   }, numeric(1L))
 }

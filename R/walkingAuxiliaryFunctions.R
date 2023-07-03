@@ -7,18 +7,14 @@ walkingAuxiliaryFunctions <- function() NULL
 auditEdge <- function(p, edges, output = "logical") {
   if (output == "logical") {
     vapply(seq_along(p[-1]), function(i) {
-      ab <- edges$node1 %in% p[i] &
-            edges$node2 %in% p[i + 1]
-      ba <- edges$node2 %in% p[i] &
-            edges$node1 %in% p[i + 1]
+      ab <- edges$node1 %in% p[i] & edges$node2 %in% p[i + 1]
+      ba <- edges$node2 %in% p[i] & edges$node1 %in% p[i + 1]
       which(ab | ba)
     }, numeric(1L))
   } else if (output == "id2") {
     vapply(seq_along(p[-1]), function(i) {
-      ab <- edges$node1 %in% p[i] &
-            edges$node2 %in% p[i + 1]
-      ba <- edges$node2 %in% p[i] &
-            edges$node1 %in% p[i + 1]
+      ab <- edges$node1 %in% p[i] & edges$node2 %in% p[i + 1]
+      ba <- edges$node2 %in% p[i] & edges$node1 %in% p[i + 1]
       edges[which(ab | ba), "id2"]
     }, character(1L))
   } else {
@@ -172,10 +168,8 @@ splitData <- function(dat, cutpoints, edges) {
 
 identifyEdges <- function(dat, edges) {
   out <- lapply(seq_len(nrow(dat)), function(i) {
-    test1 <- dat[i, "node1"] == edges$node1 &
-             dat[i, "node2"] == edges$node2
-    test2 <- dat[i, "node2"] == edges$node1 &
-             dat[i, "node1"] == edges$node2
+    test1 <- dat[i, "node1"] == edges$node1 & dat[i, "node2"] == edges$node2
+    test2 <- dat[i, "node2"] == edges$node1 & dat[i, "node1"] == edges$node2
     if (any(test1)) {
       edges[test1, ]
     } else if (any(test2)) {
