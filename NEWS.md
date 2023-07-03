@@ -1,3 +1,8 @@
+### cholera 0.8.0.9069
+
+- amend and simplify pumpTokens().
+
+
 ### cholera 0.8.0.9068
 
 - change latlongNeighborhoodEuclidean() class to "latlongEuclidean".

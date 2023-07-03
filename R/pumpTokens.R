@@ -8,16 +8,8 @@ pumpTokens <- function(x, type) {
   all.data <- dat[, c("x", "y")]
   all.labels <- paste0("p", dat$id)
 
-  if (!is.null(x$pump.select)) {
-    if (inherits(x, "walking")) {
-      p.obs <- as.numeric(names(x$paths))
-    } else if (inherits(x, "euclidean")) {
-      p.obs <- sort(unique(x$nearest.pump))
-    } else if (inherits(x, "voronoi")) {
-      p.obs <- sort(x$pump.id)
-    }
-  }
-
+  if (!is.null(x$pump.select)) p.obs <- sort(x$pump.id)
+  
   if (inherits(x, "voronoi")) x$case.set <-  "observed"
 
   if (x$case.set == "observed") {
@@ -25,20 +17,13 @@ pumpTokens <- function(x, type) {
       points(all.data, pch = 24, lwd = 2, col = x$snow.colors)
       text(all.data, pos = 1, cex = 0.9, labels = all.labels)
     } else {
-      if (all(x$pump.select > 0)) {
-        p.sel <- dat$id %in% x$pump.select
-      } else if (all(x$pump.select < 0)) {
-        p.sel <- dat$id %in% abs(x$pump.select) == FALSE
-      } else stop('pump.select must be all positive or all negative.')
-
       obs <- dat$id %in% p.obs
-      sel <- p.sel & obs
-      pos.data <- dat[sel, c("x", "y")]
-      neg.data <- dat[!sel, c("x", "y")]
-      pos.labels <- paste0("p", dat$id[sel])
-      neg.labels <- paste0("p", dat$id[!sel])
+      pos.data <- dat[obs, c("x", "y")]
+      neg.data <- dat[!obs, c("x", "y")]
+      pos.labels <- paste0("p", dat$id[obs])
+      neg.labels <- paste0("p", dat$id[!obs])
 
-      points(pos.data, pch = 24, lwd = 2, col = x$snow.colors[sel])
+      points(pos.data, pch = 24, lwd = 2, col = x$snow.colors[obs])
       text(pos.data, pos = 1, cex = 0.9, labels = pos.labels)
       points(neg.data, pch = 24, lwd = 1, col = "gray")
       text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
