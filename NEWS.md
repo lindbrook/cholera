@@ -1,3 +1,8 @@
+### cholera 0.8.0.9070
+
+- use pump.id instead of pumpID in neighborhoodWalking().
+
+
 ### cholera 0.8.0.9069
 
 - amend and simplify pumpTokens().

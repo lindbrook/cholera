@@ -65,29 +65,29 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
                                pump = nearest.dist$pump)
   }
 
-  pumpID <- sort(unique(nearest.dist$pump))
+  pump.id <- sort(unique(nearest.dist$pump))
 
-  neighborhood.cases <- lapply(pumpID, function(p) {
+  neighborhood.cases <- lapply(pump.id, function(p) {
     nearest.pump[nearest.pump$pump == p, "case"]
   })
 
-  names(neighborhood.cases) <- pumpID
+  names(neighborhood.cases) <- pump.id
 
-  neighborhood.paths <- lapply(pumpID, function(p) {
+  neighborhood.paths <- lapply(pump.id, function(p) {
     n.case <- neighborhood.cases[[paste(p)]]
     nearest.path[which(nearest.pump$case %in% n.case)]
   })
 
-  names(neighborhood.paths) <- pumpID
+  names(neighborhood.paths) <- pump.id
 
   out <- list(paths = neighborhood.paths,
-              cases = stats::setNames(neighborhood.cases, paste0("p", pumpID)),
+              cases = stats::setNames(neighborhood.cases, paste0("p", pump.id)),
               vestry = vestry,
               weighted = weighted,
               case.set = case.set,
               pump.select = pump.select,
               snow.colors = snow.colors,
-              pumpID = pumpID,
+              pump.id = pump.id,
               cores = cores,
               metric = 1 / unitMeter(1),
               dev.mode = dev.mode)
@@ -237,8 +237,8 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
 
       # plot(neighborhoodWalking(-(7:8), case.set = "expected"),
       #   type = "area.polygons")
-      neg78 <- identical(as.integer(x$pumpID), c(1:6, 9:13)) |
-               identical(as.integer(x$pumpID), c(1:6, 9:14))
+      neg78 <- identical(as.integer(x$pump.id), c(1:6, 9:13)) |
+               identical(as.integer(x$pump.id), c(1:6, 9:14))
 
       if (neg78) {
         # Air Street: 2344, 2346
@@ -249,8 +249,8 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
       }
 
       # plot(neighborhoodWalking( case.set = "expected"), "area.polygons")
-      all.pumps <- identical(as.integer(x$pumpID), c(1:13)) |
-                   identical(as.integer(x$pumpID), c(1:14))
+      all.pumps <- identical(as.integer(x$pump.id), c(1:13)) |
+                   identical(as.integer(x$pump.id), c(1:14))
 
      if (all.pumps) {
         # Air Street: 2344, 2346
@@ -335,7 +335,7 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
 #' }
 
 print.walking <- function(x, ...) {
-  print(x[c("pumpID", "case.set", "vestry")])
+  print(x[c("pump.id", "case.set", "vestry")])
 }
 
 #' Summary method for neighborhoodWalking().
@@ -353,7 +353,7 @@ print.walking <- function(x, ...) {
 summary.walking <- function(object, ...) {
   if (object$case.set == "observed" | object$case.set == "snow") {
     out <- vapply(object$paths, length, numeric(1L))
-    out <- stats::setNames(out, paste0("p", object$pumpID))
+    out <- stats::setNames(out, paste0("p", object$pump.id))
   } else if (object$case.set == "expected") {
     out <- expectedCount(object)
   }
