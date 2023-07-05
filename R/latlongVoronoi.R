@@ -112,24 +112,21 @@ latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
     if (length(unique(p.ID[pump.select])) < 2) {
       stop(paste(msg1, msg2), call. = FALSE)
     }
+    pump.id <- selectPump(pump.data, pump.select, "euclidean", vestry)
+  } else {
+    pump.id <- pump.data$id
   }
 
   # compute geodesic distance from origin to pump and decompose result into
   # horizontal (East-West) and vertical (North-South) components.
-  pump.meters <- geodesicMeters(pump.data)
+  pump.meters <- geodesicMeters(pump.data)[pump.id, ]
 
   # Voronoi cells
 
   height <- geosphere::distGeo(origin, topleft)
   width <- geosphere::distGeo(origin, bottomright)
   bounding.box <- c(0, width, 0, height)
-
-  if (is.null(pump.select)) {
-    cells <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box)
-  } else {
-    cells <- voronoiPolygons(pump.meters[pump.select, c("x", "y")],
-      rw = bounding.box)
-  }
+  cells <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box)
 
   # cells DF
 
