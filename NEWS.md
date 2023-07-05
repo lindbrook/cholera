@@ -1,3 +1,8 @@
+### cholera 0.8.0.9075
+
+- add plots for latlongNeighborhoodEuclidean(case.set = "expected").
+
+
 ### cholera 0.8.0.9074
 
 - add/set latlong = FALSE to pearlStringRadius(), peripheryCases() and 
