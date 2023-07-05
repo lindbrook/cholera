@@ -29,6 +29,8 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
         stop(msg1, msg2, call. = FALSE)
       }
     }
+  } else if (metric != "euclidean") {
+    stop('metric must either be "euclidean" or "walking".')
   }
 
   if (is.null(pump.select)) {
