@@ -4,12 +4,12 @@
 \alias{plot.latlongEuclidean}
 \title{Plot method for latlongNeighborhoodEuclidean()}
 \usage{
-\method{plot}{latlongEuclidean}(x, euclidean.paths = TRUE, ...)
+\method{plot}{latlongEuclidean}(x, type = "star", ...)
 }
 \arguments{
 \item{x}{Object.}
 
-\item{euclidean.paths}{Logical.}
+\item{type}{Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
 
 \item{...}{Additional plotting parameters.}
 }
