@@ -1,3 +1,9 @@
+### cholera 0.8.0.9072
+
+- assign pump names to list elements in latlongVoronoi().
+- fix latlongVoronoi(pump.select).
+
+
 ### cholera 0.8.0.9071
 
 - amend color selection in neighborhoodVoronoi().
