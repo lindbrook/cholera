@@ -1,15 +1,20 @@
 #' Add pump tokens to plot.
 #'
+#' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
+#' @param latlong Logical.
 #' @noRd
 
-pumpTokens <- function(x, type) {
+pumpTokens <- function(x, type, latlong = FALSE) {
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
+
   if (x$vestry) dat <- cholera::pumps.vestry
   else dat <- cholera::pumps
-  all.data <- dat[, c("x", "y")]
+  
+  all.data <- dat[, vars]
   all.labels <- paste0("p", dat$id)
 
   if (!is.null(x$pump.select)) p.obs <- sort(x$pump.id)
-  
   if (inherits(x, "voronoi")) x$case.set <-  "observed"
 
   if (x$case.set == "observed") {
@@ -18,8 +23,8 @@ pumpTokens <- function(x, type) {
       text(all.data, pos = 1, cex = 0.9, labels = all.labels)
     } else {
       obs <- dat$id %in% p.obs
-      pos.data <- dat[obs, c("x", "y")]
-      neg.data <- dat[!obs, c("x", "y")]
+      pos.data <- dat[obs, vars]
+      neg.data <- dat[!obs, vars]
       pos.labels <- paste0("p", dat$id[obs])
       neg.labels <- paste0("p", dat$id[!obs])
 
@@ -38,16 +43,11 @@ pumpTokens <- function(x, type) {
         text(all.data, pos = 1, cex = 0.9, labels = all.labels, col = "white")
       }
     } else {
-      if (all(x$pump.select > 0)) {
-        sel <- dat$id %in% x$pump.select
-      } else if (all(x$pump.select < 0)) {
-        sel <- dat$id %in% abs(x$pump.select) == FALSE
-      } else stop('pump.select must be all positive or all negative.')
-
-      pos.data <- dat[sel, c("x", "y")]
-      pos.labels <- paste0("p", dat$id[sel])
-      neg.data <- dat[!sel, c("x", "y")]
-      neg.labels <- paste0("p", dat$id[!sel])
+      obs <- dat$id %in% p.obs
+      pos.data <- dat[obs, vars]
+      neg.data <- dat[!obs, vars]
+      pos.labels <- paste0("p", dat$id[obs])
+      neg.labels <- paste0("p", dat$id[!obs])
 
       if (type == "roads") {
         if (is.null(x$pump.select)) {
@@ -64,7 +64,7 @@ pumpTokens <- function(x, type) {
           points(all.data, pch = 24, lwd = 2, bg = x$snow.colors, col = "white")
           text(all.data, pos = 1, cex = 0.9, col = "white", labels = all.labels)
         } else {
-          points(pos.data, pch = 24, lwd = 2, bg = x$snow.colors[sel],
+          points(pos.data, pch = 24, lwd = 2, bg = x$snow.colors[obs],
             col = "white")
           text(pos.data, pos = 1, cex = 0.9, col = "white", labels = pos.labels)
           points(neg.data, pch = 24, lwd = 1, col = "black")

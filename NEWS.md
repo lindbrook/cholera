@@ -1,3 +1,8 @@
+### cholera 0.8.0.9073
+
+- add/set pumpTokens(latlong = FALSE) and amend display of unselected pumps.
+
+
 ### cholera 0.8.0.9072
 
 - assign pump names to list elements in latlongVoronoi().
