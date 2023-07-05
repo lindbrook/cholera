@@ -1,3 +1,9 @@
+### cholera 0.8.0.9074
+
+- add/set latlong = FALSE to pearlStringRadius(), peripheryCases() and 
+  travelingSalesman().
+  
+
 ### cholera 0.8.0.9073
 
 - add/set pumpTokens(latlong = FALSE) and amend display of unselected pumps.
