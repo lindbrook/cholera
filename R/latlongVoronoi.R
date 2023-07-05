@@ -143,7 +143,9 @@ latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
 
   est.lonlat <- meterLatLong(cells.df, origin, topleft, bottomright)
   est.lonlat <- est.lonlat[order(est.lonlat$cell, est.lonlat$vertex), ]
-  split(est.lonlat, est.lonlat$cell)
+  out <- split(est.lonlat, est.lonlat$cell)
+  names(out) <- paste0("p", pump.id)
+  out
 }
 
 # voronoi.polygons <- latlongVoronoi()
