@@ -1,3 +1,9 @@
+### cholera 0.8.0.9076
+
+- use pump.id for selection and pump.select for title in 
+  latlongNeighborhoodVoronoi().
+  
+
 ### cholera 0.8.0.9075
 
 - add plots for latlongNeighborhoodEuclidean(case.set = "expected").
