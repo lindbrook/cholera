@@ -15,23 +15,44 @@ pumpTokens <- function(x, type, latlong = FALSE) {
   all.labels <- paste0("p", dat$id)
 
   if (!is.null(x$pump.select)) p.obs <- sort(x$pump.id)
-  if (inherits(x, "voronoi")) x$case.set <-  "observed"
+  
+  if (inherits(x, "voronoi") | inherits(x, "latlongVoronoi")) {
+    x$case.set <-  "observed"
+  } 
 
   if (x$case.set == "observed") {
-    if (is.null(x$pump.select)) {
-      points(all.data, pch = 24, lwd = 2, col = x$snow.colors)
-      text(all.data, pos = 1, cex = 0.9, labels = all.labels)
-    } else {
-      obs <- dat$id %in% p.obs
-      pos.data <- dat[obs, vars]
-      neg.data <- dat[!obs, vars]
-      pos.labels <- paste0("p", dat$id[obs])
-      neg.labels <- paste0("p", dat$id[!obs])
+    if (inherits(x, "voronoi") | inherits(x, "latlongVoronoi")) {
+      if (is.null(x$pump.select)) {
+        points(all.data, pch = 2, lwd = 2, col = x$snow.colors)
+        text(all.data, pos = 1, cex = 0.9, labels = all.labels)
+      } else {
+        obs <- dat$id %in% p.obs
+        pos.data <- dat[obs, vars]
+        neg.data <- dat[!obs, vars]
+        pos.labels <- paste0("p", dat$id[obs])
+        neg.labels <- paste0("p", dat$id[!obs])
 
-      points(pos.data, pch = 24, lwd = 2, col = x$snow.colors[obs])
-      text(pos.data, pos = 1, cex = 0.9, labels = pos.labels)
-      points(neg.data, pch = 24, lwd = 1, col = "gray")
-      text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
+        points(pos.data, pch = 2, lwd = 2, col = x$snow.colors[obs])
+        text(pos.data, pos = 1, cex = 0.9, labels = pos.labels)
+        points(neg.data, pch = 2, lwd = 2, col = "gray")
+        text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
+      }
+    } else {
+      if (is.null(x$pump.select)) {
+        points(all.data, pch = 24, lwd = 2, col = x$snow.colors)
+        text(all.data, pos = 1, cex = 0.9, labels = all.labels)
+      } else {
+        obs <- dat$id %in% p.obs
+        pos.data <- dat[obs, vars]
+        neg.data <- dat[!obs, vars]
+        pos.labels <- paste0("p", dat$id[obs])
+        neg.labels <- paste0("p", dat$id[!obs])
+
+        points(pos.data, pch = 24, lwd = 2, col = x$snow.colors[obs])
+        text(pos.data, pos = 1, cex = 0.9, labels = pos.labels)
+        points(neg.data, pch = 24, lwd = 1, col = "gray")
+        text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
+      }
     }
   } else if (x$case.set == "expected") {
     if (is.null(x$pump.select)) {

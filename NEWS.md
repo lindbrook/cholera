@@ -1,3 +1,8 @@
+### cholera 0.8.0.9077
+
+- add exceptions for "voronoi" and "latlongVoronoi" classes in pumpTokens().
+
+
 ### cholera 0.8.0.9076
 
 - use pump.id for selection and pump.select for title in 
