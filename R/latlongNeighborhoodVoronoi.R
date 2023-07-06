@@ -10,6 +10,8 @@
 latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   case.location = "address", pump.location = "address") {
 
+  snow.colors <- snowColors(vestry = vestry)
+
   if (case.location %in% c("address", "orthogonal") == FALSE) {
     stop('case.location must be "address" or "orthogonal".', call. = FALSE)
   } else {
@@ -50,8 +52,9 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 
   out <- list(pump.select = pump.select, pump.id = pump.id, vestry = vestry,
     cells = cells, pump.data = pump.data, statistic.data = statistic.data,
-    case.location = case.location)
-  class(out) <- "latlongNeighborhoodVoronoi"
+    case.location = case.location, snow.colors = snow.colors)
+
+  class(out) <- "latlongVoronoi"
   out
 }
 
@@ -62,8 +65,8 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.latlongNeighborhoodVoronoi <- function(x, add.pumps = TRUE,
-  euclidean.paths = FALSE, ...) {
+plot.latlongVoronoi <- function(x, add.pumps = TRUE, euclidean.paths = FALSE, 
+  ...) {
 
   pump.id <- x$pump.id
   vars <- c("lon", "lat")
@@ -71,15 +74,10 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.pumps = TRUE,
   snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE,
     add.pumps = FALSE)
   invisible(lapply(x$cells, function(x) polygon(x[, vars])))
-  if (add.pumps) addPump(pump.id, vestry = x$vestry, latlong = TRUE)
+
+  if (add.pumps) pumpTokens(x, type = NULL, latlong = TRUE)
 
   if (!is.null(pump.id)) {
-    unselected <- x$pump.data[!x$pump.data$id %in% pump.id, ]
-    names(x$statistic.data) <- pump.id
-    snow.colors <- snowColors(vestry = x$vestry)[paste0("p", pump.id)]
-    points(unselected[, vars], pch = 2, col = "gray")
-    text(unselected[, vars], labels = paste0("p", unselected$id), pos = 1,
-      col = "gray")
     if (x$case.location == "address") {
       title(main = paste0("Pump Neighborhoods: Voronoi (address)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
@@ -88,7 +86,6 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.pumps = TRUE,
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
     }
   } else {
-    snow.colors <- snowColors(vestry = x$vestry)
     if (x$case.location == "address") {
       title(main = "Pump Neighborhoods: Voronoi (address)")
     } else if (x$case.location == "orthogonal") {
@@ -97,13 +94,13 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.pumps = TRUE,
   }
 
   if (euclidean.paths) {
-    plotLatlongEuclideanPaths(x, pump.id, snow.colors, vars)
+    plotLatlongEuclideanPaths(x, pump.id, vars)
   } else {
-    plotLatlongVoronoiCases(x, snow.colors, vars)
+    plotLatlongVoronoiCases(x, vars)
   }
 }
 
-plotLatlongEuclideanPaths <- function(x, pump.id, snow.colors, vars) {
+plotLatlongEuclideanPaths <- function(x, pump.id, vars) {
   cases <- cholera::fatalities.address
 
   if (is.null(pump.id)) p.id <- x$pump.data$id
@@ -126,27 +123,27 @@ plotLatlongEuclideanPaths <- function(x, pump.id, snow.colors, vars) {
     p <- nearest.pump[nearest.pump$case == c, "pump"]
     alter <- x$pump.data[x$pump.data$id == p, vars]
     segments(ego$lon, ego$lat, alter$lon, alter$lat,
-             col = snow.colors[paste0("p", p)], lwd = 0.5)
+             col = x$snow.colors[paste0("p", p)], lwd = 0.5)
   }))
 }
 
-plotLatlongVoronoiCases <- function(x, snow.colors, vars) {
+plotLatlongVoronoiCases <- function(x, vars) {
   if (x$case.location == "address") {
     case.partition <- lapply(x$statistic.data, function(dat) {
       cholera::fatalities.address$anchor[dat == 1]
     })
-    invisible(lapply(seq_along(case.partition), function(i) {
-      sel <- cholera::fatalities.address$anchor %in% case.partition[[i]]
-      points(cholera::fatalities.address[sel, vars], col = snow.colors[i],
+    invisible(lapply(names(case.partition), function(nm) {
+      sel <- cholera::fatalities.address$anchor %in% case.partition[[nm]]
+      points(cholera::fatalities.address[sel, vars], col = x$snow.colors[nm],
         pch = 20, cex = 0.75)
     }))
   } else if (x$case.location == "orthogonal") {
     case.partition <- lapply(x$statistic.data, function(dat) {
       cholera::latlong.ortho.addr$case[dat == 1]
     })
-    invisible(lapply(seq_along(case.partition), function(i) {
-      sel <- cholera::latlong.ortho.addr$case %in% case.partition[[i]]
-      points(cholera::latlong.ortho.addr[sel, vars], col = snow.colors[i],
+    invisible(lapply(names(case.partition), function(nm) {
+      sel <- cholera::latlong.ortho.addr$case %in% case.partition[[nm]]
+      points(cholera::latlong.ortho.addr[sel, vars], col = x$snow.colors[nm],
         pch = 20, cex = 0.75)
     }))
   }
@@ -155,11 +152,11 @@ plotLatlongVoronoiCases <- function(x, snow.colors, vars) {
 #' Print method for latlongNeighborhoodVoronoi().
 #'
 #' Parameter values for latlongNeighborhoodVoronoi().
-#' @param x An object of class "latlongNeighborhoodVoronoi" created by \code{latlongNeighborhoodVoronoi()}.
+#' @param x An object of class "latlongVoronoi" created by \code{latlongNeighborhoodVoronoi()}.
 #' @param ... Additional arguments.
 #' @return A list of argument values.
 #' @export
 
-print.latlongNeighborhoodVoronoi <- function(x, ...) {
+print.latlongVoronoi <- function(x, ...) {
   print(x[c("pump.select", "vestry")])
 }
