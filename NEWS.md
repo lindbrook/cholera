@@ -1,3 +1,9 @@
+### cholera 0.8.0.9078
+
+- change latlongNeighborhoodVoronoi()'s class to "latlongVoronoi".
+- use pumpTokens(); loop over pump names in plotLatlongVoronoiCases().
+
+
 ### cholera 0.8.0.9077
 
 - add exceptions for "voronoi" and "latlongVoronoi" classes in pumpTokens().
