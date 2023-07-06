@@ -4,7 +4,7 @@
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param case.location Character. "address" or "orthogonal". "address" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
-#' @param pump.location Character. "address" or "orthogonal". "address" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}. 
+#' @param pump.location Character. "address" or "orthogonal". "address" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}.
 #' @export
 
 latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
@@ -25,7 +25,7 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   } else if (pump.location == "address") {
     if (vestry) pump.data <- cholera::pumps.vestry
     else pump.data <- cholera::pumps
-  } 
+  }
 
   cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
 
@@ -48,8 +48,8 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
     })
   }
 
-  out <- list(pump.select = pump.id, vestry = vestry, cells = cells,
-    pump.data = pump.data, statistic.data = statistic.data,
+  out <- list(pump.select = pump.select, pump.id = pump.id, vestry = vestry,
+    cells = cells, pump.data = pump.data, statistic.data = statistic.data,
     case.location = case.location)
   class(out) <- "latlongNeighborhoodVoronoi"
   out
@@ -65,18 +65,18 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 plot.latlongNeighborhoodVoronoi <- function(x, add.pumps = TRUE,
   euclidean.paths = FALSE, ...) {
 
-  pump.select <- x$pump.select
+  pump.id <- x$pump.id
   vars <- c("lon", "lat")
 
   snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE,
     add.pumps = FALSE)
   invisible(lapply(x$cells, function(x) polygon(x[, vars])))
-  if (add.pumps) addPump(pump.select, vestry = x$vestry, latlong = TRUE)
+  if (add.pumps) addPump(pump.id, vestry = x$vestry, latlong = TRUE)
 
-  if (!is.null(pump.select)) {
-    unselected <- x$pump.data[!x$pump.data$id %in% pump.select, ]
-    names(x$statistic.data) <- pump.select
-    snow.colors <- snowColors(vestry = x$vestry)[paste0("p", pump.select)]
+  if (!is.null(pump.id)) {
+    unselected <- x$pump.data[!x$pump.data$id %in% pump.id, ]
+    names(x$statistic.data) <- pump.id
+    snow.colors <- snowColors(vestry = x$vestry)[paste0("p", pump.id)]
     points(unselected[, vars], pch = 2, col = "gray")
     text(unselected[, vars], labels = paste0("p", unselected$id), pos = 1,
       col = "gray")
@@ -97,17 +97,17 @@ plot.latlongNeighborhoodVoronoi <- function(x, add.pumps = TRUE,
   }
 
   if (euclidean.paths) {
-    plotLatlongEuclideanPaths(x, pump.select, snow.colors, vars)
+    plotLatlongEuclideanPaths(x, pump.id, snow.colors, vars)
   } else {
     plotLatlongVoronoiCases(x, snow.colors, vars)
   }
 }
 
-plotLatlongEuclideanPaths <- function(x, pump.select, snow.colors, vars) {
+plotLatlongEuclideanPaths <- function(x, pump.id, snow.colors, vars) {
   cases <- cholera::fatalities.address
 
-  if (is.null(pump.select)) p.id <- x$pump.data$id
-  else p.id <- pump.select
+  if (is.null(pump.id)) p.id <- x$pump.data$id
+  else p.id <- pump.id
 
   nearest.pump <- do.call(rbind, lapply(cases$anchor, function(a) {
     p1 <- cases[cases$anchor == a, vars]
@@ -116,7 +116,7 @@ plotLatlongEuclideanPaths <- function(x, pump.select, snow.colors, vars) {
       geosphere::distGeo(p1, p2)
     }, numeric(1L))
     near.id <- which.min(d)
-    if (is.null(pump.select)) p.nr <- x$pump.data$id[near.id]
+    if (is.null(pump.id)) p.nr <- x$pump.data$id[near.id]
     else p.nr <- p.id[near.id]
     data.frame(case = a, pump = p.nr, meters = d[near.id])
   }))
