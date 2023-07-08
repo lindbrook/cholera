@@ -180,15 +180,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 plot.voronoi <- function(x, voronoi.cells = TRUE, delaunay.triangles = FALSE,
   euclidean.paths = FALSE, ...) {
 
-  rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
-  map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-  roads.list <- split(rd[, c("x", "y")], rd$street)
-  border.list <- split(map.frame[, c("x", "y")], map.frame$street)
-
-  plot(cholera::fatalities.address[, c("x", "y")], xlim = x$x.rng,
-    ylim = x$y.rng, pch = NA, asp = 1)
-  invisible(lapply(roads.list, lines, col = "gray"))
-  invisible(lapply(border.list, lines))
+  snowMap(add.cases = FALSE, add.pumps = FALSE)
 
   if (is.null(x$pump.select)) {
     if (x$case.location == "address") {
