@@ -1,3 +1,8 @@
+### cholera 0.8.0.9079
+
+- use snowMap() in plot.voronoi().
+
+
 ### cholera 0.8.0.9078
 
 - change latlongNeighborhoodVoronoi()'s class to "latlongVoronoi".
