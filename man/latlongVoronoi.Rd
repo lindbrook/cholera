@@ -16,6 +16,6 @@ Compute Georeferenced Latitude and Longitude of vertices of Voronoi polygons.
 }
 \examples{
 snowMap(latlong = TRUE)
-cells <- latlongVoronoi()
+cells <- latlongVoronoi()$cells
 invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
 }

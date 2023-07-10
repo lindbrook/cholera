@@ -1,3 +1,9 @@
+### cholera 0.8.0.9080
+
+- compute Voronoi cells and Delaunay triangles in latlongVoronoi().
+- amend addVoronoi() for amended latlongVoronoi().
+
+
 ### cholera 0.8.0.9079
 
 - use snowMap() in plot.voronoi().
