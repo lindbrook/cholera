@@ -78,10 +78,11 @@ pumpsVoronoiPolygons <- function(vestry = FALSE) {
 #' @export
 #' @examples
 #' snowMap(latlong = TRUE)
-#' cells <- latlongVoronoi()
+#' cells <- latlongVoronoi()$cells
 #' invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
 
 latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
+
   origin <- data.frame(lon = min(cholera::roads$lon),
                        lat = min(cholera::roads$lat))
   topleft <- data.frame(lon = min(cholera::roads$lon),
@@ -121,15 +122,13 @@ latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
   # horizontal (East-West) and vertical (North-South) components.
   pump.meters <- geodesicMeters(pump.data)[pump.id, ]
 
-  # Voronoi cells
+  # Voronoi cells and Delaunay triangles #
 
   height <- geosphere::distGeo(origin, topleft)
   width <- geosphere::distGeo(origin, bottomright)
   bounding.box <- c(0, width, 0, height)
+
   cells <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box)
-
-  # cells DF
-
   cells.df <- do.call(rbind, cells)
   cells.lat <- sort(unique(cells.df$y), decreasing = TRUE) # unique latitudes
   tmp <- row.names(cells.df)
@@ -137,12 +136,22 @@ latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
   cells.df$cell <- as.numeric(ids[, 2])
   cells.df$vertex <- as.numeric(ids[, 3])
   row.names(cells.df) <- NULL
-
   est.lonlat <- meterLatLong(cells.df, origin, topleft, bottomright)
   est.lonlat <- est.lonlat[order(est.lonlat$cell, est.lonlat$vertex), ]
-  out <- split(est.lonlat, est.lonlat$cell)
-  names(out) <- paste0("p", pump.id)
-  out
+  cells <- split(est.lonlat, est.lonlat$cell)
+  names(cells) <- paste0("p", pump.id)
+
+  triangles <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box,
+    type = "triangles")
+  triangles.df <- do.call(rbind, triangles)
+  triangles.lat <- sort(unique(triangles.df$y), decreasing = TRUE)
+  triangles.df$id <- rep(seq_along(triangles), each = 3)
+  triangles.df$vertex <- rep(1:3, length(triangles))
+  est.lonlat <- meterLatLong(triangles.df, origin, topleft, bottomright)
+  est.lonlat <- est.lonlat[order(est.lonlat$id, est.lonlat$vertex), ]
+  triangles <- split(est.lonlat, est.lonlat$id)
+ 
+  list(cells = cells, triangles = triangles)
 }
 
 # voronoi.polygons <- latlongVoronoi()
