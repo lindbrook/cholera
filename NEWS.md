@@ -1,3 +1,8 @@
+### cholera 0.8.0.9081
+
+- add/set addDelaunay(latlong = FALSE, line.width = 1).
+
+
 ### cholera 0.8.0.9080
 
 - compute Voronoi cells and Delaunay triangles in latlongVoronoi().
