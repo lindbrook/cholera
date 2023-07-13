@@ -32,7 +32,7 @@ latlongNeighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
     else pump.data <- cholera::pumps
   }
 
-  cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
+  cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)$cells
 
   if (is.null(pump.select)) {
     pump.id <- pump.select
