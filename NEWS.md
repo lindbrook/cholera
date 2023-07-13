@@ -1,3 +1,8 @@
+### cholera 0.8.0.9083
+
+- add/set plot.voronoi(delaunay.voronoi = "voronoi").
+
+
 ### cholera 0.8.0.9082
 
 - amend latlongNeighborhoodEuclidean() for amended latlongVoronoi().
