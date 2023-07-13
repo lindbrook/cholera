@@ -1,3 +1,8 @@
+### cholera 0.8.0.9082
+
+- amend latlongNeighborhoodEuclidean() for amended latlongVoronoi().
+
+
 ### cholera 0.8.0.9081
 
 - add/set addDelaunay(latlong = FALSE, line.width = 1).
