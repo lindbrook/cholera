@@ -162,8 +162,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #' Plot Voronoi neighborhoods.
 #'
 #' @param x An object of class "voronoi" created by \code{neighborhoodVoronoi()}.
-#' @param voronoi.cells Logical. Plot Voronoi tessellation cells.
-#' @param delaunay.triangles Logical. Plot Delaunay triangles.
+#' @param delaunay.voronoi Character "delaunay", "voronoi", or "both".
 #' @param euclidean.paths Logical. Plot all Euclidean paths (star graph).
 #' @param ... Additional plotting parameters.
 #' @return A base R graph.
@@ -177,7 +176,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #' @examples
 #' plot(neighborhoodVoronoi())
 
-plot.voronoi <- function(x, voronoi.cells = TRUE, delaunay.triangles = FALSE,
+plot.voronoi <- function(x, delaunay.voronoi = "voronoi", 
   euclidean.paths = FALSE, ...) {
 
   snowMap(add.cases = FALSE, add.pumps = FALSE)
@@ -200,13 +199,18 @@ plot.voronoi <- function(x, voronoi.cells = TRUE, delaunay.triangles = FALSE,
 
   pumpTokens(x, NULL)
 
-  if (voronoi.cells) {
+  if (delaunay.voronoi == "voronoi") {
     plot(x$voronoi, add = TRUE, wline = "tess", showpoints = FALSE,
       cmpnt_lty = "solid")
-  }
-
-  if (delaunay.triangles) {
+  } else if (delaunay.voronoi == "delaunay") {
     plot(x$voronoi, add = TRUE, wline = "triang", showpoints = FALSE)
+  } else if (delaunay.voronoi == "both") {
+    plot(x$voronoi, add = TRUE, wline = "tess", showpoints = FALSE,
+      cmpnt_lty = "solid")
+    plot(x$voronoi, add = TRUE, wline = "triang", showpoints = FALSE)
+  } else {
+    stop('delaunay.voronoi must be "delaunay", "voronoi", or "both".', 
+      call. = FALSE)
   }
 
   voronoi.case.id <- pumpCase(x)

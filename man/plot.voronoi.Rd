@@ -4,15 +4,13 @@
 \alias{plot.voronoi}
 \title{Plot Voronoi neighborhoods.}
 \usage{
-\method{plot}{voronoi}(x, voronoi.cells = TRUE, delaunay.triangles = FALSE,
+\method{plot}{voronoi}(x, delaunay.voronoi = "voronoi",
   euclidean.paths = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "voronoi" created by \code{neighborhoodVoronoi()}.}
 
-\item{voronoi.cells}{Logical. Plot Voronoi tessellation cells.}
-
-\item{delaunay.triangles}{Logical. Plot Delaunay triangles.}
+\item{delaunay.voronoi}{Character "delaunay", "voronoi", or "both".}
 
 \item{euclidean.paths}{Logical. Plot all Euclidean paths (star graph).}
 
