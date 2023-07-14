@@ -32,14 +32,14 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   cells.triangles <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
 
   if (statistic == "orthogonal") {
-    statistic.data <- lapply(cells.triangles$cells, function(p) {
+    statistic.data <- lapply(cells.triangles$cells, function(c) {
       sp::point.in.polygon(cholera::latlong.ortho.addr$lon,
-        cholera::latlong.ortho.addr$lat, p$lon, p$lat)
+        cholera::latlong.ortho.addr$lat, c$lon, c$lat)
     })
   } else if (statistic == "address") {
-    statistic.data <- lapply(cells.triangles$cells, function(p) {
+    statistic.data <- lapply(cells.triangles$cells, function(c) {
       sp::point.in.polygon(cholera::fatalities.address$lon,
-        cholera::fatalities.address$lat, p$lon, p$lat)
+        cholera::fatalities.address$lat, c$lon, c$lat)
     })
   }
 
