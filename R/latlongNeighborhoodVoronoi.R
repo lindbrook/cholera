@@ -29,7 +29,19 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
     else pump.data <- cholera::pumps
   }
 
-  cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
+  cells.triangles <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
+
+  if (statistic == "orthogonal") {
+    statistic.data <- lapply(cells.triangles$cells, function(p) {
+      sp::point.in.polygon(cholera::latlong.ortho.addr$lon,
+        cholera::latlong.ortho.addr$lat, p$lon, p$lat)
+    })
+  } else if (statistic == "address") {
+    statistic.data <- lapply(cells.triangles$cells, function(p) {
+      sp::point.in.polygon(cholera::fatalities.address$lon,
+        cholera::fatalities.address$lat, p$lon, p$lat)
+    })
+  }
 
   if (!is.null(pump.select)) {
     pump.id <- selectPump(pump.data, pump.select = pump.select,
@@ -38,21 +50,10 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
     pump.id <- pump.select
   }
 
-  if (statistic == "orthogonal") {
-    statistic.data <- lapply(cells, function(cell) {
-      sp::point.in.polygon(cholera::latlong.ortho.addr$lon,
-        cholera::latlong.ortho.addr$lat, cell$lon, cell$lat)
-    })
-  } else if (statistic == "address") {
-    statistic.data <- lapply(cells, function(c) {
-      sp::point.in.polygon(cholera::fatalities.address$lon,
-        cholera::fatalities.address$lat, c$lon, c$lat)
-    })
-  }
-
   out <- list(pump.select = pump.select, pump.id = pump.id, vestry = vestry,
-    cells = cells, pump.data = pump.data, statistic.data = statistic.data,
-    case.location = case.location, snow.colors = snow.colors)
+    cells.triangles = cells.triangles, pump.data = pump.data,
+    statistic.data = statistic.data, case.location = case.location,
+    snow.colors = snow.colors)
 
   class(out) <- "latlongVoronoi"
   out
@@ -61,20 +62,20 @@ latlongNeighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for latlongNeighborhoodVoronoi()
 #' @param x Object.
 #' @param add.pumps Logical.
+#' @param delaunay.voronoi Character "delaunay", "voronoi", or "both".
 #' @param euclidean.paths Logical.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.latlongVoronoi <- function(x, add.pumps = TRUE, euclidean.paths = FALSE, 
-  ...) {
+plot.latlongVoronoi <- function(x, add.pumps = TRUE, 
+  delaunay.voronoi = "voronoi", euclidean.paths = FALSE, ...) {
 
   pump.id <- x$pump.id
   vars <- c("lon", "lat")
 
   snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE,
     add.pumps = FALSE)
-  invisible(lapply(x$cells, function(x) polygon(x[, vars])))
-
+  
   if (add.pumps) pumpTokens(x, type = NULL, latlong = TRUE)
 
   if (!is.null(pump.id)) {
@@ -91,6 +92,30 @@ plot.latlongVoronoi <- function(x, add.pumps = TRUE, euclidean.paths = FALSE,
     } else if (x$case.location == "orthogonal") {
       title(main = "Pump Neighborhoods: Voronoi (orthogonal)")
     }
+  }
+
+  case.partition <- lapply(x$statistic.data, function(dat) {
+    cholera::fatalities.address$anchor[dat == 1]
+  })
+
+  if (delaunay.voronoi == "voronoi") {
+    invisible(lapply(x$cells.triangles$cells, function(dat) {
+      polygon(dat[, vars])
+    }))
+  } else if (delaunay.voronoi == "delaunay") {
+    invisible(lapply(x$cells.triangles$triangles, function(dat) {
+      polygon(dat[, vars])
+    }))
+  } else if (delaunay.voronoi == "both") {
+    invisible(lapply(x$cells.triangles$cells, function(dat) {
+      polygon(dat[, vars])
+    }))
+    invisible(lapply(x$cells.triangles$triangles, function(dat) {
+      polygon(dat[, vars])
+    }))
+  } else {
+    stop('cells.triangles must be "cells", "triangles", or "both".',
+      call. = FALSE)
   }
 
   if (euclidean.paths) {

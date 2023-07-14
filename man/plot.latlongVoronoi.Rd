@@ -4,15 +4,15 @@
 \alias{plot.latlongVoronoi}
 \title{Plot method for latlongNeighborhoodVoronoi()}
 \usage{
-\method{plot}{latlongVoronoi}(x, add.pumps = TRUE, type = "cells",
-  euclidean.paths = FALSE, ...)
+\method{plot}{latlongVoronoi}(x, add.pumps = TRUE,
+  delaunay.voronoi = "voronoi", euclidean.paths = FALSE, ...)
 }
 \arguments{
 \item{x}{Object.}
 
 \item{add.pumps}{Logical.}
 
-\item{type}{Character. "delaunay", "voronoi", or "both".}
+\item{delaunay.voronoi}{Character "delaunay", "voronoi", or "both".}
 
 \item{euclidean.paths}{Logical.}
 
