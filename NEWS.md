@@ -1,3 +1,8 @@
+### cholera 0.8.0.9085
+
+- enable neighborhoodEuclidean(case.location = "orthogonal"); remove msg argument.
+
+
 ### cholera 0.8.0.9084
 
 - add/set plot.latlongVoronoi(delaunay.voronoi = "voronoi").
