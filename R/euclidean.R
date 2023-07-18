@@ -128,7 +128,6 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
     }
     euclideanStar(x, anchors, nearest.pump, pump.data,
       add.observed.points = add.observed.points)
-    addRoads(col = "black")
   } else if (type == "area.points") {
     euclideanAreaPoints(x, anchors, nearest.pump)
     addRoads(col = "black")
