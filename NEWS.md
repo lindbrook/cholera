@@ -1,6 +1,12 @@
+### cholera 0.8.0.9086
+
+- remove redundant addRoads() in plot.euclidean().
+
+
 ### cholera 0.8.0.9085
 
-- enable neighborhoodEuclidean(case.location = "orthogonal"); remove msg argument.
+- enable neighborhoodEuclidean(case.location = "orthogonal"); remove msg 
+  argument.
 
 
 ### cholera 0.8.0.9084
