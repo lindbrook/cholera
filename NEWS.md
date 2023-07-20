@@ -1,3 +1,8 @@
+### cholera 0.8.0.9087
+
+- clean plot.latlongEuclidean(type).
+
+
 ### cholera 0.8.0.9086
 
 - remove redundant addRoads() in plot.euclidean().
