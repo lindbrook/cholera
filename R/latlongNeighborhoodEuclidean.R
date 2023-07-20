@@ -99,24 +99,13 @@ plot.latlongEuclidean <- function(x, type = "star", ...) {
     snowMap(vestry = x$vestry, add.cases = FALSE, add.pumps = FALSE,
       add.roads = FALSE, latlong = TRUE)
 
-    if (type == "star") {
-      latlongEuclideanStar(x, vars)
-      addRoads(latlong = TRUE, col = "black")
-      pumpTokens(x, type, latlong = TRUE)
+    if (type == "star") latlongEuclideanStar(x, vars)
+    else if (type == "area.points") latlongEuclideanCases(x, vars)
+    else if (type == "area.polygons") latlongEuclideanAreaPolygons(x)
+    else stop('type must be "star", "area.points" or "area.polygons".')
 
-    } else if (type == "area.points") {
-      latlongEuclideanCases(x, vars)
-      addRoads(latlong = TRUE, col = "black")
-      pumpTokens(x, type, latlong = TRUE)
-
-    } else if (type == "area.polygons") {
-      latlongEuclideanAreaPolygons(x)
-      addRoads(latlong = TRUE, col = "black")
-      pumpTokens(x, type, latlong = TRUE)
-    } else {
-      stop('type must be "star", "area.points" or "area.polygons".',
-        call. = FALSE)
-    }
+    addRoads(latlong = TRUE, col = "black")
+    pumpTokens(x, type, latlong = TRUE)
   }
 
   if (!is.null(pump.id)) {
