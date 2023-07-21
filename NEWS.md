@@ -1,3 +1,9 @@
+### cholera 0.8.0.9088
+
+- use snowMap() and addRoads() in plot.walking().
+- drop msg argument in neighborhoodWalking().
+
+
 ### cholera 0.8.0.9087
 
 - clean plot.latlongEuclidean(type).

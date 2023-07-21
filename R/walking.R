@@ -100,7 +100,6 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
 #' @param type Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
-#' @param msg Logical. Toggle in-progress messages.
 #' @param tsp.method Character. Traveling salesperson problem algorithm.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
@@ -114,9 +113,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.walking <- function(x, type = "roads", msg = FALSE,
-  tsp.method = "repetitive_nn", ...) {
-
+plot.walking <- function(x, type = "roads", tsp.method = "repetitive_nn", ...) {
   if (type %in% c("roads", "area.points", "area.polygons") == FALSE) {
     stop('type must be "roads", "area.points", "area.polygons".')
   }
@@ -127,10 +124,6 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
     }
   }
 
-  if (msg) {
-    if (x$case.set == "expected") message("Working...")
-  }
-
   n.data <- neighborhoodPathData(x)
   dat <- n.data$dat
   edges <- n.data$edges
@@ -138,19 +131,8 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
   p.node <- n.data$p.node
   p.name <- n.data$p.name
 
-  rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
-  map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-  road.list <- split(rd[, c("x", "y")], rd$street)
-  border.list <- split(map.frame[, c("x", "y")], map.frame$street)
-  x.range <- range(cholera::roads$x)
-  y.range <- range(cholera::roads$y)
-
-  plot(cholera::fatalities[, c("x", "y")], xlim = x.range, ylim = y.range,
-    pch = NA, asp = 1)
-  invisible(lapply(border.list, lines))
-
   if (x$case.set == "observed") {
-    invisible(lapply(road.list, lines, col = "gray"))
+    snowMap(add.cases = FALSE, add.pumps = FALSE)
     edge.data <- lapply(neighborhood.path.edges, function(x) unique(unlist(x)))
 
     invisible(lapply(names(edge.data), function(nm) {
@@ -166,8 +148,6 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
     }))
 
   } else if (x$case.set == "snow") {
-    invisible(lapply(road.list, lines, col = "gray"))
-
     obs.whole.edges <- lapply(neighborhood.path.edges, function(x) {
       edges[unique(unlist(x)), "id2"]
     })
@@ -179,6 +159,7 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
     }))
 
   } else if (x$case.set == "expected") {
+    snowMap(add.cases = FALSE, add.pumps = FALSE, add.roads = FALSE)
     OE <- observedExpected(x, n.data)
     wholes <- OE$expected.wholes
     splits <- OE$exp.splits
@@ -207,11 +188,8 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
         col = ap$sim.proj.wholes$color, pch = 15, cex = 1.25)
       points(cholera::regular.cases[ap$sim.proj.splits$case, ],
         col = ap$sim.proj.splits$color, pch = 15, cex = 1.25)
-      invisible(lapply(road.list, lines))
-
+      addRoads(col = "black")
     } else if (type == "area.polygons") {
-      invisible(lapply(road.list, lines))
-
       whole.cases <- lapply(names(wholes), function(nm) {
         sel <- sim.proj$road.segment %in% wholes[[nm]]
         cases <- sim.proj[sel, "case"]
@@ -235,6 +213,7 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
 
       names(neighborhood.cases) <- pearl.neighborhood
 
+      # Exception fix
       # plot(neighborhoodWalking(-(7:8), case.set = "expected"),
       #   type = "area.polygons")
       neg78 <- identical(as.integer(x$pump.id), c(1:6, 9:13)) |
@@ -248,6 +227,7 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
         neighborhood.cases$`9` <- neighborhood.cases$`9`[sel]
       }
 
+      # Exception fix
       # plot(neighborhoodWalking( case.set = "expected"), "area.polygons")
       all.pumps <- identical(as.integer(x$pump.id), c(1:13)) |
                    identical(as.integer(x$pump.id), c(1:14))
@@ -278,15 +258,16 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
           tsp.method = tsp.method, mc.cores = x$cores)
       }
 
+      addRoads(col = "black")
+
       invisible(lapply(names(pearl.string), function(nm) {
         sel <- paste0("p", nm)
         polygon(cholera::regular.cases[pearl.string[[nm]], ],
           col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = 2/3))
       }))
-
-    } else {
-      invisible(lapply(road.list, lines, col = "gray"))
-
+      
+    } else if (type == "roads") {
+      addRoads()
       invisible(lapply(names(wholes), function(nm) {
         n.edges <- edges[edges$id %in% wholes[[nm]], ]
         segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 3,
@@ -314,10 +295,6 @@ plot.walking <- function(x, type = "roads", msg = FALSE,
   } else {
     title(main = paste0("Pump Neighborhoods: Walking", "\n", "Pumps ",
       paste(sort(x$pump.select), collapse = ", ")))
-  }
-
-  if (msg) {
-    if (x$case.set == "expected") message("Done!")
   }
 }
 

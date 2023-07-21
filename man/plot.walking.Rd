@@ -4,15 +4,13 @@
 \alias{plot.walking}
 \title{Plot method for neighborhoodWalking().}
 \usage{
-\method{plot}{walking}(x, type = "roads", msg = FALSE,
-  tsp.method = "repetitive_nn", ...)
+\method{plot}{walking}(x, type = "roads", tsp.method = "repetitive_nn",
+  ...)
 }
 \arguments{
 \item{x}{An object of class "walking" created by \code{neighborhoodWalking()}.}
 
 \item{type}{Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
-
-\item{msg}{Logical. Toggle in-progress messages.}
 
 \item{tsp.method}{Character. Traveling salesperson problem algorithm.}
 
