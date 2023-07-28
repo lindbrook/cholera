@@ -1,3 +1,9 @@
+### cholera 0.8.0.9089
+
+- change neighborhoodData(observed = TRUE) to 
+  neighborhoodData(case.set = "observed").
+
+
 ### cholera 0.8.0.9088
 
 - use snowMap() and addRoads() in plot.walking().
