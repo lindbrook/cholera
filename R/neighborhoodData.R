@@ -2,7 +2,7 @@
 #'
 #' Assembles cases, pumps and road into a network graph.
 #' @param vestry Logical. Use Vestry Report pump data.
-#' @param case.set Character. "observed" or "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
+#' @param case.set Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
 #' @param embed Logical. Embed cases and pumps into road network.
 #' @param embed.landmarks Logical. Embed landmarks into road network.
 #' @export
