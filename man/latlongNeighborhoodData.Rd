@@ -4,10 +4,13 @@
 \alias{latlongNeighborhoodData}
 \title{Compute network graph of roads, cases and pumps.}
 \usage{
-latlongNeighborhoodData(vestry = FALSE, multi.core = TRUE)
+latlongNeighborhoodData(vestry = FALSE, case.set = "observed",
+  multi.core = TRUE)
 }
 \arguments{
 \item{vestry}{Logical.}
+
+\item{case.set}{Character. "observed" or "expected".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }

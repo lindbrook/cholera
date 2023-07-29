@@ -1,3 +1,8 @@
+### cholera 0.8.0.9090
+
+- add/set latlongNeighborhoodData(case.set = "observed").
+
+
 ### cholera 0.8.0.9089
 
 - change neighborhoodData(observed = TRUE) to 
