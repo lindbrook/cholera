@@ -1,13 +1,17 @@
 #' Embed anchors and pumps into road segments (prototype).
 #'
 #' @param vestry Logical.
+#' @param case.set Character. "observed" or "expected".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @noRd
 
-latlongEmbed <- function(vestry = FALSE, multi.core = TRUE) {
+latlongEmbed <- function(vestry = FALSE, case.set = "observed", 
+  multi.core = TRUE) {
+  
   cores <- multiCore(multi.core)
 
-  ortho.addr <- cholera::latlong.ortho.addr
+  if (case.set == "observed") ortho.addr <- cholera::latlong.ortho.addr
+  else if (case.set == "expected") ortho.addr <- cholera::latlong.sim.ortho.proj
 
   if (vestry) ortho.pump <- cholera::latlong.ortho.pump.vestry
   else ortho.pump <- cholera::latlong.ortho.pump
@@ -15,13 +19,13 @@ latlongEmbed <- function(vestry = FALSE, multi.core = TRUE) {
 
   road.data <- roadSegments(latlong = TRUE)
 
-  obs.segs <- unique(c(ortho.addr$road.segment, ortho.pump$road.segment))
+  obs.segs <- union(ortho.addr$road.segment, ortho.pump$road.segment)
   no_embeds <- road.data[!road.data$id %in% obs.segs, ]
 
   vars <- c("lon", "lat")
   vars2 <- c(vars, "case", "pump")
 
-  embeds <- lapply(obs.segs, function(s) {
+  embeds <- parallel::mclapply(obs.segs, function(s) {
     rd.tmp <- road.data[road.data$id == s, ]
     addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
     pump.tmp <- ortho.pump[ortho.pump$road.segment == s, ]
@@ -48,15 +52,15 @@ latlongEmbed <- function(vestry = FALSE, multi.core = TRUE) {
       embed.data <- rbind(endpts, addr.embed)
     }
 
-    out <- embed.data[order(embed.data$lon, embed.data$lat), ]
-    tmp <- out[, vars]
+    nodes <- embed.data[order(embed.data$lon, embed.data$lat), ]
+    tmp <- nodes[, vars]
     tmp <- cbind(tmp[-nrow(tmp), ], tmp[-1, ])
     coord.nms <- paste0(names(tmp), c(rep(1, 2), rep(2, 2)))
     names(tmp) <- coord.nms
     tmp <- cbind(tmp, rd.tmp[, c("street", "id", "name")])
     edges <- tmp[, c("street", "id", "name", coord.nms)]
-    list(edges = edges, nodes = out)
-  })
+    list(edges = edges, nodes = nodes)
+  }, mc.cores = cores)
 
   edges <- do.call(rbind, lapply(embeds, function(x) x$edges))
   edges <- rbind(edges, no_embeds[, names(edges)])
