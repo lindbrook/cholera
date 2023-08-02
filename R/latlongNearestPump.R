@@ -3,20 +3,26 @@
 #' @param pump.select Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param metric Character. "euclidean" or "walking".
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
+#' @param case.set Character. "observed" or "expected".
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @export
 #' @return An R data frame or list of 'igraph' path nodes.
 
 latlongNearestPump <- function(pump.select = NULL, metric = "walking",
-  vestry = FALSE, weighted = TRUE, time.unit = "second", walking.speed = 5,
-  multi.core = TRUE) {
+  vestry = FALSE, case.set = "observed", weighted = TRUE, time.unit = "second",
+  walking.speed = 5, multi.core = TRUE, dev.mode = FALSE) {
 
   cores <- multiCore(multi.core)
+  vars <- c("lon", "lat")
 
-  if (metric == "euclidean") {
+  if (metric %in% c("euclidean", "walking") == FALSE) {
+    stop('metric must either be "euclidean" or "walking".', call. = FALSE)
+
+  } else if (metric == "euclidean") {
     if (vestry) {
       pump.data <- cholera::pumps.vestry
     } else {
@@ -25,8 +31,6 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
 
     p.sel <- selectPump(pump.data, pump.select = pump.select,
       metric = "euclidean", vestry = vestry)
-
-    vars <- c("lon", "lat")
 
     out <- parallel::mclapply(cholera::fatalities.address$anchor, function(x) {
       sel <- cholera::fatalities.address$anchor == x
@@ -57,8 +61,10 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
     }
 
   } else if (metric == "walking") {
-    dat <- latlongNeighborhoodData(vestry, multi.core = cores)
-    path.data <- latlong_pathData(dat, pump.select, weighted, vestry,
+    dat <- latlongNeighborhoodData(case.set = case.set, vestry = vestry,
+      multi.core = cores)
+
+    path.data <- latlong_pathData(dat, pump.select, case.set, vestry, weighted,
       cores)
 
     if (time.unit == "hour") {
@@ -73,59 +79,86 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
       distance = path.data$distance, time = walking.time)
     out <- list(neigh.data = dat, distance = distance, path = path.data$path)
 
-  } else stop('metric must be  "euclidean" or "walking".', call. = FALSE)
-
+  }
   out
 }
 
-latlong_pathData <- function(dat, pump.select, weighted, vestry, cores) {
+latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
+  cores) {
+
   g <- dat$g
   edge.list <- dat$edge.list
   edges <- dat$edges
-  ortho.addr <- cholera::latlong.ortho.addr
 
-  if (vestry) ortho.pump <- cholera::latlong.ortho.pump.vestry
-  else ortho.pump <- cholera::latlong.ortho.pump
-  names(ortho.pump)[names(ortho.pump) == "id"] <- "pump"
+  if (case.set == "observed") {
+    ortho.addr <- cholera::latlong.ortho.addr
+  } else if (case.set == "expected") {
+    ortho.addr <- cholera::latlong.sim.ortho.proj
+  }
+
+  if (vestry) {
+    ortho.pump <- cholera::latlong.ortho.pump.vestry
+    pmp <- cholera::pumps.vestry
+  } else {
+    ortho.pump <- cholera::latlong.ortho.pump
+    pmp <- cholera::pumps
+  }
 
   if (!is.null(pump.select)) {
     if (all(pump.select > 0)) {
-      ortho.pump <- ortho.pump[ortho.pump$pump %in% pump.select, ]
+      ortho.pump <- ortho.pump[ortho.pump$id %in% pump.select, ]
     } else if (all(pump.select < 0)) {
-      ortho.pump <- ortho.pump[!ortho.pump$pump %in% -pump.select, ]
+      ortho.pump <- ortho.pump[!ortho.pump$id %in% -pump.select, ]
     } else {
-      stop('If not NULL, "pump.select" must be strictly positive or negative.',
-        call. = FALSE)
+      stop('If not NULL, "pump.select" must be strictly positive or negative.')
     }
   }
 
-  ortho.addr$node <- paste0(ortho.addr$lon, "_&_", ortho.addr$lat)
   ortho.pump$node <- paste0(ortho.pump$lon, "_&_", ortho.pump$lat)
 
   ## Adam and Eve Court: isolate with pump (#2) ##
-  sel <- cholera::road.segments$name == "Adam and Eve Court"
-  adam.eve <- cholera::road.segments[sel, "id"]
-  adam.eve.pump <- ortho.pump[ortho.pump$road.segment == adam.eve, "node"]
-  ortho.pump <- ortho.pump[!ortho.pump$node %in% adam.eve.pump, ]
+
+  rd.nm <- "Adam and Eve Court"
+  sel <- cholera::road.segments[cholera::road.segments$name == rd.nm, ]$id
+  adam.eve <- ortho.addr$road.segment %in% sel
+
+  if (any(adam.eve)) {
+    ortho.addr.adam.eve <- ortho.addr[adam.eve, ]
+    ortho.addr <- ortho.addr[!adam.eve, ]
+  }
+
+  adam.eve.pump <- pmp[pmp$street == rd.nm, ]$id
+  ortho.pump <- ortho.pump[ortho.pump$id != adam.eve.pump, ]
 
   ## Falconberg Court and Mews: isolate without pump ##
-  # falconberg.court.mews <- c("40-1", "41-1", "41-2", "63-1")
-  # ortho.addr[ortho.addr$seg %in% falconberg.court.mews, ]
 
-  paths <- lapply(ortho.addr$node, function(case.node) {
-     p <- igraph::shortest_paths(g, case.node, ortho.pump$node,
-       weights = edges$d)$vpath
-     stats::setNames(p, ortho.pump$pump)
-  })
+  rd.nm <- c("Falconberg Court", "Falconberg Mews")
+  sel <- cholera::road.segments$name %in% rd.nm
+  falconberg <- ortho.addr$road.segment %in% cholera::road.segments[sel, ]$id
 
-  distances <- lapply(ortho.addr$node, function(case.node) {
+  if (any(falconberg)) {
+    ortho.addr.falconberg <- ortho.addr[falconberg, ]
+    ortho.addr <- ortho.addr[!falconberg, ]
+  }
+
+  ##
+
+  ortho.addr$node <- paste0(ortho.addr$lon, "_&_", ortho.addr$lat)
+
+  paths <- parallel::mclapply(ortho.addr$node, function(case.node) {
+    p <- igraph::shortest_paths(g, case.node, ortho.pump$node,
+      weights = edges$d)$vpath
+    stats::setNames(p, ortho.pump$id)
+  }, mc.cores = cores)
+
+  distances <- parallel::mclapply(ortho.addr$node, function(case.node) {
     igraph::distances(g, case.node, ortho.pump$node, weights = edges$d)
-  })
+  }, mc.cores = cores)
 
   min.dist <- vapply(distances, function(x) x[which.min(x)], numeric(1L))
   path.sel <- vapply(distances, which.min, integer(1L))
 
-  nearest.pump <- vapply(path.sel, function(i) ortho.pump[i, "pump"],
+  nearest.pump <- vapply(path.sel, function(i) ortho.pump[i, "id"],
     numeric(1L))
 
   short.path <- lapply(seq_along(paths), function(i) {

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9092
+
+- add/set latlongNearestPump(case.set = "observed") and parallelize.
+
+
 ### cholera 0.8.0.9091
 
 - add/set latlongEmbed(case.set = "observed") and parallelize.
