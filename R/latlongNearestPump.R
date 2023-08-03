@@ -52,13 +52,8 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
 
     out <- do.call(rbind, out)
 
-    if (time.unit == "hour") {
-      out$time <- out$distance / (1000L * walking.speed)
-    } else if (time.unit == "minute") {
-      out$time <- (60L * out$distance) / (1000L * walking.speed)
-    } else if (time.unit == "second") {
-      out$time <- (3600L * out$distance) / (1000L * walking.speed)
-    }
+    out$time <- walkingTime(out$distance, time.unit = time.unit,
+      walking.speed = walking.speed)
 
   } else if (metric == "walking") {
     dat <- latlongNeighborhoodData(case.set = case.set, vestry = vestry,
@@ -67,13 +62,8 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
     path.data <- latlong_pathData(dat, pump.select, case.set, vestry, weighted,
       cores)
 
-    if (time.unit == "hour") {
-      walking.time <- path.data$distance / (1000L * walking.speed)
-    } else if (time.unit == "minute") {
-      walking.time <- (60L * path.data$distance) / (1000L * walking.speed)
-    } else if (time.unit == "second") {
-      walking.time <- (3600L * path.data$distance) / (1000L * walking.speed)
-    }
+    walking.time <- walkingTime(path.data$distance, time.unit = time.unit,
+      walking.speed = walking.speed)
 
     distance <- data.frame(case = path.data$case, pump = path.data$pump,
       distance = path.data$distance, time = walking.time)
@@ -194,3 +184,14 @@ latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
 # latlong.nearest.pump.vestry <- latlongNearestPump(vestry = TRUE)
 # usethis::use_data(latlong.nearest.pump, overwrite = TRUE)
 # usethis::use_data(latlong.nearest.pump.vestry, overwrite = TRUE)
+
+walkingTime <- function(dist.data, time.unit = "second", walking.speed = 5) {
+  if (time.unit == "hour") {
+    out <- dist.data / (1000L * walking.speed)
+  } else if (time.unit == "minute") {
+    out <- (60L * dist.data) / (1000L * walking.speed)
+  } else if (time.unit == "second") {
+    out <- (3600L * dist.data) / (1000L * walking.speed)
+  }
+  out
+}

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9093
+
+- use walkingTime() in latlongNearestPump().
+
+
 ### cholera 0.8.0.9092
 
 - add/set latlongNearestPump(case.set = "observed") and parallelize.
