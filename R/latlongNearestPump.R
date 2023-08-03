@@ -155,9 +155,7 @@ latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
     ortho.addr <- ortho.addr[!falconberg, ]
   }
 
-  ##
-
-  ortho.addr$node <- paste0(ortho.addr$lon, "_&_", ortho.addr$lat)
+  ## graph computation ##
 
   paths <- parallel::mclapply(ortho.addr$node, function(case.node) {
     p <- igraph::shortest_paths(g, case.node, ortho.pump$node,
