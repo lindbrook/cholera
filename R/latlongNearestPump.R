@@ -177,8 +177,10 @@ latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
     paths[[i]][path.sel[i]]
   })
 
-  list(case = ortho.addr$case, pump = nearest.pump, distance = min.dist,
-    path = short.path)
+  list(case = c(ortho.addr$case, ortho.addr.adam.eve$case),
+       pump = c(nearest.pump, rep(2L, nrow(ortho.addr.adam.eve))),
+       distance = c(min.dist, unlist(distances.AE)),
+       path = c(short.path, short.path.AE))
 }
 
 # latlong.nearest.pump <- latlongNearestPump()
