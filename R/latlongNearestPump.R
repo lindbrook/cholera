@@ -114,21 +114,35 @@ latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
     }
   }
 
+  ortho.addr$node <- paste0(ortho.addr$lon, "_&_", ortho.addr$lat)
   ortho.pump$node <- paste0(ortho.pump$lon, "_&_", ortho.pump$lat)
 
   ## Adam and Eve Court: isolate with pump (#2) ##
 
-  rd.nm <- "Adam and Eve Court"
-  sel <- cholera::road.segments[cholera::road.segments$name == rd.nm, ]$id
-  adam.eve <- ortho.addr$road.segment %in% sel
+  if (2L %in% pump.select) {
+    rd.nm <- "Adam and Eve Court"
+    sel <- cholera::road.segments[cholera::road.segments$name == rd.nm, ]$id
+    adam.eve <- ortho.addr$road.segment %in% sel
 
-  if (any(adam.eve)) {
-    ortho.addr.adam.eve <- ortho.addr[adam.eve, ]
-    ortho.addr <- ortho.addr[!adam.eve, ]
+    if (any(adam.eve)) {
+      ortho.addr.adam.eve <- ortho.addr[adam.eve, ]
+      ortho.addr <- ortho.addr[!adam.eve, ]
+    }
+
+    adam.eve.pump <- pmp[pmp$street == rd.nm, ]$id
+    ortho.pump.adam.eve <- ortho.pump[ortho.pump$id == adam.eve.pump, ]
+    ortho.pump <- ortho.pump[ortho.pump$id != adam.eve.pump, ]
+
+    short.path.AE <- parallel::mclapply(ortho.addr.adam.eve$node, function(n) {
+      p <- igraph::shortest_paths(g, n, ortho.pump.adam.eve$node,
+        weights = edges$d)$vpath
+      stats::setNames(p, ortho.pump.adam.eve$id)
+    }, mc.cores = cores)
+
+    distances.AE <- parallel::mclapply(ortho.addr.adam.eve$node, function(n) {
+      igraph::distances(g, n, ortho.pump.adam.eve$node, weights = edges$d)
+    }, mc.cores = cores)
   }
-
-  adam.eve.pump <- pmp[pmp$street == rd.nm, ]$id
-  ortho.pump <- ortho.pump[ortho.pump$id != adam.eve.pump, ]
 
   ## Falconberg Court and Mews: isolate without pump ##
 
