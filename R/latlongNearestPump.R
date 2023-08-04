@@ -109,7 +109,7 @@ latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
 
   ## Adam and Eve Court: isolate with pump (#2) ##
 
-  if (2L %in% pump.select) {
+  if (case.set == "expected" & 2L %in% pump.select) {
     rd.nm <- "Adam and Eve Court"
     sel <- cholera::road.segments[cholera::road.segments$name == rd.nm, ]$id
     adam.eve <- ortho.addr$road.segment %in% sel
@@ -167,7 +167,7 @@ latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
     paths[[i]][path.sel[i]]
   })
 
-  if (2L %in% pump.select) {
+  if (case.set == "expected" & 2L %in% pump.select) {
     list(case = c(ortho.addr$case, ortho.addr.adam.eve$case),
          pump = c(nearest.pump, rep(2L, nrow(ortho.addr.adam.eve))),
          distance = c(min.dist, unlist(distances.AE)),
