@@ -3,6 +3,7 @@
 - restrict Adam and Eve Court exception to 
   latlongNearestPump(case.set = "expected").
 
+
 ### cholera 0.8.0.9093
 
 - use walkingTime() in latlongNearestPump().
