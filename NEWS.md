@@ -1,3 +1,8 @@
+### cholera 0.8.0.9095
+
+- use selectPump() in latlongNearestPump(metric = "walking").
+
+
 ### cholera 0.8.0.9094
 
 - restrict Adam and Eve Court exception to 
