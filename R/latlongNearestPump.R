@@ -19,16 +19,16 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
   cores <- multiCore(multi.core)
   vars <- c("lon", "lat")
 
+  if (vestry) {
+    pump.data <- cholera::pumps.vestry
+  } else {
+    pump.data <- cholera::pumps
+  }
+
   if (metric %in% c("euclidean", "walking") == FALSE) {
     stop('metric must either be "euclidean" or "walking".', call. = FALSE)
 
   } else if (metric == "euclidean") {
-    if (vestry) {
-      pump.data <- cholera::pumps.vestry
-    } else {
-      pump.data <- cholera::pumps
-    }
-
     p.sel <- selectPump(pump.data, pump.select = pump.select,
       metric = "euclidean", vestry = vestry)
 
@@ -58,24 +58,18 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
   } else if (metric == "walking") {
     dat <- latlongNeighborhoodData(case.set = case.set, vestry = vestry,
       multi.core = cores)
-
-    path.data <- latlong_pathData(dat, pump.select, case.set, vestry, weighted,
-      cores)
-
+    p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
+    path.data <- latlong_pathData(dat, p.sel, case.set, vestry, weighted, cores)
     walking.time <- walkingTime(path.data$distance, time.unit = time.unit,
       walking.speed = walking.speed)
-
     distance <- data.frame(case = path.data$case, pump = path.data$pump,
       distance = path.data$distance, time = walking.time)
     out <- list(neigh.data = dat, distance = distance, path = path.data$path)
-
   }
   out
 }
 
-latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
-  cores) {
-
+latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
   g <- dat$g
   edge.list <- dat$edge.list
   edges <- dat$edges
@@ -94,14 +88,8 @@ latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
     pmp <- cholera::pumps
   }
 
-  if (!is.null(pump.select)) {
-    if (all(pump.select > 0)) {
-      ortho.pump <- ortho.pump[ortho.pump$id %in% pump.select, ]
-    } else if (all(pump.select < 0)) {
-      ortho.pump <- ortho.pump[!ortho.pump$id %in% -pump.select, ]
-    } else {
-      stop('If not NULL, "pump.select" must be strictly positive or negative.')
-    }
+  if (!all(pmp$id %in% p.sel)) {
+    ortho.pump <- ortho.pump[ortho.pump$id %in% p.sel, ]
   }
 
   ortho.addr$node <- paste0(ortho.addr$lon, "_&_", ortho.addr$lat)
@@ -109,7 +97,7 @@ latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
 
   ## Adam and Eve Court: isolate with pump (#2) ##
 
-  if (case.set == "expected" & 2L %in% pump.select) {
+  if (case.set == "expected" & 2L %in% p.sel) {
     rd.nm <- "Adam and Eve Court"
     sel <- cholera::road.segments[cholera::road.segments$name == rd.nm, ]$id
     adam.eve <- ortho.addr$road.segment %in% sel
@@ -167,7 +155,7 @@ latlong_pathData <- function(dat, pump.select, case.set, vestry, weighted,
     paths[[i]][path.sel[i]]
   })
 
-  if (case.set == "expected" & 2L %in% pump.select) {
+  if (case.set == "expected" & 2L %in% p.sel) {
     list(case = c(ortho.addr$case, ortho.addr.adam.eve$case),
          pump = c(nearest.pump, rep(2L, nrow(ortho.addr.adam.eve))),
          distance = c(min.dist, unlist(distances.AE)),
