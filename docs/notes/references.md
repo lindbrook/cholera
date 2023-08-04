@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2023-06-02
+2023-08-04
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -141,6 +141,9 @@ Says About Us)*. New York: Knopf.
 Peter Vinten-Johansen, et al. 2003. *Cholera, Chloroform, and the
 Science of Medicine: A Life of John Snow*. Oxford: Oxford University
 Press.
+
+Gavin Weightman. 2004. *London’s Thames: The River That Shaped a City
+and Its History*. New York: St. Martin’s Press.
 
 Peter Whitfield. 2006. *London: A Life in Maps*. London: The British
 Library.
