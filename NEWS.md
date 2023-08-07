@@ -1,3 +1,8 @@
+### cholera 0.8.0.9096
+
+- add/set embed.addr = TRUE in latlongEmbed() and latlongNeighborhoodData().
+
+
 ### cholera 0.8.0.9095
 
 - use selectPump() in latlongNearestPump(metric = "walking").

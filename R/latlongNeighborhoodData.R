@@ -3,14 +3,16 @@
 #' Assembles cases, pumps and road into a network graph.
 #' @param vestry Logical.
 #' @param case.set Character. "observed" or "expected".
+#' @param embed.addr Logical. Embed case address into graph network.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 
 latlongNeighborhoodData <- function(vestry = FALSE, case.set = "observed",
-  multi.core = TRUE) {
-  
+  embed.addr = TRUE, multi.core = TRUE) {
+
   cores <- multiCore(multi.core)
-  dat <- latlongEmbed(vestry = vestry, case.set = case.set, multi.core = cores)
+  dat <- latlongEmbed(vestry = vestry, case.set = case.set, 
+    embed.addr = embed.addr, multi.core = cores)
 
   edges <- dat$edges
   edges$node1 <- paste0(edges$lon1, "_&_", edges$lat1)
