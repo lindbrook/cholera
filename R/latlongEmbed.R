@@ -2,16 +2,24 @@
 #'
 #' @param vestry Logical.
 #' @param case.set Character. "observed" or "expected".
+#' @param embed.addr Logical. Embed case address into graph network.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @noRd
 
-latlongEmbed <- function(vestry = FALSE, case.set = "observed", 
-  multi.core = TRUE) {
-  
+latlongEmbed <- function(vestry = FALSE, case.set = "observed",
+  embed.addr = TRUE, multi.core = TRUE) {
+
   cores <- multiCore(multi.core)
 
-  if (case.set == "observed") ortho.addr <- cholera::latlong.ortho.addr
-  else if (case.set == "expected") ortho.addr <- cholera::latlong.sim.ortho.proj
+  if (embed.addr) {
+    if (case.set == "observed") {
+      ortho.addr <- cholera::latlong.ortho.addr
+    } else if (case.set == "expected") {
+      ortho.addr <- cholera::latlong.sim.ortho.proj
+    }
+  }
+
+  ## embed just pumps v. embed cases and pumps
 
   if (vestry) ortho.pump <- cholera::latlong.ortho.pump.vestry
   else ortho.pump <- cholera::latlong.ortho.pump
@@ -19,7 +27,12 @@ latlongEmbed <- function(vestry = FALSE, case.set = "observed",
 
   road.data <- roadSegments(latlong = TRUE)
 
-  obs.segs <- union(ortho.addr$road.segment, ortho.pump$road.segment)
+  if (embed.addr) {
+    obs.segs <- union(ortho.addr$road.segment, ortho.pump$road.segment)
+  } else {
+    obs.segs <- ortho.pump$road.segment
+  }
+
   no_embeds <- road.data[!road.data$id %in% obs.segs, ]
 
   vars <- c("lon", "lat")
@@ -27,7 +40,6 @@ latlongEmbed <- function(vestry = FALSE, case.set = "observed",
 
   embeds <- parallel::mclapply(obs.segs, function(s) {
     rd.tmp <- road.data[road.data$id == s, ]
-    addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
     pump.tmp <- ortho.pump[ortho.pump$road.segment == s, ]
     endpts <- data.frame(lon = unlist(rd.tmp[, paste0(vars[1], 1:2)]),
                          lat = unlist(rd.tmp[, paste0(vars[2], 1:2)]),
@@ -35,21 +47,30 @@ latlongEmbed <- function(vestry = FALSE, case.set = "observed",
                          pump = 0,
                          row.names = NULL)
 
-    if (nrow(addr.tmp) > 0) addr.embed <- addr.tmp[, c(vars, "case")]
-    if (nrow(pump.tmp) > 0) pump.embed <- pump.tmp[, c(vars, "pump")]
+    if (nrow(pump.tmp) > 0) {
+      pump.tmp$case <- 0L
+      pump.embed <- pump.tmp[, c(vars, "case", "pump")]
+    }
 
-    if (nrow(addr.tmp) > 0 & nrow(pump.tmp) > 0) {
-      addr.embed$pump <- 0
-      pump.embed$case <- 0
-      pump.embed <- pump.embed[, vars2]
-      embed.data <- rbind(endpts, addr.embed, pump.embed)
-    } else if (nrow(addr.tmp) == 0 & nrow(pump.tmp) > 0) {
-      pump.embed$case <- 0
-      pump.embed <- pump.embed[, vars2]
+    if (embed.addr) {
+      addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
+      if (nrow(addr.tmp) > 0) addr.embed <- addr.tmp[, c(vars, "case")]
+      
+      if (nrow(addr.tmp) > 0 & nrow(pump.tmp) > 0) {
+        addr.embed$pump <- 0
+        pump.embed$case <- 0
+        pump.embed <- pump.embed[, vars2]
+        embed.data <- rbind(endpts, addr.embed, pump.embed)
+      } else if (nrow(addr.tmp) == 0 & nrow(pump.tmp) > 0) {
+        pump.embed$case <- 0
+        pump.embed <- pump.embed[, vars2]
+        embed.data <- rbind(endpts, pump.embed)
+      } else if (nrow(addr.tmp) > 0 & nrow(pump.tmp) == 0) {
+        addr.embed$pump <- 0
+        embed.data <- rbind(endpts, addr.embed)
+      }
+    } else {
       embed.data <- rbind(endpts, pump.embed)
-    } else if (nrow(addr.tmp) > 0 & nrow(pump.tmp) == 0) {
-      addr.embed$pump <- 0
-      embed.data <- rbind(endpts, addr.embed)
     }
 
     nodes <- embed.data[order(embed.data$lon, embed.data$lat), ]
