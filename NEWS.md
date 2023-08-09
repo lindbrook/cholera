@@ -1,3 +1,8 @@
+### cholera 0.8.0.9099
+
+- add nominalNeighborhoodData() and nominalEmbed() prototypes.
+
+
 ### cholera 0.8.0.9098
 
 - compute geographic distance for edges and output road.data in 
