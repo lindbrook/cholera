@@ -80,12 +80,21 @@ latlongEmbed <- function(vestry = FALSE, case.set = "observed",
     names(tmp) <- coord.nms
     tmp <- cbind(tmp, rd.tmp[, c("street", "id", "name")])
     edges <- tmp[, c("street", "id", "name", coord.nms)]
-    list(edges = edges, nodes = nodes)
+
+    if (case.set == "observed") {
+      edges$id2 <- paste0(edges$id, letters[seq_len(nrow(edges))])
+    } else if (case.set == "expected") {
+      edges$id2 <- paste0(edges$id, "-", seq_len(nrow(edges)))
+    }
+
+    list(edges = edges, nodes = nodes, road.data = road.data)
   }, mc.cores = cores)
+
+  no_embeds$id2 <- paste0(no_embeds$id, "a")
 
   edges <- do.call(rbind, lapply(embeds, function(x) x$edges))
   edges <- rbind(edges, no_embeds[, names(edges)])
   edges <- edges[order(edges$street), ]
   nodes <- do.call(rbind, lapply(embeds, function(x) x$nodes))
-  list(edges = edges, nodes = nodes)
+  list(edges = edges, nodes = nodes, road.data = road.data)
 }

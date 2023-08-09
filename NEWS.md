@@ -1,3 +1,8 @@
+### cholera 0.8.0.9097
+
+- compute edges$id2 and output road.data in latlongEmbed().
+
+
 ### cholera 0.8.0.9096
 
 - add/set embed.addr = TRUE in latlongEmbed() and latlongNeighborhoodData().
