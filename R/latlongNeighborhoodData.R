@@ -11,8 +11,12 @@ latlongNeighborhoodData <- function(vestry = FALSE, case.set = "observed",
   embed.addr = TRUE, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
-  dat <- latlongEmbed(vestry = vestry, case.set = case.set, 
+  dat <- latlongEmbed(vestry = vestry, case.set = case.set,
     embed.addr = embed.addr, multi.core = cores)
+
+  road.data <- dat$road.data
+  road.data$node1 <- paste0(road.data$lon1, "_&_", road.data$lat1)
+  road.data$node2 <- paste0(road.data$lon2, "_&_", road.data$lat2)
 
   edges <- dat$edges
   edges$node1 <- paste0(edges$lon1, "_&_", edges$lat1)
@@ -21,9 +25,9 @@ latlongNeighborhoodData <- function(vestry = FALSE, case.set = "observed",
 
   g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
 
-  edges <- attributes(igraph::E(g))$vname
-  edges <- strsplit(edges, "|", fixed = TRUE)
-  edges <- lapply(edges, function(e) {
+  edge.nodes <- attributes(igraph::E(g))$vname
+  edge.nodes <- strsplit(edge.nodes, "|", fixed = TRUE)
+  edge.dist <- lapply(edge.nodes, function(e) {
     endpts <- lapply(e, function(x) unlist(strsplit(x, "_&_")))
     endpts <- lapply(endpts, as.numeric)
     nms <- paste0(c("lon", "lat"), c(rep(1, 2), rep(2, 2)))
@@ -33,10 +37,22 @@ latlongNeighborhoodData <- function(vestry = FALSE, case.set = "observed",
     out$d <- geosphere::distGeo(p1, p2)
     out
   })
-  edges <- do.call(rbind, edges)
+  edge.dist <- do.call(rbind, edge.dist)
 
-  edges$node1 <- paste0(edges$lon1, "_&_", edges$lat1)
-  edges$node2 <- paste0(edges$lon2, "_&_", edges$lat2)
+  edges$node1 <- paste0(pmin(edges$lon1, edges$lon2), "_&_",
+                        pmin(edges$lat1, edges$lat2))
+  edges$node2 <- paste0(pmax(edges$lon1, edges$lon2), "_&_",
+                        pmax(edges$lat1, edges$lat2))
+  edges$node.node <- paste0(edges$node1, "_&_", edges$node2)
+
+  edge.dist$node1 <- paste0(pmin(edge.dist$lon1, edge.dist$lon2), "_&_",
+                            pmin(edge.dist$lat1, edge.dist$lat2))
+  edge.dist$node2 <- paste0(pmax(edge.dist$lon1, edge.dist$lon2), "_&_",
+                            pmax(edge.dist$lat1, edge.dist$lat2))
+  edge.dist$node.node <- paste0(edge.dist$node1, "_&_", edge.dist$node2)
+
+  edges <- merge(edges, edge.dist[, c("d", "node.node")], by = "node.node")
+  edges$node.node <- NULL
 
   nodes <- dat$nodes
   nodes.pump <- nodes[nodes$pump != 0, ]
@@ -44,7 +60,7 @@ latlongNeighborhoodData <- function(vestry = FALSE, case.set = "observed",
   nodes.pump <- nodes.pump[order(nodes.pump$pump), c("pump", "node")]
 
   out <- list(edge.list = edge.list, g = g, edges = edges, nodes = nodes,
-              nodes.pump = nodes.pump)
+              nodes.pump = nodes.pump, road.data = road.data)
   class(out) <- "latlong_neighborhood_data"
   out
 }

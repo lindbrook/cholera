@@ -1,3 +1,9 @@
+### cholera 0.8.0.9098
+
+- compute geographic distance for edges and output road.data in 
+  latlongNeighborhoodData().
+  
+  
 ### cholera 0.8.0.9097
 
 - compute edges$id2 and output road.data in latlongEmbed().
