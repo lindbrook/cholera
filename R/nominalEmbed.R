@@ -95,6 +95,32 @@ nominalEmbed <- function(vestry = FALSE, case.set = "observed",
     }
 
     nodes <- embed.data[order(embed.data$x, embed.data$y), ]
+
+    # cases/landmarks that overlap road segment endpoints (e.g. Golden Sq)
+    dup.nodes <- duplicated(signif(nodes$x)) & duplicated(signif(nodes$y))
+
+    if (any(dup.nodes)) {
+      idx <- index0(seq_len(nrow(nodes)))
+
+      coord.audit <- vapply(seq_len(nrow(idx)), function(i) {
+        node.tmp <- nodes[unlist(idx[i, ]), ]
+        identicalCoords(node.tmp[, c("x", "y")])
+      }, logical(1L))
+
+      idx2 <- idx[coord.audit, ]
+
+      nodes.ok <- nodes[-unlist(idx2), ]
+
+      nodes.unduplicated <- lapply(seq_len(nrow(idx2)), function(i) {
+        node.tmp <- nodes[unlist(idx2[i, ]), ]
+        node.tmp[node.tmp$case > 0 | node.tmp$pump > 0, ]
+      })
+
+      nodes.unduplicated <- do.call(rbind, nodes.unduplicated)
+      nodes <- rbind(nodes.ok, nodes.unduplicated)
+      nodes <- nodes[order(nodes$x, nodes$y), ]
+    }
+
     tmp <- nodes[, vars]
     tmp <- cbind(tmp[-nrow(tmp), ], tmp[-1, ])
     coord.nms <- paste0(names(tmp), c(rep(1, 2), rep(2, 2)))
