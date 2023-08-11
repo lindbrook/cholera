@@ -133,3 +133,7 @@ nominalEmbed <- function(vestry = FALSE, case.set = "observed",
   list(g = g, edges = edges, nodes = nodes)
 }
 
+identicalCoords <- function(df) {
+  num <- signif(df[, c("x", "y")])
+  identical(num$x[1], num$x[2]) & identical(num$y[1], num$y[2])
+}
