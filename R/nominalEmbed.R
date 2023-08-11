@@ -73,7 +73,7 @@ nominalEmbed <- function(vestry = FALSE, case.set = "observed",
         addr.embed <- rbind(addr.tmp[, c(vars, "case")], land.embed)
       } else if (nrow(addr.tmp) == 0 & (nrow(land.tmp) > 0)) {
         addr.embed <- land.embed
-      } else if (nrow(addr.tmp) > 0 & (nrow(land.tmp) == 0)) {
+      } else { # (case & no landmark) | (no case & no landmark)
         addr.embed <- addr.tmp[, c(vars, "case")]
       }
 
