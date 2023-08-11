@@ -5,7 +5,7 @@
 \title{Compute network graph of roads, cases and pumps (prototype).}
 \usage{
 nominalNeighborhoodData(vestry = FALSE, case.set = "observed",
-  embed.addr = TRUE, embed.landmarks = TRUE)
+  embed.addr = TRUE, embed.landmarks = TRUE, multi.core = TRUE)
 }
 \arguments{
 \item{vestry}{Logical. Use Vestry Report pump data.}
@@ -15,6 +15,8 @@ nominalNeighborhoodData(vestry = FALSE, case.set = "observed",
 \item{embed.addr}{Logical. Embed cases into road network.}
 
 \item{embed.landmarks}{Logical. Embed landmarks into road network.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
 \value{
 An R list of nodes, edges and an 'igraph' network graph.
