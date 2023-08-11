@@ -108,7 +108,7 @@ nominalEmbed <- function(vestry = FALSE, case.set = "observed",
       edges$id2 <- paste0(edges$id, "-", seq_len(nrow(edges)))
     }
 
-    list(edges = edges, nodes = nodes, road.data = road.data)
+    list(edges = edges, nodes = nodes)
   }, mc.cores = cores)
 
   no_embeds$id2 <- paste0(no_embeds$id, "a")
@@ -130,5 +130,6 @@ nominalEmbed <- function(vestry = FALSE, case.set = "observed",
   nodes <- do.call(rbind, lapply(embeds, function(x) x$nodes))
   nodes$node <- paste0(nodes$x, "_&_", nodes$y)
 
-  list(g = g, edges = edges, nodes = nodes, road.data = road.data)
+  list(g = g, edges = edges, nodes = nodes)
 }
+
