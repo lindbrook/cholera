@@ -1,3 +1,8 @@
+### cholera 0.8.0.9101
+
+- add/set nominalEmbed(embed.pumps = TRUE).
+
+
 ### cholera 0.8.0.9100
 
 - add/set nominalNeighborhoodData(embed.pumps = TRUE).
