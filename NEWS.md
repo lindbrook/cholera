@@ -1,3 +1,8 @@
+### cholera 0.8.0.9100
+
+- add/set nominalNeighborhoodData(embed.pumps = TRUE).
+
+
 ### cholera 0.8.0.9099
 
 - add nominalNeighborhoodData() and nominalEmbed() prototypes.
