@@ -264,6 +264,7 @@ nominalEmbed <- function(vestry = FALSE, case.set = "observed",
   }
   
   nodes <- nodes[order(nodes$x, nodes$y), ]
+  names(nodes)[names(nodes) == "case"] <- "anchor"
   row.names(edges) <- NULL
   row.names(nodes) <- NULL
 

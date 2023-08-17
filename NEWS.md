@@ -1,3 +1,8 @@
+### cholera 0.8.0.9102
+
+- temporarily revert "case" to "anchor" for nodes created by nominalEmbed().
+
+
 ### cholera 0.8.0.9101
 
 - add/set nominalEmbed(embed.pumps = TRUE).
