@@ -85,7 +85,7 @@ latlongEmbedB <- function(vestry = FALSE, case.set = "observed",
         addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
 
         land.tmp <- cholera::landmarks[cholera::landmarks$road.segment == s, ]
-        land.embed <- land.tmp[, c("case", "lon", "lat")]
+        land.embed <- land.tmp[, c("case", vars)]
 
         addr.embed <- rbind(addr.tmp[, c(vars, "case")], land.embed)
 
@@ -103,7 +103,7 @@ latlongEmbedB <- function(vestry = FALSE, case.set = "observed",
                  nrow(pump.tmp) > 0) {
 
         land.tmp <- cholera::landmarks[cholera::landmarks$road.segment == s, ]
-        land.embed <- land.tmp[, c("case", "lon", "lat")]
+        land.embed <- land.tmp[, c("case", vars)]
 
         addr.embed <- land.embed
 
@@ -151,7 +151,7 @@ latlongEmbedB <- function(vestry = FALSE, case.set = "observed",
         addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
 
         land.tmp <- cholera::landmarks[cholera::landmarks$road.segment == s, ]
-        land.embed <- land.tmp[, c("case", "lon", "lat")]
+        land.embed <- land.tmp[, c("case", vars)]
 
         addr.embed <- rbind(addr.tmp[, c(vars, "case")], land.embed)
         addr.embed$pump <- 0
@@ -163,7 +163,7 @@ latlongEmbedB <- function(vestry = FALSE, case.set = "observed",
                  nrow(pump.tmp) == 0) {
 
         land.tmp <- cholera::landmarks[cholera::landmarks$road.segment == s, ]
-        land.embed <- land.tmp[, c("case", "lon", "lat")]
+        land.embed <- land.tmp[, c("case", vars)]
 
         addr.embed <- land.embed
         addr.embed$pump <- 0
@@ -252,7 +252,7 @@ latlongEmbedB <- function(vestry = FALSE, case.set = "observed",
     nodes <- rbind(n1, n2)
     nodes$case <- 0
     nodes$pump <- 0
-    nodes <- nodes[, c("lon", "lat", "case", "pump", "node")]
+    nodes <- nodes[, c(vars, "case", "pump", "node")]
   }
 
   if (!is.null(obs.segs)) {

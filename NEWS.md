@@ -1,3 +1,8 @@
+### cholera 0.8.0.9104
+
+- use vars in nominalEmbed() and latlongEmbedB().
+
+
 ### cholera 0.8.0.9103
 
 - add latlongEmbedB() prototype - based on nominalEmbed().
