@@ -52,7 +52,7 @@ nominalEmbed <- function(vestry = FALSE, case.set = "observed",
 
     vars2 <- c(vars, "case", "pump")
 
-    null.nms <- c("case", "road.segment", "x", "y")
+    null.nms <- c("case", "road.segment", vars)
     null.df <- stats::setNames(data.frame(matrix(nrow = 0, ncol = 4)), null.nms)
 
     embeds <- parallel::mclapply(obs.segs, function(s) {
@@ -248,13 +248,13 @@ nominalEmbed <- function(vestry = FALSE, case.set = "observed",
     edge.list <- edges[, c("node1", "node2")]
     g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
 
-    node.nms <- c("x", "y", "node")
+    node.nms <- c(vars, "node")
     n1 <- stats::setNames(edges[, c("x1", "y1", "node1")], node.nms)
     n2 <- stats::setNames(edges[, c("x2", "y2", "node2")], node.nms)
     nodes <- rbind(n1, n2)
     nodes$case <- 0
     nodes$pump <- 0
-    nodes <- nodes[, c("x", "y", "case", "pump", "node")]
+    nodes <- nodes[, c(vars, "case", "pump", "node")]
   }
 
   if (!is.null(obs.segs)) {
