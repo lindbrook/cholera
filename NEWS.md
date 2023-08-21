@@ -1,3 +1,8 @@
+### cholera 0.8.0.9105
+
+- add landmarkDataB().
+
+
 ### cholera 0.8.0.9104
 
 - use vars in nominalEmbed() and latlongEmbedB().
