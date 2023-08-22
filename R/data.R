@@ -99,7 +99,7 @@
 
 #' Orthogonal projection of landmarks onto road network.
 #'
-#' @format A data frame with 6 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
+#' @format A data frame with 12 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
 #'  \describe{
 #'     \item{\code{road.segment}}{"address" road segment}
 #'     \item{\code{x.proj}}{orthogonal x-coordinate}
@@ -111,6 +111,8 @@
 #'     \item{\code{case}}{numeric case ID}
 #'     \item{\code{lon}}{longitude}
 #'     \item{\code{lat}}{latitude}
+#'     \item{\code{lon.proj}}{orthogonal longitude}
+#'     \item{\code{lat.proj}}{orthogonal latitude}
 #'  }
 #' @note \code{\link{landmarkData}} document the code for these data.
 #' @docType data

@@ -7,10 +7,13 @@
 latlongLandmarks <- function(path) {
   # reset (delete) lon-lat for recomputation
   vars <- !names(cholera::landmarks) %in% c("lon", "lat")
+
   dat <- cholera::landmarks[, vars]
+  k <- nrow(dat)
+
+  # nominal coordinates
 
   tif <- "landmark_modified.tif"
-  k <- nrow(dat)
   coords <- latlongCoordinates(paste0(path, tif), k, path)
   coords.scale <- data.frame(id = coords$id, scale(coords[, c("lon", "lat")]))
 
@@ -35,7 +38,38 @@ latlongLandmarks <- function(path) {
   out <- out[order(out$case), ]
   out$geo.id <- NULL
   row.names(out) <- NULL
-  out
+  a <- out
+
+  # orthogonal projections
+
+  tif <- "ortho.landmark_modified.tif"
+  coords <- latlongCoordinates(paste0(path, tif), k, path)
+  coords.scale <- data.frame(id = coords$id, scale(coords[, c("lon", "lat")]))
+
+  tmp <- lapply(dat$case, function(id) rotatePoint(id, dataset = "landmarks"))
+  tmp <- do.call(rbind, tmp)
+  rotate.scale <- data.frame(id = dat$case, scale(tmp))
+
+  alters <- coords.scale
+  names(alters)[-1] <- c("x", "y")
+
+  match.points <- lapply(rotate.scale$id, function(id) {
+    ego <- rotate.scale[rotate.scale$id == id, c("x", "y")]
+    d <- vapply(seq_len(nrow(alters)), function(i) {
+      stats::dist(rbind(ego, alters[i, c("x", "y")]))
+    }, numeric(1L))
+    data.frame(id = id, geo.id = alters$id[which.min(d)])
+  })
+
+  match.points <- do.call(rbind, match.points)
+  out <- merge(dat, match.points, by.x = "case", by.y = "id")
+  out <- merge(out, coords, by.x = "geo.id", by.y = "id")
+  out <- out[order(out$case), ]
+  out$geo.id <- NULL
+  row.names(out) <- NULL
+  b <- out
+
+  cbind(a, stats::setNames(b[, c("lon", "lat")], c("lon.proj", "lat.proj")))
 }
 
 # usethis::use_data(landmarks, overwrite = TRUE)
