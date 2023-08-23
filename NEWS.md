@@ -1,3 +1,8 @@
+### cholera 0.8.0.9107
+
+- add embedNodes() prototype.
+
+
 ### cholera 0.8.0.9106
 
 - add orthogonal longitude and latitude to landmarks data frame.
