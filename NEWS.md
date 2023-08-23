@@ -1,3 +1,8 @@
+### cholera 0.8.0.9108
+
+- add latlongNeighborhoodDataB() prototype.
+
+
 ### cholera 0.8.0.9107
 
 - add embedNodes() prototype.
