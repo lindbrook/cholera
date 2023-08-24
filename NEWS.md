@@ -1,3 +1,9 @@
+### cholera 0.8.0.9109
+
+- archive latlongEmbedB() and nominalEmbed().
+- add neighborhoodDataB().
+
+
 ### cholera 0.8.0.9108
 
 - add latlongNeighborhoodDataB() prototype.
