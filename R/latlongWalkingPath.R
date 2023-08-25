@@ -51,13 +51,23 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
     alter.node <- alters$node
     names(alter.node) <- alters$pump
 
-    d <- c(igraph::distances(g, ego.node, alter.node, weights = edges$d))
+    if (weighted) {
+      d <- c(igraph::distances(g, ego.node, alter.node, weights = edges$d))
+    } else {
+      d <- c(igraph::distances(g, ego.node, alter.node))
+    }
+
     names(d) <- pump.id
 
     nr.pmp <- names(which.min(d))
 
-    p <- igraph::shortest_paths(g, ego.node, alter.node[nr.pmp],
-      weights = edges$d)$vpath
+    if (weighted) {
+      p <- igraph::shortest_paths(g, ego.node, alter.node[nr.pmp],
+        weights = edges$d)$vpath
+    } else {
+      p <- igraph::shortest_paths(g, ego.node, alter.node[nr.pmp])
+    }
+    
     p <- names(unlist(p))
 
     p.data <- do.call(rbind, strsplit(p, "_&_"))
