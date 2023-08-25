@@ -1,3 +1,8 @@
+### cholera 0.8.0.9110
+
+- add code for latlongWalkingPath(weighted = FALSE).
+
+
 ### cholera 0.8.0.9109
 
 - archive latlongEmbedB() and nominalEmbed().
