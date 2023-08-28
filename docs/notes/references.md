@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2023-08-04
+2023-08-28
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -53,6 +53,9 @@ Press.
 
 Mary Gabriel. 2011. *Love and Capital: Karl and Jenny Marx and the Birth
 of a Revolution*. New York: Little, Brown and Company.
+
+Vic Gattrell. 2022. *Conspiracy on Cato Street: A Tale of Liberty and
+Revolution in Regency London*. New York: Cambridge University Press.
 
 Ruth Goodman. 2015. *How to Be a Victorian: A Dawn-to-Dusk Guide to
 Victorian Life*. New York: Liveright.
