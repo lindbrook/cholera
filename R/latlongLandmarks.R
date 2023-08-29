@@ -67,7 +67,41 @@ latlongLandmarks <- function(path) {
   row.names(out) <- NULL
   b <- out
 
-  cbind(a, stats::setNames(b[, c("lon", "lat")], c("lon.proj", "lat.proj")))
+  # Directly use latlong segment coordinates for coordinates of Squares
+
+  out <- cbind(a, stats::setNames(b[, c("lon", "lat")], 
+    c("lon.proj", "lat.proj")))
+
+  sq <- lndmrks[grep("Square", lndmrks$name), ]
+
+  rd.geo <- roadSegments(latlong = TRUE)
+  rd.nom <- roadSegments(latlong = FALSE)
+  
+  one <- paste0(c("lon", "lat"), 1)
+  two <- paste0(c("lon", "lat"), 2)
+
+  out.geo <- lapply(seq_len(nrow(sq)), function(i) {
+    sel1 <- signif(rd.nom$x1) %in% signif(sq[i, ]$x) &
+            signif(rd.nom$y1) %in% signif(sq[i, ]$y)
+
+    sel2 <- signif(rd.nom$x2) %in% signif(sq[i, ]$x) &
+            signif(rd.nom$y2) %in% signif(sq[i, ]$y)
+
+    nodes.select <- rd.geo[sel1 | sel2, ]
+
+    if (sum(sel1) > sum(sel2)) sel <- one
+    else if (sum(sel2) > sum(sel1)) sel <- two
+    else stop("err.")
+
+    geo.coords <- nodes.select[-grep("Square", nodes.select$name), sel]
+    geo.coords <- stats::setNames(geo.coords, c("lon", "lat"))
+    cbind(sq[i, ], geo.coords)
+  })
+
+  out.geo <- do.call(rbind, out.geo)
+  out.geo$lon.proj <- out.geo$lon
+  out.geo$lat.proj <- out.geo$lat
+  rbind(out, out.geo[, names(out)])
 }
 
 # usethis::use_data(landmarks, overwrite = TRUE)
