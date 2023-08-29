@@ -1,3 +1,9 @@
+### cholera 0.8.0.9111
+
+- use georeferenced segment coordinates for Squares in latlongLandmarks().
+- use landmarkDataB() in landmarksPDF() and latlongLandmarks(); exclude Squares.
+
+
 ### cholera 0.8.0.9110
 
 - add code for latlongWalkingPath(weighted = FALSE).

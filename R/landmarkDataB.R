@@ -108,13 +108,7 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
     "Lion Brewery", "The Pantheon", "St James Workhouse", "Argyll House",
     "Model Lodging", "Craven Chapel", soho.square$name, golden.square$name)
 
-  rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
-  map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-  roads.list <- split(rd[, c("x", "y")], rd$street)
-  border.list <- split(map.frame[, c("x", "y")], map.frame$street)
-
   cores <- multiCore(multi.core)
-
   orthogonal.projection <- orthoProjLandmarks(landmarks, cores, dev.mode)
 
   ortho.proj <- do.call(rbind, orthogonal.projection)
