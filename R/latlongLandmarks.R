@@ -5,10 +5,8 @@
 #' @note This documents the computation of the latlong version of the landmarks data frame.
 
 latlongLandmarks <- function(path) {
-  # reset (delete) lon-lat for recomputation
-  vars <- !names(cholera::landmarks) %in% c("lon", "lat")
-
-  dat <- cholera::landmarks[, vars]
+  lndmrks <- landmarkDataB()
+  dat <- lndmrks[-grep("Square", lndmrks$name), ]
   k <- nrow(dat)
 
   # nominal coordinates
@@ -93,7 +91,11 @@ landmarksPDF <- function(path, orthogonal = FALSE, pch = 15, cex = 0.2) {
   }
   pre <- paste0(file.nm, ".")
   post <- "pdf"
-  dat <- cholera::landmarkData()
+  dat <- landmarkDataB()
+
+  # Exclude Squares from georeferencing
+  dat <- dat[-grep("Square", dat$name), ]
+
   rng <- mapRange()
   grDevices::pdf(file = paste0(path, pre, post))
   plot(dat[, coords], pch = NA, xaxt = "n", yaxt = "n", xlab = NA, ylab = NA,
