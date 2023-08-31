@@ -7,6 +7,7 @@
 latlongLandmarks <- function(path) {
   lndmrks <- landmarkDataB()
   dat <- lndmrks[-grep("Square", lndmrks$name), ]
+  dat <- dat[dat$name != "The Pantheon", ]
   k <- nrow(dat)
 
   # nominal coordinates
@@ -129,6 +130,9 @@ landmarksPDF <- function(path, orthogonal = FALSE, pch = 15, cex = 0.2) {
 
   # Exclude Squares from georeferencing
   dat <- dat[-grep("Square", dat$name), ]
+
+  # Exclude The Pantheon from georeferencing
+  dat <- dat[dat$name != "The Pantheon", ]
 
   rng <- mapRange()
   grDevices::pdf(file = paste0(path, pre, post))
