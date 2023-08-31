@@ -7,6 +7,7 @@
 latlongLandmarks <- function(path) {
   lndmrks <- landmarkDataB()
   dat <- lndmrks[-grep("Square", lndmrks$name), ]
+  dat <- dat[dat$name != "The Pantheon", ]
   k <- nrow(dat)
 
   # nominal coordinates
@@ -67,18 +68,20 @@ latlongLandmarks <- function(path) {
   row.names(out) <- NULL
   b <- out
 
-  # Directly use latlong segment coordinates for coordinates of Squares
-
-  out <- cbind(a, stats::setNames(b[, c("lon", "lat")], 
-    c("lon.proj", "lat.proj")))
-
-  sq <- lndmrks[grep("Square", lndmrks$name), ]
+  # assembly
 
   rd.geo <- roadSegments(latlong = TRUE)
   rd.nom <- roadSegments(latlong = FALSE)
-  
+
   one <- paste0(c("lon", "lat"), 1)
   two <- paste0(c("lon", "lat"), 2)
+
+  out <- cbind(a, stats::setNames(b[, c("lon", "lat")],
+    c("lon.proj", "lat.proj")))
+
+  # use latlong segment coordinates for coordinates of Squares
+
+  sq <- lndmrks[grep("Square", lndmrks$name), ]
 
   out.geo <- lapply(seq_len(nrow(sq)), function(i) {
     sel1 <- signif(rd.nom$x1) %in% signif(sq[i, ]$x) &
@@ -101,7 +104,36 @@ latlongLandmarks <- function(path) {
   out.geo <- do.call(rbind, out.geo)
   out.geo$lon.proj <- out.geo$lon
   out.geo$lat.proj <- out.geo$lat
-  rbind(out, out.geo[, names(out)])
+
+  out <- rbind(out, out.geo[, names(out)])
+
+  # use Winsley Street latlong coordinates for coordinates of The Pantheon
+
+  pantheon <- lndmrks[lndmrks$name == "The Pantheon", ]
+
+  sel1 <- signif(rd.nom$x1) %in% signif(pantheon$x) &
+          signif(rd.nom$y1) %in% signif(pantheon$y)
+
+  sel2 <- signif(rd.nom$x2) %in% signif(pantheon$x) &
+          signif(rd.nom$y2) %in% signif(pantheon$y)
+
+  nodes.select <- rd.geo[sel1 | sel2, ]
+
+  if (sum(sel1) > sum(sel2)) sel <- one
+  else if (sum(sel2) > sum(sel1)) sel <- two
+  else stop("err.")
+
+  pantheon.coords <- nodes.select[-grep("Oxford", nodes.select$name), sel]
+  pantheon.coords <- stats::setNames(pantheon.coords, c("lon", "lat"))
+
+  out.pantheon <- cbind(pantheon, pantheon.coords)
+  out.pantheon$lon.proj <- out.pantheon$lon
+  out.pantheon$lat.proj <- out.pantheon$lat
+
+  out <- rbind(out, out.pantheon[, names(out)])
+  out <- out[order(out$case), ]
+  row.names(out) <- NULL
+  out
 }
 
 # usethis::use_data(landmarks, overwrite = TRUE)
@@ -129,6 +161,9 @@ landmarksPDF <- function(path, orthogonal = FALSE, pch = 15, cex = 0.2) {
 
   # Exclude Squares from georeferencing
   dat <- dat[-grep("Square", dat$name), ]
+
+  # Exclude The Pantheon from georeferencing
+  dat <- dat[dat$name != "The Pantheon", ]
 
   rng <- mapRange()
   grDevices::pdf(file = paste0(path, pre, post))

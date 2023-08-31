@@ -1,6 +1,11 @@
+### cholera 0.8.0.9113
+
+- amend The Pantheon latlong coordinates in landmarks data frame.
+
+
 ### cholera 0.8.0.9112
 
-- amend Golden and Soho Square(s) in landmarks data frame.
+- amend Golden and Soho Square(s) latlong coordinates in landmarks data frame.
 
 
 ### cholera 0.8.0.9111
