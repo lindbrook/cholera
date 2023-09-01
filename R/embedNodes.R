@@ -319,15 +319,13 @@ orthoAddrC <- function(case.set = "observed", latlong = FALSE) {
 }
 
 orthoLandC <- function(latlong = FALSE) {
-  dat <- landmarkDataB()
-  sel <- grepl("lon", names(cholera::landmarks)) |
-         grepl("lat", names(cholera::landmarks))
-  dat <- cbind(dat, cholera::landmarks[, sel])
-  sel.latlong <- grepl("lon", names(dat)) | grepl("lat", names(dat))
+  dat <- cholera::landmarks  
   sel.xy <- grepl("x", names(dat)) | grepl("y", names(dat))
-  if (latlong) coords <- dat[, sel.latlong]
-  else coords <- dat[, sel.xy]
-  cbind(dat[, c("case", "name", "road.segment")], coords)
+  sel.latlong <- grepl("lon", names(dat)) | grepl("lat", names(dat))
+  if (latlong) out <- dat[, !sel.xy]
+  else out <- dat[, !sel.latlong]
+  names(out)[names(out) == "case"] <- "land"
+  out
 }
 
 orthoPumpsC <- function(vestry = TRUE, latlong = FALSE) {
