@@ -183,7 +183,7 @@ latlongOrthoAddress <- function(multi.core = TRUE, radius = 60) {
       data.frame(road.segment = seg, ortho.pts, ortho.dist)
     } else {
       # pick nearest segment endpoint
-      
+
       dist.to.endpts <- vapply(seq_len(nrow(seg.df)), function(i) {
         stats::dist(rbind(case, seg.df[i, ]))
       }, numeric(1L))
@@ -197,7 +197,7 @@ latlongOrthoAddress <- function(multi.core = TRUE, radius = 60) {
 
   coordsB <- data.frame(do.call(rbind, orthogonal.projectionB),
     case = manual.compute$addr, row.names = NULL)
-  
+
   coords <- rbind(coordsA, coordsB)
   coords <- coords[order(coords$case), ]
 
@@ -209,7 +209,61 @@ latlongOrthoAddress <- function(multi.core = TRUE, radius = 60) {
                             lat = min(cholera::roads$lat))
 
   est.lonlat <- meterLatLong(coords, origin, topleft, bottomright)
-  est.lonlat[order(est.lonlat$case), ]
+  est.lonlat <- est.lonlat[order(est.lonlat$case), ]
+
+  # Portland Mews (case 286) and Portland Street (case 369 @ St James Workhouse)
+  # floating point estimation rounding - 286
+
+  geo.seg <- roadSegments(TRUE)
+  nom.seg <- roadSegments(FALSE)
+
+  #
+
+  case.georef <- est.lonlat[est.lonlat$case == 286, ]
+  seg.georef <- geo.seg[geo.seg$id == "160-3", ]
+
+  ep1 <- seg.georef[, c("lon1", "lat1")]
+  ep2 <- seg.georef[, c("lon2", "lat2")]
+
+  ds <- vapply(list(ep1, ep2), function(x) {
+    geosphere::distGeo(case.georef[, c("lon", "lat")], x)
+  }, numeric(1L))
+
+  sel <- which.min(ds)
+
+  if (sel == 1L) {
+    est.lonlat[est.lonlat$case == 286, c("lon", "lat")] <- ep1
+  } else if (sel == 2L) {
+    est.lonlat[est.lonlat$case == 286, c("lon", "lat")] <- ep2
+  } else stop("err!")
+
+  # identical(est.lonlat[est.lonlat$case == 286, ]$lat, seg.georef$lat2)
+  # identical(est.lonlat[est.lonlat$case == 286, ]$lon, seg.georef$lon2)
+
+  #
+
+  case.georef <- est.lonlat[est.lonlat$case == 369, ]
+  seg.georef <- geo.seg[geo.seg$id == "194-1", ]
+
+  ep1 <- seg.georef[, c("lon1", "lat1")]
+  ep2 <- seg.georef[, c("lon2", "lat2")]
+
+  ds <- vapply(list(ep1, ep2), function(x) {
+    geosphere::distGeo(case.georef[, c("lon", "lat")], x)
+  }, numeric(1L))
+
+  sel <- which.min(ds)
+
+  if (sel == 1L) {
+    est.lonlat[est.lonlat$case == 369, c("lon", "lat")] <- ep1
+  } else if (sel == 2L) {
+    est.lonlat[est.lonlat$case == 369, c("lon", "lat")] <- ep2
+  } else stop("err!")
+
+  # identical(est.lonlat[est.lonlat$case == 369, ]$lon, seg.georef$lon1)
+  # identical(est.lonlat[est.lonlat$case == 369, ]$lat, seg.georef$lat1)
+
+  est.lonlat
 }
 
 # latlong.ortho.addr <- cholera:::latlongOrthoAddress(multi.core = TRUE)

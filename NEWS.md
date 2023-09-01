@@ -1,3 +1,10 @@
+### cholera 0.8.0.9114
+
+- use latlong road segment endpoint for cases 286 & 369 in 
+  latlongOrthoAddress().
+- amend cases 286 & 369 in latlong.ortho.addr data frame.
+
+
 ### cholera 0.8.0.9113
 
 - amend The Pantheon latlong coordinates in landmarks data frame.
