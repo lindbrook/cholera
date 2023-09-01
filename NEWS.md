@@ -1,3 +1,8 @@
+### cholera 0.8.0.9115
+
+- separate cases, landmarks and pumps in embedNodes().
+
+
 ### cholera 0.8.0.9114
 
 - use latlong road segment endpoint for cases 286 & 369 in 

@@ -58,28 +58,12 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
 
   if (!is.null(obs.segs)) {
     no_embeds <- road.data[!road.data$id %in% obs.segs, ]
-
-    vars2 <- c(vars, "case", "pump")
-
-    null.nms <- c("case", "road.segment", vars)
-    null.df <- stats::setNames(data.frame(matrix(nrow = 0, ncol = 4)), null.nms)
+    vars2 <- c(vars, "case", "land", "pump")
+    null.df <- stats::setNames(data.frame(matrix(nrow = 0, ncol = 5)), vars2)
 
     embeds <- parallel::mclapply(obs.segs, function(s) {
       rd.tmp <- road.data[road.data$id == s, ]
-
-      if (latlong) {
-        endpts <- data.frame(lon = unlist(rd.tmp[, paste0(vars[1], 1:2)]),
-                             lat = unlist(rd.tmp[, paste0(vars[2], 1:2)]),
-                             case = 0,
-                             pump = 0,
-                             row.names = NULL)
-      } else {
-        endpts <- data.frame(x = unlist(rd.tmp[, paste0(vars[1], 1:2)]),
-                             y = unlist(rd.tmp[, paste0(vars[2], 1:2)]),
-                             case = 0,
-                             pump = 0,
-                             row.names = NULL)
-      }
+      endpts <- endPoints(rd.tmp, vars, latlong = latlong)
 
       if (exists("ortho.addr")) {
         addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
@@ -100,99 +84,46 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
       }
 
       if (nrow(addr.tmp) > 0 & nrow(land.tmp) > 0 & nrow(pump.tmp) > 0) {
-        addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
-
-        land.embed <- land.tmp[, c(vars, "case")]
-        addr.embed <- rbind(addr.tmp[, c(vars, "case")], land.embed)
-
-        pump.tmp <- ortho.pump[ortho.pump$road.segment == s, ]
-        pump.tmp$case <- 0L
-        pump.embed <- pump.tmp[, vars2]
-
-        addr.embed$pump <- 0
-        pump.embed$case <- 0
-        pump.embed <- pump.embed[, vars2]
-        embed.data <- rbind(endpts, addr.embed, pump.embed)
-
+        addr.embed <- embedAddress(addr.tmp, s, vars)
+        land.embed <- embedLandmark(land.tmp, s, vars, vars2)
+        pump.embed <- embedPump(pump.tmp, s, vars, vars2)
+        embed.data <- rbind(endpts, addr.embed, land.embed, pump.embed)
       } else if (nrow(addr.tmp) == 0 &
                  nrow(land.tmp) > 0 &
                  nrow(pump.tmp) > 0) {
-
-        addr.embed <- land.tmp[, c("case", vars)]
-
-        pump.tmp <- ortho.pump[ortho.pump$road.segment == s, ]
-        pump.tmp$case <- 0L
-        pump.embed <- pump.tmp[, vars2]
-
-        addr.embed$pump <- 0
-        pump.embed$case <- 0
-        pump.embed <- pump.embed[, vars2]
-        embed.data <- rbind(endpts, addr.embed, pump.embed)
-
+        land.embed <- embedLandmark(land.tmp, s, vars, vars2)
+        pump.embed <- embedPump(pump.tmp, s, vars, vars2)
+        embed.data <- rbind(endpts, land.embed, pump.embed)
       } else if (nrow(addr.tmp) > 0 &
                  nrow(land.tmp) == 0 &
                  nrow(pump.tmp) > 0) {
-
-        addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
-        addr.embed <- addr.tmp[, c(vars, "case")]
-
-        pump.tmp <- ortho.pump[ortho.pump$road.segment == s, ]
-        pump.tmp$case <- 0L
-        pump.embed <- pump.tmp[, vars2]
-
-        addr.embed$pump <- 0
-        pump.embed$case <- 0
-        pump.embed <- pump.embed[, vars2]
+        addr.embed <- embedAddress(addr.tmp, s, vars)
+        pump.embed <- embedPump(pump.tmp, s, vars, vars2)
         embed.data <- rbind(endpts, addr.embed, pump.embed)
-
       } else if (nrow(addr.tmp) == 0 &
                  nrow(land.tmp) == 0 &
                  nrow(pump.tmp) > 0) {
-
-        pump.tmp <- ortho.pump[ortho.pump$road.segment == s, ]
-        pump.tmp$case <- 0L
-        pump.embed <- pump.tmp[, vars2]
-
-        pump.embed$case <- 0
-        pump.embed <- pump.embed[, vars2]
+        pump.embed <- embedPump(pump.tmp, s, vars, vars2)
         embed.data <- rbind(endpts, pump.embed)
-
       } else if (nrow(addr.tmp) > 0 &
                  nrow(land.tmp) > 0 &
                  nrow(pump.tmp) == 0) {
-
-        addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
-
-        land.embed <- land.tmp[, c(vars, "case")]
-        addr.embed <- rbind(addr.tmp[, c(vars, "case")], land.embed)
-        addr.embed$pump <- 0
-
-        embed.data <- rbind(endpts, addr.embed)
-
+        addr.embed <- embedAddress(addr.tmp, s, vars)
+        land.embed <- embedLandmark(land.tmp, s, vars, vars2)
+        embed.data <- rbind(endpts, addr.embed, land.embed)
       } else if (nrow(addr.tmp) == 0 &
                  nrow(land.tmp) > 0 &
                  nrow(pump.tmp) == 0) {
-        
-        addr.embed <- land.tmp[, c(vars, "case")]
-        addr.embed$pump <- 0
-
-        embed.data <- rbind(endpts, addr.embed)
-
+        land.embed <- embedLandmark(land.tmp, s, vars, vars2)
+        embed.data <- rbind(endpts, land.embed)
       } else if (nrow(addr.tmp) > 0 &
                  nrow(land.tmp) == 0 &
                  nrow(pump.tmp) == 0) {
-
-        addr.tmp <- ortho.addr[ortho.addr$road.segment == s, ]
-        addr.embed <- addr.tmp[, c(vars, "case")]
-
-        addr.embed$pump <- 0
-
+        addr.embed <- embedAddress(addr.tmp, s, vars)
         embed.data <- rbind(endpts, addr.embed)
-
       } else if (nrow(addr.tmp) == 0 &
                  nrow(land.tmp) == 0 &
                  nrow(pump.tmp) == 0) {
-
         embed.data <- endpts
       }
 
@@ -246,6 +177,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
     n2 <- stats::setNames(no_embeds[, paste0(vars, 2)], vars)
     nodes.no_embeds <- rbind(n1, n2)
     nodes.no_embeds$case <- 0
+    nodes.no_embeds$land <- 0
     nodes.no_embeds$pump <- 0
     nodes <- rbind(nodes, nodes.no_embeds)
 
@@ -279,8 +211,9 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
     n2 <- stats::setNames(edges[, paste0(node.nms, 2)], node.nms)
     nodes <- rbind(n1, n2)
     nodes$case <- 0
+    nodes$land <- 0
     nodes$pump <- 0
-    nodes <- nodes[, c(vars, "case", "pump", "node")]
+    nodes <- nodes[, c(vars, "case", "land", "pump", "node")]
   }
 
   if (!is.null(obs.segs)) {
@@ -291,11 +224,49 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
 
   if (latlong) nodes <- nodes[order(nodes$lon, nodes$lat), ]
   else nodes <- nodes[order(nodes$x, nodes$y), ]
-  # names(nodes)[names(nodes) == "case"] <- "anchor"
   row.names(edges) <- NULL
   row.names(nodes) <- NULL
 
   list(g = g, edges = edges, nodes = nodes)
+}
+
+endPoints <- function(rd.tmp, vars, latlong = FALSE) {
+  if (latlong) {
+    data.frame(lon = unlist(rd.tmp[, paste0(vars[1], 1:2)]),
+               lat = unlist(rd.tmp[, paste0(vars[2], 1:2)]),
+               case = 0,
+               land = 0,
+               pump = 0,
+               row.names = NULL)
+  } else {
+    data.frame(x = unlist(rd.tmp[, paste0(vars[1], 1:2)]),
+               y = unlist(rd.tmp[, paste0(vars[2], 1:2)]),
+               case = 0,
+               land = 0,
+               pump = 0,
+               row.names = NULL)
+  }
+}
+
+embedAddress <- function(addr.tmp, s, vars) {
+  out <- addr.tmp[addr.tmp$road.segment == s, c(vars, "case")]
+  out$land <- 0
+  out$pump <- 0
+  out
+}
+
+embedLandmark <- function(land.tmp, s, vars, vars2) {
+  out <- land.tmp[land.tmp$road.segment == s, c(vars, "land")]
+  out$case <- 0
+  out$pump <- 0
+  out[, vars2]
+}
+
+embedPump <- function(pump.tmp, s, vars, vars2) {
+  out <- pump.tmp[pump.tmp$road.segment == s, c(vars, "pump")]
+  out$case <- 0
+  out$land <- 0
+  out[, vars2]
 }
 
 orthoAddrC <- function(case.set = "observed", latlong = FALSE) {
