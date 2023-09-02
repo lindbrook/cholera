@@ -3,33 +3,52 @@
 #' Group cases into neighborhoods based on walking distance.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps. Note that you can't just select the pump on Adam and Eve Court (#2) because it's technically an isolate.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
+# #' @param case.location Character. "address" or "orthogonal". "address" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
+#' @param case.set Character. "observed" or "expected".
+#' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 
 latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
-  multi.core = TRUE) {
+  case.set = "observed", weighted = TRUE, multi.core = TRUE) {
+
+  if (!case.set %in% c("expected", "observed")) {
+    stop('case.location must be "observed" or "expected".', call. = FALSE)
+  }
 
   cores <- multiCore(multi.core)
   snow.colors <- snowColors(vestry = vestry)
 
+  # Pump Data #
   if (vestry) {
     pump.data <- cholera::pumps.vestry
   } else {
     pump.data <- cholera::pumps
   }
 
+  # Case Data #
+  if (case.set == "observed") {
+    case.data <- cholera::fatalities.address
+    case.ortho <- cholera::latlong.ortho.addr
+  } else if (case.set == "expected") {
+    case.data <- cholera::latlong.regular.cases
+    case.data$case <- seq_len(nrow(case.data))
+    case.ortho <- cholera::latlong.sim.ortho.proj
+  }
+
   pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
-  nearest.data <- latlongNearestPump(pump.select = pump.id, vestry = vestry,
-    multi.core = cores)
+  nearest.data <- latlongNearestPump(pump.select = pump.id,
+                                     case.set = case.set,
+                                     vestry = vestry,
+                                     weighted = weighted,
+                                     multi.core = cores)
 
   nearest.dist <- nearest.data$distance
   nearest.path <- nearest.data$path
   neigh.data <- nearest.data$neigh.data
-
-  nearest.pump <- data.frame(case = cholera::fatalities.address$anchor,
-                             pump = nearest.dist$pump)
-
+  nearest.pump <- data.frame(case = nearest.dist$case, pump = nearest.dist$pump)
+  
   pumpID <- sort(unique(nearest.dist$pump))
 
   neighborhood.cases <- lapply(pumpID, function(p) {
@@ -103,7 +122,7 @@ plot.latlong_walking <- function(x, ...) {
     points(p.data[, vars], col = x$snow.colors, lwd = 2, pch = 24)
     text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
   } else {
-    pump.id <- selectPump(p.data, pump.select = x$pump.select, 
+    pump.id <- selectPump(p.data, pump.select = x$pump.select,
       vestry = x$vestry)
     sel <- p.data$id %in% pump.id
     unsel <- setdiff(p.data$id, pump.id)

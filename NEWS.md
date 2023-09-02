@@ -1,3 +1,9 @@
+### cholera 0.8.0.9118
+
+- add/set latlongNeighborhoodWalking(case.set = "observed", weighted = TRUE).
+- parallelize computation of paths in plot.latlong_walking()
+
+
 ### cholera 0.8.0.9117
 
 - use neighborhoodDataB() in latlongWalkingPath().
