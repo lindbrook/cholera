@@ -1,3 +1,8 @@
+### cholera 0.8.0.9116
+
+- use neighborhoodDataB() in latlongNearestPump().
+
+
 ### cholera 0.8.0.9115
 
 - separate cases, landmarks and pumps in embedNodes().
