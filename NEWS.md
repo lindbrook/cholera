@@ -1,3 +1,8 @@
+### cholera 0.8.0.9117
+
+- use neighborhoodDataB() in latlongWalkingPath().
+
+
 ### cholera 0.8.0.9116
 
 - use neighborhoodDataB() in latlongNearestPump().
