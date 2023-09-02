@@ -56,8 +56,8 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
       walking.speed = walking.speed)
 
   } else if (metric == "walking") {
-    dat <- latlongNeighborhoodData(case.set = case.set, vestry = vestry,
-      multi.core = cores)
+    dat <- neighborhoodDataB(case.set = case.set, vestry = vestry, 
+      latlong = TRUE, multi.core = cores)
     p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
     path.data <- latlong_pathData(dat, p.sel, case.set, vestry, weighted, cores)
     walking.time <- walkingTime(path.data$distance, time.unit = time.unit,
@@ -71,7 +71,6 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
 
 latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
   g <- dat$g
-  edge.list <- dat$edge.list
   edges <- dat$edges
 
   if (case.set == "observed") {
