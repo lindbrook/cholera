@@ -37,8 +37,8 @@ latlongWalkingPath <- function(case = 1, destination = NULL, vestry = FALSE,
       pump.id <- pump.id[pump.id != 2L]
     }
 
-    network.data <- latlongNeighborhoodData(vestry = vestry, multi.core = cores)
-    edge.list <- network.data$edge.list
+    network.data <- neighborhoodDataB(vestry = vestry, latlong = TRUE,
+      multi.core = cores)
     edges <- network.data$edges
     g <- network.data$g
     nodes <- network.data$nodes
