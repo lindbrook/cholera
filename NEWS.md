@@ -1,3 +1,8 @@
+### cholera 0.8.0.9119
+
+- archive nominalNeighborhoodData().
+
+
 ### cholera 0.8.0.9118
 
 - add/set latlongNeighborhoodWalking(case.set = "observed", weighted = TRUE).
