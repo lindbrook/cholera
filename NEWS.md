@@ -1,3 +1,8 @@
+### cholera 0.8.0.9120
+
+- add validateDestinationCases() prototype.
+
+
 ### cholera 0.8.0.9119
 
 - archive nominalNeighborhoodData().
