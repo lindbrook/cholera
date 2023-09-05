@@ -380,3 +380,118 @@ std <- function(dat, center, spread) (dat - center) / spread
 #' @noRd
 
 unstd <- function(x, center, spread) x * spread + center
+
+#' Validate destinations for latlongWalkingPath(type = "cases").
+#'
+#' @param vec Object. Vector of numeric or character (Landmarks) destinations
+#' @noRd
+
+validateDestinationCases <- function(vec) {
+  destination.chk <- vapply(vec, function(x) {
+    if (is.numeric(x)) {
+      name.chk <- FALSE
+      number.chk <- x %in% cholera::fatalities$case |
+                    x %in% cholera::landmarks$case
+    } else if (is.character(x)) {
+      tmp <- caseAndSpace(x)
+      name.chk <- tmp %in% cholera::landmarks$name |
+                  tmp %in% cholera::landmark.squares$name
+
+      if (suppressWarnings(!is.na(as.integer(tmp)))) {
+         number.chk <- as.integer(tmp) %in% cholera::fatalities$case |
+                       as.integer(tmp) %in% cholera::landmarks$case
+      } else {
+        number.chk <- FALSE
+      }
+    }
+    name.chk | number.chk
+  }, logical(1L))
+
+  if (all(!destination.chk)) {
+    stop("No valid destinations. Check case number or spelling.", call. = FALSE)
+  } else if (any(destination.chk)) {
+    if (all(destination.chk)) out <- vec
+    else out <- vec[destination.chk]
+    
+    if (any(!destination.chk)) {
+      message("Note invalid/misspelled destination(s): ",
+              paste(vec[!destination.chk], collapse = ", "))
+    }
+
+    if (is.character(out)) {
+      audit <- lapply(out, function(x) {
+        if (suppressWarnings(!is.na(as.integer(x)))) {
+          number.chk <- as.integer(x) %in% cholera::fatalities$case |
+                        as.integer(x) %in% cholera::landmarks$case
+          name.chk <- FALSE
+        } else if (is.character(x)) {
+          tmp <- caseAndSpace(x)
+          name.chk <- tmp %in% cholera::landmarks$name |
+                      tmp %in% cholera::landmark.squares$name
+          number.chk <- FALSE
+        }
+        list(name.chk = name.chk, number.chk = number.chk)
+      })
+
+      num.sel <- vapply(audit, function(x) x$number.chk, logical(1L))
+      vec.num <- as.integer(out[num.sel])
+
+      anchr <- vapply(vec.num, function(x) {
+        cholera::anchor.case[cholera::anchor.case$case == x, ]$anchor
+      }, numeric(1L))
+
+      dest.num <- data.frame(case = vec.num, anchor = anchr)
+      
+      chr.sel <- vapply(audit, function(x) x$name.chk, logical(1L))
+      vec.chr <- caseAndSpace(out[chr.sel])
+
+      sel <- grep(vec.chr, cholera::landmarks$name)
+      dest.chr <- data.frame(case = cholera::landmarks[sel, ]$case)
+      dest.chr$anchor <- dest.chr$case
+      dest.cases <- rbind(dest.num, dest.chr)
+
+    } else if (is.numeric(out)) {
+      if (length(out) > 1) {
+        number.chk <- vapply(out, function(x) {
+          as.integer(x) %in% cholera::fatalities$case |
+          as.integer(x) %in% cholera::landmarks$case
+        }, logical(1L))
+
+        if (any(number.chk)) {
+          if (any(out[number.chk] %in% cholera::fatalities$case)) {
+            dest.num <- vapply(out[number.chk], function(x) {
+              sel <- cholera::anchor.case$case == x
+              cholera::anchor.case[sel, ]$anchor
+            }, numeric(1L))
+            dest.case <- data.frame(case = out[number.chk], anchor = dest.num)
+          } else if (any(out[number.chk] %in% cholera::landmarks$case)) {
+            dest.num <- out[number.chk]
+            dest.land <- data.frame(case = dest.num, anchor = dest.num)
+          }
+        }
+      } else if (length(out) == 1) {
+        number.chk <- as.integer(out) %in% cholera::fatalities$case |
+                      as.integer(out) %in% cholera::landmarks$case
+        if (number.chk) {
+          if (out %in% cholera::fatalities$case) {
+            sel <- cholera::anchor.case$case == out
+            dest.num <- cholera::anchor.case[sel, ]$anchor
+            dest.case <- data.frame(case = out[number.chk], anchor = dest.num)
+          } else if (out %in% cholera::landmarks$case) {
+            dest.num <- out
+            dest.land <- data.frame(case = dest.num, anchor = dest.num)
+          }
+        }
+      }
+
+      if (exists("dest.num") & exists("dest.land")) {
+        dest.cases <- rbind(dest.case, dest.land)
+      } else if (exists("dest.num") & !exists("dest.land")) {
+        dest.cases <- dest.case
+      } else if (!exists("dest.num") & exists("dest.land")) {
+        dest.cases <- dest.land
+      }
+    }
+    dest.cases
+  }
+}
