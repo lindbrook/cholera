@@ -1,3 +1,8 @@
+### cholera 0.8.0.9121
+
+- add exception for all(destination.chk) == TRUE in validateDestinationCases().
+
+
 ### cholera 0.8.0.9120
 
 - add validateDestinationCases() prototype.
