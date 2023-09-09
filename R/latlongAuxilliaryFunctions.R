@@ -506,44 +506,30 @@ validateDestinationCases <- function(vec) {
       dest.chr$anchor <- dest.chr$case
       out <- rbind(dest.num, dest.chr)
     } else if (is.numeric(candidate)) {
-      if (length(candidate) > 1) {
-        number.chk <- vapply(candidate, function(x) {
-          as.integer(x) %in% cholera::fatalities$case |
-          as.integer(x) %in% cholera::landmarks$case
-        }, logical(1L))
-
-        if (any(number.chk)) {
-          if (any(candidate[number.chk] %in% cholera::fatalities$case)) {
-            dest.num <- vapply(candidate[number.chk], function(x) {
-              sel <- cholera::anchor.case$case == x
-              cholera::anchor.case[sel, ]$anchor
-            }, numeric(1L))
-            dest.case <- data.frame(case = candidate[number.chk], 
-                                    anchor = dest.num)
-          } else if (any(candidate[number.chk] %in% cholera::landmarks$case)) {
-            dest.num <- candidate[number.chk]
-            dest.land <- data.frame(case = dest.num, anchor = dest.num)
-          }
+      if (any(abs(candidate) %in% cholera::fatalities$case)) {
+        if (all(candidate > 0)) {
+          sel <- cholera::anchor.case$case %in% candidate
+          dest.num <- cholera::anchor.case[sel, ]$anchor
+          dest.case <- data.frame(case = candidate, anchor = dest.num)
+        } else if (all(candidate < 0)) {
+          sel <- !cholera::anchor.case$case %in% abs(candidate)
+          dest.num <- cholera::anchor.case[sel, ]$anchor
+          neg.candidate <- cholera::anchor.case[sel, ]$case
+          dest.case <- data.frame(case = neg.candidate, anchor = dest.num)
         }
-      } else if (length(candidate) == 1) {
-        number.chk <- as.integer(candidate) %in% cholera::fatalities$case |
-                      as.integer(candidate) %in% cholera::landmarks$case
-        if (number.chk) {
-          if (candidate %in% cholera::fatalities$case) {
-            sel <- cholera::anchor.case$case == candidate
-            dest.num <- cholera::anchor.case[sel, ]$anchor
-            dest.case <- data.frame(case = candidate[number.chk], 
-                                    anchor = dest.num)
-          } else if (candidate %in% cholera::landmarks$case) {
-            dest.num <- candidate
-            dest.land <- data.frame(case = dest.num, anchor = dest.num)
-          }
+      } else if (any(abs(candidate) %in% cholera::landmarks$case)) {
+        if (all(candidate > 0)) {
+          dest.land <- data.frame(case = candidate, anchor = candidate)
+        } else if (all(candidate < 0)) {
+          sel <- !cholera::landmarks$case %in% abs(candidate)
+          dest.num <- cholera::landmarks[sel, ]$case
+          dest.land <- data.frame(case = dest.num, anchor = dest.num)
         }
       }
 
-      if (exists("dest.num") & exists("dest.land")) {
+      if (exists("dest.case") & exists("dest.land")) {
         out <- rbind(dest.case, dest.land)
-      } else if (exists("dest.num") & !exists("dest.land")) {
+      } else if (exists("dest.case") & !exists("dest.land")) {
         out <- dest.case
       } else if (!exists("dest.num") & exists("dest.land")) {
         out <- dest.land
