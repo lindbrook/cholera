@@ -390,8 +390,8 @@ validateDestinationCases <- function(vec) {
   destination.chk <- vapply(vec, function(x) {
     if (is.numeric(x)) {
       name.chk <- FALSE
-      number.chk <- x %in% cholera::fatalities$case |
-                    x %in% cholera::landmarks$case
+      number.chk <- abs(x) %in% cholera::fatalities$case |
+                    abs(x) %in% cholera::landmarks$case
     } else if (is.character(x)) {
       tmp <- caseAndSpace(x)
       name.chk <- tmp %in% cholera::landmarks$name |
@@ -411,7 +411,16 @@ validateDestinationCases <- function(vec) {
     stop("No valid destinations. Check case number or spelling.", call. = FALSE)
   } else if (all(destination.chk)) {
     if (is.numeric(vec)) {
-      dest.case <- cholera::anchor.case[cholera::anchor.case$case %in% vec, ]
+      if (all(vec > 0)) {
+        dest.case <- cholera::anchor.case[cholera::anchor.case$case %in% vec, ]
+      } else if (all(vec < 0)) {
+        sel <- !cholera::anchor.case$case %in% abs(vec)
+        dest.case <- cholera::anchor.case[sel, ]
+      } else {
+        stop('destination should be strictly positive or negative.',
+          call. = FALSE)
+      }
+
       dest.case <- dest.case[, c("case", "anchor")]
 
       sel <- cholera::landmarks$case %in% vec
@@ -465,14 +474,11 @@ validateDestinationCases <- function(vec) {
         out <- dest.num
       }
     }
-  } else if (any(destination.chk)) {
-    if (all(destination.chk)) candidate <- vec
-    else candidate <- vec[destination.chk]
+  } else if (any(!destination.chk)) {
+    candidate <- vec[destination.chk]
 
-    if (any(!destination.chk)) {
-      message("Note invalid/misspelled destination(s): ",
-              paste(vec[!destination.chk], collapse = ", "))
-    }
+    message("Note invalid/misspelled destination(s): ",
+            paste(vec[!destination.chk], collapse = ", "))
 
     if (is.character(candidate)) {
       audit <- lapply(candidate, function(x) {

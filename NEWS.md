@@ -1,3 +1,9 @@
+### cholera 0.8.0.9122
+
+- allow negative selection in validateDestinationCases().
+- remove redundant num.chk.
+
+
 ### cholera 0.8.0.9121
 
 - add exception for all(destination.chk) == TRUE in validateDestinationCases().
