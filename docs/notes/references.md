@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2023-08-28
+2023-09-09
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -65,6 +65,9 @@ House.
 
 Christopher Hamlin. 2009. *Cholera: The Biography*. New York: Oxford
 University Press.
+
+Lucinda Hawksley. 2016. *Bitten by Witch Fever: Wallpaper & Arsenic in
+the Victorian Home*. New York: Thames & Hudson.
 
 Kyle Harper. 2021. *Plagues Upon the Earth: Disease and the Course of
 Human History*. Princeton: Princeton University Press.
