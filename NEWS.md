@@ -1,3 +1,8 @@
+### cholera 0.8.0.9123
+
+- allow pump names (street names) in selectPump().
+
+
 ### cholera 0.8.0.9122
 
 - allow negative selection in validateDestinationCases().
