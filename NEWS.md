@@ -1,3 +1,8 @@
+### cholera 0.8.0.9124
+
+- fix selectPump() using all(pump.num < 0).
+
+
 ### cholera 0.8.0.9123
 
 - allow pump names (street names) in selectPump().

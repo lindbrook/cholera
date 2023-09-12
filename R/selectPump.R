@@ -114,9 +114,9 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
         if (any(pump.num > 0) & any(pump.num < 0)) {
           stop('pump.select must either be strictly positive or negative.',
             call. = FALSE)
+        } else if (all(pump.num < 0)) {
+          pump.num <- setdiff(pump.data$id, abs(pump.num))
         }
-
-        if (pump.num < 0) pump.num <- setdiff(pump.data$id, abs(pump.num))
 
         chr.sel <- vapply(audit, function(x) x$name.chk, logical(1L))
 
