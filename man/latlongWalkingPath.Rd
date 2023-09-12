@@ -4,14 +4,16 @@
 \alias{latlongWalkingPath}
 \title{Plot walking path to nearest pump (prototype).}
 \usage{
-latlongWalkingPath(case = 1, destination = NULL, vestry = FALSE,
-  weighted = TRUE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5, multi.core = TRUE)
+latlongWalkingPath(origin = 1, destination = NULL, type = "case-pump",
+  vestry = FALSE, weighted = TRUE, distance.unit = "meter",
+  time.unit = "second", walking.speed = 5, multi.core = TRUE)
 }
 \arguments{
-\item{case}{Numeric.}
+\item{origin}{Numeric. A single numeric value (vector of length one).}
 
-\item{destination}{Numeric. Pump ID.}
+\item{destination}{Numeric. Vector of destinations (numeric or landmark names.}
+
+\item{type}{Character. Path case to pump. FALSE is all other combinations of cases, landmarks and pumps.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 

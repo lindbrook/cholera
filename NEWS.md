@@ -1,11 +1,13 @@
 ### cholera 0.8.0.9124
 
-- fix selectPump() using all(pump.num < 0).
+- add type = "cases" and type = "pumps" to latlongWalkingPath().
+- allow landmark and pump names in latlongWalkingPath().
 
 
 ### cholera 0.8.0.9123
 
 - allow pump names (street names) in selectPump().
+- fix selectPump() using all(pump.num < 0).
 
 
 ### cholera 0.8.0.9122
