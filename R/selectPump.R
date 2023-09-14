@@ -10,10 +10,16 @@
 selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
   vestry = FALSE) {
 
-  if (is.numeric(pump.select)) {
-    if (any(!abs(pump.select) %in% pump.data$id)) {
-      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ',
-        nrow(pump.data), ".", call. = FALSE)
+  if (!metric %in% c("euclidean", "walking")) {
+    stop('metric must either be "euclidean" or "walking".', call. = FALSE)
+  }
+
+  if (!is.null(pump.select)) {
+    if (is.numeric(pump.select)) {
+      if (any(!abs(pump.select) %in% pump.data$id)) {
+        stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ',
+          nrow(pump.data), ".", call. = FALSE)
+      }
     }
 
     if (metric == "walking") {
@@ -24,12 +30,8 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
           stop(msg1, msg2, call. = FALSE)
         }
       }
-    } else if (metric != "euclidean") {
-      stop('metric must either be "euclidean" or "walking".', call. = FALSE)
     }
-  }
 
-  if (!is.null(pump.select)) {
     destination.chk <- vapply(pump.select, function(x) {
       if (is.numeric(x)) {
         name.chk <- FALSE
@@ -47,7 +49,9 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
     }, logical(1L))
 
     if (all(!destination.chk)) {
-      stop("No valid pumps. Check numerical ID or spelling.", call. = FALSE)
+      msg1 <- "No valid pumps. Check numerical ID or spelling in 'pumps' or"
+      msg2 <- " 'pumps.vestry'."
+      stop(msg1, msg2, call. = FALSE)
 
     } else if (all(destination.chk)) {
       if (is.numeric(pump.select)) {
@@ -56,18 +60,18 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
         } else if (all(pump.select < 0)) {
           out <- setdiff(pump.data$id, abs(pump.select))
         } else {
-          stop("Use all positive or all negative numbers for pump.select.",
+          stop("'pump.select must either be all positive or negative.",
             call. = FALSE)
         }
       } else if (is.character(pump.select)) {
         audit <- lapply(pump.select, function(x) {
           if (suppressWarnings(!is.na(as.integer(x)))) {
-           number.chk <- as.integer(x) %in% pump.data$id
-           name.chk <- FALSE
+            number.chk <- as.integer(x) %in% pump.data$id
+            name.chk <- FALSE
           } else if (is.character(x)) {
-           tmp <- caseAndSpace(x)
-           name.chk <- tmp %in% pump.data$street
-           number.chk <- FALSE
+            tmp <- caseAndSpace(x)
+            name.chk <- tmp %in% pump.data$street
+            number.chk <- FALSE
           }
           list(name.chk = name.chk, number.chk = number.chk)
         })
@@ -76,14 +80,14 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
         pump.num <- as.integer(pump.select[num.sel])
 
         if (any(pump.num > 0) & any(pump.num < 0)) {
-          stop('pump.select must either be strictly positive or negative.',
+          stop("'pump.select' must either be all positive or negative.",
             call. = FALSE)
         }
 
         chr.sel <- vapply(audit, function(x) x$name.chk, logical(1L))
 
         if (any(chr.sel)) {
-          pump.chr <- caseAndSpace(pump.select[chr.sel])
+          pump.chr <- vapply(pump.select[chr.sel], caseAndSpace, character(1L))
           sel <- pump.data$street %in% pump.chr
           out <- sort(c(pump.num, pump.data[sel, ]$id))
         } else {
@@ -111,17 +115,19 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
         num.sel <- vapply(audit, function(x) x$number.chk, logical(1L))
         pump.num <- as.integer(pump.select[num.sel])
 
-        if (any(pump.num > 0) & any(pump.num < 0)) {
-          stop('pump.select must either be strictly positive or negative.',
-            call. = FALSE)
-        } else if (all(pump.num < 0)) {
-          pump.num <- setdiff(pump.data$id, abs(pump.num))
+        if (length(pump.num) > 0) {
+          if (any(pump.num > 0) & any(pump.num < 0)) {
+            stop('pump.select must either be strictly positive or negative.',
+                 call. = FALSE)
+          } else if (all(pump.num < 0)) {
+            pump.num <- setdiff(pump.data$id, abs(pump.num))
+          }
         }
 
         chr.sel <- vapply(audit, function(x) x$name.chk, logical(1L))
 
         if (any(chr.sel)) {
-          pump.chr <- caseAndSpace(pump.select[chr.sel])
+          pump.chr <- vapply(pump.select[chr.sel], caseAndSpace, character(1L))
           sel <- pump.data$street %in% pump.chr
           out <- sort(c(pump.num, pump.data[sel, ]$id))
         } else {
@@ -130,8 +136,6 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
 
       } else if (is.numeric(pump.select)) {
         pump.vec <- pump.select[destination.chk]
-        message("Note invalid pump ID(s): ",
-            paste(pump.select[!destination.chk], collapse = ", "))
         if (all(pump.vec > 0)) {
           out <- sort(pump.data[pump.data$id %in% pump.vec, ]$id)
         } else if (all(pump.select < 0)) {
@@ -144,5 +148,5 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
     out <- pump.data$id
   }
 
-  out
+  unique(out)
 }
