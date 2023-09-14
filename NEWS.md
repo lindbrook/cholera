@@ -1,3 +1,8 @@
+### cholera 0.8.0.9125
+
+- fix pump names (street names) in selectPump().
+
+
 ### cholera 0.8.0.9124
 
 - add type = "cases" and type = "pumps" to latlongWalkingPath().
