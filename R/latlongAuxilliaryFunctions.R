@@ -505,12 +505,37 @@ validateDestinationCases <- function(vec) {
       dest.num <- data.frame(case = vec.num, anchor = anchr)
 
       chr.sel <- vapply(audit, function(x) x$name.chk, logical(1L))
-      vec.chr <- caseAndSpace(candidate[chr.sel])
+      vec.chr <- vapply(candidate[chr.sel], caseAndSpace, character(1L))
 
-      sel <- grep(vec.chr, cholera::landmarks$name)
-      dest.chr <- data.frame(case = cholera::landmarks[sel, ]$case)
+      sq.sel <- grepl("Square", vec.chr)
+
+      if (all(sq.sel)) {
+        sel <- unlist(lapply(vec.chr, function(x) {
+          grep(x, cholera::landmarks$name)
+        }))
+
+        dest.chr <- data.frame(case = cholera::landmarks[sel, ]$case)
+
+      } else if (any(sq.sel)) {
+        sq.sel <- unlist(lapply(vec.chr[sq.sel], function(x) {
+          grep(x, cholera::landmarks$name)
+        }))
+
+        other.sel <- unlist(lapply(vec.chr[!sq.sel], function(x) {
+          grep(x, cholera::landmarks$name)
+        }))
+
+        sel <- c(sq.sel, other.sel)
+        dest.chr <- data.frame(case = cholera::landmarks[sel, ]$case)
+
+      } else if (all(!sq.sel)) {
+        sel <- grep(vec.chr, cholera::landmarks$name)
+        dest.chr <- data.frame(case = cholera::landmarks[sel, ]$case)
+      }
+
       dest.chr$anchor <- dest.chr$case
       out <- rbind(dest.num, dest.chr)
+
     } else if (is.numeric(candidate)) {
       if (any(abs(candidate) %in% cholera::fatalities$case)) {
         if (all(candidate > 0)) {
