@@ -1,3 +1,8 @@
+### cholera 0.8.0.9126
+
+- allow multiple Squares in validateDestinationCases().
+
+
 ### cholera 0.8.0.9125
 
 - fix pump names (street names) in selectPump().
