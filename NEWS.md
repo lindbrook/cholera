@@ -1,3 +1,8 @@
+### cholera 0.8.0.9127
+
+- allow landmark and pump names in latlongWalkingPath().
+
+
 ### cholera 0.8.0.9126
 
 - allow multiple Squares in validateDestinationCases().
