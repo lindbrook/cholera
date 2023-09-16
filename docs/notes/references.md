@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2023-09-09
+2023-09-16
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -131,6 +131,9 @@ Geographics*. 14:21.
 
 Robert Skidelsky. 2018. *Money and Government: The Past and Future of
 Economics*. New Haven: Yale University Press.
+
+John Snow. 1838. “Arsenic as a preservative of dead bodies”. *The
+Lancet*. 10 November: 264.
 
 John Snow. 1855. *On The Mode Of Communication Of Cholera*. London: John
 Churchill.
