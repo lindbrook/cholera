@@ -219,7 +219,7 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
       alters <- nodes[nodes$pump %in% pump.id & nodes$pump != 0, ]
 
       if (origin %in% pump.id) {
-        # message("Note: 'origin' excluded from 'destination'.")
+        message("Note: 'origin' pumps excluded from 'destination'.")
         alters <- alters[alters$pump %in% setdiff(pump.id, origin), ]
       }
 
@@ -420,7 +420,11 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
 
       destination <- c(cholera::fatalities$case, cholera::landmarks$case)
       dest <- validateDestinationCases(destination)
-      dest <- dest[dest$anchor != anchor, ]
+      
+      if (any(anchor %in% dest$anchor)) {
+        dest <- dest[dest$anchor != anchor, ]
+        message("Note: 'origin' anchor cases excluded from 'destination'.")
+      }
 
       sel <- nodes$case %in% dest$anchor | nodes$land %in% dest$anchor
       alters <- nodes[sel, ]
@@ -509,7 +513,16 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
 
       alters <- nodes[!nodes$pump %in% anchor & nodes$pump != 0, ]
       alters <- alters[order(alters$pump), ]
-      alters <- alters[alters$pump != 2, ]
+      
+      if (any(pump.id == 2L)) {
+        message("Note: Pump 2 excluded because it's a technical isolate.")
+        alters <- alters[alters$pump != 2, ]
+      }
+
+      if (origin %in% pump.id) {
+        message("Note: 'origin' pumps excluded from 'destination'.")
+        alters <- alters[alters$pump %in% setdiff(pump.id, origin), ]
+      }
 
       alter.node <- alters$node
       names(alter.node) <- alters$pump

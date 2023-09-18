@@ -1,3 +1,11 @@
+### cholera 0.8.0.9128
+
+- add additional message(s) and exclusion(s) of origin in destination for 
+  latlongWalkingPath().
+- add message about pump 2 isolate in 
+  latlongWalkingPath(destination = NULL, type = "pumps").
+
+
 ### cholera 0.8.0.9127
 
 - allow landmark and pump names in latlongWalkingPath().
