@@ -513,6 +513,11 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
 
       alters <- nodes[!nodes$pump %in% anchor & nodes$pump != 0, ]
       alters <- alters[order(alters$pump), ]
+      
+      if (any(pump.id == 2L)) {
+        message("Note: Pump 2 excluded because it's a technical isolate.")
+        alters <- alters[alters$pump != 2, ]
+      }
 
       if (origin %in% pump.id) {
         message("Note: 'origin' pumps excluded from 'destination'.")
