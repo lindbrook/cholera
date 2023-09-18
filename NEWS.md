@@ -1,3 +1,9 @@
+### cholera 0.8.0.9129
+
+- compute "d" for latlongWalkingPath(origin = grep("Square", origin), 
+  destination = NULL, type = "case-pump").
+  
+
 ### cholera 0.8.0.9128
 
 - add additional message(s) and exclusion(s) of origin in destination for 

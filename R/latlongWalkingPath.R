@@ -126,6 +126,7 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
 
         min_dist.multi.ego <- vapply(d.multi.ego, min, numeric(1L))
         ego.id <- which.min(min_dist.multi.ego)
+        d <- d.multi.ego[[ego.id]]
 
         sel <- nodes$node == ego.node[ego.id] & nodes$land != 0
         anchor <- nodes[sel, ]$land
@@ -420,7 +421,7 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
 
       destination <- c(cholera::fatalities$case, cholera::landmarks$case)
       dest <- validateDestinationCases(destination)
-      
+
       if (any(anchor %in% dest$anchor)) {
         dest <- dest[dest$anchor != anchor, ]
         message("Note: 'origin' anchor cases excluded from 'destination'.")
@@ -513,7 +514,7 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
 
       alters <- nodes[!nodes$pump %in% anchor & nodes$pump != 0, ]
       alters <- alters[order(alters$pump), ]
-      
+
       if (any(pump.id == 2L)) {
         message("Note: Pump 2 excluded because it's a technical isolate.")
         alters <- alters[alters$pump != 2, ]
