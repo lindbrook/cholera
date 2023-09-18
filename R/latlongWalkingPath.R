@@ -126,6 +126,7 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
 
         min_dist.multi.ego <- vapply(d.multi.ego, min, numeric(1L))
         ego.id <- which.min(min_dist.multi.ego)
+        d <- d.multi.ego[[ego.id]]
 
         sel <- nodes$node == ego.node[ego.id] & nodes$land != 0
         anchor <- nodes[sel, ]$land
