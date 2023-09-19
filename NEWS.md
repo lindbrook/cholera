@@ -1,3 +1,8 @@
+### cholera 0.8.0.9130
+
+- consolidate "data.summary" output in latlongWalkingPath().
+
+
 ### cholera 0.8.0.9129
 
 - compute "d" for latlongWalkingPath(origin = grep("Square", origin), 
