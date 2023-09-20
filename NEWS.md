@@ -1,3 +1,8 @@
+### cholera 0.8.0.9131
+
+- consolidate path data computation latlongWalkingPath().
+
+
 ### cholera 0.8.0.9130
 
 - consolidate "data.summary" output in latlongWalkingPath().
