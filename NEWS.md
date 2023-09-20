@@ -1,3 +1,8 @@
+### cholera 0.8.0.9132
+
+- simplify computation of "ego.node" in latlongWalkingPath(destination = NULL).
+
+
 ### cholera 0.8.0.9131
 
 - consolidate path data computation latlongWalkingPath().

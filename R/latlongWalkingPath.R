@@ -254,19 +254,8 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
 
   } else {
     if (type == "case-pump") {
-      if (any(anchor >= 20000L)) {
-        ego.land.node <- nodes[nodes$land %in% anchor, ]$node
-      } else if (anchor < 20000L) {
-        ego.case.node <- nodes[nodes$case == anchor, ]$node
-      }
-
-      if (exists("ego.case.node") & exists("ego.land.node")) {
-        ego.node <- c(ego.case.node, ego.land.node)
-      } else if (exists("ego.case.node") & !exists("ego.land.node")) {
-        ego.node <- ego.case.node
-      } else if (!exists("ego.case.node") & exists("ego.land.node")) {
-        ego.node <- ego.land.node
-      }
+      ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
+                    nodes[nodes$land %in% anchor, ]$node)
 
       alters <- nodes[!nodes$pump %in% anchor & nodes$pump != 0, ]
       alters <- alters[order(alters$pump), ]
@@ -440,7 +429,7 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
     edges[edge.sel, ]$d
   }, numeric(1L))
 
-  walking.time <- walkingTime(sum(ds), time.unit = time.unit, 
+  walking.time <- walkingTime(sum(ds), time.unit = time.unit,
     walking.speed = walking.speed)
 
   if (as.integer(nearest.dest) < 20000L) {
