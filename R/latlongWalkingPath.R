@@ -486,13 +486,17 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   milepost.unit = "distance", milepost.interval = NULL, alpha.level = 1, ...) {
 
   path.data <- x$data
-  case <- path.data$case
+  type <- x$data$type
+  case <- path.data$orig.anchor
   destination <- x$destination
   colors <- snowColors(x$vestry)
   dat <- x$path
   ds <- x$ds
   distance.unit <- x$distance.unit
-  pmp <- x$pmp
+  if (type %in% c("case-pump", "pumps")) {
+    if (x$vestry) pmp <- cholera::pumps.vestry
+    else pmp <- cholera::pumps
+  }
   time.unit <- x$time.unit
   walking.speed <- x$walking.speed
 
@@ -520,8 +524,8 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
   if (is.logical(zoom)) {
     if (zoom) {
       padding <- 0.00026
-      xlim <- c(min(dat$x) - padding, max(dat$x) + padding)
-      ylim <- c(min(dat$y) - padding, max(dat$y) + padding)
+      xlim <- c(min(dat$lon) - padding, max(dat$lon) + padding)
+      ylim <- c(min(dat$lat) - padding, max(dat$lat) + padding)
     } else {
       map.data <- rbind(frame, rd)
       xlim <- range(map.data$lon)
@@ -529,15 +533,17 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
     }
   } else if (is.numeric(zoom)) {
     if (zoom >= 0) {
-      xlim <- c(min(dat$x) - zoom, max(dat$x) + zoom)
-      ylim <- c(min(dat$y) - zoom, max(dat$y) + zoom)
+      xlim <- c(min(dat$lon) - zoom, max(dat$lon) + zoom)
+      ylim <- c(min(dat$lat) - zoom, max(dat$lat) + zoom)
     } else stop("If numeric, zoom must be >= 0.")
   } else stop("zoom must either be logical or numeric.")
 
   vars <- c("lon", "lat")
 
-  p.sel <- paste0("p", path.data$pump)
-  case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
+  if (type == "case-pump") {
+    p.sel <- paste0("p", path.data$dest.anchor)
+    case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
+  }
 
   plot(rd[, vars], pch = NA, asp = 1.6, xlim = xlim, ylim = ylim)
   roads.list <- split(rd[, vars], rd$street)
@@ -555,8 +561,8 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
     col = case.color)
   points(pump.address[pump.address$id == path.data$pump, vars], pch = 0,
     col = case.color)
-  points(dat[1, c("x", "y")], col = "dodgerblue", pch = 0)
-  points(dat[nrow(dat), c("x", "y")], col = "dodgerblue", pch = 0)
+  points(dat[1, vars], col = "dodgerblue", pch = 0)
+  points(dat[nrow(dat), vars], col = "dodgerblue", pch = 0)
 
   drawPathLatLong(dat, case.color)
 
@@ -594,8 +600,8 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
       stop('"milepost.unit" muster either be "distance" or "time".')
     }
 
-    arrows(seg.data[1, "x2"], seg.data[1, "y2"],
-           seg.data[1, "x1"], seg.data[1, "y1"],
+    arrows(seg.data[1, "lon2"], seg.data[1, "lat2"],
+           seg.data[1, "lon1"], seg.data[1, "lat1"],
            length = 0.0875, lwd = 3, col = case.color)
     if (path.length >= milepost.interval) {
       # dotchart(log(abs(arrow.tail$lon - arrow.head$lon)))
@@ -654,11 +660,10 @@ print.latlong_walking_path <- function(x, ...) {
   print(x[c("path", "data")])
 }
 
-drawPathLatLong <- function(x, case.color) {
-  path.data <- x
-  n1 <- path.data[1:(nrow(path.data) - 1), ]
-  n2 <- path.data[2:nrow(path.data), ]
-  segments(n1$x, n1$y, n2$x, n2$y, lwd = 3, col = case.color)
+drawPathLatLong <- function(dat, case.color) {
+  n1 <- dat[1:(nrow(dat) - 1), ]
+  n2 <- dat[2:nrow(dat), ]
+  segments(n1$lon, n1$lat, n2$lon, n2$lat, lwd = 3, col = case.color)
 }
 
 milePostsLatLong <- function(path.data, dat, ds, milepost.unit,
@@ -666,7 +671,7 @@ milePostsLatLong <- function(path.data, dat, ds, milepost.unit,
 
   rev.data <- dat[order(dat$id, decreasing = TRUE), ]
 
-  vars <- c("x", "y")
+  vars <- c("lon", "lat")
   seg.vars <- c(paste0(vars, 1), paste0(vars, 2))
 
   seg.data <- do.call(rbind, lapply(seq_len(nrow(rev.data) - 1), function(i) {
@@ -742,8 +747,8 @@ milePostsLatLong <- function(path.data, dat, ds, milepost.unit,
         milepost.unit)
     }
 
-    arrow.tail <- stats::setNames(arrow.data[, paste0(vars, 1)], vars)
-    arrow.head <- stats::setNames(arrow.data[, paste0(vars, 2)], vars)
+    arrow.tail <- arrow.data[, paste0(c("x", "y"), 1)]
+    arrow.head <- arrow.data[, paste0(c("x", "y"), 2)]
     arrow.tail <- meterLatLong(arrow.tail, origin, topleft, bottomright)
     arrow.head <- meterLatLong(arrow.head, origin, topleft, bottomright)
     arrow.tail <- arrow.tail[order(row.names(arrow.tail)), ]
