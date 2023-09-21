@@ -1,3 +1,8 @@
+### cholera 0.8.0.9133
+
+- add plot(latlongWalkingPath(type = "case-pump")) prototype.
+
+
 ### cholera 0.8.0.9132
 
 - simplify computation of "ego.node" in latlongWalkingPath(destination = NULL).
