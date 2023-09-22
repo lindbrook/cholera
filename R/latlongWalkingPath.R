@@ -58,10 +58,8 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
     }
   }
 
-  if (type %in% c("case-pump", "pumps")) {
-    if (vestry) pmp <- cholera::pumps.vestry
-    else pmp <- cholera::pumps
-  }
+  if (vestry) pmp <- cholera::pumps.vestry
+  else pmp <- cholera::pumps
 
   if (type == "pumps") {
     if (is.numeric(origin)) {
@@ -463,6 +461,7 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
                  vestry = vestry,
                  ds = ds,
                  distance.unit = distance.unit,
+                 pmp = pmp,
                  time.unit = time.unit,
                  walking.speed = walking.speed)
 

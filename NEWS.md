@@ -1,3 +1,8 @@
+### cholera 0.8.0.9134
+
+- return "pmp" with latlongWalkingPath().
+
+
 ### cholera 0.8.0.9133
 
 - add plot(latlongWalkingPath(type = "case-pump")) prototype.
