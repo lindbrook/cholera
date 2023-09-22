@@ -1,3 +1,8 @@
+### cholera 0.8.0.9135
+
+- add/set plot.latlong_walking_path(long.title = TRUE).
+
+
 ### cholera 0.8.0.9134
 
 - return "pmp" with latlongWalkingPath().
