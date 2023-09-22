@@ -473,6 +473,7 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
 #'
 #' @param x An object of class "latlong_walking_path" created by latlongWalkingPath().
 #' @param zoom Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.
+#' @param long.title Logical. Tile with names.
 #' @param mileposts Logical. Plot mile/time posts.
 #' @param milepost.unit Character. "distance" or "time".
 #' @param milepost.interval Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).
@@ -481,8 +482,9 @@ latlongWalkingPath <- function(origin = 1, destination = NULL,
 #' @return A base R plot.
 #' @export
 
-plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
-  milepost.unit = "distance", milepost.interval = NULL, alpha.level = 1, ...) {
+plot.latlong_walking_path <- function(x, zoom = TRUE, long.title = TRUE,
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
+  alpha.level = 1, ...) {
 
   path.data <- x$data
   type <- x$data$type
@@ -634,14 +636,54 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, mileposts = TRUE,
       arrows(arrow.tail$lon, arrow.tail$lat, arrow.head$lon, arrow.head$lat,
         length = 0.0875, lwd = 3, col = case.color)
     }
-
-    title(main = paste("Case", case, "to Pump", path.data$pump),
-          sub = paste(d, t, post.info, sep = "; "))
-
-  } else {
-    title(main = paste("Case", case, "to Pump", path.data$pump),
-          sub = paste(d, t, sep = "; "))
   }
+
+  if (long.title) {
+    if (type == "case-pump") {
+      p.nm <- pmp[pmp$id == path.data$dest.anchor, ]$street
+      if (case < 20000L) {
+        alpha <- paste("Case", case)
+        omega <- paste(p.nm, "Pump", paste0("(#", path.data$dest.anchor, ")"))
+      } else if (case >= 20000L) {
+        c.nm <- land[land$case == case, ]$name
+        alpha <- paste(c.nm, paste0("(#", case, ")"))
+        omega <- paste(p.nm, "Pump", paste0("(#", path.data$dest.anchor, ")"))
+      }
+    } else if (type == "cases") {
+      if (case >= 20000L & path.data$dest.anchor >= 20000L) {
+        c.orig.nm <- land[land$case == case, ]$name
+        c.dest.nm <- land[land$case == path.data$dest.anchor, ]$name
+        alpha <- paste(c.orig.nm, paste0("(#", case, ")"))
+        omega <- paste(c.dest.nm, paste0("(#", path.data$dest.anchor, ")"))
+      } else if (case < 20000L & path.data$dest.anchor >= 20000L) {
+        c.dest.nm <- land[land$case == path.data$dest.anchor, ]$name
+        alpha <- paste("Case", case)
+        omega <- paste(c.dest.nm, paste0("(#", path.data$dest.anchor, ")"))
+      } else if (case >= 20000L & path.data$dest.anchor < 20000L) {
+        c.orig.nm <- land[land$case == case, ]$name
+        alpha <- paste(c.orig.nm, paste0("(#", case, ")"))
+        omega <- paste("to Case", path.data$dest.anchor)
+      } else {
+        alpha <- paste("Case", case)
+        omega <- paste("Case", path.data$dest.anchor)
+      }
+    } else if (type == "pumps") {
+      orig.nm <- pmp[pmp$id == path.data$orig.anchor, ]$street
+      dest.nm <- pmp[pmp$id == path.data$dest.anchor, ]$street
+      alpha <- paste(orig.nm, "Pump", paste0("(#", path.data$orig.anchor, ")"))
+      omega <- paste(dest.nm, "Pump", paste0("(#", path.data$dest.anchor, ")"))
+    }
+    title(main = paste(alpha, "to", omega))
+  } else {
+    if (type == "case-pump") {
+      title(main = paste("Case", case, "to Pump", path.data$dest.anchor))
+    } else if (type == "cases") {
+      title(main = paste("Case", case, "to Case", path.data$dest.anchor))
+    } else if (type == "pumps") {
+      title(main = paste("Pump", case, "to Pump", path.data$dest.anchor))
+    }
+  }
+  title(sub = paste(d, t, post.info, sep = "; "))
 }
 
 #' Print method for latlongWalkingPath().

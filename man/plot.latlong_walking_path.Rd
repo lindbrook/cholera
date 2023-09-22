@@ -4,14 +4,16 @@
 \alias{plot.latlong_walking_path}
 \title{Plot the walking path between selected cases and/or pumps.}
 \usage{
-\method{plot}{latlong_walking_path}(x, zoom = TRUE, mileposts = TRUE,
-  milepost.unit = "distance", milepost.interval = NULL, alpha.level = 1,
-  ...)
+\method{plot}{latlong_walking_path}(x, zoom = TRUE, long.title = TRUE,
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
+  alpha.level = 1, ...)
 }
 \arguments{
 \item{x}{An object of class "latlong_walking_path" created by latlongWalkingPath().}
 
 \item{zoom}{Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.}
+
+\item{long.title}{Logical. Tile with names.}
 
 \item{mileposts}{Logical. Plot mile/time posts.}
 
