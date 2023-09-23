@@ -1,3 +1,8 @@
+### cholera 0.8.0.9136
+
+- fix validateDestinationCases() for multiple landmark names.
+
+
 ### cholera 0.8.0.9135
 
 - add/set plot.latlong_walking_path(long.title = TRUE).
