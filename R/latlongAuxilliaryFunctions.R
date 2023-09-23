@@ -463,11 +463,13 @@ validateDestinationCases <- function(vec) {
       chr.sel <- vapply(audit, function(x) x$name.chk, logical(1L))
 
       if (any(chr.sel)) {
-        vec.chr <- caseAndSpace(vec[chr.sel])
+        vec.chr <- vapply(vec[chr.sel], caseAndSpace, character(1L))
 
-        sel <- grep(vec.chr, cholera::landmarks$name)
+        sel <- unlist(lapply(vec.chr, function(x) {
+          grep(x, cholera::landmarks$name)
+        }))
+
         dest.chr <- data.frame(case = cholera::landmarks[sel, ]$case)
-
         dest.chr$anchor <- dest.chr$case
         out <- rbind(dest.num, dest.chr)
       } else {
