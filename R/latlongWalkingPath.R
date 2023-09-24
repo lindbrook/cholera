@@ -641,30 +641,30 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, long.title = TRUE,
   if (long.title) {
     if (type == "case-pump") {
       p.nm <- pmp[pmp$id == path.data$dest.anchor, ]$street
-      if (case < 20000L) {
-        alpha <- paste("Case", case)
+      if (orig < 20000L) {
+        alpha <- paste("Case", orig)
         omega <- paste(p.nm, "Pump", paste0("(#", path.data$dest.anchor, ")"))
-      } else if (case >= 20000L) {
-        c.nm <- land[land$case == case, ]$name
-        alpha <- paste(c.nm, paste0("(#", case, ")"))
+      } else if (orig >= 20000L) {
+        c.nm <- land[land$case == orig, ]$name
+        alpha <- paste(c.nm, paste0("(#", orig, ")"))
         omega <- paste(p.nm, "Pump", paste0("(#", path.data$dest.anchor, ")"))
       }
     } else if (type == "cases") {
-      if (case >= 20000L & path.data$dest.anchor >= 20000L) {
-        c.orig.nm <- land[land$case == case, ]$name
+      if (orig >= 20000L & path.data$dest.anchor >= 20000L) {
+        c.orig.nm <- land[land$case == orig, ]$name
         c.dest.nm <- land[land$case == path.data$dest.anchor, ]$name
-        alpha <- paste(c.orig.nm, paste0("(#", case, ")"))
+        alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
         omega <- paste(c.dest.nm, paste0("(#", path.data$dest.anchor, ")"))
-      } else if (case < 20000L & path.data$dest.anchor >= 20000L) {
+      } else if (orig < 20000L & path.data$dest.anchor >= 20000L) {
         c.dest.nm <- land[land$case == path.data$dest.anchor, ]$name
-        alpha <- paste("Case", case)
+        alpha <- paste("Case", orig)
         omega <- paste(c.dest.nm, paste0("(#", path.data$dest.anchor, ")"))
-      } else if (case >= 20000L & path.data$dest.anchor < 20000L) {
-        c.orig.nm <- land[land$case == case, ]$name
-        alpha <- paste(c.orig.nm, paste0("(#", case, ")"))
+      } else if (orig >= 20000L & path.data$dest.anchor < 20000L) {
+        c.orig.nm <- land[land$case == orig, ]$name
+        alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
         omega <- paste("to Case", path.data$dest.anchor)
       } else {
-        alpha <- paste("Case", case)
+        alpha <- paste("Case", orig)
         omega <- paste("Case", path.data$dest.anchor)
       }
     } else if (type == "pumps") {
@@ -676,11 +676,11 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, long.title = TRUE,
     title(main = paste(alpha, "to", omega))
   } else {
     if (type == "case-pump") {
-      title(main = paste("Case", case, "to Pump", path.data$dest.anchor))
+      title(main = paste("Case", orig, "to Pump", path.data$dest.anchor))
     } else if (type == "cases") {
-      title(main = paste("Case", case, "to Case", path.data$dest.anchor))
+      title(main = paste("Case", orig, "to Case", path.data$dest.anchor))
     } else if (type == "pumps") {
-      title(main = paste("Pump", case, "to Pump", path.data$dest.anchor))
+      title(main = paste("Pump", orig, "to Pump", path.data$dest.anchor))
     }
   }
   title(sub = paste(d, t, post.info, sep = "; "))
