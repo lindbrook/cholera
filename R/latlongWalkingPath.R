@@ -488,18 +488,18 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, long.title = TRUE,
 
   path.data <- x$data
   type <- x$data$type
-  case <- path.data$orig.anchor
+  orig <- path.data$orig.anchor
+  dest <- path.data$dest.anchor
   destination <- x$destination
   colors <- snowColors(x$vestry)
   dat <- x$path
   ds <- x$ds
   distance.unit <- x$distance.unit
-  if (type %in% c("case-pump", "pumps")) {
-    if (x$vestry) pmp <- cholera::pumps.vestry
-    else pmp <- cholera::pumps
-  }
   time.unit <- x$time.unit
   walking.speed <- x$walking.speed
+
+  if (x$vestry) pmp <- cholera::pumps.vestry
+  else pmp <- cholera::pumps
 
   if (distance.unit == "meter") {
     d.unit <- "m"
@@ -515,12 +515,11 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, long.title = TRUE,
 
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  fatality <- cholera::fatalities
 
-  case.address <- cholera::latlong.ortho.addr
-  addr <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor"]
-  if (x$vestry) pump.address <- cholera::latlong.ortho.pump.vestry
-  else pump.address <- cholera::latlong.ortho.pump
+  fatality <- cholera::fatalities
+  fatality.ortho <- cholera::latlong.ortho.addr
+
+  land <- cholera::landmarks # includes nominal and ortho
 
   if (is.logical(zoom)) {
     if (zoom) {
@@ -544,6 +543,8 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, long.title = TRUE,
   if (type == "case-pump") {
     p.sel <- paste0("p", path.data$dest.anchor)
     case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
+  } else {
+    case.color <- "dodgerblue"
   }
 
   plot(rd[, vars], pch = NA, asp = 1.6, xlim = xlim, ylim = ylim)
@@ -552,18 +553,34 @@ plot.latlong_walking_path <- function(x, zoom = TRUE, long.title = TRUE,
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(frame.list, lines))
   points(fatality[, vars], col = "lightgray", pch = 16, cex = 0.5)
-  points(fatality[fatality$case == case, vars], col = "red")
-  text(fatality[fatality$case == case, vars], pos = 1, labels = case,
-    col = "red")
   points(pmp[, vars], pch = 24, col = grDevices::adjustcolor(colors,
     alpha.f = alpha.level))
   text(pmp[, vars], pos = 1, labels = paste0("p", pmp$id))
-  points(case.address[case.address$case == addr, vars], pch = 0,
-    col = case.color)
-  points(pump.address[pump.address$id == path.data$pump, vars], pch = 0,
-    col = case.color)
-  points(dat[1, vars], col = "dodgerblue", pch = 0)
-  points(dat[nrow(dat), vars], col = "dodgerblue", pch = 0)
+
+  if (type %in% c("case-pump", "cases")) {
+    if (orig < 20000L) {
+      points(fatality[fatality$case == orig, vars], col = "red")
+      text(fatality[fatality$case == orig, vars], pos = 1, labels = orig,
+        col = "red")
+    } else if (orig >= 20000L) {
+      points(land[land$case == orig, vars], col = "red")
+      text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
+    }
+  }
+
+  if (type == "cases") {
+    if (dest < 20000L) {
+      points(fatality[fatality$case == dest, vars], col = "red")
+      text(fatality[fatality$case == dest, vars], pos = 1, labels = dest,
+        col = "red")
+    } else if (dest >= 20000L) {
+      points(land[land$case == dest, vars], col = "red")
+      text(land[land$case == dest, vars], pos = 1, labels = dest, col = "red")
+    }
+  }
+
+  points(dat[1, vars], pch = 0)
+  points(dat[nrow(dat), vars], pch = 0)
 
   drawPathLatLong(dat, case.color)
 
