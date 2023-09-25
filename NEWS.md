@@ -1,3 +1,8 @@
+### cholera 0.8.0.9139
+
+- add walkingPathB().
+
+
 ### cholera 0.8.0.9138
 
 - amend graphical elements and syntax in plot.latlong_walking_path().
