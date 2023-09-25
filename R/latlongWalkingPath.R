@@ -2,8 +2,8 @@
 #'
 #' @param origin Numeric. A single numeric value (vector of length one).
 #' @param destination Numeric. Vector of destinations (numeric or landmark names.
-#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param type Character. Path case to pump. FALSE is all other combinations of cases, landmarks and pumps.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
