@@ -1,3 +1,9 @@
+### cholera 0.8.0.9140
+
+- fix walking.time computation and use "xy" as path coordinates in 
+  walkingPathB(latlong = FALSE).
+  
+
 ### cholera 0.8.0.9139
 
 - add walkingPathB().
