@@ -418,6 +418,8 @@ walkingPathB <- function(origin = 1, destination = NULL,
                      lon = as.numeric(p.data[, 1]),
                      lat = as.numeric(p.data[, 2]))
 
+  if (!latlong) names(path)[-1] <- c("x", "y")
+
   endpts <- do.call(rbind, lapply(seq_len(length(p[-1])), function(i) {
     data.frame(ep1 = p[i], ep2 = p[i + 1])
   }))
