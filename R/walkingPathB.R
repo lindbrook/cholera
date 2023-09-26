@@ -14,7 +14,7 @@
 
 walkingPathB <- function(origin = 1, destination = NULL,
   type = "case-pump", vestry = FALSE, latlong = FALSE, weighted = TRUE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5, 
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
   multi.core = TRUE) {
 
   meter.to.yard <- 1.09361
@@ -418,6 +418,8 @@ walkingPathB <- function(origin = 1, destination = NULL,
                      lon = as.numeric(p.data[, 1]),
                      lat = as.numeric(p.data[, 2]))
 
+  if (!latlong) names(path)[-1] <- c("x", "y")
+
   endpts <- do.call(rbind, lapply(seq_len(length(p[-1])), function(i) {
     data.frame(ep1 = p[i], ep2 = p[i + 1])
   }))
@@ -434,10 +436,10 @@ walkingPathB <- function(origin = 1, destination = NULL,
       walking.speed = walking.speed)
   } else {
     ds <- unitMeter(ds, distance.unit = distance.unit)
-    walking.time <- distanceTime(ds, distance.unit = distance.unit,
+    walking.time <- distanceTime(sum(ds), distance.unit = distance.unit,
       time.unit = time.unit, walking.speed = walking.speed)
   }
-  
+
   if (as.integer(nearest.dest) < 20000L) {
     if (type %in% c("case-pump", "pumps")) {
       dest.nm <- pmp[pmp$id == nearest.dest, ]$street
