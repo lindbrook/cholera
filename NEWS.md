@@ -1,3 +1,8 @@
+### cholera 0.8.0.9141
+
+- return "edges" and set class to "walking_path_B" for walkingPathB().
+
+
 ### cholera 0.8.0.9140
 
 - fix walking.time computation and use "xy" as path coordinates in 
