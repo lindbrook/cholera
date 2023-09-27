@@ -472,10 +472,11 @@ walkingPathB <- function(origin = 1, destination = NULL,
                  ds = ds,
                  distance.unit = distance.unit,
                  latlong = latlong,
+                 edges = edges,
                  pmp = pmp,
                  time.unit = time.unit,
                  walking.speed = walking.speed)
 
-  class(output) <- "walking_path"
+  class(output) <- "walking_path_B"
   output
 }
