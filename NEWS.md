@@ -1,3 +1,8 @@
+### cholera 0.8.0.9142
+
+- add plot and print methods for walkingPathB().
+
+
 ### cholera 0.8.0.9141
 
 - return "edges" and set class to "walking_path_B" for walkingPathB().
