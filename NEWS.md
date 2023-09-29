@@ -1,3 +1,8 @@
+### cholera 0.8.0.9145
+
+- set path color to "blue" for walkingPathB(path %in% c("cases", "pumps")).
+
+
 ### cholera 0.8.0.9144
 
 - use separate cutpoints, latlong = TRUE/FALSE, for zero length arrows with 

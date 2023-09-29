@@ -566,7 +566,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
     p.sel <- paste0("p", path.data$dest.anchor)
     case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
   } else {
-    case.color <- "dodgerblue"
+    case.color <- "blue"
   }
 
   plot(rd[, vars], pch = NA, asp = asp, xlim = xlim, ylim = ylim)
