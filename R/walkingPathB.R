@@ -714,7 +714,7 @@ drawPathB <- function(dat, case.color, latlong) {
 }
 
 milePostsB <- function(path.data, dat, destination, distance.unit, ds, latlong,
- milepost.unit, milepost.interval, time.unit, walking.speed) {
+  milepost.unit, milepost.interval, time.unit, walking.speed) {
 
   rev.data <- dat[order(dat$id, decreasing = TRUE), ]
 
