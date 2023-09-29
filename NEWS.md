@@ -1,3 +1,9 @@
+### cholera 0.8.0.9144
+
+- use separate cutpoints, latlong = TRUE/FALSE, for zero length arrows with 
+  walkingPathB().
+
+
 ### cholera 0.8.0.9143
 
 - archive latlongWalkingPath().
