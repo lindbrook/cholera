@@ -1,3 +1,8 @@
+### cholera 0.8.0.9146
+
+- use separate zoom padding for latlong = TRUE/FALSE in walkingPathB().
+
+
 ### cholera 0.8.0.9145
 
 - set path color to "blue" for walkingPathB(path %in% c("cases", "pumps")).

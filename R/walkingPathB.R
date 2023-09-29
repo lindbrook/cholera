@@ -547,7 +547,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
 
   if (is.logical(zoom)) {
     if (zoom) {
-      padding <- 0.00026
+      padding <- ifelse(latlong, 0.00026, 0.1)
       xlim <- c(min(dat[, ew]) - padding, max(dat[, ew]) + padding)
       ylim <- c(min(dat[, ns]) - padding, max(dat[, ns]) + padding)
     } else {
