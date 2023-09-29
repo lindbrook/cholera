@@ -1,3 +1,8 @@
+### cholera 0.8.0.9143
+
+- archive latlongWalkingPath().
+
+
 ### cholera 0.8.0.9142
 
 - add plot and print methods for walkingPathB().
