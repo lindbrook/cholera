@@ -651,12 +651,10 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
       # diagnostic #
       # dotchart(log(abs(arrow.tail$lon - arrow.head$lon)))
       # dotchart(log(abs(arrow.tail$lat - arrow.head$lat)))
-      
-      cutpoint <- -13
-      zero.length.ew <- log(abs(arrow.tail[, ew] - arrow.head[, ew])) <
-        cutpoint
-      zero.length.ns <- log(abs(arrow.tail[, ns] - arrow.head[, ns])) <
-        cutpoint
+
+      cutpoint <- ifelse(latlong, -13L, -6L)
+      zero.length.ew <- log(abs(arrow.tail[, ew] - arrow.head[, ew])) < cutpoint
+      zero.length.ns <- log(abs(arrow.tail[, ns] - arrow.head[, ns])) < cutpoint
 
       if (any(zero.length.ew | zero.length.ns)) {
         zero.id <- unique(row.names(arrow.head[zero.length.ew, ]),
