@@ -1,3 +1,8 @@
+### cholera 0.8.0.9147
+
+- fix Golden Square in latlongLandmarks(); amend 'landmarks'.
+
+
 ### cholera 0.8.0.9146
 
 - use separate zoom padding for latlong = TRUE/FALSE in walkingPathB().

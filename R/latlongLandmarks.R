@@ -92,11 +92,25 @@ latlongLandmarks <- function(path) {
 
     nodes.select <- rd.geo[sel1 | sel2, ]
 
-    if (sum(sel1) > sum(sel2)) sel <- one
-    else if (sum(sel2) > sum(sel1)) sel <- two
-    else stop("err.")
+    ones <- vapply(seq_len(nrow(nodes.select)), function(i) {
+      paste0(nodes.select[i, ]$lon1, "_&_", nodes.select[i, ]$lat1)
+    }, character(1L))
 
-    geo.coords <- nodes.select[-grep("Square", nodes.select$name), sel]
+    twos <- vapply(seq_len(nrow(nodes.select)), function(i) {
+      paste0(nodes.select[i, ]$lon2, "_&_", nodes.select[i, ]$lat2)
+    }, character(1L))
+
+    endpt.census <- table(c(ones, twos))
+    node.candidate <- names(which.max(endpt.census))
+    col1.rows <- which(ones %in% node.candidate)
+    col2.rows <- which(twos %in% node.candidate)
+
+    if (length(col1.rows) > 0) {
+      geo.coords <- nodes.select[col1.rows[1], c("lon1", "lat1")]
+    } else if (length(col2.rows) > 0) {
+      geo.coords <- nodes.select[col2.rows[1], c("lon2", "lat2")]
+    } else stop("err.")
+
     geo.coords <- stats::setNames(geo.coords, c("lon", "lat"))
     cbind(sq[i, ], geo.coords)
   })
