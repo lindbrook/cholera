@@ -610,41 +610,41 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
   t <- paste(round(x$data$time), paste0(time.unit, "s"), "@", walking.speed,
              "km/hr")
 
-  if (mileposts) {
-    if (is.null(milepost.interval)) {
-      if (milepost.unit == "distance") {
-        milepost.interval <- 50
-      } else if (milepost.unit == "time") {
-        milepost.interval <- 60
-      }
+  if (is.null(milepost.interval)) {
+    if (milepost.unit == "distance") {
+      milepost.interval <- 50
+    } else if (milepost.unit == "time") {
+      milepost.interval <- 60
     }
+  }
 
-    milepost.data <- milePostsB(path.data, dat, destination, distance.unit,
-      ds, latlong, milepost.unit, milepost.interval, time.unit, walking.speed)
+  milepost.data <- milePostsB(path.data, dat, destination, distance.unit,
+    ds, latlong, milepost.unit, milepost.interval, time.unit, walking.speed)
 
-    seg.data <- milepost.data$seg.data
+  seg.data <- milepost.data$seg.data
 
+  # last arrow (last mile)
+  arrows(seg.data[1, paste0(ew, 2)], seg.data[1, paste0(ns, 2)],
+         seg.data[1, paste0(ew, 1)], seg.data[1, paste0(ns, 1)],
+         length = 0.0875, lwd = 3, col = case.color)
+
+  if (milepost.unit == "distance") {
+    if (distance.unit == "meter") {
+      post.info <- paste("posts at", milepost.interval, "m intervals")
+    } else if (distance.unit == "yard") {
+      post.info <- paste("posts at", milepost.interval, "yd intervals")
+    }
+  } else if (milepost.unit == "time") {
+    post.info <- paste("posts at", milepost.interval, "sec intervals")
+  } else {
+    stop('"milepost.unit" muster either be "distance" or "time".')
+  }
+
+  if (mileposts) {
     if (path.length > milepost.interval) {
       arrow.head <- milepost.data$arrow.head
       arrow.tail <- milepost.data$arrow.tail
     }
-
-    if (milepost.unit == "distance") {
-      if (distance.unit == "meter") {
-        post.info <- paste("posts at", milepost.interval, "m intervals")
-      } else if (distance.unit == "yard") {
-        post.info <- paste("posts at", milepost.interval, "yd intervals")
-      }
-    } else if (milepost.unit == "time") {
-      post.info <- paste("posts at", milepost.interval, "sec intervals")
-    } else {
-      stop('"milepost.unit" muster either be "distance" or "time".')
-    }
-
-    # last arrow (last mile)
-    arrows(seg.data[1, paste0(ew, 2)], seg.data[1, paste0(ns, 2)],
-           seg.data[1, paste0(ew, 1)], seg.data[1, paste0(ns, 1)],
-           length = 0.0875, lwd = 3, col = case.color)
 
     # intermediate arrows (mileposts)
     if (path.length >= milepost.interval) {
