@@ -1,3 +1,8 @@
+### cholera 0.8.0.9149
+
+- set Lion Brewery address (lon.proj and lat.proj) to Broad Street.
+
+
 ### cholera 0.8.0.9148
 
 - move final "last mile" arrow and path info in plot.walking_path_B().
