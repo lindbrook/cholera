@@ -1,3 +1,8 @@
+### cholera 0.8.0.9150
+
+- use landmark addresses (lon.proj and lat.proj) in embedNodes().
+
+
 ### cholera 0.8.0.9149
 
 - set Lion Brewery address (lon.proj and lat.proj) to Broad Street.
