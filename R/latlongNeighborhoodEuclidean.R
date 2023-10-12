@@ -6,6 +6,7 @@
 #' @param case.location Character. "address" or "orthogonal". "address" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
 #' @param case.set Character. "observed" or "expected".
 #' @param pump.location Character. "address" or "orthogonal". "address" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}.
+#' @importFrom sp point.in.polygon
 #' @export
 
 latlongNeighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,

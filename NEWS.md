@@ -1,3 +1,8 @@
+### cholera 0.8.0.9151
+
+- use importFrom for 'sp' functions.
+
+
 ### cholera 0.8.0.9150
 
 - use landmark addresses (lon.proj and lat.proj) in embedNodes().

@@ -4,6 +4,7 @@
 # #' @param cutpoint Numeric. Cutpoint for hierarchical cluster analysis.
 #' @param k Numeric. Number of clusters, k, to identify.
 #' @param path Character. e.g., "~/Documents/Data/".
+#' @importFrom sp point.in.polygon
 #' @noRd
 
 latlongCoordinates <- function(tif, k, path) {
