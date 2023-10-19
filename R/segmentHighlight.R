@@ -6,6 +6,7 @@
 #' @param rotate.label Logical. Rotate segment ID label.
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @return A base R graphics segment(s).
+#' @importFrom geosphere distGeo
 #' @export
 #' @examples
 #' streetNameLocator("Soho Square", zoom = TRUE, highlight = FALSE)

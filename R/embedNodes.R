@@ -7,6 +7,7 @@
 #' @param embed.pumps Logical. Embed pumps into road network.
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @importFrom geosphere distGeo
 #' @noRd
 
 embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,

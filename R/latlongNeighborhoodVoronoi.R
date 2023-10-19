@@ -126,6 +126,8 @@ plot.latlongVoronoi <- function(x, add.pumps = TRUE,
   }
 }
 
+#' @importFrom geosphere distGeo
+
 plotLatlongEuclideanPaths <- function(x, pump.id, vars) {
   cases <- cholera::fatalities.address
 

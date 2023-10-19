@@ -154,6 +154,7 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
 #' Compute Cartesian latitude and longitude for simulated regular cases.
 #'
 #' @param simulated.obs Numeric. Number of simulated cases.
+#' @importFrom geosphere distGeo
 #' @importFrom sp Polygon
 #' @importFrom sp spsample
 #' @noRd

@@ -1,6 +1,7 @@
 #' Compute landmark othogonal projection longitude and latitude (address).
 #'
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.
+#' @importFrom geosphere distGeo
 #' @noRd
 
 latlongOrthoLandmarks <- function(multi.core = TRUE) {

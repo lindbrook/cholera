@@ -7,6 +7,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R list with two elements: \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}
 #' @note This function is computationally intensive. With "simulated.obs" set to 20,000 simulated cases (actually generating 19,993 cases). This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}. In real world terms, the distance between of these simulated cases is approximately 6 meters.
+#' @importFrom pracma cart2pol
 #' @importFrom sp Polygon
 #' @importFrom sp spsample
 #' @export

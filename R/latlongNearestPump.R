@@ -9,6 +9,7 @@
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
+#' @importFrom geosphere distGeo
 #' @export
 #' @return An R data frame or list of 'igraph' path nodes.
 

@@ -4,6 +4,7 @@
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @return An R vector of length one.
+#' @importFrom geosphere distGeo
 #' @export
 #' @examples
 #' streetLength("Oxford Street")

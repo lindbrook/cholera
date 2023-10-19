@@ -47,6 +47,8 @@ plot.oxfordWeather <- function(x, statistic = "temperature",
   else stop('statistic must be "temperature" or "rain".', call. = FALSE)
 }
 
+#' @importFrom tools toTitleCase
+
 rainPlot <- function(x, month) {
   if (month == "august") {
     outbreak <- as.Date("1854-09-01") - 1
@@ -76,6 +78,8 @@ rainPlot <- function(x, month) {
   lines(stats::lowess(x[mos, "date"], x[mos, "rain"]), col = mo.col,
       lty = "dashed", lwd = 2)
 }
+
+#' @importFrom tools toTitleCase
 
 temperaturePlot <- function(x, month) {
   if (month == "august") {

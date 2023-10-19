@@ -1,3 +1,8 @@
+### cholera 0.8.0.9154
+
+- use importFrom for functions with limited package use.
+
+
 ### cholera 0.8.0.9153
 
 - clean up use of double colon operator.
