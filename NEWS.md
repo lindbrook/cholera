@@ -1,3 +1,8 @@
+### cholera 0.8.0.9152
+
+- clean DESCRIPTION Imports.
+
+
 ### cholera 0.8.0.9151
 
 - use importFrom for 'sp' functions.
