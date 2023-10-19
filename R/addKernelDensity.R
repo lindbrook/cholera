@@ -10,7 +10,6 @@
 #' @param data Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @return Add contours to a graphics plot.
-#' @import graphics
 #' @note This function uses \code{KernSmooth::bkde2D()}.
 #' @export
 #' @examples
@@ -65,7 +64,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
         kde <- KernSmooth::bkde2D(dat, bandwidth = bw)
 
-        graphics::contour(x = kde$x1, y = kde$x2, z = kde$fhat, col = color,
+        contour(x = kde$x1, y = kde$x2, z = kde$fhat, col = color, 
           lty = line.type, add = TRUE)
 
       } else if (pump.subset == "individual") {
@@ -88,8 +87,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
         invisible(lapply(names(kde), function(nm) {
           dat <- kde[[nm]]
-          graphics::contour(x = dat$x1, y = dat$x2, z = dat$fhat,
-            col = snowColors()[nm], lty = line.type, add = TRUE)
+          contour(x = dat$x1, y = dat$x2, z = dat$fhat, col = snowColors()[nm], 
+            lty = line.type, add = TRUE)
         }))
       }
 
@@ -145,7 +144,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
     invisible(lapply(names(kde), function(nm) {
       dat <- kde[[nm]]
-      graphics::contour(x = dat$x1, y = dat$x2, z = dat$fhat,
+      contour(x = dat$x1, y = dat$x2, z = dat$fhat,
         col = snowColors()[nm], lty = line.type, add = TRUE)
     }))
   }

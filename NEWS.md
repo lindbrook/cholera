@@ -1,3 +1,8 @@
+### cholera 0.8.0.9153
+
+- clean up use of double colon operator.
+
+
 ### cholera 0.8.0.9152
 
 - clean DESCRIPTION Imports.

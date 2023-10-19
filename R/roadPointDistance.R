@@ -8,5 +8,5 @@
 roadPointDistance <- function(a = 85, b = 86, meters = FALSE) {
   sel <- cholera::roads$id %in% c(a, b)
   d <- stats::dist(cholera::roads[sel, c("x", "y")])
-  ifelse(meters, cholera::unitMeter(d), d)
+  ifelse(meters, unitMeter(d), d)
 }

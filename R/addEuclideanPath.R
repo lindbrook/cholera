@@ -77,13 +77,13 @@ addEuclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       }
 
       if (milepost.unit == "distance") {
-        tot <- cholera::unitMeter(stats::dist(dat))
-        h <- seq(0, tot, milepost.interval) / cholera::unitMeter(1)
+        tot <- unitMeter(stats::dist(dat))
+        h <- seq(0, tot, milepost.interval) / unitMeter(1)
       } else if (milepost.unit == "time") {
-        tot <- distanceTime(cholera::unitMeter(stats::dist(dat),
+        tot <- distanceTime(unitMeter(stats::dist(dat),
           distance.unit = "nominal"), walking.speed = x$walking.speed)
         h <- seq(0, tot, milepost.interval) * 1000 * x$walking.speed / 60^2 /
-          cholera::unitMeter(1)
+          unitMeter(1)
       } else {
         stop('Specify a milepost.unit', call. = FALSE)
       }
