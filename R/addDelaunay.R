@@ -7,7 +7,7 @@
 #' @param line.width Numeric. Width of cell edges: lwd.
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @note This function uses \code{deldir::deldir()}.
-#' @import graphics
+#' @importFrom deldir deldir
 #' @export
 #' @examples
 #' snowMap()

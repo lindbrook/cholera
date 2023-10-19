@@ -8,6 +8,7 @@
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param case.location Character. For \code{observed = FALSE}: "address" or "nominal". "nominal" is the x-y coordinates of \code{regular.cases}.
+#' @importFrom geosphere distGeo
 #' @export
 
 latlongEuclideanPath <- function(case = 1, destination = NULL, vestry = FALSE,
@@ -86,6 +87,7 @@ latlongEuclideanPath <- function(case = 1, destination = NULL, vestry = FALSE,
 #' @param milepost.unit Character. "distance" or "time".
 #' @param milepost.interval Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).
 #' @param ... Additional plotting parameters.
+#' @importFrom geosphere distGeo
 #' @export
 
 plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,

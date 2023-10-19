@@ -5,6 +5,7 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param drop.neg.subset Logical. Drop negative subset selection
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @importFrom threejs scatterplot3js
 #' @export
 #' @examples
 #' \dontrun{

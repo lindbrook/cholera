@@ -42,6 +42,8 @@ peripheryCases <- function(n.points, latlong = FALSE) {
 #' @param vertices Object. Polygon vertices candidates.
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @param tsp.method Character. Traveling saleman algorithm. See TSP::solve_TSP() for details. Default method is repetitive nearest neighbor: "repetitive_nn".
+#' @importFrom TSP TSP
+#' @importFrom TSP solve_TSP
 #' @noRd
 
 travelingSalesman <- function(vertices, latlong = FALSE,

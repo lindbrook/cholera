@@ -6,6 +6,7 @@
 #' @param case.location Character. "address" or "anchor". "address" uses the x-y coordinates of \code{ortho.proj}. "anchor" uses the x-y coordinates of \code{fatalities.address}.
 #' @param pump.location Character. "address" or "nominal". "address" uses the x-y coordinates of \code{ortho.proj.pump} or \code{ortho.proj.pump.vestry}. "nominal" uses the x-y coordinates of \code{pumps} or \code{pumps.vestry}.
 #' @param polygon.vertices Logical. \code{TRUE} returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for \code{sp::point.in.polygon()} as used in \code{print.voronoi()} method.
+#' @importFrom deldir deldir
 #' @importFrom sp point.in.polygon
 #' @return An R list with 12 objects.
 #' \itemize{

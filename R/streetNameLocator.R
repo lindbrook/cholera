@@ -196,6 +196,8 @@ wordCase <- function(x) {
   paste0(toupper(substr(x, 1, 1)), tolower(substr(x, 2, nchar(x))))
 }
 
+#' @importFrom tools toTitleCase
+
 caseAndSpace <- function(name) {
   valid.names <- unique(cholera::roads$name)
   name.parts <- unlist(strsplit(name, " "))

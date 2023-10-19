@@ -11,6 +11,7 @@ caseNumber <- function(x) as.numeric(names(x))
 #` horizontal (East-West) and vertical (North-South) components.
 #' @param dat Object. Data.
 #' @param case.address Logical. Use fatalities.address$anchor
+#' @importFrom geosphere distGeo
 #' @noRd
 
 geodesicMeters <- function(dat = cholera::pumps, case.address = FALSE) {
@@ -50,6 +51,7 @@ kmeansRectangle <- function(x) {
 #' @param origin Object. Bottom left corner of map.
 #' @param topleft Object. Top left corner of map.
 #' @param delta Numeric. Increment between simulated values.
+#' @importFrom geosphere distGeo
 #' @noRd
 
 meterLatitude <- function(coords, origin, topleft, delta = 0.000025) {
@@ -79,6 +81,7 @@ meterLatitude <- function(coords, origin, topleft, delta = 0.000025) {
 #' @param topleft Object. Top left corner of map.
 #' @param bottomright Object. Bottom right corner of map.
 #' @param delta Numeric. Increment between simulated values.
+#' @importFrom geosphere distGeo
 #' @noRd
 
 meterLatLong <- function(coords, origin, topleft, bottomright,
@@ -120,6 +123,8 @@ meterLatLong <- function(coords, origin, topleft, bottomright,
 #' Extract points from GeoTiff.
 #'
 #' @param x Object. GeoTIFF.
+#' @importFrom terra as.data.frame
+#' @importFrom terra rast
 #' @noRd
 
 pointsFromGeoTIFF <- function(x) {
@@ -249,6 +254,7 @@ rotatePoint <- function(id = 1, dataset = "roads") {
 #' @param dat Object. R data frame of road segments
 #' @param latlong Logical. Data use longitude/latitude or native map coordinates.
 #' @return An R data frame.
+#' @importFrom geosphere distGeo
 #' @noRd
 
 segmentDistance <- function(dat, latlong = FALSE) {

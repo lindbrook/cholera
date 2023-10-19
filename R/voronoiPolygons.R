@@ -9,6 +9,8 @@
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @return An R list of data frames or base R graphics polygon()'s'.
 #' @note This function relies on the 'deldir' package.
+#' @importFrom deldir deldir
+#' @importFrom deldir triang.list
 #' @export
 #' @examples
 #' snowMap()
