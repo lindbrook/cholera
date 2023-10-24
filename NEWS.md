@@ -1,3 +1,8 @@
+### cholera 0.8.0.9157
+
+- clean DESCRIPTION Imports.
+
+
 ### cholera 0.8.0.9156
 
 - check for internet connection in tanakaContourPlot().
