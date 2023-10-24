@@ -7,10 +7,10 @@
 #' @note Uses road segments that enter square(s) as entry points.
 
 landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
-  marx <- data.frame(x = 17.3855, y = 13.371)
-  snow <- data.frame(x = 10.22414, y = 4.383851)
-  st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
-  huggins.brewery <- data.frame(x = 13.9022, y = 11.87315)
+  marx <- data.frame(x = 17.3855, y = 13.371) # 28 Dean Street
+  snow <- data.frame(x = 10.22414, y = 4.383851) # 54 Frith Street
+  st.lukes.church <- data.frame(x = 14.94156, y = 11.25313) # Berwick Street
+  huggins.brewery <- data.frame(x = 13.9022, y = 11.87315) # Broad Street
 
   ## Squares ##
 
@@ -22,6 +22,7 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
 
   ## ##
 
+  # Today Marks & Spencers at 173 Oxford Street
   pantheon.bazaar <- cholera::road.segments[cholera::road.segments$name ==
     "Winsley Street", c("x2", "y2")]
   names(pantheon.bazaar) <- c("x", "y")
@@ -71,7 +72,7 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   model.lodging <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
                                        NE$x, NE$y, SW$x, SW$y)
 
-  ## Craven Chapel (Wesleyan) ##
+  ## Craven Chapel (Wesleyan) Berwick Street ##
 
   ep1 <- cholera::road.segments[cholera::road.segments$name == "Lowndes Court",
     c("x2", "y2")]
