@@ -7,10 +7,10 @@
 #' @note Uses road segments that enter square(s) as entry points.
 
 landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
-  marx <- data.frame(x = 17.3855, y = 13.371)
-  snow <- data.frame(x = 10.22414, y = 4.383851)
-  st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
-  huggins.brewery <- data.frame(x = 13.9022, y = 11.87315)
+  marx <- data.frame(x = 17.3855, y = 13.371) # 28 Dean Street
+  snow <- data.frame(x = 10.22414, y = 4.383851) # 54 Frith Street
+  st.lukes.church <- data.frame(x = 14.94156, y = 11.25313) # Berwick Street
+  huggins.brewery <- data.frame(x = 13.9022, y = 11.87315) # Broad Street
 
   ## Squares ##
 
@@ -20,8 +20,7 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   soho.square <- squareExitsB("Soho Square")
   soho.square$name <- paste0("Soho Square-", c("E", "N", "S3", "S2", "S1", "W"))
 
-  ## ##
-
+  # Today Marks & Spencers at 173 Oxford Street
   pantheon.bazaar <- cholera::road.segments[cholera::road.segments$name ==
     "Winsley Street", c("x2", "y2")]
   names(pantheon.bazaar) <- c("x", "y")
@@ -71,7 +70,7 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   model.lodging <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
                                        NE$x, NE$y, SW$x, SW$y)
 
-  ## Craven Chapel (Wesleyan) ##
+  ## Craven Chapel (Wesleyan) Berwick Street ##
 
   ep1 <- cholera::road.segments[cholera::road.segments$name == "Lowndes Court",
     c("x2", "y2")]
@@ -140,9 +139,63 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   golden.fix <- golden.fix[, names(out)]
   out[out$name %in% golden.square$name, ] <- golden.fix
 
-  #
+  # Marlborough Street Magistrates Court ##
+  # 19–21 Great Marlborough Street
+  # 51°30′51.62″N 0°8′22.13″W
+  magistrates.court <- magistratesCourt()
+  out <- rbind(out, magistrates.court)
+  out <- out[order(out$case), ]
+  row.names(out) <- NULL
+}
 
-  out[order(out$case), ]
+magistratesCourt <- function() {
+  vars <- c('x', "y")
+
+  # Great Marlborough Street #
+  gt.marlb <- cholera::road.segments[cholera::road.segments$street == 151, ]
+  gt.marlb.df <- rbind(stats::setNames(gt.marlb[, paste0(vars, 1)], vars),
+                       stats::setNames(gt.marlb[, paste0(vars, 2)], vars))
+
+  ols <- stats::lm(y ~ x, data = gt.marlb.df)
+  segment.slope <- stats::coef(ols)[2]
+  theta <- atan(segment.slope)
+  h <- stats::dist(gt.marlb.df)
+  delta.x <- (h / 3) * cos(theta) # approx 1/3 of way along block.
+  delta.y <- (h / 3) * sin(theta)
+
+  # computed street "address"
+  x.est <- gt.marlb$x1 + delta.x
+  y.est <- gt.marlb$y1 + delta.y
+
+  ## Great Marlborough Street label coordinate ##
+  ortho.slope <- -1 / theta
+  ortho.intercept <- y.est - ortho.slope * x.est
+
+  # Marlbrough Mews - parallel road (same block) north of Great Marlborough #
+  marlb.mews <- cholera::road.segments[cholera::road.segments$id == "116-2", ]
+  marlb.mews.df <- rbind(stats::setNames(marlb.mews[, paste0(vars, 1)], vars),
+                         stats::setNames(marlb.mews[, paste0(vars, 2)], vars))
+
+  ols <- stats::lm(y ~ x, data = marlb.mews.df)
+
+  # orthogonal point of intersection from Magistrates Court on Marlborough Mews
+  ortho.x <- (ortho.intercept - stats::coef(ols)[1]) /
+             (stats::coef(ols)[2] - ortho.slope)
+  ortho.y <- stats::coef(ols)["x"] * ortho.x + stats::coef(ols)["(Intercept)"]
+
+  ortho.data <- rbind(data.frame(x = c(ortho.x), y = c(ortho.y)),
+                      data.frame(x = c(x.est), y = c(y.est)))
+
+  h <- stats::dist(ortho.data)
+  ortho.theta <- atan(ortho.slope)
+  delta.x <- (h / 2) * cos(ortho.theta) # position label in "middle" via 1/2.
+  delta.y <- (h / 2) * sin(ortho.theta)
+  x.lab <- x.est - delta.x
+  y.lab <- y.est - delta.y
+
+  data.frame(road.segment = "151-1", x.proj = x.est, y.proj = y.est,
+    ortho.dist = 0, x = x.lab, y = y.lab, name = "Magistrates Court",
+    case = 20020)
 }
 
 pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {

@@ -1,3 +1,9 @@
+### cholera 0.8.0.9158
+
+- add Marlborough Street Magistrates Court and landmark street location/address.
+- add/use magistratesCourt().
+
+
 ### cholera 0.8.0.9157
 
 - clean DESCRIPTION Imports.
