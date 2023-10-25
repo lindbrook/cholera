@@ -61,7 +61,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
     }
   }
 
-  if (vestry) pmp <- cholera::pumps.vestry
+  if (isTRUE(vestry)) pmp <- cholera::pumps.vestry
   else pmp <- cholera::pumps
 
   if (type == "pumps") {
@@ -110,7 +110,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
       names(alter.node) <- alters$pump
 
       if (length(ego.node) == 1) {
-        if (weighted) {
+        if (isTRUE(weighted)) {
           d <- igraph::distances(g, ego.node, alter.node, weights = edges$d)
         } else {
           d <- igraph::distances(g, ego.node, alter.node)
@@ -119,7 +119,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
         nearest.node <- dimnames(d)[[2]][which.min(d)]
         nearest.dest <- as.character(alters[alters$node == nearest.node, ]$pump)
 
-        if (weighted) {
+        if (isTRUE(weighted)) {
           p <- igraph::shortest_paths(g, ego.node, alter.node[nearest.dest],
                                       weights = edges$d)$vpath
         } else {
@@ -146,7 +146,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
         nearest.node <- dimnames(d.multi.ego[[ego.id]])[[2]][alter.id]
         nearest.dest <- as.character(nodes[nodes$node == nearest.node, ]$pump)
 
-        if (weighted) {
+        if (isTRUE(weighted)) {
           p <- igraph::shortest_paths(g, nearest.ego.node, nearest.node,
                                       weights = edges$d)$vpath
         } else {
@@ -169,7 +169,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
                       nodes[nodes$land %in% dest$anchor, ]$node)
 
       if (length(ego.node) == 1) {
-        if (weighted) {
+        if (isTRUE(weighted)) {
           d <- igraph::distances(g, ego.node, alter.node, weights = edges$d)
         } else {
           d <- igraph::distances(g, ego.node, alter.node)
@@ -213,7 +213,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
 
         nearest.dest <- nearest.candidate$case + nearest.candidate$land
 
-        if (weighted) {
+        if (isTRUE(weighted)) {
           p <- igraph::shortest_paths(g, nearest.ego.node, nearest.node,
                                       weights = edges$d)$vpath
         } else {
@@ -236,7 +236,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
       alter.node <- alters$node
       names(alter.node) <- alters$pump
 
-      if (weighted) {
+      if (isTRUE(weighted)) {
         d <- igraph::distances(g, ego.node, alter.node, weights = edges$d)
       } else {
         d <- igraph::distances(g, ego.node, alter.node)
@@ -245,7 +245,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
       nearest.node <- dimnames(d)[[2]][which.min(d)]
       nearest.dest <- as.character(alters[alters$node == nearest.node, ]$pump)
 
-      if (weighted) {
+      if (isTRUE(weighted)) {
         p <- igraph::shortest_paths(g, ego.node, nearest.node,
                                     weights = edges$d)$vpath
       } else {
@@ -267,7 +267,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
       names(alter.node) <- alters$pump
 
       if (length(ego.node) == 1) {
-        if (weighted) {
+        if (isTRUE(weighted)) {
           d <- igraph::distances(g, ego.node, alter.node, weights = edges$d)
         } else {
           d <- igraph::distances(g, ego.node, alter.node)
@@ -285,7 +285,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
         }
       } else if (length(ego.node) > 1) {
         d.multi.ego <- lapply(ego.node, function(x) {
-          if (weighted) {
+          if (isTRUE(weighted)) {
             igraph::distances(g, x, alter.node, weights = edges$d)
           } else {
             igraph::distances(g, x, alter.node)
@@ -304,7 +304,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
         nearest.node <- dimnames(d.multi.ego[[ego.id]])[[2]][alter.id]
         nearest.dest <- as.character(nodes[nodes$node == nearest.node, ]$pump)
 
-        if (weighted) {
+        if (isTRUE(weighted)) {
           p <- igraph::shortest_paths(g, nearest.ego.node, nearest.node,
                                       weights = edges$d)$vpath
         } else {
@@ -336,7 +336,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
       names(alter.node) <- alters$case + alters$land
 
       if (length(ego.node) == 1) {
-        if (weighted) {
+        if (isTRUE(weighted)) {
           d <- igraph::distances(g, ego.node, alter.node, weights = edges$d)
         } else {
           d <- igraph::distances(g, ego.node, alter.node)
@@ -346,7 +346,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
         nearest.dest <- nodes[nodes$node == nearest.node, ]$case +
                         nodes[nodes$node == nearest.node, ]$land
 
-        if (weighted) {
+        if (isTRUE(weighted)) {
           p <- igraph::shortest_paths(g, ego.node, nearest.node,
                                       weights = edges$d)$vpath
         } else {
@@ -354,7 +354,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
         }
       } else if (length(ego.node) > 1) {
         d.multi.ego <- lapply(ego.node, function(x) {
-          if (weighted) {
+          if (isTRUE(weighted)) {
             igraph::distances(g, x, alter.node, weights = edges$d)
           } else {
             igraph::distances(g, x, alter.node)
@@ -374,7 +374,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
         nearest.dest <- nodes[nodes$node == nearest.node, ]$case +
                         nodes[nodes$node == nearest.node, ]$land
 
-        if (weighted) {
+        if (isTRUE(weighted)) {
           p <- igraph::shortest_paths(g, nearest.ego.node, nearest.node,
                                       weights = edges$d)$vpath
         } else {
@@ -395,7 +395,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
       alter.node <- alters$node
       names(alter.node) <- alters$pump
 
-      if (weighted) {
+      if (isTRUE(weighted)) {
         d <- igraph::distances(g, ego.node, alter.node, weights = edges$d)
       } else {
         d <- igraph::distances(g, ego.node, alter.node)
@@ -404,7 +404,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
       nearest.node <- dimnames(d)[[2]][which.min(d)]
       nearest.dest <- as.character(alters[alters$node == nearest.node, ]$pump)
 
-      if (weighted) {
+      if (isTRUE(weighted)) {
         p <- igraph::shortest_paths(g, ego.node, nearest.node,
                                     weights = edges$d)$vpath
       } else {
@@ -419,7 +419,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
                      lon = as.numeric(p.data[, 1]),
                      lat = as.numeric(p.data[, 2]))
 
-  if (!latlong) names(path)[-1] <- c("x", "y")
+  if (isFALSE(latlong)) names(path)[-1] <- c("x", "y")
 
   endpts <- do.call(rbind, lapply(seq_len(length(p[-1])), function(i) {
     data.frame(ep1 = p[i], ep2 = p[i + 1])
@@ -432,7 +432,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
     edges[edge.sel, ]$d
   }, numeric(1L))
 
-  if (latlong) {
+  if (isTRUE(latlong)) {
     walking.time <- walkingTime(sum(ds), time.unit = time.unit,
       walking.speed = walking.speed)
   } else {
@@ -534,7 +534,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
 
   land <- cholera::landmarks # includes nominal and ortho
 
-  if (latlong) {
+  if (isTRUE(latlong)) {
     ew <- "lon"
     ns <- "lat"
     asp <- 1.6
@@ -547,7 +547,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
   vars <- c(ew, ns)
 
   if (is.logical(zoom)) {
-    if (zoom) {
+    if (isTRUE(zoom)) {
       padding <- ifelse(latlong, 0.00026, 0.1)
       xlim <- c(min(dat[, ew]) - padding, max(dat[, ew]) + padding)
       ylim <- c(min(dat[, ns]) - padding, max(dat[, ns]) + padding)
@@ -641,7 +641,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
     stop('"milepost.unit" muster either be "distance" or "time".')
   }
 
-  if (mileposts) {
+  if (isTRUE(mileposts)) {
     if (path.length > milepost.interval) {
       arrow.head <- milepost.data$arrow.head
       arrow.tail <- milepost.data$arrow.tail
@@ -707,7 +707,7 @@ print.walking_path_B <- function(x, ...) {
 drawPathB <- function(dat, case.color, latlong) {
   n1 <- dat[1:(nrow(dat) - 1), ]
   n2 <- dat[2:nrow(dat), ]
-  if (latlong) {
+  if (isTRUE(latlong)) {
     segments(n1$lon, n1$lat, n2$lon, n2$lat, lwd = 3, col = case.color)
   } else {
     segments(n1$x, n1$y, n2$x, n2$y, lwd = 3, col = case.color)
@@ -719,7 +719,7 @@ milePostsB <- function(path.data, dat, destination, distance.unit, ds, latlong,
 
   rev.data <- dat[order(dat$id, decreasing = TRUE), ]
 
-  if (latlong) {
+  if (isTRUE(latlong)) {
     ew <- "lon"
     ns <- "lat"
   } else {
@@ -785,7 +785,7 @@ milePostsB <- function(path.data, dat, destination, distance.unit, ds, latlong,
     milepost.values <- seq_along(milepost.seg.id) * milepost.interval
     census <- data.frame(seg = milepost.seg.id, post = milepost.values)
 
-    if (latlong) {
+    if (isTRUE(latlong)) {
       origin <- data.frame(lon = min(cholera::roads[, ew]),
                            lat = min(cholera::roads[, ns]))
       topleft <- data.frame(lon = min(cholera::roads[, ew]),
@@ -819,7 +819,7 @@ milePostsB <- function(path.data, dat, destination, distance.unit, ds, latlong,
     arrow.tail <- arrow.data[, paste0(c("x", "y"), 1)]
     arrow.head <- arrow.data[, paste0(c("x", "y"), 2)]
 
-    if (latlong) {
+    if (isTRUE(latlong)) {
       arrow.tail <- meterLatLong(arrow.tail, origin, topleft, bottomright)
       arrow.head <- meterLatLong(arrow.head, origin, topleft, bottomright)
     } else {
@@ -843,7 +843,7 @@ milePostsB <- function(path.data, dat, destination, distance.unit, ds, latlong,
 arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit, 
   seg.data, origin, multi.arrow.seg = FALSE) {
 
-  if (latlong) vars <- c("lon", "lat")
+  if (isTRUE(latlong)) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
   out <- lapply(segs, function(s) {
@@ -852,7 +852,7 @@ arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit,
     endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], vars)
     data.tmp <- rbind(endpt1, endpt2)
 
-    if (latlong) {
+    if (isTRUE(latlong)) {
       idx <- seq_along(data.tmp$lon)
       meter.coords <- do.call(rbind, lapply(idx, function(i) {
         tmp <- data.tmp[i, vars]
@@ -870,9 +870,9 @@ arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit,
     seg.slope <- stats::coef(ols)[2]
     theta <- atan(seg.slope)
 
-    if (multi.arrow.seg) {
+    if (isTRUE(multi.arrow.seg)) {
       posts <- census[census$seg %in% s, "post"]
-      if (latlong) {
+      if (isTRUE(latlong)) {
          multi.out <- lapply(posts, function(p) {
           if (milepost.unit == "distance") {
             h <- tmp$cumulative.d - p
@@ -903,7 +903,7 @@ arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit,
     } else {
       post <- census[census$seg == s, "post"]
 
-      if (latlong) {
+      if (isTRUE(latlong)) {
         if (milepost.unit == "distance") {
           h <- tmp$cumulative.d - post
         } else if (milepost.unit == "time") {
@@ -932,7 +932,7 @@ arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit,
 }
 
 longTitle <- function(long.title, type, pmp, path.data, orig, land) {
-  if (long.title) {
+  if (isTRUE(long.title)) {
     if (type == "case-pump") {
       p.nm <- pmp[pmp$id == path.data$dest.anchor, ]$street
       if (orig < 20000L) {

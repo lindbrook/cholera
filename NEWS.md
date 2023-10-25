@@ -1,3 +1,8 @@
+### cholera 0.8.0.9159
+
+- use isTRUE()/isFALSE() in walkingPathB().
+
+
 ### cholera 0.8.0.9158
 
 - add Marlborough Street Magistrates Court and landmark street location/address.
