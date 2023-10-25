@@ -20,7 +20,66 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   soho.square <- squareExitsB("Soho Square")
   soho.square$name <- paste0("Soho Square-", c("E", "N", "S3", "S2", "S1", "W"))
 
-  ## ##
+  # Marlborough Street Magistrates Court ##
+
+  # 19–21 Great Marlborough Street
+  # 51°30′51.62″N 0°8′22.13″W
+
+  # streetNameLocator("Great Marlborough Street", zoom = 1)
+  # sel <- road.segments$street == 151
+  vars <- c('x', "y")
+  # points(road.segments[sel, paste0(vars, 1)], pch = 0)
+  # points(road.segments[sel, paste0(vars, 2)])
+
+  gt.marlb.st <- cholera::road.segments[cholera::road.segments$street == 151, ]
+
+  dat <- rbind(stats::setNames(gt.marlb.st[, paste0(vars, 1)], vars),
+               stats::setNames(gt.marlb.st[, paste0(vars, 2)], vars))
+
+  ols <- stats::lm(y ~ x, data = dat)
+  segment.slope <- stats::coef(ols)[2]
+  theta <- atan(segment.slope)
+
+  h <- stats::dist(dat)
+  delta.x <- (h / 3) * cos(theta)
+  delta.y <- (h / 3) * sin(theta)
+
+  # street "address"
+  x.est <- gt.marlb.st$x1 + delta.x
+  y.est <- gt.marlb.st$y1 + delta.y
+  # points(x.est, y.est, pch = 15)
+
+  ## label coordinates ##
+
+  # ortho projection from "address"
+  ortho.slope <- -1 / theta
+  ortho.intercept <- y.est - ortho.slope * x.est
+  # abline(a = c(ortho.intercept), b = c(ortho.slope), lty = "dotted")
+
+  # parallel road north "Marlbrough Mews"
+  marlb.mews <- cholera::road.segments[cholera::road.segments$id == "116-2", ]
+  marlb.mews.df <- rbind(stats::setNames(marlb.mews[, paste0(vars, 1)], vars),
+                         stats::setNames(marlb.mews[, paste0(vars, 2)], vars))
+  ols.mews <- stats::lm(y ~ x, data = marlb.mews.df)
+
+  # point of intersection along "Marlborough Mews"
+  ortho.x <- (ortho.intercept - stats::coef(ols.mews)[1]) /
+             (stats::coef(ols.mews)[2] - ortho.slope)
+  ortho.y <- stats::coef(ols.mews)["x"] * ortho.x +
+             stats::coef(ols.mews)["(Intercept)"]
+  ortho.data <- rbind(data.frame(x = c(ortho.x), y = c(ortho.y)),
+                      data.frame(x = c(x.est), y = c(y.est)))
+
+  h <- stats::dist(ortho.data)
+  ortho.theta <- atan(ortho.slope)
+  delta.x <- (h / 2) * cos(ortho.theta)
+  delta.y <- (h / 2) * sin(ortho.theta)
+  x.lab <- x.est - delta.x
+  y.lab <- y.est - delta.y
+
+  magistrates.court <- data.frame(x = x.est, y = y.est,
+                                  x.lab = x.lab, y.lab = y.lab,
+                                  label = "Magistrates\n Court")
 
   # Today Marks & Spencers at 173 Oxford Street
   pantheon.bazaar <- cholera::road.segments[cholera::road.segments$name ==
