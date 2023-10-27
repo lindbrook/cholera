@@ -1,3 +1,8 @@
+### cholera 0.8.0.9161
+
+- amend magistratesCourt().
+
+
 ### cholera 0.8.0.9160
 
 - add roadTheta() and trignometricDelta().
