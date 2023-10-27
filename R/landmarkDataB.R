@@ -169,12 +169,12 @@ magistratesCourt <- function() {
   gt.marlb <- rbind(stats::setNames(gt.marlb.st[, paste0(vars, 1)], vars),
                     stats::setNames(gt.marlb.st[, paste0(vars, 2)], vars))
 
-  delta <- trignometricDelta(broad, factor = 3L) # appox 1/3 way along road
-  x.est <- gt.marlb$x1 + delta$x
-  y.est <- gt.marlb$y1 + delta$y
+  delta <- trignometricDelta(gt.marlb, factor = 3L) # appox 1/3 way along road
+  x.est <- gt.marlb.st$x1 + delta$x
+  y.est <- gt.marlb.st$y1 + delta$y
 
   ## Great Marlborough Street label coordinate ##
-  ortho.slope <- -1 / roadTheta(broad)
+  ortho.slope <- -1 / roadTheta(gt.marlb)
   ortho.intercept <- y.est - ortho.slope * x.est
 
   # Marlbrough Mews - parallel road (same block) north of Great Marlborough #
@@ -196,9 +196,9 @@ magistratesCourt <- function() {
   x.lab <- x.est - delta$x
   y.lab <- y.est - delta$y
 
-  data.frame(road.segment = "151-1", x.proj = x.est, y.proj = y.est,
-    ortho.dist = 0, x = x.lab, y = y.lab, name = "Magistrates Court",
-    case = 20020)
+  data.frame(case = 20020L, road.segment = "151-1", x.proj = x.est, 
+    y.proj = y.est, ortho.dist = 0, x = x.lab, y = y.lab, 
+    name = "Magistrates Court")
 }
 
 pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
