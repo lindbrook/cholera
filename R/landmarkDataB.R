@@ -152,31 +152,24 @@ magistratesCourt <- function() {
   vars <- c('x', "y")
 
   # Great Marlborough Street #
-  gt.marlb <- cholera::road.segments[cholera::road.segments$street == 151, ]
-  gt.marlb.df <- rbind(stats::setNames(gt.marlb[, paste0(vars, 1)], vars),
-                       stats::setNames(gt.marlb[, paste0(vars, 2)], vars))
+  gt.marlb.st <- cholera::road.segments[cholera::road.segments$street == 151, ]
+  gt.marlb <- rbind(stats::setNames(gt.marlb.st[, paste0(vars, 1)], vars),
+                    stats::setNames(gt.marlb.st[, paste0(vars, 2)], vars))
 
-  ols <- stats::lm(y ~ x, data = gt.marlb.df)
-  segment.slope <- stats::coef(ols)[2]
-  theta <- atan(segment.slope)
-  h <- stats::dist(gt.marlb.df)
-  delta.x <- (h / 3) * cos(theta) # approx 1/3 of way along block.
-  delta.y <- (h / 3) * sin(theta)
-
-  # computed street "address"
-  x.est <- gt.marlb$x1 + delta.x
-  y.est <- gt.marlb$y1 + delta.y
+  delta <- trignometricDelta(broad, factor = 3L) # appox 1/3 way along road
+  x.est <- gt.marlb$x1 + delta$x
+  y.est <- gt.marlb$y1 + delta$y
 
   ## Great Marlborough Street label coordinate ##
-  ortho.slope <- -1 / theta
+  ortho.slope <- -1 / roadTheta(broad)
   ortho.intercept <- y.est - ortho.slope * x.est
 
   # Marlbrough Mews - parallel road (same block) north of Great Marlborough #
   marlb.mews <- cholera::road.segments[cholera::road.segments$id == "116-2", ]
-  marlb.mews.df <- rbind(stats::setNames(marlb.mews[, paste0(vars, 1)], vars),
-                         stats::setNames(marlb.mews[, paste0(vars, 2)], vars))
+  mews <- rbind(stats::setNames(marlb.mews[, paste0(vars, 1)], vars),
+                stats::setNames(marlb.mews[, paste0(vars, 2)], vars))
 
-  ols <- stats::lm(y ~ x, data = marlb.mews.df)
+  ols <- stats::lm(y ~ x, data = mews)
 
   # orthogonal point of intersection from Magistrates Court on Marlborough Mews
   ortho.x <- (ortho.intercept - stats::coef(ols)[1]) /
@@ -186,12 +179,9 @@ magistratesCourt <- function() {
   ortho.data <- rbind(data.frame(x = c(ortho.x), y = c(ortho.y)),
                       data.frame(x = c(x.est), y = c(y.est)))
 
-  h <- stats::dist(ortho.data)
-  ortho.theta <- atan(ortho.slope)
-  delta.x <- (h / 2) * cos(ortho.theta) # position label in "middle" via 1/2.
-  delta.y <- (h / 2) * sin(ortho.theta)
-  x.lab <- x.est - delta.x
-  y.lab <- y.est - delta.y
+  delta <- trignometricDelta(ortho.data)
+  x.lab <- x.est - delta$x
+  y.lab <- y.est - delta$y
 
   data.frame(road.segment = "151-1", x.proj = x.est, y.proj = y.est,
     ortho.dist = 0, x = x.lab, y = y.lab, name = "Magistrates Court",
