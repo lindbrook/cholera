@@ -1,3 +1,8 @@
+### cholera 0.8.0.9162
+
+- clean landmarkDataB().
+
+
 ### cholera 0.8.0.9161
 
 - amend magistratesCourt().
