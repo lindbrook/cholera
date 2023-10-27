@@ -7,10 +7,21 @@
 #' @note Uses road segments that enter square(s) as entry points.
 
 landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
+  vars <- c("x", "y")
+  vars.proj <- c("x.proj", "y.proj")
+
+
   marx <- data.frame(x = 17.3855, y = 13.371) # 28 Dean Street
-  snow <- data.frame(x = 10.22414, y = 4.383851) # 54 Frith Street
-  st.lukes.church <- data.frame(x = 14.94156, y = 11.25313) # Berwick Street
-  huggins.brewery <- data.frame(x = 13.9022, y = 11.87315) # Broad Street
+
+  snow <- data.frame(x = 10.22414, y = 4.383851) # H: 18 Sackville
+  # snow.office <- data.frame(x = , y = ) # O: 54 Frith Street
+
+  # Berwick Street
+  # current Kemp House across from Tyler's Court
+  st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
+
+  # 50 Broad Street; Lion Brewery / Huggins Brewery
+  brewery <- data.frame(x = 13.9022, y = 11.87315)
 
   ## Squares ##
 
@@ -22,28 +33,30 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
 
   # Today Marks & Spencers at 173 Oxford Street
   pantheon.bazaar <- cholera::road.segments[cholera::road.segments$name ==
-    "Winsley Street", c("x2", "y2")]
-  names(pantheon.bazaar) <- c("x", "y")
+    "Winsley Street", paste0(vars, 2)]
+  names(pantheon.bazaar) <- vars
 
   st.james.workhouse <- cholera::road.segments[cholera::road.segments$name ==
     "St James Workhouse", c("id", "x1", "y1", "name")]
-  names(st.james.workhouse)[1:3] <- c("road.segment", "x.proj", "y.proj")
+  names(st.james.workhouse)[1:3] <- c("road.segment", vars.proj)
   st.james.workhouse$ortho.dist <- 0
-  vars <- c("x.proj", "y.proj")
-  st.james.workhouse <- stats::setNames(st.james.workhouse[, vars], c("x", "y"))
+
+  st.james.workhouse <- stats::setNames(st.james.workhouse[, vars.proj], vars)
 
   ## Argyll House : Lord Aberdeen ##
-
-  nm <- c("x", "y")
+  # The London Palladium
+  # https://www.british-history.ac.uk/survey-london/vols31-2/pt2/pp284-307#h3-0010
+  # "frontages in both Argyll Street and Great Marlborough Street."
+  # entrance on Argyll Street
 
   NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "116-2", c("x2", "y2")], nm)
+    "116-2", paste0(vars, 2)], vars)
   NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "144-1", c("x2", "y2")], nm)
+    "144-1", paste0(vars, 2)], vars)
   SW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "161-1", c("x2", "y2")], nm)
+    "161-1", paste0(vars, 2)], vars)
   SE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "161-1", c("x1", "y1")], nm)
+    "161-1", paste0(vars, 1)], vars)
 
   aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y,
     SW$x, SW$y)
@@ -52,20 +65,20 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   ## Model Lodging ##
 
   sel <- cholera::road.segments$name == "Cock Court"
-  rd.data <- cholera::road.segments[sel, c("x2", "y2")]
-  NW <- stats::setNames(rd.data, nm)
+  rd.data <- cholera::road.segments[sel, paste0(vars, 2)]
+  NW <- stats::setNames(rd.data, vars)
 
   sel <- cholera::road.segments$name == "Cock Court"
-  rd.data <- cholera::road.segments[sel, c("x1", "y1")]
-  NE <- stats::setNames(rd.data, nm)
+  rd.data <- cholera::road.segments[sel, paste0(vars, 1)]
+  NE <- stats::setNames(rd.data, vars)
 
   sel <- cholera::road.segments$id == "259-1"
-  rd.data <- cholera::road.segments[sel, c("x2", "y2")]
-  SW <- stats::setNames(rd.data, nm)
+  rd.data <- cholera::road.segments[sel, paste0(vars, 2)]
+  SW <- stats::setNames(rd.data, vars)
 
   sel <- cholera::road.segments$id == "259-1"
-  rd.data <- cholera::road.segments[sel, c("x1", "y1")]
-  SE <- stats::setNames(rd.data, nm)
+  rd.data <- cholera::road.segments[sel, paste0(vars, 1)]
+  SE <- stats::setNames(rd.data, vars)
 
   model.lodging <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
                                        NE$x, NE$y, SW$x, SW$y)
@@ -73,10 +86,10 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   ## Craven Chapel (Wesleyan) Berwick Street ##
 
   ep1 <- cholera::road.segments[cholera::road.segments$name == "Lowndes Court",
-    c("x2", "y2")]
+    paste0(vars, 2)]
   ep2 <- cholera::road.segments[cholera::road.segments$id == "201-1",
-    c("x2", "y2")]
-  dat <- stats::setNames(rbind(ep1, ep2), nm)
+    paste0(vars, 2)]
+  dat <- stats::setNames(rbind(ep1, ep2), vars)
   h <- c(stats::dist(dat))
   ols <- stats::lm(y ~ x, dat)
   segment.slope <- stats::coef(ols)[2]
@@ -259,4 +272,5 @@ trignometricDelta <- function(dat, factor = 2L) {
    delta.y <- (h / factor) * sin(theta)
    data.frame(x = delta.x, y = delta.y, row.names = NULL)
 }
+
 
