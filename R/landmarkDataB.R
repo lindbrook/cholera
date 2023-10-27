@@ -204,6 +204,12 @@ pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
   }, character(1L))
 }
 
+roadTheta <- function(dat) {
+   ols <- stats::lm(y ~ x, data = dat)
+   slope <- stats::coef(ols)[2]
+   ifelse(is.na(slope), pi / 2, atan(slope))
+}
+
 squareExitsB <- function(nm = "Golden Square") {
   dat <- cholera::road.segments[cholera::road.segments$name == nm, ]
   left <- pasteCoordsB(dat)
@@ -254,5 +260,13 @@ squareExitsB <- function(nm = "Golden Square") {
 
     candidate
   }))
+}
+
+trignometricDelta <- function(dat, factor = 2L) {
+   h <- c(stats::dist(dat))
+   theta <- roadTheta(dat)
+   delta.x <- (h / factor) * cos(theta)
+   delta.y <- (h / factor) * sin(theta)
+   data.frame(x = delta.x, y = delta.y, row.names = NULL)
 }
 

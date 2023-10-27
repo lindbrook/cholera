@@ -1,3 +1,8 @@
+### cholera 0.8.0.9160
+
+- add roadTheta() and trignometricDelta().
+
+
 ### cholera 0.8.0.9159
 
 - use isTRUE()/isFALSE() in walkingPathB().
