@@ -161,6 +161,26 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   row.names(out) <- NULL
 }
 
+lionBrewery <- function() {
+   vars <- c("x", "y")
+   seg.id <- "187-1"
+
+   sel <- cholera::road.segments$id == seg.id
+   broad.st <- cholera::road.segments[sel, ]
+
+   broad <- rbind(stats::setNames(broad.st[, paste0(vars, 1)], vars),
+                  stats::setNames(broad.st[, paste0(vars, 2)], vars))
+
+   delta <- trignometricDelta(broad)
+
+   left <- broad[which.min(broad$x), ]
+   x.new <- left$x + delta$x
+   y.new <- left$y + delta$y
+
+   data.frame(case = 20004L, road.segment = seg.id, x.proj = x.new,
+      y.proj = y.new, ortho.dist = 0)
+}
+
 magistratesCourt <- function() {
   vars <- c('x', "y")
 
