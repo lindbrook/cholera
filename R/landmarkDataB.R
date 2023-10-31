@@ -216,8 +216,8 @@ magistratesCourt <- function() {
   x.lab <- x.est - delta$x
   y.lab <- y.est - delta$y
 
-  data.frame(case = 20020L, road.segment = "151-1", x.proj = x.est, 
-    y.proj = y.est, ortho.dist = 0, x = x.lab, y = y.lab, 
+  data.frame(case = 20020L, road.segment = "151-1", x.proj = x.est,
+    y.proj = y.est, ortho.dist = 0, x = x.lab, y = y.lab,
     name = "Magistrates Court")
 }
 
