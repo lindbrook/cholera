@@ -285,6 +285,30 @@ squareExitsB <- function(nm = "Golden Square") {
   }))
 }
 
+stLukes <- function() {
+  vars <- c("x", "y")
+  seg.id <- "222-1"
+
+  sel <- cholera::road.segments$id == seg.id
+  berwick.st <- cholera::road.segments[sel, ]
+  berwick <- rbind(stats::setNames(berwick.st[, paste0(vars, 1)], vars),
+                   stats::setNames(berwick.st[, paste0(vars, 2)], vars))
+
+  sel <- cholera::landmarks$name == "St Luke's Church"
+  st.lukes <- cholera::landmarks[sel, vars]
+
+  ols.berwick <- stats::lm(y ~ x, data = berwick)
+  ortho.slope <- -1 / stats::coef(ols.berwick)[2]
+  ortho.intercept <- st.lukes$y - ortho.slope * st.lukes$x
+
+  x.proj <- (stats::coef(ols.berwick)[1] -  ortho.intercept) /
+            (ortho.slope - stats::coef(ols.berwick)[2])
+  y.proj <- x.proj * ortho.slope + ortho.intercept
+
+  data.frame(case = 20003L, road.segment = seg.id, x.proj = x.proj,
+             y.proj = y.proj, ortho.dist = 0, row.names = NULL)
+}
+
 trignometricDelta <- function(dat, factor = 2L) {
    h <- c(stats::dist(dat))
    theta <- roadTheta(dat)
