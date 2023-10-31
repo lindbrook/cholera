@@ -1,3 +1,8 @@
+### cholera 0.8.0.9166
+
+- add importFrom deldir tile.list in voronoiPolygons().
+
+
 ### cholera 0.8.0.9165
 
 - add stLukes().
