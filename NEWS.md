@@ -1,3 +1,8 @@
+### cholera 0.8.0.9168
+
+- add notes about model lodging houses.
+
+
 ### cholera 0.8.0.9167
 
 - add assignLandmarkAddress().

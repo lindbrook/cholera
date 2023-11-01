@@ -63,6 +63,10 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   argyll.house <- data.frame(x = aberdeen$x, y = aberdeen$y)
 
   ## Model Lodging ##
+  # Hopkins Street "The Cholera in Berwick Street" by Rev. Henry Whitehead
+  # segment IDs: "245-1"
+  # Ingestre Buildings
+  # New Street/Husband Street -> Ingestre Place (now)
 
   sel <- cholera::road.segments$name == "Cock Court"
   rd.data <- cholera::road.segments[sel, paste0(vars, 2)]
