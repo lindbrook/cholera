@@ -161,6 +161,31 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   row.names(out) <- NULL
 }
 
+# Default is St Luke's Church
+assignLandmarkAddress <- function(seg.id = "222-1", landmark.id = 20003L) {
+  vars <- c("x", "y")
+
+  sel <- cholera::road.segments$id == seg.id
+  st.data <- cholera::road.segments[sel, ]
+  st <- rbind(stats::setNames(st.data[, paste0(vars, 1)], vars),
+              stats::setNames(st.data[, paste0(vars, 2)], vars))
+
+  sel <- cholera::landmarks$case == landmark.id
+  lndmrk <- cholera::landmarks[sel, vars]
+
+  ols.st <- stats::lm(y ~ x, data = st)
+  ortho.slope <- -1 / stats::coef(ols.st)[2]
+  ortho.intercept <- lndmrk$y - ortho.slope * lndmrk$x
+
+  x.proj <- (stats::coef(ols.st)[1] -  ortho.intercept) /
+            (ortho.slope - stats::coef(ols.st)[2])
+  y.proj <- x.proj * ortho.slope + ortho.intercept
+
+  data.frame(case = landmark.id, road.segment = seg.id, x.proj = x.proj,
+             y.proj = y.proj, ortho.dist = 0, row.names = NULL)
+}
+
+
 lionBrewery <- function() {
    vars <- c("x", "y")
    seg.id <- "187-1"
