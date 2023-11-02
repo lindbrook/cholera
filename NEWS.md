@@ -1,3 +1,8 @@
+### cholera 0.8.0.9169
+
+- add cravenChapel().
+
+
 ### cholera 0.8.0.9168
 
 - add notes about model lodging houses.

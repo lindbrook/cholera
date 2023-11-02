@@ -189,6 +189,37 @@ assignLandmarkAddress <- function(seg.id = "222-1", landmark.id = 20003L) {
              y.proj = y.proj, ortho.dist = 0, row.names = NULL)
 }
 
+cravenChapel <- function() {
+  vars <- c("x", "y")
+  seg.id <- "229-1" # Fouberts Place
+
+  sel <- cholera::road.segments$id == seg.id
+  fouberts.pl <- cholera::road.segments[sel, ]
+
+  fouberts <- rbind(stats::setNames(fouberts.pl[, paste0(vars, 1)], vars),
+                    stats::setNames(fouberts.pl[, paste0(vars, 2)], vars))
+
+  delta <- trignometricDelta(fouberts)
+  left <- fouberts[which.min(fouberts$x), ] # West end
+  x.new <- left$x + delta$x
+  y.new <- left$y + delta$y
+
+  ols <- stats::lm(y ~ x, data = fouberts)
+  slope <- stats::coef(ols)[2]
+  ortho.slope <- -1 / slope
+  ortho.intercept <- y.new - ortho.slope * x.new
+
+  theta <- ifelse(is.na(ortho.slope), pi / 2, atan(ortho.slope))
+  # unitMeter(1, "yard") * 3 is appox. 177.2 ft
+  # 0.5 nominal units approx 88 feet
+  delta.x <- 0.5 * cos(theta)
+  delta.y <- 0.5 * sin(theta)
+  x.label <- x.new + delta.x
+  y.label <- y.new + delta.y
+
+  data.frame(case = 20009L, road.segment = seg.id, x = x.label, y = y.label,
+    x.proj = x.new, y.proj = y.new, ortho.dist = 0, row.names = NULL)
+}
 
 lionBrewery <- function() {
    vars <- c("x", "y")
