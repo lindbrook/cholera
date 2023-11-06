@@ -1,3 +1,8 @@
+### cholera 0.8.0.9170
+
+- add squareCenterB().
+
+
 ### cholera 0.8.0.9169
 
 - add cravenChapel().
