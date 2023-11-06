@@ -293,6 +293,25 @@ roadTheta <- function(dat) {
    ifelse(is.na(slope), pi / 2, atan(slope))
 }
 
+squareCenterB <- function(NS, EW, latlong = FALSE) {
+  if (isTRUE(latlong)) {
+    line.NS <- stats::lm(lat ~ lon, data = NS)
+    line.EW <- stats::lm(lat ~ lon, data = EW)
+  } else {
+    line.NS <- stats::lm(y ~ x, data = NS)
+    line.EW <- stats::lm(y ~ x, data = EW)
+  }
+
+  slope.delta <- stats::coef(line.NS)[2] - stats::coef(line.EW)[2]
+  int.delta <- stats::coef(line.EW)[1] - stats::coef(line.NS)[1]
+  x.val <- int.delta / slope.delta
+  y.val <- stats::coef(line.EW)[2] * x.val + stats::coef(line.EW)[1]
+
+  out <- data.frame(x = x.val, y = y.val, row.names = NULL)
+  if (isTRUE(latlong)) names(out) <- c("lon", "lat")
+  out
+}
+
 squareExitsB <- function(nm = "Golden Square") {
   dat <- cholera::road.segments[cholera::road.segments$name == nm, ]
   left <- pasteCoordsB(dat)
