@@ -1,3 +1,8 @@
+### cholera 0.8.0.9171
+
+- add addressProportion().
+
+
 ### cholera 0.8.0.9170
 
 - add squareCenterB().
