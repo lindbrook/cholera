@@ -165,6 +165,17 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   row.names(out) <- NULL
 }
 
+addressProportion <- function(seg.id = "174-1", landmark = "Karl Marx") {
+  vars <- c("x", "y")
+  seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
+  alpha <- stats::setNames(seg[, paste0(vars, 1)], vars)
+  omega <- stats::setNames(seg[, paste0(vars, 2)], vars)
+  seg.dist <- stats::dist(rbind(alpha, omega))
+  lndmrk <- cholera::landmarks[cholera::landmarks$name == landmark, vars]
+  lndmrk.dist <- stats::dist(rbind(alpha, lndmrk))
+  c(lndmrk.dist / seg.dist)
+}
+
 # Default is St Luke's Church
 assignLandmarkAddress <- function(seg.id = "222-1", landmark.id = 20003L) {
   vars <- c("x", "y")
