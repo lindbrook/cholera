@@ -407,4 +407,14 @@ trignometricDelta <- function(dat, factor = 2L) {
    data.frame(x = delta.x, y = delta.y, row.names = NULL)
 }
 
-
+segmentTrignometryAddress <- function(seg.id = "174-1", factor = 2L) {
+  vars <- c("x", "y")
+  seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
+  alpha <- stats::setNames(seg[, paste0(vars, 1)], vars)
+  omega <- stats::setNames(seg[, paste0(vars, 2)], vars)
+  dat <- rbind(alpha, omega)
+  h <- c(stats::dist(dat)) / factor
+  theta <- roadTheta(dat)
+  delta.x <- h * cos(theta)
+  delta.y <- h * sin(theta)
+  data.frame(x = alpha$x + delta.x, y = alpha$y + delta.y, row.names = NULL)
