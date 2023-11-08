@@ -1,3 +1,8 @@
+### cholera 0.8.0.9173
+
+- amend provisional landmarkDataB().
+
+
 ### cholera 0.8.0.9172
 
 - add segmentTrignometryAddress().
