@@ -1,3 +1,8 @@
+### cholera 0.8.0.9172
+
+- add segmentTrignometryAddress().
+
+
 ### cholera 0.8.0.9171
 
 - add addressProportion().
