@@ -1,12 +1,10 @@
 #' Landmark data.
 #'
 #' Nominal and orthogonal coordinates
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @noRd
 #' @note Uses road segments that enter square(s) as entry points.
 
-landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
+landmarkDataB <- function() {
   vars <- c("x", "y")
   vars.proj <- c("x.proj", "y.proj")
 
@@ -29,7 +27,7 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   points(snow, pch = 16, cex = 0.5)
   text(snow, label = "John\n Snow", cex = 0.5)
 
-  # St Luke's Church # 
+  # St Luke's Church #
   # Berwick Street, currently Kemp House across from Tyler's Court
   st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
   points(st.lukes.church, pch = 16, cex = 0.5)
@@ -100,9 +98,9 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
     landmark.id = 20008L)
 
   # Craven Chapel #
-  # Berwick Street 
+  # Berwick Street
   craven.chapel <- cravenChapel()
-  
+
   ## Squares ##
 
   golden.square <- squareExitsB("Golden Square")
@@ -129,7 +127,6 @@ landmarkDataB <- function(multi.core = TRUE, dev.mode = FALSE) {
   soho <- squareCenterB(soho.NS, soho.EW)
   text(soho, labels = "Soho\nSquare")
 
-  
   soho <- lapply(soho.square$name, function(nm) {
     soho.square[soho.square$name == nm, c("x", "y")]
   })
