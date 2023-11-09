@@ -63,35 +63,22 @@ landmarkDataB <- function() {
   # https://www.british-history.ac.uk/survey-london/vols31-2/pt2/pp284-307#h3-0010
   # "frontages in both Argyll Street and Great Marlborough Street."
   # entrance on Argyll Street
-  NW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "116-2", paste0(vars, 2)], vars)
-  NE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "144-1", paste0(vars, 2)], vars)
-  SW <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "161-1", paste0(vars, 2)], vars)
-  SE <- stats::setNames(cholera::road.segments[cholera::road.segments$id ==
-    "161-1", paste0(vars, 1)], vars)
-  aberdeen <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y,
-    SW$x, SW$y)
-  argyll.house <- data.frame(x = aberdeen$x, y = aberdeen$y)
+  NW <- roadSegmentData(seg.id = "116-2", var.sel = 2L)
+  NE <- roadSegmentData(seg.id = "144-1", var.sel = 2L)
+  SW <- roadSegmentData(seg.id = "161-1", var.sel = 2L)
+  SE <- roadSegmentData(seg.id = "161-1", var.sel = 1L)
+  argyll <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
+  argyll.house <- data.frame(x = argyll$x, y = argyll$y)
 
   # Model Lodging Houses #
   # Hopkins Street "The Cholera in Berwick Street" by Rev. Henry Whitehead
   # segment IDs: "245-1"
   # Ingestre Buildings
   # New Street/Husband Street -> Ingestre Place (now)
-  sel <- cholera::road.segments$name == "Cock Court"
-  rd.data <- cholera::road.segments[sel, paste0(vars, 2)]
-  NW <- stats::setNames(rd.data, vars)
-  sel <- cholera::road.segments$name == "Cock Court"
-  rd.data <- cholera::road.segments[sel, paste0(vars, 1)]
-  NE <- stats::setNames(rd.data, vars)
-  sel <- cholera::road.segments$id == "259-1"
-  rd.data <- cholera::road.segments[sel, paste0(vars, 2)]
-  SW <- stats::setNames(rd.data, vars)
-  sel <- cholera::road.segments$id == "259-1"
-  rd.data <- cholera::road.segments[sel, paste0(vars, 1)]
-  SE <- stats::setNames(rd.data, vars)
+  NW <- roadSegmentData(seg.id = "225-1", var.sel = 2L)
+  NE <- roadSegmentData(seg.id = "225-1", var.sel = 1L)
+  SW <- roadSegmentData(seg.id = "259-1", var.sel = 2L)
+  SE <- roadSegmentData(seg.id = "259-1", var.sel = 1L)
   model.lodging <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
                                        NE$x, NE$y, SW$x, SW$y)
   model.lodging.proj <- assignLandmarkAddress(seg.id = "245-1",
@@ -306,6 +293,15 @@ pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
   vapply(seq_len(nrow(dat)), function(i) {
     paste(dat[i, c(var1, var2)], collapse = "-")
   }, character(1L))
+}
+
+roadSegmentData <- function(seg.id = "116-2", var.sel = 2L) {
+  vars <- c("x", "y")
+  sel <- cholera::road.segments$id == seg.id
+  seg.data <- cholera::road.segments[sel, paste0(vars, var.sel)]
+  out <- stats::setNames(seg.data, vars)
+  row.names(out) <- NULL
+  out
 }
 
 roadTheta <- function(dat) {
