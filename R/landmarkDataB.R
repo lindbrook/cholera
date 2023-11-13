@@ -409,7 +409,7 @@ squareExitsB <- function(nm = "Golden Square") {
   }))
 }
 
-segmentTrignometryAddress <- function(seg.id = "174-1", factor = 2L) {
+segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L) {
   vars <- c("x", "y")
   seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
   alpha <- stats::setNames(seg[, paste0(vars, 1)], vars)
