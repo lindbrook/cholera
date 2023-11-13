@@ -1,3 +1,8 @@
+### cholera 0.8.0.9176
+
+- clean code for Squares in landmarkDataB().
+
+
 ### cholera 0.8.0.9175
 
 - add more functions to landmarkDataB().

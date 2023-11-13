@@ -57,64 +57,19 @@ landmarkDataB <- function() {
 
   golden.square <- squareExitsB("Golden Square")
   golden.square$name <- paste0("Golden Square-", c("W", "E", "S", "N"))
-
   sel <- golden.square$name %in% c("Golden Square-N", "Golden Square-S")
   golden.NS <- golden.square[sel, vars]
   sel <- golden.square$name %in% c("Golden Square-E", "Golden Square-W")
   golden.EW <- golden.square[sel, vars]
-
   golden <- squareCenterB(golden.NS, golden.EW)
-
-  #
 
   soho.square <- squareExitsB("Soho Square")
   soho.square$name <- paste0("Soho Square-", c("E", "N", "S3", "S2", "S1", "W"))
-
   sel <- soho.square$name %in% c("Soho Square-N", "Soho Square-S2")
   soho.NS <- soho.square[sel, vars]
   sel <- soho.square$name %in% c("Soho Square-E", "Soho Square-W")
   soho.EW <- soho.square[sel, vars]
-
   soho <- squareCenterB(soho.NS, soho.EW)
-
-  soho <- lapply(soho.square$name, function(nm) {
-    soho.square[soho.square$name == nm, c("x", "y")]
-  })
-
-  golden <- lapply(golden.square$name, function(nm) {
-    golden.square[golden.square$name == nm, c("x", "y")]
-  })
-
-  landmarks <- list(marx, snow, st.lukes.church, lion.brewery, pantheon.bazaar,
-    st.james.workhouse, argyll.house, model.lodging, craven.chapel)
-  landmarks <- append(landmarks, soho)
-  landmarks <- append(landmarks, golden)
-
-  landmark.names <- c("Karl Marx", "John Snow", "St Luke's Church",
-    "Lion Brewery", "The Pantheon", "St James Workhouse", "Argyll House",
-    "Model Lodging", "Craven Chapel", soho.square$name, golden.square$name)
-
-  # Soho Square fix
-
-  soho.tmp <- out[out$name %in% soho.square$name, ]
-  soho.fix <- merge(soho.square[, c("id", "name")],
-                    soho.tmp[names(soho.tmp) != "road.segment"],
-                    by = "name")
-
-  names(soho.fix)[names(soho.fix) == "id"] <- "road.segment"
-  soho.fix <- soho.fix[, names(out)]
-  out[out$name %in% soho.square$name, ] <- soho.fix
-
-  # Golden Square fix
-
-  golden.tmp <- out[out$name %in% golden.square$name, ]
-  golden.fix <- merge(golden.square[, c("id", "name")],
-                      golden.tmp[names(golden.tmp) != "road.segment"],
-                      by = "name")
-
-  names(golden.fix)[names(golden.fix) == "id"] <- "road.segment"
-  golden.fix <- golden.fix[, names(out)]
-  out[out$name %in% golden.square$name, ] <- golden.fix
 
   # Marlborough Street Magistrates Court #
   # 19–21 Great Marlborough Street
