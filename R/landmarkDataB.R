@@ -173,6 +173,15 @@ addressProportion <- function(seg.id = "174-1", landmark = "Karl Marx") {
   c(lndmrk.dist / seg.dist)
 }
 
+argyllHouse <- function() {
+  NW <- roadSegmentData(seg.id = "116-2", var.sel = 2L)
+  NE <- roadSegmentData(seg.id = "144-1", var.sel = 2L)
+  SW <- roadSegmentData(seg.id = "161-1", var.sel = 2L)
+  SE <- roadSegmentData(seg.id = "161-1", var.sel = 1L)
+  argyll <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
+  data.frame(x = argyll$x, y = argyll$y) 
+}
+
 # Default is St Luke's Church
 assignLandmarkAddress <- function(seg.id = "222-1", landmark.id = 20003L) {
   vars <- c("x", "y")
@@ -287,6 +296,25 @@ magistratesCourt <- function() {
   data.frame(case = 20020L, road.segment = "151-1", x.proj = x.est,
     y.proj = y.est, ortho.dist = 0, x = x.lab, y = y.lab,
     name = "Magistrates Court")
+}
+
+modelLodgingHouses <- function() {
+  NW <- roadSegmentData(seg.id = "225-1", var.sel = 2L)
+  NE <- roadSegmentData(seg.id = "225-1", var.sel = 1L)
+  SW <- roadSegmentData(seg.id = "259-1", var.sel = 2L)
+  SE <- roadSegmentData(seg.id = "259-1", var.sel = 1L)
+  label.data <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
+    SW$y)
+  proj <- assignLandmarkAddress(seg.id = "245-1",
+    landmark.id = 20008L)  
+}
+
+pantheonBazaar <- function() {
+  vars <- c("x", "y")
+  sel <- cholera::road.segments$name == "Winsley Street"
+  out <- cholera::road.segments[sel, paste0(vars, 2)]
+  names(out) <- vars
+  out
 }
 
 pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
@@ -424,4 +452,29 @@ segmentTrignometryAddress <- function(seg.id = "174-1", factor = 2L) {
   delta.x <- h * cos(theta)
   delta.y <- h * sin(theta)
   data.frame(x = alpha$x + delta.x, y = alpha$y + delta.y, row.names = NULL)
+}
+
+stJamesWorkhouse <- function() {
+  vars <- c("x", "y")
+  vars.proj <- c("x.proj", "y.proj")
+  workhouse <- cholera::road.segments[cholera::road.segments$name ==
+    "St James Workhouse", c("id", paste0(vars, 2), "name")]
+  names(workhouse)[1:3] <- c("road.segment", vars.proj)
+  workhouse$ortho.dist <- 0
+  stats::setNames(workhouse[, vars.proj], vars)
+}
+
+stLukesChurch <- function() {
+  dat <- data.frame(x = 14.94156, y = 11.25313)
+  proj <- assignLandmarkAddress(seg.id = "222-1", landmark.id = 20003L)
+  cbind(proj[, c("case", "road.segment")], dat, 
+    proj[, c("x.proj", "y.proj", "ortho.dist")])
+}
+
+trignometricDelta <- function(dat, factor = 2L) {
+   h <- c(stats::dist(dat))
+   theta <- roadTheta(dat)
+   delta.x <- (h / factor) * cos(theta)
+   delta.y <- (h / factor) * sin(theta)
+   data.frame(x = delta.x, y = delta.y, row.names = NULL)
 }
