@@ -241,6 +241,7 @@ cravenChapel <- function() {
 lionBrewery <- function() {
    vars <- c("x", "y")
    seg.id <- "187-1"
+   data.label <- data.frame(x = 13.9022, y = 11.87315)
 
    sel <- cholera::road.segments$id == seg.id
    broad.st <- cholera::road.segments[sel, ]
@@ -254,8 +255,9 @@ lionBrewery <- function() {
    x.new <- left$x + delta$x
    y.new <- left$y + delta$y
 
-   data.frame(case = 20004L, road.segment = seg.id, x.proj = x.new,
-      y.proj = y.new, ortho.dist = 0)
+   data.frame(case = 20004L, road.segment = seg.id, x = data.label$x, 
+    y = data.label$y, x.proj = x.new, y.proj = y.new, ortho.dist = 0, 
+    row.names = NULL)
 }
 
 magistratesCourt <- function() {
