@@ -9,81 +9,46 @@ landmarkDataB <- function() {
   vars.proj <- c("x.proj", "y.proj")
 
   # Karl Marx #
-  # marx <- data.frame(x = 17.3855, y = 13.371) # 28 Dean Street, 174-1
-  # points(marx, pch = 16, cex = 0.5)
-  # text(marx, label = "Karl\n Marx", cex = 0.5)
+  # 28 Dean Street, 174-1
   # cholera:::addressProportion("174-1", "Karl Marx") # 0.5000003
-  marx <- segmentTrignometryAddress(seg.id = "174-1", factor = 2L)
-  points(marx, pch = 16, cex = 0.5)
-  text(marx, label = "Karl\n Marx", cex = 0.5)
-
+  marx <- segmentTrigonometryAddress(seg.id = "174-1", factor = 2L)
+  
   # John Snow #
-  # snow <- data.frame(x = 10.22414, y = 4.383851) # H: 18 Sackville Street, 508-1
-  # points(snow, pch = 16, cex = 0.5)
-  # text(snow, label = "John\n Snow", cex = 0.5)
-  # snow.office <- data.frame(x = , y = ) # O: 54 Frith Street
+  # H: 18 Sackville Street, "508-1"
   # cholera:::addressProportion("508-1", "John Snow") # 0.4999993
-  snow <- segmentTrignometryAddress(seg.id = "508-1", factor = 2L)
-  points(snow, pch = 16, cex = 0.5)
-  text(snow, label = "John\n Snow", cex = 0.5)
-
+  snow <- segmentTrigonometryAddress(seg.id = "508-1", factor = 2L)
+  
   # St Luke's Church #
   # Berwick Street, currently Kemp House across from Tyler's Court
-  st.lukes.church <- data.frame(x = 14.94156, y = 11.25313)
-  points(st.lukes.church, pch = 16, cex = 0.5)
-  text(st.lukes.church, label = "St\n Lukes", cex = 0.5)
-  st.lukes.church.proj <- assignLandmarkAddress(seg.id = "222-1",
-    landmark.id = 20003L)
-  points(st.lukes.church.proj[, c("x.proj", "y.proj")], pch = 0, cex = 0.5)
-
+  st.lukes.church <- stLukesChurch()
+  
   # Lion Brewery #
   # 50 Broad Street; Huggins Brewery (?)
-  lion.brewery <- data.frame(x = 13.9022, y = 11.87315)
-  points(lion.brewery, pch = 16, cex = 0.5)
-  text(lion.brewery, label = "Lion\n Brewery", cex = 0.5)
-  lion.brewery.proj <- lionBrewery()
-  points(lion.brewery.proj[, c("x.proj", "y.proj")], pch = 0, cex = 0.5)
+  lion.brewery <- lionBrewery()
 
   # The Pantheon #
   # Today Marks & Spencers at 173 Oxford Street
-  # I placed at intersection of Oxford and Winsley
-  pantheon.bazaar <- cholera::road.segments[cholera::road.segments$name ==
-    "Winsley Street", paste0(vars, 2)]
-  names(pantheon.bazaar) <- vars
+  # placed at intersection of Oxford and Winsley
+  pantheon.bazaar <- pantheonBazaar()
 
   # St James Workhouse #
-  st.james.workhouse <- cholera::road.segments[cholera::road.segments$name ==
-    "St James Workhouse", c("id", "x1", "y1", "name")]
-  names(st.james.workhouse)[1:3] <- c("road.segment", vars.proj)
-  st.james.workhouse$ortho.dist <- 0
-  st.james.workhouse <- stats::setNames(st.james.workhouse[, vars.proj], vars)
+  # address set on Poland Street
+  st.james.workhouse <- stJamesWorkhouse()
 
   # Argyll House -- Lord Aberdeen #
   # The London Palladium
   # https://www.british-history.ac.uk/survey-london/vols31-2/pt2/pp284-307#h3-0010
   # "frontages in both Argyll Street and Great Marlborough Street."
   # entrance on Argyll Street
-  NW <- roadSegmentData(seg.id = "116-2", var.sel = 2L)
-  NE <- roadSegmentData(seg.id = "144-1", var.sel = 2L)
-  SW <- roadSegmentData(seg.id = "161-1", var.sel = 2L)
-  SE <- roadSegmentData(seg.id = "161-1", var.sel = 1L)
-  argyll <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
-  argyll.house <- data.frame(x = argyll$x, y = argyll$y)
+  argyll.house <- argyllHouse()
 
   # Model Lodging Houses #
   # Hopkins Street "The Cholera in Berwick Street" by Rev. Henry Whitehead
   # segment IDs: "245-1"
   # Ingestre Buildings
   # New Street/Husband Street -> Ingestre Place (now)
-  NW <- roadSegmentData(seg.id = "225-1", var.sel = 2L)
-  NE <- roadSegmentData(seg.id = "225-1", var.sel = 1L)
-  SW <- roadSegmentData(seg.id = "259-1", var.sel = 2L)
-  SE <- roadSegmentData(seg.id = "259-1", var.sel = 1L)
-  model.lodging <- segmentIntersection(NW$x, NW$y, SE$x, SE$y,
-                                       NE$x, NE$y, SW$x, SW$y)
-  model.lodging.proj <- assignLandmarkAddress(seg.id = "245-1",
-    landmark.id = 20008L)
-
+  model.lodging.houses <- modelLodgingHouses()
+  
   # Craven Chapel #
   # Berwick Street
   craven.chapel <- cravenChapel()
@@ -99,7 +64,6 @@ landmarkDataB <- function() {
   golden.EW <- golden.square[sel, vars]
 
   golden <- squareCenterB(golden.NS, golden.EW)
-  text(golden, labels = "Golden\nSquare")
 
   #
 
@@ -112,7 +76,6 @@ landmarkDataB <- function() {
   soho.EW <- soho.square[sel, vars]
 
   soho <- squareCenterB(soho.NS, soho.EW)
-  text(soho, labels = "Soho\nSquare")
 
   soho <- lapply(soho.square$name, function(nm) {
     soho.square[soho.square$name == nm, c("x", "y")]
