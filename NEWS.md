@@ -1,3 +1,8 @@
+### cholera 0.8.0.9177
+
+- provisionally restore tanakaContourPlot().
+
+
 ### cholera 0.8.0.9176
 
 - clean code for Squares in landmarkDataB().
