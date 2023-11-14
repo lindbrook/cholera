@@ -6,11 +6,11 @@
 #' @importFrom elevatr get_elev_raster
 #' @importFrom tanaka tanaka
 #' @importFrom terra rast
-#' @noRd
+#' @export
 
 tanakaContourPlot <- function(add = FALSE) {
   if (!curl::has_internet()) {
-    stop("This function requires an internet connection.", call. = FALSE)
+    stop("This function requires an active internet connection.", call. = FALSE)
   }
   vars <- c("lon", "lat")
   map.frame <- cholera::roads[cholera::roads$name == "Map Frame", vars]
