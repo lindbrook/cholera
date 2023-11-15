@@ -1,3 +1,8 @@
+### cholera 0.8.0.9179
+
+- add/use Squares().
+
+
 ### cholera 0.8.0.9178
 
 - amend coordinates in squareCenterB() and squareExitsB().
