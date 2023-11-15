@@ -48,28 +48,18 @@ landmarkDataB <- function() {
   # Ingestre Buildings
   # New Street/Husband Street -> Ingestre Place (now)
   model.lodging.houses <- modelLodgingHouses()
-  
+
   # Craven Chapel #
   # Berwick Street
   craven.chapel <- cravenChapel()
 
   ## Squares ##
 
-  golden.square <- squareExitsB("Golden Square")
-  golden.square$name <- paste0("Golden Square-", c("W", "E", "S", "N"))
-  sel <- golden.square$name %in% c("Golden Square-N", "Golden Square-S")
-  golden.NS <- golden.square[sel, vars]
-  sel <- golden.square$name %in% c("Golden Square-E", "Golden Square-W")
-  golden.EW <- golden.square[sel, vars]
-  golden <- squareCenterB(golden.NS, golden.EW)
+  golden.square <- Squares("Golden Square")
+  golden.sq.label <- Squares("Golden Square", label.coord = TRUE)
 
-  soho.square <- squareExitsB("Soho Square")
-  soho.square$name <- paste0("Soho Square-", c("E", "N", "S3", "S2", "S1", "W"))
-  sel <- soho.square$name %in% c("Soho Square-N", "Soho Square-S2")
-  soho.NS <- soho.square[sel, vars]
-  sel <- soho.square$name %in% c("Soho Square-E", "Soho Square-W")
-  soho.EW <- soho.square[sel, vars]
-  soho <- squareCenterB(soho.NS, soho.EW)
+  soho.square <- Squares("Soho Square")
+  soho.sq.lable <- Squares("Soho Square", label.coord = TRUE)
 
   # Marlborough Street Magistrates Court #
   # 19–21 Great Marlborough Street
@@ -327,6 +317,39 @@ squareExitsB <- function(nm = "Golden Square") {
 
     candidate
   }))
+}
+
+Squares <- function(nm = "Golden Square", label.coord = FALSE) {
+  vars <- c("x.proj", "y.proj")
+  sq <- squareExitsB(nm)
+
+  if (nm == "Golden Square") {
+    exits <- c("W", "E", "S", "N")
+    start <- 20016L
+  } else if (nm == "Soho Square") {
+    exits <- c("E", "N", "S3", "S2", "S1", "W")
+    start <- 20010L
+  } else stop('nm must be "Golden Square" or "Soho Square"', call. = FALSE)
+
+  case <- seq(start, start + length(exits) - 1)
+  sq$name <- paste0(nm, "-", exits)
+
+  if (isTRUE(label.coord)) {
+    if (nm == "Golden Square") {
+      sel <- sq$name %in% paste0(paste0(nm, "-"), c("N", "S"))
+    } else if (nm == "Soho Square") {
+      sel <- sq$name %in% paste0(paste0(nm, "-"), c("N", "S2"))
+    }
+
+    NS <- sq[sel, vars]
+    sel <- sq$name %in% paste0(paste0(nm, "-"), c("E", "W"))
+    EW <- sq[sel, vars]
+    coords <- squareCenterB(NS, EW)
+  } else {
+    coords <- data.frame(case = case, road.segment = sq$id, x = sq$x.proj,
+      y = sq$y.proj, x.proj = sq$x.proj, y.proj = sq$y.proj, name = sq$name)
+  }
+  coords
 }
 
 segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L) {
