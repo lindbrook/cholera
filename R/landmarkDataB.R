@@ -263,8 +263,8 @@ squareCenterB <- function(NS, EW, latlong = FALSE) {
     line.NS <- stats::lm(lat ~ lon, data = NS)
     line.EW <- stats::lm(lat ~ lon, data = EW)
   } else {
-    line.NS <- stats::lm(y ~ x, data = NS)
-    line.EW <- stats::lm(y ~ x, data = EW)
+    line.NS <- stats::lm(y.proj ~ x.proj, data = NS)
+    line.EW <- stats::lm(y.proj ~ x.proj, data = EW)
   }
 
   slope.delta <- stats::coef(line.NS)[2] - stats::coef(line.EW)[2]
@@ -319,10 +319,10 @@ squareExitsB <- function(nm = "Golden Square") {
 
     if (any(ones)) {
       candidate <- candidate[, c(vars, paste0(vars0, 1))]
-      names(candidate)[grep(1, names(candidate))] <- vars0
+      names(candidate)[grep(1, names(candidate))] <- paste0(vars0, ".proj")
     } else if (any(twos)) {
       candidate <- candidate[, c(vars, paste0(vars0, 2))]
-      names(candidate)[grep(2, names(candidate))] <- vars0
+      names(candidate)[grep(2, names(candidate))] <- paste0(vars0, ".proj")
     }
 
     candidate
