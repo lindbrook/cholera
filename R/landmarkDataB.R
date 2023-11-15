@@ -12,16 +12,16 @@ landmarkDataB <- function() {
   # 28 Dean Street, 174-1
   # cholera:::addressProportion("174-1", "Karl Marx") # 0.5000003
   marx <- segmentTrigonometryAddress(seg.id = "174-1", factor = 2L)
-  
+
   # John Snow #
   # H: 18 Sackville Street, "508-1"
   # cholera:::addressProportion("508-1", "John Snow") # 0.4999993
   snow <- segmentTrigonometryAddress(seg.id = "508-1", factor = 2L)
-  
+
   # St Luke's Church #
   # Berwick Street, currently Kemp House across from Tyler's Court
   st.lukes.church <- stLukesChurch()
-  
+
   # Lion Brewery #
   # 50 Broad Street; Huggins Brewery (?)
   lion.brewery <- lionBrewery()
@@ -65,9 +65,6 @@ landmarkDataB <- function() {
   # 19–21 Great Marlborough Street
   # 51°30′51.62″N 0°8′22.13″W
   magistrates.court <- magistratesCourt()
-  out <- rbind(out, magistrates.court)
-  out <- out[order(out$case), ]
-  row.names(out) <- NULL
 }
 
 addressProportion <- function(seg.id = "174-1", landmark = "Karl Marx") {
@@ -87,7 +84,7 @@ argyllHouse <- function() {
   SW <- roadSegmentData(seg.id = "161-1", var.sel = 2L)
   SE <- roadSegmentData(seg.id = "161-1", var.sel = 1L)
   argyll <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
-  data.frame(x = argyll$x, y = argyll$y) 
+  data.frame(x = argyll$x, y = argyll$y)
 }
 
 # Default is St Luke's Church
@@ -163,8 +160,8 @@ lionBrewery <- function() {
    x.new <- left$x + delta$x
    y.new <- left$y + delta$y
 
-   data.frame(case = 20004L, road.segment = seg.id, x = data.label$x, 
-    y = data.label$y, x.proj = x.new, y.proj = y.new, ortho.dist = 0, 
+   data.frame(case = 20004L, road.segment = seg.id, x = data.label$x,
+    y = data.label$y, x.proj = x.new, y.proj = y.new, ortho.dist = 0,
     row.names = NULL)
 }
 
@@ -216,7 +213,7 @@ modelLodgingHouses <- function() {
   label.data <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
     SW$y)
   proj <- assignLandmarkAddress(seg.id = "245-1",
-    landmark.id = 20008L)  
+    landmark.id = 20008L)
 }
 
 pantheonBazaar <- function() {
@@ -378,7 +375,7 @@ stJamesWorkhouse <- function() {
 stLukesChurch <- function() {
   dat <- data.frame(x = 14.94156, y = 11.25313)
   proj <- assignLandmarkAddress(seg.id = "222-1", landmark.id = 20003L)
-  cbind(proj[, c("case", "road.segment")], dat, 
+  cbind(proj[, c("case", "road.segment")], dat,
     proj[, c("x.proj", "y.proj", "ortho.dist")])
 }
 
