@@ -36,7 +36,7 @@ addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
     pearl.string <- travelingSalesman(periphery.cases)
 
     if (type == "perimeter") {
-      polygon(cholera::regular.cases[pearl.string, ], border = snow.col,
+      polygon(cholera::regular.cases[pearl.string, ], border = "black",
         lwd = line.width)
     } else if (type == "area") {
       polygon(cholera::regular.cases[pearl.string, ], border = "black",
