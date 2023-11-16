@@ -65,6 +65,9 @@ nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
       sim.proj <- cholera::sim.ortho.proj
       case.segments <- unique(sim.proj$road.segment)
       case.segments <- case.segments[is.na(case.segments) == FALSE]
+    } else if (case.set == "snow") {
+      sel <- cholera::ortho.proj$case %in% cholera::snow.neighborhood
+      case.segments <- unique(cholera::ortho.proj[sel, "road.segment"])
     }
 
     if (embed.landmarks) {
@@ -79,7 +82,7 @@ nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
     no_site.pump <- setdiff(ortho.pump$road.segment, site.segments)
     edits <- c(site.pump, site.no_pump, no_site.pump)
 
-    if (case.set == "observed") {
+    if (case.set %in% c("observed", "snow")) {
       if (vestry) {
         nodes <- lapply(edits, embedSites, ortho.pump, vestry = TRUE)
         edges <- lapply(edits, embedSites, ortho.pump, type = "edges",
@@ -109,7 +112,7 @@ nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
     road.segments$node1 <- paste0(road.segments$x1, "_&_", road.segments$y1)
     road.segments$node2 <- paste0(road.segments$x2, "_&_", road.segments$y2)
 
-    if (case.set == "observed") {
+    if (case.set %in% c("observed", "snow")) {
       road.segments$id2 <- paste0(road.segments$id, "a")
     } else if (case.set == "expected") {
       road.segments$id2 <- paste0(road.segments$id, "-1")
