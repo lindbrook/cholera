@@ -1,3 +1,8 @@
+### cholera 0.8.0.9180
+
+- enable addSnow().
+
+
 ### cholera 0.8.0.9179
 
 - add/use Squares().
