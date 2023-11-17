@@ -18,8 +18,7 @@ addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
   if (type %in% c("area", "perimeter", "street") == FALSE) {
     stop('type must be "area", "perimeter" or "street".')
   }
-
-  snow.col <- grDevices::adjustcolor(color, alpha.f = alpha.level)
+    
   edges <- neighborhoodData(case.set = "snow")$edges
   snow <- snowNeighborhood()
 
@@ -36,9 +35,10 @@ addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
     pearl.string <- travelingSalesman(periphery.cases)
 
     if (type == "perimeter") {
-      polygon(cholera::regular.cases[pearl.string, ], border = "black",
+      polygon(cholera::regular.cases[pearl.string, ], border = color,
         lwd = line.width)
     } else if (type == "area") {
+      snow.col <- grDevices::adjustcolor(color, alpha.f = alpha.level)
       polygon(cholera::regular.cases[pearl.string, ], border = "black",
         col = snow.col)
     }
