@@ -1,7 +1,7 @@
 #' Add observed case(s) to plot.
 #'
-#' Add case(s), as "address" or "fatalities" as points or IDs, to a plot.
-#' @param case Numeric or Character. Vector of case ID(s). "all" plots all cases. "anchor" plots anchor cases.
+#' Add case(s), as "anchor", "fatality" or "orthogonal" as points or IDs, to a plot.
+#' @param case Numeric or Character. Vector of case ID(s). "anchor" plots anchor cases; "fatality" plots all cases; "orthogonal" plot projected addresses.
 #' @param type Character. Type of case: "observed" or "expected".
 #' @param token Character. Type of token to plot: "point", "id" or "both".
 #' @param text.size Numeric. Size of case ID text.
@@ -23,15 +23,20 @@ addCase <- function(case = 1, type = "observed", token = "both",
   text.size = 0.5, pch = 1, cex = 1, point.lwd = 2, col = "black", pos = 1) {
 
   if (is.character(case)) {
-    if (!case %in% c("all", "anchor")) {
-      stop('If non-numeric, case must be "all" or "anchor".', call. = FALSE)
+    if (!case %in% c("anchor", "fatality", "orthogonal", "ortho")) {
+      stop('If non-numeric, case must be "anchor", "fatality" or "orthogonal".',
+        call. = FALSE)
     } else {
-      if (case == "all") {
-        points(cholera::fatalities[, c("x", "y")], pch = 16, cex = 0.5,
-          col = col)
-      } else if (case == "anchor") {
+      if (case == "anchor") {
         points(cholera::fatalities.address[, c("x", "y")], pch = 16, cex = 0.5,
           col = col)
+      } else if (case == "fatality") {
+        points(cholera::fatalities[, c("x", "y")], pch = 16, cex = 0.5,
+          col = col)
+      } else if (case %in% c("orthogonal", "ortho")) {
+        sel <- cholera::ortho.proj$case %in% cholera::fatalities.address$anchor
+        points(cholera::ortho.proj[sel, c("x.proj", "y.proj")], pch = 16,
+          cex = 0.5, col = col)
       }
     }
   } else if (is.numeric(case)) {
