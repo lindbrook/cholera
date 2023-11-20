@@ -1,3 +1,8 @@
+### cholera 0.8.0.9182
+
+- make pump.select first argument in addNeighborhoodWalking().
+
+
 ### cholera 0.8.0.9181
 
 - amend addCase(case %in% c("anchor", "fatality", "orthogonal")).
