@@ -4,16 +4,16 @@
 \alias{addNeighborhoodWalking}
 \title{Add expected walking neighborhoods.}
 \usage{
-addNeighborhoodWalking(pump.subset = NULL, pump.select = NULL,
+addNeighborhoodWalking(pump.select = NULL, pump.subset = NULL,
   vestry = FALSE, weighted = TRUE, path = NULL, path.color = NULL,
   path.width = 3, alpha.level = 0.25, polygon.type = "solid",
   polygon.col = NULL, polygon.lwd = 2, multi.core = TRUE,
   dev.mode = FALSE, latlong = FALSE)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
-
 \item{pump.select}{Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.}
+
+\item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 

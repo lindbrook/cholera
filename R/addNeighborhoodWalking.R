@@ -1,7 +1,7 @@
 #' Add expected walking neighborhoods.
 #'
-#' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.
 #' @param pump.select Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.
+#' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param path Character. "expected" or "observed".
@@ -22,7 +22,7 @@
 #' addNeighborhoodWalking()
 #' }
 
-addNeighborhoodWalking <- function(pump.subset = NULL, pump.select = NULL,
+addNeighborhoodWalking <- function(pump.select = NULL, pump.subset = NULL,
   vestry = FALSE, weighted = TRUE, path = NULL, path.color = NULL,
   path.width = 3, alpha.level = 0.25, polygon.type = "solid",
   polygon.col = NULL, polygon.lwd = 2, multi.core = TRUE, dev.mode = FALSE,
