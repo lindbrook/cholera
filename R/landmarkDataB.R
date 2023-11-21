@@ -56,16 +56,23 @@ landmarkDataB <- function() {
   ## Squares ##
 
   golden.square <- Squares("Golden Square")
-  golden.sq.label <- Squares("Golden Square", label.coord = TRUE)
-
   soho.square <- Squares("Soho Square")
-  soho.sq.lable <- Squares("Soho Square", label.coord = TRUE)
 
   # Marlborough Street Magistrates Court #
   # 19–21 Great Marlborough Street
   # 51°30′51.62″N 0°8′22.13″W
   magistrates.court <- magistratesCourt()
 }
+
+landmarkSquares <- function() {
+  golden <- Squares("Golden Square", label.coord = TRUE)
+  soho <- Squares("Soho Square", label.coord = TRUE)
+  data.frame(name = c("Golden Square", "Soho Square"), x = c(golden$x, soho$x),
+             y = c(golden$y, soho$y), case = 20020:20021)
+}
+
+# landmark.squares <- landmarkSquares()
+# usethis::use_data(landmark.squares, overwrite = TRUE)
 
 addressProportion <- function(seg.id = "174-1", landmark = "Karl Marx") {
   vars <- c("x", "y")
@@ -144,23 +151,23 @@ cravenChapel <- function() {
 }
 
 lionBrewery <- function() {
-   vars <- c("x", "y")
-   seg.id <- "187-1"
-   data.label <- data.frame(x = 13.9022, y = 11.87315)
+  vars <- c("x", "y")
+  seg.id <- "187-1"
+  data.label <- data.frame(x = 13.9022, y = 11.87315)
 
-   sel <- cholera::road.segments$id == seg.id
-   broad.st <- cholera::road.segments[sel, ]
+  sel <- cholera::road.segments$id == seg.id
+  broad.st <- cholera::road.segments[sel, ]
 
-   broad <- rbind(stats::setNames(broad.st[, paste0(vars, 1)], vars),
-                  stats::setNames(broad.st[, paste0(vars, 2)], vars))
+  broad <- rbind(stats::setNames(broad.st[, paste0(vars, 1)], vars),
+                stats::setNames(broad.st[, paste0(vars, 2)], vars))
 
-   delta <- trignometricDelta(broad)
+  delta <- trignometricDelta(broad)
 
-   left <- broad[which.min(broad$x), ]
-   x.new <- left$x + delta$x
-   y.new <- left$y + delta$y
+  left <- broad[which.min(broad$x), ]
+  x.new <- left$x + delta$x
+  y.new <- left$y + delta$y
 
-   data.frame(case = 20004L, road.segment = seg.id, x = data.label$x,
+  data.frame(case = 20004L, road.segment = seg.id, x = data.label$x,
     y = data.label$y, x.proj = x.new, y.proj = y.new, ortho.dist = 0,
     row.names = NULL)
 }
@@ -212,8 +219,7 @@ modelLodgingHouses <- function() {
   SE <- roadSegmentData(seg.id = "259-1", var.sel = 1L)
   label.data <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
     SW$y)
-  proj <- assignLandmarkAddress(seg.id = "245-1",
-    landmark.id = 20008L)
+  proj <- assignLandmarkAddress(seg.id = "245-1", landmark.id = 20008L)
 }
 
 pantheonBazaar <- function() {

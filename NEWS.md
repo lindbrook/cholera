@@ -1,3 +1,8 @@
+### cholera 0.8.0.9183
+
+- add landmarkSquares().
+
+
 ### cholera 0.8.0.9182
 
 - make pump.select first argument in addNeighborhoodWalking().
