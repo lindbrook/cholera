@@ -56,16 +56,23 @@ landmarkDataB <- function() {
   ## Squares ##
 
   golden.square <- Squares("Golden Square")
-  golden.sq.label <- Squares("Golden Square", label.coord = TRUE)
-
   soho.square <- Squares("Soho Square")
-  soho.sq.lable <- Squares("Soho Square", label.coord = TRUE)
 
   # Marlborough Street Magistrates Court #
   # 19–21 Great Marlborough Street
   # 51°30′51.62″N 0°8′22.13″W
   magistrates.court <- magistratesCourt()
 }
+
+landmarkSquares <- function() {
+  golden <- Squares("Golden Square", label.coord = TRUE)
+  soho <- Squares("Soho Square", label.coord = TRUE)
+  data.frame(name = c("Golden Square", "Soho Square"), x = c(golden$x, soho$x),
+             y = c(golden$y, soho$y), case = 20020:20021)
+}
+
+# landmark.squares <- landmarkSquares()
+# usethis::use_data(landmark.squares, overwrite = TRUE)
 
 addressProportion <- function(seg.id = "174-1", landmark = "Karl Marx") {
   vars <- c("x", "y")
