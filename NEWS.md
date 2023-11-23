@@ -1,3 +1,8 @@
+### cholera 0.8.0.9184
+
+- amend modelLodgingHouses().
+
+
 ### cholera 0.8.0.9183
 
 - add landmarkSquares().

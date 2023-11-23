@@ -220,6 +220,8 @@ modelLodgingHouses <- function() {
   label.data <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
     SW$y)
   proj <- assignLandmarkAddress(seg.id = "245-1", landmark.id = 20008L)
+  data.frame(proj[, c("case", "road.segment")], label.data, 
+    proj[, c("x.proj", "y.proj", "ortho.dist")], name = "Model Lodging Houses")
 }
 
 pantheonBazaar <- function() {
