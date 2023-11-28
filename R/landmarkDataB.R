@@ -5,18 +5,15 @@
 #' @note Uses road segments that enter square(s) as entry points.
 
 landmarkDataB <- function() {
-  vars <- c("x", "y")
-  vars.proj <- c("x.proj", "y.proj")
-
   # Karl Marx #
   # 28 Dean Street, 174-1
   # cholera:::addressProportion("174-1", "Karl Marx") # 0.5000003
-  marx <- segmentTrigonometryAddress(seg.id = "174-1", factor = 2L)
+  marx <- karlMarx()
 
   # John Snow #
   # H: 18 Sackville Street, "508-1"
   # cholera:::addressProportion("508-1", "John Snow") # 0.4999993
-  snow <- segmentTrigonometryAddress(seg.id = "508-1", factor = 2L)
+  snow <- johnSnow()
 
   # St Luke's Church #
   # Berwick Street, currently Kemp House across from Tyler's Court
@@ -62,13 +59,20 @@ landmarkDataB <- function() {
   # 19–21 Great Marlborough Street
   # 51°30′51.62″N 0°8′22.13″W
   magistrates.court <- magistratesCourt()
+
+  out <- rbind(marx, snow, st.lukes.church, lion.brewery, pantheon.bazaar,
+    st.james.workhouse, argyll.house, model.lodging.houses, craven.chapel, 
+    soho.square, golden.square, magistrates.court)
+  
+  row.names(out) <- NULL
+  out
 }
 
 landmarkSquares <- function() {
   golden <- Squares("Golden Square", label.coord = TRUE)
   soho <- Squares("Soho Square", label.coord = TRUE)
   data.frame(name = c("Golden Square", "Soho Square"), x = c(golden$x, soho$x),
-             y = c(golden$y, soho$y), case = 20020:20021)
+    y = c(golden$y, soho$y), case = 20020:20021)
 }
 
 # landmark.squares <- landmarkSquares()
@@ -91,7 +95,11 @@ argyllHouse <- function() {
   SW <- roadSegmentData(seg.id = "161-1", var.sel = 2L)
   SE <- roadSegmentData(seg.id = "161-1", var.sel = 1L)
   argyll <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
-  data.frame(x = argyll$x, y = argyll$y)
+  argyll.house <- data.frame(x = argyll$x, y = argyll$y)
+  seg.id <- "162-1"
+  proj <- segmentTrigonometryAddress(seg.id = seg.id, delta = "neg")
+  data.frame(case = 20007L, road.segment = seg.id, argyll.house,
+    x.proj = proj$x, y.proj = proj$y, name = "Argyll House")
 }
 
 # Default is St Luke's Church
@@ -115,7 +123,7 @@ assignLandmarkAddress <- function(seg.id = "222-1", landmark.id = 20003L) {
   y.proj <- x.proj * ortho.slope + ortho.intercept
 
   data.frame(case = landmark.id, road.segment = seg.id, x.proj = x.proj,
-             y.proj = y.proj, ortho.dist = 0, row.names = NULL)
+    y.proj = y.proj, ortho.dist = 0, row.names = NULL)
 }
 
 cravenChapel <- function() {
@@ -147,7 +155,19 @@ cravenChapel <- function() {
   y.label <- y.new + delta.y
 
   data.frame(case = 20009L, road.segment = seg.id, x = x.label, y = y.label,
-    x.proj = x.new, y.proj = y.new, ortho.dist = 0, row.names = NULL)
+    x.proj = x.new, y.proj = y.new, name = "Craven Chapel", row.names = NULL)
+}
+
+johnSnow <- function() {
+  snow <- segmentTrigonometryAddress(seg.id = "508-1", factor = 2L)
+  data.frame(case = 20002L, road.segment = "508-1", snow, x.proj = snow$x,
+    y.proj = snow$y, name = "John Snow")
+}
+
+karlMarx <- function() {
+  marx <- segmentTrigonometryAddress(seg.id = "174-1", factor = 2L)
+  data.frame(case = 20001L, road.segment = "174-1", marx, x.proj = marx$x,
+    y.proj = marx$y, name = "Karl Marx")
 }
 
 lionBrewery <- function() {
@@ -168,7 +188,7 @@ lionBrewery <- function() {
   y.new <- left$y + delta$y
 
   data.frame(case = 20004L, road.segment = seg.id, x = data.label$x,
-    y = data.label$y, x.proj = x.new, y.proj = y.new, ortho.dist = 0,
+    y = data.label$y, x.proj = x.new, y.proj = y.new, name = "Lion Brewery",
     row.names = NULL)
 }
 
@@ -207,9 +227,8 @@ magistratesCourt <- function() {
   x.lab <- x.est - delta$x
   y.lab <- y.est - delta$y
 
-  data.frame(case = 20020L, road.segment = "151-1", x.proj = x.est,
-    y.proj = y.est, ortho.dist = 0, x = x.lab, y = y.lab,
-    name = "Magistrates Court")
+  data.frame(case = 20020L, road.segment = "151-1", x = x.lab, y = y.lab,
+    x.proj = x.est, y.proj = y.est, name = "Magistrates Court")
 }
 
 modelLodgingHouses <- function() {
@@ -220,16 +239,18 @@ modelLodgingHouses <- function() {
   label.data <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
     SW$y)
   proj <- assignLandmarkAddress(seg.id = "245-1", landmark.id = 20008L)
-  data.frame(proj[, c("case", "road.segment")], label.data, 
-    proj[, c("x.proj", "y.proj", "ortho.dist")], name = "Model Lodging Houses")
+  data.frame(proj[, c("case", "road.segment")], label.data,
+    proj[, c("x.proj", "y.proj")], name = "Model Lodging Houses")
 }
 
 pantheonBazaar <- function() {
   vars <- c("x", "y")
   sel <- cholera::road.segments$name == "Winsley Street"
-  out <- cholera::road.segments[sel, paste0(vars, 2)]
-  names(out) <- vars
-  out
+  pantheon.bazaar <- cholera::road.segments[sel, paste0(vars, 2)]
+  names(pantheon.bazaar) <- vars
+  data.frame(case = 20005L, road.segment = "73-1", pantheon.bazaar, 
+    x.proj = pantheon.bazaar$x, y.proj = pantheon.bazaar$y, 
+    name = "The Pantheon")
 }
 
 pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
@@ -251,6 +272,24 @@ roadTheta <- function(dat) {
    ols <- stats::lm(y ~ x, data = dat)
    slope <- stats::coef(ols)[2]
    ifelse(is.na(slope), pi / 2, atan(slope))
+}
+
+segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
+  delta = "pos") {
+  vars <- c("x", "y")
+  seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
+  alpha <- stats::setNames(seg[, paste0(vars, 1)], vars)
+  omega <- stats::setNames(seg[, paste0(vars, 2)], vars)
+  dat <- rbind(alpha, omega)
+  h <- c(stats::dist(dat)) / factor
+  theta <- roadTheta(dat)
+  delta.x <- h * cos(theta)
+  delta.y <- h * sin(theta)
+  if (delta == "pos") {
+    data.frame(x = alpha$x + delta.x, y = alpha$y + delta.y, row.names = NULL)
+  } else if (delta == "neg") {
+    data.frame(x = alpha$x - delta.x, y = alpha$y - delta.y, row.names = NULL)
+  }
 }
 
 squareCenterB <- function(NS, EW, latlong = FALSE) {
@@ -357,34 +396,36 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
   coords
 }
 
-segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L) {
-  vars <- c("x", "y")
-  seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
-  alpha <- stats::setNames(seg[, paste0(vars, 1)], vars)
-  omega <- stats::setNames(seg[, paste0(vars, 2)], vars)
-  dat <- rbind(alpha, omega)
-  h <- c(stats::dist(dat)) / factor
-  theta <- roadTheta(dat)
-  delta.x <- h * cos(theta)
-  delta.y <- h * sin(theta)
-  data.frame(x = alpha$x + delta.x, y = alpha$y + delta.y, row.names = NULL)
-}
-
 stJamesWorkhouse <- function() {
   vars <- c("x", "y")
-  vars.proj <- c("x.proj", "y.proj")
+  vars.proj <- paste0(vars, ".proj")
   workhouse <- cholera::road.segments[cholera::road.segments$name ==
     "St James Workhouse", c("id", paste0(vars, 2), "name")]
   names(workhouse)[1:3] <- c("road.segment", vars.proj)
-  workhouse$ortho.dist <- 0
-  stats::setNames(workhouse[, vars.proj], vars)
+  right <- cholera::road.segments[cholera::road.segments$name ==
+           "St James Workhouse", c("x1", "y1")]
+  left <- cholera::road.segments[cholera::road.segments$id == "201-1",
+          c("x2", "y2")]
+  dat <- stats::setNames(data.frame(rbind(unlist(right), unlist(left))),
+         c("x", "y"))
+  h <- c(stats::dist(dat))
+  ols <- stats::lm(y ~ x, dat)
+  segment.slope <- stats::coef(ols)[2]
+  theta <- atan(segment.slope)
+  delta.x <- (h / 2) * cos(theta)
+  delta.y <- (h / 2) * sin(theta)
+  x.lab <- left$x2 + delta.x
+  y.lab <- left$y2 + delta.y
+  data.frame(case = 20006L, road.segment = "148-1",x = x.lab, y = y.lab,
+    workhouse[, c("x.proj", "y.proj")], name = "St James Workhouse",
+    row.names = NULL)
 }
 
 stLukesChurch <- function() {
   dat <- data.frame(x = 14.94156, y = 11.25313)
   proj <- assignLandmarkAddress(seg.id = "222-1", landmark.id = 20003L)
-  cbind(proj[, c("case", "road.segment")], dat,
-    proj[, c("x.proj", "y.proj", "ortho.dist")])
+  data.frame(proj[, c("case", "road.segment")], dat,
+    proj[, c("x.proj", "y.proj")], name = "St Luke's Church")
 }
 
 trignometricDelta <- function(dat, factor = 2L) {
