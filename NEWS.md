@@ -1,3 +1,8 @@
+### cholera 0.8.0.9185
+
+- add/amend functions and clean code in landmarkDataB().
+
+
 ### cholera 0.8.0.9184
 
 - amend modelLodgingHouses().
