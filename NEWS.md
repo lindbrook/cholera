@@ -1,3 +1,8 @@
+### cholera 0.8.0.9186
+
+- set case IDs for Golden and Soho Square to 20021:20022 in landmarkSquares().
+
+
 ### cholera 0.8.0.9185
 
 - add/amend functions and clean code in landmarkDataB().

@@ -61,9 +61,9 @@ landmarkDataB <- function() {
   magistrates.court <- magistratesCourt()
 
   out <- rbind(marx, snow, st.lukes.church, lion.brewery, pantheon.bazaar,
-    st.james.workhouse, argyll.house, model.lodging.houses, craven.chapel, 
+    st.james.workhouse, argyll.house, model.lodging.houses, craven.chapel,
     soho.square, golden.square, magistrates.court)
-  
+
   row.names(out) <- NULL
   out
 }
@@ -72,7 +72,7 @@ landmarkSquares <- function() {
   golden <- Squares("Golden Square", label.coord = TRUE)
   soho <- Squares("Soho Square", label.coord = TRUE)
   data.frame(name = c("Golden Square", "Soho Square"), x = c(golden$x, soho$x),
-    y = c(golden$y, soho$y), case = 20020:20021)
+    y = c(golden$y, soho$y), case = 20021:20022)
 }
 
 # landmark.squares <- landmarkSquares()
@@ -248,8 +248,8 @@ pantheonBazaar <- function() {
   sel <- cholera::road.segments$name == "Winsley Street"
   pantheon.bazaar <- cholera::road.segments[sel, paste0(vars, 2)]
   names(pantheon.bazaar) <- vars
-  data.frame(case = 20005L, road.segment = "73-1", pantheon.bazaar, 
-    x.proj = pantheon.bazaar$x, y.proj = pantheon.bazaar$y, 
+  data.frame(case = 20005L, road.segment = "73-1", pantheon.bazaar,
+    x.proj = pantheon.bazaar$x, y.proj = pantheon.bazaar$y,
     name = "The Pantheon")
 }
 
