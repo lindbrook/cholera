@@ -1,3 +1,8 @@
+### cholera 0.8.0.9187
+
+- revert to other endpoint in stJamesWorkhouse().
+
+
 ### cholera 0.8.0.9186
 
 - set case IDs for Golden and Soho Square to 20021:20022 in landmarkSquares().

@@ -400,7 +400,7 @@ stJamesWorkhouse <- function() {
   vars <- c("x", "y")
   vars.proj <- paste0(vars, ".proj")
   workhouse <- cholera::road.segments[cholera::road.segments$name ==
-    "St James Workhouse", c("id", paste0(vars, 2), "name")]
+    "St James Workhouse", c("id", paste0(vars, 1), "name")]
   names(workhouse)[1:3] <- c("road.segment", vars.proj)
   right <- cholera::road.segments[cholera::road.segments$name ==
            "St James Workhouse", c("x1", "y1")]
