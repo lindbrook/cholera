@@ -1,3 +1,8 @@
+### cholera 0.8.0.9188
+
+- use landmarkDataB() in nodeData().
+
+
 ### cholera 0.8.0.9187
 
 - revert to other endpoint in stJamesWorkhouse().

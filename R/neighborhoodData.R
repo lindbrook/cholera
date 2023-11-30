@@ -71,7 +71,9 @@ nodeData <- function(embed = TRUE, embed.landmarks = FALSE, vestry = FALSE,
     }
 
     if (embed.landmarks) {
-      landmark.segments <- cholera::landmarks$road.segment
+      lndmrks <- landmarkDataB()
+      # landmark.segments <- cholera::landmarks$road.segment
+      landmark.segments <- lndmrks$road.segment
       site.segments <- unique(c(case.segments, landmark.segments))
     } else {
       site.segments <- case.segments
