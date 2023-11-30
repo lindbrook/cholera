@@ -399,15 +399,13 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
 stJamesWorkhouse <- function() {
   vars <- c("x", "y")
   vars.proj <- paste0(vars, ".proj")
-  workhouse <- cholera::road.segments[cholera::road.segments$name ==
-    "St James Workhouse", c("id", paste0(vars, 1), "name")]
+  sel <- cholera::road.segments$name == "St James Workhouse"
+  workhouse <- cholera::road.segments[sel, c("id", paste0(vars, 1), "name")]
   names(workhouse)[1:3] <- c("road.segment", vars.proj)
-  right <- cholera::road.segments[cholera::road.segments$name ==
-           "St James Workhouse", c("x1", "y1")]
-  left <- cholera::road.segments[cholera::road.segments$id == "201-1",
-          c("x2", "y2")]
-  dat <- stats::setNames(data.frame(rbind(unlist(right), unlist(left))),
-         c("x", "y"))
+  right <- cholera::road.segments[sel, paste0(vars, 1)]
+  left <- cholera::road.segments[cholera::road.segments$id == "201-1", 
+    paste0(vars, 2)]
+  dat <- stats::setNames(data.frame(rbind(unlist(right), unlist(left))), vars)
   h <- c(stats::dist(dat))
   ols <- stats::lm(y ~ x, dat)
   segment.slope <- stats::coef(ols)[2]
