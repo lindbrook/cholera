@@ -1,3 +1,8 @@
+### cholera 0.8.0.9189
+
+- amend assignLandmarkAddress() and renumber landmark case IDs.
+
+
 ### cholera 0.8.0.9188
 
 - use landmarkDataB() in nodeData().
