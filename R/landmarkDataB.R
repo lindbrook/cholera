@@ -129,15 +129,17 @@ squareExitsB <- function(nm = "Golden Square") {
     ones <- vapply(seq_len(nrow(sq.coords)), function(i) {
       sq.tmp <- sq.coords[i, vars0]
       candidate.tmp <- candidate[, paste0(vars0, 1)]
-      identical(candidate.tmp$x1, sq.tmp$x) & identical(candidate.tmp$y1,
-        sq.tmp$y)
+
+      identical(candidate.tmp$x1, sq.tmp$x) &
+      identical(candidate.tmp$y1, sq.tmp$y)
     }, logical(1L))
 
     twos <- vapply(seq_len(nrow(sq.coords)), function(i) {
       sq.tmp <- sq.coords[i, vars0]
       candidate.tmp <- candidate[, paste0(vars0, 2)]
-      identical(candidate.tmp$x2, sq.tmp$x) & identical(candidate.tmp$y2,
-        sq.tmp$y)
+
+      identical(candidate.tmp$x2, sq.tmp$x) &
+      identical(candidate.tmp$y2,sq.tmp$y)
     }, logical(1L))
 
     vars <- names(dat)[!grepl("x", names(dat)) & !grepl("y", names(dat))]
@@ -419,13 +421,14 @@ roadSegmentData <- function(seg.id = "116-2", var.sel = 2L) {
 }
 
 roadTheta <- function(dat) {
-   ols <- stats::lm(y ~ x, data = dat)
-   slope <- stats::coef(ols)[2]
-   ifelse(is.na(slope), pi / 2, atan(slope))
+  ols <- stats::lm(y ~ x, data = dat)
+  slope <- stats::coef(ols)[2]
+  ifelse(is.na(slope), pi / 2, atan(slope))
 }
 
 segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
   delta = "pos") {
+
   vars <- c("x", "y")
   seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
   alpha <- stats::setNames(seg[, paste0(vars, 1)], vars)
@@ -443,9 +446,9 @@ segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
 }
 
 trignometricDelta <- function(dat, factor = 2L) {
-   h <- c(stats::dist(dat))
-   theta <- roadTheta(dat)
-   delta.x <- (h / factor) * cos(theta)
-   delta.y <- (h / factor) * sin(theta)
-   data.frame(x = delta.x, y = delta.y, row.names = NULL)
+  h <- c(stats::dist(dat))
+  theta <- roadTheta(dat)
+  delta.x <- (h / factor) * cos(theta)
+  delta.y <- (h / factor) * sin(theta)
+  data.frame(x = delta.x, y = delta.y, row.names = NULL)
 }
