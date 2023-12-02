@@ -65,7 +65,7 @@ landmarkDataB <- function() {
 
   out <- rbind(golden.square, soho.square, argyll.house, craven.chapel,
                lion.brewery, magistrates.court, marx, model.lodging.houses,
-               pantheon.bazaar, snow, st.james.workhouse, st.lukes.church)
+               pantheon.bazaar, st.james.workhouse, st.lukes.church, snow)
 
   row.names(out) <- NULL
   out
@@ -168,7 +168,6 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
     start <- 1006L
   } else stop('nm must be "Golden Square" or "Soho Square"', call. = FALSE)
 
-  case <- seq(start, start + length(exits) - 1)
   sq$name <- paste0(nm, "-", exits)
 
   if (label.coord) {
@@ -210,7 +209,7 @@ argyllHouse <- function() {
   argyll.house <- data.frame(x = argyll$x, y = argyll$y)
   seg.id <- "162-1"
   proj <- segmentTrigonometryAddress(seg.id = seg.id, delta = "neg")
-  data.frame(case = 1011L, road.segment = seg.id, argyll.house,
+  data.frame(case = 1012L, road.segment = seg.id, argyll.house,
     x.proj = proj$x, y.proj = proj$y, name = "Argyll House")
 }
 
@@ -242,20 +241,8 @@ cravenChapel <- function() {
   x.label <- x.new + delta.x
   y.label <- y.new + delta.y
 
-  data.frame(case = 1012L, road.segment = seg.id, x = x.label, y = y.label,
+  data.frame(case = 1013L, road.segment = seg.id, x = x.label, y = y.label,
     x.proj = x.new, y.proj = y.new, name = "Craven Chapel", row.names = NULL)
-}
-
-johnSnow <- function() {
-  snow <- segmentTrigonometryAddress(seg.id = "508-1", factor = 2L)
-  data.frame(case = 1013L, road.segment = "508-1", snow, x.proj = snow$x,
-    y.proj = snow$y, name = "John Snow")
-}
-
-karlMarx <- function() {
-  marx <- segmentTrigonometryAddress(seg.id = "174-1", factor = 2L)
-  data.frame(case = 1014L, road.segment = "174-1", marx, x.proj = marx$x,
-    y.proj = marx$y, name = "Karl Marx")
 }
 
 lionBrewery <- function() {
@@ -267,7 +254,7 @@ lionBrewery <- function() {
   broad.st <- cholera::road.segments[sel, ]
 
   broad <- rbind(stats::setNames(broad.st[, paste0(vars, 1)], vars),
-                stats::setNames(broad.st[, paste0(vars, 2)], vars))
+                 stats::setNames(broad.st[, paste0(vars, 2)], vars))
 
   delta <- trignometricDelta(broad)
 
@@ -275,7 +262,7 @@ lionBrewery <- function() {
   x.new <- left$x + delta$x
   y.new <- left$y + delta$y
 
-  data.frame(case = 1015L, road.segment = seg.id, x = data.label$x,
+  data.frame(case = 1014L, road.segment = seg.id, x = data.label$x,
     y = data.label$y, x.proj = x.new, y.proj = y.new, name = "Lion Brewery",
     row.names = NULL)
 }
@@ -315,8 +302,14 @@ magistratesCourt <- function() {
   x.lab <- x.est - delta$x
   y.lab <- y.est - delta$y
 
-  data.frame(case = 1016L, road.segment = "151-1", x = x.lab, y = y.lab,
+  data.frame(case = 1015L, road.segment = "151-1", x = x.lab, y = y.lab,
     x.proj = x.est, y.proj = y.est, name = "Magistrates Court")
+}
+
+karlMarx <- function() {
+  marx <- segmentTrigonometryAddress(seg.id = "174-1", factor = 2L)
+  data.frame(case = 1016L, road.segment = "174-1", marx, x.proj = marx$x,
+    y.proj = marx$y, name = "Karl Marx")
 }
 
 modelLodgingHouses <- function() {
@@ -366,11 +359,17 @@ stJamesWorkhouse <- function() {
 }
 
 stLukesChurch <- function() {
-  dat <- data.frame(case = 1019L, road.segment = "222-1", x = 14.94156,
+  dat <- data.frame(case = 1020L, road.segment = "222-1", x = 14.94156,
     y = 11.25313)
   out <- assignLandmarkAddress(dat)
   out$name <- "St Luke's Church"
   out
+}
+
+johnSnow <- function() {
+  snow <- segmentTrigonometryAddress(seg.id = "508-1", factor = 2L)
+  data.frame(case = 1021L, road.segment = "508-1", snow, x.proj = snow$x,
+             y.proj = snow$y, name = "John Snow")
 }
 
 ## Auxilliary Functions ##

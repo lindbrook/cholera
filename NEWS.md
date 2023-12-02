@@ -1,3 +1,8 @@
+### cholera 0.8.0.9191
+
+- alphabetize landmarks and fix case IDs.
+
+
 ### cholera 0.8.0.9190
 
 - set exit order in Squares().
