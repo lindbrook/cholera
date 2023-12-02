@@ -181,10 +181,20 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
     EW <- sq[sel, vars]
     coords <- squareCenterB(NS, EW)
   } else {
-    coords <- data.frame(case = case, road.segment = sq$id, x = sq$x.proj,
+    coords <- data.frame(road.segment = sq$id, x = sq$x.proj,
       y = sq$y.proj, x.proj = sq$x.proj, y.proj = sq$y.proj, name = sq$name)
   }
-  coords
+
+  if (nm == "Golden Square") {
+    ordered.exit <- c("-N", "-E", "-S", "-W")
+  } else if (nm == "Soho Square") {
+    ordered.exit <- c("-N", "-E", "-S1", "-S2", "-S3", "-W")
+  }
+
+  ord <- vapply(ordered.exit, function(x) grep(x, coords$name), integer(1L))
+  coords <- coords[ord, ]
+  case <- seq(start, start + length(exits) - 1)
+  data.frame(case, coords, row.names = NULL)
 }
 
 ## Landmark Functions ##
