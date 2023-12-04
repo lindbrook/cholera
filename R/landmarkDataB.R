@@ -76,8 +76,7 @@ landmarkDataB <- function() {
 landmarkSquares <- function() {
   golden <- Squares("Golden Square", label.coord = TRUE)
   soho <- Squares("Soho Square", label.coord = TRUE)
-  data.frame(case = 1000L:1001L, x = c(golden$x, soho$x),
-    y = c(golden$y, soho$y), name = c("Golden Square", "Soho Square"))
+  rbind(golden, soho)
 }
 
 # landmark.squares <- landmarkSquares()
@@ -173,29 +172,33 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
   if (label.coord) {
     if (nm == "Golden Square") {
       sel <- sq$name %in% paste0(paste0(nm, "-"), c("N", "S"))
+      case <- 1000L
     } else if (nm == "Soho Square") {
       sel <- sq$name %in% paste0(paste0(nm, "-"), c("N", "S2"))
+      case <- 1001L
     }
 
     NS <- sq[sel, vars]
     sel <- sq$name %in% paste0(paste0(nm, "-"), c("E", "W"))
     EW <- sq[sel, vars]
     coords <- squareCenterB(NS, EW)
+    out <- data.frame(case = case, coords, name = nm)
   } else {
-    coords <- data.frame(road.segment = sq$id, x = sq$x.proj,
-      y = sq$y.proj, x.proj = sq$x.proj, y.proj = sq$y.proj, name = sq$name)
-  }
+    coords <- data.frame(road.segment = sq$id, x = sq$x.proj, y = sq$y.proj,
+      x.proj = sq$x.proj, y.proj = sq$y.proj, name = sq$name)
 
-  if (nm == "Golden Square") {
-    ordered.exit <- c("-N", "-E", "-S", "-W")
-  } else if (nm == "Soho Square") {
-    ordered.exit <- c("-N", "-E", "-S1", "-S2", "-S3", "-W")
-  }
+    if (nm == "Golden Square") {
+      ordered.exit <- c("-N", "-E", "-S", "-W")
+    } else if (nm == "Soho Square") {
+      ordered.exit <- c("-N", "-E", "-S1", "-S2", "-S3", "-W")
+    }
 
-  ord <- vapply(ordered.exit, function(x) grep(x, coords$name), integer(1L))
-  coords <- coords[ord, ]
-  case <- seq(start, start + length(exits) - 1)
-  data.frame(case, coords, row.names = NULL)
+    ord <- vapply(ordered.exit, function(x) grep(x, coords$name), integer(1L))
+    coords <- coords[ord, ]
+    case <- seq(start, start + length(exits) - 1)
+    out <- data.frame(case, coords, row.names = NULL)
+  }
+  out
 }
 
 ## Landmark Functions ##
