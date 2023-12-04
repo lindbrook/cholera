@@ -1,3 +1,8 @@
+### cholera 0.8.0.9192
+
+- amend landmarkSquares() and Squares(label.coord = TRUE).
+
+
 ### cholera 0.8.0.9191
 
 - alphabetize landmarks and fix case IDs.
