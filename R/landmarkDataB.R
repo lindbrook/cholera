@@ -429,22 +429,59 @@ roadTheta <- function(dat) {
 }
 
 segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
-  delta = "pos") {
+  delta = "pos", latlong = FALSE) {
 
   vars <- c("x", "y")
-  seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
-  alpha <- stats::setNames(seg[, paste0(vars, 1)], vars)
-  omega <- stats::setNames(seg[, paste0(vars, 2)], vars)
-  dat <- rbind(alpha, omega)
-  h <- c(stats::dist(dat)) / factor
-  theta <- roadTheta(dat)
+
+  if (latlong) {
+    varsB <- c("lon", "lat")
+    ew <- varsB[1]
+    ns <- varsB[2]
+    origin <- data.frame(lon = min(cholera::roads[, ew]),
+                         lat = min(cholera::roads[, ns]))
+    topleft <- data.frame(lon = min(cholera::roads[, ew]),
+                          lat = max(cholera::roads[, ns]))
+    bottomright <- data.frame(lon = max(cholera::roads[, ew]),
+                              lat = min(cholera::roads[, ns]))
+    rd.segs <- roadSegments(latlong = TRUE)
+    seg <- rd.segs[rd.segs$id == seg.id, ]
+    alpha <- stats::setNames(seg[, paste0(varsB, 1)], varsB)
+    omega <- stats::setNames(seg[, paste0(varsB, 2)], varsB)
+  } else {
+    seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
+    alpha <- stats::setNames(seg[, paste0(vars, 1)], vars)
+    omega <- stats::setNames(seg[, paste0(vars, 2)], vars)
+  }
+
+  seg.data <- rbind(alpha, omega)
+
+  if (latlong) {
+    geodesic <- do.call(rbind, lapply(1:2, function(i) {
+      tmp <- seg.data[i, ]
+      x.proj <- c(tmp$lon, origin$lat)
+      y.proj <- c(origin$lon, tmp$lat)
+      m.lon <- geosphere::distGeo(y.proj, tmp)
+      m.lat <- geosphere::distGeo(x.proj, tmp)
+      data.frame(pt.id = i, x = m.lon, y = m.lat)
+    }))
+    seg.data <- geodesic[, vars]
+  }
+
+  h <- c(stats::dist(seg.data)) / factor
+  theta <- roadTheta(seg.data)
   delta.x <- h * cos(theta)
   delta.y <- h * sin(theta)
+
   if (delta == "pos") {
-    data.frame(x = alpha$x + delta.x, y = alpha$y + delta.y, row.names = NULL)
+    out <- data.frame(x = seg.data[1, ]$x + delta.x,
+                      y = seg.data[1, ]$y + delta.y, row.names = NULL)
   } else if (delta == "neg") {
-    data.frame(x = alpha$x - delta.x, y = alpha$y - delta.y, row.names = NULL)
+    out <- data.frame(x = seg.data[1, ]$x - delta.x,
+                      y = seg.data[1, ]$y - delta.y, row.names = NULL)
   }
+
+  if (latlong) out <- meterLatLong(out, origin, topleft, bottomright)[, varsB]
+  out
 }
 
 trignometricDelta <- function(dat, factor = 2L) {
