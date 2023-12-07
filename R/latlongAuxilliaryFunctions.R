@@ -47,7 +47,7 @@ kmeansRectangle <- function(x) {
 
 #' Convert meters-North to latitude.
 #'
-#' @param coords Object. Data frame of coordinates of Voronoi cells
+#' @param coords Object. Data frame of coordinates.
 #' @param origin Object. Bottom left corner of map.
 #' @param topleft Object. Top left corner of map.
 #' @param delta Numeric. Increment between simulated values.
