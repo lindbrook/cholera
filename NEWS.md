@@ -1,3 +1,8 @@
+### cholera 0.8.0.9198
+
+- amend nominal and latlong coordinates in modelLodgingHouses().
+
+
 ### cholera 0.8.0.9197
 
 - rename/amend assignLandmarkAddress() to projectLandmarkAddress().
