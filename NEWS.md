@@ -1,3 +1,8 @@
+### cholera 0.8.0.9195
+
+- add/set roadSegmentData(latlong = FALSE).
+
+
 ### cholera 0.8.0.9194
 
 - add/set segmentTrigonometryAddress(latlong = FALSE).

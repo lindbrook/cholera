@@ -316,10 +316,10 @@ karlMarx <- function() {
 }
 
 modelLodgingHouses <- function() {
-  NW <- roadSegmentData(seg.id = "225-1", var.sel = 2L)
-  NE <- roadSegmentData(seg.id = "225-1", var.sel = 1L)
-  SW <- roadSegmentData(seg.id = "259-1", var.sel = 2L)
-  SE <- roadSegmentData(seg.id = "259-1", var.sel = 1L)
+  NW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L)
+  NE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L)
+  SW <- roadSegmentData(seg.id = "259-1", endpt.sel = 2L)
+  SE <- roadSegmentData(seg.id = "259-1", endpt.sel = 1L)
   label.data <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
     SW$y)
   dat <- data.frame(case = 1017L, road.segment = "259-2", label.data)
@@ -413,10 +413,18 @@ pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
   }, character(1L))
 }
 
-roadSegmentData <- function(seg.id = "116-2", var.sel = 2L) {
-  vars <- c("x", "y")
-  sel <- cholera::road.segments$id == seg.id
-  seg.data <- cholera::road.segments[sel, paste0(vars, var.sel)]
+roadSegmentData <- function(seg.id = "116-2", endpt.sel = 2L, latlong = FALSE) {
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
+
+  if (latlong) {
+    rd.segs <- roadSegments(latlong = TRUE)
+    seg.data <- rd.segs[rd.segs$id == seg.id, paste0(vars, endpt.sel)]
+  } else {
+    sel <- cholera::road.segments$id == seg.id
+    seg.data <- cholera::road.segments[sel, paste0(vars, endpt.sel)]
+  }
+
   out <- stats::setNames(seg.data, vars)
   row.names(out) <- NULL
   out
