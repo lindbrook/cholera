@@ -352,10 +352,74 @@ modelLodgingHouses <- function() {
   NE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L)
   SW <- roadSegmentData(seg.id = "259-1", endpt.sel = 2L)
   SE <- roadSegmentData(seg.id = "259-1", endpt.sel = 1L)
-  label.data <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
+  label.nominal <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
     SW$y)
-  dat <- data.frame(case = 1017L, road.segment = "259-2", label.data)
-  out <- assignLandmarkAddress(dat)
+
+  dat <- data.frame(case = 1017L, road.segment = "259-2", label.nominal)
+  proj <- projectLandmarkAddress(dat)
+
+  origin <- data.frame(lon = min(cholera::roads[, "lon"]),
+                       lat = min(cholera::roads[, "lat"]))
+  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
+                        lat = max(cholera::roads[, "lat"]))
+  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
+                            lat = min(cholera::roads[, "lat"]))
+  NW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
+  NE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
+  SW <- roadSegmentData(seg.id = "259-1", endpt.sel = 2L, latlong = TRUE)
+  SE <- roadSegmentData(seg.id = "259-1", endpt.sel = 1L, latlong = TRUE)
+
+  geodesics <- lapply(list(NW, NE, SW, SE), function(coords) {
+    x.proj <- c(coords$lon, origin$lat)
+    y.proj <- c(origin$lon, coords$lat)
+    m.lon <- geosphere::distGeo(y.proj, coords)
+    m.lat <- geosphere::distGeo(x.proj, coords)
+    data.frame(x = m.lon, y = m.lat)
+  })
+
+  names(geodesics) <- c("NW", "NE", "SW", "SE")
+  NW <- geodesics$NW
+  NE <- geodesics$NE
+  SW <- geodesics$SW
+  SE <- geodesics$SE
+
+  pt <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
+
+  vars <- c("lon", "lat")
+  label.latlong <- meterLatLong(pt, origin, topleft, bottomright)[, vars]
+
+  x.proj <- c(label.latlong$lon, origin$lat)
+  y.proj <- c(origin$lon, label.latlong$lat)
+  m.lon <- geosphere::distGeo(y.proj, label.latlong)
+  m.lat <- geosphere::distGeo(x.proj, label.latlong)
+  label.geodesic <- data.frame(x = m.lon, y = m.lat)
+
+  rd.segs <- roadSegments(latlong = TRUE)
+  st.data <- rd.segs[rd.segs$id == dat$road.segment, ]
+  st <- rbind(stats::setNames(st.data[, paste0(vars, 1)], vars),
+              stats::setNames(st.data[, paste0(vars, 2)], vars))
+
+  geodesics <- lapply(seq_len(nrow(st)), function(i) {
+    coord <- st[i, ]
+    x.proj <- c(coord$lon, origin$lat)
+    y.proj <- c(origin$lon, coord$lat)
+    m.lon <- geosphere::distGeo(y.proj, coord)
+    m.lat <- geosphere::distGeo(x.proj, coord)
+    data.frame(x = m.lon, y = m.lat)
+  })
+
+  st.geodesic <- do.call(rbind, geodesics)
+  ols.st <- stats::lm(y ~ x, data = st.geodesic)
+  ortho.slope <- -1 / stats::coef(ols.st)[2]
+  ortho.intercept <- label.geodesic$y - ortho.slope * label.geodesic$x
+  x.proj <- (stats::coef(ols.st)[1] -  ortho.intercept) /
+            (ortho.slope - stats::coef(ols.st)[2])
+  y.proj <- x.proj * ortho.slope + ortho.intercept
+  proj.geodesic <- data.frame(x.proj, y.proj, row.names = NULL)
+  proj.latlong <- meterLatLong(proj.geodesic, origin, topleft, bottomright)
+
+  out <- data.frame(dat, proj, label.latlong, lon.proj = proj.latlong$lon,
+    lat.proj = proj.latlong$lat)
   out$name = "Model Lodging Houses"
   out
 }
