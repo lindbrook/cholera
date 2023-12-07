@@ -1,3 +1,8 @@
+### cholera 0.8.0.9196
+
+- amend nominal and latlong coordinates in argyllHouse().
+
+
 ### cholera 0.8.0.9195
 
 - add/set roadSegmentData(latlong = FALSE).

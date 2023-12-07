@@ -204,16 +204,48 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
 ## Landmark Functions ##
 
 argyllHouse <- function() {
-  NW <- roadSegmentData(seg.id = "116-2", var.sel = 2L)
-  NE <- roadSegmentData(seg.id = "144-1", var.sel = 2L)
-  SW <- roadSegmentData(seg.id = "161-1", var.sel = 2L)
-  SE <- roadSegmentData(seg.id = "161-1", var.sel = 1L)
+  NW <- roadSegmentData(seg.id = "116-2", endpt.sel = 2L)
+  NE <- roadSegmentData(seg.id = "144-1", endpt.sel = 2L)
+  SW <- roadSegmentData(seg.id = "161-1", endpt.sel = 2L)
+  SE <- roadSegmentData(seg.id = "161-1", endpt.sel = 1L)
   argyll <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
-  argyll.house <- data.frame(x = argyll$x, y = argyll$y)
+  label.nominal <- data.frame(x = argyll$x, y = argyll$y)
+
+  origin <- data.frame(lon = min(cholera::roads[, "lon"]),
+                       lat = min(cholera::roads[, "lat"]))
+  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
+                        lat = max(cholera::roads[, "lat"]))
+  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
+                            lat = min(cholera::roads[, "lat"]))
+  NW <- roadSegmentData(seg.id = "116-2", endpt.sel = 2L, latlong = TRUE)
+  NE <- roadSegmentData(seg.id = "144-1", endpt.sel = 2L, latlong = TRUE)
+  SW <- roadSegmentData(seg.id = "161-1", endpt.sel = 2L, latlong = TRUE)
+  SE <- roadSegmentData(seg.id = "161-1", endpt.sel = 1L, latlong = TRUE)
+
+  geodesics <- lapply(list(NW, NE, SW, SE), function(coords) {
+    x.proj <- c(coords$lon, origin$lat)
+    y.proj <- c(origin$lon, coords$lat)
+    m.lon <- geosphere::distGeo(y.proj, coords)
+    m.lat <- geosphere::distGeo(x.proj, coords)
+    data.frame(x = m.lon, y = m.lat)
+  })
+
+  names(geodesics) <- c("NW", "NE", "SW", "SE")
+  NW <- geodesics$NW
+  NE <- geodesics$NE
+  SW <- geodesics$SW
+  SE <- geodesics$SE
+  argyll <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
+  vars <- c("lon", "lat")
+  label.latlong <- meterLatLong(argyll, origin, topleft, bottomright)[, vars]
+
   seg.id <- "162-1"
   proj <- segmentTrigonometryAddress(seg.id = seg.id, delta = "neg")
-  data.frame(case = 1012L, road.segment = seg.id, argyll.house,
-    x.proj = proj$x, y.proj = proj$y, name = "Argyll House")
+  geo <- segmentTrigonometryAddress(seg.id = seg.id, delta = "neg",
+    latlong = TRUE)
+  data.frame(case = 1012L, road.segment = seg.id, label.nominal,
+    x.proj = proj$x, y.proj = proj$y, label.latlong, lon.proj = geo$lon,
+    lat.proj = geo$lat, name = "Argyll House")
 }
 
 cravenChapel <- function() {
