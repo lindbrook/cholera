@@ -396,7 +396,7 @@ stJamesWorkhouse <- function() {
 stLukesChurch <- function() {
   dat <- data.frame(case = 1020L, road.segment = "222-1", x = 14.94156,
     y = 11.25313)
-  out <- assignLandmarkAddress(dat)
+  out <- projectLandmarkAddress(dat)
   out$name <- "St Luke's Church"
   out
 }
@@ -420,8 +420,15 @@ addressProportion <- function(seg.id = "174-1", landmark = "Karl Marx") {
   c(lndmrk.dist / seg.dist)
 }
 
-assignLandmarkAddress <- function(dat) {
-  vars <- c("x", "y")
+pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
+  vapply(seq_len(nrow(dat)), function(i) {
+    paste(dat[i, c(var1, var2)], collapse = "-")
+  }, character(1L))
+}
+
+projectLandmarkAddress <- function(dat, latlong = FALSE) {
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
   lndmrk <- dat[, vars]
 
   sel <- cholera::road.segments$id == dat$road.segment
@@ -436,13 +443,7 @@ assignLandmarkAddress <- function(dat) {
   x.proj <- (stats::coef(ols.st)[1] -  ortho.intercept) /
             (ortho.slope - stats::coef(ols.st)[2])
   y.proj <- x.proj * ortho.slope + ortho.intercept
-  data.frame(dat, x.proj = x.proj, y.proj = y.proj, row.names = NULL)
-}
-
-pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
-  vapply(seq_len(nrow(dat)), function(i) {
-    paste(dat[i, c(var1, var2)], collapse = "-")
-  }, character(1L))
+  data.frame(x.proj = x.proj, y.proj = y.proj, row.names = NULL)
 }
 
 roadSegmentData <- function(seg.id = "116-2", endpt.sel = 2L, latlong = FALSE) {

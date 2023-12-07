@@ -1,3 +1,8 @@
+### cholera 0.8.0.9197
+
+- rename/amend assignLandmarkAddress() to projectLandmarkAddress().
+
+
 ### cholera 0.8.0.9196
 
 - amend nominal and latlong coordinates in argyllHouse().
