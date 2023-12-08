@@ -1,3 +1,8 @@
+### cholera 0.8.0.9200
+
+- set address to Hopkins Street; use proportion method in modelLodgingHouses().
+
+
 ### cholera 0.8.0.9199
 
 - add exception for single coordinates (1 row) in meterLatLong().
