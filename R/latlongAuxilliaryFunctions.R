@@ -75,7 +75,6 @@ meterLatitude <- function(coords, origin, topleft, delta = 0.000025) {
 
 #' Convert meters-East to longitude.
 #'
-#' @param est.latitude Object. Estimated latitudes from meters-North.
 #' @param coords Object. Data frame of coordinates.
 #' @param origin Object. Bottom left corner of map.
 #' @param topleft Object. Top left corner of map.
