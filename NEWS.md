@@ -1,3 +1,8 @@
+### cholera 0.8.0.9199
+
+- add exception for single coordinates (1 row) in meterLatLong().
+
+
 ### cholera 0.8.0.9198
 
 - amend nominal and latlong coordinates in modelLodgingHouses().
