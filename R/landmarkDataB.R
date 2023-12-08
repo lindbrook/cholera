@@ -348,6 +348,7 @@ karlMarx <- function() {
 }
 
 modelLodgingHouses <- function() {
+  ## nominal label ##
   NW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L)
   NE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L)
   SW <- roadSegmentData(seg.id = "259-1", endpt.sel = 2L)
@@ -355,15 +356,41 @@ modelLodgingHouses <- function() {
   label.nominal <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
     SW$y)
 
-  dat <- data.frame(case = 1017L, road.segment = "259-2", label.nominal)
-  proj <- projectLandmarkAddress(dat)
+  ## nominal address (proj): segment proportion to estimate street address ##
+  vars <- c("x", "y")
+  sel <- cholera::road.segments$id %in% c("245-1", "245-2")
+  hopkins <- cholera::road.segments[sel, ]
 
+  sel <- hopkins$id == "245-1"
+  seg1 <- rbind(stats::setNames(hopkins[sel, paste0(vars, 1)], vars),
+                stats::setNames(hopkins[sel, paste0(vars, 2)], vars))
+
+  sel <- hopkins$id == "245-2"
+  seg2 <- rbind(stats::setNames(hopkins[sel, paste0(vars, 1)], vars),
+                stats::setNames(hopkins[sel, paste0(vars, 2)], vars))
+
+  d1 <- stats::dist(seg1)
+  d2 <- stats::dist(seg2)
+  mid.point <- sum(d1, d2) / 2 # arbitrarily use mid-point of block as address
+
+  seg.data <- seg1 # mid-point on "245-1"
+  h <- d1 - mid.point
+  theta <- roadTheta(seg.data)
+  delta.x <- h * cos(theta)
+  delta.y <- h * sin(theta)
+
+  # southern point
+  pt2 <- stats::setNames(hopkins[hopkins$id == "245-1", paste0(vars, 2)], vars)
+  proj <- data.frame(x.proj = pt2$x - delta.x, y.proj = pt2$y - delta.y)
+
+  ## latlong label ##
   origin <- data.frame(lon = min(cholera::roads[, "lon"]),
                        lat = min(cholera::roads[, "lat"]))
   topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
                         lat = max(cholera::roads[, "lat"]))
   bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
                             lat = min(cholera::roads[, "lat"]))
+  
   NW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
   NE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
   SW <- roadSegmentData(seg.id = "259-1", endpt.sel = 2L, latlong = TRUE)
@@ -394,32 +421,45 @@ modelLodgingHouses <- function() {
   m.lat <- geosphere::distGeo(x.proj, label.latlong)
   label.geodesic <- data.frame(x = m.lon, y = m.lat)
 
+  ## latlong address (proj) ##
   rd.segs <- roadSegments(latlong = TRUE)
-  st.data <- rd.segs[rd.segs$id == dat$road.segment, ]
-  st <- rbind(stats::setNames(st.data[, paste0(vars, 1)], vars),
-              stats::setNames(st.data[, paste0(vars, 2)], vars))
+  hopkins <- rd.segs[rd.segs$id %in% c("245-1", "245-2"), ]
+  vars <- c("lon", "lat")
 
-  geodesics <- lapply(seq_len(nrow(st)), function(i) {
-    coord <- st[i, ]
-    x.proj <- c(coord$lon, origin$lat)
-    y.proj <- c(origin$lon, coord$lat)
-    m.lon <- geosphere::distGeo(y.proj, coord)
-    m.lat <- geosphere::distGeo(x.proj, coord)
+  sel <- hopkins$id == "245-1"
+  seg1 <- rbind(stats::setNames(hopkins[sel, paste0(vars, 1)], vars),
+                stats::setNames(hopkins[sel, paste0(vars, 2)], vars))
+
+  sel <- hopkins$id == "245-2"
+  seg2 <- rbind(stats::setNames(hopkins[sel, paste0(vars, 1)], vars),
+                stats::setNames(hopkins[sel, paste0(vars, 2)], vars))
+
+  d1 <- geosphere::distGeo(seg1[1, ], seg1[2, ])
+  d2 <- geosphere::distGeo(seg2[1, ], seg2[2, ])
+  mid.point <- sum(d1, d2) / 2 # arbitrarily use mid-point of block as address
+  proportion <- mid.point / d1
+
+  geodesics <- lapply(list(seg1[1, ], seg1[2, ]), function(coords) {
+    x.proj <- c(coords$lon, origin$lat)
+    y.proj <- c(origin$lon, coords$lat)
+    m.lon <- geosphere::distGeo(y.proj, coords)
+    m.lat <- geosphere::distGeo(x.proj, coords)
     data.frame(x = m.lon, y = m.lat)
   })
 
-  st.geodesic <- do.call(rbind, geodesics)
-  ols.st <- stats::lm(y ~ x, data = st.geodesic)
-  ortho.slope <- -1 / stats::coef(ols.st)[2]
-  ortho.intercept <- label.geodesic$y - ortho.slope * label.geodesic$x
-  x.proj <- (stats::coef(ols.st)[1] -  ortho.intercept) /
-            (ortho.slope - stats::coef(ols.st)[2])
-  y.proj <- x.proj * ortho.slope + ortho.intercept
-  proj.geodesic <- data.frame(x.proj, y.proj, row.names = NULL)
-  proj.latlong <- meterLatLong(proj.geodesic, origin, topleft, bottomright)
+  geodesics <- do.call(rbind, geodesics)
+  seg.d <- stats::dist(geodesics)
 
-  out <- data.frame(dat, proj, label.latlong, lon.proj = proj.latlong$lon,
-    lat.proj = proj.latlong$lat)
+  h <- proportion * seg.d
+  theta <- roadTheta(geodesics)
+  delta.x <- h * cos(theta)
+  delta.y <- h * sin(theta)
+  proj.geodesics <- data.frame(x = geodesics[2, ]$x - delta.x,
+                               y = geodesics[2, ]$y - delta.y)
+  proj.latlong <- meterLatLong(proj.geodesics, origin, topleft, bottomright)
+
+  out <- data.frame(case = 1017L, road.segment = "245-1", label.nominal, proj,
+    label.latlong, lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat)
   out$name = "Model Lodging Houses"
   out
 }
