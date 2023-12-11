@@ -120,11 +120,9 @@ meterLatLong <- function(coords, origin, topleft, bottomright,
     }))
   } else if (nrow(coords) == 1) {
     dat <- coords
-    loess.fit <- loess.lon[[i]]
-    dat$lon <- vapply(dat$x, function(x) {
-      stats::predict(loess.fit, newdata = data.frame(m = x))
-    }, numeric(1L))
-    dat$lat <- est.lat[est.lat$m == y.unique[i], "lat"]
+    loess.fit <- loess.lon[[1]]
+    dat$lon <- stats::predict(loess.fit, newdata = data.frame(m = dat$x))
+    dat$lat <- est.lat[est.lat$m == y.unique, "lat"]
     dat
   }
 }
