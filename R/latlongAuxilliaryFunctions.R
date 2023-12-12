@@ -108,23 +108,23 @@ meterLatLong <- function(coords, origin, topleft, bottomright,
   y.unique <- sort(unique(coords$y))
 
   # estimate longitudes, append estimated latitudes
-  if (nrow(coords) > 1) {
-    do.call(rbind, lapply(seq_along(y.unique), function(i) {
-      dat <- coords[coords$y == y.unique[i], ]
-      loess.fit <- loess.lon[[i]]
-      dat$lon <- vapply(dat$x, function(x) {
-        stats::predict(loess.fit, newdata = data.frame(m = x))
-      }, numeric(1L))
-      dat$lat <- est.lat[est.lat$m == y.unique[i], "lat"]
-      dat
-    }))
-  } else if (nrow(coords) == 1) {
-    dat <- coords
-    loess.fit <- loess.lon[[1]]
-    dat$lon <- stats::predict(loess.fit, newdata = data.frame(m = dat$x))
-    dat$lat <- est.lat[est.lat$m == y.unique, "lat"]
+  out <- lapply(seq_along(y.unique), function(i) {
+    if (nrow(coords) > 1) dat <- coords[coords$y == y.unique[i], ]
+    else dat <- coords
+    loess.fit <- loess.lon[[i]]
+    dat$lon <- vapply(dat$x, function(x) {
+      stats::predict(loess.fit, newdata = data.frame(m = x))
+    }, numeric(1L))
+    dat$lat <- est.lat[est.lat$m == y.unique[i], "lat"]
     dat
+  })
+
+  if (length(out) == 1) {
+    out <- out[[1]]
+  } else {
+    out <- do.call(rbind, out)
   }
+  out
 }
 
 #' Extract points from GeoTiff.
