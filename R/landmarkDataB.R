@@ -523,10 +523,24 @@ addressProportion <- function(seg.id = "174-1", landmark = "Karl Marx") {
   c(lndmrk.dist / seg.dist)
 }
 
+coordsCartesian <- function(proj.latlong, origin) {
+  coord.zero <- geosphere::destPoint(unlist(proj.latlong), b = 0, d = 54)
+  coord.zero <- data.frame(coord.zero)
+  projCartesian(coord.zero, origin)
+}
+
 pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
   vapply(seq_len(nrow(dat)), function(i) {
     paste(dat[i, c(var1, var2)], collapse = "-")
   }, character(1L))
+}
+
+projCartesian <- function(proj.latlong, origin) {
+  x.proj <- c(proj.latlong$lon, origin$lat)
+  y.proj <- c(origin$lon, proj.latlong$lat)
+  m.lon <- geosphere::distGeo(y.proj, proj.latlong)
+  m.lat <- geosphere::distGeo(x.proj, proj.latlong)
+  data.frame(x = m.lon, y = m.lat)
 }
 
 projectLandmarkAddress <- function(dat, latlong = FALSE) {
