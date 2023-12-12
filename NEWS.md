@@ -1,3 +1,8 @@
+### cholera 0.8.0.9202
+
+- amend exception for single coordinates in meterLatLong().
+
+
 ### cholera 0.8.0.9201
 
 - fix exception for single coordinates in meterLatLong().
