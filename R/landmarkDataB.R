@@ -62,7 +62,6 @@ landmarkDataB <- function() {
   # Berwick Street, currently Kemp House across from Tyler's Court
   st.lukes.church <- stLukesChurch()
 
-
   out <- rbind(golden.square, soho.square, argyll.house, craven.chapel,
                lion.brewery, magistrates.court, marx, model.lodging.houses,
                pantheon.bazaar, st.james.workhouse, st.lukes.church, snow)
@@ -390,7 +389,7 @@ modelLodgingHouses <- function() {
                         lat = max(cholera::roads[, "lat"]))
   bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
                             lat = min(cholera::roads[, "lat"]))
-  
+
   NW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
   NE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
   SW <- roadSegmentData(seg.id = "259-1", endpt.sel = 2L, latlong = TRUE)
