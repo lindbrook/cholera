@@ -1,3 +1,9 @@
+### cholera 0.8.0.9203
+
+- amend nominal and latlong coordinates in cravenChapel().
+- add coordsCartesian() and projCartesian().
+
+
 ### cholera 0.8.0.9202
 
 - amend exception for single coordinates in meterLatLong().

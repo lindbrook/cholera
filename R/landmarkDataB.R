@@ -62,7 +62,6 @@ landmarkDataB <- function() {
   # Berwick Street, currently Kemp House across from Tyler's Court
   st.lukes.church <- stLukesChurch()
 
-
   out <- rbind(golden.square, soho.square, argyll.house, craven.chapel,
                lion.brewery, magistrates.court, marx, model.lodging.houses,
                pantheon.bazaar, st.james.workhouse, st.lukes.church, snow)
@@ -252,6 +251,8 @@ cravenChapel <- function() {
   vars <- c("x", "y")
   seg.id <- "229-1" # Fouberts Place
 
+  # nominal proj coordinates #
+
   sel <- cholera::road.segments$id == seg.id
   fouberts.pl <- cholera::road.segments[sel, ]
 
@@ -260,24 +261,56 @@ cravenChapel <- function() {
 
   delta <- trignometricDelta(fouberts)
   left <- fouberts[which.min(fouberts$x), ] # West end
-  x.new <- left$x + delta$x
-  y.new <- left$y + delta$y
+  x.proj <- left$x + delta$x
+  y.proj <- left$y + delta$y
+
+  # nominal label coordinates #
 
   ols <- stats::lm(y ~ x, data = fouberts)
   slope <- stats::coef(ols)[2]
   ortho.slope <- -1 / slope
-  ortho.intercept <- y.new - ortho.slope * x.new
+  ortho.intercept <- y.proj - ortho.slope * x.proj
 
   theta <- ifelse(is.na(ortho.slope), pi / 2, atan(ortho.slope))
   # unitMeter(1, "yard") * 3 is appox. 177.2 ft
   # 0.5 nominal units approx 88 feet
   delta.x <- 0.5 * cos(theta)
   delta.y <- 0.5 * sin(theta)
-  x.label <- x.new + delta.x
-  y.label <- y.new + delta.y
+  x.label <- x.proj + delta.x
+  y.label <- y.proj + delta.y
+
+  # latlong street address coordinates #
+
+  proj.latlong <- segmentTrigonometryAddress("229-1", latlong = TRUE)
+
+  # latlong label coordinates #
+
+  rd.segs <- roadSegments(latlong = TRUE)
+  vars <- c("lon", "lat")
+  fouberts.pl <- rd.segs[rd.segs$id == seg.id, ]
+
+  origin <- data.frame(lon = min(cholera::roads[, "lon"]),
+                       lat = min(cholera::roads[, "lat"]))
+  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
+                        lat = max(cholera::roads[, "lat"]))
+  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
+                            lat = min(cholera::roads[, "lat"]))
+
+  proj.cartesian <- projCartesian(proj.latlong, origin)
+  coord.cartesian <- coordsCartesian(proj.latlong, origin)
+
+  h <- stats::dist(rbind(proj.cartesian, coord.cartesian)) # 54 units
+  delta.x <- h * cos(theta)
+  delta.y <- h * sin(theta)
+  proj.label <- data.frame(x = proj.cartesian$x + delta.x,
+                           y = proj.cartesian$y + delta.y)
+
+  label.latlong <- meterLatLong(proj.label, origin, topleft, bottomright)
 
   data.frame(case = 1013L, road.segment = seg.id, x = x.label, y = y.label,
-    x.proj = x.new, y.proj = y.new, name = "Craven Chapel", row.names = NULL)
+    x.proj = x.proj, y.proj = y.proj, lon = label.latlong$lon,
+    lat = label.latlong$lat, lon.proj = proj.latlong$lon,
+    lat.proj = proj.latlong$lat, name = "Craven Chapel", row.names = NULL)
 }
 
 lionBrewery <- function() {
@@ -390,7 +423,7 @@ modelLodgingHouses <- function() {
                         lat = max(cholera::roads[, "lat"]))
   bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
                             lat = min(cholera::roads[, "lat"]))
-  
+
   NW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
   NE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
   SW <- roadSegmentData(seg.id = "259-1", endpt.sel = 2L, latlong = TRUE)
@@ -524,10 +557,24 @@ addressProportion <- function(seg.id = "174-1", landmark = "Karl Marx") {
   c(lndmrk.dist / seg.dist)
 }
 
+coordsCartesian <- function(proj.latlong, origin) {
+  coord.zero <- geosphere::destPoint(unlist(proj.latlong), b = 0, d = 54)
+  coord.zero <- data.frame(coord.zero)
+  projCartesian(coord.zero, origin)
+}
+
 pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
   vapply(seq_len(nrow(dat)), function(i) {
     paste(dat[i, c(var1, var2)], collapse = "-")
   }, character(1L))
+}
+
+projCartesian <- function(proj.latlong, origin) {
+  x.proj <- c(proj.latlong$lon, origin$lat)
+  y.proj <- c(origin$lon, proj.latlong$lat)
+  m.lon <- geosphere::distGeo(y.proj, proj.latlong)
+  m.lat <- geosphere::distGeo(x.proj, proj.latlong)
+  data.frame(x = m.lon, y = m.lat)
 }
 
 projectLandmarkAddress <- function(dat, latlong = FALSE) {
