@@ -316,23 +316,53 @@ cravenChapel <- function() {
 lionBrewery <- function() {
   vars <- c("x", "y")
   seg.id <- "187-1"
-  data.label <- data.frame(x = 13.9022, y = 11.87315)
+  
+  NW <- roadSegmentData(seg.id = seg.id, endpt.sel = 1L)
+  NE <- roadSegmentData(seg.id = seg.id, endpt.sel = 2L)
+  SW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L)
+  SE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L)
+  label.nominal <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
+    SW$y)
+  
+  origin <- data.frame(lon = min(cholera::roads[, "lon"]),
+                       lat = min(cholera::roads[, "lat"]))
+  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
+                        lat = max(cholera::roads[, "lat"]))
+  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
+                            lat = min(cholera::roads[, "lat"]))
 
-  sel <- cholera::road.segments$id == seg.id
-  broad.st <- cholera::road.segments[sel, ]
+  NW <- roadSegmentData(seg.id = seg.id, endpt.sel = 1L, latlong = TRUE)
+  NE <- roadSegmentData(seg.id = seg.id, endpt.sel = 2L, latlong = TRUE)
+  SW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
+  SE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
 
-  broad <- rbind(stats::setNames(broad.st[, paste0(vars, 1)], vars),
-                 stats::setNames(broad.st[, paste0(vars, 2)], vars))
+  geodesics <- lapply(list(NW, NE, SW, SE), function(coords) {
+    x.proj <- c(coords$lon, origin$lat)
+    y.proj <- c(origin$lon, coords$lat)
+    m.lon <- geosphere::distGeo(y.proj, coords)
+    m.lat <- geosphere::distGeo(x.proj, coords)
+    data.frame(x = m.lon, y = m.lat)
+  })
 
-  delta <- trignometricDelta(broad)
+  names(geodesics) <- c("NW", "NE", "SW", "SE")
+  NW <- geodesics$NW
+  NE <- geodesics$NE
+  SW <- geodesics$SW
+  SE <- geodesics$SE
+  lion <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
+  
+  vars <- c("lon", "lat")
+  label.latlong <- meterLatLong(lion, origin, topleft, bottomright)[, vars]
+  
+  proj.nominal <- segmentTrigonometryAddress(seg.id = seg.id, delta = "pos")
+  proj.latlong <- segmentTrigonometryAddress(seg.id = seg.id, delta = "pos",
+    latlong = TRUE)
 
-  left <- broad[which.min(broad$x), ]
-  x.new <- left$x + delta$x
-  y.new <- left$y + delta$y
-
-  data.frame(case = 1014L, road.segment = seg.id, x = data.label$x,
-    y = data.label$y, x.proj = x.new, y.proj = y.new, name = "Lion Brewery",
-    row.names = NULL)
+  data.frame(case = 1014L, road.segment = seg.id, x = label.nominal$x,
+    y = label.nominal$y, x.proj = proj.nominal$x, y.proj = proj.nominal$y, 
+    lon = label.latlong$lon, lat = label.latlong$lat, 
+    lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat, 
+    name = "Lion Brewery", row.names = NULL)
 }
 
 magistratesCourt <- function() {

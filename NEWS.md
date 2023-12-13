@@ -1,3 +1,8 @@
+### cholera 0.8.0.9204
+
+- amend nominal and latlong coordinates in lionBrewery().
+
+
 ### cholera 0.8.0.9203
 
 - amend nominal and latlong coordinates in cravenChapel().
