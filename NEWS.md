@@ -1,6 +1,7 @@
 ### cholera 0.8.0.9205
 
 - amend nominal and latlong coordinates in magistratesCourt().
+- fix output of magistratesCourt().
 
 
 ### cholera 0.8.0.9204

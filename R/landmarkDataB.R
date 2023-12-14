@@ -463,8 +463,8 @@ magistratesCourt <- function() {
   label.latlong <- meterLatLong(label.cartesian, origin, topleft, bottomright)
 
   data.frame(case = 1015L, road.segment = "151-1", x = x.lab, y = y.lab,
-    x.proj = proj.nominal$x, y.proj = proj.nominal$y, lon = label.latlong$x,
-    lat = label.latlong$y, lon.proj = proj.latlong$lon,
+    x.proj = proj.nominal$x, y.proj = proj.nominal$y, lon = label.latlong$lon,
+    lat = label.latlong$lat, lon.proj = proj.latlong$lon,
     lat.proj = proj.latlong$lat, name = "Magistrates Court")
 }
 
