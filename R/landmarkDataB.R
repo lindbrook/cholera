@@ -465,7 +465,7 @@ magistratesCourt <- function() {
   data.frame(case = 1015L, road.segment = "151-1", x = x.lab, y = y.lab,
     x.proj = proj.nominal$x, y.proj = proj.nominal$y, lon = label.latlong$x,
     lat = label.latlong$y, lon.proj = proj.latlong$lon,
-    lon.proj = proj.latlong$lat, name = "Magistrates Court")
+    lat.proj = proj.latlong$lat, name = "Magistrates Court")
 }
 
 karlMarx <- function() {
