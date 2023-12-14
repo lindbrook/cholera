@@ -316,14 +316,14 @@ cravenChapel <- function() {
 lionBrewery <- function() {
   vars <- c("x", "y")
   seg.id <- "187-1"
-  
+
   NW <- roadSegmentData(seg.id = seg.id, endpt.sel = 1L)
   NE <- roadSegmentData(seg.id = seg.id, endpt.sel = 2L)
   SW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L)
   SE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L)
   label.nominal <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
     SW$y)
-  
+
   origin <- data.frame(lon = min(cholera::roads[, "lon"]),
                        lat = min(cholera::roads[, "lat"]))
   topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
@@ -350,18 +350,18 @@ lionBrewery <- function() {
   SW <- geodesics$SW
   SE <- geodesics$SE
   lion <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
-  
+
   vars <- c("lon", "lat")
   label.latlong <- meterLatLong(lion, origin, topleft, bottomright)[, vars]
-  
+
   proj.nominal <- segmentTrigonometryAddress(seg.id = seg.id, delta = "pos")
   proj.latlong <- segmentTrigonometryAddress(seg.id = seg.id, delta = "pos",
     latlong = TRUE)
 
   data.frame(case = 1014L, road.segment = seg.id, x = label.nominal$x,
-    y = label.nominal$y, x.proj = proj.nominal$x, y.proj = proj.nominal$y, 
-    lon = label.latlong$lon, lat = label.latlong$lat, 
-    lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat, 
+    y = label.nominal$y, x.proj = proj.nominal$x, y.proj = proj.nominal$y,
+    lon = label.latlong$lon, lat = label.latlong$lat,
+    lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat,
     name = "Lion Brewery", row.names = NULL)
 }
 
