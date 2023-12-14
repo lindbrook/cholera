@@ -367,41 +367,105 @@ lionBrewery <- function() {
 
 magistratesCourt <- function() {
   vars <- c('x', "y")
+  seg.id <- "151-1"
+
+  proj.nominal <- segmentTrigonometryAddress(seg.id = seg.id, factor = 3L,
+    delta = "pos")
+  proj.latlong <- segmentTrigonometryAddress(seg.id = seg.id, factor = 3L,
+    delta = "pos", latlong = TRUE)
+
+  ## xy label ##
 
   # Great Marlborough Street #
-  gt.marlb.st <- cholera::road.segments[cholera::road.segments$street == 151, ]
-  gt.marlb <- rbind(stats::setNames(gt.marlb.st[, paste0(vars, 1)], vars),
-                    stats::setNames(gt.marlb.st[, paste0(vars, 2)], vars))
-
-  delta <- trignometricDelta(gt.marlb, factor = 3L) # appox 1/3 way along road
-  x.est <- gt.marlb.st$x1 + delta$x
-  y.est <- gt.marlb.st$y1 + delta$y
+  seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
+  gt.marlb <- rbind(stats::setNames(seg[, paste0(vars, 1)], vars),
+                    stats::setNames(seg[, paste0(vars, 2)], vars))
 
   ## Great Marlborough Street label coordinate ##
   ortho.slope <- -1 / roadTheta(gt.marlb)
-  ortho.intercept <- y.est - ortho.slope * x.est
+  ortho.intercept <- proj.nominal$y - ortho.slope * proj.nominal$x
 
-  # Marlbrough Mews - parallel road (same block) north of Great Marlborough #
-  marlb.mews <- cholera::road.segments[cholera::road.segments$id == "116-2", ]
-  mews <- rbind(stats::setNames(marlb.mews[, paste0(vars, 1)], vars),
-                stats::setNames(marlb.mews[, paste0(vars, 2)], vars))
+  # Marlbrough Mews - parallel road, on same block, north of Great Marlborough #
+  seg <- cholera::road.segments[cholera::road.segments$id == "116-2", ]
+  mews <- rbind(stats::setNames(seg[, paste0(vars, 1)], vars),
+                stats::setNames(seg[, paste0(vars, 2)], vars))
 
-  ols <- stats::lm(y ~ x, data = mews)
+  ols.mews <- stats::lm(y ~ x, data = mews)
 
   # orthogonal point of intersection from Magistrates Court on Marlborough Mews
-  ortho.x <- (ortho.intercept - stats::coef(ols)[1]) /
-             (stats::coef(ols)[2] - ortho.slope)
-  ortho.y <- stats::coef(ols)["x"] * ortho.x + stats::coef(ols)["(Intercept)"]
+  ortho.x <- (ortho.intercept - stats::coef(ols.mews)["(Intercept)"]) /
+             (stats::coef(ols.mews)["x"] - ortho.slope)
 
-  ortho.data <- rbind(data.frame(x = c(ortho.x), y = c(ortho.y)),
-                      data.frame(x = c(x.est), y = c(y.est)))
+  ortho.y <- stats::coef(ols.mews)["x"] * ortho.x +
+             stats::coef(ols.mews)["(Intercept)"]
+
+  ortho.data <- rbind(data.frame(x = ortho.x, y = ortho.y),
+                      data.frame(x = proj.nominal$x, y = proj.nominal$y))
 
   delta <- trignometricDelta(ortho.data)
-  x.lab <- x.est - delta$x
-  y.lab <- y.est - delta$y
+  x.lab <- proj.nominal$x - delta$x
+  y.lab <- proj.nominal$y - delta$y
+
+  ## latlong label ##
+
+  vars <- c("lon", "lat")
+  rd.segs <- roadSegments(latlong = TRUE)
+
+  seg <- rd.segs[rd.segs$id == "151-1", ]
+  gt.marlb <- rbind(stats::setNames(seg[, paste0(vars, 1)], vars),
+                    stats::setNames(seg[, paste0(vars, 2)], vars))
+
+  # Marlbrough Mews - parallel road, on same block, north of Great Marlborough #
+  seg <- rd.segs[rd.segs$id == "116-2", ]
+  mews <- rbind(stats::setNames(seg[, paste0(vars, 1)], vars),
+                stats::setNames(seg[, paste0(vars, 2)], vars))
+
+  origin <- data.frame(lon = min(cholera::roads[, "lon"]),
+                       lat = min(cholera::roads[, "lat"]))
+  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
+                        lat = max(cholera::roads[, "lat"]))
+  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
+                            lat = min(cholera::roads[, "lat"]))
+
+  cartesian <- lapply(list(gt.marlb, mews), function(coords) {
+    do.call(rbind, lapply(1:2, function(i) {
+      x.proj <- c(coords[i, "lon"], origin$lat)
+      y.proj <- c(origin$lon, coords[i, "lat"])
+      m.lon <- geosphere::distGeo(y.proj, coords[i, ])
+      m.lat <- geosphere::distGeo(x.proj, coords[i, ])
+      data.frame(x = m.lon, y = m.lat)
+    }))
+  })
+
+  names(cartesian) <- c("gt.marlb", "mews")
+
+  proj.cartesian <- projCartesian(proj.latlong, origin)
+
+  ## Great Marlborough Street latlong label coordinate ##
+  ortho.slope <- -1 / roadTheta(cartesian$gt.marlb)
+  ortho.intercept <- proj.cartesian$y - ortho.slope * proj.cartesian$x
+  ols.mews <- stats::lm(y ~ x, data = cartesian$mews)
+
+  # orthogonal point of intersection from  Marlborough Mews to Magistrates Court
+  ortho.x <- (ortho.intercept - stats::coef(ols.mews)["(Intercept)"]) /
+             (stats::coef(ols.mews)["x"] - ortho.slope)
+
+  ortho.y <- stats::coef(ols.mews)["x"] * ortho.x +
+             stats::coef(ols.mews)["(Intercept)"]
+
+  ortho.data <- rbind(data.frame(x = ortho.x, y = ortho.y),
+                      data.frame(x = proj.cartesian$x, y = proj.cartesian$y))
+
+  delta <- trignometricDelta(ortho.data)
+  label.cartesian <- data.frame(x = proj.cartesian$x - delta$x,
+                                y = proj.cartesian$y - delta$y)
+
+  label.latlong <- meterLatLong(label.cartesian, origin, topleft, bottomright)
 
   data.frame(case = 1015L, road.segment = "151-1", x = x.lab, y = y.lab,
-    x.proj = x.est, y.proj = y.est, name = "Magistrates Court")
+    x.proj = proj.nominal$x, y.proj = proj.nominal$y, lon = label.latlong$x,
+    lat = label.latlong$y, lon.proj = proj.latlong$lon,
+    lon.proj = proj.latlong$lat, name = "Magistrates Court")
 }
 
 karlMarx <- function() {
