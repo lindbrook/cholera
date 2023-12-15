@@ -49,11 +49,6 @@ landmarkDataB <- function() {
   # placed at intersection of Oxford and Winsley
   pantheon.bazaar <- pantheonBazaar()
 
-  # John Snow #
-  # H: 18 Sackville Street, "508-1"
-  # cholera:::addressProportion("508-1", "John Snow") # 0.4999993
-  snow <- johnSnow()
-
   # St James Workhouse #
   # address set on Poland Street
   st.james.workhouse <- stJamesWorkhouse()
@@ -61,6 +56,11 @@ landmarkDataB <- function() {
   # St Luke's Church #
   # Berwick Street, currently Kemp House across from Tyler's Court
   st.lukes.church <- stLukesChurch()
+
+  # John Snow #
+  # H: 18 Sackville Street, "508-1"
+  # cholera:::addressProportion("508-1", "John Snow") # 0.4999993
+  snow <- johnSnow()
 
   out <- rbind(golden.square, soho.square, argyll.house, craven.chapel,
                lion.brewery, magistrates.court, marx, model.lodging.houses,
