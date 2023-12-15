@@ -1,3 +1,8 @@
+### cholera 0.8.0.9207
+
+- amend nominal and latlong coordinates in pantheonBazaar().
+
+
 ### cholera 0.8.0.9206
 
 - amend nominal and latlong coordinates in karlMarx().

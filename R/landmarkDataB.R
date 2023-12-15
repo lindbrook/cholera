@@ -597,12 +597,21 @@ modelLodgingHouses <- function() {
 }
 
 pantheonBazaar <- function() {
+  st.nm <- "Winsley Street" # "73-1"
+
   vars <- c("x", "y")
-  sel <- cholera::road.segments$name == "Winsley Street"
-  pantheon.bazaar <- cholera::road.segments[sel, paste0(vars, 2)]
-  names(pantheon.bazaar) <- vars
-  data.frame(case = 1018L, road.segment = "73-1", pantheon.bazaar,
-    x.proj = pantheon.bazaar$x, y.proj = pantheon.bazaar$y,
+  sel <- cholera::road.segments$name == st.nm
+  proj.nominal <- cholera::road.segments[sel, paste0(vars, 2)]
+  names(proj.nominal) <- vars
+  
+  rd.segs <- roadSegments(latlong = TRUE)
+  vars <- c("lon", "lat")
+  proj.latlong <- rd.segs[rd.segs$name == st.nm, paste0(vars, 2)]
+  names(proj.latlong) <- vars
+  
+  data.frame(case = 1018L, road.segment = "73-1", proj.nominal,
+    x.proj = proj.nominal$x, y.proj = proj.nominal$y, proj.latlong,
+    lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat,
     name = "The Pantheon")
 }
 
