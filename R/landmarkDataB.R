@@ -469,13 +469,13 @@ magistratesCourt <- function() {
 }
 
 karlMarx <- function() {
-  seg.id <- "174-1"
+  seg.id <- "174-1" # Dean Street
   proj.nominal <- segmentTrigonometryAddress(seg.id = seg.id, factor = 2L)
   proj.latlong <- segmentTrigonometryAddress(seg.id = seg.id, delta = "pos",
     latlong = TRUE)
   data.frame(case = 1016L, road.segment = seg.id, proj.nominal,
-    x.proj = proj.nominal$x, y.proj = proj.nominal$y, proj.latlong, 
-    lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat, 
+    x.proj = proj.nominal$x, y.proj = proj.nominal$y, proj.latlong,
+    lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat,
     name = "Karl Marx")
 }
 
