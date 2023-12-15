@@ -647,9 +647,13 @@ stLukesChurch <- function() {
 }
 
 johnSnow <- function() {
-  snow <- segmentTrigonometryAddress(seg.id = "508-1", factor = 2L)
-  data.frame(case = 1021L, road.segment = "508-1", snow, x.proj = snow$x,
-             y.proj = snow$y, name = "John Snow")
+  seg.id <- "508-1"
+  proj.nominal <- segmentTrigonometryAddress(seg.id = seg.id)
+  proj.latlong <- segmentTrigonometryAddress(seg.id = seg.id, latlong = TRUE)
+  data.frame(case = 1021L, road.segment = seg.id, proj.nominal, 
+    x.proj = proj.nominal$x, y.proj = proj.nominal$y, proj.latlong, 
+    lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat,
+    name = "John Snow")
 }
 
 ## Auxilliary Functions ##
