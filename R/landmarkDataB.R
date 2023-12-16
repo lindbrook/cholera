@@ -726,6 +726,21 @@ roadSegEndpt <- function(seg.id = "116-2", endpt.sel = 2L, latlong = FALSE) {
   out
 }
 
+roadSegmentData <- function(seg.id = "116-2", latlong = FALSE) {
+  if (latlong) {
+    vars <- c("lon", "lat")
+    rd.segs <- roadSegments(latlong = TRUE)
+  } else {
+    vars <- c("x", "y")
+    rd.segs <- cholera::road.segments
+  }
+  seg.data <- rd.segs[rd.segs$id == seg.id, ]
+  out <- rbind(stats::setNames(seg.data[, paste0(vars, 1)], vars),
+               stats::setNames(seg.data[, paste0(vars, 2)], vars))
+  row.names(out) <- NULL
+  out
+}
+
 roadTheta <- function(dat) {
   ols <- stats::lm(y ~ x, data = dat)
   slope <- stats::coef(ols)[2]
