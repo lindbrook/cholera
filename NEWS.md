@@ -1,3 +1,8 @@
+### cholera 0.8.0.9210
+
+- add amended roadSegmentData().
+
+
 ### cholera 0.8.0.9209
 
 - rename roadSegmentData() to roadSegEndpt().
