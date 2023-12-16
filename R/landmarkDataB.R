@@ -203,10 +203,10 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
 ## Landmark Functions ##
 
 argyllHouse <- function() {
-  NW <- roadSegmentData(seg.id = "116-2", endpt.sel = 2L)
-  NE <- roadSegmentData(seg.id = "144-1", endpt.sel = 2L)
-  SW <- roadSegmentData(seg.id = "161-1", endpt.sel = 2L)
-  SE <- roadSegmentData(seg.id = "161-1", endpt.sel = 1L)
+  NW <- roadSegEndpt(seg.id = "116-2", endpt.sel = 2L)
+  NE <- roadSegEndpt(seg.id = "144-1", endpt.sel = 2L)
+  SW <- roadSegEndpt(seg.id = "161-1", endpt.sel = 2L)
+  SE <- roadSegEndpt(seg.id = "161-1", endpt.sel = 1L)
   argyll <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
   label.nominal <- data.frame(x = argyll$x, y = argyll$y)
 
@@ -216,10 +216,10 @@ argyllHouse <- function() {
                         lat = max(cholera::roads[, "lat"]))
   bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
                             lat = min(cholera::roads[, "lat"]))
-  NW <- roadSegmentData(seg.id = "116-2", endpt.sel = 2L, latlong = TRUE)
-  NE <- roadSegmentData(seg.id = "144-1", endpt.sel = 2L, latlong = TRUE)
-  SW <- roadSegmentData(seg.id = "161-1", endpt.sel = 2L, latlong = TRUE)
-  SE <- roadSegmentData(seg.id = "161-1", endpt.sel = 1L, latlong = TRUE)
+  NW <- roadSegEndpt(seg.id = "116-2", endpt.sel = 2L, latlong = TRUE)
+  NE <- roadSegEndpt(seg.id = "144-1", endpt.sel = 2L, latlong = TRUE)
+  SW <- roadSegEndpt(seg.id = "161-1", endpt.sel = 2L, latlong = TRUE)
+  SE <- roadSegEndpt(seg.id = "161-1", endpt.sel = 1L, latlong = TRUE)
 
   geodesics <- lapply(list(NW, NE, SW, SE), function(coords) {
     x.proj <- c(coords$lon, origin$lat)
@@ -317,10 +317,10 @@ lionBrewery <- function() {
   vars <- c("x", "y")
   seg.id <- "187-1"
 
-  NW <- roadSegmentData(seg.id = seg.id, endpt.sel = 1L)
-  NE <- roadSegmentData(seg.id = seg.id, endpt.sel = 2L)
-  SW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L)
-  SE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L)
+  NW <- roadSegEndpt(seg.id = seg.id, endpt.sel = 1L)
+  NE <- roadSegEndpt(seg.id = seg.id, endpt.sel = 2L)
+  SW <- roadSegEndpt(seg.id = "225-1", endpt.sel = 2L)
+  SE <- roadSegEndpt(seg.id = "225-1", endpt.sel = 1L)
   label.nominal <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
     SW$y)
 
@@ -331,10 +331,10 @@ lionBrewery <- function() {
   bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
                             lat = min(cholera::roads[, "lat"]))
 
-  NW <- roadSegmentData(seg.id = seg.id, endpt.sel = 1L, latlong = TRUE)
-  NE <- roadSegmentData(seg.id = seg.id, endpt.sel = 2L, latlong = TRUE)
-  SW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
-  SE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
+  NW <- roadSegEndpt(seg.id = seg.id, endpt.sel = 1L, latlong = TRUE)
+  NE <- roadSegEndpt(seg.id = seg.id, endpt.sel = 2L, latlong = TRUE)
+  SW <- roadSegEndpt(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
+  SE <- roadSegEndpt(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
 
   geodesics <- lapply(list(NW, NE, SW, SE), function(coords) {
     x.proj <- c(coords$lon, origin$lat)
@@ -481,10 +481,10 @@ karlMarx <- function() {
 
 modelLodgingHouses <- function() {
   ## nominal label ##
-  NW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L)
-  NE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L)
-  SW <- roadSegmentData(seg.id = "259-1", endpt.sel = 2L)
-  SE <- roadSegmentData(seg.id = "259-1", endpt.sel = 1L)
+  NW <- roadSegEndpt(seg.id = "225-1", endpt.sel = 2L)
+  NE <- roadSegEndpt(seg.id = "225-1", endpt.sel = 1L)
+  SW <- roadSegEndpt(seg.id = "259-1", endpt.sel = 2L)
+  SE <- roadSegEndpt(seg.id = "259-1", endpt.sel = 1L)
   label.nominal <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x,
     SW$y)
 
@@ -523,10 +523,10 @@ modelLodgingHouses <- function() {
   bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
                             lat = min(cholera::roads[, "lat"]))
 
-  NW <- roadSegmentData(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
-  NE <- roadSegmentData(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
-  SW <- roadSegmentData(seg.id = "259-1", endpt.sel = 2L, latlong = TRUE)
-  SE <- roadSegmentData(seg.id = "259-1", endpt.sel = 1L, latlong = TRUE)
+  NW <- roadSegEndpt(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
+  NE <- roadSegEndpt(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
+  SW <- roadSegEndpt(seg.id = "259-1", endpt.sel = 2L, latlong = TRUE)
+  SE <- roadSegEndpt(seg.id = "259-1", endpt.sel = 1L, latlong = TRUE)
 
   geodesics <- lapply(list(NW, NE, SW, SE), function(coords) {
     x.proj <- c(coords$lon, origin$lat)
@@ -709,7 +709,7 @@ projectLandmarkAddress <- function(dat, latlong = FALSE) {
   data.frame(x.proj = x.proj, y.proj = y.proj, row.names = NULL)
 }
 
-roadSegmentData <- function(seg.id = "116-2", endpt.sel = 2L, latlong = FALSE) {
+roadSegEndpt <- function(seg.id = "116-2", endpt.sel = 2L, latlong = FALSE) {
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
