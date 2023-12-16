@@ -1,3 +1,8 @@
+### cholera 0.8.0.9209
+
+- rename roadSegmentData() to roadSegEndpt().
+
+
 ### cholera 0.8.0.9208
 
 - amend nominal and latlong coordinates in johnSnow().
