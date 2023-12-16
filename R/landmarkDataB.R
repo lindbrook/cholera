@@ -639,11 +639,73 @@ stJamesWorkhouse <- function() {
 }
 
 stLukesChurch <- function() {
-  dat <- data.frame(case = 1020L, road.segment = "222-1", x = 14.94156,
-    y = 11.25313)
-  out <- projectLandmarkAddress(dat)
-  out$name <- "St Luke's Church"
-  out
+  # Berwick Street: provisionally use "Tylers Court" endpt on segment "221-1"
+  # dat <- data.frame(case = 1020L, road.segment = "222-1", x = 14.94156,
+  #   y = 11.25313)
+
+  seg.id <- "221-1"
+  proj.nominal <- roadSegEndpt(seg.id = seg.id, endpt.sel = 1L)
+  proj.latlong <- roadSegEndpt(seg.id = seg.id, endpt.sel = 1L,
+    latlong = TRUE)
+
+  # nominal xy label
+
+  taylor.data <- roadSegmentData(seg.id = "221-1")
+  hopkins.data <- roadSegmentData(seg.id = "245-2")
+
+  taylor.ols <- stats::lm(y ~ x, data = taylor.data)
+  hopkins.ols <- stats::lm(y ~ x, data = hopkins.data)
+
+  xs <- stats::coef(taylor.ols)["x"] -
+        stats::coef(hopkins.ols)["x"]
+
+  bs <- stats::coef(hopkins.ols)["(Intercept)"] -
+        stats::coef(taylor.ols)["(Intercept)"]
+
+  x.proj <- bs / xs
+  y.proj <- stats::coef(hopkins.ols)["x"] * proj.nominal$x +
+            stats::coef(hopkins.ols)["(Intercept)"]
+
+  transversal <- rbind(proj.nominal, data.frame(x = x.proj, y = y.proj))
+  delta <- trignometricDelta(transversal)
+  xy <- data.frame(x = x.proj + delta$x, y = y.proj + delta$y)
+
+  # latlong label
+
+  origin <- data.frame(lon = min(cholera::roads[, "lon"]),
+                       lat = min(cholera::roads[, "lat"]))
+  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
+                        lat = max(cholera::roads[, "lat"]))
+  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
+                            lat = min(cholera::roads[, "lat"]))
+
+  taylor.data <- roadSegmentData(seg.id = "221-1", latlong = TRUE) |>
+                 segmentGeoCartesian(origin)
+  hopkins.data <- roadSegmentData(seg.id = "245-2", latlong = TRUE) |>
+                  segmentGeoCartesian(origin)
+
+  taylor.ols <- stats::lm(y ~ x, data = taylor.data)
+  hopkins.ols <- stats::lm(y ~ x, data = hopkins.data)
+
+  xs <- stats::coef(taylor.ols)["x"] -
+        stats::coef(hopkins.ols)["x"]
+
+  bs <- stats::coef(hopkins.ols)["(Intercept)"] -
+        stats::coef(taylor.ols)["(Intercept)"]
+
+  x.proj <- bs / xs
+  y.proj <- stats::coef(hopkins.ols)["x"] * proj.nominal$x +
+            stats::coef(hopkins.ols)["(Intercept)"]
+
+  transversal <- rbind(proj.nominal, data.frame(x = x.proj, y = y.proj))
+  delta <- trignometricDelta(transversal)
+  geo.cartesian <- data.frame(x = x.proj + delta$x, y = y.proj + delta$y)
+  label.latlong <- meterLatLong(geo.cartesian, origin, topleft, bottomright)
+
+  data.frame(case = 1020L, road.segment = seg.id, xy, x.proj = proj.nominal$x,
+    y.proj = proj.nominal$y, label.latlong[, c("lon", "lat")], 
+    lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat, 
+    name = "St Luke's Church", row.names = NULL)
 }
 
 johnSnow <- function() {
