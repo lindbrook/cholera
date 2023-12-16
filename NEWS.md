@@ -1,3 +1,8 @@
+### cholera 0.8.0.9211
+
+- add segmentGeoCartesian().
+
+
 ### cholera 0.8.0.9210
 
 - add amended roadSegmentData().

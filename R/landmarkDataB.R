@@ -747,6 +747,16 @@ roadTheta <- function(dat) {
   ifelse(is.na(slope), pi / 2, atan(slope))
 }
 
+segmentGeoCartesian <- function(endpt.data, origin) {
+  do.call(rbind, lapply(1:2, function(i) {
+    x.proj <- c(endpt.data[i, ]$lon, origin$lat)
+    y.proj <- c(origin$lon, endpt.data[i, ]$lat)
+    m.lon <- geosphere::distGeo(y.proj, unlist(endpt.data[i, ]))
+    m.lat <- geosphere::distGeo(x.proj, unlist(endpt.data[i, ]))
+    data.frame(x = m.lon, y = m.lat)
+  }))
+}
+
 segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
   delta = "pos", latlong = FALSE) {
 
