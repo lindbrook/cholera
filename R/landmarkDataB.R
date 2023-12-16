@@ -603,12 +603,12 @@ pantheonBazaar <- function() {
   sel <- cholera::road.segments$name == st.nm
   proj.nominal <- cholera::road.segments[sel, paste0(vars, 2)]
   names(proj.nominal) <- vars
-  
+
   rd.segs <- roadSegments(latlong = TRUE)
   vars <- c("lon", "lat")
   proj.latlong <- rd.segs[rd.segs$name == st.nm, paste0(vars, 2)]
   names(proj.latlong) <- vars
-  
+
   data.frame(case = 1018L, road.segment = "73-1", proj.nominal,
     x.proj = proj.nominal$x, y.proj = proj.nominal$y, proj.latlong,
     lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat,
@@ -712,8 +712,8 @@ johnSnow <- function() {
   seg.id <- "508-1"
   proj.nominal <- segmentTrigonometryAddress(seg.id = seg.id)
   proj.latlong <- segmentTrigonometryAddress(seg.id = seg.id, latlong = TRUE)
-  data.frame(case = 1021L, road.segment = seg.id, proj.nominal, 
-    x.proj = proj.nominal$x, y.proj = proj.nominal$y, proj.latlong, 
+  data.frame(case = 1021L, road.segment = seg.id, proj.nominal,
+    x.proj = proj.nominal$x, y.proj = proj.nominal$y, proj.latlong,
     lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat,
     name = "John Snow")
 }
