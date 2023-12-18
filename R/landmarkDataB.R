@@ -730,8 +730,8 @@ stLukesChurch <- function() {
   label.latlong <- meterLatLong(geo.cartesian, origin, topleft, bottomright)
 
   data.frame(case = 1020L, road.segment = seg.id, xy, x.proj = proj.nominal$x,
-    y.proj = proj.nominal$y, label.latlong[, c("lon", "lat")], 
-    lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat, 
+    y.proj = proj.nominal$y, label.latlong[, c("lon", "lat")],
+    lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat,
     name = "St Luke's Church", row.names = NULL)
 }
 
