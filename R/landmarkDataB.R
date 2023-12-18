@@ -616,26 +616,53 @@ pantheonBazaar <- function() {
 }
 
 stJamesWorkhouse <- function() {
-  vars <- c("x", "y")
-  vars.proj <- paste0(vars, ".proj")
-  sel <- cholera::road.segments$name == "St James Workhouse"
-  workhouse <- cholera::road.segments[sel, c("id", paste0(vars, 1), "name")]
-  names(workhouse)[1:3] <- c("road.segment", vars.proj)
-  right <- cholera::road.segments[sel, paste0(vars, 1)]
-  left <- cholera::road.segments[cholera::road.segments$id == "201-1",
-    paste0(vars, 2)]
-  dat <- stats::setNames(data.frame(rbind(unlist(right), unlist(left))), vars)
-  h <- c(stats::dist(dat))
-  ols <- stats::lm(y ~ x, dat)
-  segment.slope <- stats::coef(ols)[2]
-  theta <- atan(segment.slope)
+  seg.id <- "148-1" # "St James Workhouse"
+  workhouse.west <- roadSegEndpt(seg.id = "148-1", endpt.sel = 1L)
+  marshall.east <- roadSegEndpt(seg.id = "201-1", endpt.sel = 2L)
+  proj.seg <- rbind(workhouse.west, marshall.east)
+  h <- stats::dist(proj.seg)
+  theta <- roadTheta(proj.seg)
   delta.x <- (h / 2) * cos(theta)
   delta.y <- (h / 2) * sin(theta)
-  x.lab <- left$x2 + delta.x
-  y.lab <- left$y2 + delta.y
-  data.frame(case = 1019L, road.segment = "148-1",x = x.lab, y = y.lab,
-    workhouse[, c("x.proj", "y.proj")], name = "St James Workhouse",
-    row.names = NULL)
+  x.lab <- marshall.east$x + delta.x
+  y.lab <- marshall.east$y + delta.y
+
+  origin <- data.frame(lon = min(cholera::roads[, "lon"]),
+                       lat = min(cholera::roads[, "lat"]))
+  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
+                        lat = max(cholera::roads[, "lat"]))
+  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
+                            lat = min(cholera::roads[, "lat"]))
+
+  workhouse.west.geo <- roadSegEndpt(seg.id = "148-1", endpt.sel = 1L,
+    latlong = TRUE)
+  marshall.east.geo <- roadSegEndpt(seg.id = "201-1", endpt.sel = 2L,
+    latlong = TRUE)
+  coords.lst <- list(workhouse.west.geo, marshall.east.geo)
+
+  geo.cartesian <- do.call(rbind, lapply(coords.lst, function(coords) {
+    x.proj <- c(coords$lon, origin$lat)
+    y.proj <- c(origin$lon, coords$lat)
+    m.lon <- geosphere::distGeo(y.proj, coords)
+    m.lat <- geosphere::distGeo(x.proj, coords)
+    data.frame(x = m.lon, y = m.lat)
+  }))
+
+  h <- stats::dist(geo.cartesian)
+  theta <- roadTheta(geo.cartesian)
+  delta.x <- (h / 2) * cos(theta)
+  delta.y <- (h / 2) * sin(theta)
+
+  geo.cartesian.lab <- data.frame(x = geo.cartesian[2, "x"] + delta.x,
+                                  y = geo.cartesian[2, "y"] + delta.y)
+
+  label.latlong <- meterLatLong(geo.cartesian.lab, origin, topleft, bottomright)
+
+  data.frame(case = 1019L, road.segment = "148-1", x = x.lab, y = y.lab,
+    x.proj = workhouse.west$x, y.proj = workhouse.west$y,
+    lon = label.latlong$lon, lat = label.latlong$lat,
+    lon.proj = workhouse.west.geo$lon, lat.proj = workhouse.west.geo$lat,
+    name = "St James Workhouse", row.names = NULL)
 }
 
 stLukesChurch <- function() {

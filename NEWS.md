@@ -1,3 +1,8 @@
+### cholera 0.8.0.9213
+
+- amend nominal and latlong coordinates in stJamesWorkhouse().
+
+
 ### cholera 0.8.0.9212
 
 - amend nominal and latlong coordinates in stLukesChurch().
