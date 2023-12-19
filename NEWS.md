@@ -1,3 +1,8 @@
+### cholera 0.8.0.9215
+
+- add/set squareExitsB(latlong = FALSE).
+
+
 ### cholera 0.8.0.9214
 
 - use "_&_" as coordinate delimeter in pasteCoordsB().

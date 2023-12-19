@@ -100,54 +100,88 @@ squareCenterB <- function(NS, EW, latlong = FALSE) {
   out
 }
 
-squareExitsB <- function(nm = "Golden Square") {
-  dat <- cholera::road.segments[cholera::road.segments$name == nm, ]
-  left <- pasteCoordsB(dat)
-  right <- pasteCoordsB(dat, "x2", "y2")
-  mat <- do.call(rbind, lapply(strsplit(union(left, right), "-"), as.numeric))
-  exit.nodes <- data.frame(x = mat[, 1], y = mat[, 2])
+squareExitsB <- function(nm = "Golden Square", latlong = FALSE) {
+  if (latlong) {
+    rd.seg <- roadSegments(latlong = TRUE)
+    dat <- rd.seg[rd.seg$name == nm, ]
+    vars <- c("lon", "lat")
+  } else {
+    dat <- cholera::road.segments[cholera::road.segments$name == nm, ]
+    vars <- c("x", "y")
+  }
+
+  if (latlong) {
+    left <- pasteCoordsB(dat, paste0(vars[1], 1), paste0(vars[2], 1))
+    right <- pasteCoordsB(dat, paste0(vars[1], 2), paste0(vars[2], 2))
+  } else {
+    left <- pasteCoordsB(dat)
+    right <- pasteCoordsB(dat, paste0(vars[1], 2), paste0(vars[2], 2))
+  }
+
+  mat <- do.call(rbind, lapply(strsplit(union(left, right), "_&_"), as.numeric))
+
+  if (latlong) exit.nodes <- data.frame(lon = mat[, 1], lat = mat[, 2])
+  else exit.nodes <- data.frame(x = mat[, 1], y = mat[, 2])
 
   do.call(rbind, lapply(seq_len(nrow(exit.nodes)), function(i) {
-    sel1 <- cholera::road.segments$x1 == exit.nodes[i, ]$x &
-            cholera::road.segments$y1 == exit.nodes[i, ]$y
-    sel2 <- cholera::road.segments$x2 == exit.nodes[i, ]$x &
-            cholera::road.segments$y2 == exit.nodes[i, ]$y
+    if (latlong) {
+      sel1 <- signif(rd.seg$lon1) == signif(exit.nodes[i, ]$lon) &
+              signif(rd.seg$lat1) == signif(exit.nodes[i, ]$lat)
+      sel2 <- signif(rd.seg$lon2) == signif(exit.nodes[i, ]$lon) &
+              signif(rd.seg$lat2) == signif(exit.nodes[i, ]$lat)
+      node.segs <- rd.seg[sel1 | sel2, ]
+    } else {
+      sel1 <- cholera::road.segments$x1 == exit.nodes[i, ]$x &
+              cholera::road.segments$y1 == exit.nodes[i, ]$y
+      sel2 <- cholera::road.segments$x2 == exit.nodes[i, ]$x &
+              cholera::road.segments$y2 == exit.nodes[i, ]$y
+      node.segs <- cholera::road.segments[sel1 | sel2, ]
+    }
 
-    node.segs <- cholera::road.segments[sel1 | sel2, ]
     candidate <- node.segs[!grepl(nm, node.segs$name), ]
     square.segs <- node.segs[grepl(nm, node.segs$name), ]
 
-    vars0 <- c("x", "y")
-
     sq.coords <- unique(rbind(
-      stats::setNames(square.segs[, paste0(vars0, 1)], vars0),
-      stats::setNames(square.segs[, paste0(vars0, 2)], vars0)
+      stats::setNames(square.segs[, paste0(vars, 1)], vars),
+      stats::setNames(square.segs[, paste0(vars, 2)], vars)
     ))
 
     ones <- vapply(seq_len(nrow(sq.coords)), function(i) {
-      sq.tmp <- sq.coords[i, vars0]
-      candidate.tmp <- candidate[, paste0(vars0, 1)]
-
-      identical(candidate.tmp$x1, sq.tmp$x) &
-      identical(candidate.tmp$y1, sq.tmp$y)
+      sq.tmp <- sq.coords[i, vars]
+      cand.tmp <- candidate[, paste0(vars, 1)]
+      if (latlong) {
+          identical(cand.tmp$lon1, sq.tmp$lon) &
+          identical(cand.tmp$lat1, sq.tmp$lat)
+        } else {
+          identical(cand.tmp$x1, sq.tmp$x) & identical(cand.tmp$y1, sq.tmp$y)
+        }
     }, logical(1L))
 
     twos <- vapply(seq_len(nrow(sq.coords)), function(i) {
-      sq.tmp <- sq.coords[i, vars0]
-      candidate.tmp <- candidate[, paste0(vars0, 2)]
-
-      identical(candidate.tmp$x2, sq.tmp$x) &
-      identical(candidate.tmp$y2,sq.tmp$y)
+      sq.tmp <- sq.coords[i, vars]
+      cand.tmp <- candidate[, paste0(vars, 2)]
+      if (latlong) {
+          identical(cand.tmp$lon2, sq.tmp$lon) &
+          identical(cand.tmp$lat2, sq.tmp$lat)
+        } else {
+          identical(cand.tmp$x2, sq.tmp$x) & identical(cand.tmp$y2, sq.tmp$y)
+        }
     }, logical(1L))
 
-    vars <- names(dat)[!grepl("x", names(dat)) & !grepl("y", names(dat))]
+    if (latlong) {
+      sel <- !grepl("lon", names(dat)) & !grepl("lat", names(dat))
+    } else {
+      sel <- !grepl("x", names(dat)) & !grepl("y", names(dat))
+    }
+
+    vars0 <- names(dat)[sel]
 
     if (any(ones)) {
-      candidate <- candidate[, c(vars, paste0(vars0, 1))]
-      names(candidate)[grep(1, names(candidate))] <- paste0(vars0, ".proj")
+      candidate <- candidate[, c(vars0, paste0(vars, 1))]
+      names(candidate)[grep(1, names(candidate))] <- paste0(vars, ".proj")
     } else if (any(twos)) {
-      candidate <- candidate[, c(vars, paste0(vars0, 2))]
-      names(candidate)[grep(2, names(candidate))] <- paste0(vars0, ".proj")
+      candidate <- candidate[, c(vars0, paste0(vars, 2))]
+      names(candidate)[grep(2, names(candidate))] <- paste0(vars, ".proj")
     }
 
     candidate
