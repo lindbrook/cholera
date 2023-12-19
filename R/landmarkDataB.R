@@ -195,7 +195,7 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
     by = "id")
 
   if (nm == "Golden Square") {
-    exits <- c("N", "W", "E", "S", )
+    exits <- c("N", "W", "E", "S")
     start <- 1002L
   } else if (nm == "Soho Square") {
     exits <- c( "W", "S1", "S2",  "S3", "N", "E")
@@ -217,7 +217,7 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
     NS <- sq[sel, vars]
     sel <- sq$name %in% paste0(paste0(nm, "-"), c("E", "W"))
     EW <- sq[sel, vars]
-    coords.nominal <- cholera:::squareCenterB(NS, EW)
+    coords.nominal <- squareCenterB(NS, EW)
 
     if (nm == "Golden Square") {
       sel <- sq$name %in% paste0(paste0(nm, "-"), c("N", "S"))
@@ -229,7 +229,7 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
     NS <- sq[sel, vars]
     sel <- sq$name %in% paste0(paste0(nm, "-"), c("E", "W"))
     EW <- sq[sel, vars]
-    coords.latlong <- cholera:::squareCenterB(NS, EW, latlong = TRUE)
+    coords.latlong <- squareCenterB(NS, EW, latlong = TRUE)
 
     out <- data.frame(case = case, coords.nominal, coords.latlong, name = nm)
 
