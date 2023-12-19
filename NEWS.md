@@ -1,3 +1,8 @@
+### cholera 0.8.0.9215
+
+- amend pantheonBazaar() and stLukesChurch().
+
+
 ### cholera 0.8.0.9214
 
 - use "_&_" as coordinate delimeter in pasteCoordsB().

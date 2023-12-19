@@ -665,7 +665,7 @@ pantheonBazaar <- function() {
   data.frame(case = 1018L, road.segment = "73-1", proj.nominal,
     x.proj = proj.nominal$x, y.proj = proj.nominal$y, proj.latlong,
     lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat,
-    name = "The Pantheon")
+    name = "The Pantheon", row.names = NULL)
 }
 
 stJamesWorkhouse <- function() {
@@ -759,10 +759,11 @@ stLukesChurch <- function() {
   bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
                             lat = min(cholera::roads[, "lat"]))
 
-  taylor.data <- roadSegmentData(seg.id = "221-1", latlong = TRUE) |>
-                 segmentGeoCartesian(origin)
-  hopkins.data <- roadSegmentData(seg.id = "245-2", latlong = TRUE) |>
-                  segmentGeoCartesian(origin)
+  taylor.data <- roadSegmentData(seg.id = "221-1", latlong = TRUE)
+  taylor.data <- segmentGeoCartesian(taylor.data, origin)
+
+  hopkins.data <- roadSegmentData(seg.id = "245-2", latlong = TRUE)
+  hopkins.data <- segmentGeoCartesian(hopkins.data, origin)
 
   taylor.ols <- stats::lm(y ~ x, data = taylor.data)
   hopkins.ols <- stats::lm(y ~ x, data = hopkins.data)
