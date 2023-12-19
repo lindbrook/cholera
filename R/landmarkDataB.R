@@ -189,14 +189,16 @@ squareExitsB <- function(nm = "Golden Square", latlong = FALSE) {
 }
 
 Squares <- function(nm = "Golden Square", label.coord = FALSE) {
-  vars <- c("x.proj", "y.proj")
-  sq <- squareExitsB(nm)
+  sq.nominal <- squareExitsB(nm)
+  sq.latlong <- squareExitsB(nm, latlong = TRUE)
+  sq <- merge(sq.nominal, sq.latlong[, c("id", "lon.proj", "lat.proj")],
+    by = "id")
 
   if (nm == "Golden Square") {
-    exits <- c("W", "E", "S", "N")
+    exits <- c("N", "W", "E", "S", )
     start <- 1002L
   } else if (nm == "Soho Square") {
-    exits <- c("E", "N", "S3", "S2", "S1", "W")
+    exits <- c( "W", "S1", "S2",  "S3", "N", "E")
     start <- 1006L
   } else stop('nm must be "Golden Square" or "Soho Square"', call. = FALSE)
 
@@ -211,14 +213,31 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
       case <- 1001L
     }
 
+    vars <- c("x.proj", "y.proj")
     NS <- sq[sel, vars]
     sel <- sq$name %in% paste0(paste0(nm, "-"), c("E", "W"))
     EW <- sq[sel, vars]
-    coords <- squareCenterB(NS, EW)
-    out <- data.frame(case = case, coords, name = nm)
+    coords.nominal <- cholera:::squareCenterB(NS, EW)
+
+    if (nm == "Golden Square") {
+      sel <- sq$name %in% paste0(paste0(nm, "-"), c("N", "S"))
+    } else if (nm == "Soho Square") {
+      sel <- sq$name %in% paste0(paste0(nm, "-"), c("N", "S2"))
+    }
+
+    vars <- c("lon.proj", "lat.proj")
+    NS <- sq[sel, vars]
+    sel <- sq$name %in% paste0(paste0(nm, "-"), c("E", "W"))
+    EW <- sq[sel, vars]
+    coords.latlong <- cholera:::squareCenterB(NS, EW, latlong = TRUE)
+
+    out <- data.frame(case = case, coords.nominal, coords.latlong, name = nm)
+
   } else {
     coords <- data.frame(road.segment = sq$id, x = sq$x.proj, y = sq$y.proj,
-      x.proj = sq$x.proj, y.proj = sq$y.proj, name = sq$name)
+      x.proj = sq$x.proj, y.proj = sq$y.proj, lon = sq$lon.proj,
+      lat = sq$lat.proj, lon.proj = sq$lon.proj, lat.proj = sq$lat.proj,
+      name = sq$name)
 
     if (nm == "Golden Square") {
       ordered.exit <- c("-N", "-E", "-S", "-W")
