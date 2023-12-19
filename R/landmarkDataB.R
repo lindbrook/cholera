@@ -766,7 +766,7 @@ coordsCartesian <- function(proj.latlong, origin) {
 
 pasteCoordsB <- function(dat, var1 = "x1", var2 = "y1") {
   vapply(seq_len(nrow(dat)), function(i) {
-    paste(dat[i, c(var1, var2)], collapse = "-")
+    paste(dat[i, c(var1, var2)], collapse = "_&_")
   }, character(1L))
 }
 

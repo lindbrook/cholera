@@ -1,3 +1,8 @@
+### cholera 0.8.0.9214
+
+- use "_&_" as coordinate delimeter in pasteCoordsB().
+
+
 ### cholera 0.8.0.9213
 
 - amend nominal and latlong coordinates in stJamesWorkhouse().
