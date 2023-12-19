@@ -83,8 +83,8 @@ landmarkSquares <- function() {
 
 squareCenterB <- function(NS, EW, latlong = FALSE) {
   if (latlong) {
-    line.NS <- stats::lm(lat ~ lon, data = NS)
-    line.EW <- stats::lm(lat ~ lon, data = EW)
+    line.NS <- stats::lm(lat.proj ~ lon.proj, data = NS)
+    line.EW <- stats::lm(lat.proj ~ lon.proj, data = EW)
   } else {
     line.NS <- stats::lm(y.proj ~ x.proj, data = NS)
     line.EW <- stats::lm(y.proj ~ x.proj, data = EW)
