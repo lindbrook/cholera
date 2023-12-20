@@ -274,7 +274,7 @@ argyllHouse <- function() {
   SW <- roadSegEndpt(seg.id = "161-1", endpt.sel = 2L, latlong = TRUE)
   SE <- roadSegEndpt(seg.id = "161-1", endpt.sel = 1L, latlong = TRUE)
 
-  geodesics <- lapply(list(NW, NE, SW, SE), function(coords) {
+  geo.cartesian <- lapply(list(NW, NE, SW, SE), function(coords) {
     x.proj <- c(coords$lon, origin$lat)
     y.proj <- c(origin$lon, coords$lat)
     m.lon <- geosphere::distGeo(y.proj, coords)
@@ -282,11 +282,11 @@ argyllHouse <- function() {
     data.frame(x = m.lon, y = m.lat)
   })
 
-  names(geodesics) <- c("NW", "NE", "SW", "SE")
-  NW <- geodesics$NW
-  NE <- geodesics$NE
-  SW <- geodesics$SW
-  SE <- geodesics$SE
+  names(geo.cartesian) <- c("NW", "NE", "SW", "SE")
+  NW <- geo.cartesian$NW
+  NE <- geo.cartesian$NE
+  SW <- geo.cartesian$SW
+  SE <- geo.cartesian$SE
   argyll <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
   vars <- c("lon", "lat")
   label.latlong <- meterLatLong(argyll, origin, topleft, bottomright)[, vars]
@@ -389,7 +389,7 @@ lionBrewery <- function() {
   SW <- roadSegEndpt(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
   SE <- roadSegEndpt(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
 
-  geodesics <- lapply(list(NW, NE, SW, SE), function(coords) {
+  geo.cartesian <- lapply(list(NW, NE, SW, SE), function(coords) {
     x.proj <- c(coords$lon, origin$lat)
     y.proj <- c(origin$lon, coords$lat)
     m.lon <- geosphere::distGeo(y.proj, coords)
@@ -397,11 +397,11 @@ lionBrewery <- function() {
     data.frame(x = m.lon, y = m.lat)
   })
 
-  names(geodesics) <- c("NW", "NE", "SW", "SE")
-  NW <- geodesics$NW
-  NE <- geodesics$NE
-  SW <- geodesics$SW
-  SE <- geodesics$SE
+  names(geo.cartesian) <- c("NW", "NE", "SW", "SE")
+  NW <- geo.cartesian$NW
+  NE <- geo.cartesian$NE
+  SW <- geo.cartesian$SW
+  SE <- geo.cartesian$SE
   lion <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
 
   vars <- c("lon", "lat")
@@ -581,7 +581,7 @@ modelLodgingHouses <- function() {
   SW <- roadSegEndpt(seg.id = "259-1", endpt.sel = 2L, latlong = TRUE)
   SE <- roadSegEndpt(seg.id = "259-1", endpt.sel = 1L, latlong = TRUE)
 
-  geodesics <- lapply(list(NW, NE, SW, SE), function(coords) {
+  geo.cartesian <- lapply(list(NW, NE, SW, SE), function(coords) {
     x.proj <- c(coords$lon, origin$lat)
     y.proj <- c(origin$lon, coords$lat)
     m.lon <- geosphere::distGeo(y.proj, coords)
@@ -589,11 +589,11 @@ modelLodgingHouses <- function() {
     data.frame(x = m.lon, y = m.lat)
   })
 
-  names(geodesics) <- c("NW", "NE", "SW", "SE")
-  NW <- geodesics$NW
-  NE <- geodesics$NE
-  SW <- geodesics$SW
-  SE <- geodesics$SE
+  names(geo.cartesian) <- c("NW", "NE", "SW", "SE")
+  NW <- geo.cartesian$NW
+  NE <- geo.cartesian$NE
+  SW <- geo.cartesian$SW
+  SE <- geo.cartesian$SE
 
   pt <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
 
@@ -624,7 +624,7 @@ modelLodgingHouses <- function() {
   mid.point <- sum(d1, d2) / 2 # arbitrarily use mid-point of block as address
   proportion <- mid.point / d1
 
-  geodesics <- lapply(list(seg1[1, ], seg1[2, ]), function(coords) {
+  geo.cartesian <- lapply(list(seg1[1, ], seg1[2, ]), function(coords) {
     x.proj <- c(coords$lon, origin$lat)
     y.proj <- c(origin$lon, coords$lat)
     m.lon <- geosphere::distGeo(y.proj, coords)
@@ -632,16 +632,16 @@ modelLodgingHouses <- function() {
     data.frame(x = m.lon, y = m.lat)
   })
 
-  geodesics <- do.call(rbind, geodesics)
-  seg.d <- stats::dist(geodesics)
+  geo.cartesian <- do.call(rbind, geo.cartesian)
+  seg.d <- stats::dist(geo.cartesian)
 
   h <- proportion * seg.d
-  theta <- roadTheta(geodesics)
+  theta <- roadTheta(geo.cartesian)
   delta.x <- h * cos(theta)
   delta.y <- h * sin(theta)
-  proj.geodesics <- data.frame(x = geodesics[2, ]$x - delta.x,
-                               y = geodesics[2, ]$y - delta.y)
-  proj.latlong <- meterLatLong(proj.geodesics, origin, topleft, bottomright)
+  proj.geo.cartesian <- data.frame(x = geo.cartesian[2, ]$x - delta.x,
+                                   y = geo.cartesian[2, ]$y - delta.y)
+  proj.latlong <- meterLatLong(proj.geo.cartesian, origin, topleft, bottomright)
 
   out <- data.frame(case = 1017L, road.segment = "245-1", label.nominal, proj,
     label.latlong, lon.proj = proj.latlong$lon, lat.proj = proj.latlong$lat)

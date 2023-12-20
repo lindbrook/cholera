@@ -1,3 +1,8 @@
+### cholera 0.8.0.9216
+
+- change geodesics to geo.cartesian in landmarkB functions.
+
+
 ### cholera 0.8.0.9215
 
 - amend pantheonBazaar() and stLukesChurch().
