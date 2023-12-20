@@ -1,14 +1,17 @@
 #' Landmark data.
 #'
 #' Nominal and orthogonal coordinates
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @noRd
 #' @note Uses road segments that enter square(s) as entry points.
 
-landmarkDataB <- function() {
+landmarkDataB <- function(multi.core = TRUE) {
+  cores <- multiCore(multi.core)
+
   ## squares ##
 
-  golden.square <- Squares("Golden Square")
-  soho.square <- Squares("Soho Square")
+  # golden.square <- Squares("Golden Square")
+  # soho.square <- Squares("Soho Square")
 
   ## other landmarks #
 
@@ -17,57 +20,74 @@ landmarkDataB <- function() {
   # https://www.british-history.ac.uk/survey-london/vols31-2/pt2/pp284-307#h3-0010
   # "frontages in both Argyll Street and Great Marlborough Street."
   # entrance on Argyll Street
-  argyll.house <- argyllHouse()
+  # argyll.house <- argyllHouse()
 
   # Craven Chapel #
   # Berwick Street
-  craven.chapel <- cravenChapel()
+  # craven.chapel <- cravenChapel()
 
   # Lion Brewery #
   # 50 Broad Street; Huggins Brewery (?)
-  lion.brewery <- lionBrewery()
+  # lion.brewery <- lionBrewery()
 
   # Marlborough Street Magistrates Court #
   # 19–21 Great Marlborough Street
   # 51°30′51.62″N 0°8′22.13″W
-  magistrates.court <- magistratesCourt()
+  # magistrates.court <- magistratesCourt()
 
   # Karl Marx #
   # 28 Dean Street, 174-1
   # cholera:::addressProportion("174-1", "Karl Marx") # 0.5000003
-  marx <- karlMarx()
+  # marx <- karlMarx()
 
   # Model Lodging Houses #
   # Hopkins Street "The Cholera in Berwick Street" by Rev. Henry Whitehead
   # segment IDs: "245-1"
   # Ingestre Buildings
   # New Street/Husband Street -> Ingestre Place (now)
-  model.lodging.houses <- modelLodgingHouses()
+  # model.lodging.houses <- modelLodgingHouses()
 
   # The Pantheon #
   # Today Marks & Spencers at 173 Oxford Street
   # placed at intersection of Oxford and Winsley
-  pantheon.bazaar <- pantheonBazaar()
+  # pantheon.bazaar <- pantheonBazaar()
 
   # St James Workhouse #
   # address set on Poland Street
-  st.james.workhouse <- stJamesWorkhouse()
+  # st.james.workhouse <- stJamesWorkhouse()
 
   # St Luke's Church #
   # Berwick Street, currently Kemp House across from Tyler's Court
-  st.lukes.church <- stLukesChurch()
+  # st.lukes.church <- stLukesChurch()
 
   # John Snow #
   # H: 18 Sackville Street, "508-1"
   # cholera:::addressProportion("508-1", "John Snow") # 0.4999993
-  snow <- johnSnow()
+  # snow <- johnSnow()
 
-  out <- rbind(golden.square, soho.square, argyll.house, craven.chapel,
-               lion.brewery, magistrates.court, marx, model.lodging.houses,
-               pantheon.bazaar, st.james.workhouse, st.lukes.church, snow)
+  # out <- rbind(golden.square, soho.square, argyll.house, craven.chapel,
+  #              lion.brewery, magistrates.court, marx, model.lodging.houses,
+  #              pantheon.bazaar, st.james.workhouse, st.lukes.church, snow)
+  # row.names(out) <- NULL
+  # out
 
-  row.names(out) <- NULL
-  out
+  sq.data <- lapply(list("Golden Square", "Soho Square"), Squares)
+
+  fns <- list(argyllHouse, 
+              cravenChapel,
+              lionBrewery,
+              magistratesCourt, 
+              karlMarx, 
+              modelLodgingHouses, 
+              pantheonBazaar, 
+              stJamesWorkhouse, 
+              stLukesChurch, 
+              johnSnow)
+
+  other.lndmrks <- parallel::mclapply(seq_along(fns), function(i) fns[[i]](), 
+    mc.cores = cores)
+
+  do.call(rbind, c(sq.data, other.lndmrks))
 }
 
 ## Square(s) Functions ##

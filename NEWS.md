@@ -1,3 +1,8 @@
+### cholera 0.8.0.9217
+
+- implement parallel version of landmarkDataB().
+
+
 ### cholera 0.8.0.9216
 
 - change geodesics to geo.cartesian in landmarkB functions.
