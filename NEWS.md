@@ -1,3 +1,8 @@
+### cholera 0.8.0.9218
+
+- rename coordinates in functions in landmarkDataB().
+
+
 ### cholera 0.8.0.9217
 
 - implement parallel version of landmarkDataB().
