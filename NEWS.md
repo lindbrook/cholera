@@ -1,3 +1,8 @@
+### cholera 0.8.0.9219
+
+- drop .proj suffix from coordinate names in Squares() and squareCenterB().
+
+
 ### cholera 0.8.0.9218
 
 - rename coordinates in functions in landmarkDataB().
