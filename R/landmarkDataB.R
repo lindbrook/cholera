@@ -103,11 +103,11 @@ landmarkSquares <- function() {
 
 squareCenterB <- function(NS, EW, latlong = FALSE) {
   if (latlong) {
-    line.NS <- stats::lm(lat.proj ~ lon.proj, data = NS)
-    line.EW <- stats::lm(lat.proj ~ lon.proj, data = EW)
+    line.NS <- stats::lm(lat ~ lon, data = NS)
+    line.EW <- stats::lm(lat ~ lon, data = EW)
   } else {
-    line.NS <- stats::lm(y.proj ~ x.proj, data = NS)
-    line.EW <- stats::lm(y.proj ~ x.proj, data = EW)
+    line.NS <- stats::lm(y ~ x, data = NS)
+    line.EW <- stats::lm(y ~ x, data = EW)
   }
 
   slope.delta <- stats::coef(line.NS)[2] - stats::coef(line.EW)[2]
@@ -233,7 +233,7 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
       case <- 1001L
     }
 
-    vars <- c("x.proj", "y.proj")
+    vars <- c("x", "y")
     NS <- sq[sel, vars]
     sel <- sq$name %in% paste0(paste0(nm, "-"), c("E", "W"))
     EW <- sq[sel, vars]
@@ -245,7 +245,7 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
       sel <- sq$name %in% paste0(paste0(nm, "-"), c("N", "S2"))
     }
 
-    vars <- c("lon.proj", "lat.proj")
+    vars <- c("lon", "lat")
     NS <- sq[sel, vars]
     sel <- sq$name %in% paste0(paste0(nm, "-"), c("E", "W"))
     EW <- sq[sel, vars]
