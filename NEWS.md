@@ -1,3 +1,8 @@
+### cholera 0.8.0.9222
+
+- provisionally use landmarksB and landmark.squaresB.
+
+
 ### cholera 0.8.0.9221
 
 - fix squareCenterB() output variable names.
