@@ -12,7 +12,7 @@ A data frame of landmark coordinates with 20 observationas and 11 variables.
     \item{\code{x}}{nominal x-coordinate}
     \item{\code{y}}{nominal y-coordinate}
     \item{\code{x.lab}}{label x-coordinate}
-    \item{\code{y.labl}}{label y-coordinate}
+    \item{\code{y.lab}}{label y-coordinate}
     \item{\code{lon}}{longitude}
     \item{\code{lat}}{latitude}
     \item{\code{lon.lab}}{label longitude}
