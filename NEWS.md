@@ -1,3 +1,8 @@
+### cholera 0.8.0.9221
+
+- fix squareCenterB() output variable names.
+
+
 ### cholera 0.8.0.9220
 
 - add landmarksB and landmark.squaresB data frames.
