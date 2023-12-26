@@ -73,22 +73,25 @@ landmarkDataB <- function(multi.core = TRUE) {
 
   sq.data <- lapply(list("Golden Square", "Soho Square"), Squares)
 
-  fns <- list(argyllHouse, 
+  fns <- list(argyllHouse,
               cravenChapel,
               lionBrewery,
-              magistratesCourt, 
-              karlMarx, 
-              modelLodgingHouses, 
-              pantheonBazaar, 
-              stJamesWorkhouse, 
-              stLukesChurch, 
+              magistratesCourt,
+              karlMarx,
+              modelLodgingHouses,
+              pantheonBazaar,
+              stJamesWorkhouse,
+              stLukesChurch,
               johnSnow)
 
-  other.lndmrks <- parallel::mclapply(seq_along(fns), function(i) fns[[i]](), 
+  other.lndmrks <- parallel::mclapply(seq_along(fns), function(i) fns[[i]](),
     mc.cores = cores)
 
   do.call(rbind, c(sq.data, other.lndmrks))
 }
+
+# landmarksB <- cholera:::landmarkDataB()
+# usethis::use_data(landmarksB, overwrite = TRUE)
 
 ## Square(s) Functions ##
 
@@ -98,8 +101,8 @@ landmarkSquares <- function() {
   rbind(golden, soho)
 }
 
-# landmark.squares <- landmarkSquares()
-# usethis::use_data(landmark.squares, overwrite = TRUE)
+# landmark.squaresB <- cholera:::landmarkSquares()
+# usethis::use_data(landmark.squaresB, overwrite = TRUE)
 
 squareCenterB <- function(NS, EW, latlong = FALSE) {
   if (latlong) {
@@ -254,14 +257,14 @@ Squares <- function(nm = "Golden Square", label.coord = FALSE) {
     out <- data.frame(case = case, coords.nominal, coords.latlong, name = nm)
 
   } else {
-    coords <- data.frame(road.segment = sq$id, 
-                         x = sq$x, 
+    coords <- data.frame(road.segment = sq$id,
+                         x = sq$x,
                          y = sq$y,
-                         x.lab = sq$x, 
-                         y.lab = sq$y, 
+                         x.lab = sq$x,
+                         y.lab = sq$y,
                          lon = sq$lon,
-                         lat = sq$lat, 
-                         lon.lab = sq$lon, 
+                         lat = sq$lat,
+                         lon.lab = sq$lon,
                          lat.lab = sq$lat,
                          name = sq$name)
 
@@ -321,14 +324,14 @@ argyllHouse <- function() {
   proj <- segmentTrigonometryAddress(seg.id = seg.id, delta = "neg")
   geo <- segmentTrigonometryAddress(seg.id = seg.id, delta = "neg",
     latlong = TRUE)
-  data.frame(case = 1012L, 
-             road.segment = seg.id, 
+  data.frame(case = 1012L,
+             road.segment = seg.id,
              proj,
-             label.nominal, 
+             label.nominal,
              geo,
              lon.lab = label.latlong$lon,
              lat.lab = label.latlong$lat,
-             name = "Argyll House", 
+             name = "Argyll House",
              row.names = NULL)
 }
 
@@ -392,16 +395,16 @@ cravenChapel <- function() {
 
   label.latlong <- meterLatLong(proj.label, origin, topleft, bottomright)
 
-  data.frame(case = 1013L, 
-             road.segment = seg.id, 
-             x = x.proj, 
+  data.frame(case = 1013L,
+             road.segment = seg.id,
+             x = x.proj,
              y = y.proj,
-             x.lab = x.label, 
+             x.lab = x.label,
              y.lab = y.label,
              proj.latlong,
              lon.lab = label.latlong$lon,
-             lat.lab = label.latlong$lat, 
-             name = "Craven Chapel", 
+             lat.lab = label.latlong$lat,
+             name = "Craven Chapel",
              row.names = NULL)
 }
 
@@ -450,15 +453,15 @@ lionBrewery <- function() {
   proj.latlong <- segmentTrigonometryAddress(seg.id = seg.id, delta = "pos",
     latlong = TRUE)
 
-  data.frame(case = 1014L, 
-             road.segment = seg.id, 
+  data.frame(case = 1014L,
+             road.segment = seg.id,
              proj.nominal,
              x.lab = label.nominal$x,
-             y.lab = label.nominal$y, 
+             y.lab = label.nominal$y,
              proj.latlong,
-             lon.lab = label.latlong$lon, 
+             lon.lab = label.latlong$lon,
              lat.lab = label.latlong$lat,
-             name = "Lion Brewery", 
+             name = "Lion Brewery",
              row.names = NULL)
 }
 
@@ -559,15 +562,15 @@ magistratesCourt <- function() {
 
   label.latlong <- meterLatLong(label.cartesian, origin, topleft, bottomright)
 
-  data.frame(case = 1015L, 
-             road.segment = seg.id, 
+  data.frame(case = 1015L,
+             road.segment = seg.id,
              proj.nominal,
-             x.lab = x.lab, 
+             x.lab = x.lab,
              y.lab = y.lab,
              proj.latlong,
              lon.lab = label.latlong$lon,
-             lat.lab = label.latlong$lat, 
-             name = "Magistrates Court", 
+             lat.lab = label.latlong$lat,
+             name = "Magistrates Court",
              row.names = NULL)
 }
 
@@ -576,15 +579,15 @@ karlMarx <- function() {
   proj.nominal <- segmentTrigonometryAddress(seg.id = seg.id, factor = 2L)
   proj.latlong <- segmentTrigonometryAddress(seg.id = seg.id, delta = "pos",
     latlong = TRUE)
-  data.frame(case = 1016L, 
-             road.segment = seg.id, 
+  data.frame(case = 1016L,
+             road.segment = seg.id,
              proj.nominal,
              x.lab = proj.nominal$x,
              y.lab = proj.nominal$y,
              proj.latlong,
-             lon.lab = proj.latlong$lon, 
+             lon.lab = proj.latlong$lon,
              lat.lab = proj.latlong$lat,
-             name = "Karl Marx", 
+             name = "Karl Marx",
              row.names = NULL)
 }
 
@@ -699,14 +702,14 @@ modelLodgingHouses <- function() {
                                    y = geo.cartesian[2, ]$y - delta.y)
   proj.latlong <- meterLatLong(proj.geo.cartesian, origin, topleft, bottomright)
 
-  data.frame(case = 1017L, 
-             road.segment = "245-1", 
+  data.frame(case = 1017L,
+             road.segment = "245-1",
              proj,
              x.lab = label.nominal$x,
-             y.lab = label.nominal$y, 
+             y.lab = label.nominal$y,
              proj.latlong[, c("lon", "lat")],
-             lon.lab = label.latlong$lon, 
-             lat.lab = label.latlong$lat, 
+             lon.lab = label.latlong$lon,
+             lat.lab = label.latlong$lat,
              name = "Model Lodging Houses",
              row.names = NULL)
 }
@@ -724,15 +727,15 @@ pantheonBazaar <- function() {
   proj.latlong <- rd.segs[rd.segs$name == st.nm, paste0(vars, 2)]
   names(proj.latlong) <- vars
 
-  data.frame(case = 1018L, 
-             road.segment = "73-1", 
+  data.frame(case = 1018L,
+             road.segment = "73-1",
              proj.nominal,
-             x.lab = proj.nominal$x, 
-             y.lab = proj.nominal$y, 
+             x.lab = proj.nominal$x,
+             y.lab = proj.nominal$y,
              proj.latlong,
-             lon.lab = proj.latlong$lon, 
+             lon.lab = proj.latlong$lon,
              lat.lab = proj.latlong$lat,
-             name = "The Pantheon", 
+             name = "The Pantheon",
              row.names = NULL)
 }
 
@@ -780,14 +783,14 @@ stJamesWorkhouse <- function() {
   label.latlong <- meterLatLong(geo.cartesian.lab, origin, topleft, bottomright)
 
   data.frame(case = 1019L,
-             road.segment = seg.id, 
+             road.segment = seg.id,
              workhouse.west,
-             x.lab = x.lab, 
+             x.lab = x.lab,
              y.lab = y.lab,
              workhouse.west.geo,
-             lon.lab = label.latlong$lon, 
+             lon.lab = label.latlong$lon,
              lat.lab = label.latlong$lat,
-             name = "St James Workhouse", 
+             name = "St James Workhouse",
              row.names = NULL)
 }
 
@@ -856,15 +859,15 @@ stLukesChurch <- function() {
   geo.cartesian <- data.frame(x = x.proj + delta$x, y = y.proj + delta$y)
   label.latlong <- meterLatLong(geo.cartesian, origin, topleft, bottomright)
 
-  data.frame(case = 1020L, 
-             road.segment = seg.id, 
+  data.frame(case = 1020L,
+             road.segment = seg.id,
              proj.nominal,
              x.lab = xy$x,
-             y.lab = xy$y, 
+             y.lab = xy$y,
              proj.latlong[, c("lon", "lat")],
              lon.lab = label.latlong$lon,
              lat.lab = label.latlong$lat,
-             name = "St Luke's Church", 
+             name = "St Luke's Church",
              row.names = NULL)
 }
 
@@ -872,15 +875,15 @@ johnSnow <- function() {
   seg.id <- "508-1"
   proj.nominal <- segmentTrigonometryAddress(seg.id = seg.id)
   proj.latlong <- segmentTrigonometryAddress(seg.id = seg.id, latlong = TRUE)
-  data.frame(case = 1021L, 
-             road.segment = seg.id, 
+  data.frame(case = 1021L,
+             road.segment = seg.id,
              proj.nominal,
-             x.lab = proj.nominal$x, 
-             y.lab = proj.nominal$y, 
+             x.lab = proj.nominal$x,
+             y.lab = proj.nominal$y,
              proj.latlong,
-             lon.lab = proj.latlong$lon, 
+             lon.lab = proj.latlong$lon,
              lat.lab = proj.latlong$lat,
-             name = "John Snow", 
+             name = "John Snow",
              row.names = NULL)
 }
 
