@@ -74,10 +74,6 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
 
       if (exists("ortho.land")) {
         land.tmp <- ortho.land[ortho.land$road.segment == s, ]
-        if (latlong) {
-          land.tmp[, vars] <- land.tmp[, paste0(vars, ".proj")]
-          land.tmp[, paste0(vars, ".proj")] <- NULL
-        }
       } else {
         land.tmp <- null.df
       }
@@ -295,7 +291,7 @@ orthoAddrC <- function(case.set = "observed", latlong = FALSE) {
 }
 
 orthoLandC <- function(latlong = FALSE) {
-  dat <- cholera::landmarks
+  dat <- cholera::landmarksB
   sel.xy <- grepl("x", names(dat)) | grepl("y", names(dat))
   sel.latlong <- grepl("lon", names(dat)) | grepl("lat", names(dat))
   if (latlong) out <- dat[, !sel.xy]
