@@ -74,10 +74,6 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
 
       if (exists("ortho.land")) {
         land.tmp <- ortho.land[ortho.land$road.segment == s, ]
-        if (latlong) {
-          land.tmp[, vars] <- land.tmp[, paste0(vars, ".proj")]
-          land.tmp[, paste0(vars, ".proj")] <- NULL
-        }
       } else {
         land.tmp <- null.df
       }
