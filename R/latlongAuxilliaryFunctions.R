@@ -404,15 +404,15 @@ validateDestinationCases <- function(vec) {
     if (is.numeric(x)) {
       name.chk <- FALSE
       number.chk <- abs(x) %in% cholera::fatalities$case |
-                    abs(x) %in% cholera::landmarks$case
+                    abs(x) %in% cholera::landmarksB$case
+
     } else if (is.character(x)) {
       tmp <- caseAndSpace(x)
-      name.chk <- tmp %in% cholera::landmarks$name |
-                  tmp %in% cholera::landmark.squares$name
-
+      name.chk <- tmp %in% cholera::landmarksB$name |
+                  tmp %in% cholera::landmark.squaresB$name
       if (suppressWarnings(!is.na(as.integer(tmp)))) {
          number.chk <- as.integer(tmp) %in% cholera::fatalities$case |
-                       as.integer(tmp) %in% cholera::landmarks$case
+                       as.integer(tmp) %in% cholera::landmarksB$case
       } else {
         number.chk <- FALSE
       }
@@ -436,9 +436,9 @@ validateDestinationCases <- function(vec) {
 
       dest.case <- dest.case[, c("case", "anchor")]
 
-      sel <- cholera::landmarks$case %in% vec
-      dest.land <- data.frame(case = cholera::landmarks[sel, ]$case,
-                              anchor = cholera::landmarks[sel, ]$case)
+      sel <- cholera::landmarksB$case %in% vec
+      dest.land <- data.frame(case = cholera::landmarksB[sel, ]$case,
+                              anchor = cholera::landmarksB[sel, ]$case)
 
       if (nrow(dest.case) > 0 & nrow(dest.land) > 0) {
         out <- rbind(dest.case, dest.land)
@@ -453,12 +453,12 @@ validateDestinationCases <- function(vec) {
       audit <- lapply(vec, function(x) {
         if (suppressWarnings(!is.na(as.integer(x)))) {
           number.chk <- as.integer(x) %in% cholera::fatalities$case |
-                        as.integer(x) %in% cholera::landmarks$case
+                        as.integer(x) %in% cholera::landmarksB$case
           name.chk <- FALSE
         } else if (is.character(x)) {
           tmp <- caseAndSpace(x)
-          name.chk <- tmp %in% cholera::landmarks$name |
-                      tmp %in% cholera::landmark.squares$name
+          name.chk <- tmp %in% cholera::landmarksB$name |
+                      tmp %in% cholera::landmark.squaresB$name
           number.chk <- FALSE
         }
         list(name.chk = name.chk, number.chk = number.chk)
@@ -479,10 +479,10 @@ validateDestinationCases <- function(vec) {
         vec.chr <- vapply(vec[chr.sel], caseAndSpace, character(1L))
 
         sel <- unlist(lapply(vec.chr, function(x) {
-          grep(x, cholera::landmarks$name)
+          grep(x, cholera::landmarksB$name)
         }))
 
-        dest.chr <- data.frame(case = cholera::landmarks[sel, ]$case)
+        dest.chr <- data.frame(case = cholera::landmarksB[sel, ]$case)
         dest.chr$anchor <- dest.chr$case
         out <- rbind(dest.num, dest.chr)
       } else {
@@ -499,12 +499,12 @@ validateDestinationCases <- function(vec) {
       audit <- lapply(candidate, function(x) {
         if (suppressWarnings(!is.na(as.integer(x)))) {
           number.chk <- as.integer(x) %in% cholera::fatalities$case |
-                        as.integer(x) %in% cholera::landmarks$case
+                        as.integer(x) %in% cholera::landmarksB$case
           name.chk <- FALSE
         } else if (is.character(x)) {
           tmp <- caseAndSpace(x)
-          name.chk <- tmp %in% cholera::landmarks$name |
-                      tmp %in% cholera::landmark.squares$name
+          name.chk <- tmp %in% cholera::landmarksB$name |
+                      tmp %in% cholera::landmark.squaresB$name
           number.chk <- FALSE
         }
         list(name.chk = name.chk, number.chk = number.chk)
@@ -526,26 +526,26 @@ validateDestinationCases <- function(vec) {
 
       if (all(sq.sel)) {
         sel <- unlist(lapply(vec.chr, function(x) {
-          grep(x, cholera::landmarks$name)
+          grep(x, cholera::landmarksB$name)
         }))
 
-        dest.chr <- data.frame(case = cholera::landmarks[sel, ]$case)
+        dest.chr <- data.frame(case = cholera::landmarksB[sel, ]$case)
 
       } else if (any(sq.sel)) {
         sq.sel <- unlist(lapply(vec.chr[sq.sel], function(x) {
-          grep(x, cholera::landmarks$name)
+          grep(x, cholera::landmarksB$name)
         }))
 
         other.sel <- unlist(lapply(vec.chr[!sq.sel], function(x) {
-          grep(x, cholera::landmarks$name)
+          grep(x, cholera::landmarksB$name)
         }))
 
         sel <- c(sq.sel, other.sel)
-        dest.chr <- data.frame(case = cholera::landmarks[sel, ]$case)
+        dest.chr <- data.frame(case = cholera::landmarksB[sel, ]$case)
 
       } else if (all(!sq.sel)) {
-        sel <- grep(vec.chr, cholera::landmarks$name)
-        dest.chr <- data.frame(case = cholera::landmarks[sel, ]$case)
+        sel <- grep(vec.chr, cholera::landmarksB$name)
+        dest.chr <- data.frame(case = cholera::landmarksB[sel, ]$case)
       }
 
       dest.chr$anchor <- dest.chr$case
@@ -563,12 +563,12 @@ validateDestinationCases <- function(vec) {
           neg.candidate <- cholera::anchor.case[sel, ]$case
           dest.case <- data.frame(case = neg.candidate, anchor = dest.num)
         }
-      } else if (any(abs(candidate) %in% cholera::landmarks$case)) {
+      } else if (any(abs(candidate) %in% cholera::landmarksB$case)) {
         if (all(candidate > 0)) {
           dest.land <- data.frame(case = candidate, anchor = candidate)
         } else if (all(candidate < 0)) {
-          sel <- !cholera::landmarks$case %in% abs(candidate)
-          dest.num <- cholera::landmarks[sel, ]$case
+          sel <- !cholera::landmarksB$case %in% abs(candidate)
+          dest.num <- cholera::landmarksB[sel, ]$case
           dest.land <- data.frame(case = dest.num, anchor = dest.num)
         }
       }
