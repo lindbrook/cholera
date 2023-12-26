@@ -118,7 +118,7 @@ squareCenterB <- function(NS, EW, latlong = FALSE) {
   x.val <- int.delta / slope.delta
   y.val <- stats::coef(line.EW)[2] * x.val + stats::coef(line.EW)[1]
 
-  out <- data.frame(x.lab = x.val, y.lab = y.val, row.names = NULL)
+  out <- data.frame(x = x.val, y = y.val, row.names = NULL)
   if (latlong) names(out) <- c("lon", "lat")
   out
 }
