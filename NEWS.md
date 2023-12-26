@@ -1,3 +1,9 @@
+### cholera 0.8.0.9223
+
+- restore nodeData().
+- fix typo for landmarksB documentation
+
+
 ### cholera 0.8.0.9222
 
 - provisionally use landmarksB and landmark.squaresB.
