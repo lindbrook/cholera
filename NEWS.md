@@ -1,3 +1,8 @@
+### cholera 0.8.0.9220
+
+- add landmarksB and landmark.squaresB data frames.
+
+
 ### cholera 0.8.0.9219
 
 - drop .proj suffix from coordinate names in Squares() and squareCenterB().
