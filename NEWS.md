@@ -1,3 +1,8 @@
+### cholera 0.8.0.9224
+
+- accommodate landmark labels in plot.walking_path_B().
+
+
 ### cholera 0.8.0.9223
 
 - restore nodeData().
