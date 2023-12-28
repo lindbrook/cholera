@@ -1,3 +1,8 @@
+### cholera 0.8.0.9225
+
+- clean modelLodgingHouses().
+
+
 ### cholera 0.8.0.9224
 
 - accommodate landmark labels in plot.walking_path_B().
