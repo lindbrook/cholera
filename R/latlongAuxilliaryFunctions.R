@@ -5,16 +5,16 @@
 
 caseNumber <- function(x) as.numeric(names(x))
 
-#' Decompose geodesic distances into horizontal and vertical components.
+#' Decompose geo-cartesian distances into horizontal and vertical components.
 #'
-#' Compute geodesic distance from origin to pump and decompose result into
+#' Compute geo-cartesian distance from origin to pump and translate into
 #` horizontal (East-West) and vertical (North-South) components.
 #' @param dat Object. Data.
 #' @param case.address Logical. Use fatalities.address$anchor
 #' @importFrom geosphere distGeo
 #' @noRd
 
-geodesicMeters <- function(dat = cholera::pumps, case.address = FALSE) {
+geoCartesian <- function(dat = cholera::pumps, case.address = FALSE) {
   origin <- data.frame(lon = min(cholera::roads$lon),
                        lat = min(cholera::roads$lat))
   if (case.address) {

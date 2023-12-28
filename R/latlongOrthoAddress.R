@@ -8,11 +8,11 @@
 latlongOrthoAddress <- function(multi.core = TRUE, radius = 60) {
   cores <- multiCore(multi.core)
 
-  geo.addr <- geodesicMeters(dat = cholera::fatalities.address,
+  geo.addr <- geoCartesian(dat = cholera::fatalities.address,
     case.address = TRUE)
 
   rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
-  geo.rd <- data.frame(street = rd$street, geodesicMeters(rd))
+  geo.rd <- data.frame(street = rd$street, geoCartesian(rd))
 
   geo.rd.segs <- lapply(unique(geo.rd$street), function(st) {
     dat <- geo.rd[geo.rd$street == st, ]

@@ -118,9 +118,9 @@ latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
     pump.id <- pump.data$id
   }
 
-  # compute geodesic distance from origin to pump and decompose result into
+  # compute geo-cartesian distance from origin to pump and decompose result into
   # horizontal (East-West) and vertical (North-South) components.
-  pump.meters <- geodesicMeters(pump.data)[pump.id, ]
+  pump.meters <- geoCartesian(pump.data)[pump.id, ]
 
   # Voronoi cells and Delaunay triangles #
 
