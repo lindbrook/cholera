@@ -1,3 +1,9 @@
+### cholera 0.8.0.9227
+
+- fix coordinates in stLukesChurch().
+- update landmarksB.
+
+
 ### cholera 0.8.0.9226
 
 - change geodesic to geo.cartesian in segmentTrigonometryAddress().

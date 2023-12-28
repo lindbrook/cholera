@@ -812,12 +812,13 @@ stLukesChurch <- function() {
         stats::coef(taylor.ols)["(Intercept)"]
 
   x.proj <- bs / xs
-  y.proj <- stats::coef(hopkins.ols)["x"] * proj.nominal$x +
+  y.proj <- stats::coef(hopkins.ols)["x"] * x.proj +
             stats::coef(hopkins.ols)["(Intercept)"]
 
   transversal <- rbind(proj.nominal, data.frame(x = x.proj, y = y.proj))
   delta <- trignometricDelta(transversal)
-  xy <- data.frame(x = x.proj + delta$x, y = y.proj + delta$y)
+  label.nominal <- data.frame(x.lab = x.proj + delta$x,
+                              y.lab = y.proj + delta$y)
 
   # latlong label
 
@@ -844,22 +845,23 @@ stLukesChurch <- function() {
         stats::coef(taylor.ols)["(Intercept)"]
 
   x.proj <- bs / xs
-  y.proj <- stats::coef(hopkins.ols)["x"] * proj.nominal$x +
+  y.proj <- stats::coef(hopkins.ols)["x"] * x.proj +
             stats::coef(hopkins.ols)["(Intercept)"]
 
-  transversal <- rbind(proj.nominal, data.frame(x = x.proj, y = y.proj))
+  transversal <- rbind(taylor.data[1, ], data.frame(x = x.proj, y = y.proj))
   delta <- trignometricDelta(transversal)
   geo.cartesian <- data.frame(x = x.proj + delta$x, y = y.proj + delta$y)
   label.latlong <- meterLatLong(geo.cartesian, origin, topleft, bottomright)
 
+  vars <- c("lon", "lat")
+  label.latlong <- stats::setNames(label.latlong[, vars],  paste0(vars, ".lab"))
+
   data.frame(case = 1020L,
              road.segment = seg.id,
              proj.nominal,
-             x.lab = xy$x,
-             y.lab = xy$y,
-             proj.latlong[, c("lon", "lat")],
-             lon.lab = label.latlong$lon,
-             lat.lab = label.latlong$lat,
+             label.nominal,
+             proj.latlong,
+             label.latlong,
              name = "St Luke's Church",
              row.names = NULL)
 }
