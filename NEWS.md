@@ -1,3 +1,8 @@
+### cholera 0.8.0.9226
+
+- change geodesic to geo.cartesian in segmentTrigonometryAddress().
+
+
 ### cholera 0.8.0.9225
 
 - clean modelLodgingHouses().
