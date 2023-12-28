@@ -1,3 +1,8 @@
+### cholera 0.8.0.9228
+
+- rename geodesicMeters() to geoCartesian().
+
+
 ### cholera 0.8.0.9227
 
 - fix coordinates in stLukesChurch().

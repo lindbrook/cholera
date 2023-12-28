@@ -17,7 +17,7 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
   }
 
   rd <- cholera::roads[!cholera::roads$street %in% cholera::border, ]
-  cart.rd <- data.frame(street = rd$street, geodesicMeters(rd))
+  cart.rd <- data.frame(street = rd$street, geoCartesian(rd))
 
   cart.rd.segs <- lapply(unique(cart.rd$street), function(st) {
     dat <- cart.rd[cart.rd$street == st, ]
@@ -120,7 +120,7 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
 
   coords <- do.call(rbind, orthogonal.projection)
 
-  # translate from geodesic to latlong #
+  # translate from geo-cartesian to latlong #
   origin <- data.frame(lon = min(cholera::roads$lon),
                        lat = min(cholera::roads$lat))
   topleft <- data.frame(lon = min(cholera::roads$lon),
