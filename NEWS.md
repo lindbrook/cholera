@@ -1,3 +1,8 @@
+### cholera 0.8.0.9229
+
+- move segmentIntersection() to landmarkDataB.R.
+
+
 ### cholera 0.8.0.9228
 
 - rename geodesicMeters() to geoCartesian().
