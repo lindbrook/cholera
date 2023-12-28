@@ -1009,7 +1009,7 @@ segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
   seg.data <- rbind(alpha, omega)
 
   if (latlong) {
-    geodesic <- do.call(rbind, lapply(1:2, function(i) {
+    geo.cartesian <- do.call(rbind, lapply(1:2, function(i) {
       tmp <- seg.data[i, ]
       x.proj <- c(tmp$lon, origin$lat)
       y.proj <- c(origin$lon, tmp$lat)
@@ -1017,7 +1017,7 @@ segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
       m.lat <- geosphere::distGeo(x.proj, tmp)
       data.frame(pt.id = i, x = m.lon, y = m.lat)
     }))
-    seg.data <- geodesic[, vars]
+    seg.data <- geo.cartesian[, vars]
   }
 
   h <- c(stats::dist(seg.data)) / factor
