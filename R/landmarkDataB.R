@@ -659,16 +659,9 @@ modelLodgingHouses <- function() {
   vars <- c("lon", "lat")
   label.latlong <- meterLatLong(pt, origin, topleft, bottomright)[, vars]
 
-  x.proj <- c(label.latlong$lon, origin$lat)
-  y.proj <- c(origin$lon, label.latlong$lat)
-  m.lon <- geosphere::distGeo(y.proj, label.latlong)
-  m.lat <- geosphere::distGeo(x.proj, label.latlong)
-  label.geodesic <- data.frame(x = m.lon, y = m.lat)
-
   ## latlong address (proj) ##
   rd.segs <- roadSegments(latlong = TRUE)
   hopkins <- rd.segs[rd.segs$id %in% c("245-1", "245-2"), ]
-  vars <- c("lon", "lat")
 
   sel <- hopkins$id == "245-1"
   seg1 <- rbind(stats::setNames(hopkins[sel, paste0(vars, 1)], vars),
@@ -707,7 +700,7 @@ modelLodgingHouses <- function() {
              proj,
              x.lab = label.nominal$x,
              y.lab = label.nominal$y,
-             proj.latlong[, c("lon", "lat")],
+             proj.latlong[, vars],
              lon.lab = label.latlong$lon,
              lat.lab = label.latlong$lat,
              name = "Model Lodging Houses",
