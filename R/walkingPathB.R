@@ -549,14 +549,12 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
 
   if (is.logical(zoom)) {
     if (zoom) {
+      padding <- ifelse(latlong, 0.00005, 0.1)
       if (path.data$dest.anchor >= 1000L) {
         land.tmp <- land[land$case == path.data$dest.anchor, ]
         if (land.tmp[, ew] == land.tmp[, paste0(ew, ".lab")]) {
           label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
           names(label.dat) <- vars
-          padding <- ifelse(latlong, 0.00026, 0.1)
-          xlim <- c(min(dat[, ew]) - padding, max(dat[, ew]) + padding)
-          ylim <- c(min(dat[, ns]) - padding, max(dat[, ns]) + padding)
         } else {
           if (grepl("Square", land.tmp$name)) {
             sel <- cholera::landmark.squaresB$name == path.data$dest.name
@@ -565,17 +563,17 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
             label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
             names(label.dat) <- vars
           }
-          label.dat$id <- nrow(dat) + 1
-          dat2 <- rbind(dat, label.dat)
-          padding <- ifelse(latlong, 0.00026, 0.1)
-          xlim <- c(min(dat2[, ew]) - padding, max(dat2[, ew]) + padding)
-          ylim <- c(min(dat2[, ns]) - padding, max(dat2[, ns]) + padding)
         }
+        map.data <- rbind(dat[, vars], label.dat)
       } else {
-        map.data <- rbind(frame, rd)
-        xlim <- range(map.data[, ew])
-        ylim <- range(map.data[, ns])
+        map.data <- dat[, vars]
       }
+      xlim <- c(min(map.data[, ew]) - padding, max(map.data[, ew]) + padding)
+      ylim <- c(min(map.data[, ns]) - padding, max(map.data[, ns]) + padding)
+    } else {
+      map.data <- rbind(frame, rd)
+      xlim <- range(map.data[, ew])
+      ylim <- range(map.data[, ns])
     }
   } else if (is.numeric(zoom)) {
     if (zoom >= 0) {

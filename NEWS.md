@@ -1,3 +1,8 @@
+### cholera 0.8.0.9230
+
+- fix zoom for non-landmarks and tweak zoom padding for latlong = TRUE.
+
+
 ### cholera 0.8.0.9229
 
 - move segmentIntersection() to landmarkDataB.R.
