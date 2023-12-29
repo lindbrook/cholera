@@ -6,15 +6,12 @@
 #' @param embed.landmarks Logical. Embed landmarks into road network.
 #' @param embed.pumps Logical. Embed pumps into road network.
 #' @param latlong Logical. Use estimated longitude and latitude.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @importFrom geosphere distGeo
 #' @noRd
 
 embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
-  embed.landmarks = TRUE, embed.pumps = TRUE, latlong = FALSE,
-  multi.core = TRUE) {
+  embed.landmarks = TRUE, embed.pumps = TRUE, latlong = FALSE) {
 
-  cores <- multiCore(multi.core)
   road.data <- roadSegments(latlong = latlong)
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
@@ -62,7 +59,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
     vars2 <- c(vars, "case", "land", "pump")
     null.df <- stats::setNames(data.frame(matrix(nrow = 0, ncol = 5)), vars2)
 
-    embeds <- parallel::mclapply(obs.segs, function(s) {
+    embeds <- lapply(obs.segs, function(s) {
       rd.tmp <- road.data[road.data$id == s, ]
       endpts <- endPoints(rd.tmp, vars, latlong = latlong)
 
@@ -145,7 +142,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
       }
 
       list(edges = edges, nodes = nodes)
-    }, mc.cores = cores)
+    })
 
     no_embeds$id2 <- paste0(no_embeds$id, "a")
 
