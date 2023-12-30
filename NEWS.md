@@ -1,3 +1,8 @@
+### cholera 0.8.0.9232
+
+- remove parallel code from neighborhoodDataB().
+
+
 ### cholera 0.8.0.9231
 
 - remove parallel implementation of embedNodes().

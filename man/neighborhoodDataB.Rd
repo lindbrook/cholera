@@ -6,7 +6,7 @@
 \usage{
 neighborhoodDataB(vestry = FALSE, case.set = "observed",
   embed.addr = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
-  latlong = FALSE, multi.core = TRUE)
+  latlong = FALSE)
 }
 \arguments{
 \item{vestry}{Logical. Use Vestry Report pump data.}
@@ -20,8 +20,6 @@ neighborhoodDataB(vestry = FALSE, case.set = "observed",
 \item{embed.pumps}{Logical. Embed pumps into road network.}
 
 \item{latlong}{Logical. Use estimated longitude and latitude.}
-
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
 \value{
 An R list of nodes, edges and an 'igraph' network graph.

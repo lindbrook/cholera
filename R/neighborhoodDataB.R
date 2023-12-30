@@ -7,17 +7,16 @@
 #' @param embed.landmarks Logical. Embed landmarks into road network.
 #' @param embed.pumps Logical. Embed pumps into road network.
 #' @param latlong Logical. Use estimated longitude and latitude.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
 neighborhoodDataB <- function(vestry = FALSE, case.set = "observed",
   embed.addr = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE, 
-  latlong = FALSE, multi.core = TRUE) {
+  latlong = FALSE) {
 
   args <- list(embed.addr = embed.addr, embed.landmarks = embed.landmarks,
     embed.pumps = embed.pumps, vestry = vestry, case.set = case.set,
-    latlong = latlong, multi.core = multiCore(multi.core))
+    latlong = latlong)
 
   node.data <- do.call("embedNodes", args)
   nodes <- node.data$nodes
