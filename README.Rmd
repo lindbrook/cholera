@@ -152,8 +152,8 @@ snowMap(latlong = TRUE)
 ```
 
 ```{r latlong_walking_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%", fig.show = "hold"}
-plot(latlongWalkingPath())
-plot(walkingPath())  # Dodson and Tobler native scale for comparison
+plot(walkingPathB(latlong = TRUE))
+plot(walkingPathB())  # Dodson and Tobler native scale for comparison
 ```
 
 ```{r latlong_euclidean_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%", fig.show = "hold"}

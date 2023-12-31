@@ -1,3 +1,8 @@
+### cholera 0.8.0.9233
+
+- use walkingPathB() in README.
+
+
 ### cholera 0.8.0.9232
 
 - remove parallel code from neighborhoodDataB().
