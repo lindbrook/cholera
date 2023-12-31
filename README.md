@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9233-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9234-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -344,9 +344,8 @@ and three apparently misplaced case in Dodson and Tobler’s data.
 
 [Clifford Street missing
 segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md)
-describes what I believe is far Western part (segment) of Clifford
-Street is missing from Dodson and Tobler’s (1992) digitization of Snow’s
-map.
+discusses the missing segment at the far Western end of Clifford Street
+in Dodson and Tobler’s (1992) digitization of Snow’s map.
 
 [computing street
 addresses](https://github.com/lindbrook/cholera/blob/master/docs/notes/unstacking.bars.notes.md)
