@@ -344,7 +344,7 @@ and three apparently misplaced case in Dodson and Tobler’s data.
 
 [Clifford Street missing
 segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md)
-discusses the missing segment at the far Western end of Clifford Street
+discusses the missing segment at the far Eastern end of Clifford Street
 in Dodson and Tobler’s (1992) digitization of Snow’s map.
 
 [computing street

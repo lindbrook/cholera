@@ -1,10 +1,10 @@
 Clifford Street missing segment
 ================
 Peter Li
-2023-05-08
+2023-12-31
 
 With ‘cholera’ v.0.8.0.9017, there is a provisional support for an
-amendment to Clifford Street. I believe that the far West segment
+amendment to Clifford Street. I believe that the far Eastern segment
 between Old Marlborough Street and Saville Row is missing from Dodson
 and Tobler’s digitization.
 

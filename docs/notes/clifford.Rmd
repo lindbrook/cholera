@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(cholera)
 ```
 
-With 'cholera' v.0.8.0.9017, there is a provisional support for an amendment to Clifford Street. I believe that the far West segment between Old Marlborough Street and Saville Row is missing from Dodson and Tobler's digitization.
+With 'cholera' v.0.8.0.9017, there is a provisional support for an amendment to Clifford Street. I believe that the far Eastern segment between Old Marlborough Street and Saville Row is missing from Dodson and Tobler's digitization.
 
 The graphic below shows Clifford Street from the map Snow used in his work (Cheffin's):
 
