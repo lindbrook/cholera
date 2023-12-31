@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9232-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9233-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -254,8 +254,8 @@ snowMap(latlong = TRUE)
 <img src="man/figures/README-latlong-1.png" width="50%" />
 
 ``` r
-plot(latlongWalkingPath())
-plot(walkingPath())  # Dodson and Tobler native scale for comparison
+plot(walkingPathB(latlong = TRUE))
+plot(walkingPathB())  # Dodson and Tobler native scale for comparison
 ```
 
 <img src="man/figures/README-latlong_walking_path-1.png" width="50%" /><img src="man/figures/README-latlong_walking_path-2.png" width="50%" />
