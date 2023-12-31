@@ -1,3 +1,8 @@
+### cholera 0.8.0.9234
+
+- copyedit Clifford Street missing segment description in README.
+
+
 ### cholera 0.8.0.9233
 
 - use walkingPathB() in README.
