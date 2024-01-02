@@ -1,3 +1,8 @@
+### cholera 0.8.0.9237
+
+- change numeric zoom to a factor >= 0 in plot.walking_path_B().
+
+
 ### cholera 0.8.0.9236
 
 - increase default padding for plot.walking_path_B().
