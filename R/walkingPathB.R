@@ -548,7 +548,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
 
   if (is.logical(zoom)) {
     if (zoom) {
-      padding <- ifelse(latlong, 0.00005, 0.1)
+      padding <- ifelse(latlong, 0.000125, 0.25)
       if (path.data$dest.anchor >= 1000L) {
         land.tmp <- land[land$case == path.data$dest.anchor, ]
         if (land.tmp[, ew] == land.tmp[, paste0(ew, ".lab")]) {
