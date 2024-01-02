@@ -1,3 +1,9 @@
+### cholera 0.8.0.9235
+
+- remove multi.core in neighborhoodDataB() for latlongNearestPump() and 
+  walkingPathB().
+
+
 ### cholera 0.8.0.9234
 
 - copyedit Clifford Street missing segment description in README.

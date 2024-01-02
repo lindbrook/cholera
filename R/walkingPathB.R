@@ -86,8 +86,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
     }
   }
 
-  network.data <- neighborhoodDataB(vestry = vestry, latlong = latlong,
-    multi.core = cores)
+  network.data <- neighborhoodDataB(vestry = vestry, latlong = latlong)
   edges <- network.data$edges
   g <- network.data$g
   nodes <- network.data$nodes
