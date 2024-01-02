@@ -1,3 +1,8 @@
+### cholera 0.8.0.9236
+
+- increase default padding for plot.walking_path_B().
+
+
 ### cholera 0.8.0.9235
 
 - remove multi.core in neighborhoodDataB() for latlongNearestPump() and 
