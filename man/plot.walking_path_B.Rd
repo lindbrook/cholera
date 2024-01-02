@@ -11,7 +11,7 @@
 \arguments{
 \item{x}{An object of class "latlong_walking_path" created by latlongWalkingPath().}
 
-\item{zoom}{Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.}
+\item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. A value of 1 equals zoom = TRUE.}
 
 \item{long.title}{Logical. Tile with names.}
 

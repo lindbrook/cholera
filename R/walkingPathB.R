@@ -485,7 +485,7 @@ walkingPathB <- function(origin = 1, destination = NULL,
 #' Plot the walking path between selected cases and/or pumps.
 #'
 #' @param x An object of class "latlong_walking_path" created by latlongWalkingPath().
-#' @param zoom Logical or Numeric. A numeric value >= 0 that controls the degree of zoom.
+#' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. A value of 1 equals zoom = TRUE.
 #' @param long.title Logical. Tile with names.
 #' @param mileposts Logical. Plot mile/time posts.
 #' @param milepost.unit Character. "distance" or "time".
@@ -545,10 +545,10 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
   }
 
   vars <- c(ew, ns)
+  padding <- ifelse(latlong, 0.000125, 0.25)
 
   if (is.logical(zoom)) {
     if (zoom) {
-      padding <- ifelse(latlong, 0.000125, 0.25)
       if (path.data$dest.anchor >= 1000L) {
         land.tmp <- land[land$case == path.data$dest.anchor, ]
         if (land.tmp[, ew] == land.tmp[, paste0(ew, ".lab")]) {
@@ -576,8 +576,10 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
     }
   } else if (is.numeric(zoom)) {
     if (zoom >= 0) {
-      xlim <- c(min(dat[, ew]) - zoom, max(dat[, ew]) + zoom)
-      ylim <- c(min(dat[, ns]) - zoom, max(dat[, ns]) + zoom)
+      xlim <- c(min(dat[, ew]) - zoom * (padding),
+                max(dat[, ew]) + zoom * (padding))
+      ylim <- c(min(dat[, ns]) - zoom * (padding),
+                max(dat[, ns]) + zoom * (padding))
     } else stop("If numeric, zoom must be >= 0.")
   } else stop("zoom must either be logical or numeric.")
 
