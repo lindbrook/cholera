@@ -673,10 +673,10 @@ modelLodgingHouses <- function() {
 
   d1 <- geosphere::distGeo(seg1[1, ], seg1[2, ])
   d2 <- geosphere::distGeo(seg2[1, ], seg2[2, ])
-  mid.point <- sum(d1, d2) / 2 # arbitrarily use mid-point of block as address
-  proportion <- mid.point / d1
+  # mid.point <- sum(d1, d2) / 2 # arbitrarily use mid-point of block as address
+  # proportion <- mid.point / d1
 
-  geo.cartesian <- lapply(list(seg1[1, ], seg1[2, ]), function(coords) {
+  geo.cartesian1 <- lapply(list(seg1[1, ], seg1[2, ]), function(coords) {
     x.proj <- c(coords$lon, origin$lat)
     y.proj <- c(origin$lon, coords$lat)
     m.lon <- geosphere::distGeo(y.proj, coords)
@@ -684,15 +684,24 @@ modelLodgingHouses <- function() {
     data.frame(x = m.lon, y = m.lat)
   })
 
-  geo.cartesian <- do.call(rbind, geo.cartesian)
-  seg.d <- stats::dist(geo.cartesian)
+  geo.cartesian2 <- lapply(list(seg2[1, ], seg2[2, ]), function(coords) {
+    x.proj <- c(coords$lon, origin$lat)
+    y.proj <- c(origin$lon, coords$lat)
+    m.lon <- geosphere::distGeo(y.proj, coords)
+    m.lat <- geosphere::distGeo(x.proj, coords)
+    data.frame(x = m.lon, y = m.lat)
+  })
 
-  h <- proportion * seg.d
-  theta <- roadTheta(geo.cartesian)
+  geo.cartesian1 <- do.call(rbind, geo.cartesian1)
+  geo.cartesian2 <- do.call(rbind, geo.cartesian2)
+  seg.d <- sum(stats::dist(geo.cartesian1), stats::dist(geo.cartesian2))
+
+  h <- seg.d / 2 # arbitrarily use mid-point of block as address
+  theta <- roadTheta(geo.cartesian1) # mid-point on geo.cartesian1 (i.e., seg1)
   delta.x <- h * cos(theta)
   delta.y <- h * sin(theta)
-  proj.geo.cartesian <- data.frame(x = geo.cartesian[2, ]$x - delta.x,
-                                   y = geo.cartesian[2, ]$y - delta.y)
+  proj.geo.cartesian <- data.frame(x = geo.cartesian1[1, ]$x + delta.x,
+                                   y = geo.cartesian1[1, ]$y + delta.y)
   proj.latlong <- meterLatLong(proj.geo.cartesian, origin, topleft, bottomright)
 
   data.frame(case = 1017L,
