@@ -26,6 +26,17 @@ walkingPathB <- function(origin = 1, destination = NULL,
       call. = FALSE)
   }
 
+  if (is.character(destination)) {
+    destination <- caseAndSpace(destination)
+    if (any(grepl(destination, cholera::landmarksB$name)) & type != "cases") {
+      type <- "cases"
+    }
+  } else if (is.numeric(destination)) {
+    if (destination %in% cholera::landmarksB$case & type != "cases") {
+      type <- "cases"
+    }
+  }
+
   if (type %in% c("case-pump", "cases")) {
     if (is.numeric(origin)) {
       if (!origin %in% cholera::fatalities$case &

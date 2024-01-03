@@ -1,3 +1,8 @@
+### cholera 0.8.0.9238
+
+- add type exception for landmark destinations in walkingPathB().
+
+
 ### cholera 0.8.0.9237
 
 - change numeric zoom to a factor >= 0 in plot.walking_path_B().
