@@ -1,6 +1,7 @@
 ### cholera 0.8.0.9239
 
 - fix latlong coordinates for modelLodgingHouses().
+- update landmarksB.
 
 
 ### cholera 0.8.0.9238
