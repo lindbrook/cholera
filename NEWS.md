@@ -1,3 +1,8 @@
+### cholera 0.8.0.9240
+
+- add/use mapDataRange() in walkingPathB().
+
+
 ### cholera 0.8.0.9239
 
 - fix latlong coordinates for modelLodgingHouses().
