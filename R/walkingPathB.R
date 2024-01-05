@@ -604,6 +604,42 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
   }
 
   if (type == "cases") {
+    if (orig < 1000L) {
+      points(fatality[fatality$case == orig, vars], col = "red")
+      text(fatality[fatality$case == orig, vars], pos = 1, labels = orig,
+        col = "red")
+    } else if (orig >= 1000L) {
+      points(land[land$case == orig, vars], col = "red")
+      land.tmp <- land[land$case == orig, ]
+
+      if (grepl("Square", land.tmp$name)) {
+        sel <- cholera::landmark.squaresB$name == path.data$orig.nm
+        label.dat <- cholera::landmark.squaresB[sel, ]
+        label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
+        sq.label <- paste0(label.parse[1], "\n", label.parse[2])
+        text(label.dat[, c(ew, ns)], labels = sq.label, col = "red", cex = 0.8)
+        # text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
+      } else {
+        label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
+        names(label.dat) <- vars
+        if (grepl("St", land.tmp$name)) {
+          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+          land.label <- paste0(paste(label.parse[1], label.parse[2]), "\n",
+            label.parse[3])
+        } else {
+          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+          if (length(label.parse) == 2) {
+            land.label <- paste0(label.parse[1], "\n", label.parse[2])
+          } else if (length(label.parse) == 3) {
+            land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
+                                 label.parse[3])
+          }
+        }
+        text(label.dat, labels = land.label, col = "red", cex = 0.8)
+        # text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
+      }
+    }
+    
     if (dest < 1000L) {
       points(fatality[fatality$case == dest, vars], col = "red")
       text(fatality[fatality$case == dest, vars], pos = 1, labels = dest,
