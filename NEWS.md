@@ -1,3 +1,8 @@
+### cholera 0.8.0.9241
+
+- amend mapDataRange().
+
+
 ### cholera 0.8.0.9240
 
 - add/use mapDataRange() in walkingPathB().
