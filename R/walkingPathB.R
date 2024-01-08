@@ -1060,8 +1060,8 @@ longTitle <- function(long.title, type, pmp, path.data, orig, land) {
 }
 
 mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
-  if (path.data$orig.anchor >= 1000L) {
-    land.orig <- land[land$case == path.data$orig.anchor, ]
+  if (any(path.data$orig.anchor >= 1000L)) {
+    land.orig <- land[land$case %in% path.data$orig.anchor, ]
     if (grepl("Square", land.orig$name)) {
       sel <- grepl(path.data$orig.nm, cholera::landmarksB$name)
       label.orig <- cholera::landmarksB[sel, vars]
@@ -1071,8 +1071,8 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
     }
   }
 
-  if (path.data$dest.anchor >= 1000L) {
-    land.dest <- land[land$case == path.data$dest.anchor, ]
+  if (any(path.data$dest.anchor >= 1000L)) {
+    land.dest <- land[land$case %in% path.data$dest.anchor, ]
     if (grepl("Square", land.dest$name)) {
       sel <- grepl(path.data$dest.nm, cholera::landmarksB$name)
       label.dest <- cholera::landmarksB[sel, vars]
