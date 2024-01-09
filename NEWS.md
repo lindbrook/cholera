@@ -1,3 +1,8 @@
+### cholera 0.8.0.9243
+
+- allow multiple landmarks in mapDataRange().
+
+
 ### cholera 0.8.0.9242
 
 - fix labels for origin landmark Squares.
