@@ -1,3 +1,8 @@
+### cholera 0.8.0.9245
+
+- add pearsonResiduals() methods to NAMESPACE for 'roxygen2' 7.3.0.
+
+
 ### cholera 0.8.0.9244
 
 - remove multi.core argument from walkingPathB().
