@@ -13,6 +13,7 @@
 
 pumpCase <- function(x, case) UseMethod("pumpCase", x)
 
+#' @export
 pumpCase.default <- function(x, case) NULL
 
 #' @export
