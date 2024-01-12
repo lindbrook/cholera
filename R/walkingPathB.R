@@ -9,17 +9,14 @@
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @importFrom geosphere distGeo
 #' @export
 
 walkingPathB <- function(origin = 1, destination = NULL,
   type = "case-pump", vestry = FALSE, latlong = FALSE, weighted = TRUE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  multi.core = TRUE) {
+  distance.unit = "meter", time.unit = "second", walking.speed = 5) {
 
   meter.to.yard <- 1.09361
-  cores <- multiCore(multi.core)
 
   if (length(origin) != 1) {
     stop('"origin" must be a character/numeric vector of length one.',
@@ -639,7 +636,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
         # text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
       }
     }
-    
+
     if (dest < 1000L) {
       points(fatality[fatality$case == dest, vars], col = "red")
       text(fatality[fatality$case == dest, vars], pos = 1, labels = dest,

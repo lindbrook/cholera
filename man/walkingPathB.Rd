@@ -6,8 +6,7 @@
 \usage{
 walkingPathB(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, weighted = TRUE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  multi.core = TRUE)
+  distance.unit = "meter", time.unit = "second", walking.speed = 5)
 }
 \arguments{
 \item{origin}{Numeric. A single numeric value (vector of length one).}
@@ -27,8 +26,6 @@ walkingPathB(origin = 1, destination = NULL, type = "case-pump",
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
-
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
 \description{
 Plot walking path to nearest pump (prototype).

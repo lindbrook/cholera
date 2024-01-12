@@ -1,3 +1,9 @@
+### cholera 0.8.0.9244
+
+- remove multi.core argument from walkingPathB().
+- set `RoxygenNote` to "7.3.0".
+
+
 ### cholera 0.8.0.9243
 
 - allow multiple landmarks in mapDataRange().
