@@ -35,6 +35,6 @@
 #'
 #' \code{vignette("unstacking.bars")}
 #'
-#' @docType package
+#' "_PACKAGE"
 #' @name cholera-package
 NULL
