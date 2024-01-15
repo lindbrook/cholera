@@ -1,3 +1,8 @@
+### cholera 0.8.0.9248
+
+- add casePump() prototype.
+
+
 ### cholera 0.8.0.9247
 
 - change `@docType "package"` to "_PACKAGE" in cholera.R for 'roxygen2' 7.3.0.
