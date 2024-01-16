@@ -1,3 +1,8 @@
+### cholera 0.8.0.9249
+
+- add caseCase() prototype.
+
+
 ### cholera 0.8.0.9248
 
 - add casePump() prototype.

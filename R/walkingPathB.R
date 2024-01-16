@@ -1167,3 +1167,88 @@ casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
   list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest,
        p = p[[1]])
 }
+
+caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
+  weighted) {
+
+  edges <- network.data$edges
+  g <- network.data$g
+  nodes <- network.data$nodes
+
+  ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
+                      nodes[nodes$land %in% anchor, ]$node)
+
+  if (is.null(destination)) {
+    destination <- c(cholera::fatalities$case, cholera::landmarksB$case)
+  }
+
+  dest <- validateDestinationCases(destination)
+
+  if (any(anchor %in% dest$anchor)) {
+    dest <- dest[!dest$anchor %in% anchor, ]
+    # message("Note: 'origin' anchor cases excluded from 'destination'.")
+  }
+
+  sel <- nodes$case %in% dest$anchor | nodes$land %in% dest$anchor
+  alters <- nodes[sel, ]
+
+  alter.node <- alters$node
+  names(alter.node) <- alters$case + alters$land
+
+  if (length(ego.node) == 1) {
+    if (weighted) {
+      d <- igraph::distances(g, ego.node, alter.node, weights = edges$d)
+    } else {
+      d <- igraph::distances(g, ego.node, alter.node)
+    }
+
+    nearest.node <- dimnames(d)[[2]][which.min(d)]
+    nearest.dest <- nodes[nodes$node == nearest.node, ]$case +
+                    nodes[nodes$node == nearest.node, ]$land
+
+    if (weighted) {
+      p <- igraph::shortest_paths(g, ego.node, nearest.node,
+                                  weights = edges$d)$vpath
+    } else {
+      p <- igraph::shortest_paths(g, ego.node, nearest.node)
+    }
+  } else if (length(ego.node) > 1) {
+    d.multi.ego <- lapply(ego.node, function(x) {
+      if (weighted) {
+        igraph::distances(g, x, alter.node, weights = edges$d)
+      } else {
+        igraph::distances(g, x, alter.node)
+      }
+    })
+
+    ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+    d <- min(d.multi.ego[[ego.id]])
+
+    sel <- (nodes$case != 0 | nodes$land != 0) &
+            nodes$node == ego.node[ego.id]
+
+    anchor <- nodes[sel, ]$case + nodes[sel, ]$land
+    anchor.nm <- anchor.nm[ego.id]
+
+    nr.ego.node <- nodes[sel, ]$node
+
+    alter.id <- which.min(d.multi.ego[[ego.id]])
+    nr.alter.node <- dimnames(d.multi.ego[[ego.id]])[[2]][alter.id]
+
+    sel <- (nodes$case != 0 | nodes$land != 0) & nodes$node == nr.alter.node
+    nearest.dest <- nodes[sel, ]$case + nodes[sel, ]$land
+
+    if (weighted) {
+      p <- igraph::shortest_paths(g, nr.ego.node, nr.alter.node,
+                                  weights = edges$d)$vpath
+    } else {
+      p <- igraph::shortest_paths(g, nr.ego.node, nr.alter.node)
+    }
+
+    # if (length(anchor) > 1) anchor <- anchor[ego.id]
+    # if (length(anchor.nm) > 1) anchor.nm <- anchor.nm[ego.id]
+  }
+
+  list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest, p = p[[1]])
+}
+
