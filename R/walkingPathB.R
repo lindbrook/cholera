@@ -1252,3 +1252,74 @@ caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
   list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest, p = p[[1]])
 }
 
+pumpPump <- function(anchor, anchor.nm, destination, network.data, origin, pmp,
+  vestry, weighted) {
+
+  edges <- network.data$edges
+  g <- network.data$g
+  nodes <- network.data$nodes
+
+  ego.node <- nodes[nodes$pump %in% anchor, ]$node
+  pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
+
+  alters <- nodes[nodes$pump %in% pump.id, ]
+
+  if (any(anchor %in% pump.id)) {
+    # message("Note: 'origin' pumps excluded from 'destination'.")
+    alters <- alters[alters$pump %in% setdiff(pump.id, anchor), ]
+  }
+
+  if (any(alters$pump == 2L)) {
+    alters <- alters[alters$pump != 2, ]
+    # message("Note: Pump 2 excluded because it's a technical isolate.")
+  }
+
+  alter.node <- alters$node
+  names(alter.node) <- alters$pump
+
+  if (length(ego.node) == 1) {
+    if (weighted) {
+      d <- igraph::distances(g, ego.node, alter.node, weights = edges$d)
+    } else {
+      d <- igraph::distances(g, ego.node, alter.node)
+    }
+
+    nearest.node <- dimnames(d)[[2]][which.min(d)]
+    nearest.dest <- as.character(alters[alters$node == nearest.node, ]$pump)
+
+    if (weighted) {
+      p <- igraph::shortest_paths(g, ego.node, nearest.node,
+        weights = edges$d)$vpath
+    } else {
+      p <- igraph::shortest_paths(g, ego.node, nearest.node)
+    }
+
+  } else if (length(ego.node) > 1) {
+    d.multi.ego <- lapply(ego.node, function(x) {
+      if (weighted) igraph::distances(g, x, alter.node, weights = edges$d)
+      else igraph::distances(g, x, alter.node)
+    })
+
+    ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+    d <- min(d.multi.ego[[ego.id]])
+
+    nr.ego.node <- nodes[nodes$node == ego.node[ego.id], ]$node
+
+    alter.id <- which.min(d.multi.ego[[ego.id]])
+    nr.alter.node <- dimnames(d.multi.ego[[ego.id]])[[2]][alter.id]
+    nearest.dest <- as.character(nodes[nodes$node == nr.alter.node, ]$pump)
+
+    if (weighted) {
+      p <- igraph::shortest_paths(g, nr.ego.node, nr.alter.node,
+        weights = edges$d)$vpath
+    } else {
+      p <- igraph::shortest_paths(g, nr.ego.node, nr.alter.node)
+    }
+
+    anchor <- anchor[ego.id]
+    anchor.nm <- anchor.nm[ego.id]
+  }
+
+  list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest,
+       p = p[[1]])
+}
