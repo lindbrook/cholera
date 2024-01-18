@@ -1,3 +1,9 @@
+### cholera 0.8.0.9252
+
+- plot origin Square names in plot.walking_path_B().
+- amend longTitle(type = "pumps").
+
+
 ### cholera 0.8.0.9251
 
 - enable multiple origins and use walking path type functions.
