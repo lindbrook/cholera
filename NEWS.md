@@ -1,3 +1,8 @@
+### cholera 0.8.0.9251
+
+- enable multiple origins and use walking path type functions.
+
+
 ### cholera 0.8.0.9250
 
 - add pumpPump() prototype.
