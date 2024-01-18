@@ -743,8 +743,8 @@ longTitle <- function(long.title, type, pmp, path.data, orig, land) {
     } else if (type == "pumps") {
       orig.nm <- pmp[pmp$id == path.data$orig.anchor, ]$street
       dest.nm <- pmp[pmp$id == path.data$dest.anchor, ]$street
-      alpha <- paste(orig.nm, "Pump", paste0("(#", path.data$orig.anchor, ")"))
-      omega <- paste(dest.nm, "Pump", paste0("(#", path.data$dest.anchor, ")"))
+      alpha <- paste(orig.nm, paste0("(p", path.data$orig.anchor, ")"))
+      omega <- paste(dest.nm, paste0("(p", path.data$dest.anchor, ")"))
     }
     title(main = paste(alpha, "to", omega))
   } else {
