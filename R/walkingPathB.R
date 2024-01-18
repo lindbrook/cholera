@@ -1098,7 +1098,7 @@ casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
   nodes <- network.data$nodes
 
   ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
-                      nodes[nodes$land %in% anchor, ]$node)
+                nodes[nodes$land %in% anchor, ]$node)
 
   pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
 
@@ -1176,7 +1176,7 @@ caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
   nodes <- network.data$nodes
 
   ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
-                      nodes[nodes$land %in% anchor, ]$node)
+                nodes[nodes$land %in% anchor, ]$node)
 
   if (is.null(destination)) {
     destination <- c(cholera::fatalities$case, cholera::landmarksB$case)
