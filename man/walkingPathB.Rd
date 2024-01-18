@@ -9,9 +9,9 @@ walkingPathB(origin = 1, destination = NULL, type = "case-pump",
   distance.unit = "meter", time.unit = "second", walking.speed = 5)
 }
 \arguments{
-\item{origin}{Numeric. A single numeric value (vector of length one).}
+\item{origin}{Numeric. Vector of origin(s) (numeric or landmark/pump name).}
 
-\item{destination}{Numeric. Vector of destinations (numeric or landmark names.}
+\item{destination}{Numeric. Vector of destination(s) (numeric or landmark/pump name).}
 
 \item{type}{Character. Path case to pump. FALSE is all other combinations of cases, landmarks and pumps.}
 
