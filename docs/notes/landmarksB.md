@@ -1,0 +1,57 @@
+landmarksB
+================
+
+### Three Classes of Landmarks
+
+1)  Squares (road entrances)
+
+- Golden Square and Soho Square.
+
+2)  Label at location
+
+- Karl Marx, John Snow, The Pantheon.
+
+3)  Label separate from location
+
+- St James Workhouse, St Lukes (Berwick)
+
+<https://www.british-history.ac.uk/survey-london/vols31-2/pt2/pp219-229#h3-0012>
+<https://www.londonpicturearchive.org.uk/view-item?i=19777&WINID=1698775877925>
+
+- Lion Brewery (Broad)
+- Argyll House
+- Model Lodging
+- Craven Chapel (at Foubert’s Place)
+
+### Methodology
+
+The geographic or “latlong” coordinates for ‘landmarks’ dataset were
+computed by georeferencing the nominal coordinates using
+[QGIS](https://qgis.org/). Partly as a check (validation) and partly as
+an experiment, the geographic coordinates for ‘landmarksB’ were computed
+by using ratios and proportions. I did this because georeferencing seems
+add a bit of “noise” to the relative position of points (i.e., nominal
+v. geographic). A good example is that the stacks of cases (“dots” or
+“bars”) typically lose their alignment in the process.
+
+In Dodson and Tobler’s digitization, roads and street are represented by
+a set of straight line segments. The ratio and proportion method works
+by defining a landmark’s address not as an x-y coordinate but in terms
+of its relative position along the line segment where the landmark is
+located.
+
+For example, [Agyll
+House](https://www.british-history.ac.uk/survey-london/vols31-2/pt2/pp284-307#h3-0010)
+is located on Argyll Street, which is composed of three line segments.
+The building’s frontage appears to be on the Southern most segment
+(“162-1”). A reasonable and convenient choice for its address is the
+mid-point of the segment. Since I have already georeferenced all the
+road segments, my thinking is that I can use this ratio to “compute” the
+geographic coordinate of Argyll House without having to georeference it.
+I just compute the mid-point of geographic coordinates (“latlong”) of
+segment “162-1”. In this example, “162-1” is approximated 80 meters in
+length. Thus the geographic coordinate is 40 meters from either end
+points along the segment.
+
+This saves an additional georeferencing step and is potentially more
+“accurate”. This is an experimental, work in progress.
