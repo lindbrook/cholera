@@ -1,3 +1,8 @@
+### cholera 0.8.0.9253
+
+- draft landmarksB note.
+
+
 ### cholera 0.8.0.9252
 
 - plot origin Square names in plot.walking_path_B().
