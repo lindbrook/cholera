@@ -904,9 +904,11 @@ caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
       d <- igraph::distances(g, ego.node, alter.node)
     }
 
-    nearest.node <- dimnames(d)[[2]][which.min(d)]
-    nearest.dest <- nodes[nodes$node == nearest.node, ]$case +
-                    nodes[nodes$node == nearest.node, ]$land
+    if (length(d) == 1) nearest.node <- dimnames(d)[[2]]
+    else if (length(d) > 1) nearest.node <- dimnames(d)[[2]][which.min(d)]
+
+    sel <- (nodes$case != 0 | nodes$land != 0) & nodes$node == nearest.node
+    nearest.dest <- nodes[sel, ]$case + nodes[sel, ]$land
 
     if (weighted) {
       p <- igraph::shortest_paths(g, ego.node, nearest.node,
