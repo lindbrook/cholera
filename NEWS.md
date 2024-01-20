@@ -1,3 +1,8 @@
+### cholera 0.8.0.9254
+
+- fix multi-edge destination nodes in caseCase().
+
+
 ### cholera 0.8.0.9253
 
 - draft landmarksB note.
