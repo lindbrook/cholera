@@ -1,3 +1,8 @@
+### cholera 0.8.0.9256
+
+- Set `RoxygenNote` to "7.3.1".
+
+
 ### cholera 0.8.0.9255
 
 - amend "Clifford Street missing segment" note.
