@@ -1,3 +1,9 @@
+### cholera 0.8.0.9255
+
+- amend "Clifford Street missing segment" note.
+- remove cliffordStreet() from NAMESPACE.
+
+
 ### cholera 0.8.0.9254
 
 - fix multi-edge destination nodes in caseCase().

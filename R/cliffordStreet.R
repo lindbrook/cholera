@@ -1,7 +1,7 @@
 #' Estimate native coordinates for missing Clifford Street segment.
 #'
 #' Segment between Old Burlington and Saville Row.
-#' @export
+#' @noRd
 
 cliffordStreet <- function() {
   # Clifford Street Eastern segment
