@@ -1,3 +1,8 @@
+### cholera 0.8.0.9258
+
+- remove roadSegmentFix(), simulateWalkingDistance() and subsetRoadsSamples() 
+  from NAMESPACE.
+
 ### cholera 0.8.0.9257
 
 - remove isoLines() and isoVertices() from NAMESPACE.

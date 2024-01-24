@@ -1,7 +1,7 @@
 #' Sample for road segment endpoints.
 #'
 #' For endpoints with 1 or 3 intersections.
-#' @export
+#' @noRd
 
 subsetRoadsSamples <- function() {
   framework <- cholera::roads[cholera::roads$name != "Map Frame", ]
