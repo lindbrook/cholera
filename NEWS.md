@@ -1,3 +1,8 @@
+### cholera 0.8.0.9257
+
+- remove isoLines() and isoVertices() from NAMESPACE.
+
+
 ### cholera 0.8.0.9256
 
 - Set `RoxygenNote` to "7.3.1".

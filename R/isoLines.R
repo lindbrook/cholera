@@ -5,7 +5,7 @@
 #' @param palette Character.
 #' @param alpha.level Numeric. Alpha level transparency
 #' @importFrom viridisLite plasma
-#' @export
+#' @noRd
 
 isoLines <- function(post = 50, post.type = "distance", palette = "plasma",
   alpha.level = 1/2) {

@@ -138,7 +138,7 @@ plot.iso <- function(x, selected.post = "all", palette = "plasma",
 #' @param x An object of class "iso" created by \code{isoVertices()}.
 #' @param ... Additional arguments.
 #' @return A vector with observed counts.
-#' @export
+#' @noRd
 
 print.iso <- function(x, ...) {
   print(vapply(x$vertices, length, numeric(1L)))
