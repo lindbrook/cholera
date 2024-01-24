@@ -171,8 +171,8 @@ walkingPathB <- function(origin = 1, destination = NULL,
                              dest.anchor = as.integer(nearest.dest),
                              orig.nm = anchor.nm,
                              dest.nm = dest.nm,
-                             distance = round(sum(ds)),
-                             time = round(walking.time),
+                             distance = sum(ds),
+                             time = walking.time,
                              type = type,
                              row.names = NULL)
 
