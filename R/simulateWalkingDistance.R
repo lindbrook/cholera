@@ -5,7 +5,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @param compute Logical.
 #' @note This function is computationally intensive. See \code{vignette("Parallelization")} for details. This functions document the code that generates \code{\link{sim.walking.distance}}.
-#' @export
+#' @noRd
 
 simulateWalkingDistance <- function(pump.select = 7, multi.core = TRUE,
   dev.mode = FALSE, compute = FALSE) {

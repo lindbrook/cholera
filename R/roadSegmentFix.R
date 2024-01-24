@@ -1,7 +1,7 @@
 #' Bar orientation classification errors.
 #'
 #' @note Bars lie parallel to the road where that fatality is observed. This can lead to (classification) errors when using orthogonal projection to assign a street address: the closest road is not always the right road. This R list manually assigns those problematic bars to their "correct" road segment.
-#' @export
+#' @noRd
 
 roadSegmentFix <- function() {
   list("216-1" = c(290, 61, 174, 547, 523, 521, 138, 59, 340, 508),
