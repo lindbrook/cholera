@@ -388,7 +388,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
   drawPathB(dat, case.color, latlong)
 
   d <- paste(round(path.length, 1), d.unit)
-  t <- paste(round(x$data$time), paste0(time.unit, "s"), "@", walking.speed,
+  t <- paste(round(x$data$time, 1), paste0(time.unit, "s"), "@", walking.speed,
              "km/hr")
 
   if (is.null(milepost.interval)) {
