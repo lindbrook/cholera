@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2023-09-16
+2024-01-26
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -81,6 +81,9 @@ their Detection*. London: Longmans, Green, and Co.
 Sandra Hempel. 2013. “Obituary: John Snow”. *The Lancet*. 381(9874):
 1269-1270.
 
+Jonathan Hodge and Gregory Radick, eds. 2003. *The Cambridge Companion
+to Darwin*. New York: Cambridge University Press.
+
 Stephen Inwood. 1998 *A History of London*. New York: Carroll & Graf
 Publishers.
 
@@ -93,6 +96,9 @@ World*. New York: Liveright.
 
 Gareth Stedman Jones. 1971 (2013). *Outcast London: A Study in the
 Relationship Between Classes in Victorian Society*. London: Verso.
+
+Steve Jones. 1999 (2001). *Darwin’s Ghost: The Origin of Species
+Updated*. New York: Random House.
 
 Tom Koch. 2011. *Disease Maps: Epidemics on the Ground*. Chicago: The
 University of Chicago Press.
