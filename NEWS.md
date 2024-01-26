@@ -1,3 +1,8 @@
+### cholera 0.8.0.9260
+
+- update/copyedit 'cholera-package' and use "_PACKAGE".
+
+
 ### cholera 0.8.0.9259
 
 - temporarily round distance and time to tenth's place in plot.walking_path_B().
@@ -7,6 +12,7 @@
 
 - remove roadSegmentFix(), simulateWalkingDistance() and subsetRoadsSamples() 
   from NAMESPACE.
+  
 
 ### cholera 0.8.0.9257
 
