@@ -887,8 +887,12 @@ caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
   dest <- validateDestinationCases(destination)
 
   if (any(anchor %in% dest$anchor)) {
-    dest <- dest[!dest$anchor %in% anchor, ]
-    # message("Note: 'origin' anchor cases excluded from 'destination'.")
+    if (length(anchor) == 1) {  # single origin
+      dest <- dest[!dest$anchor %in% anchor, ]
+      # message("Note: 'origin' anchor cases excluded from 'destination'.")
+    } else if (length(anchor) > 1) {  # multiple origins | NULL origin
+      anchor <- anchor[!anchor %in% dest$anchor]
+    }
   }
 
   sel <- nodes$case %in% dest$anchor | nodes$land %in% dest$anchor
@@ -896,6 +900,10 @@ caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
 
   alter.node <- alters$node
   names(alter.node) <- alters$case + alters$land
+
+  if (any(alter.node %in% ego.node)) {
+    ego.node <- ego.node[!ego.node %in% alter.node]
+  }
 
   if (length(ego.node) == 1) {
     if (weighted) {
