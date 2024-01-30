@@ -969,23 +969,54 @@ pumpPump <- function(anchor, anchor.nm, destination, network.data, origin, pmp,
   g <- network.data$g
   nodes <- network.data$nodes
 
-  ego.node <- nodes[nodes$pump %in% anchor, ]$node
+  egos <- nodes[nodes$pump %in% anchor, ]
+  if (nrow(egos) > 1) egos <- egos[order(egos$pump), ]
+
   pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
-
   alters <- nodes[nodes$pump %in% pump.id, ]
+  if (nrow(alters) > 1) alters <- alters[order(alters$pump), ]
 
-  if (any(anchor %in% pump.id)) {
-    # message("Note: 'origin' pumps excluded from 'destination'.")
-    alters <- alters[alters$pump %in% setdiff(pump.id, anchor), ]
+  if (2L %in% egos$pump) {
+    egos <- egos[egos$pump != 2, ]
+    if (nrow(egos) == 0) {
+      msg1 <- "No valid origins: "
+      msg2 <- "Pump 2 excluded because it's a technical isolate."
+      stop(msg1, msg2, call. = FALSE)
+    }
   }
 
-  if (any(alters$pump == 2L)) {
+  if (2L %in% alters$pump) {
     alters <- alters[alters$pump != 2, ]
-    # message("Note: Pump 2 excluded because it's a technical isolate.")
+    if (nrow(alters) == 0) {
+      msg1 <- "No valid destinations: "
+      msg2 <- "Pump 2 excluded because it's a technical isolate."
+      stop(msg1, msg2, call. = FALSE)
+    }
   }
 
-  alter.node <- alters$node
-  names(alter.node) <- alters$pump
+  if (is.null(origin)) {
+    if (any(egos$pump %in% alters$pump)) {
+      egosB <- egos[!egos$pump %in% alters$pump, ]
+    } else egosB <- egos
+  } else egosB <- egos
+
+  if (is.null(destination)) {
+    if (any(alters$pump %in% egos$pump)) {
+      altersB <- alters[!alters$pump %in% egos$pump, ]
+    } else altersB <- alters
+  } else altersB <- alters
+
+  ego.node <- egosB$node
+  names(ego.node) <- egosB$pump
+
+  alter.node <- altersB$node
+  names(alter.node) <- altersB$pump
+
+  if (length(setdiff(anchor, egosB$pump) != 0)) {
+    sel <- anchor %in% setdiff(anchor, egosB$pump)
+    anchor <- anchor[!sel]
+    anchor.nm <- anchor.nm[!sel]
+  }
 
   if (length(ego.node) == 1) {
     if (weighted) {
