@@ -810,7 +810,6 @@ casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
   }
 
   alters <- nodes[nodes$pump %in% pump.id, ]
-  # if (nrow(alters) > 1) alters <- alters[order(alters$pump), ]
 
   alter.node <- alters$node
   names(alter.node) <- alters$pump
@@ -861,9 +860,6 @@ casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
     } else {
       p <- igraph::shortest_paths(g, nr.ego.node, nr.alter.node)
     }
-
-    # if (length(anchor) > 1) anchor <- anchor[ego.id]
-    # if (length(anchor.nm) > 1) anchor.nm <- anchor.nm[ego.id]
   }
 
   list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest,
