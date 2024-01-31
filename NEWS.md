@@ -1,3 +1,10 @@
+### cholera 0.8.0.9261
+
+- enable origin = NULL for caseCase().
+- enable origin = NULL for pumpPump().
+- enable origin = NULL for walkingPathB().
+
+
 ### cholera 0.8.0.9260
 
 - update/copyedit 'cholera-package' and use "_PACKAGE".

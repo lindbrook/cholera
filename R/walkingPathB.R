@@ -18,6 +18,10 @@ walkingPathB <- function(origin = 1, destination = NULL,
 
   meter.to.yard <- 1.09361
 
+  if (is.null(origin) & is.null(destination)) {
+    stop("You must provide at least one origin or destination.", call. = FALSE)
+  }
+
   # Change type to "cases" in presence of landmarks
   if (is.character(destination)) {
     destination <- caseAndSpace(destination)
@@ -31,7 +35,10 @@ walkingPathB <- function(origin = 1, destination = NULL,
   }
 
   if (type %in% c("case-pump", "cases")) {
-    if (is.numeric(origin)) {
+    if (is.null(origin)) {
+      anchor <- c(cholera::fatalities$case, cholera::landmarksB$case)
+      anchor.nm <- c(cholera::fatalities$case, cholera::landmarksB$name)
+    } else if (is.numeric(origin)) {
       if (any(!origin %in% cholera::fatalities$case &
               !origin %in% cholera::landmarksB$case)) {
         message("Cases range from 1 to 578; Landmarks from 1000 to 1021.")
@@ -73,7 +80,10 @@ walkingPathB <- function(origin = 1, destination = NULL,
   else pmp <- cholera::pumps
 
   if (type == "pumps") {
-    if (is.numeric(origin)) {
+    if (is.null(origin)) {
+      anchor <- pmp$id
+      anchor.nm <- pmp$street
+    } else if (is.numeric(origin)) {
       if (all(!origin %in% pmp$id)) {
         stop("For vestry = ", vestry, ", pump IDs range from 1 to ", nrow(pmp),
           "." , call. = FALSE)
@@ -105,7 +115,6 @@ walkingPathB <- function(origin = 1, destination = NULL,
   }
 
   network.data <- neighborhoodDataB(vestry = vestry, latlong = latlong)
-  edges <- network.data$edges
 
   if (type == "case-pump") {
     path.data <- casePump(anchor, anchor.nm, destination, network.data, pmp,
@@ -133,6 +142,8 @@ walkingPathB <- function(origin = 1, destination = NULL,
   endpts <- do.call(rbind, lapply(seq_len(length(p[-1])), function(i) {
     data.frame(ep1 = p[i], ep2 = p[i + 1])
   }))
+
+  edges <- network.data$edges
 
   ds <- vapply(seq_len(nrow(endpts)), function(i) {
     tmp <- endpts[i, ]
