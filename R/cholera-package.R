@@ -34,4 +34,4 @@
 #' \code{vignette("unstacking.bars")}
 #'
 "_PACKAGE"
-
+NULL
