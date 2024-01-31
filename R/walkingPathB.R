@@ -18,6 +18,10 @@ walkingPathB <- function(origin = 1, destination = NULL,
 
   meter.to.yard <- 1.09361
 
+  if (is.null(origin) & is.null(destination)) {
+    stop("You must provide at least one origin or destination.", call. = FALSE)
+  }
+
   # Change type to "cases" in presence of landmarks
   if (is.character(destination)) {
     destination <- caseAndSpace(destination)
@@ -31,7 +35,10 @@ walkingPathB <- function(origin = 1, destination = NULL,
   }
 
   if (type %in% c("case-pump", "cases")) {
-    if (is.numeric(origin)) {
+    if (is.null(origin)) {
+      anchor <- c(cholera::fatalities$case, cholera::landmarksB$case)
+      anchor.nm <- c(cholera::fatalities$case, cholera::landmarksB$name)
+    } else if (is.numeric(origin)) {
       if (any(!origin %in% cholera::fatalities$case &
               !origin %in% cholera::landmarksB$case)) {
         message("Cases range from 1 to 578; Landmarks from 1000 to 1021.")
@@ -73,7 +80,10 @@ walkingPathB <- function(origin = 1, destination = NULL,
   else pmp <- cholera::pumps
 
   if (type == "pumps") {
-    if (is.numeric(origin)) {
+    if (is.null(origin)) {
+      anchor <- pmp$id
+      anchor.nm <- pmp$street
+    } else if (is.numeric(origin)) {
       if (all(!origin %in% pmp$id)) {
         stop("For vestry = ", vestry, ", pump IDs range from 1 to ", nrow(pmp),
           "." , call. = FALSE)
@@ -105,7 +115,6 @@ walkingPathB <- function(origin = 1, destination = NULL,
   }
 
   network.data <- neighborhoodDataB(vestry = vestry, latlong = latlong)
-  edges <- network.data$edges
 
   if (type == "case-pump") {
     path.data <- casePump(anchor, anchor.nm, destination, network.data, pmp,
@@ -133,6 +142,8 @@ walkingPathB <- function(origin = 1, destination = NULL,
   endpts <- do.call(rbind, lapply(seq_len(length(p[-1])), function(i) {
     data.frame(ep1 = p[i], ep2 = p[i + 1])
   }))
+
+  edges <- network.data$edges
 
   ds <- vapply(seq_len(nrow(endpts)), function(i) {
     tmp <- endpts[i, ]
@@ -810,7 +821,6 @@ casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
   }
 
   alters <- nodes[nodes$pump %in% pump.id, ]
-  # if (nrow(alters) > 1) alters <- alters[order(alters$pump), ]
 
   alter.node <- alters$node
   names(alter.node) <- alters$pump
@@ -861,9 +871,6 @@ casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
     } else {
       p <- igraph::shortest_paths(g, nr.ego.node, nr.alter.node)
     }
-
-    # if (length(anchor) > 1) anchor <- anchor[ego.id]
-    # if (length(anchor.nm) > 1) anchor.nm <- anchor.nm[ego.id]
   }
 
   list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest,
@@ -887,8 +894,12 @@ caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
   dest <- validateDestinationCases(destination)
 
   if (any(anchor %in% dest$anchor)) {
-    dest <- dest[!dest$anchor %in% anchor, ]
-    # message("Note: 'origin' anchor cases excluded from 'destination'.")
+    if (length(anchor) == 1) {  # single origin
+      dest <- dest[!dest$anchor %in% anchor, ]
+      # message("Note: 'origin' anchor cases excluded from 'destination'.")
+    } else if (length(anchor) > 1) {  # multiple origins | NULL origin
+      anchor <- anchor[!anchor %in% dest$anchor]
+    }
   }
 
   sel <- nodes$case %in% dest$anchor | nodes$land %in% dest$anchor
@@ -896,6 +907,10 @@ caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
 
   alter.node <- alters$node
   names(alter.node) <- alters$case + alters$land
+
+  if (any(alter.node %in% ego.node)) {
+    ego.node <- ego.node[!ego.node %in% alter.node]
+  }
 
   if (length(ego.node) == 1) {
     if (weighted) {
@@ -948,12 +963,10 @@ caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
     } else {
       p <- igraph::shortest_paths(g, nr.ego.node, nr.alter.node)
     }
-
-    # if (length(anchor) > 1) anchor <- anchor[ego.id]
-    # if (length(anchor.nm) > 1) anchor.nm <- anchor.nm[ego.id]
   }
 
-  list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest, p = p[[1]])
+  list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest,
+       p = p[[1]])
 }
 
 pumpPump <- function(anchor, anchor.nm, destination, network.data, origin, pmp,
@@ -963,23 +976,54 @@ pumpPump <- function(anchor, anchor.nm, destination, network.data, origin, pmp,
   g <- network.data$g
   nodes <- network.data$nodes
 
-  ego.node <- nodes[nodes$pump %in% anchor, ]$node
+  egos <- nodes[nodes$pump %in% anchor, ]
+  if (nrow(egos) > 1) egos <- egos[order(egos$pump), ]
+
   pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
-
   alters <- nodes[nodes$pump %in% pump.id, ]
+  if (nrow(alters) > 1) alters <- alters[order(alters$pump), ]
 
-  if (any(anchor %in% pump.id)) {
-    # message("Note: 'origin' pumps excluded from 'destination'.")
-    alters <- alters[alters$pump %in% setdiff(pump.id, anchor), ]
+  if (2L %in% egos$pump) {
+    egos <- egos[egos$pump != 2, ]
+    if (nrow(egos) == 0) {
+      msg1 <- "No valid origins: "
+      msg2 <- "Pump 2 excluded because it's a technical isolate."
+      stop(msg1, msg2, call. = FALSE)
+    }
   }
 
-  if (any(alters$pump == 2L)) {
+  if (2L %in% alters$pump) {
     alters <- alters[alters$pump != 2, ]
-    # message("Note: Pump 2 excluded because it's a technical isolate.")
+    if (nrow(alters) == 0) {
+      msg1 <- "No valid destinations: "
+      msg2 <- "Pump 2 excluded because it's a technical isolate."
+      stop(msg1, msg2, call. = FALSE)
+    }
   }
 
-  alter.node <- alters$node
-  names(alter.node) <- alters$pump
+  if (is.null(origin)) {
+    if (any(egos$pump %in% alters$pump)) {
+      egosB <- egos[!egos$pump %in% alters$pump, ]
+    } else egosB <- egos
+  } else egosB <- egos
+
+  if (is.null(destination)) {
+    if (any(alters$pump %in% egos$pump)) {
+      altersB <- alters[!alters$pump %in% egos$pump, ]
+    } else altersB <- alters
+  } else altersB <- alters
+
+  ego.node <- egosB$node
+  names(ego.node) <- egosB$pump
+
+  alter.node <- altersB$node
+  names(alter.node) <- altersB$pump
+
+  if (length(setdiff(anchor, egosB$pump) != 0)) {
+    sel <- anchor %in% setdiff(anchor, egosB$pump)
+    anchor <- anchor[!sel]
+    anchor.nm <- anchor.nm[!sel]
+  }
 
   if (length(ego.node) == 1) {
     if (weighted) {
