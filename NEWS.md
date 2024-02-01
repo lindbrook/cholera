@@ -1,3 +1,8 @@
+### cholera 0.8.0.9262
+
+- don't plot destination case when type = "case-pump" in plot.walking_path_B().
+
+
 ### cholera 0.8.0.9261
 
 - enable origin = NULL for caseCase().

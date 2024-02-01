@@ -350,45 +350,50 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
       }
     }
 
-    if (dest < 1000L) {
-      points(fatality[fatality$case == dest, vars], col = "red")
-      text(fatality[fatality$case == dest, vars], pos = 1, labels = dest,
-        col = "red")
-    } else if (dest >= 1000L) {
-      points(land[land$case == dest, vars], col = "red")
-      land.tmp <- land[land$case == dest, ]
-      if (grepl("Square", land.tmp$name)) {
-        sel <- cholera::landmark.squaresB$name == path.data$dest.nm
-        label.dat <- cholera::landmark.squaresB[sel, ]
-        label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
-        sq.label <- paste0(label.parse[1], "\n", label.parse[2])
-        text(label.dat[, c(ew, ns)], labels = sq.label, col = "red", cex = 0.8)
-        # text(land[land$case == dest, vars], pos = 1, labels = dest, col = "red")
-      } else if (land.tmp[, ew] != land.tmp[, paste0(ew, ".lab")]) {
-        label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
-        names(label.dat) <- vars
-        if (grepl("St", land.tmp$name)) {
-          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
-          land.label <- paste0(paste(label.parse[1], label.parse[2]), "\n",
-                                     label.parse[3])
-        } else {
-          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
-          if (length(label.parse) == 2) {
-            land.label <- paste0(label.parse[1], "\n", label.parse[2])
-          } else if (length(label.parse) == 3) {
-            land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
-                                 label.parse[3])
+    if (type == "cases") {
+      if (dest < 1000L) {
+        points(fatality[fatality$case == dest, vars], col = "red")
+        text(fatality[fatality$case == dest, vars], pos = 1, labels = dest,
+          col = "red")
+      } else if (dest >= 1000L) {
+        points(land[land$case == dest, vars], col = "red")
+        land.tmp <- land[land$case == dest, ]
+        if (grepl("Square", land.tmp$name)) {
+          sel <- cholera::landmark.squaresB$name == path.data$dest.nm
+          label.dat <- cholera::landmark.squaresB[sel, ]
+          label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
+          sq.label <- paste0(label.parse[1], "\n", label.parse[2])
+          text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",
+            cex = 0.8)
+          # text(land[land$case == dest, vars], pos = 1, labels = dest,
+          #   col = "red")
+        } else if (land.tmp[, ew] != land.tmp[, paste0(ew, ".lab")]) {
+          label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
+          names(label.dat) <- vars
+          if (grepl("St", land.tmp$name)) {
+            label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+            land.label <- paste0(paste(label.parse[1], label.parse[2]), "\n",
+                                       label.parse[3])
+          } else {
+            label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+            if (length(label.parse) == 2) {
+              land.label <- paste0(label.parse[1], "\n", label.parse[2])
+            } else if (length(label.parse) == 3) {
+              land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
+                                   label.parse[3])
+            }
           }
+          text(label.dat, labels = land.label, col = "red", cex = 0.8)
+          # text(land[land$case == dest, vars], pos = 1, labels = dest,
+          #   col = "red")
+        } else {
+          label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
+          names(label.dat) <- vars
+          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+          land.label <- paste0(label.parse[1], "\n", label.parse[2])
+          text(land[land$case == dest, vars], labels = land.label, col = "red",
+            cex = 0.8)
         }
-        text(label.dat, labels = land.label, col = "red", cex = 0.8)
-        # text(land[land$case == dest, vars], pos = 1, labels = dest, col = "red")
-      } else {
-        label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
-        names(label.dat) <- vars
-        label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
-        land.label <- paste0(label.parse[1], "\n", label.parse[2])
-        text(land[land$case == dest, vars], labels = land.label, col = "red",
-          cex = 0.8)
       }
     }
   }
