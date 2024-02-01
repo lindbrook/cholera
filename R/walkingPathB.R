@@ -22,6 +22,10 @@ walkingPathB <- function(origin = 1, destination = NULL,
     stop("You must provide at least one origin or destination.", call. = FALSE)
   }
 
+  if (!type %in% c("case-pump", "cases", "pumps")) {
+    stop('type must be "case-pump", "cases" or "pumps".', call. = FALSE)
+  }
+
   # Change type to "cases" in presence of landmarks
   if (is.character(destination)) {
     destination <- caseAndSpace(destination)
