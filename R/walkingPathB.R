@@ -886,8 +886,8 @@ casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
        p = p[[1]])
 }
 
-caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
-  weighted) {
+caseCase <- function(anchor, anchor.nm, destination, network.data, origin,
+  vestry, weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
@@ -897,18 +897,14 @@ caseCase <- function(anchor, anchor.nm, destination, network.data, vestry,
                 nodes[nodes$land %in% anchor, ]$node)
 
   if (is.null(destination)) {
-    destination <- c(cholera::fatalities$case, cholera::landmarksB$case)
+    dest <- c(cholera::fatalities$case, cholera::landmarksB$case)
+    dest <- validateDestinationCases(dest)
+  } else {
+    dest <- validateDestinationCases(destination)
   }
 
-  dest <- validateDestinationCases(destination)
-
-  if (any(anchor %in% dest$anchor)) {
-    if (length(anchor) == 1) {  # single origin
-      dest <- dest[!dest$anchor %in% anchor, ]
-      # message("Note: 'origin' anchor cases excluded from 'destination'.")
-    } else if (length(anchor) > 1) {  # multiple origins | NULL origin
-      anchor <- anchor[!anchor %in% dest$anchor]
-    }
+  if (is.null(destination)) {
+    if (any(anchor %in% dest$anchor)) dest <- dest[!dest$anchor %in% anchor, ]
   }
 
   sel <- nodes$case %in% dest$anchor | nodes$land %in% dest$anchor
