@@ -1,3 +1,9 @@
+### cholera 0.8.0.9264
+
+- filter origin cases from destination in caseCase() for 
+  walkingPathB(destination = NULL).
+
+
 ### cholera 0.8.0.9263
 
 - check 'type' in walkingPathB().
