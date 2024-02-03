@@ -6,7 +6,8 @@
 \usage{
 walkingPathB(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, weighted = TRUE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5)
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  include.landmarks = TRUE)
 }
 \arguments{
 \item{origin}{Numeric. Vector of origin(s) (numeric or landmark/pump name).}
@@ -26,6 +27,8 @@ walkingPathB(origin = 1, destination = NULL, type = "case-pump",
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
+
+\item{include.landmarks}{Logical. Include landmarks as cases.}
 }
 \description{
 Plot walking path to nearest pump (prototype).
