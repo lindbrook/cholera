@@ -1,3 +1,8 @@
+### cholera 0.8.0.9266
+
+- amend/add walkingPathB(destination = NULL, include.landmarks = TRUE).
+
+
 ### cholera 0.8.0.9265
 
 - add caseCase(include.landmarks).

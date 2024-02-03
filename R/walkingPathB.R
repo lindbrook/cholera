@@ -9,12 +9,14 @@
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
+#' @param include.landmarks Logical. Include landmarks as cases.
 #' @importFrom geosphere distGeo
 #' @export
 
 walkingPathB <- function(origin = 1, destination = NULL,
   type = "case-pump", vestry = FALSE, latlong = FALSE, weighted = TRUE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5) {
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  include.landmarks = TRUE) {
 
   meter.to.yard <- 1.09361
 
@@ -38,14 +40,23 @@ walkingPathB <- function(origin = 1, destination = NULL,
     }
   }
 
+  case.id <- cholera::fatalities$case
+  case.nm <- paste(case.id)
+  case.msg <- "Cases range from 1 to 578."
+
+  if (include.landmarks) {
+    case.id <- c(case.id, cholera::landmarksB$case)
+    case.nm <- c(case.nm, cholera::landmarksB$name)
+    case.msg <- "Cases range from 1 to 578; Landmarks from 1000 to 1021."
+  }
+
   if (type %in% c("case-pump", "cases")) {
     if (is.null(origin)) {
-      anchor <- c(cholera::fatalities$case, cholera::landmarksB$case)
-      anchor.nm <- c(cholera::fatalities$case, cholera::landmarksB$name)
+      anchor <- case.id
+      anchor.nm <- case.nm
     } else if (is.numeric(origin)) {
-      if (any(!origin %in% cholera::fatalities$case &
-              !origin %in% cholera::landmarksB$case)) {
-        message("Cases range from 1 to 578; Landmarks from 1000 to 1021.")
+      if (any(!origin %in% case.id)) {
+        message(case.msg)
       } else {
         if (any(origin < 1000L)) {
           sel <- cholera::anchor.case$case %in% origin
@@ -61,21 +72,17 @@ walkingPathB <- function(origin = 1, destination = NULL,
       } else if (length(origin) > 1) {
         origin <- vapply(origin, caseAndSpace, character(1L))
       }
-
-      if (all(!origin %in% cholera::landmarksB$name &
-              !origin %in% cholera::landmark.squaresB$name)) {
+      if (any(origin %in% cholera::landmark.squaresB$name)) {
+        sel <- grep(origin, cholera::landmarksB$name)
+        anchor <- cholera::landmarksB[sel, ]$case
+        anchor.nm <- origin
+      } else if (any(origin %in% cholera::landmarksB$name)) {
+        sel <- cholera::landmarksB$name %in% origin
+        anchor <- cholera::landmarksB[sel, ]$case
+        anchor.nm <- cholera::landmarksB[sel, ]$name
+      } else if (all(!origin %in% case.nm)) {
         stop("Landmark not found. Check spelling or cholera::landmarksB.",
           call. = FALSE)
-      } else {
-        if (any(origin %in% cholera::landmarksB$name)) {
-          sel <- cholera::landmarksB$name %in% origin
-          anchor <- cholera::landmarksB[sel, ]$case
-          anchor.nm <- cholera::landmarksB[sel, ]$name
-        } else if (any(origin %in% cholera::landmark.squaresB$name)) {
-          sel <- grep(origin, cholera::landmarksB$name)
-          anchor <- cholera::landmarksB[sel, ]$case
-          anchor.nm <- origin
-        }
       }
     }
   }
@@ -124,8 +131,8 @@ walkingPathB <- function(origin = 1, destination = NULL,
     path.data <- casePump(anchor, anchor.nm, destination, network.data, pmp,
       vestry, weighted)
   } else if (type == "cases") {
-    path.data <- caseCase(anchor, anchor.nm, destination, network.data,
-      vestry, weighted)
+    path.data <- caseCase(anchor, anchor.nm, destination, include.landmarks,
+      network.data, origin, vestry, weighted)
   } else if (type == "pumps") {
     path.data <- pumpPump(anchor, anchor.nm, destination, network.data,
       origin, pmp, vestry, weighted)
@@ -174,7 +181,6 @@ walkingPathB <- function(origin = 1, destination = NULL,
   } else if (as.integer(nearest.dest) >= 1000L) {
     sel <- cholera::landmarksB$case == as.integer(nearest.dest)
     dest.nm <- cholera::landmarksB[sel, ]$name
-
     if (grepl("Square", dest.nm)) {
       sel <- cholera::landmarksB$case == nearest.dest
       tmp <- strsplit(cholera::landmarksB[sel, ]$name, "-")
