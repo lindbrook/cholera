@@ -886,8 +886,8 @@ casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
        p = p[[1]])
 }
 
-caseCase <- function(anchor, anchor.nm, destination, network.data, origin,
-  vestry, weighted) {
+caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
+  network.data, origin, vestry, weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
@@ -896,12 +896,15 @@ caseCase <- function(anchor, anchor.nm, destination, network.data, origin,
   ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
                 nodes[nodes$land %in% anchor, ]$node)
 
-  if (is.null(destination)) {
-    dest <- c(cholera::fatalities$case, cholera::landmarksB$case)
-    dest <- validateDestinationCases(dest)
+  if (include.landmarks) {
+    if (is.null(destination)) {
+      dest <- c(cholera::fatalities$case, cholera::landmarksB$case)
+    }
   } else {
-    dest <- validateDestinationCases(destination)
+    if (is.null(destination)) dest <- cholera::fatalities$case
   }
+
+  dest <- validateDestinationCases(dest)
 
   if (is.null(destination)) {
     if (any(anchor %in% dest$anchor)) dest <- dest[!dest$anchor %in% anchor, ]
