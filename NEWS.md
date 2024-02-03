@@ -1,3 +1,8 @@
+### cholera 0.8.0.9265
+
+- add caseCase(include.landmarks).
+.
+
 ### cholera 0.8.0.9264
 
 - filter origin cases from destination in caseCase() for 
