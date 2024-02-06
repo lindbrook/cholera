@@ -28,16 +28,49 @@ walkingPathB <- function(origin = 1, destination = NULL,
     stop('type must be "case-pump", "cases" or "pumps".', call. = FALSE)
   }
 
-  # Change type to "cases" in presence of landmarks
+  if (any(is.character(origin))) {
+    if (length(origin) == 1) {
+      origin <- caseAndSpace(origin)
+    } else if (length(origin) > 1) {
+      origin <- vapply(origin, caseAndSpace, character(1L))
+    }
+  }
+
+  if (any(is.character(destination))) {
+    if (length(destination) == 1) {
+      destination <- caseAndSpace(destination)
+    } else if (length(destination) > 1) {
+      destination <- vapply(destination, caseAndSpace, character(1L))
+    }
+  }
+
+  if (!include.landmarks & type %in% c("case-pump", "cases")) {
+    msg <- 'landmarks not considered when include.landmarks = FALSE.'
+
+    if (is.numeric(origin)) {
+      if (origin > 1000L) stop(msg, call. = FALSE)
+    } else if (is.character(origin)) {
+      lndmrk.test <- origin %in% cholera::landmarksB$name |
+                     origin %in% cholera::landmark.squaresB$name
+      if (lndmrk.test) stop(msg, call. = FALSE)
+    }
+
+    if (is.numeric(destination)) {
+      if (destination > 1000L) stop(msg, call. = FALSE)
+    } else if (is.character(destination)) {
+      lndmrk.test <- destination %in% cholera::landmarksB$case |
+                     destination %in% cholera::landmark.squaresB$case
+      if (lndmrk.test) stop(msg, call. = FALSE)
+    }
+  }
+
+  # Change type to "cases" in presence of destination landmarks
   if (is.character(destination)) {
-    destination <- caseAndSpace(destination)
-    if (any(grepl(destination, cholera::landmarksB$name)) & type != "cases") {
-      type <- "cases"
-    }
+    dest.nm <- c(cholera::landmark.squaresB$name, cholera::landmarksB$name)
+    if (any(destination %in% dest.nm) & type != "cases") type <- "cases"
   } else if (is.numeric(destination)) {
-    if (any(destination %in% cholera::landmarksB$case) & type != "cases") {
-      type <- "cases"
-    }
+    dest.num <- c(cholera::landmark.squaresB$case, cholera::landmarksB$case)
+    if (any(destination %in% dest.num) & type != "cases") type <- "cases"
   }
 
   case.id <- cholera::fatalities$case
@@ -45,8 +78,12 @@ walkingPathB <- function(origin = 1, destination = NULL,
   case.msg <- "Cases range from 1 to 578."
 
   if (include.landmarks) {
-    case.id <- c(case.id, cholera::landmarksB$case)
-    case.nm <- c(case.nm, cholera::landmarksB$name)
+    case.id <- c(case.id,
+                 cholera::landmark.squaresB$case,
+                 cholera::landmarksB$case)
+    case.nm <- c(case.nm,
+                 cholera::landmark.squaresB$name,
+                 cholera::landmarksB$name)
     case.msg <- "Cases range from 1 to 578; Landmarks from 1000 to 1021."
   }
 
@@ -61,21 +98,37 @@ walkingPathB <- function(origin = 1, destination = NULL,
         if (any(origin < 1000L)) {
           sel <- cholera::anchor.case$case %in% origin
           anchor <- cholera::anchor.case[sel, "anchor"]
-        } else {
-          anchor <- origin
+          anchor.nm <- paste(anchor)
+        } else if (any(origin >= 1000L)) {
+          if (any(origin %in% cholera::landmark.squaresB$case)) {
+            sel <- cholera::landmark.squaresB$case %in% origin
+            sq.nm <- cholera::landmark.squaresB[sel, ]$name
+            id.sel <- grepl(sq.nm, cholera::landmarksB$name)
+            anchor.sq <- cholera::landmarksB$case[id.sel]
+          } else if (any(origin %in% cholera::landmarksB$case)) {
+            sel <- cholera::landmarksB$case %in% origin
+            anchor <- cholera::landmarksB[sel, ]$case
+            anchor.nm <- cholera::landmarksB[sel, ]$name
+          }
+
+          if (exists("anchor") & exists("anchor.sq")) {
+            anchor <- c(anchor, anchor.sq)
+            sel <- cholera::landmarksB$case %in% anchor.sq
+            nm.sq <- cholera::landmarksB[sel, ]$name
+            anchor.nm <- c(anchor, nm.sq)
+          } else if (!exists("anchor") & exists("anchor.sq")) {
+            anchor <- anchor.sq
+            sel <- cholera::landmarksB$case %in% anchor.sq
+            nm.sq <- cholera::landmarksB[sel, ]$name
+            anchor.nm <- nm.sq
+          }
         }
-        anchor.nm <- anchor
       }
     } else if (is.character(origin)) {
-      if (length(origin) == 1) {
-        origin <- caseAndSpace(origin)
-      } else if (length(origin) > 1) {
-        origin <- vapply(origin, caseAndSpace, character(1L))
-      }
       if (any(origin %in% cholera::landmark.squaresB$name)) {
         sel <- grep(origin, cholera::landmarksB$name)
         anchor <- cholera::landmarksB[sel, ]$case
-        anchor.nm <- origin
+        anchor.nm <- cholera::landmarksB[sel, ]$name
       } else if (any(origin %in% cholera::landmarksB$name)) {
         sel <- cholera::landmarksB$name %in% origin
         anchor <- cholera::landmarksB[sel, ]$case
@@ -333,11 +386,11 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
       land.tmp <- land[land$case == orig, ]
 
       if (grepl("Square", land.tmp$name)) {
-        sel <- cholera::landmark.squaresB$name == path.data$orig.nm
-        label.dat <- cholera::landmark.squaresB[sel, ]
-        label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
+        sq.label <- unlist(strsplit(land.tmp$name, "-"))[1]
+        label.parse <- unlist(strsplit(sq.label, "[ ]"))
         sq.label <- paste0(label.parse[1], "\n", label.parse[2])
-        text(label.dat[, c(ew, ns)], labels = sq.label, col = "red", cex = 0.8)
+        text(cholera::landmark.squaresB[, c(ew, ns)], labels = sq.label,
+          col = "red", cex = 0.8)
         # text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
       } else {
         label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
@@ -425,12 +478,12 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
     }
   }
 
-  milepost.data <- milePostsB(path.data, dat, destination, distance.unit,
-    ds, latlong, milepost.unit, milepost.interval, time.unit, walking.speed)
+  milepost.data <- milePostsB(path.data, dat, destination, distance.unit, ds,
+    latlong, milepost.unit, milepost.interval, time.unit, walking.speed)
 
   seg.data <- milepost.data$seg.data
 
-  # last arrow (last mile)
+  # last/final arrow ("last mile")
   arrows(seg.data[1, paste0(ew, 2)], seg.data[1, paste0(ns, 2)],
          seg.data[1, paste0(ew, 1)], seg.data[1, paste0(ns, 1)],
          length = 0.0875, lwd = 3, col = case.color)
@@ -902,13 +955,13 @@ caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
   ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
                 nodes[nodes$land %in% anchor, ]$node)
 
-  if (include.landmarks) {
-    if (is.null(destination)) {
-      dest <- c(cholera::fatalities$case, cholera::landmarksB$case)
-    }
-  } else {
-    if (is.null(destination)) dest <- cholera::fatalities$case
-  }
+  if (is.null(destination)) {
+    if (include.landmarks) {
+      dest <- c(cholera::fatalities$case,
+                cholera::landmark.squaresB$case,
+                cholera::landmarksB$case)
+    } else dest <- cholera::fatalities$case
+  } else dest <- destination
 
   dest <- validateDestinationCases(dest)
 
