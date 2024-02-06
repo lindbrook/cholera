@@ -902,13 +902,13 @@ caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
   ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
                 nodes[nodes$land %in% anchor, ]$node)
 
-  if (include.landmarks) {
-    if (is.null(destination)) {
-      dest <- c(cholera::fatalities$case, cholera::landmarksB$case)
-    }
-  } else {
-    if (is.null(destination)) dest <- cholera::fatalities$case
-  }
+  if (is.null(destination)) {
+    if (include.landmarks) {
+      dest <- c(cholera::fatalities$case,
+                cholera::landmark.squaresB$case,
+                cholera::landmarksB$case)
+    } else dest <- cholera::fatalities$case
+  } else dest <- destination
 
   dest <- validateDestinationCases(dest)
 

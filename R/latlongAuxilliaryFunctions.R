@@ -404,7 +404,8 @@ validateDestinationCases <- function(vec) {
     if (is.numeric(x)) {
       name.chk <- FALSE
       number.chk <- abs(x) %in% cholera::fatalities$case |
-                    abs(x) %in% cholera::landmarksB$case
+                    abs(x) %in% cholera::landmarksB$case |
+                    abs(x) %in% cholera::landmark.squaresB$case
 
     } else if (is.character(x)) {
       tmp <- caseAndSpace(x)
