@@ -1,3 +1,8 @@
+### cholera 0.8.0.9268
+
+- add/use caseLandmarks() for Square entry/exit names.
+
+
 ### cholera 0.8.0.9267
 
 - fix numerical landmarks (esp. Squares) in walkingPathB().
