@@ -333,11 +333,11 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
       land.tmp <- land[land$case == orig, ]
 
       if (grepl("Square", land.tmp$name)) {
-        sel <- cholera::landmark.squaresB$name == path.data$orig.nm
-        label.dat <- cholera::landmark.squaresB[sel, ]
-        label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
+        sq.label <- unlist(strsplit(land.tmp$name, "-"))[1]
+        label.parse <- unlist(strsplit(sq.label, "[ ]"))
         sq.label <- paste0(label.parse[1], "\n", label.parse[2])
-        text(label.dat[, c(ew, ns)], labels = sq.label, col = "red", cex = 0.8)
+        text(cholera::landmark.squaresB[, c(ew, ns)], labels = sq.label,
+          col = "red", cex = 0.8)
         # text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
       } else {
         label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
