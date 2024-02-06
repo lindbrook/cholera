@@ -1,3 +1,8 @@
+### cholera 0.8.0.9267
+
+- fix numerical landmarks (esp. Squares) in walkingPathB().
+
+
 ### cholera 0.8.0.9266
 
 - amend/add walkingPathB(destination = NULL, include.landmarks = TRUE).
