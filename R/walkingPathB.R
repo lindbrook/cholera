@@ -425,12 +425,12 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
     }
   }
 
-  milepost.data <- milePostsB(path.data, dat, destination, distance.unit,
-    ds, latlong, milepost.unit, milepost.interval, time.unit, walking.speed)
+  milepost.data <- milePostsB(path.data, dat, destination, distance.unit, ds,
+    latlong, milepost.unit, milepost.interval, time.unit, walking.speed)
 
   seg.data <- milepost.data$seg.data
 
-  # last arrow (last mile)
+  # last/final arrow ("last mile")
   arrows(seg.data[1, paste0(ew, 2)], seg.data[1, paste0(ns, 2)],
          seg.data[1, paste0(ew, 1)], seg.data[1, paste0(ns, 1)],
          length = 0.0875, lwd = 3, col = case.color)
