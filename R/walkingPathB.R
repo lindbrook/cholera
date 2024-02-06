@@ -28,21 +28,8 @@ walkingPathB <- function(origin = 1, destination = NULL,
     stop('type must be "case-pump", "cases" or "pumps".', call. = FALSE)
   }
 
-  if (any(is.character(origin))) {
-    if (length(origin) == 1) {
-      origin <- caseAndSpace(origin)
-    } else if (length(origin) > 1) {
-      origin <- vapply(origin, caseAndSpace, character(1L))
-    }
-  }
-
-  if (any(is.character(destination))) {
-    if (length(destination) == 1) {
-      destination <- caseAndSpace(destination)
-    } else if (length(destination) > 1) {
-      destination <- vapply(destination, caseAndSpace, character(1L))
-    }
-  }
+  if (any(is.character(origin))) origin <- caseLandmarks(origin)
+  if (any(is.character(destination))) destination <- caseLandmarks(destination)
 
   if (!include.landmarks & type %in% c("case-pump", "cases")) {
     msg <- 'landmarks not considered when include.landmarks = FALSE.'
@@ -1137,4 +1124,30 @@ pumpPump <- function(anchor, anchor.nm, destination, network.data, origin, pmp,
 
   list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest,
        p = p[[1]])
+}
+
+caseLandmarks <- function(string) {
+  if (length(string) == 1) {
+    out <- landmarkCase(string)
+  } else if (length(string) > 1) {
+    out <- vapply(string, landmarkCase, character(1L))
+  }
+  unname(out)
+}
+
+landmarkCase <- function(string) {
+  land.parts <- unlist(strsplit(string, " "))
+  dash.chk <- grepl("-", land.parts) # check for Square postfix
+  if (any(dash.chk)) {
+    dash <- land.parts[dash.chk]
+    no_dash <- land.parts[!dash.chk]
+    tmp <- caseAndSpace(dash)
+    postfix.id <- nchar(tmp)
+    postfix <- substr(tmp, postfix.id, postfix.id)
+    substr(tmp, postfix.id, postfix.id) <- toupper(postfix)
+    string <- paste(caseAndSpace(no_dash), tmp)
+  } else {
+    string <- caseAndSpace(string)
+  }
+  string
 }
