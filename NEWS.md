@@ -1,3 +1,8 @@
+### cholera 0.8.0.9270
+
+- exclude landmark destinations when origin is landmark (prototype).
+
+
 ### cholera 0.8.0.9269
 
 - fix check for compound Square postfixes (e.g., "Soho Square-S1").
