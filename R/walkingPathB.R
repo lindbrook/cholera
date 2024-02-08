@@ -953,7 +953,9 @@ caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
   dest <- validateDestinationCases(dest)
 
   if (is.null(destination)) {
-    if (any(anchor %in% dest$anchor)) dest <- dest[!dest$anchor %in% anchor, ]
+    if (any(anchor %in% dest$anchor)) {
+      dest <- dest[!dest$anchor %in% anchor & dest$anchor < 1000L, ]
+    }
   }
 
   sel <- nodes$case %in% dest$anchor | nodes$land %in% dest$anchor
