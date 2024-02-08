@@ -1,3 +1,8 @@
+### cholera 0.8.0.9269
+
+- fix check for compound Square postfixes (e.g., "Soho Square-S1").
+
+
 ### cholera 0.8.0.9268
 
 - add/use caseLandmarks() for Square entry/exit names.

@@ -1127,11 +1127,15 @@ pumpPump <- function(anchor, anchor.nm, destination, network.data, origin, pmp,
 }
 
 caseLandmarks <- function(string) {
-  if (length(string) == 1) {
-    out <- landmarkCase(string)
-  } else if (length(string) > 1) {
-    out <- vapply(string, landmarkCase, character(1L))
-  }
+  nm.chk <- any(string %in% cholera::landmarksB$name |
+                string %in% cholera::landmark.squaresB$name)
+  if (!nm.chk) {
+    if (length(string) == 1) {
+      out <- landmarkCase(string)
+    } else if (length(string) > 1) {
+      out <- vapply(string, landmarkCase, character(1L))
+    }
+  } else out <- string
   unname(out)
 }
 
@@ -1142,8 +1146,8 @@ landmarkCase <- function(string) {
     dash <- land.parts[dash.chk]
     no_dash <- land.parts[!dash.chk]
     tmp <- caseAndSpace(dash)
-    postfix.id <- nchar(tmp)
-    postfix <- substr(tmp, postfix.id, postfix.id)
+    postfix.id <- unlist(gregexpr("-", tmp)) + 1
+    postfix <- substr(tmp, postfix.id, nchar(tmp))
     substr(tmp, postfix.id, postfix.id) <- toupper(postfix)
     string <- paste(caseAndSpace(no_dash), tmp)
   } else {
