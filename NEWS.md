@@ -1,3 +1,8 @@
+### cholera 0.8.0.9271
+
+- fix landmark destination test in walkingPathB().
+
+
 ### cholera 0.8.0.9270
 
 - exclude landmark destinations when origin is landmark (prototype).

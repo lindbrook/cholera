@@ -44,8 +44,8 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
     if (is.numeric(destination)) {
       if (destination > 1000L) stop(msg, call. = FALSE)
     } else if (is.character(destination)) {
-      lndmrk.test <- destination %in% cholera::landmarksB$case |
-                     destination %in% cholera::landmark.squaresB$case
+      lndmrk.test <- destination %in% cholera::landmarksB$name |
+                     destination %in% cholera::landmark.squaresB$name
       if (lndmrk.test) stop(msg, call. = FALSE)
     }
   }
