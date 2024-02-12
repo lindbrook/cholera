@@ -952,8 +952,16 @@ caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
   dest <- validateDestinationCases(dest)
 
   if (is.null(destination)) {
-    if (any(anchor %in% dest$anchor)) {
-      dest <- dest[!dest$anchor %in% anchor & dest$anchor < 1000L, ]
+    if (any(dest$anchor >= 1000L)) {
+      golden.sq <- 1002:1005
+      soho.sq <- 1006:1011
+      if (any(anchor %in% golden.sq)) {
+        dest <- dest[!dest$anchor %in% golden.sq, ]
+      } else if (any(anchor %in% soho.sq)) {
+        dest <- dest[!dest$anchor %in% soho.sq, ]
+      }
+    } else if (any(dest$anchor < 1000L)) {
+      dest <- dest[!dest$anchor %in% anchor, ]
     }
   }
 
