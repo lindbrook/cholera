@@ -13,10 +13,9 @@
 #' @importFrom geosphere distGeo
 #' @export
 
-walkingPathB <- function(origin = 1, destination = NULL,
-  type = "case-pump", vestry = FALSE, latlong = FALSE, weighted = TRUE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  include.landmarks = TRUE) {
+walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
+  vestry = FALSE, latlong = FALSE, weighted = TRUE, distance.unit = "meter",
+  time.unit = "second", walking.speed = 5, include.landmarks = TRUE) {
 
   meter.to.yard <- 1.09361
 
