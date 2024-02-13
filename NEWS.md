@@ -1,3 +1,8 @@
+### cholera 0.8.0.9273
+
+- use caseLandmarks() in validateDestinationCases().
+
+
 ### cholera 0.8.0.9272
 
 - exclude other Square destination cases with a Square origin.

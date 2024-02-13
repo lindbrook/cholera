@@ -408,7 +408,7 @@ validateDestinationCases <- function(vec) {
                     abs(x) %in% cholera::landmark.squaresB$case
 
     } else if (is.character(x)) {
-      tmp <- caseAndSpace(x)
+      tmp <- caseLandmarks(x)
       name.chk <- tmp %in% cholera::landmarksB$name |
                   tmp %in% cholera::landmark.squaresB$name
       if (suppressWarnings(!is.na(as.integer(tmp)))) {
