@@ -963,51 +963,25 @@ caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
   if (is.null(destination)) {
     golden <- sqCases("Golden")
     soho <- sqCases("Soho")
-    if (any(dest %in% golden)) {
-      dest <- dest[!dest %in% golden]
-    } else if (any(dest %in% soho)) {
-      dest <- dest[!dest %in% soho]
+    if (any(anchor %in% c(golden, soho))) {
+      if (any(anchor %in% golden)) dest <- dest[!dest %in% golden]
+      if (any(anchor %in% soho)) dest <- dest[!dest %in% soho]
     }
-    if (any(anchor %in% dest)) {
-      dest <- dest[!dest %in% anchor]
-    }
+    if (any(anchor %in% dest)) dest <- dest[!dest %in% anchor]
   }
 
   if (is.null(origin)) {
     golden <- sqCases("Golden")
     soho <- sqCases("Soho")
-    if (any(dest %in% golden)) {
-      anchor <- anchor[!anchor %in% golden]
-    } else if (any(dest %in% soho)) {
-      anchor <- anchor[!anchor %in% soho]
+    if (any(dest %in% c(golden, soho))) {
+      if (any(dest %in% golden)) anchor <- anchor[!anchor %in% dest]
+      if (any(dest %in% soho)) anchor <- anchor[!anchor %in% dest]
     }
-    if (any(dest %in% anchor)) {
-      anchor <- anchor[!anchor %in% dest]
-    }
+    if (any(dest %in% anchor)) anchor <- anchor[!anchor %in% dest]
   }
 
   ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
                 nodes[nodes$land %in% anchor, ]$node)
-
-  if (1000L %in% dest) {
-    delta <- setdiff(sqCases("Golden"), 1000L)
-    if (length(dest) > 1) {
-      dest <- dest[dest != 1000L]
-      dest <- c(dest, delta)
-    } else if (length(dest) == 1) {
-      dest <- delta
-    }
-  }
-
-  if (1001L %in% dest) {
-    delta <- setdiff(sqCases("Soho"), 1001L)
-    if (length(dest) > 1) {
-      dest <- dest[dest != 1000L]
-      dest <- c(dest, delta)
-    } else if (length(dest) == 1) {
-      dest <- delta
-    }
-  }
 
   alters <- nodes[nodes$case %in% dest | nodes$land %in% dest, ]
   alter.node <- alters$node
