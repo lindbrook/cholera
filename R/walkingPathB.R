@@ -32,7 +32,6 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
 
   if (!include.landmarks & type %in% c("case-pump", "cases")) {
     msg <- 'landmarks not considered when include.landmarks = FALSE.'
-
     if (is.numeric(origin)) {
       if (origin > 1000L) stop(msg, call. = FALSE)
     } else if (is.character(origin)) {
@@ -40,7 +39,6 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
                      origin %in% cholera::landmark.squaresB$name
       if (lndmrk.test) stop(msg, call. = FALSE)
     }
-
     if (is.numeric(destination)) {
       if (destination > 1000L) stop(msg, call. = FALSE)
     } else if (is.character(destination)) {
@@ -59,21 +57,21 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
     if (any(destination %in% dest.num) & type != "cases") type <- "cases"
   }
 
-  case.id <- cholera::fatalities$case
-  case.nm <- paste(case.id)
-  case.msg <- "Cases range from 1 to 578."
-
-  if (include.landmarks) {
-    case.id <- c(case.id,
-                 cholera::landmark.squaresB$case,
-                 cholera::landmarksB$case)
-    case.nm <- c(case.nm,
-                 cholera::landmark.squaresB$name,
-                 cholera::landmarksB$name)
-    case.msg <- "Cases range from 1 to 578; Landmarks from 1000 to 1021."
-  }
-
   if (type %in% c("case-pump", "cases")) {
+    case.id <- cholera::fatalities$case
+    case.nm <- paste(case.id)
+    case.msg <- "Cases range from 1 to 578."
+
+    if (include.landmarks) {
+      case.id <- c(case.id,
+                   cholera::landmark.squaresB$case,
+                   cholera::landmarksB$case)
+      case.nm <- c(case.nm,
+                   cholera::landmark.squaresB$name,
+                   cholera::landmarksB$name)
+      case.msg <- "Cases range from 1 to 578; Landmarks from 1000 to 1021."
+    }
+
     if (is.null(origin)) {
       anchor <- case.id
       anchor.nm <- case.nm
