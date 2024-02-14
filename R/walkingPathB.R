@@ -1162,3 +1162,11 @@ landmarkCase <- function(string) {
   }
   string
 }
+
+sqCases <- function(sq = "Golden") {
+  sel <- grep(sq, cholera::landmark.squaresB$name)
+  a <- cholera::landmark.squaresB[sel, ]$case
+  sel <- grep(sq, cholera::landmarksB$name)
+  b <- cholera::landmarksB[sel, ]$case
+  c(a, b)
+}
