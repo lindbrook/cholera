@@ -1,3 +1,8 @@
+### cholera 0.8.0.9275
+
+- fix Square cases with NULL origin/destination in caseCase().
+
+
 ### cholera 0.8.0.9274
 
 - add/use sqCases() and drop/archive validateDestinationCases() in caseCase().
