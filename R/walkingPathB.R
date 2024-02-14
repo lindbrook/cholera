@@ -1202,6 +1202,8 @@ landmarkCase <- function(string) {
 }
 
 sqCases <- function(sq = "Golden") {
+  if (!sq %in% c("Golden", "Soho")) sq <- wordCase(sq)
+  if (!sq %in% c("Golden", "Soho")) stop('sq must be "Golden" or "Soho".')
   sel <- grep(sq, cholera::landmark.squaresB$name)
   a <- cholera::landmark.squaresB[sel, ]$case
   sel <- grep(sq, cholera::landmarksB$name)
