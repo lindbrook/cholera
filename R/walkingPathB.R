@@ -936,42 +936,82 @@ caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
   g <- network.data$g
   nodes <- network.data$nodes
 
-  ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
-                nodes[nodes$land %in% anchor, ]$node)
-
   if (is.null(destination)) {
     if (include.landmarks) {
       dest <- c(cholera::fatalities$case,
                 cholera::landmark.squaresB$case,
                 cholera::landmarksB$case)
-    } else dest <- cholera::fatalities$case
-  } else dest <- destination
-
-  dest <- validateDestinationCases(dest)
-
-  if (is.null(destination)) {
-    if (any(dest$anchor >= 1000L)) {
-      golden.sq <- 1002:1005
-      soho.sq <- 1006:1011
-      if (any(anchor %in% golden.sq)) {
-        dest <- dest[!dest$anchor %in% golden.sq, ]
-      } else if (any(anchor %in% soho.sq)) {
-        dest <- dest[!dest$anchor %in% soho.sq, ]
-      }
-    } else if (any(dest$anchor < 1000L)) {
-      dest <- dest[!dest$anchor %in% anchor, ]
+    } else {
+      dest <- cholera::fatalities$case
+    }
+  } else if (is.character(destination)) {
+    sel <- cholera::landmarksB$name %in% destination
+    sel.sq <- cholera::landmark.squaresB$name %in% destination
+    dest <- c(cholera::landmarksB[sel, ]$case,
+              cholera::landmark.squaresB[sel.sq, ]$case)
+  } else if (is.numeric((destination))) {
+    if (destination < 1000L) {
+      sel <- cholera::anchor.case$case %in% destination
+      dest <- cholera::anchor.case[sel, ]$anchor
+    } else if (destination >= 1000L) {
+      sel <- cholera::landmarksB$case %in% destination |
+             cholera::landmark.squaresB$case %in% destination
+      dest <- cholera::landmarksB[sel, ]$case
     }
   }
 
-  sel <- nodes$case %in% dest$anchor | nodes$land %in% dest$anchor
-  alters <- nodes[sel, ]
+  if (is.null(destination)) {
+    golden <- sqCases("Golden")
+    soho <- sqCases("Soho")
+    if (any(dest %in% golden)) {
+      dest <- dest[!dest %in% golden]
+    } else if (any(dest %in% soho)) {
+      dest <- dest[!dest %in% soho]
+    }
+    if (any(anchor %in% dest)) {
+      dest <- dest[!dest %in% anchor]
+    }
+  }
 
+  if (is.null(origin)) {
+    golden <- sqCases("Golden")
+    soho <- sqCases("Soho")
+    if (any(dest %in% golden)) {
+      anchor <- anchor[!anchor %in% golden]
+    } else if (any(dest %in% soho)) {
+      anchor <- anchor[!anchor %in% soho]
+    }
+    if (any(dest %in% anchor)) {
+      anchor <- anchor[!anchor %in% dest]
+    }
+  }
+
+  ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
+                nodes[nodes$land %in% anchor, ]$node)
+
+  if (1000L %in% dest) {
+    delta <- setdiff(sqCases("Golden"), 1000L)
+    if (length(dest) > 1) {
+      dest <- dest[dest != 1000L]
+      dest <- c(dest, delta)
+    } else if (length(dest) == 1) {
+      dest <- delta
+    }
+  }
+
+  if (1001L %in% dest) {
+    delta <- setdiff(sqCases("Soho"), 1001L)
+    if (length(dest) > 1) {
+      dest <- dest[dest != 1000L]
+      dest <- c(dest, delta)
+    } else if (length(dest) == 1) {
+      dest <- delta
+    }
+  }
+
+  alters <- nodes[nodes$case %in% dest | nodes$land %in% dest, ]
   alter.node <- alters$node
   names(alter.node) <- alters$case + alters$land
-
-  if (any(alter.node %in% ego.node)) {
-    ego.node <- ego.node[!ego.node %in% alter.node]
-  }
 
   if (length(ego.node) == 1) {
     if (weighted) {
@@ -1004,9 +1044,7 @@ caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
     ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
     d <- min(d.multi.ego[[ego.id]])
 
-    sel <- (nodes$case != 0 | nodes$land != 0) &
-            nodes$node == ego.node[ego.id]
-
+    sel <- (nodes$case != 0 | nodes$land != 0) & nodes$node == ego.node[ego.id]
     anchor <- nodes[sel, ]$case + nodes[sel, ]$land
     anchor.nm <- anchor.nm[ego.id]
 
@@ -1170,3 +1208,4 @@ sqCases <- function(sq = "Golden") {
   b <- cholera::landmarksB[sel, ]$case
   c(a, b)
 }
+
