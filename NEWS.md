@@ -1,3 +1,11 @@
+### cholera 0.8.0.9276
+
+- add validateCase() and validatePump(); archive sqCases().
+- amend variables and code in casePump(), caseCase() and pumpPump().
+- amend variables in plot.walking_path_B(), longTitle() and mapDataRange().
+- use validateCase() and validatePump() and amend variables in walkingPathB().
+
+
 ### cholera 0.8.0.9275
 
 - fix Square cases with NULL origin/destination in caseCase().
