@@ -854,7 +854,7 @@ casePump <- function(orgn, orgn.nm, destination, network.data, pmp, vestry,
   list(orgn = orgn, orgn.nm = orgn.nm, nearest.dest = nearest.dest, p = p[[1]])
 }
 
-caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks, 
+caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks,
   network.data, origin, vestry, weighted) {
 
   edges <- network.data$edges
