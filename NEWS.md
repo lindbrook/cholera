@@ -1,3 +1,9 @@
+### cholera 0.8.0.9277
+
+- remove redundant code in plot.walking_path_B().
+- fix duplicate Square origin label in plot.walking_path_B().
+
+
 ### cholera 0.8.0.9276
 
 - add validateCase() and validatePump(); archive sqCases().

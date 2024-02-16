@@ -288,7 +288,9 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
         sq.label <- unlist(strsplit(land.tmp$name, "-"))[1]
         label.parse <- unlist(strsplit(sq.label, "[ ]"))
         sq.label <- paste0(label.parse[1], "\n", label.parse[2])
-        text(cholera::landmark.squaresB[, c(ew, ns)], labels = sq.label,
+        obs.sq <- paste(label.parse, collapse = " ")
+        sel <- cholera::landmark.squaresB$name == obs.sq
+        text(cholera::landmark.squaresB[sel, c(ew, ns)], labels = sq.label,
           col = "red", cex = 0.8)
         # text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
       } else {
