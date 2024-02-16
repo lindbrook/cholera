@@ -855,15 +855,15 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
   }
 }
 
-casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
+casePump <- function(orgn, orgn.nm, destination, network.data, pmp, vestry,
   weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
   nodes <- network.data$nodes
 
-  ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
-                nodes[nodes$land %in% anchor, ]$node)
+  ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
+                nodes[nodes$land %in% orgn, ]$node)
 
   pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
 
@@ -908,8 +908,8 @@ casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
     sel <- (nodes$case != 0 | nodes$land != 0) &
             nodes$node %in% ego.node[ego.id]
 
-    anchor <- nodes[sel, ]$case + nodes[sel, ]$land
-    anchor.nm <- anchor.nm[ego.id]
+    orgn <- nodes[sel, ]$case + nodes[sel, ]$land
+    orgn.nm <- orgn.nm[ego.id]
 
     nr.ego.node <- nodes[sel, ]$node
 
@@ -925,65 +925,20 @@ casePump <- function(anchor, anchor.nm, destination, network.data, pmp, vestry,
     }
   }
 
-  list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest,
-       p = p[[1]])
+  list(orgn = orgn, orgn.nm = orgn.nm, nearest.dest = nearest.dest, p = p[[1]])
 }
 
-caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
+caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks, 
   network.data, origin, vestry, weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
   nodes <- network.data$nodes
 
-  if (is.null(destination)) {
-    if (include.landmarks) {
-      dest <- c(cholera::fatalities$case,
-                cholera::landmark.squaresB$case,
-                cholera::landmarksB$case)
-    } else {
-      dest <- cholera::fatalities$case
-    }
-  } else if (is.character(destination)) {
-    sel <- cholera::landmarksB$name %in% destination
-    sel.sq <- cholera::landmark.squaresB$name %in% destination
-    dest <- c(cholera::landmarksB[sel, ]$case,
-              cholera::landmark.squaresB[sel.sq, ]$case)
-  } else if (is.numeric((destination))) {
-    if (destination < 1000L) {
-      sel <- cholera::anchor.case$case %in% destination
-      dest <- cholera::anchor.case[sel, ]$anchor
-    } else if (destination >= 1000L) {
-      sel <- cholera::landmarksB$case %in% destination |
-             cholera::landmark.squaresB$case %in% destination
-      dest <- cholera::landmarksB[sel, ]$case
-    }
-  }
+  ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
+                nodes[nodes$land %in% orgn, ]$node)
 
-  if (is.null(destination)) {
-    golden <- sqCases("Golden")
-    soho <- sqCases("Soho")
-    if (any(anchor %in% c(golden, soho))) {
-      if (any(anchor %in% golden)) dest <- dest[!dest %in% golden]
-      if (any(anchor %in% soho)) dest <- dest[!dest %in% soho]
-    }
-    if (any(anchor %in% dest)) dest <- dest[!dest %in% anchor]
-  }
-
-  if (is.null(origin)) {
-    golden <- sqCases("Golden")
-    soho <- sqCases("Soho")
-    if (any(dest %in% c(golden, soho))) {
-      if (any(dest %in% golden)) anchor <- anchor[!anchor %in% dest]
-      if (any(dest %in% soho)) anchor <- anchor[!anchor %in% dest]
-    }
-    if (any(dest %in% anchor)) anchor <- anchor[!anchor %in% dest]
-  }
-
-  ego.node <- c(nodes[nodes$case %in% anchor, ]$node,
-                nodes[nodes$land %in% anchor, ]$node)
-
-  alters <- nodes[nodes$case %in% dest | nodes$land %in% dest, ]
+  alters <- nodes[nodes$case %in% dstn | nodes$land %in% dstn, ]
   alter.node <- alters$node
   names(alter.node) <- alters$case + alters$land
 
@@ -1019,8 +974,8 @@ caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
     d <- min(d.multi.ego[[ego.id]])
 
     sel <- (nodes$case != 0 | nodes$land != 0) & nodes$node == ego.node[ego.id]
-    anchor <- nodes[sel, ]$case + nodes[sel, ]$land
-    anchor.nm <- anchor.nm[ego.id]
+    orgn <- nodes[sel, ]$case + nodes[sel, ]$land
+    orgn.nm <- orgn.nm[ego.id]
 
     nr.ego.node <- nodes[sel, ]$node
 
@@ -1038,18 +993,17 @@ caseCase <- function(anchor, anchor.nm, destination, include.landmarks,
     }
   }
 
-  list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest,
-       p = p[[1]])
+  list(orgn = orgn, orgn.nm = orgn.nm, nearest.dest = nearest.dest, p = p[[1]])
 }
 
-pumpPump <- function(anchor, anchor.nm, destination, network.data, origin, pmp,
+pumpPump <- function(orgn, orgn.nm, destination, network.data, origin, pmp,
   vestry, weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
   nodes <- network.data$nodes
 
-  egos <- nodes[nodes$pump %in% anchor, ]
+  egos <- nodes[nodes$pump %in% orgn, ]
   if (nrow(egos) > 1) egos <- egos[order(egos$pump), ]
 
   pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
@@ -1092,10 +1046,10 @@ pumpPump <- function(anchor, anchor.nm, destination, network.data, origin, pmp,
   alter.node <- altersB$node
   names(alter.node) <- altersB$pump
 
-  if (length(setdiff(anchor, egosB$pump) != 0)) {
-    sel <- anchor %in% setdiff(anchor, egosB$pump)
-    anchor <- anchor[!sel]
-    anchor.nm <- anchor.nm[!sel]
+  if (length(setdiff(orgn, egosB$pump) != 0)) {
+    sel <- orgn %in% setdiff(orgn, egosB$pump)
+    orgn <- orgn[!sel]
+    orgn.nm <- orgn.nm[!sel]
   }
 
   if (length(ego.node) == 1) {
@@ -1137,12 +1091,11 @@ pumpPump <- function(anchor, anchor.nm, destination, network.data, origin, pmp,
       p <- igraph::shortest_paths(g, nr.ego.node, nr.alter.node)
     }
 
-    anchor <- anchor[ego.id]
-    anchor.nm <- anchor.nm[ego.id]
+    orgn <- orgn[ego.id]
+    orgn.nm <- orgn.nm[ego.id]
   }
 
-  list(anchor = anchor, anchor.nm = anchor.nm, nearest.dest = nearest.dest,
-       p = p[[1]])
+  list(orgn = orgn, orgn.nm = orgn.nm, nearest.dest = nearest.dest, p = p[[1]])
 }
 
 caseLandmarks <- function(string) {
