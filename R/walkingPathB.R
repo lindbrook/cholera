@@ -269,8 +269,8 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
 
   path.data <- x$data
   type <- x$data$type
-  orig <- path.data$orig.anchor
-  dest <- path.data$dest.anchor
+  orig <- path.data$orig
+  dest <- path.data$dest
   destination <- x$destination
   colors <- snowColors(x$vestry)
   dat <- x$path
@@ -333,7 +333,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
   } else stop("zoom must either be logical or numeric.")
 
   if (type == "case-pump") {
-    p.sel <- paste0("p", path.data$dest.anchor)
+    p.sel <- paste0("p", path.data$dest)
     case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
   } else {
     case.color <- "blue"
@@ -776,54 +776,54 @@ arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit,
 longTitle <- function(long.title, type, pmp, path.data, orig, land) {
   if (long.title) {
     if (type == "case-pump") {
-      p.nm <- pmp[pmp$id == path.data$dest.anchor, ]$street
+      p.nm <- pmp[pmp$id == path.data$dest, ]$street
       if (orig < 1000L) {
         alpha <- paste("Case", orig)
-        omega <- paste(p.nm, "Pump", paste0("(#", path.data$dest.anchor, ")"))
+        omega <- paste(p.nm, "Pump", paste0("(#", path.data$dest, ")"))
       } else if (orig >= 1000L) {
         c.nm <- land[land$case == orig, ]$name
         alpha <- paste(c.nm, paste0("(#", orig, ")"))
-        omega <- paste(p.nm, "Pump", paste0("(#", path.data$dest.anchor, ")"))
+        omega <- paste(p.nm, "Pump", paste0("(#", path.data$dest, ")"))
       }
     } else if (type == "cases") {
-      if (orig >= 1000L & path.data$dest.anchor >= 1000L) {
+      if (orig >= 1000L & path.data$dest >= 1000L) {
         c.orig.nm <- land[land$case == orig, ]$name
-        c.dest.nm <- land[land$case == path.data$dest.anchor, ]$name
+        c.dest.nm <- land[land$case == path.data$dest, ]$name
         alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
-        omega <- paste(c.dest.nm, paste0("(#", path.data$dest.anchor, ")"))
-      } else if (orig < 1000L & path.data$dest.anchor >= 1000L) {
-        c.dest.nm <- land[land$case == path.data$dest.anchor, ]$name
+        omega <- paste(c.dest.nm, paste0("(#", path.data$dest, ")"))
+      } else if (orig < 1000L & path.data$dest >= 1000L) {
+        c.dest.nm <- land[land$case == path.data$dest, ]$name
         alpha <- paste("Case", orig)
-        omega <- paste(c.dest.nm, paste0("(#", path.data$dest.anchor, ")"))
-      } else if (orig >= 1000L & path.data$dest.anchor < 1000L) {
+        omega <- paste(c.dest.nm, paste0("(#", path.data$dest, ")"))
+      } else if (orig >= 1000L & path.data$dest < 1000L) {
         c.orig.nm <- land[land$case == orig, ]$name
         alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
-        omega <- paste("to Case", path.data$dest.anchor)
+        omega <- paste("to Case", path.data$dest)
       } else {
         alpha <- paste("Case", orig)
-        omega <- paste("Case", path.data$dest.anchor)
+        omega <- paste("Case", path.data$dest)
       }
     } else if (type == "pumps") {
-      orig.nm <- pmp[pmp$id == path.data$orig.anchor, ]$street
-      dest.nm <- pmp[pmp$id == path.data$dest.anchor, ]$street
-      alpha <- paste(orig.nm, paste0("(p", path.data$orig.anchor, ")"))
-      omega <- paste(dest.nm, paste0("(p", path.data$dest.anchor, ")"))
+      orig.nm <- pmp[pmp$id == path.data$orig, ]$street
+      dest.nm <- pmp[pmp$id == path.data$dest, ]$street
+      alpha <- paste(orig.nm, paste0("(p", path.data$orig, ")"))
+      omega <- paste(dest.nm, paste0("(p", path.data$dest, ")"))
     }
     title(main = paste(alpha, "to", omega))
   } else {
     if (type == "case-pump") {
-      title(main = paste("Case", orig, "to Pump", path.data$dest.anchor))
+      title(main = paste("Case", orig, "to Pump", path.data$dest))
     } else if (type == "cases") {
-      title(main = paste("Case", orig, "to Case", path.data$dest.anchor))
+      title(main = paste("Case", orig, "to Case", path.data$dest))
     } else if (type == "pumps") {
-      title(main = paste("Pump", orig, "to Pump", path.data$dest.anchor))
+      title(main = paste("Pump", orig, "to Pump", path.data$dest))
     }
   }
 }
 
 mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
-  if (any(path.data$orig.anchor >= 1000L)) {
-    land.orig <- land[land$case %in% path.data$orig.anchor, ]
+  if (any(path.data$orig >= 1000L)) {
+    land.orig <- land[land$case %in% path.data$orig, ]
     if (grepl("Square", land.orig$name)) {
       sel <- grepl(path.data$orig.nm, cholera::landmarksB$name)
       label.orig <- cholera::landmarksB[sel, vars]
@@ -833,8 +833,8 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
     }
   }
 
-  if (any(path.data$dest.anchor >= 1000L)) {
-    land.dest <- land[land$case %in% path.data$dest.anchor, ]
+  if (any(path.data$dest >= 1000L)) {
+    land.dest <- land[land$case %in% path.data$dest, ]
     if (grepl("Square", land.dest$name)) {
       sel <- grepl(path.data$dest.nm, cholera::landmarksB$name)
       label.dest <- cholera::landmarksB[sel, vars]
