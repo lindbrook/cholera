@@ -279,17 +279,6 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
     if (orig < 1000L) {
       points(fatality[fatality$case == orig, vars], col = "red")
       text(fatality[fatality$case == orig, vars], pos = 1, labels = orig,
-           col = "red")
-    } else if (orig >= 1000L) {
-      points(land[land$case == orig, vars], col = "red")
-      # text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
-    }
-  }
-
-  if (type %in% c("case-pump", "cases")) {
-    if (orig < 1000L) {
-      points(fatality[fatality$case == orig, vars], col = "red")
-      text(fatality[fatality$case == orig, vars], pos = 1, labels = orig,
         col = "red")
     } else if (orig >= 1000L) {
       points(land[land$case == orig, vars], col = "red")
