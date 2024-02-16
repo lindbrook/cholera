@@ -94,7 +94,7 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
     path.data <- casePump(orgn, orgn.nm, destination, network.data, pmp, vestry,
       weighted)
   } else if (type == "cases") {
-    path.data <- caseCase(orgn, orgn.nm, dstn, destination, include.landmarks, 
+    path.data <- caseCase(orgn, orgn.nm, dstn, destination, include.landmarks,
       network.data, origin, vestry, weighted)
   } else if (type == "pumps") {
     path.data <- pumpPump(orgn, orgn.nm, destination, network.data, origin, pmp,
