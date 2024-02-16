@@ -1175,13 +1175,106 @@ landmarkCase <- function(string) {
   string
 }
 
-sqCases <- function(sq = "Golden") {
-  if (!sq %in% c("Golden", "Soho")) sq <- wordCase(sq)
-  if (!sq %in% c("Golden", "Soho")) stop('sq must be "Golden" or "Soho".')
-  sel <- grep(sq, cholera::landmark.squaresB$name)
-  a <- cholera::landmark.squaresB[sel, ]$case
-  sel <- grep(sq, cholera::landmarksB$name)
-  b <- cholera::landmarksB[sel, ]$case
-  c(a, b)
+validateCase <- function(x, include.landmarks) {
+  case.id <- cholera::fatalities$case
+  case.nm <- paste(case.id)
+  case.msg <- "Cases range from 1 to 578."
+
+  if (include.landmarks) {
+    case.id <- c(case.id,
+                 cholera::landmark.squaresB$case,
+                 cholera::landmarksB$case)
+    case.nm <- c(case.nm,
+                 cholera::landmark.squaresB$name,
+                 cholera::landmarksB$name)
+    case.msg <- "Cases range from 1 to 578; Landmarks from 1000 to 1021."
+  }
+
+  if (is.null(x)) {
+    out <- case.id
+    out.nm <- case.nm
+  } else if (is.numeric(x)) {
+    if (any(!x %in% case.id)) {
+      message(case.msg)
+    } else {
+      if (any(x < 1000L)) {
+        sel <- cholera::anchor.case$case %in% x
+        out <- cholera::anchor.case[sel, "anchor"]
+        out.nm <- paste(out)
+      } else if (any(x >= 1000L)) {
+        if (any(x %in% cholera::landmark.squaresB$case)) {
+          sel <- cholera::landmark.squaresB$case %in% x
+          sq.nm <- cholera::landmark.squaresB[sel, ]$name
+          id.sel <- grepl(sq.nm, cholera::landmarksB$name)
+          out.sq <- cholera::landmarksB$case[id.sel]
+        } else if (any(x %in% cholera::landmarksB$case)) {
+          sel <- cholera::landmarksB$case %in% x
+          out <- cholera::landmarksB[sel, ]$case
+          out.nm <- cholera::landmarksB[sel, ]$name
+        }
+
+        if (exists("out") & exists("out.sq")) {
+          out <- c(out, out.sq)
+          sel <- cholera::landmarksB$case %in% out.sq
+          nm.sq <- cholera::landmarksB[sel, ]$name
+          out.nm <- c(out, nm.sq)
+        } else if (!exists("out") & exists("out.sq")) {
+          out <- out.sq
+          sel <- cholera::landmarksB$case %in% out.sq
+          nm.sq <- cholera::landmarksB[sel, ]$name
+          out.nm <- nm.sq
+        }
+      }
+    }
+  } else if (is.character(x)) {
+    if (any(x %in% cholera::landmark.squaresB$name)) {
+      sel <- grep(x, cholera::landmarksB$name)
+      out <- cholera::landmarksB[sel, ]$case
+      out.nm <- cholera::landmarksB[sel, ]$name
+    } else if (any(x %in% cholera::landmarksB$name)) {
+      sel <- cholera::landmarksB$name %in% x
+      out <- cholera::landmarksB[sel, ]$case
+      out.nm <- cholera::landmarksB[sel, ]$name
+    } else if (all(!x %in% case.nm)) {
+      stop("Landmark not found. Check spelling or cholera::landmarksB.")
+    }
+  }
+  list(out = out, out.nm = out.nm)
+}
+
+validatePump <- function(x, pmp, vestry) {
+  if (is.null(x)) {
+    out <- pmp$id
+    out.nm <- pmp$street
+  } else if (is.numeric(x)) {
+    if (all(!x %in% pmp$id)) {
+      stop("For vestry = ", vestry, ", pump IDs range from 1 to ", nrow(pmp),
+        "." , call. = FALSE)
+    } else if (any(!x %in% pmp$id)) {
+      message("For vestry = ", vestry, ", pump IDs range from 1 to ", nrow(pmp),
+        ".")
+      x <- x[x %in% pmp$id]
+      out.nm <- pmp[pmp$id %in% x, ]$street
+    } else {
+      out <- x
+      out.nm <- pmp[pmp$id %in% x, ]$street
+    }
+  } else if (is.character(x)) {
+    x <- caseAndSpace(x)
+    if (all(!x %in% pmp$street)) {
+      stop("For vestry = ", vestry,
+        ", pump (street) name not found. Check spelling or cholera::pumps.")
+    } else if (any(!x %in% pmp$street)) {
+      message("For vestry = ", vestry,
+        ", pump (street) name not found. Check spelling or cholera::pumps.")
+      x <- x[x %in% pmp$street]
+      out.nm <- pmp[pmp$id %in% x, ]$street
+    } else {
+      out <- pmp[pmp$street %in% x, ]$id
+      out.nm <- x
+    }
+  }
+
+  list(out = out, out.nm = out.nm)
 }
 
