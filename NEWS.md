@@ -3,7 +3,7 @@
 - add validateCase() and validatePump(); archive sqCases().
 - amend variables and code in casePump(), caseCase() and pumpPump().
 - amend variables in plot.walking_path_B(), longTitle() and mapDataRange().
-- use validateCase() and validatePump() and amend variables in walkingPathB().
+- use validateCase() and validatePump(); amend variables in walkingPathB().
 
 
 ### cholera 0.8.0.9275
