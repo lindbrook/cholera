@@ -1,3 +1,9 @@
+### cholera 0.8.0.9278
+
+- amend fix for Square cases with NULL origin/destination in caseCase().
+- add amended sqCases().
+
+
 ### cholera 0.8.0.9277
 
 - remove redundant code in plot.walking_path_B().

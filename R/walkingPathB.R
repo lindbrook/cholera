@@ -852,8 +852,58 @@ caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks,
   g <- network.data$g
   nodes <- network.data$nodes
 
+  sq.cases <- sort(c(sqCases("Golden"), sqCases("Soho")))
+
+  if (is.null(origin) & !is.null(destination)) {
+    sq.destination <- (grepl("Square", destination) |
+                       destination %in% sq.cases) &
+                      is.null(origin)
+
+    if (sq.destination) {
+      if (is.character(orgn)) var <- "name"
+      else if (is.numeric(orgn)) var <- "case"
+      gold <- sqCases("Golden", var)
+      soho <- sqCases("Soho", var)
+
+       if (any(dstn %in% gold)) {
+        sel <- !orgn %in% gold
+        orgn <- orgn[sel]
+        orgn.nm <- orgn.nm[sel]
+      }
+
+      if (any(dstn %in% soho)) {
+        sel <- !orgn %in% soho
+        orgn <- orgn[sel]
+        orgn.nm <- orgn.nm[sel]
+      }
+    }
+
+    if (any(dstn %in% orgn)) {
+      sel <- !orgn %in% dstn
+      orgn <- orgn[sel]
+      orgn.nm <- orgn.nm[sel]
+    }
+  }
+
   ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
                 nodes[nodes$land %in% orgn, ]$node)
+
+  if (!is.null(origin) & is.null(destination)) {
+    sq.origin <- (grepl("Square", origin) |
+                  origin %in% sq.cases) &
+                 is.null(destination)
+
+    if (sq.origin) {
+      if (is.character(dstn)) var <- "name"
+      else if (is.numeric(dstn)) var <- "case"
+      gold <- sqCases("Golden", var)
+      soho <- sqCases("Soho", var)
+      if (any(orgn %in% gold)) dstn <- dstn[!dstn %in% gold]
+      if (any(orgn %in% soho)) dstn <- dstn[!dstn %in% soho]
+    }
+
+    if (any(orgn %in% dstn)) dstn <- dstn[!dstn %in% orgn]
+  }
 
   alters <- nodes[nodes$case %in% dstn | nodes$land %in% dstn, ]
   alter.node <- alters$node
@@ -1146,5 +1196,16 @@ validatePump <- function(x, pmp, vestry) {
   }
 
   list(out = out, out.nm = out.nm)
+}
+
+sqCases <- function(sq = "Golden", var = "case") {
+  if (!sq %in% c("Golden", "Soho")) sq <- wordCase(sq)
+  if (!sq %in% c("Golden", "Soho")) stop('sq must be "Golden" or "Soho".')
+  if (!var %in% c("case", "name")) stop('var must be "case" or "name".' )
+  sel.A <- grep(sq, cholera::landmark.squaresB$name)
+  sel.B <- grep(sq, cholera::landmarksB$name)
+  a <- cholera::landmark.squaresB[sel.A, var]
+  b <- cholera::landmarksB[sel.B, var]
+  c(a, b)
 }
 
