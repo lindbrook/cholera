@@ -1148,3 +1148,13 @@ validatePump <- function(x, pmp, vestry) {
   list(out = out, out.nm = out.nm)
 }
 
+sqCases <- function(sq = "Golden", var = "case") {
+  if (!sq %in% c("Golden", "Soho")) sq <- wordCase(sq)
+  if (!sq %in% c("Golden", "Soho")) stop('sq must be "Golden" or "Soho".')
+  if (!var %in% c("case", "name")) stop('var must be "case" or "name".' )
+  sel.A <- grep(sq, cholera::landmark.squaresB$name)
+  sel.B <- grep(sq, cholera::landmarksB$name)
+  a <- cholera::landmark.squaresB[sel.A, var]
+  b <- cholera::landmarksB[sel.B, var]
+  c(a, b)
+}
