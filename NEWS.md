@@ -1,3 +1,8 @@
+### cholera 0.8.0.9279
+
+- copyedit function documentation; format code.
+
+
 ### cholera 0.8.0.9278
 
 - amend fix for Square cases with NULL origin/destination in caseCase().

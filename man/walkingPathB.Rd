@@ -2,7 +2,7 @@
 % Please edit documentation in R/walkingPathB.R
 \name{walkingPathB}
 \alias{walkingPathB}
-\title{Plot walking path to nearest pump (prototype).}
+\title{Compute walking path from case/landmark to nearest or selected pump.}
 \usage{
 walkingPathB(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, weighted = TRUE,
@@ -10,7 +10,7 @@ walkingPathB(origin = 1, destination = NULL, type = "case-pump",
   include.landmarks = TRUE)
 }
 \arguments{
-\item{origin}{Numeric. Vector of origin(s) (numeric or landmark/pump name).}
+\item{origin}{Numeric. Vector of origin(s) (numeric or case/landmark name).}
 
 \item{destination}{Numeric. Vector of destination(s) (numeric or landmark/pump name).}
 
@@ -31,5 +31,5 @@ walkingPathB(origin = 1, destination = NULL, type = "case-pump",
 \item{include.landmarks}{Logical. Include landmarks as cases.}
 }
 \description{
-Plot walking path to nearest pump (prototype).
+Compute walking path from case/landmark to nearest or selected pump.
 }
