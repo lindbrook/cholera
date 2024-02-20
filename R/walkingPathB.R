@@ -1,6 +1,6 @@
-#' Plot walking path to nearest pump (prototype).
+#' Compute walking path from case/landmark to nearest or selected pump.
 #'
-#' @param origin Numeric. Vector of origin(s) (numeric or landmark/pump name).
+#' @param origin Numeric. Vector of origin(s) (numeric or case/landmark name).
 #' @param destination Numeric. Vector of destination(s) (numeric or landmark/pump name).
 #' @param type Character. Path case to pump. FALSE is all other combinations of cases, landmarks and pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
@@ -865,7 +865,7 @@ caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks,
       gold <- sqCases("Golden", var)
       soho <- sqCases("Soho", var)
 
-       if (any(dstn %in% gold)) {
+     if (any(dstn %in% gold)) {
         sel <- !orgn %in% gold
         orgn <- orgn[sel]
         orgn.nm <- orgn.nm[sel]
