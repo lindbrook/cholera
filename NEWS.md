@@ -1,3 +1,8 @@
+### cholera 0.8.0.9280
+
+- drop selectPump() in casePump() and pumpPump() in walkingPathB().
+
+
 ### cholera 0.8.0.9279
 
 - copyedit function documentation; format code.

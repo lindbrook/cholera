@@ -91,13 +91,13 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
   network.data <- neighborhoodDataB(vestry = vestry, latlong = latlong)
 
   if (type == "case-pump") {
-    path.data <- casePump(orgn, orgn.nm, destination, network.data, pmp, vestry,
+    path.data <- casePump(orgn, orgn.nm, dstn, destination, network.data, pmp, vestry,
       weighted)
   } else if (type == "cases") {
     path.data <- caseCase(orgn, orgn.nm, dstn, destination, include.landmarks,
       network.data, origin, vestry, weighted)
   } else if (type == "pumps") {
-    path.data <- pumpPump(orgn, orgn.nm, destination, network.data, origin, pmp,
+    path.data <- pumpPump(orgn, orgn.nm, dstn, destination, network.data, origin, pmp,
       vestry, weighted)
   }
 
@@ -772,8 +772,8 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
   }
 }
 
-casePump <- function(orgn, orgn.nm, destination, network.data, pmp, vestry,
-  weighted) {
+casePump <- function(orgn, orgn.nm, dstn, destination, network.data, pmp,
+  vestry, weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
@@ -782,14 +782,12 @@ casePump <- function(orgn, orgn.nm, destination, network.data, pmp, vestry,
   ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
                 nodes[nodes$land %in% orgn, ]$node)
 
-  pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
-
-  if (any(pump.id == 2L)) {
+  if (any(dstn == 2L)) {
     # message("Note: Pump 2 excluded because it's a technical isolate.")
-    pump.id <- pump.id[pump.id != 2L]
+    dstn <- dstn[dstn != 2L]
   }
 
-  alters <- nodes[nodes$pump %in% pump.id, ]
+  alters <- nodes[nodes$pump %in% dstn, ]
 
   alter.node <- alters$node
   names(alter.node) <- alters$pump
@@ -963,8 +961,8 @@ caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks,
   list(orgn = orgn, orgn.nm = orgn.nm, nearest.dest = nearest.dest, p = p[[1]])
 }
 
-pumpPump <- function(orgn, orgn.nm, destination, network.data, origin, pmp,
-  vestry, weighted) {
+pumpPump <- function(orgn, orgn.nm, dstn, destination, network.data, origin,
+  pmp, vestry, weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
@@ -973,8 +971,7 @@ pumpPump <- function(orgn, orgn.nm, destination, network.data, origin, pmp,
   egos <- nodes[nodes$pump %in% orgn, ]
   if (nrow(egos) > 1) egos <- egos[order(egos$pump), ]
 
-  pump.id <- selectPump(pmp, pump.select = destination, vestry = vestry)
-  alters <- nodes[nodes$pump %in% pump.id, ]
+  alters <- nodes[nodes$pump %in% dstn, ]
   if (nrow(alters) > 1) alters <- alters[order(alters$pump), ]
 
   if (2L %in% egos$pump) {
