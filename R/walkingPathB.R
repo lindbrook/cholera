@@ -178,7 +178,7 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
 
 #' Plot the walking path between selected cases and/or pumps.
 #'
-#' @param x An object of class "latlong_walking_path" created by latlongWalkingPath().
+#' @param x An object of class "walking_path_B" created by walkingPathB().
 #' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. A value of 1 equals zoom = TRUE.
 #' @param long.title Logical. Tile with names.
 #' @param mileposts Logical. Plot mile/time posts.
