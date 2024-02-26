@@ -95,7 +95,8 @@ euclideanPathB <- function(origin = 1, destination = NULL, type = "case-pump",
     path.data <- caseCaseEucl(orgn, orgn.nm, destination, dstn,
       include.landmarks, latlong, origin, vestry)
   } else if (type == "pumps") {
-    path.data <- pumpPumpEucl(orgn, orgn.nm, destination, dstn, latlong, origin, pmp, vestry)
+    path.data <- pumpPumpEucl(orgn, orgn.nm, destination, dstn, latlong, origin,
+      pmp, vestry)
   }
 
   if (length(orgn) > 1) orgn <- path.data$data$orgn
@@ -343,8 +344,8 @@ plot.euclidean_path_B <- function(x, zoom = TRUE, long.title = TRUE,
 
   drawPathB(dat, case.color, latlong)
 
-  arrows(ego.xy$x, ego.xy$y, alter.xy$x, alter.xy$y, col = case.color,
-         lwd = 3, length = 0.075)
+  arrows(ego.xy$x, ego.xy$y, alter.xy$x, alter.xy$y, col = case.color, lwd = 3,
+    length = 0.075)
 
   d <- paste(round(path.data$distance, 1), d.unit)
   t <- paste(round(path.data$time, 1), paste0(time.unit, "s"), "@",
@@ -389,7 +390,9 @@ print.euclidean_path_B <- function(x, ...) {
   print(x[c("ego", "alter", "data")])
 }
 
-casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp, vestry) {
+casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
+  vestry) {
+
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
