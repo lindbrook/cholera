@@ -103,11 +103,18 @@ euclideanPathB <- function(origin = 1, destination = NULL, type = "case-pump",
   nearest.dest <- path.data$data$nearest.dest
 
   if (latlong) {
-    walking.time <- walkingTime(path.data$data$d, time.unit = time.unit,
+    p1 <- path.data$ego
+    p2 <- path.data$alter
+    d <- geosphere::distGeo(p1, p2)
+  } else {
+    d <- unitMeter(path.data$data$d, distance.unit = distance.unit)
+  }
+
+  if (latlong) {
+    walking.time <- walkingTime(d, time.unit = time.unit,
       walking.speed = walking.speed)
   } else {
-    d.est <- unitMeter(path.data$data$d, distance.unit = distance.unit)
-    walking.time <- distanceTime(d.est, distance.unit = distance.unit,
+    walking.time <- distanceTime(d, distance.unit = distance.unit,
       time.unit = time.unit, walking.speed = walking.speed)
   }
 
@@ -131,22 +138,18 @@ euclideanPathB <- function(origin = 1, destination = NULL, type = "case-pump",
                              dest = nearest.dest,
                              orig.nm = orgn.nm,
                              dest.nm = dest.nm,
-                             distance = path.data$data$d,
+                             distance = d,
                              time = walking.time,
                              type = type,
                              row.names = NULL)
 
-  output <- list(# path = path,
-    # ego.coords = ego.coords,
-                 ego = path.data$ego,
+  output <- list(ego = path.data$ego,
                  alter = path.data$alter,
                  data = data.summary,
                  destination = destination,
                  vestry = vestry,
-                 # ds = path.data$d,
                  distance.unit = distance.unit,
                  latlong = latlong,
-                 # edges = edges,
                  pmp = pmp,
                  time.unit = time.unit,
                  walking.speed = walking.speed)
