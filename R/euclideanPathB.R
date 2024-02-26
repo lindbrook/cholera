@@ -158,6 +158,222 @@ euclideanPathB <- function(origin = 1, destination = NULL, type = "case-pump",
   output
 }
 
+#' Plot the path of the Euclidean distance between cases and/or pumps.
+#'
+#' @param x An object of class "euclidean_path_B" created by euclideanPathB().
+#' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.
+#' @param long.title Logical. Tile with names.
+#' @param mileposts Logical. Plot mile/time posts.
+#' @param milepost.unit Character. "distance" or "time".
+#' @param milepost.interval Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).
+#' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
+#' @param ... Additional plotting parameters.
+#' @return A base R plot.
+#' @export
+
+plot.euclidean_path_B <- function(x, zoom = TRUE, long.title = TRUE,
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
+  alpha.level = 1, ...) {
+
+  path.data <- x$data
+  type <- x$data$type
+  ego.xy <- x$ego
+  alter.xy <- x$alter
+  dat <- rbind(alter.xy, ego.xy)
+  pmp <- x$pmp
+  orig <- path.data$orig
+  dest <- path.data$dest
+
+  colors <- snowColors(x$vestry)
+  distance.unit <- x$distance.unit
+  latlong <- x$latlong
+  time.unit <- x$time.unit
+  walking.speed <- x$walking.speed
+
+  if (distance.unit == "meter") {
+    d.unit <- "m"
+  } else if (distance.unit == "yard") {
+    d.unit <- "yd"
+  }
+
+  if (milepost.unit == "distance") {
+    path.length <- sum(path.data$distance)
+  } else if (milepost.unit == "time") {
+    path.length <- (3600L * sum(path.data$distance)) / (1000L * walking.speed)
+  }
+
+  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
+  fatality <- cholera::fatalities
+  fatality.ortho <- cholera::latlong.ortho.addr
+  land <- cholera::landmarksB
+
+  if (latlong) {
+    ew <- "lon"
+    ns <- "lat"
+    asp <- 1.6
+  } else {
+    ew <- "x"
+    ns <- "y"
+    asp <- 1L
+  }
+
+  vars <- c(ew, ns)
+  padding <- ifelse(latlong, 0.000125, 0.25)
+
+  if (is.logical(zoom)) {
+    if (zoom) {
+      map.data <- mapDataRange(dat, land, path.data, vars, ew, ns)
+      xlim <- c(min(map.data[, ew]) - padding, max(map.data[, ew]) + padding)
+      ylim <- c(min(map.data[, ns]) - padding, max(map.data[, ns]) + padding)
+    } else {
+      map.data <- rbind(frame, rd)
+      xlim <- range(map.data[, ew])
+      ylim <- range(map.data[, ns])
+    }
+  } else if (is.numeric(zoom)) {
+    if (zoom >= 0) {
+      xlim <- c(min(dat[, ew]) - zoom * (padding),
+                max(dat[, ew]) + zoom * (padding))
+      ylim <- c(min(dat[, ns]) - zoom * (padding),
+                max(dat[, ns]) + zoom * (padding))
+    } else stop("If numeric, zoom must be >= 0.")
+  }
+
+  if (type == "case-pump") {
+    p.sel <- paste0("p", path.data$dest)
+    case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
+  } else {
+    case.color <- "blue"
+  }
+
+  plot(rd[, vars], pch = NA, asp = asp, xlim = xlim, ylim = ylim)
+  roads.list <- split(rd[, vars], rd$street)
+  frame.list <- split(frame[, vars], frame$street)
+  invisible(lapply(roads.list, lines, col = "lightgray"))
+  invisible(lapply(frame.list, lines))
+  points(fatality[, vars], col = "lightgray", pch = 16, cex = 0.5)
+  points(pmp[, vars], pch = 24, col = grDevices::adjustcolor(colors,
+    alpha.f = alpha.level))
+  text(pmp[, vars], pos = 1, labels = paste0("p", pmp$id))
+
+  if (type %in% c("case-pump", "cases")) {
+    if (orig < 1000L) {
+      points(fatality[fatality$case == orig, vars], col = "red")
+      text(fatality[fatality$case == orig, vars], pos = 1, labels = orig,
+        col = "red")
+    } else if (orig >= 1000L) {
+      points(land[land$case == orig, vars], col = "red")
+      land.tmp <- land[land$case == orig, ]
+
+      if (grepl("Square", land.tmp$name)) {
+        sq.label <- unlist(strsplit(land.tmp$name, "-"))[1]
+        label.parse <- unlist(strsplit(sq.label, "[ ]"))
+        sq.label <- paste0(label.parse[1], "\n", label.parse[2])
+        obs.sq <- paste(label.parse, collapse = " ")
+        sel <- cholera::landmark.squaresB$name == obs.sq
+        text(cholera::landmark.squaresB[sel, c(ew, ns)], labels = sq.label,
+          col = "red", cex = 0.8)
+      } else {
+        label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
+        names(label.dat) <- vars
+        if (grepl("St", land.tmp$name)) {
+          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+          land.label <- paste0(paste(label.parse[1], label.parse[2]), "\n",
+            label.parse[3])
+        } else {
+          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+          if (length(label.parse) == 2) {
+            land.label <- paste0(label.parse[1], "\n", label.parse[2])
+          } else if (length(label.parse) == 3) {
+            land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
+                                 label.parse[3])
+          }
+        }
+        text(label.dat, labels = land.label, col = "red", cex = 0.8)
+      }
+    }
+
+    if (type == "cases") {
+      if (dest < 1000L) {
+        points(fatality[fatality$case == dest, vars], col = "red")
+        text(fatality[fatality$case == dest, vars], pos = 1, labels = dest,
+          col = "red")
+      } else if (dest >= 1000L) {
+        points(land[land$case == dest, vars], col = "red")
+        land.tmp <- land[land$case == dest, ]
+        if (grepl("Square", land.tmp$name)) {
+          sel <- cholera::landmark.squaresB$name == path.data$dest.nm
+          label.dat <- cholera::landmark.squaresB[sel, ]
+          label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
+          sq.label <- paste0(label.parse[1], "\n", label.parse[2])
+          text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",
+            cex = 0.8)
+        } else if (land.tmp[, ew] != land.tmp[, paste0(ew, ".lab")]) {
+          label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
+          names(label.dat) <- vars
+          if (grepl("St", land.tmp$name)) {
+            label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+            land.label <- paste0(paste(label.parse[1], label.parse[2]), "\n",
+                                       label.parse[3])
+          } else {
+            label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+            if (length(label.parse) == 2) {
+              land.label <- paste0(label.parse[1], "\n", label.parse[2])
+            } else if (length(label.parse) == 3) {
+              land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
+                                   label.parse[3])
+            }
+          }
+          text(label.dat, labels = land.label, col = "red", cex = 0.8)
+        } else {
+          label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
+          names(label.dat) <- vars
+          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+          land.label <- paste0(label.parse[1], "\n", label.parse[2])
+          text(land[land$case == dest, vars], labels = land.label, col = "red",
+            cex = 0.8)
+        }
+      }
+    }
+  }
+
+  # points(ego.xy[, vars], pch = 0)
+  # points(alter.xy[, vars], pch = 0)
+
+  drawPathB(dat, case.color, latlong)
+
+  arrows(ego.xy$x, ego.xy$y, alter.xy$x, alter.xy$y, col = case.color,
+         lwd = 3, length = 0.075)
+
+  d <- paste(round(path.data$distance, 1), d.unit)
+  t <- paste(round(path.data$time, 1), paste0(time.unit, "s"), "@",
+    walking.speed, "km/hr")
+
+  if (is.null(milepost.interval)) {
+    if (milepost.unit == "distance") {
+      milepost.interval <- 50
+    } else if (milepost.unit == "time") {
+      milepost.interval <- 60
+    }
+  }
+
+  if (milepost.unit == "distance") {
+    if (distance.unit == "meter") {
+      post.info <- paste("posts at", milepost.interval, "m intervals")
+    } else if (distance.unit == "yard") {
+      post.info <- paste("posts at", milepost.interval, "yd intervals")
+    }
+  } else if (milepost.unit == "time") {
+    post.info <- paste("posts at", milepost.interval, "sec intervals")
+  } else {
+    stop('"milepost.unit" muster either be "distance" or "time".')
+  }
+
+  longTitle(long.title, type, pmp, path.data, orig, land)
+  title(sub = paste(d, t, post.info, sep = "; "))
+}
+
 #' Print method for walkingPathB().
 #'
 #' Summary output.
