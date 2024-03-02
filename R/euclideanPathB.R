@@ -611,3 +611,37 @@ pumpPumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, origin, pmp,
   list(ego = ego, alter = alter, data = data.summary)
 }
 
+latlongEuclideanPosts <- function(ego.xy, alter.xy, h, ew, ns) {
+  origin <- data.frame(lon = min(cholera::roads[, ew]),
+                       lat = min(cholera::roads[, ns]))
+  topleft <- data.frame(lon = min(cholera::roads[, ew]),
+                        lat = max(cholera::roads[, ns]))
+  bottomright <- data.frame(lon = max(cholera::roads[, ew]),
+                            lat = min(cholera::roads[, ns]))
+
+  ego.cartesian <- latlongCartesian(ego.xy, origin)
+  alter.cartesian <- latlongCartesian(alter.xy, origin)
+  meter.coords <- rbind(ego.cartesian, alter.cartesian)
+
+  ols <- stats::lm(y ~ x, data = meter.coords)
+  path.slope <- stats::coef(ols)[2]
+  theta <- ifelse(is.na(path.slope), pi / 2, atan(path.slope))
+
+  cartesian.posts <- quandrantCoordinates(meter.coords, h, theta)
+
+  conversion <- lapply(seq_len(nrow(cartesian.posts)), function(i) {
+    coords.tmp <- cartesian.posts[i, c("x", "y")]
+    coord.conversion <- meterLatLong(coords.tmp, origin, topleft, bottomright)
+    coord.conversion[, c("lon", "lat")]
+  })
+
+  data.frame(post = h, do.call(rbind, conversion))
+}
+
+latlongCartesian <- function(xy, origin) {
+  x.proj <- c(xy$lon, origin$lat)
+  y.proj <- c(origin$lon, xy$lat)
+  m.lon <- geosphere::distGeo(y.proj, xy)
+  m.lat <- geosphere::distGeo(x.proj, xy)
+  data.frame(x = m.lon, y = m.lat)
+}
