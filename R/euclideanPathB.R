@@ -198,9 +198,9 @@ plot.euclidean_path_B <- function(x, zoom = TRUE, long.title = TRUE,
   }
 
   if (milepost.unit == "distance") {
-    path.length <- sum(path.data$distance)
+    path.length <- path.data$distance
   } else if (milepost.unit == "time") {
-    path.length <- (3600L * sum(path.data$distance)) / (1000L * walking.speed)
+    path.length <- (3600L * path.data$distance) / (1000L * walking.speed)
   }
 
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
@@ -341,22 +341,60 @@ plot.euclidean_path_B <- function(x, zoom = TRUE, long.title = TRUE,
 
   # points(ego.xy[, vars], pch = 0)
   # points(alter.xy[, vars], pch = 0)
+  # drawPathB(dat, case.color, latlong)
 
-  drawPathB(dat, case.color, latlong)
-
-  arrows(ego.xy$x, ego.xy$y, alter.xy$x, alter.xy$y, col = case.color, lwd = 3,
-    length = 0.075)
+  arrows(ego.xy[, ew], ego.xy[, ns], alter.xy[, ew], alter.xy[, ns],
+    col = case.color, lwd = 3, length = 0.075)
 
   d <- paste(round(path.data$distance, 1), d.unit)
   t <- paste(round(path.data$time, 1), paste0(time.unit, "s"), "@",
     walking.speed, "km/hr")
 
-  if (is.null(milepost.interval)) {
-    if (milepost.unit == "distance") {
-      milepost.interval <- 50
-    } else if (milepost.unit == "time") {
-      milepost.interval <- 60
+  if (mileposts) {
+    if (is.null(milepost.interval)) {
+      if (milepost.unit == "distance") {
+        milepost.interval <- 50
+      } else if (milepost.unit == "time") {
+        milepost.interval <- 60
+      }
     }
+
+    if (milepost.unit == "distance") {
+      h <- seq(0, path.data$distance, milepost.interval)
+      if (isFALSE(latlong)) h <- h / unitMeter(1)
+    } else if (milepost.unit == "time") {
+      h <- seq(0, path.data$time, milepost.interval)
+      if (isFALSE(latlong)) {
+        h <- h * 1000 * x$walking.speed / 60^2 / unitMeter(1)
+      }
+    } else {
+      stop('Specify milepost.unit', call. = FALSE)
+    }
+
+    if (latlong) ols <- stats::lm(lat ~ lon, data = dat)
+    else ols <- stats::lm(y ~ x, data = dat)
+    edge.slope <- stats::coef(ols)[2]
+    theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
+
+    if (latlong) {
+      post.coords <- latlongEuclideanPosts(ego.xy, alter.xy, h, ew, ns)
+    } else {
+      post.coords <- quandrantCoordinates(dat[2:1, ], h, theta)
+    }
+
+    arrow.data <- data.frame(x = c(post.coords[, ew], ego.xy[, ew]),
+                             y = c(post.coords[, ns], ego.xy[, ns]))
+
+    arrow.list <- lapply(seq_len(nrow(arrow.data) - 1), function(i) {
+      a.data <- cbind(arrow.data[i, ], arrow.data[i + 1, ])
+      stats::setNames(a.data, c(paste0(c(ew, ns), 1), paste0(c(ew, ns), 2)))
+    })
+
+    invisible(lapply(arrow.list, function(seg) {
+      arrows(seg[, paste0(ew, 1)], seg[, paste0(ns, 1)],
+             seg[, paste0(ew, 2)], seg[, paste0(ns, 2)],
+             length = 0.075, col = case.color, lwd = 3, code = 1)
+    }))
   }
 
   if (milepost.unit == "distance") {
@@ -645,3 +683,4 @@ latlongCartesian <- function(xy, origin) {
   m.lat <- geosphere::distGeo(x.proj, xy)
   data.frame(x = m.lon, y = m.lat)
 }
+
