@@ -1,3 +1,12 @@
+### cholera 0.8.0.9281
+
+- add euclideanPathB() prototype.
+- amend distance computation and function output.
+- add plot.euclidean_path_B() prototype.
+- add latlongEuclideanPosts() and latlongCartesian().
+- amend plot.euclidean_path_B() prototype.
+
+
 ### cholera 0.8.0.9280
 
 - drop selectPump() in casePump() and pumpPump() in walkingPathB().
