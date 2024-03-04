@@ -1,3 +1,11 @@
+### cholera 0.8.0.9282
+
+- fix multiple origins (e.g., Squares) in euclideanPathB().
+- amend argument name in sqCases().
+- filter orgn and dstn in caseCaseEucl() for anchors and landmarks.
+- fix multiple numeric origins in caseCaseEucl().
+
+
 ### cholera 0.8.0.9281
 
 - add euclideanPathB() prototype.
