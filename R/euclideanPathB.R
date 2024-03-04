@@ -549,7 +549,7 @@ caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
                   origin %in% sq.cases) &
                  is.null(destination)
 
-    if (sq.origin) {
+    if (any(sq.origin)) {
       if (is.character(dstn)) variable <- "name"
       else if (is.numeric(dstn)) variable <- "case"
       gold <- sqCases("Golden", variable)
