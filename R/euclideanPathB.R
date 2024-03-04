@@ -470,7 +470,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
     nearest.pump <- dstn[which.min(d)]
     nearest.d <- min(d)
 
-    ego <- ego.coords[ego.id]
+    ego <- ego.coords[ego.id, ]
     alter <- alter.coords[which.min(d), ]
   }
 
@@ -494,10 +494,10 @@ caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
                       is.null(origin)
 
     if (sq.destination) {
-      if (is.character(orgn)) var <- "name"
-      else if (is.numeric(orgn)) var <- "case"
-      gold <- sqCases("Golden", var)
-      soho <- sqCases("Soho", var)
+      if (is.character(orgn)) variable <- "name"
+      else if (is.numeric(orgn)) variable <- "case"
+      gold <- sqCases("Golden", variable)
+      soho <- sqCases("Soho", variable)
 
        if (any(dstn %in% gold)) {
         sel <- !orgn %in% gold
@@ -528,13 +528,20 @@ caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
   land <- cholera::landmarksB$case %in% orgn
 
   if (any(fatal) & any(land)) {
-    a <- cholera::fatalities.address[fatal, vars]
-    b <- cholera::landmarksB[land, vars]
-    ego.coords <- rbind(a, b)
+    sel.fatal <- cholera::fatalities.address[fatal, ]
+    sel.land <- cholera::landmarksB[land, ]
+    ego.coords <- rbind(sel.fatal[, vars], sel.land[, vars])
+    orgn <- c(sel.fatal$anchor, sel.land$case)
+
   } else if (all(!fatal) & any(land)) {
-    ego.coords <- cholera::landmarksB[land, vars]
+    sel.land <- cholera::landmarksB[land, ]
+    ego.coords <- sel.land[, vars]
+    orgn <- sel.land$case
+
   } else if (any(fatal) & all(!land)) {
-    ego.coords <- cholera::fatalities.address[fatal, vars]
+    sel.fatal <- cholera::fatalities.address[fatal, ]
+    ego.coords <- sel.fatal[, vars]
+    orgn <- sel.fatal$anchor
   }
 
   if (!is.null(origin) & is.null(destination)) {
@@ -542,11 +549,11 @@ caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
                   origin %in% sq.cases) &
                  is.null(destination)
 
-    if (sq.origin) {
-      if (is.character(dstn)) var <- "name"
-      else if (is.numeric(dstn)) var <- "case"
-      gold <- sqCases("Golden", var)
-      soho <- sqCases("Soho", var)
+    if (any(sq.origin)) {
+      if (is.character(dstn)) variable <- "name"
+      else if (is.numeric(dstn)) variable <- "case"
+      gold <- sqCases("Golden", variable)
+      soho <- sqCases("Soho", variable)
       if (any(orgn %in% gold)) dstn <- dstn[!dstn %in% gold]
       if (any(orgn %in% soho)) dstn <- dstn[!dstn %in% soho]
     }
@@ -563,13 +570,20 @@ caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
   land <- cholera::landmarksB$case %in% dstn
 
   if (any(fatal) & any(land)) {
-    a <- cholera::fatalities.address[fatal, vars]
-    b <- cholera::landmarksB[land, vars]
-    alter.coords <- rbind(a, b)
+    sel.fatal <- cholera::fatalities.address[fatal, ]
+    sel.land <- cholera::landmarksB[land, ]
+    alter.coords <- rbind(sel.fatal[, vars], sel.land[, vars])
+    dstn <- c(sel.fatal$anchor, sel.land$case)
+
   } else if (all(!fatal) & any(land)) {
-    alter.coords <- cholera::landmarksB[land, vars]
+    sel.land <- cholera::landmarksB[land, ]
+    alter.coords <- sel.land[, vars]
+    dstn <- sel.land$case
+
   } else if (any(fatal) & all(!land)) {
-    alter.coords <- cholera::fatalities.address[fatal, vars]
+    sel.fatal <- cholera::fatalities.address[fatal, ]
+    alter.coords <- sel.fatal[, vars]
+    dstn <- sel.fatal$anchor
   }
 
   sel <- seq_len(nrow(alter.coords))
@@ -592,7 +606,7 @@ caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
     nearest.dest <- dstn[which.min(d)]
     nearest.d <- min(d)
 
-    ego <- ego.coords[ego.id]
+    ego <- ego.coords[ego.id, ]
     alter <- alter.coords[which.min(d), ]
   }
 
@@ -639,7 +653,7 @@ pumpPumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, origin, pmp,
     nearest.pump <- dstn[which.min(d)]
     nearest.d <- min(d)
 
-    ego <- ego.coords[ego.id]
+    ego <- ego.coords[ego.id, ]
     alter <- alter.coords[which.min(d), ]
   }
 

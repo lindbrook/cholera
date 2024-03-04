@@ -858,10 +858,10 @@ caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks,
                       is.null(origin)
 
     if (sq.destination) {
-      if (is.character(orgn)) var <- "name"
-      else if (is.numeric(orgn)) var <- "case"
-      gold <- sqCases("Golden", var)
-      soho <- sqCases("Soho", var)
+      if (is.character(orgn)) variable <- "name"
+      else if (is.numeric(orgn)) variable <- "case"
+      gold <- sqCases("Golden", variable)
+      soho <- sqCases("Soho", variable)
 
      if (any(dstn %in% gold)) {
         sel <- !orgn %in% gold
@@ -892,10 +892,10 @@ caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks,
                  is.null(destination)
 
     if (sq.origin) {
-      if (is.character(dstn)) var <- "name"
-      else if (is.numeric(dstn)) var <- "case"
-      gold <- sqCases("Golden", var)
-      soho <- sqCases("Soho", var)
+      if (is.character(dstn)) variable <- "name"
+      else if (is.numeric(dstn)) variable <- "case"
+      gold <- sqCases("Golden", variable)
+      soho <- sqCases("Soho", variable)
       if (any(orgn %in% gold)) dstn <- dstn[!dstn %in% gold]
       if (any(orgn %in% soho)) dstn <- dstn[!dstn %in% soho]
     }
@@ -1195,14 +1195,16 @@ validatePump <- function(x, pmp, vestry) {
   list(out = out, out.nm = out.nm)
 }
 
-sqCases <- function(sq = "Golden", var = "case") {
+sqCases <- function(sq = "Golden", variable = "case") {
   if (!sq %in% c("Golden", "Soho")) sq <- wordCase(sq)
   if (!sq %in% c("Golden", "Soho")) stop('sq must be "Golden" or "Soho".')
-  if (!var %in% c("case", "name")) stop('var must be "case" or "name".' )
+  if (!variable %in% c("case", "name")) {
+    stop('variable must be "case" or "name".' )
+  }
   sel.A <- grep(sq, cholera::landmark.squaresB$name)
   sel.B <- grep(sq, cholera::landmarksB$name)
-  a <- cholera::landmark.squaresB[sel.A, var]
-  b <- cholera::landmarksB[sel.B, var]
+  a <- cholera::landmark.squaresB[sel.A, variable]
+  b <- cholera::landmarksB[sel.B, variable]
   c(a, b)
 }
 
