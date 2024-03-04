@@ -494,10 +494,10 @@ caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
                       is.null(origin)
 
     if (sq.destination) {
-      if (is.character(orgn)) var <- "name"
-      else if (is.numeric(orgn)) var <- "case"
-      gold <- sqCases("Golden", var)
-      soho <- sqCases("Soho", var)
+      if (is.character(orgn)) variable <- "name"
+      else if (is.numeric(orgn)) variable <- "case"
+      gold <- sqCases("Golden", variable)
+      soho <- sqCases("Soho", variable)
 
        if (any(dstn %in% gold)) {
         sel <- !orgn %in% gold
@@ -543,10 +543,10 @@ caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
                  is.null(destination)
 
     if (sq.origin) {
-      if (is.character(dstn)) var <- "name"
-      else if (is.numeric(dstn)) var <- "case"
-      gold <- sqCases("Golden", var)
-      soho <- sqCases("Soho", var)
+      if (is.character(dstn)) variable <- "name"
+      else if (is.numeric(dstn)) variable <- "case"
+      gold <- sqCases("Golden", variable)
+      soho <- sqCases("Soho", variable)
       if (any(orgn %in% gold)) dstn <- dstn[!dstn %in% gold]
       if (any(orgn %in% soho)) dstn <- dstn[!dstn %in% soho]
     }
