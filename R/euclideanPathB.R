@@ -470,7 +470,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
     nearest.pump <- dstn[which.min(d)]
     nearest.d <- min(d)
 
-    ego <- ego.coords[ego.id]
+    ego <- ego.coords[ego.id, ]
     alter <- alter.coords[which.min(d), ]
   }
 
@@ -592,7 +592,7 @@ caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
     nearest.dest <- dstn[which.min(d)]
     nearest.d <- min(d)
 
-    ego <- ego.coords[ego.id]
+    ego <- ego.coords[ego.id, ]
     alter <- alter.coords[which.min(d), ]
   }
 
@@ -639,7 +639,7 @@ pumpPumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, origin, pmp,
     nearest.pump <- dstn[which.min(d)]
     nearest.d <- min(d)
 
-    ego <- ego.coords[ego.id]
+    ego <- ego.coords[ego.id, ]
     alter <- alter.coords[which.min(d), ]
   }
 
