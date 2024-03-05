@@ -1,3 +1,8 @@
+### cholera 0.8.0.9283
+
+- fix mapDataRange() for Square labels with euclideanPathB().
+
+
 ### cholera 0.8.0.9282
 
 - fix multiple origins (e.g., Squares) in euclideanPathB().
