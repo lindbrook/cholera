@@ -97,7 +97,7 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
     path.data <- caseCase(orgn, orgn.nm, dstn, destination, include.landmarks,
       network.data, origin, vestry, weighted)
   } else if (type == "pumps") {
-    path.data <- pumpPump(orgn, orgn.nm, dstn, destination, network.data, 
+    path.data <- pumpPump(orgn, orgn.nm, dstn, destination, network.data,
       origin, pmp, vestry, weighted)
   }
 
@@ -742,7 +742,8 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
   if (any(path.data$orig >= 1000L)) {
     land.orig <- land[land$case %in% path.data$orig, ]
     if (grepl("Square", land.orig$name)) {
-      sel <- grepl(path.data$orig.nm, cholera::landmarksB$name)
+      sq.nm <- unlist(strsplit(path.data$orig.nm, "-"))[1]
+      sel <- grepl(sq.nm, cholera::landmarksB$name)
       label.orig <- cholera::landmarksB[sel, vars]
     } else {
       label.orig <- land.orig[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
@@ -753,7 +754,8 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
   if (any(path.data$dest >= 1000L)) {
     land.dest <- land[land$case %in% path.data$dest, ]
     if (grepl("Square", land.dest$name)) {
-      sel <- grepl(path.data$dest.nm, cholera::landmarksB$name)
+      sq.nm <- unlist(strsplit(path.data$dest.nm, "-"))[1]
+      sel <- grepl(sq.nm, cholera::landmarksB$name)
       label.dest <- cholera::landmarksB[sel, vars]
     } else {
       label.dest <- land.dest[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
