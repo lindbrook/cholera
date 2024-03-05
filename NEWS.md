@@ -1,3 +1,8 @@
+### cholera 0.8.0.9284
+
+- use cholera::landmarksB in addLandmarks().
+
+
 ### cholera 0.8.0.9283
 
 - fix mapDataRange() for Square labels with euclideanPathB().
