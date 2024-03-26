@@ -1,3 +1,8 @@
+### cholera 0.8.0.9285
+
+- add addWalkingPathB() prototype.
+
+
 ### cholera 0.8.0.9284
 
 - use cholera::landmarksB in addLandmarks().
