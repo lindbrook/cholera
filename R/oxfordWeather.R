@@ -40,48 +40,34 @@ plot.oxfordWeather <- function(x, statistic = "temperature",
 #' @importFrom tools toTitleCase
 
 rainPlot <- function(x, month) {
-  if (month == "august") {
-    outbreak <- as.Date("1854-09-01") - 1
-    suffix <- "-08-31"
-    rain.mo <- x[x$year == 1854 & x$mo == 8, "rain"]
-    rain <- x[x$mo == 8, "rain"]
-  } else if (month == "september") {
-    outbreak <- as.Date("1854-10-01") - 1
-    suffix <- "-09-30"
-    rain.mo <- x[x$year == 1854 & x$mo == 9, "rain"]
-    rain <- x[x$mo == 9, "rain"]
-  } else stop('month must be "august" or "september".', call. = FALSE)
+  if (month == "august") outbreak.mo <- as.Date("1854-08-01")
+  else if (month == "september") outbreak.mo <- as.Date("1854-09-01")
+  else stop('month must be "august" or "september".', call. = FALSE)
 
-  percentile <- 100 * mean(rain.mo > rain)
+  outbreak.sel <- x$date == outbreak.mo
+  mo <- as.numeric(format(outbreak.mo, "%m"))
+  yr <- as.numeric(format(outbreak.mo, "%Y"))
 
-  mo.sel <- x$date == outbreak
-  mos <- x$date %in% as.Date(paste0(unique(x$year), suffix))
-  ttl <- paste0("Monthly Rainfall in Oxford UK (", tools::toTitleCase(month),
-    ")")
+  rain.outbreak <- x[x$year == yr & x$mo == mo, "rain"]
+  rain.mo <- x[x$mo == mo, "rain"]
 
-  plot(x$date, x$rain, xlab = "Year", ylab = "millimeters", col = "gray",
+  percentile <- 100 * mean(rain.outbreak > rain.mo)
+  ttl <- paste0("Monthly Rainfall in Oxford UK - ", tools::toTitleCase(month))
+
+  plot(x$date, x$rain, xlab = "Year", ylab = "mm", col = "gray",
     pch = NA, main = ttl)
-
-  if (month == "august") {
-    points(x[x$year != 1854 & x$mo == 8, "date"],
-           x[x$year != 1854 & x$mo == 8, "rain"], pch = 16)
-    points(x[x$year == 1854 & x$mo == 8, "date"],
-           x[x$year == 1854 & x$mo == 8, "rain"], col = "red", pch = 16)
-  } else if (month == "september") {
-    points(x[x$year != 1854 & x$mo == 9, "date"],
-           x[x$year != 1854 & x$mo == 9, "rain"], pch = 16)
-    points(x[x$year == 1854 & x$mo == 9, "date"],
-           x[x$year == 1854 & x$mo == 9, "rain"], col = "red", pch = 16)
-  }
-
-  axis(3, at = outbreak, labels = "Soho Outbreak", padj = 0.9, cex.axis = 3/4,
-    col.axis = "red", col.ticks = "red")
-  abline(v = outbreak, col = "red")
-  abline(h = x[mo.sel, "rain"], col = "red")
-  axis(4, at = x[mo.sel, "rain"], labels = paste0(round(percentile), "th %"),
-    col.axis = "red", col = "red")
-  rug(x[mos, "rain"], side = 4)
-  lines(stats::lowess(x[mos, "date"], x[mos, "rain"]), lty = "dashed", lwd = 2)
+  points(x[x$year != yr & x$mo == mo, "date"],
+         x[x$year != yr & x$mo == mo, "rain"], pch = 16)
+  points(x[x$year == yr & x$mo == mo, "date"],
+         x[x$year == yr & x$mo == mo, "rain"], col = "red", pch = 16)
+  axis(3, at = outbreak.mo, labels = "Soho outbreak", padj = 0.9,
+    cex.axis = 3/4, col.axis = "red", col.ticks = "red")
+  abline(v = outbreak.mo, col = "red")
+  abline(h = x[outbreak.sel, "rain"], col = "red")
+  axis(4, at = x[outbreak.sel, "rain"],  col.axis = "red", col = "red",
+    labels = paste0(round(percentile), "th %"))
+  rug(rain.mo, side = 4)
+  lines(stats::lowess(x[x$mo == mo, "date"], rain.mo), lty = "dashed", lwd = 2)
 }
 
 #' @importFrom tools toTitleCase
