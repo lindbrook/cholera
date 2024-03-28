@@ -1,3 +1,8 @@
+### cholera 0.8.0.9286
+
+- add/set plot.oxfordWeather(end.year = NULL); amend graph elements.
+
+
 ### cholera 0.8.0.9285
 
 - add addWalkingPathB() prototype.
