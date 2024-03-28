@@ -5,7 +5,7 @@
 \title{Plot method for oxfordWeather().}
 \usage{
 \method{plot}{oxfordWeather}(x, statistic = "temperature",
-  month = "september", ...)
+  month = "september", end.year = NULL, ...)
 }
 \arguments{
 \item{x}{object.}
@@ -13,6 +13,8 @@
 \item{statistic}{Character.}
 
 \item{month}{Character. "august" or "september".}
+
+\item{end.year}{Numeric.}
 
 \item{...}{Additional plotting parameters.}
 }
