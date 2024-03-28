@@ -7,25 +7,8 @@
 
 oxfordWeather <- function() {
   ox <- cholera::oxford.weather
-  ox$date <- monthEndDate()
   class(ox) <- c("oxfordWeather", class(ox))
   ox
-}
-
-# Compute last day of month.
-monthEndDate <- function(start.yr = 1853, end.year = NULL) {
-  if (is.null(end.year)) end.year <- max(cholera::oxford.weather$year)
-  start <- paste0(start.yr, "-1-1")
-  end <- paste0(end.year, "-12-31")
-  cal <- seq.Date(as.Date(start), as.Date(end), by = "day")
-  cal <- data.frame(date = cal, year = as.numeric(format(cal, "%Y")),
-    month = as.numeric(format(cal, "%m")), day = as.numeric(format(cal, "%d")))
-  last.day.month <- lapply(start.yr:end.year, function(yr) {
-    tmp <- cal[cal$year == yr, ]
-    out <- lapply(1:12, function(mo) max(tmp[tmp$month == mo, "date"]))
-    do.call(c, out)
-  })
-  do.call(c, last.day.month)
 }
 
 #' Plot method for oxfordWeather().
