@@ -25,8 +25,6 @@ plot.oxfordWeather <- function(x, statistic = "temperature",
   month = "september", end.year = NULL, ...) {
 
   month <- tolower(month)
-  outbreak <- as.Date("1854-10-01") - 1
-  sept <- as.Date(paste0(unique(x$year), "-09-30"))
   if (!is.null(end.year)) {
     if (end.year > min(x$year) & end.year <= max(x$year)) {
       x <- x[x$year <= end.year, ]
