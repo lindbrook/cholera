@@ -13,14 +13,14 @@ oxfordWeather <- function() {
 }
 
 # Compute last day of month.
-monthEndDate <- function(start.yr = 1853, end.yr = NULL) {
-  if (is.null(end.yr)) end.yr <- max(cholera::oxford.weather$year)
+monthEndDate <- function(start.yr = 1853, end.year = NULL) {
+  if (is.null(end.year)) end.year <- max(cholera::oxford.weather$year)
   start <- paste0(start.yr, "-1-1")
-  end <- paste0(end.yr, "-12-31")
+  end <- paste0(end.year, "-12-31")
   cal <- seq.Date(as.Date(start), as.Date(end), by = "day")
   cal <- data.frame(date = cal, year = as.numeric(format(cal, "%Y")),
     month = as.numeric(format(cal, "%m")), day = as.numeric(format(cal, "%d")))
-  last.day.month <- lapply(start.yr:end.yr, function(yr) {
+  last.day.month <- lapply(start.yr:end.year, function(yr) {
     tmp <- cal[cal$year == yr, ]
     out <- lapply(1:12, function(mo) max(tmp[tmp$month == mo, "date"]))
     do.call(c, out)
