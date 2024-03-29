@@ -235,21 +235,22 @@
 #' @docType data
 "rectangle.filter"
 
-#' Oxford monthly weather data, January 1853 - December 2019.
+#' Oxford monthly weather data, January 1853 - February 2024.
 #'
 #' Extract from UK Met Office (https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/oxforddata.txt): Lat 51.761 Lon -1.262, 63 metres amsl. Approximate 90 km (55 miles) northwest of Soho.
 #'
-#' @format A data frame with 7 variables and 95 observations.
+#' @format A data frame with 9 variables and 2054 observations.
 #'  \describe{
-#'     \item{\code{year}}{yyyy}
-#'     \item{\code{mo}}{month (mm)}
-#'     \item{\code{tmax}}{maximum temperature degrees Celsius}
-#'     \item{\code{tmin}}{minimum temperature degrees Celsius}
-#'     \item{\code{airfrost}}{days}
-#'     \item{\code{rain}}{millimeters (mm)}
-#'     \item{\code{sun}}{sunshine hours}
+#'     \item{\code{year}}{Year}
+#'     \item{\code{month}}{Month}
+#'     \item{\code{tmax}}{Mean daily maximum temperature Celsius}
+#'     \item{\code{tmin}}{Mean daily minimum temperature Celsius}
+#'     \item{\code{af}}{Days of air frost }
+#'     \item{\code{rain}}{Total rainfall (mm)}
+#'     \item{\code{sun}}{Total sunshine duration hours}
+#'     \item{\code{prov}}{Provisional data}
+#'     \item{\code{date}}{Date}
 #'  }
-#' @note December 1860 excluded due to missing tmin observation.
 #' @docType data
 "oxford.weather"
 
