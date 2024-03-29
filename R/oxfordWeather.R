@@ -72,37 +72,33 @@ rainPlot <- function(x, month) {
 #' @importFrom tools toTitleCase
 
 temperaturePlot <- function(x, month) {
-  if (month == "august") {
-    outbreak <- as.Date("1854-09-01") - 1
-    suffix <- "-08-31"
-    temp.mo.hi <- x[x$year == 1854 & x$mo == 8, "tmax"]
-    temp.mo.lo <- x[x$year == 1854 & x$mo == 8, "tmin"]
-    temp.hi <- x[x$mo == 8, "tmax"]
-    temp.lo <- x[x$mo == 8, "tmin"]
-  } else if (month == "september") {
-    outbreak <- as.Date("1854-10-01") - 1
-    suffix <- "-09-30"
-    temp.mo.hi <- x[x$year == 1854 & x$mo == 9, "tmax"]
-    temp.mo.lo <- x[x$year == 1854 & x$mo == 9, "tmin"]
-    temp.hi <- x[x$mo == 9, "tmax"]
-    temp.lo <- x[x$mo == 9, "tmin"]
-  } else stop('month must be "august" or "september".', call. = FALSE)
+  if (month == "august") outbreak.mo <- as.Date("1854-08-01")
+  else if (month == "september") outbreak.mo <- as.Date("1854-09-01")
+  else stop('month must be "august" or "september".', call. = FALSE)
 
-  percentile.hi <- 100 * mean(temp.mo.hi > temp.hi)
-  percentile.lo <- 100 * mean(temp.mo.lo > temp.lo, na.rm = TRUE)
+  outbreak.sel <- x$date == outbreak.mo
+  mo <- as.numeric(format(outbreak.mo, "%m"))
+  yr <- as.numeric(format(outbreak.mo, "%Y"))
 
-  sel <- x$date %in% as.Date(paste0(unique(x$year), suffix))
-  mo.data <- x[sel, ]
+  mo.data <- x[x$month == mo, ]
+  temp.outbreak.hi <- x[x$year == yr & x$month == mo, "tmax"]
+  temp.outbreak.lo <- x[x$year == yr & x$month == mo, "tmin"]
+  temp.hi <- x[x$month == mo, "tmax"]
+  temp.lo <- x[x$month == mo, "tmin"]
 
-  ttl <- paste0("Monthly High and Low Temperatures in Oxford UK (",
-    tools::toTitleCase(month), ")")
+  percentile.hi <- 100 * mean(temp.outbreak.hi > temp.hi)
+  percentile.lo <- 100 * mean(temp.outbreak.lo > temp.lo)
+
+  ttl <- paste0("Monthly Average High and Low Temperatures in Oxford - ",
+                tools::toTitleCase(month))
 
   plot(mo.data$date, mo.data$tmax, pch = NA, xlab = "Year", ylab = "Celsius",
     ylim = range(mo.data$tmax, mo.data$tmin), main = ttl)
-  axis(3, at = outbreak, labels = "Soho Outbreak", cex.axis = 3/4, padj = 0.9)
-  axis(4, at = temp.mo.hi, cex.axis = 0.9, padj = -0.9,
+  axis(3, at = outbreak.mo, labels = "Soho Outbreak", cex.axis = 3/4,
+    padj = 0.9)
+  axis(4, at = temp.outbreak.hi, cex.axis = 0.9, padj = -0.9,
     labels = paste0(round(percentile.hi), "th %"))
-  axis(4, at = temp.mo.lo, cex.axis = 0.9, padj = -0.9,
+  axis(4, at = temp.outbreak.lo, cex.axis = 0.9, padj = -0.9,
     labels = paste0(round(percentile.lo), "th %"))
 
   invisible(lapply(seq_len(nrow(mo.data )), function(i) {
@@ -112,20 +108,20 @@ temperaturePlot <- function(x, month) {
 
   points(mo.data$date, mo.data$tmax, col = "red")
   points(mo.data$date, mo.data$tmin, col = "blue")
-  segments(mo.data[mo.data$date == outbreak, "date"],
-           mo.data[mo.data$date == outbreak, "tmax"],
-           mo.data[mo.data$date == outbreak, "date"],
-           mo.data[mo.data$date == outbreak, "tmin"], lwd = 2)
-  points(mo.data[mo.data$date == outbreak, "date"],
-         mo.data[mo.data$date == outbreak, "tmax"], col = "red", pch = 16)
-  points(mo.data[mo.data$date == outbreak, "date"],
-         mo.data[mo.data$date == outbreak, "tmin"], col = "blue", pch = 16)
+  segments(mo.data[mo.data$date == outbreak.mo, "date"],
+           mo.data[mo.data$date == outbreak.mo, "tmax"],
+           mo.data[mo.data$date == outbreak.mo, "date"],
+           mo.data[mo.data$date == outbreak.mo, "tmin"], lwd = 2)
+  points(mo.data[mo.data$date == outbreak.mo, "date"],
+         mo.data[mo.data$date == outbreak.mo, "tmax"], col = "red", pch = 16)
+  points(mo.data[mo.data$date == outbreak.mo, "date"],
+         mo.data[mo.data$date == outbreak.mo, "tmin"], col = "blue", pch = 16)
   lines(stats::lowess(mo.data$date, mo.data$tmax), col = "red", lwd = 1.5)
   lines(stats::lowess(mo.data$date, mo.data$tmin), col = "blue", lwd = 1.5)
   rug(mo.data$tmax, side = 4, col = "red")
   rug(mo.data$tmin, side = 4, col = "blue")
-  abline(h = mo.data[mo.data$date == outbreak, "tmax"], col = "red",
+  abline(h = mo.data[mo.data$date == outbreak.mo, "tmax"], col = "red",
     lty = "dashed", lwd = 1.5)
-  abline(h = mo.data[mo.data$date == outbreak, "tmin"], col = "blue",
+  abline(h = mo.data[mo.data$date == outbreak.mo, "tmin"], col = "blue",
     lty = "dashed", lwd = 1.5)
 }
