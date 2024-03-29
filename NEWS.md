@@ -1,3 +1,8 @@
+### cholera 0.8.0.9288
+
+- note Dodson and Tobler data and code on Internet Archive's Wayback Machine.
+
+
 ### cholera 0.8.0.9287
 
 - amend/update oxford.weather.
