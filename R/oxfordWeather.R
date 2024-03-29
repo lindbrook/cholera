@@ -46,19 +46,20 @@ rainPlot <- function(x, month) {
   mo <- as.numeric(format(outbreak.mo, "%m"))
   yr <- as.numeric(format(outbreak.mo, "%Y"))
 
-  rain.outbreak <- x[x$year == yr & x$mo == mo, "rain"]
-  rain.mo <- x[x$mo == mo, "rain"]
+  rain.outbreak <- x[x$year == yr & x$month == mo, "rain"]
+  rain.mo <- x[x$month == mo, "rain"]
 
   percentile <- 100 * mean(rain.outbreak > rain.mo)
+
   ttl <- paste0("Monthly Rainfall Totals in Oxford - ",
                 tools::toTitleCase(month))
 
   plot(x$date, x$rain, xlab = "Year", ylab = "mm", col = "gray",
     pch = NA, main = ttl)
-  points(x[x$year != yr & x$mo == mo, "date"],
-         x[x$year != yr & x$mo == mo, "rain"], pch = 16)
-  points(x[x$year == yr & x$mo == mo, "date"],
-         x[x$year == yr & x$mo == mo, "rain"], col = "red", pch = 16)
+  points(x[x$year != yr & x$month == mo, "date"],
+         x[x$year != yr & x$month == mo, "rain"], pch = 16)
+  points(x[x$year == yr & x$month == mo, "date"],
+         x[x$year == yr & x$month == mo, "rain"], col = "red", pch = 16)
   axis(3, at = outbreak.mo, labels = "Soho outbreak", padj = 0.9,
     cex.axis = 3/4, col.axis = "red", col.ticks = "red")
   abline(v = outbreak.mo, col = "red")
@@ -66,7 +67,8 @@ rainPlot <- function(x, month) {
   axis(4, at = x[outbreak.sel, "rain"],  col.axis = "red", col = "red",
     labels = paste0(round(percentile), "th %"))
   rug(rain.mo, side = 4)
-  lines(stats::lowess(x[x$mo == mo, "date"], rain.mo), lty = "dashed", lwd = 2)
+  lines(stats::lowess(x[x$month == mo, "date"], rain.mo), lty = "dashed",
+    lwd = 2)
 }
 
 #' @importFrom tools toTitleCase
