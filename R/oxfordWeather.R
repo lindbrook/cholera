@@ -50,7 +50,8 @@ rainPlot <- function(x, month) {
   rain.mo <- x[x$mo == mo, "rain"]
 
   percentile <- 100 * mean(rain.outbreak > rain.mo)
-  ttl <- paste0("Monthly Rainfall in Oxford UK - ", tools::toTitleCase(month))
+  ttl <- paste0("Monthly Rainfall Totals in Oxford - ",
+                tools::toTitleCase(month))
 
   plot(x$date, x$rain, xlab = "Year", ylab = "mm", col = "gray",
     pch = NA, main = ttl)
