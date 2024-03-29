@@ -1,3 +1,12 @@
+### cholera 0.8.0.9287
+
+- amend/update oxford.weather.
+- amend temperaturePlot().
+- amend rainPlot().
+- archive monthEndDate().
+- clean plot.oxfordWeather().
+
+
 ### cholera 0.8.0.9286
 
 - add/set plot.oxfordWeather(end.year = NULL); amend graph elements.
