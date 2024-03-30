@@ -1,21 +1,21 @@
 Duplicate and Missing Cases
 ================
 lindbrook
-2024-03-29
+2024-03-30
 
 John Snow’s map of the 1854 cholera outbreak in London is a canonical
 example of data visualization:[^1]
 
 ![](msu-snows-mapB.jpg)
 
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the
-original [URL](http://www.ncgia.ucsb.edu/pubs/snow/snow.html) no longer
-works, their efforts have been preserved in [Internet Archive’s Wayback
-Machine](https://web.archive.org/web/20100703153945/http://ncgia.ucsb.edu/Publications/Software/cholera/streets).
-The data are also available in Michael Friendly’s
-[‘HistData’](https://cran.r-project.org/package=HistData) R package.
-That package is the starting point for this project. These data are
-plotted below:
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. Their data and
+software are preserved in [Internet Archive’s Wayback
+Machine](https://web.archive.org/web/20100703153945/http://ncgia.ucsb.edu/Publications/Software/cholera/streets).[^2]
+Their data are also available in Michael Friendly’s
+[‘HistData’](https://cran.r-project.org/package=HistData) R package,
+which is the starting point for the
+[‘cholera’](https://cran.r-project.org/package=cholera) package. These
+data are plotted below:
 
 <img src="duplicate.missing.cases_files/figure-gfm/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
 
@@ -25,7 +25,7 @@ However, I would argue that there are two apparent coding errors in
 these data that stem from three misplaced cases.
 
 While the data record 578 bars, only 575 of them have a unique x-y
-coordinate.[^2] Three pairs have identical coordinates: 1) 93 and 214;
+coordinate.[^3] Three pairs have identical coordinates: 1) 93 and 214;
 2) 91 and 241; and 3) 209 and 429. Within the scheme of stacking bars to
 represent the number of fatalities at a given “address”, this should not
 occur. Each bar should have its own unique x-y coordinate. For this
@@ -82,7 +82,10 @@ in this package’s GitHub repository.
     books, including Edward Tufte’s 1997 “Visual Explanations: Images
     and Quantities, Evidence and Narrative”.
 
-[^2]: There is a lack of consensus about the actual number of cases
+[^2]: The original URL, www.ncgia.ucsb.edu/pubs/snow/snow.html, no
+    longer works.
+
+[^3]: There is a lack of consensus about the actual number of cases
     represented in Snow’s map. For what it’s worth, I manually recounted
     the data on Snow’s map and the result I got matches Dodson and
     Tobler’s.

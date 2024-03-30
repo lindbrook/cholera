@@ -1,3 +1,8 @@
+### cholera 0.8.0.9289
+
+- fix Dodson and Tobler URL for winbuilder.
+
+
 ### cholera 0.8.0.9288
 
 - note Dodson and Tobler data and code on Internet Archive's Wayback Machine.
