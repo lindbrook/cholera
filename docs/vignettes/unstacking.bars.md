@@ -1,7 +1,7 @@
 “Unstacking” Bars
 ================
 lindbrook
-2024-03-29
+2024-03-30
 
 ## Overview
 
@@ -13,13 +13,14 @@ five fatalities is represented by five horizontally stacked bars:[^1]
 
 ![](msu-snows-mapB.jpg)
 
-In 1992, Rusty Dodson and Waldo Tobler digitized the map. While the
-original [URL](http://www.ncgia.ucsb.edu/pubs/snow/snow.html) no longer
-works, their efforts have been preserved in [Internet Archive’s Wayback
-Machine](https://web.archive.org/web/20100703153945/http://ncgia.ucsb.edu/Publications/Software/cholera/streets).
-The data are also available in Michael Friendly’s
-[‘HistData’](https://cran.r-project.org/package=HistData) R package.
-That package is the starting point for this project.
+In 1992, Rusty Dodson and Waldo Tobler digitized the map. Their data and
+software are preserved in [Internet Archive’s Wayback
+Machine](https://web.archive.org/web/20100703153945/https://ncgia.ucsb.edu/Publications/Software/cholera/streets).[^2]
+Their data are also available in Michael Friendly’s
+[‘HistData’](https://cran.r-project.org/package=HistData) R package,
+which is the starting point for the
+[‘cholera’](https://cran.r-project.org/package=cholera) package. These
+data are plotted below:
 
 Each bar and pump is assigned a unique x-y coordinate. Each road is
 translated into a series of straight line segments, defined by the
@@ -145,7 +146,7 @@ provide an estimate of the epicenter of the outbreak.
 
 With the “stacked” data, `fatalities`, the contours are looser
 (reflecting lower proximity) and the epicenter is further south than we
-might expect given that the Broad Street pump (blue triangle)[^2] is the
+might expect given that the Broad Street pump (blue triangle)[^3] is the
 accepted source of the outbreak. The problem is that the “vertical”
 stack of 18 cases (west of the pump at 38 Broad Street) and the
 “horizontal” stack of 5 cases (south of the pump at 10 Cambridge Street)
@@ -163,7 +164,7 @@ the pump and to Broad Street:
 
 The main roadblock to “unstacking” is that there is no notion of an
 “address” in the data: bars are merely points and the streets are merely
-line segments.[^3] Nothing links a point to a segment. And nothing
+line segments.[^4] Nothing links a point to a segment. And nothing
 connects one bar in a stack to another bar in the same stack. All
 elements exist independently of one another. The only reason why the map
 “works” is that the fatalities and roads data have proximate x-y
@@ -187,10 +188,13 @@ in this package’s GitHub repository.
     books, including Edward Tufte’s 1997 “Visual Explanations: Images
     and Quantities, Evidence and Narrative”.
 
-[^2]: The blue triangle is the “correct” location of the pump as
+[^2]: The original URL, www.ncgia.ucsb.edu/pubs/snow/snow.html, no
+    longer works.
+
+[^3]: The blue triangle is the “correct” location of the pump as
     included in the amended, second version of the map that appears in
     the Vestry report. The empty green triangle is the pump’s “wrong”
     location from the original map.
 
-[^3]: In Friendly’s ‘HistData’ package, these data are called
+[^4]: In Friendly’s ‘HistData’ package, these data are called
     `Snow.deaths` and `Snow.streets`.
