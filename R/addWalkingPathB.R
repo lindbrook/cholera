@@ -10,7 +10,7 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param include.landmarks Logical. Include landmarks as cases.
-#' @param long.title Logical. Tile with names.
+
 #' @param mileposts Logical. Plot mile/time posts.
 #' @param milepost.unit Character. "distance" or "time".
 #' @param milepost.interval Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).
@@ -22,8 +22,8 @@
 addWalkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, weighted = TRUE, distance.unit = "meter",
   time.unit = "second", walking.speed = 5, include.landmarks = TRUE,
-  long.title = TRUE, mileposts = TRUE, milepost.unit = "distance",
-  milepost.interval = NULL, alpha.level = 1, ...) {
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
+  alpha.level = 1, ...) {
 
   args <- list(origin = origin,
                destination = destination,
@@ -37,12 +37,6 @@ addWalkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
                include.landmarks = include.landmarks)
 
   x <- do.call("walkingPathB", args)
-
-  long.title <- TRUE
-  mileposts <-  TRUE
-  milepost.unit <- "distance"
-  milepost.interval <- NULL
-  alpha.level <- 1
 
   path.data <- x$data
   type <- x$data$type
@@ -78,11 +72,9 @@ addWalkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
   if (latlong) {
     ew <- "lon"
     ns <- "lat"
-    asp <- 1.6
   } else {
     ew <- "x"
     ns <- "y"
-    asp <- 1L
   }
 
   vars <- c(ew, ns)
@@ -253,7 +245,5 @@ addWalkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
     }
 
   }
-  # longTitle(long.title, type, pmp, path.data, orig, land)
-  # title(sub = paste(d, t, post.info, sep = "; "))
 }
 
