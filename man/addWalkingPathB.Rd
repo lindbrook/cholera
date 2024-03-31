@@ -7,9 +7,8 @@
 addWalkingPathB(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, weighted = TRUE,
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  include.landmarks = TRUE, long.title = TRUE, mileposts = TRUE,
-  milepost.unit = "distance", milepost.interval = NULL, alpha.level = 1,
-  ...)
+  include.landmarks = TRUE, mileposts = TRUE, milepost.unit = "distance",
+  milepost.interval = NULL, alpha.level = 1, ...)
 }
 \arguments{
 \item{origin}{Numeric. Vector of origin(s) (numeric or case/landmark name).}
@@ -31,8 +30,6 @@ addWalkingPathB(origin = 1, destination = NULL, type = "case-pump",
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{include.landmarks}{Logical. Include landmarks as cases.}
-
-\item{long.title}{Logical. Tile with names.}
 
 \item{mileposts}{Logical. Plot mile/time posts.}
 

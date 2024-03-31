@@ -1,3 +1,8 @@
+### cholera 0.8.0.9291
+
+- remove long.title argument from addWalkingPathB(); clean code.
+
+
 ### cholera 0.8.0.9290
 
 - use Internet Archive links for Frerichs's UCLA website links.
