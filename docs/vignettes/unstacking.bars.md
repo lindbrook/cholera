@@ -179,14 +179,17 @@ in this package’s GitHub repository.
 
 ## Notes
 
-[^1]: The map was originally published in Snow’s 1855 book “On The Mode
-    Of Communication Of Cholera”, which was reprinted as John Snow et.
+[^1]: The map was originally published in Snow’s 1855 book, “On The Mode
+    Of Communication Of Cholera”, and was reprinted as John Snow et.
     al., 1936. *Snow on Cholera: Being a Reprint of Two Papers*. New
     York: The Common Wealth Fund. You can also find the map online (a
-    high resolution version is available at
-    <https://www.ph.ucla.edu/epi/snow/highressnowmap.html>) and in many
-    books, including Edward Tufte’s 1997 “Visual Explanations: Images
-    and Quantities, Evidence and Narrative”.
+    high resolution version is available on the Internet Archive’s
+    Wayback Machine,
+    <https://web.archive.org/web/20230124072836/https://www.ph.ucla.edu/epi/snow/highressnowmap.html>
+    (the original site, which no longer seems available, was
+    www.ph.ucla.edu/epi/snow/highressnowmap.html) and in many books,
+    including Edward Tufte’s 1997 “Visual Explanations: Images and
+    Quantities, Evidence and Narrative”.
 
 [^2]: The original URL, www.ncgia.ucsb.edu/pubs/snow/snow.html, no
     longer works.

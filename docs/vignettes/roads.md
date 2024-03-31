@@ -1,7 +1,7 @@
 Roads
 ================
 lindbrook
-2023-01-22
+2024-03-30
 
 ## Overview
 
@@ -20,19 +20,19 @@ some 528 numerically identified “streets”.
 
 ``` r
 head(roads)
->   street n        x        y id      name        lon      lat
-> 1      1 2 16.73800 18.69600  1 Map Frame -0.1332322 51.51669
-> 2      1 2 17.66000 18.71200  2 Map Frame -0.1324437 51.51670
-> 3      2 2 14.46200 18.65500  3 Map Frame -0.1350414 51.51668
-> 4      2 2 16.73800 18.69600  4 Map Frame -0.1332322 51.51669
-> 5      3 2 12.79388 18.61613  5 Map Frame -0.1363508 51.51667
-> 6      3 2 14.46200 18.65500  6 Map Frame -0.1350414 51.51668
+>   id street n        x        y      name        lon      lat
+> 1  1      1 2 16.73800 18.69600 Map Frame -0.1332467 51.51667
+> 2  2      1 2 17.66000 18.71200 Map Frame -0.1325068 51.51668
+> 3  3      2 2 14.46200 18.65500 Map Frame -0.1350545 51.51668
+> 4  4      2 2 16.73800 18.69600 Map Frame -0.1332467 51.51667
+> 5  5      3 2 12.79388 18.61613 Map Frame -0.1363807 51.51666
+> 6  6      3 2 14.46200 18.65500 Map Frame -0.1350545 51.51668
 
 nrow(roads)
-> [1] 1241
+> [1] 1243
 
 length(unique(roads$street))
-> [1] 528
+> [1] 529
 ```
 
 The correspondence between these 528 “streets” and streets in the real
@@ -62,10 +62,10 @@ length(border)
 
 The primary source for road names is Snow’s map (a high resolution
 version is available
-[here](https://www.ph.ucla.edu/epi/snow/highressnowmap.html). While
-great effort was made to correctly record and cross-reference names,
-there may still be errors. Error reports and suggestions for amendments
-are welcome.
+[here](https://web.archive.org/web/20230124072836/https://www.ph.ucla.edu/epi/snow/highressnowmap.html).
+While great effort was made to correctly record and cross-reference
+names, there may still be errors. Error reports and suggestions for
+amendments are welcome.
 
 Some roads on the map do not have a name. In those cases, I attach
 unique labels like “Unknown-C”.
@@ -79,8 +79,8 @@ locations. For these, I use Roman numerals to distinguish them (e.g.,
 There is one apparent coding error in Dodson and Tobler’s road data.
 Queen Street (I) extends too far: the water pump \#5 is clearly located
 on Marlborough Mews (see
-[map](https://www.ph.ucla.edu/epi/snow/highressnowmap.html), cited
-above) but ends up on Queen Street (I).
+[map](https://web.archive.org/web/20230124072836/https://www.ph.ucla.edu/epi/snow/highressnowmap.html),
+cited above) but ends up on Queen Street (I).
 
 I amend this by moving the end point of Queen Street (I) westward so
 that the street only runs in a north-south direction. I do so by
