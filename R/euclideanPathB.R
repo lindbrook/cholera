@@ -395,22 +395,24 @@ plot.euclidean_path_B <- function(x, zoom = TRUE, long.title = TRUE,
              seg[, paste0(ew, 2)], seg[, paste0(ns, 2)],
              length = 0.075, col = case.color, lwd = 3, code = 1)
     }))
-  }
 
-  if (milepost.unit == "distance") {
-    if (distance.unit == "meter") {
-      post.info <- paste("posts at", milepost.interval, "m intervals")
-    } else if (distance.unit == "yard") {
-      post.info <- paste("posts at", milepost.interval, "yd intervals")
+    if (milepost.unit == "distance") {
+      if (distance.unit == "meter") {
+        post.info <- paste("posts at", milepost.interval, "m intervals")
+      } else if (distance.unit == "yard") {
+        post.info <- paste("posts at", milepost.interval, "yd intervals")
+      }
+    } else if (milepost.unit == "time") {
+      post.info <- paste("posts at", milepost.interval, "sec intervals")
+    } else {
+      stop('"milepost.unit" muster either be "distance" or "time".')
     }
-  } else if (milepost.unit == "time") {
-    post.info <- paste("posts at", milepost.interval, "sec intervals")
+    title(sub = paste(d, t, post.info, sep = "; "))
   } else {
-    stop('"milepost.unit" muster either be "distance" or "time".')
+    title(sub = paste(d, t, sep = "; "))
   }
 
   longTitle(long.title, type, pmp, path.data, orig, land)
-  title(sub = paste(d, t, post.info, sep = "; "))
 }
 
 #' Print method for walkingPathB().
