@@ -1,3 +1,8 @@
+### cholera 0.8.0.9294
+
+- move post.info and amend subtitle in euclideanPathB() and walkingPathB().
+
+
 ### cholera 0.8.0.9293
 
 - clean addEuclideanPathB() and addWalkingPathB().

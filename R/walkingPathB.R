@@ -389,18 +389,6 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
          seg.data[1, paste0(ew, 1)], seg.data[1, paste0(ns, 1)],
          length = 0.0875, lwd = 3, col = case.color)
 
-  if (milepost.unit == "distance") {
-    if (distance.unit == "meter") {
-      post.info <- paste("posts at", milepost.interval, "m intervals")
-    } else if (distance.unit == "yard") {
-      post.info <- paste("posts at", milepost.interval, "yd intervals")
-    }
-  } else if (milepost.unit == "time") {
-    post.info <- paste("posts at", milepost.interval, "sec intervals")
-  } else {
-    stop('"milepost.unit" muster either be "distance" or "time".')
-  }
-
   if (mileposts) {
     if (path.length > milepost.interval) {
       arrow.head <- milepost.data$arrow.head
@@ -444,9 +432,23 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
              length = 0.0875, lwd = 3, col = case.color)
     }
 
+    if (milepost.unit == "distance") {
+      if (distance.unit == "meter") {
+        post.info <- paste("posts at", milepost.interval, "m intervals")
+      } else if (distance.unit == "yard") {
+        post.info <- paste("posts at", milepost.interval, "yd intervals")
+      }
+    } else if (milepost.unit == "time") {
+      post.info <- paste("posts at", milepost.interval, "sec intervals")
+    } else {
+      stop('"milepost.unit" muster either be "distance" or "time".')
+    }
+    title(sub = paste(d, t, post.info, sep = "; "))
+  } else {
+    title(sub = paste(d, t, sep = "; "))
   }
+
   longTitle(long.title, type, pmp, path.data, orig, land)
-  title(sub = paste(d, t, post.info, sep = "; "))
 }
 
 #' Print method for walkingPathB().
