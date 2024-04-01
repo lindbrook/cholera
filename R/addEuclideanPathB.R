@@ -217,17 +217,5 @@ addEuclideanPathB <- function(origin = 1, destination = NULL,
              length = 0.075, col = case.color, lwd = 3, code = 1)
     }))
   }
-
-  if (milepost.unit == "distance") {
-    if (distance.unit == "meter") {
-      post.info <- paste("posts at", milepost.interval, "m intervals")
-    } else if (distance.unit == "yard") {
-      post.info <- paste("posts at", milepost.interval, "yd intervals")
-    }
-  } else if (milepost.unit == "time") {
-    post.info <- paste("posts at", milepost.interval, "sec intervals")
-  } else {
-    stop('"milepost.unit" muster either be "distance" or "time".')
-  }
 }
 

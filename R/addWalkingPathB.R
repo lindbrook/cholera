@@ -194,18 +194,6 @@ addWalkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
          seg.data[1, paste0(ew, 1)], seg.data[1, paste0(ns, 1)],
          length = 0.0875, lwd = 3, col = case.color)
 
-  if (milepost.unit == "distance") {
-    if (distance.unit == "meter") {
-      post.info <- paste("posts at", milepost.interval, "m intervals")
-    } else if (distance.unit == "yard") {
-      post.info <- paste("posts at", milepost.interval, "yd intervals")
-    }
-  } else if (milepost.unit == "time") {
-    post.info <- paste("posts at", milepost.interval, "sec intervals")
-  } else {
-    stop('"milepost.unit" muster either be "distance" or "time".')
-  }
-
   if (mileposts) {
     if (path.length > milepost.interval) {
       arrow.head <- milepost.data$arrow.head
@@ -243,7 +231,6 @@ addWalkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
              arrow.head[, ew], arrow.head[, ns],
              length = 0.0875, lwd = 3, col = case.color)
     }
-
   }
 }
 

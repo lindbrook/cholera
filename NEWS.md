@@ -1,3 +1,8 @@
+### cholera 0.8.0.9293
+
+- clean addEuclideanPathB() and addWalkingPathB().
+
+
 ### cholera 0.8.0.9292
 
 - add addEuclideanPathB() prototype.
