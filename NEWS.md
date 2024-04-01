@@ -1,3 +1,8 @@
+### cholera 0.8.0.9292
+
+- add addEuclideanPathB() prototype.
+
+
 ### cholera 0.8.0.9291
 
 - remove long.title argument from addWalkingPathB(); clean code.
