@@ -340,7 +340,7 @@ certain issues and topics discussed in the vignettes:
 [note on duplicate and missing
 cases](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md)
 documents the specifics of how I fixed the two apparent coding errors
-and three apparently misplaced case in Dodson and Tobler’s data.
+and three apparently misplaced cases in Dodson and Tobler’s data.
 
 [Clifford Street missing
 segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md)

@@ -202,7 +202,7 @@ The vignettes are available in the package as well as online at the links below.
 
 The lab notes, which are only available online, go into detail about certain issues and topics discussed in the vignettes:
 
-[note on duplicate and missing cases](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md) documents the specifics of how I fixed the two apparent coding errors and three apparently misplaced case in Dodson and Tobler's data.
+[note on duplicate and missing cases](https://github.com/lindbrook/cholera/blob/master/docs/notes/duplicate.missing.cases.notes.md) documents the specifics of how I fixed the two apparent coding errors and three apparently misplaced cases in Dodson and Tobler's data.
 
 [Clifford Street missing segment](https://github.com/lindbrook/cholera/blob/master/docs/notes/clifford.md) discusses the missing segment at the far Eastern end of Clifford Street in Dodson and Tobler's (1992) digitization of Snow's map.
 
