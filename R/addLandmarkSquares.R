@@ -15,13 +15,6 @@ addLandmarkSquares <- function(latlong = FALSE, text.size = 0.5,
 
   if (latlong) {
     vars <- c("lon", "lat")
-    sel <- !grepl("Square", cholera::landmarksB$name)
-    lndmrks <- cholera::landmarksB$name[sel]
-    lndmrks <- strsplit(lndmrks, " ")
-    lndmrks <- vapply(lndmrks, function(x) {
-      if (length(x) == 2L) paste(x, collapse = "\n")
-      else if (length(x) == 3L) paste(x[1], paste(x[-1], collapse = "\n"))
-    }, character(1L))
 
     # Golden Square and Soho Square #
     sel <- cholera::landmarksB$name %in% c("Golden Square-N", "Golden Square-S")
