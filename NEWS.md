@@ -1,3 +1,8 @@
+### cholera 0.8.0.9295
+
+- add addLandmarkSquares().
+
+
 ### cholera 0.8.0.9294
 
 - move post.info and amend subtitle in euclideanPathB() and walkingPathB().
