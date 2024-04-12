@@ -1,8 +1,8 @@
 Package: cholera
 Type: Package
 Title: Amend, Augment and Aid Analysis of John Snow's Cholera Map
-Version: 0.8.0.9295
-Date: 2024-04-08
+Version: 0.8.0.9296
+Date: 2024-04-11
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
   role = c("aut", "cre"))
 Description: Amends errors, augments data and aids analysis of John Snow's map
@@ -16,7 +16,6 @@ Imports: curl,
          deldir (>= 1.0-2),
          elevatr,
          geosphere,
-         ggplot2,
          HistData (>= 0.7-8),
          igraph,
          KernSmooth,
@@ -29,7 +28,8 @@ Imports: curl,
          threejs,
          TSP,
          viridisLite
-Suggests: knitr,
+Suggests: ggplot2,
+          knitr,
           rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 7.3.1
