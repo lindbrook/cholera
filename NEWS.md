@@ -1,3 +1,8 @@
+### cholera 0.8.0.9296
+
+- archive profile2D() 'ggplot2' code.
+
+
 ### cholera 0.8.0.9295
 
 - add addLandmarkSquares().

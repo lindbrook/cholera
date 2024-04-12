@@ -3,9 +3,7 @@
 #' @param angle Numeric. Angle of perspective axis in degrees.
 #' @param pump Numeric. Select pump as focal point.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
-#' @param type Character. Type of graphic: "base" or "ggplot2".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
-#' @import ggplot2
 #' @export
 #' @examples
 #' \dontrun{
@@ -13,8 +11,7 @@
 #' profile2D(angle = 30, type = "ggplot2")
 #' }
 
-profile2D <- function(angle = 0, pump = 7, vestry = FALSE, type = "base",
-  multi.core = TRUE) {
+profile2D <- function(angle = 0, pump = 7, vestry = FALSE, multi.core = TRUE) {
 
   if (angle < 0 | angle > 360) stop("Use 0 >= angle <= 360.", call. = FALSE)
 
@@ -40,51 +37,19 @@ profile2D <- function(angle = 0, pump = 7, vestry = FALSE, type = "base",
   outside <- profilePerspective("outside", pump = pump, angle = angle,
     vestry = vestry, multi.core = cores)
 
-  if (type == "base") {
-    par(mfrow = c(3, 1))
-    x.rng <- range(inside$axis, outside$axis)
-    y.rng <- range(inside$count, outside$count)
-    plot(inside$axis, inside$count, type = "h", xlim = x.rng, ylim = y.rng,
-      col = "red")
-    title(main = paste("Axis angle =", angle))
-    plot(outside$axis, outside$count, type = "h", xlim = x.rng, ylim = y.rng,
-      col = "blue")
-    plot(outside$axis, outside$count, type = "h", xlim = x.rng, ylim = y.rng,
-      col = grDevices::adjustcolor("blue", alpha.f = 1/2))
-    points(inside$axis, inside$count, type = "h",
-      col = grDevices::adjustcolor("red", alpha.f = 1/2))
-    par(mfrow = c(1, 1))
-
-  } else if (type == "ggplot2") {
-    profileA <- data.frame(axis = inside$axis, count = inside$count)
-    profileB <- data.frame(axis = outside$axis, count = outside$count)
-    profileA$Location <- "Inside"
-    profileB$Location <- "Outside"
-    profileA$facet <- "Inside"
-    profileB$facet <- "Outside"
-    profileAB <- rbind(profileA, profileB)
-    profileAB$facet <- "In & Out"
-    profile.data <- rbind(profileA, profileB, profileAB)
-    facet <- c("Inside", "Outside", "In & Out")
-    profile.data$facet <- factor(profile.data$facet, levels = facet)
-      p <- ggplot(data = profile.data, aes_string(x = "axis", y = 0,
-        xend = "axis", yend = "count")) +
-      geom_segment(aes_string(color = "Location")) +
-      scale_colour_manual(values = c("red", "blue"),
-                          guide = guide_legend(title = "Location")) +
-      facet_wrap(~ facet, nrow = 3) +
-      ggtitle(paste("Axis angle =", angle)) +
-      theme_bw() +
-      theme(panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            plot.title = element_text(hjust = 0.5))
-    p
-
-  } else {
-    if (type %in% c("base", "ggplot2") == FALSE) {
-      stop('type must be "base" or "ggplot2".', call. = FALSE)
-    }
-  }
+  par(mfrow = c(3, 1))
+  x.rng <- range(inside$axis, outside$axis)
+  y.rng <- range(inside$count, outside$count)
+  plot(inside$axis, inside$count, type = "h", xlim = x.rng, ylim = y.rng,
+    col = "red")
+  title(main = paste("Axis angle =", angle))
+  plot(outside$axis, outside$count, type = "h", xlim = x.rng, ylim = y.rng,
+    col = "blue")
+  plot(outside$axis, outside$count, type = "h", xlim = x.rng, ylim = y.rng,
+    col = grDevices::adjustcolor("blue", alpha.f = 1/2))
+  points(inside$axis, inside$count, type = "h",
+    col = grDevices::adjustcolor("red", alpha.f = 1/2))
+  par(mfrow = c(1, 1))
 }
 
 axisSlope <- function(angle) {
