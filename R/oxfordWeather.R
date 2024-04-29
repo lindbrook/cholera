@@ -36,6 +36,16 @@ plot.oxfordWeather <- function(x, statistic = "temperature",
     stop('unit.observation must be "day" or "month".', call. = FALSE)
   }
 
+  # interpolation for tmin NA based on tmax
+  missing <- which(is.na(x$tmin))
+  delta <- x[missing, "tmax"] - min(x[c(missing - 1, missing + 1), "tmax"])
+  distance <- abs(x[missing - 1, "tmax"] - x[missing + 1, "tmax"])
+  fraction <- delta / distance
+  missing.data.length <- abs(x[missing - 1, "tmin"] - x[missing + 1, "tmin"])
+  delta.fix <- fraction * missing.data.length
+  abs.fix <- delta.fix + min(x[c(missing - 1, missing + 1), "tmin"])
+  x[missing, "tmin"] <- abs.fix
+
   if (!is.null(end.year)) {
     if (end.year > min(x$year) & end.year <= max(x$year)) {
       x <- x[x$year <= end.year, ]
@@ -129,8 +139,6 @@ temperaturePlot <- function(x, month, unit.observation) {
 
   plot(x$date, x$tmax, pch = NA, xlab = "Year", ylab = "Celsius",
     ylim = range(c(x$tmax, x$tmin), na.rm = TRUE), main = ttl)
-
-
   axis(3, at = outbreak.mo, labels = "Soho Outbreak", cex.axis = 3/4,
     padj = 0.9)
   axis(4, at = temp.outbreak.hi, cex.axis = 0.9, padj = -0.9,
@@ -173,19 +181,7 @@ temperaturePlot <- function(x, month, unit.observation) {
       lty = "dashed", lwd = 1.5)
   } else if (unit.observation == "day") {
     lines(stats::lowess(x$date, x$tmax), col = "red", lwd = 1.5)
-
-    # interpolation for tmin based on tmax
-    missing <- which(is.na(x$tmin))
-    delta <- x[missing, "tmax"] - min(x[c(missing - 1, missing + 1), "tmax"])
-    distance <- abs(x[missing - 1, "tmax"] - x[missing + 1, "tmax"])
-    fraction <- delta / distance
-    missing.data.length <- abs(x[missing - 1, "tmin"] - x[missing + 1, "tmin"])
-    delta.fix <- fraction * missing.data.length
-    x2 <- x
-    abs.fix <- delta.fix + min(x2[c(missing - 1, missing + 1), "tmin"])
-    x2[missing, "tmin"] <- abs.fix
-    lines(stats::lowess(x2$date, x2$tmin), col = "blue", lwd = 1.5)
-
+    lines(stats::lowess(x$date, x$tmin), col = "blue", lwd = 1.5)
     rug(x$tmax, side = 4, col = grDevices::adjustcolor("red", alpha.f = 0.125))
     rug(x$tmin, side = 4, col = grDevices::adjustcolor("blue", alpha.f = 0.125))
     abline(h = x[x$date == outbreak.mo, "tmax"], col = "red", lty = "dashed",

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9298
+
+- move interpolation code for "tmin" NA to plot.oxfordWeather().
+
+
 ### cholera 0.8.0.9297
 
 - add/set plot.oxfordWeather(unit.observation = "month").
