@@ -10,7 +10,6 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param include.landmarks Logical. Include landmarks as cases.
-
 #' @param mileposts Logical. Plot mile/time posts.
 #' @param milepost.unit Character. "distance" or "time".
 #' @param milepost.interval Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).
@@ -109,7 +108,7 @@ addWalkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
         if (grepl("St", land.tmp$name)) {
           label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
           land.label <- paste0(paste(label.parse[1], label.parse[2]), "\n",
-            label.parse[3])
+                               label.parse[3])
         } else {
           label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
           if (length(label.parse) == 2) {
@@ -137,7 +136,7 @@ addWalkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
           label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
           text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",
-            cex = 0.8)
+               cex = 0.8)
         } else if (land.tmp[, ew] != land.tmp[, paste0(ew, ".lab")]) {
           label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
           names(label.dat) <- vars
@@ -220,7 +219,7 @@ addWalkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
 
         invisible(lapply(seq_along(zero.id), function(i) {
           text(arrow.head[zero.id[i], vars], labels = "<", srt = angle[i],
-               col = case.color, cex = 1.25)
+            col = case.color, cex = 1.25)
         }))
 
         arrow.head <- arrow.head[!row.names(arrow.head) %in% zero.id, ]
