@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2024-02-07
+2024-04-30
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -75,7 +75,7 @@ Human History*. Princeton: Princeton University Press.
 Brian Harrison. 1997. *Drink and the Victorians*. Edinburgh: Edinburgh
 University Press.
 
-Arthur Hill Hassall. 1876, *Food: Its Adulterations, and the Methods for
+Arthur Hill Hassall. 1876. *Food: Its Adulterations, and the Methods for
 their Detection*. London: Longmans, Green, and Co.
 
 Sandra Hempel. 2013. “Obituary: John Snow”. *The Lancet*. 381(9874):
@@ -84,11 +84,14 @@ Sandra Hempel. 2013. “Obituary: John Snow”. *The Lancet*. 381(9874):
 Jonathan Hodge and Gregory Radick, eds. 2003. *The Cambridge Companion
 to Darwin*. New York: Cambridge University Press.
 
-Stephen Inwood. 1998 *A History of London*. New York: Carroll & Graf
+Stephen Inwood. 1998. *A History of London*. New York: Carroll & Graf
 Publishers.
 
 Lee Jackson. 2014. *Dirty Old London: The Victorian Fight Against
 Filth*. New Haven: Yale University Press.
+
+Oskar Jensen. 2022. *Vagabonds: Life on the Streets of
+Nineteenth-Century London*. Richmond: Duckworth Books Ltd.
 
 Steven Johnson. 2006. *The Ghost Map: The Story of London’s Most
 Terrifying Epidemic – and How it Changed Science, Cities and the Modern
