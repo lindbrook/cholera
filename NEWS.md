@@ -1,3 +1,8 @@
+### cholera 0.8.0.9299
+
+- amend/restore profile2D() 'ggplot2' code.
+
+
 ### cholera 0.8.0.9298
 
 - move interpolation code for "tmin" NA to plot.oxfordWeather().
