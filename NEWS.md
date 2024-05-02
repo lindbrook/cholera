@@ -1,3 +1,8 @@
+### cholera 0.8.0.9300
+
+- add snowMap() to plot.neighborhoodWalking() for case.set = "snow".
+
+
 ### cholera 0.8.0.9299
 
 - amend/restore profile2D() 'ggplot2' code.

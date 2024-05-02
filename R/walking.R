@@ -152,6 +152,8 @@ plot.walking <- function(x, type = "roads", tsp.method = "repetitive_nn", ...) {
       edges[unique(unlist(x)), "id2"]
     })
 
+    snowMap(add.cases = FALSE, add.pumps = FALSE)
+
     invisible(lapply(names(obs.whole.edges), function(nm) {
       n.edges <- edges[edges$id2 %in% obs.whole.edges[[nm]], ]
       segments(n.edges$x1, n.edges$y1, n.edges$x2, n.edges$y2, lwd = 4,
@@ -265,7 +267,7 @@ plot.walking <- function(x, type = "roads", tsp.method = "repetitive_nn", ...) {
         polygon(cholera::regular.cases[pearl.string[[nm]], ],
           col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = 2/3))
       }))
-      
+
     } else if (type == "roads") {
       addRoads()
       invisible(lapply(names(wholes), function(nm) {
