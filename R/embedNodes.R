@@ -135,7 +135,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
       tmp <- cbind(tmp, rd.tmp[, c("street", "id", "name")])
       edges <- tmp[, c("street", "id", "name", coord.nms)]
 
-      if (case.set == "observed") {
+      if (case.set %in% c("observed", "snow")) {
         edges$id2 <- paste0(edges$id, letters[seq_len(nrow(edges))])
       } else if (case.set == "expected") {
         edges$id2 <- paste0(edges$id, "-", seq_len(nrow(edges)))
@@ -273,6 +273,9 @@ orthoAddrC <- function(case.set = "observed", latlong = FALSE) {
       out <- cholera::latlong.ortho.addr
     } else if (case.set == "expected") {
       out <- cholera::latlong.sim.ortho.proj
+    } else if (case.set == "snow") {
+      sel <- cholera::latlong.ortho.addr$case %in% cholera::snow.neighborhood
+      out <- cholera::latlong.ortho.addr[sel, ]
     }
   } else {
     if (case.set == "observed") {
@@ -280,6 +283,9 @@ orthoAddrC <- function(case.set = "observed", latlong = FALSE) {
       out <- cholera::ortho.proj[sel, ]
     } else if (case.set == "expected") {
       out <- cholera::sim.ortho.proj
+    } else if (case.set == "snow") {
+      sel <- cholera::ortho.proj$case %in% cholera::snow.neighborhood
+      out <- cholera::ortho.proj[sel, ]
     }
     sel <- names(out) %in% c("x.proj", "y.proj")
     names(out)[sel] <- c("x", "y")

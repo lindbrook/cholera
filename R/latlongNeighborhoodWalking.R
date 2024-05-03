@@ -12,8 +12,9 @@
 latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   case.set = "observed", weighted = TRUE, multi.core = TRUE) {
 
-  if (!case.set %in% c("expected", "observed")) {
-    stop('case.location must be "observed" or "expected".', call. = FALSE)
+  if (!case.set %in% c("expected", "observed", "snow")) {
+    stop('case.location must be "observed", "expected" or "snow".',
+      call. = FALSE)
   }
 
   cores <- multiCore(multi.core)
@@ -27,7 +28,12 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   }
 
   # Case Data #
-  if (case.set == "observed") {
+  if (case.set == "snow") {
+    sel <- cholera::fatalities.address$anchor %in% cholera::snow.neighborhood
+    case.data <- cholera::fatalities.address[sel, ]
+    sel <- cholera::latlong.ortho.addr$case %in% cholera::snow.neighborhood
+    case.ortho <- cholera::latlong.ortho.addr[sel, ]
+  } else if (case.set == "observed") {
     case.data <- cholera::fatalities.address
     case.ortho <- cholera::latlong.ortho.addr
   } else if (case.set == "expected") {
@@ -48,7 +54,7 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   nearest.path <- nearest.data$path
   neigh.data <- nearest.data$neigh.data
   nearest.pump <- data.frame(case = nearest.dist$case, pump = nearest.dist$pump)
-  
+
   pumpID <- sort(unique(nearest.dist$pump))
 
   neighborhood.cases <- lapply(pumpID, function(p) {
@@ -71,6 +77,7 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
               pump.select = pump.select,
               snow.colors = snow.colors,
               pumpID = pumpID,
+              case.set = case.set,
               cores = cores)
 
   class(out) <- "latlong_walking"
@@ -134,11 +141,20 @@ plot.latlong_walking <- function(x, ...) {
       pos = 1, col = "gray")
   }
 
-  if (is.null(x$pump.select)) {
-    title(main = "Pump Neighborhoods: Walking")
+  if (x$case.set == "snow") {
+    if (is.null(x$pump.select)) {
+      title(main = "Snow Pump Neighborhood: Walking")
+    } else {
+      title(main = paste0("Snow Pump Neighborhood: Walking", "\n", "Pumps ",
+        paste(sort(x$pump.select), collapse = ", ")))
+    }
   } else {
-    title(main = paste0("Pump Neighborhoods: Walking", "\n", "Pumps ",
-      paste(sort(x$pump.select), collapse = ", ")))
+    if (is.null(x$pump.select)) {
+      title(main = "Pump Neighborhoods: Walking")
+    } else {
+      title(main = paste0("Pump Neighborhoods: Walking", "\n", "Pumps ",
+        paste(sort(x$pump.select), collapse = ", ")))
+    }
   }
 }
 

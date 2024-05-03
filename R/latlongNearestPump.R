@@ -57,7 +57,7 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
       walking.speed = walking.speed)
 
   } else if (metric == "walking") {
-    dat <- neighborhoodDataB(case.set = case.set, vestry = vestry, 
+    dat <- neighborhoodDataB(case.set = case.set, vestry = vestry,
       latlong = TRUE)
     p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
     path.data <- latlong_pathData(dat, p.sel, case.set, vestry, weighted, cores)
@@ -78,6 +78,9 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
     ortho.addr <- cholera::latlong.ortho.addr
   } else if (case.set == "expected") {
     ortho.addr <- cholera::latlong.sim.ortho.proj
+  } else if (case.set == "snow") {
+    sel <- cholera::latlong.ortho.addr$case %in% cholera::snow.neighborhood
+    ortho.addr <- cholera::latlong.ortho.addr[sel, ]
   }
 
   if (vestry) {
