@@ -1,3 +1,8 @@
+### cholera 0.8.0.9301
+
+- add latlongNeighborhoodWalking(case.set = "snow").
+
+
 ### cholera 0.8.0.9300
 
 - add snowMap() to plot.neighborhoodWalking() for case.set = "snow".
