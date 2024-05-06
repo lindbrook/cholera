@@ -86,7 +86,7 @@ snowNeighborhood <- function() {
     case.data <- partial.candidates[[i]]
     seg.data <- partial.segments[[i]]
 
-    if (nrow(seg.data > 1)) {
+    if (nrow(seg.data) > 1) {
       seg.data <- seg.data[order(seg.data$id2), ]
       classify.test <- vapply(case.data$case, function(case) {
         obs <- case.data[case.data$case == case, c("x.proj", "y.proj")]

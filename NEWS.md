@@ -1,3 +1,8 @@
+### cholera 0.8.0.9302
+
+- fix typo in classifyCase() for snowNeighborhood().
+
+
 ### cholera 0.8.0.9301
 
 - add latlongNeighborhoodWalking(case.set = "snow").
