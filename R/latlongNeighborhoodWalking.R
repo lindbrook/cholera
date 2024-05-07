@@ -100,7 +100,7 @@ plot.latlong_walking <- function(x, ...) {
   obs.edges <- parallel::mclapply(paths, function(p) {
     oe <- lapply(p, function(x) {
       nodes.tmp <- names(unlist(unname(x)))
-      identifyEdgesB(nodes.tmp, edges)
+      auditEdge(nodes.tmp, edges)
     })
     unique(unlist(oe))
   }, mc.cores = x$cores)
@@ -158,10 +158,3 @@ plot.latlong_walking <- function(x, ...) {
   }
 }
 
-identifyEdgesB <- function(p, edges) {
-  vapply(seq_along(p[-1]), function(i) {
-    ab <- edges$node1 %in% p[i] & edges$node2 %in% p[i + 1]
-    ba <- edges$node2 %in% p[i] & edges$node1 %in% p[i + 1]
-    which(ab | ba)
-  }, numeric(1L))
-}

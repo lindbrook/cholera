@@ -1,3 +1,8 @@
+### cholera 0.8.0.9303
+
+- replace identifyEdgesB() with auditEdge() in plot.latlong_walking().
+
+
 ### cholera 0.8.0.9302
 
 - fix typo in classifyCase() for snowNeighborhood().
