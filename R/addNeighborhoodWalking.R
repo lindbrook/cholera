@@ -42,7 +42,7 @@ addNeighborhoodWalking <- function(pump.select = NULL, pump.subset = NULL,
     obs.edges <- lapply(paths, function(p) {
       oe <- lapply(p, function(x) {
         nodes.tmp <- names(unlist(unname(x)))
-        identifyEdgesB(nodes.tmp, edges)
+        auditEdge(nodes.tmp, edges)
       })
       unique(unlist(oe))
     })
