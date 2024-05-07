@@ -1,3 +1,8 @@
+### cholera 0.8.0.9304
+
+- replace identifyEdgesB() with auditEdge() in addNeighborhoodWalking().
+
+
 ### cholera 0.8.0.9303
 
 - replace identifyEdgesB() with auditEdge() in plot.latlong_walking().
