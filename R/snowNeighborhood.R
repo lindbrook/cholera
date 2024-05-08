@@ -35,9 +35,8 @@ snowNeighborhood <- function() {
   kemps.court <- which(edges$id2 == "196-1d")
   bentinck.street <- which(edges$id2 == "167-1a")
 
-  whole.segs <- c(portland.mews, ship.yard, tylers.court,
-                  maidenhead.court, cock.court, hopkins.street, unknownB,
-                  duck.ham)
+  whole.segs <- c(portland.mews, ship.yard, tylers.court, maidenhead.court, 
+                  cock.court, hopkins.street, unknownB, duck.ham)
 
   sub.segs <- c(dufours.place, silver.street, pulteney.court1,
                 new.husband.street, st.anns.place, hopkins.street.sub,
