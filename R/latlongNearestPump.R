@@ -3,7 +3,7 @@
 #' @param pump.select Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.
 #' @param metric Character. "euclidean" or "walking".
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
-#' @param case.set Character. "observed" or "expected".
+#' @param case.set Character. "observed", "expected" or "snow".
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
@@ -24,6 +24,10 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
     pump.data <- cholera::pumps.vestry
   } else {
     pump.data <- cholera::pumps
+  }
+
+  if (!case.set %in% c("observed", "expected", "snow")) {
+    stop('case.set must be "observed", "expected" or "snow".', call. = FALSE)
   }
 
   if (metric %in% c("euclidean", "walking") == FALSE) {

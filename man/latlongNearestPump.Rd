@@ -16,7 +16,7 @@ latlongNearestPump(pump.select = NULL, metric = "walking",
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
-\item{case.set}{Character. "observed" or "expected".}
+\item{case.set}{Character. "observed", "expected" or "snow".}
 
 \item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 

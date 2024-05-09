@@ -1,3 +1,8 @@
+### cholera 0.8.0.9306
+
+- add latlongNearestPump(case.set = "snow").
+
+
 ### cholera 0.8.0.9305
 
 - amend list structure of shortest path in latlongNearestPump().
