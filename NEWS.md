@@ -1,3 +1,8 @@
+### cholera 0.8.0.9307
+
+- amend computation of obs.edges in plot.latlong_walking().
+
+
 ### cholera 0.8.0.9306
 
 - add latlongNearestPump(case.set = "snow").
