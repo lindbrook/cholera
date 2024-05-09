@@ -97,13 +97,11 @@ plot.latlong_walking <- function(x, ...) {
   paths <- x$paths
   vars <- c("lon", "lat")
 
-  obs.edges <- parallel::mclapply(paths, function(p) {
-    oe <- lapply(p, function(x) {
-      nodes.tmp <- names(unlist(unname(x)))
-      auditEdge(nodes.tmp, edges)
-    })
-    unique(unlist(oe))
-  }, mc.cores = x$cores)
+  obs.edges <- lapply(paths, function(neighborhood) {
+    edge.names <- lapply(neighborhood, names)
+    audited.edges <- lapply(edge.names, auditEdge, edges)
+    unique(unlist(audited.edges))
+  })
 
   snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
 
