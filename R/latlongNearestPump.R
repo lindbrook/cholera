@@ -155,7 +155,7 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
     numeric(1L))
 
   short.path <- lapply(seq_along(paths), function(i) {
-    paths[[i]][path.sel[i]]
+    paths[[i]][[path.sel[i]]]
   })
 
   if (case.set == "expected" & 2L %in% p.sel) {
