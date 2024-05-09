@@ -1,3 +1,8 @@
+### cholera 0.8.0.9305
+
+- amend list structure of shortest path in latlongNearestPump().
+
+
 ### cholera 0.8.0.9304
 
 - replace identifyEdgesB() with auditEdge() in addNeighborhoodWalking().
