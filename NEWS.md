@@ -1,3 +1,8 @@
+### cholera 0.8.0.9309
+
+- add exception for single pump selection in latlong_pathData().
+
+
 ### cholera 0.8.0.9308
 
 - use computed distance to identify pump isolate(s) in latlong_pathData().
