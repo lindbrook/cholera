@@ -133,15 +133,21 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
     }, mc.cores = cores)
   }
 
-  min.dist <- vapply(distances, function(x) x[which.min(x)], numeric(1L))
-  path.sel <- vapply(distances, which.min, integer(1L))
-
-  short.path <- lapply(seq_along(paths), function(i) {
-    paths[[i]][[paste(path.sel[i])]]
-  })
+  if (nrow(ortho.pump) > 1) {
+    min.dist <- vapply(distances, function(x) x[which.min(x)], numeric(1L))
+    p.sel <- vapply(distances, which.min, integer(1L))
+    short.path <- lapply(seq_along(paths), function(i) {
+      paths[[i]][[paste(p.sel[i])]]
+    })
+  } else if (nrow(ortho.pump) == 1) {
+    min.dist <- unlist(distances)
+    short.path <- lapply(seq_along(paths), function(i) {
+      paths[[i]][[paste(p.sel)]]
+    })
+  }
 
   list(case = ortho.addr$case,
-       pump = path.sel,
+       pump = p.sel,
        distance = min.dist,
        path = short.path)
 }
