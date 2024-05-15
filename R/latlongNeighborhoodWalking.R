@@ -20,26 +20,10 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   cores <- multiCore(multi.core)
   snow.colors <- snowColors(vestry = vestry)
 
-  # Pump Data #
   if (vestry) {
     pump.data <- cholera::pumps.vestry
   } else {
     pump.data <- cholera::pumps
-  }
-
-  # Case Data #
-  if (case.set == "snow") {
-    sel <- cholera::fatalities.address$anchor %in% cholera::snow.neighborhood
-    case.data <- cholera::fatalities.address[sel, ]
-    sel <- cholera::latlong.ortho.addr$case %in% cholera::snow.neighborhood
-    case.ortho <- cholera::latlong.ortho.addr[sel, ]
-  } else if (case.set == "observed") {
-    case.data <- cholera::fatalities.address
-    case.ortho <- cholera::latlong.ortho.addr
-  } else if (case.set == "expected") {
-    case.data <- cholera::latlong.regular.cases
-    case.data$case <- seq_len(nrow(case.data))
-    case.ortho <- cholera::latlong.sim.ortho.proj
   }
 
   pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
@@ -76,9 +60,8 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
               vestry = vestry,
               pump.select = pump.select,
               snow.colors = snow.colors,
-              pumpID = pumpID,
-              case.set = case.set,
-              cores = cores)
+              pump.data = pump.data,
+              case.set = case.set)
 
   class(out) <- "latlong_walking"
   out
@@ -92,8 +75,7 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @export
 
 plot.latlong_walking <- function(x, ...) {
-  dat <- x$neigh.data
-  edges <- dat$edges
+  edges <- x$neigh.data$edges
   paths <- x$paths
   vars <- c("lon", "lat")
 
@@ -117,11 +99,7 @@ plot.latlong_walking <- function(x, ...) {
       col = x$snow.colors[nm])
   }))
 
-  if (x$vestry) {
-    p.data <- cholera::pumps.vestry
-  } else {
-    p.data <- cholera::pumps
-  }
+  p.data <- x$pump.data
 
   if (is.null(x$pump.select)) {
     points(p.data[, vars], col = x$snow.colors, lwd = 2, pch = 24)
@@ -155,4 +133,3 @@ plot.latlong_walking <- function(x, ...) {
     }
   }
 }
-
