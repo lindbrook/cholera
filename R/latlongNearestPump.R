@@ -77,6 +77,8 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
 latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
   g <- dat$g
   edges <- dat$edges
+  nodes <- dat$nodes
+  nodes.pump <- dat$nodes.pump
 
   if (case.set == "observed") {
     ortho.addr <- cholera::latlong.ortho.addr
@@ -102,77 +104,46 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
   ortho.addr$node <- paste0(ortho.addr$lon, "_&_", ortho.addr$lat)
   ortho.pump$node <- paste0(ortho.pump$lon, "_&_", ortho.pump$lat)
 
-  ## Adam and Eve Court: isolate with pump (#2) ##
+  if (case.set %in% c("observed", "snow")) {
+    distances <- parallel::mclapply(ortho.addr$node, function(case.node) {
+      igraph::distances(g, case.node, ortho.pump$node, weights = edges$d)
+    }, mc.cores = cores)
 
-  if (case.set == "expected" & 2L %in% p.sel) {
-    rd.nm <- "Adam and Eve Court"
-    sel <- cholera::road.segments[cholera::road.segments$name == rd.nm, ]$id
-    adam.eve <- ortho.addr$road.segment %in% sel
+    ## Adam and Eve Court: isolate with pump (#2) ##
+    # infinite distance means unreachable node
 
-    if (any(adam.eve)) {
-      ortho.addr.adam.eve <- ortho.addr[adam.eve, ]
-      ortho.addr <- ortho.addr[!adam.eve, ]
+    inf.dist <- vapply(distances, function(x) any(is.infinite(x)), logical(1L))
+
+    if (any(inf.dist)) {
+      inf.pump <- vapply(distances, function(x) {
+        which(is.infinite(x))
+      }, integer(1L))
+
+      if (length(unique(inf.pump)) == 1) {
+        ortho.pump <- ortho.pump[-unique(inf.pump),]
+      } else if (length(unique(inf.pump)) > 1) { # by case exclusion (expected)
+        NULL
+      }
     }
 
-    adam.eve.pump <- pmp[pmp$street == rd.nm, ]$id
-    ortho.pump.adam.eve <- ortho.pump[ortho.pump$id == adam.eve.pump, ]
-    ortho.pump <- ortho.pump[ortho.pump$id != adam.eve.pump, ]
-
-    short.path.AE <- parallel::mclapply(ortho.addr.adam.eve$node, function(n) {
-      p <- igraph::shortest_paths(g, n, ortho.pump.adam.eve$node,
+    paths <- parallel::mclapply(ortho.addr$node, function(case.node) {
+      p <- igraph::shortest_paths(g, case.node, ortho.pump$node,
         weights = edges$d)$vpath
-      stats::setNames(p, ortho.pump.adam.eve$id)
-    }, mc.cores = cores)
-
-    distances.AE <- parallel::mclapply(ortho.addr.adam.eve$node, function(n) {
-      igraph::distances(g, n, ortho.pump.adam.eve$node, weights = edges$d)
+      stats::setNames(p, ortho.pump$id)
     }, mc.cores = cores)
   }
-
-  ## Falconberg Court and Mews: isolate without pump ##
-
-  rd.nm <- c("Falconberg Court", "Falconberg Mews")
-  sel <- cholera::road.segments$name %in% rd.nm
-  falconberg <- ortho.addr$road.segment %in% cholera::road.segments[sel, ]$id
-
-  if (any(falconberg)) {
-    ortho.addr.falconberg <- ortho.addr[falconberg, ]
-    ortho.addr <- ortho.addr[!falconberg, ]
-  }
-
-  ## graph computation ##
-
-  paths <- parallel::mclapply(ortho.addr$node, function(case.node) {
-    p <- igraph::shortest_paths(g, case.node, ortho.pump$node,
-      weights = edges$d)$vpath
-    stats::setNames(p, ortho.pump$id)
-  }, mc.cores = cores)
-
-  distances <- parallel::mclapply(ortho.addr$node, function(case.node) {
-    igraph::distances(g, case.node, ortho.pump$node, weights = edges$d)
-  }, mc.cores = cores)
 
   min.dist <- vapply(distances, function(x) x[which.min(x)], numeric(1L))
   path.sel <- vapply(distances, which.min, integer(1L))
 
-  nearest.pump <- vapply(path.sel, function(i) ortho.pump[i, "id"],
-    numeric(1L))
-
   short.path <- lapply(seq_along(paths), function(i) {
-    paths[[i]][[path.sel[i]]]
+    paths[[i]][[paste(path.sel[i])]]
   })
 
-  if (case.set == "expected" & 2L %in% p.sel) {
-    list(case = c(ortho.addr$case, ortho.addr.adam.eve$case),
-         pump = c(nearest.pump, rep(2L, nrow(ortho.addr.adam.eve))),
-         distance = c(min.dist, unlist(distances.AE)),
-         path = c(short.path, short.path.AE))
-  } else {
-    list(case = ortho.addr$case,
-         pump = nearest.pump,
-         distance = min.dist,
-         path = short.path)
-  }
+  list(case = ortho.addr$case,
+       pump = path.sel,
+       distance = min.dist,
+       path = short.path)
 }
 
 # latlong.nearest.pump <- latlongNearestPump()

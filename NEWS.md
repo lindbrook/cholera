@@ -1,3 +1,9 @@
+### cholera 0.8.0.9308
+
+- use computed distance to identify pump isolate(s) in latlong_pathData().
+- clean latlongNeighborhoodWalking().
+
+
 ### cholera 0.8.0.9307
 
 - amend computation of obs.edges in plot.latlong_walking().
