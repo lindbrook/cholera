@@ -1,3 +1,8 @@
+### cholera 0.8.0.9310
+
+- add snowNeighborhoodB() prototype.
+
+
 ### cholera 0.8.0.9309
 
 - add exception for single pump selection in latlong_pathData().
