@@ -24,15 +24,23 @@ latlongStreetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
   real.road.names <- streetNames()
   vars <- c("lon", "lat")
 
-  if (is.character(road.name) == FALSE) {
-    stop("Road name must be a character string.", call. = FALSE)
-  } else if (road.name %in% real.road.names == FALSE) {
-    case.name <- caseAndSpace(road.name)
-    if (case.name %in% real.road.names == FALSE) {
-      error.msg <- "Invalid road name. Check spelling or see streetNames()."
+  if (!is.null(road.name)) {
+    if (is.character(road.name)) {
+      name <- vapply(road.name, caseAndSpace, character(1L))
+    } else {
+      stop("Road name must be a character string.", call. = FALSE)
+    }
+
+    if (all(name %in% real.road.names == FALSE)) {
+      error.msg <- "Invalid road name(s). See streetNames()."
       stop(error.msg, call. = FALSE)
-    } else name <- case.name
-  } else name <- road.name
+    } else if (any(name %in% real.road.names == FALSE)) {
+      nm.err <- name[!name %in% real.road.names]
+      nm.msg <- "Misspelled or invalid road name(s). See streetNames():"
+      message(paste(nm.msg, paste(nm.err, collapse = ", ")))
+      name <- name[name %in% real.road.names]
+    }
+  }
 
   if (is.null(cases) == FALSE) {
     if (cases %in% c("address", "fatality") == FALSE) {
@@ -53,31 +61,27 @@ latlongStreetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
     stop('time.unit must be "hour", "minute" or "second".', call. = FALSE)
   }
 
-  selected.road <- cholera::roads[cholera::roads$name == name, "street"]
+  sel <- cholera::roads$name %in% name
+  selected.road <- unique(cholera::roads[sel, "street"])
+
   roads.list <- split(cholera::roads[, vars], cholera::roads$street)
 
-  rng <- lapply(cholera::roads[cholera::roads$name == name, vars], range)
+  if (is.null(road.name) | isFALSE(zoom)) {
+    xlim <- range(cholera::roads$lon)
+    ylim <- range(cholera::roads$lat)
+  } else {
+    sel <- cholera::roads$name %in% name
+    xlim <- range(cholera::roads[sel, "lon"])
+    ylim <- range(cholera::roads[sel, "lat"])
+  }
 
-  if (is.logical(zoom)) {
-    if (zoom) {
-      zoom.pct <- 0.00001
-      x.rng <- c(min(min(rng$lon), min(rng$lon) * (1 + zoom.pct)),
-                 max(max(rng$lon), max(rng$lon) * (1 - zoom.pct)))
-      y.rng <- c(min(min(rng$lat), min(rng$lat) * (1 + zoom.pct)),
-                 max(max(rng$lat), max(rng$lat) * (1 - zoom.pct)))
-    } else {
-      x.rng <- range(cholera::roads$lon)
-      y.rng <- range(cholera::roads$lat)
-    }
-  } else stop("zoom must logical.", call. = FALSE)
-
-  plot(cholera::fatalities[, vars], xlim = x.rng, ylim = y.rng, pch = NA,
+  plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = NA,
     asp = 1.6)
   invisible(lapply(roads.list, lines, col = "gray"))
 
-  if ((is.logical(zoom) & zoom == TRUE) | is.numeric(zoom)) {
+  if (zoom == TRUE) {
     if (is.null(cases) == FALSE) {
-      id <- cholera::road.segments[cholera::road.segments$name == name, "id"]
+      id <- cholera::road.segments[cholera::road.segments$name %in% name, "id"]
 
       sel <- cholera::latlong.ortho.addr$road.segment %in% id
       seg.ortho <- cholera::latlong.ortho.addr[sel, ]
@@ -161,21 +165,26 @@ latlongStreetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
       lwd = 3))
   }
 
-  if (add.title) title(main = name)
+  if (add.title) {
+    if (length(name) == 1) title(main = name)
+    else if (length(name) > 1) title(main = paste(name, collapse = ", "))
+  }
 
   if (add.subtitle) {
-    street.length <- streetLength(name, distance.unit, latlong = TRUE)
-    est.time <- distanceTime(street.length, distance.unit = distance.unit,
-      time.unit = time.unit, walking.speed = walking.speed)
+    if (length(name) == 1) {
+      street.length <- streetLength(name, distance.unit, latlong = TRUE)
+      est.time <- distanceTime(street.length, distance.unit = distance.unit,
+        time.unit = time.unit, walking.speed = walking.speed)
 
-    nominal.time <- nominalTime(est.time, time.unit)
+      nominal.time <- nominalTime(est.time, time.unit)
 
-    if (distance.unit == "meter") {
-      subtitle <- paste(round(street.length, 1), "m;", nominal.time)
-    } else if (distance.unit == "yard") {
-      subtitle <- paste(round(street.length, 1), "yd;", nominal.time)
+      if (distance.unit == "meter") {
+        subtitle <- paste(round(street.length, 1), "m;", nominal.time)
+      } else if (distance.unit == "yard") {
+        subtitle <- paste(round(street.length, 1), "yd;", nominal.time)
+      }
+
+      title(sub = paste(subtitle, "@", walking.speed, "km/hr"))
     }
-
-    title(sub = paste(subtitle, "@", walking.speed, "km/hr"))
   }
 }

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9313
+
+- use vector of streets for zoom in  latlongStreetNameLocator().
+
+
 ### cholera 0.8.0.9312
 
 - add street name spell-check and draw streets with lines() in 
