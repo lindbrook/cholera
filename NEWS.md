@@ -1,3 +1,9 @@
+### cholera 0.8.0.9312
+
+- add street name spell-check and draw streets with lines() in 
+  geoCartesianStreetLocator().
+
+
 ### cholera 0.8.0.9311
 
 - add internal geoCartesianStreetLocator().

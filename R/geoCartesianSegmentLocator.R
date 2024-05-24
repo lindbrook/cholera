@@ -6,39 +6,37 @@
 #' @noRd
 
 geoCartesianStreetLocator <- function(street.name = NULL, zoom = TRUE) {
+  real.road.names <- streetNames()
+
   if (!is.null(street.name)) {
     st.nm <- vapply(street.name, caseAndSpace, character(1L))
+
+    if (all(st.nm %in% real.road.names == FALSE)) {
+      error.msg <- "Invalid street name(s). See streetNames()."
+      stop(error.msg, call. = FALSE)
+    } else if (any(st.nm %in% real.road.names == FALSE)) {
+      nm.err <- st.nm[!st.nm %in% real.road.names]
+      nm.msg <- "Misspelled or invalid street name(s). See streetNames():"
+      message(paste(nm.msg, paste(nm.err, collapse = ", ")))
+      st.nm <- st.nm[st.nm %in% real.road.names]
+    }
   }
 
   rd <- cholera::roads[!cholera::roads$street %in% cholera::border, ]
   cartesian.rd <- data.frame(street = rd$street, geoCartesian(rd))
   vars <- c("x", "y")
 
-  cartesian.rd.segs <- lapply(unique(cartesian.rd$street), function(st) {
-    dat <- cartesian.rd[cartesian.rd$street == st, ]
-    names(dat)[names(dat) %in% vars] <- paste0(vars, 1)
-    seg.data <- dat[-1, paste0(vars, 1)]
-    names(seg.data) <- paste0(vars, 2)
-    dat <- cbind(dat[-nrow(dat), ], seg.data)
-    dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
-    dat
-  })
-
-  cartesian.rd.segs <- do.call(rbind, cartesian.rd.segs)
+  roads.list <- split(cartesian.rd[, vars], cartesian.rd$street)
 
   if (is.null(street.name) | isFALSE(zoom)) {
     xlim <- NULL
     ylim <- NULL
-  } else {
+  } else if (!is.null(street.name) & isTRUE(zoom)) {
     sel <- cartesian.rd$street %in% unique(rd[rd$name %in% st.nm, "street"])
     xlim <- range(cartesian.rd[sel, "x"])
     ylim <- range(cartesian.rd[sel, "y"])
   }
 
   plot(cartesian.rd[, vars], asp = 1, pch = NA, xlim = xlim, ylim = ylim)
-  idx <- seq_len(nrow(cartesian.rd.segs))
-  invisible(lapply(idx, function(i) {
-    st.seg <- cartesian.rd.segs[i, ]
-    segments(st.seg$x1, st.seg$y1, st.seg$x2, st.seg$y2)
-  }))
+  invisible(lapply(roads.list, lines))
 }
