@@ -1,3 +1,8 @@
+### cholera 0.8.0.9311
+
+- add internal geoCartesianStreetLocator().
+
+
 ### cholera 0.8.0.9310
 
 - add snowNeighborhoodB() prototype.
