@@ -40,6 +40,7 @@ snowNeighborhoodB <- function(latlong = TRUE) {
   hopkins.street <- c("245-2", "265-1", "265-2")
   unknownB <- "263-1"
   duck.ham <- paste0(198, "-", 2:4)
+  workhouse <- "148-1"
 
   # id2 #
   dufours.place <- "217-2c"
@@ -52,7 +53,7 @@ snowNeighborhoodB <- function(latlong = TRUE) {
   bentinck.street <- "167-1a"
 
   whole.segs <- c(portland.mews, ship.yard, tylers.court, maidenhead.court,
-                  cock.court, hopkins.street, unknownB, duck.ham)
+                  cock.court, hopkins.street, unknownB, duck.ham, workhouse)
 
   sub.segs <- c(dufours.place, silver.street, pulteney.court1,
                 new.husband.street, st.anns.place, hopkins.street.sub,

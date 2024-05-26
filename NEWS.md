@@ -1,3 +1,8 @@
+### cholera 0.8.0.9314
+
+- add St James Workhouse segment ("148-1") to whole.segs in snowNeighborhoodB().
+
+
 ### cholera 0.8.0.9313
 
 - use vector of streets for zoom in  latlongStreetNameLocator().
