@@ -2,10 +2,13 @@
 #'
 #' @param street.name Character. Vector of street names.
 #' @param zoom Logical.
+#' @param zoom.padding Numeric. Padding in "meters".
 #' @return A base R graphics plot.
 #' @noRd
 
-geoCartesianStreetLocator <- function(street.name = NULL, zoom = TRUE) {
+geoCartesianStreetLocator <- function(street.name = NULL, zoom = TRUE,
+  zoom.padding = 0) {
+
   real.road.names <- streetNames()
 
   if (!is.null(street.name)) {
@@ -33,8 +36,15 @@ geoCartesianStreetLocator <- function(street.name = NULL, zoom = TRUE) {
     ylim <- NULL
   } else if (!is.null(street.name) & isTRUE(zoom)) {
     sel <- cartesian.rd$street %in% unique(rd[rd$name %in% st.nm, "street"])
-    xlim <- range(cartesian.rd[sel, "x"])
-    ylim <- range(cartesian.rd[sel, "y"])
+
+    if (zoom.padding > 0) {
+      pad <- c(-zoom.padding, zoom.padding)
+      xlim <- range(cartesian.rd[sel, "x"]) + pad
+      ylim <- range(cartesian.rd[sel, "y"]) + pad
+    } else if (zoom.padding == 0) {
+      xlim <- range(cartesian.rd[sel, "x"])
+      ylim <- range(cartesian.rd[sel, "y"])
+    } else stop("zoom.padding must be >= 0.")
   }
 
   plot(cartesian.rd[, vars], asp = 1, pch = NA, xlim = xlim, ylim = ylim)
