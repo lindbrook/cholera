@@ -1,3 +1,9 @@
+### cholera 0.8.0.9317
+
+- define more nearest segments by euclidean rather than othogonal distance in
+  latlongSimulateFatalities().
+
+
 ### cholera 0.8.0.9316
 
 - add/set geoCartesianStreetLocator(street.col = "gray").
