@@ -3,6 +3,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param radius Numeric. Radius for \code{withinRadius()} to find road segment endpoints.
 #' @param recompute Logical. Recompute regular cases.
+#' @note radius = 75 - appox. 1 hr; radius = 100 - appox. 1.5 hr
 #' @noRd
 
 latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
@@ -70,48 +71,34 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
        y.proj <- road.slope * x.proj + road.intercept
       }
 
-      seg.data <- cart.rd.segs[cart.rd.segs$id == seg.id, seg.endpts]
-      seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
-                           y = c(seg.data$y1, seg.data$y2))
-
       # segment bisection/intersection test #
-      distB <- stats::dist(rbind(seg.df[1, ], c(x.proj, y.proj))) +
-               stats::dist(rbind(seg.df[2, ], c(x.proj, y.proj)))
+      distB <- stats::dist(rbind(road.segment[1, ], c(x.proj, y.proj))) +
+               stats::dist(rbind(road.segment[2, ], c(x.proj, y.proj)))
 
-      bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
+      ortho.dist <- c(stats::dist(rbind(c(case$x, case$y), c(x.proj, y.proj))))
+
+      bisect.test <- signif(stats::dist(road.segment)) == signif(distB)
 
       if (bisect.test) {
-        ortho.dist <- c(stats::dist(rbind(c(case$x, case$y),
-          c(x.proj, y.proj))))
         ortho.pts <- data.frame(x.proj, y.proj)
         data.frame(road.segment = seg.id, ortho.pts, dist = ortho.dist,
-          bisect = bisect.test)
+          type = "ortho")
       } else {
-        # select nearest segment endpoint
         dist.to.endpts <- vapply(seq_len(nrow(road.segment)), function(i) {
-          stats::dist(rbind(case, road.segment[i, ]))
+          stats::dist(rbind(case[, c("x", "y")], road.segment[i, ]))
         }, numeric(1L))
 
         sel <- which.min(dist.to.endpts)
-        data.frame(road.segment = seg.id,
-                   x.proj = road.segment[sel, "x"],
-                   y.proj = road.segment[sel, "y"],
-                   dist = dist.to.endpts[sel],
-                   bisect = bisect.test)
+
+        data.frame(road.segment = seg.id, x.proj = road.segment[sel, "x"],
+          y.proj = road.segment[sel, "y"], dist = dist.to.endpts[sel],
+          type = "eucl")
       }
     })
 
     out <- do.call(rbind, out)
 
-    if (any(out$bisect)) {
-      out <- out[out$bisect == TRUE, ]
-    } else {
-      out <- out[out$bisect == FALSE, ]
-    }
-
     if (nrow(out) > 1) out <- out[which.min(out$dist), ]
-    out$type <- ifelse(out$bisect, "ortho", "eucl")
-    out$bisect <- NULL
     tmp.nms <- names(out)
     out$case <- i
     row.names(out) <- NULL
@@ -136,14 +123,12 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
     meterLatLong(regular.cases[i, ], origin, topleft, bottomright)
   }, mc.cores = cores)
 
-
-  list(latlong.sim.ortho.proj = do.call(rbind, proj),
-       latlong.regular.cases = do.call(rbind, reg))
+  list(sim = do.call(rbind, proj), reg = do.call(rbind, reg))
 }
 
 # > system.time(latlong.reg.sim <- cholera:::latlongSimulateFatalities())
-#     user   system  elapsed
-# 8793.615   29.496 2279.553
+#      user    system   elapsed
+# 12083.022    59.472  3421.048
 
 # latlong.reg.sim <- cholera:::latlongSimulateFatalities()
 # usethis::use_data(latlong.sim.ortho.proj)
