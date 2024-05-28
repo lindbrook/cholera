@@ -1,13 +1,14 @@
 #' Locate road by name on geo-cartesian map.
 #'
 #' @param street.name Character. Vector of street names.
+#' @param street.col Character. Color of streets.
 #' @param zoom Logical.
 #' @param zoom.padding Numeric. Padding in "meters".
 #' @return A base R graphics plot.
 #' @noRd
 
-geoCartesianStreetLocator <- function(street.name = NULL, zoom = TRUE,
-  zoom.padding = 0) {
+geoCartesianStreetLocator <- function(street.name = NULL, street.col = "gray",
+  zoom = TRUE, zoom.padding = 0) {
 
   real.road.names <- streetNames()
 
@@ -48,5 +49,5 @@ geoCartesianStreetLocator <- function(street.name = NULL, zoom = TRUE,
   }
 
   plot(cartesian.rd[, vars], asp = 1, pch = NA, xlim = xlim, ylim = ylim)
-  invisible(lapply(roads.list, lines))
+  invisible(lapply(roads.list, lines, col = street.col))
 }

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9316
+
+- add/set geoCartesianStreetLocator(street.col = "gray").
+
+
 ### cholera 0.8.0.9315
 
 - add/set geoCartesianStreetLocator(zoom.padding = 0).
