@@ -123,7 +123,7 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
     meterLatLong(regular.cases[i, ], origin, topleft, bottomright)
   }, mc.cores = cores)
 
-  list(sim = do.call(rbind, proj), reg = do.call(rbind, reg))
+  list(reg = do.call(rbind, reg), sim = do.call(rbind, proj))
 }
 
 # > system.time(latlong.reg.sim <- cholera:::latlongSimulateFatalities())
