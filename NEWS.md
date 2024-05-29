@@ -1,3 +1,8 @@
+### cholera 0.8.0.9318
+
+- make geoCartesianStreetLocator(zoom) logical or numeric.
+
+
 ### cholera 0.8.0.9317
 
 - define more nearest segments by euclidean rather than othogonal distance in
