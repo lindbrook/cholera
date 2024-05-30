@@ -1,3 +1,8 @@
+### cholera 0.8.0.9319
+
+- amend/update latlong.regular.cases and latlong.sim.ortho.proj.
+
+
 ### cholera 0.8.0.9318
 
 - make geoCartesianStreetLocator(zoom) logical or numeric.
