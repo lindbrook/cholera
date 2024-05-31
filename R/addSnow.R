@@ -18,9 +18,8 @@ addSnow <- function(type = "area", color = "dodgerblue", alpha.level = 0.25,
   if (type %in% c("area", "perimeter") == FALSE) {
     stop('type must be "area" or "perimeter".')
   }
-    
-  edges <- neighborhoodData(case.set = "snow")$edges
-  snow <- snowNeighborhood()
+
+  snow <- snowNeighborhoodB(latlong = FALSE)
   snow.area <- row.names(cholera::regular.cases[snow$sim.case, ])
   periphery.cases <- peripheryCases(snow.area)
   pearl.string <- travelingSalesman(periphery.cases)
