@@ -1,3 +1,8 @@
+### cholera 0.8.0.9323
+
+- promote/rename snowNeighborhoodB() to snowNeighborhood().
+
+
 ### cholera 0.8.0.9322
 
 - add/set addSnow(latlong = FALSE).

@@ -20,7 +20,7 @@ addSnow <- function(latlong = FALSE, type = "area", color = "dodgerblue",
     stop('type must be "area" or "perimeter".')
   }
 
-  snow <- snowNeighborhoodB(latlong = latlong)
+  snow <- snowNeighborhood(latlong = latlong)
 
   if (latlong) {
     reg.data <- cholera::latlong.regular.cases
