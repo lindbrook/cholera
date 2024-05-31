@@ -4,10 +4,12 @@
 \alias{addSnow}
 \title{Adds Snow's graphical annotation of the Broad Street pump walking neighborhood.}
 \usage{
-addSnow(type = "area", color = "dodgerblue", alpha.level = 0.25,
-  line.width = 2)
+addSnow(latlong = FALSE, type = "area", color = "dodgerblue",
+  alpha.level = 0.25, line.width = 2)
 }
 \arguments{
+\item{latlong}{Logical.}
+
 \item{type}{Character. Type of annotation plot: "area" or "perimeter".}
 
 \item{color}{Character. Neighborhood color.}
