@@ -40,6 +40,7 @@ snowNeighborhoodB <- function(latlong = TRUE) {
   hopkins.street <- c("245-2", "265-1", "265-2")
   unknownB <- "263-1"
   duck.ham <- paste0(198, "-", 2:4)
+
   workhouse <- "148-1"
 
   # id2 #
@@ -49,15 +50,26 @@ snowNeighborhoodB <- function(latlong = TRUE) {
   new.husband.street <- "259-1d"
   st.anns.place <- "138-1a"
   hopkins.street.sub <- "245-1c"
-  kemps.court <- "196-1d"
   bentinck.street <- "167-1a"
 
-  whole.segs <- c(portland.mews, ship.yard, tylers.court, maidenhead.court,
-                  cock.court, hopkins.street, unknownB, duck.ham, workhouse)
+  if (latlong) kemps.court <- c("196-1d", "196-1e")
+  else kemps.court <- "196-1d"
+  marshall.street <- "276-2d"
+  new.street <- "224-1e"
 
-  sub.segs <- c(dufours.place, silver.street, pulteney.court1,
-                new.husband.street, st.anns.place, hopkins.street.sub,
-                kemps.court, bentinck.street)
+  if (latlong) {
+    whole.segs <- c(portland.mews, ship.yard, tylers.court, maidenhead.court,
+                    cock.court, hopkins.street, unknownB, duck.ham, workhouse)
+    sub.segs <- c(dufours.place, silver.street, pulteney.court1,
+                  new.husband.street, st.anns.place, hopkins.street.sub,
+                  bentinck.street, kemps.court, marshall.street, new.street)
+  } else {
+    whole.segs <- c(portland.mews, ship.yard, tylers.court, maidenhead.court,
+                    cock.court, hopkins.street, unknownB, duck.ham)
+    sub.segs <- c(dufours.place, silver.street, pulteney.court1,
+                  new.husband.street, st.anns.place, hopkins.street.sub,
+                  bentinck.street, kemps.court)
+  }
 
   ## Area Data ##
 
@@ -78,7 +90,7 @@ snowNeighborhoodB <- function(latlong = TRUE) {
   audit <- merge(edge.ct, snow.ct, by = "id")
   names(audit)[-1] <- c("edge.ct", "snow.ct")
 
- # whole segments #
+  # whole segments #
 
   whole.audit <- audit[audit$edge.ct == audit$snow.ct, ]
   whole.id <- sim.data[sim.data$road.segment %in% whole.audit$id, "case"]

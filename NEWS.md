@@ -1,3 +1,8 @@
+### cholera 0.8.0.9321
+
+- amend road segments and sub-segments in snowNeighborhoodB(latlong = TRUE).
+
+
 ### cholera 0.8.0.9320
 
 - use snowNeighborhoodB() in addSnow().
