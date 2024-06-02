@@ -5,7 +5,7 @@
 #' @return An R list of edge IDs and simulated case IDs.
 #' @export
 
-snowNeighborhood <- function(latlong = TRUE) {
+snowNeighborhood <- function(latlong = FALSE) {
   if (latlong) {
     snow <- latlongNeighborhoodWalking(pump.select = 7, case.set = "snow")
     edges <- snow$neigh.data$edges

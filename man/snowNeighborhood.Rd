@@ -4,7 +4,7 @@
 \alias{snowNeighborhood}
 \title{Plotting data for Snow's graphical annotation of the Broad Street pump neighborhood.}
 \usage{
-snowNeighborhood(latlong = TRUE)
+snowNeighborhood(latlong = FALSE)
 }
 \arguments{
 \item{latlong}{Logical. Use estimated longitude and latitude.}
