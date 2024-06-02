@@ -5,7 +5,7 @@
 #' @return An R list of edge IDs and simulated case IDs.
 #' @export
 
-snowNeighborhood <- function(latlong = TRUE) {
+snowNeighborhood <- function(latlong = FALSE) {
   if (latlong) {
     snow <- latlongNeighborhoodWalking(pump.select = 7, case.set = "snow")
     edges <- snow$neigh.data$edges
@@ -65,7 +65,7 @@ snowNeighborhood <- function(latlong = TRUE) {
                   bentinck.street, kemps.court, marshall.street, new.street)
   } else {
     whole.segs <- c(portland.mews, ship.yard, tylers.court, maidenhead.court,
-                    cock.court, hopkins.street, unknownB, duck.ham)
+                    cock.court, hopkins.street, unknownB, duck.ham, workhouse)
     sub.segs <- c(dufours.place, silver.street, pulteney.court1,
                   new.husband.street, st.anns.place, hopkins.street.sub,
                   bentinck.street, kemps.court)
