@@ -1,3 +1,9 @@
+### cholera 0.8.0.9324
+
+- set snowNeighborhood(latlong = FALSE).
+- add St James Workhouse segment ("148-1") to whole.segs in snowNeighborhood().
+
+
 ### cholera 0.8.0.9323
 
 - promote/rename snowNeighborhoodB() to snowNeighborhood().
