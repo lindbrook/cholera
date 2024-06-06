@@ -75,61 +75,72 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @export
 
 plot.latlong_walking <- function(x, ...) {
-  edges <- x$neigh.data$edges
-  paths <- x$paths
   vars <- c("lon", "lat")
-
-  obs.edges <- lapply(paths, function(neighborhood) {
-    edge.names <- lapply(neighborhood, names)
-    audited.edges <- lapply(edge.names, auditEdge, edges)
-    unique(unlist(audited.edges))
-  })
-
   snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
 
-  invisible(lapply(names(obs.edges), function(nm) {
-    n.edges <- edges[obs.edges[[nm]], ]
-    segments(n.edges$lon1, n.edges$lat1, n.edges$lon2, n.edges$lat2, lwd = 2,
-      col = x$snow.colors[paste0("p", nm)])
-  }))
+  if (x$case.set %in% c("observed", "snow")) {
+    edges <- x$neigh.data$edges
+    paths <- x$paths
 
-  invisible(lapply(names(x$cases), function(nm) {
-    sel <- cholera::fatalities.address$anchor %in% x$cases[[nm]]
-    points(cholera::fatalities.address[sel, vars], pch = 20, cex = 0.75,
-      col = x$snow.colors[nm])
-  }))
+    obs.edges <- lapply(paths, function(neighborhood) {
+      edge.names <- lapply(neighborhood, function(x) names(unlist(x)))
+      audited.edges <- lapply(edge.names, auditEdge, edges)
+      unique(unlist(audited.edges))
+    })
 
-  p.data <- x$pump.data
+    invisible(lapply(names(obs.edges), function(nm) {
+      n.edges <- edges[obs.edges[[nm]], ]
+      segments(n.edges$lon1, n.edges$lat1, n.edges$lon2, n.edges$lat2, lwd = 2,
+        col = x$snow.colors[paste0("p", nm)])
+    }))
 
-  if (is.null(x$pump.select)) {
-    points(p.data[, vars], col = x$snow.colors, lwd = 2, pch = 24)
-    text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
-  } else {
-    pump.id <- selectPump(p.data, pump.select = x$pump.select,
-      vestry = x$vestry)
-    sel <- p.data$id %in% pump.id
-    unsel <- setdiff(p.data$id, pump.id)
-    points(p.data[sel, vars], col = x$snow.colors[sel], lwd = 2, pch = 24)
-    text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
-      pos = 1)
-    points(p.data[unsel, vars], col = "gray", lwd = 2, pch = 24)
-    text(p.data[unsel, vars], labels = paste0("p", p.data$id[unsel]), cex = 0.9,
-      pos = 1, col = "gray")
-  }
+    invisible(lapply(names(x$cases), function(nm) {
+      sel <- cholera::fatalities.address$anchor %in% x$cases[[nm]]
+      points(cholera::fatalities.address[sel, vars], pch = 20, cex = 0.75,
+        col = x$snow.colors[nm])
+    }))
 
-  if (x$case.set == "snow") {
+    p.data <- x$pump.data
+
     if (is.null(x$pump.select)) {
-      title(main = "Snow Pump Neighborhood: Walking")
+      points(p.data[, vars], col = x$snow.colors, lwd = 2, pch = 24)
+      text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
     } else {
-      title(main = paste0("Snow Pump Neighborhood: Walking", "\n", "Pumps ",
-        paste(sort(x$pump.select), collapse = ", ")))
+      pump.id <- selectPump(p.data, pump.select = x$pump.select,
+        vestry = x$vestry)
+      sel <- p.data$id %in% pump.id
+      unsel <- setdiff(p.data$id, pump.id)
+      points(p.data[sel, vars], col = x$snow.colors[sel], lwd = 2, pch = 24)
+      text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
+        pos = 1)
+      points(p.data[unsel, vars], col = "gray", lwd = 2, pch = 24)
+      text(p.data[unsel, vars], labels = paste0("p", p.data$id[unsel]),
+        cex = 0.9, pos = 1, col = "gray")
     }
-  } else {
-    if (is.null(x$pump.select)) {
-      title(main = "Pump Neighborhoods: Walking")
+
+    if (x$case.set == "snow") {
+      if (is.null(x$pump.select)) {
+        title(main = "Snow Pump Neighborhood: Walking")
+      } else {
+        title(main = paste0("Snow Pump Neighborhood: Walking", "\n", "Pumps ",
+          paste(sort(x$pump.select), collapse = ", ")))
+      }
     } else {
-      title(main = paste0("Pump Neighborhoods: Walking", "\n", "Pumps ",
-        paste(sort(x$pump.select), collapse = ", ")))
+      if (is.null(x$pump.select)) {
+        title(main = "Pump Neighborhoods: Walking")
+      } else {
+        title(main = paste0("Pump Neighborhoods: Walking", "\n", "Pumps ",
+          paste(sort(x$pump.select), collapse = ", ")))
+      }
     }
+  } else if (x$case.set == "expected") {
+    invisible(lapply(names(x$cases), function(nm) {
+      neighborhood <- x$cases[[nm]]
+      points(cholera::latlong.regular.cases[neighborhood, vars],
+        col = x$snow.colors[nm], pch = 15)
+    }))
+    addRoads(latlong = TRUE, col = "white")
+    addPump(latlong = TRUE, col = "white")
+    title(main = "Expected Pump Neighborhoods: Walking")
   }
 }
