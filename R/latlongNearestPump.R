@@ -113,21 +113,19 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
       }, logical(1L))
 
       if (any(inf.dist)) {
-        if (case.set == "expected") {
-          # e.g., cases on Falconberg Mews - no reachable pumps - street isolate
-          all.infinite <- vapply(distances, function(x) {
-            all(is.infinite(x))
-          }, logical(1L))
-          no_pump.isolate <- distances[all.infinite]
-          distances <- distances[!all.infinite]
+        # e.g., cases on Falconberg Mews - no reachable pumps - street isolate
+        all.infinite <- vapply(distances, function(x) {
+          all(is.infinite(x))
+        }, logical(1L))
+        no_pump.isolate <- distances[all.infinite]
+        distances <- distances[!all.infinite]
 
-          # e.g. only reachable pump Adam and Eve Court Pump (#2) - pump isolate
-          one.finite <- vapply(distances, function(x) {
-            sum(is.finite(x)) == 1
-          }, logical(1L))
-          pump.isolate <- distances[one.finite]
-          distances <- distances[!one.finite]
-        }
+        # e.g. only reachable pump Adam and Eve Court Pump (#2) - pump isolate
+        one.finite <- vapply(distances, function(x) {
+          sum(is.finite(x)) == 1
+        }, logical(1L))
+        pump.isolate <- distances[one.finite]
+        distances <- distances[!one.finite]
       }
 
       # cases
@@ -190,10 +188,10 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
   }
 
   if (case.set == "expected") {
-    case <-  c(case.pump.isolate, ortho.addr$case)
-    pump  <-  c(p.id.iso, p.id)
-    distance  <-  c(min.dist.iso, min.dist)
-    path  <-  c(short.path.pump.isolate, short.path)
+    case <- c(case.pump.isolate, ortho.addr$case)
+    pump <- c(p.id.iso, p.id)
+    distance <- c(min.dist.iso, min.dist)
+    path <- c(short.path.pump.isolate, short.path)
   } else {
     case <- ortho.addr$case
     pump <- p.id
