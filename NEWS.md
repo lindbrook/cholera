@@ -1,3 +1,8 @@
+### cholera 0.8.0.9325
+
+- add latlongNearestPump(case.set = "expected") prototype.
+
+
 ### cholera 0.8.0.9324
 
 - set snowNeighborhood(latlong = FALSE).
