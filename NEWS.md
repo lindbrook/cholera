@@ -1,3 +1,8 @@
+### cholera 0.8.0.9327
+
+- remove dev.mode argument from latlongNearestPump().
+
+
 ### cholera 0.8.0.9326
 
 - add latlongNeighborhoodWalking(case.set = "expected") prototype.

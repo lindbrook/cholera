@@ -8,14 +8,13 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @importFrom geosphere distGeo
 #' @export
 #' @return An R data frame or list of 'igraph' path nodes.
 
 latlongNearestPump <- function(pump.select = NULL, metric = "walking",
   vestry = FALSE, case.set = "observed", weighted = TRUE, time.unit = "second",
-  walking.speed = 5, multi.core = TRUE, dev.mode = FALSE) {
+  walking.speed = 5, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
   vars <- c("lon", "lat")

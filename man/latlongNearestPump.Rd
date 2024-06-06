@@ -6,8 +6,7 @@
 \usage{
 latlongNearestPump(pump.select = NULL, metric = "walking",
   vestry = FALSE, case.set = "observed", weighted = TRUE,
-  time.unit = "second", walking.speed = 5, multi.core = TRUE,
-  dev.mode = FALSE)
+  time.unit = "second", walking.speed = 5, multi.core = TRUE)
 }
 \arguments{
 \item{pump.select}{Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
@@ -25,8 +24,6 @@ latlongNearestPump(pump.select = NULL, metric = "walking",
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
-
-\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \value{
 An R data frame or list of 'igraph' path nodes.
