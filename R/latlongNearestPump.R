@@ -97,59 +97,112 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
     pmp <- cholera::pumps
   }
 
-  if (!all(pmp$id %in% p.sel)) {
-    ortho.pump <- ortho.pump[ortho.pump$id %in% p.sel, ]
-  }
-
   ortho.addr$node <- paste0(ortho.addr$lon, "_&_", ortho.addr$lat)
   ortho.pump$node <- paste0(ortho.pump$lon, "_&_", ortho.pump$lat)
 
-  if (case.set %in% c("observed", "snow")) {
+  if (case.set %in% c("observed", "expected", "snow")) {
     distances <- parallel::mclapply(ortho.addr$node, function(case.node) {
       igraph::distances(g, case.node, ortho.pump$node, weights = edges$d)
     }, mc.cores = cores)
 
-    ## Adam and Eve Court: isolate with pump (#2) ##
-    # infinite distance means unreachable node
+    names(distances) <- ortho.addr$case
 
-    inf.dist <- vapply(distances, function(x) any(is.infinite(x)), logical(1L))
+    if (case.set == "expected") {
+      ## Adam and Eve Court: isolate with pump (#2) - infinite = unreachable
+      inf.dist <- vapply(distances, function(x) {
+        any(is.infinite(x))
+      }, logical(1L))
 
-    if (any(inf.dist)) {
-      inf.pump <- vapply(distances, function(x) {
-        which(is.infinite(x))
+      if (any(inf.dist)) {
+        if (case.set == "expected") {
+          # e.g., cases on Falconberg Mews - no reachable pumps - street isolate
+          all.infinite <- vapply(distances, function(x) {
+            all(is.infinite(x))
+          }, logical(1L))
+          no_pump.isolate <- distances[all.infinite]
+          distances <- distances[!all.infinite]
+
+          # e.g. only reachable pump Adam and Eve Court Pump (#2) - pump isolate
+          one.finite <- vapply(distances, function(x) {
+            sum(is.finite(x)) == 1
+          }, logical(1L))
+          pump.isolate <- distances[one.finite]
+          distances <- distances[!one.finite]
+        }
+      }
+
+      # cases
+      case.no_pump.isolate <- as.numeric(names(no_pump.isolate))
+      case.pump.isolate <- as.numeric(names(pump.isolate))
+      isolates <- c(case.no_pump.isolate, case.pump.isolate)
+
+      # ortho.addr data frames
+      sel <- ortho.addr$case %in% case.pump.isolate
+      ortho.addr.pump.isolate <- ortho.addr[sel, ]
+
+      pump.isolate.id <- vapply(pump.isolate, function(x) {
+        which(vapply(x, is.finite, logical(1L)))
       }, integer(1L))
 
-      if (length(unique(inf.pump)) == 1) {
-        ortho.pump <- ortho.pump[-unique(inf.pump),]
-      } else if (length(unique(inf.pump)) > 1) { # by case exclusion (expected)
-        NULL
-      }
+      # cases inside of pump isolate neighborhood
+      idx <- seq_along(case.pump.isolate)
+
+      paths.pump.isolate <- parallel::mclapply(idx, function(i) {
+        sel <- ortho.addr.pump.isolate$case == case.pump.isolate[i]
+        case.node <- ortho.addr.pump.isolate[sel, "node"]
+        sel <- ortho.pump$id == pump.isolate.id[i]
+        pump.node <- ortho.pump[sel, "node"]
+        igraph::shortest_paths(g, case.node, pump.node, weights = edges$d)$vpath
+      }, mc.cores = cores)
+
+      names(paths.pump.isolate) <- case.pump.isolate
+
+      # Pump 2 isolate cases
+      min.dist.iso <- vapply(pump.isolate, function(x) {
+        x[which.min(x)]
+      }, numeric(1L))
+      p.id.iso <- vapply(pump.isolate, which.min, integer(1L))
+      idx <- seq_along(case.pump.isolate)
+
+      short.path.pump.isolate <- lapply(idx, function(i) {
+        case.node <- ortho.addr.pump.isolate[i, "node"]
+        pump.node <- ortho.pump[ortho.pump$id == p.id.iso[i], "node"]
+        igraph::shortest_paths(g, case.node, pump.node, weights = edges$d)$vpath
+      })
+
+      names(short.path.pump.isolate) <- case.pump.isolate
+
+      # filter out "isolates"
+      ortho.addr <- ortho.addr[ortho.addr$case %in% isolates == FALSE, ]
     }
 
-    paths <- parallel::mclapply(ortho.addr$node, function(case.node) {
-      p <- igraph::shortest_paths(g, case.node, ortho.pump$node,
-        weights = edges$d)$vpath
-      stats::setNames(p, ortho.pump$id)
-    }, mc.cores = cores)
-  }
-
-  if (nrow(ortho.pump) > 1) {
+    # other pump cases
     min.dist <- vapply(distances, function(x) x[which.min(x)], numeric(1L))
-    p.sel <- vapply(distances, which.min, integer(1L))
-    short.path <- lapply(seq_along(paths), function(i) {
-      paths[[i]][[paste(p.sel[i])]]
-    })
-  } else if (nrow(ortho.pump) == 1) {
-    min.dist <- unlist(distances)
-    short.path <- lapply(seq_along(paths), function(i) {
-      paths[[i]][[paste(p.sel)]]
-    })
+    p.id <- vapply(distances, which.min, integer(1L))
+    idx <- seq_along(ortho.addr$case)
+
+    short.path <- parallel::mclapply(idx, function(i) {
+      case.node <- ortho.addr[i, "node"]
+      pump.node <- ortho.pump[ortho.pump$id == p.id[i], "node"]
+      igraph::shortest_paths(g, case.node, pump.node, weights = edges$d)$vpath
+    }, mc.cores = cores)
+
+    names(short.path) <- ortho.addr$case
   }
 
-  list(case = ortho.addr$case,
-       pump = p.sel,
-       distance = min.dist,
-       path = short.path)
+  if (case.set == "expected") {
+    case <-  c(case.pump.isolate, ortho.addr$case)
+    pump  <-  c(p.id.iso, p.id)
+    distance  <-  c(min.dist.iso, min.dist)
+    path  <-  c(short.path.pump.isolate, short.path)
+  } else {
+    case <- ortho.addr$case
+    pump <- p.id
+    distance <- min.dist
+    path <- short.path
+  }
+
+  list(case = case, pump = pump, distance = distance, path = path)
 }
 
 # latlong.nearest.pump <- latlongNearestPump()
