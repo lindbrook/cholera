@@ -4,10 +4,12 @@
 \alias{plot.latlong_walking}
 \title{Plot method for latlongNeighborhoodWalking().}
 \usage{
-\method{plot}{latlong_walking}(x, ...)
+\method{plot}{latlong_walking}(x, type = "area.points", ...)
 }
 \arguments{
 \item{x}{An object of class "latlong_walking" created by \code{latlongNeighborhoodWalking()}.}
+
+\item{type}{Character. For case.set = "expected", area.points" or "area.polygons".}
 
 \item{...}{Additional plotting parameters.}
 }
