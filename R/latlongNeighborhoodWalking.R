@@ -61,7 +61,8 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
               pump.select = pump.select,
               snow.colors = snow.colors,
               pump.data = pump.data,
-              case.set = case.set)
+              case.set = case.set,
+              cores = cores)
 
   class(out) <- "latlong_walking"
   out

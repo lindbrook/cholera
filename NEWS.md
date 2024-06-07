@@ -1,3 +1,8 @@
+### cholera 0.8.0.9329
+
+- return 'cores' in latlongNeighborhoodWalking().
+
+
 ### cholera 0.8.0.9328
 
 - add/set plot.latlong_walking(type = "area.points").
