@@ -70,15 +70,16 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for latlongNeighborhoodWalking().
 #'
 #' @param x An object of class "latlong_walking" created by \code{latlongNeighborhoodWalking()}.
+#' @param type Character. For case.set = "expected", area.points" or "area.polygons".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.latlong_walking <- function(x, ...) {
+plot.latlong_walking <- function(x, type = "area.points", ...) {
   vars <- c("lon", "lat")
-  snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
 
   if (x$case.set %in% c("observed", "snow")) {
+    snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
     edges <- x$neigh.data$edges
     paths <- x$paths
 
@@ -134,13 +135,33 @@ plot.latlong_walking <- function(x, ...) {
       }
     }
   } else if (x$case.set == "expected") {
-    invisible(lapply(names(x$cases), function(nm) {
-      neighborhood <- x$cases[[nm]]
-      points(cholera::latlong.regular.cases[neighborhood, vars],
-        col = x$snow.colors[nm], pch = 15)
-    }))
-    addRoads(latlong = TRUE, col = "white")
-    addPump(latlong = TRUE, col = "white")
+    if (type == "area.points") {
+      snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE,
+        add.roads = FALSE)
+
+      invisible(lapply(names(x$cases), function(nm) {
+        points(cholera::latlong.regular.cases[x$cases[[nm]], vars],
+          col = x$snow.colors[nm], pch = 15)
+      }))
+
+      addRoads(latlong = TRUE, col = "white")
+      addPump(latlong = TRUE, col = "white")
+
+    } else if (type == "area.polygons") {
+      snowMap(latlong = TRUE, add.cases = FALSE)
+
+      periphery.cases <- parallel::mclapply(x$cases, peripheryCases,
+        latlong = TRUE, mc.cores = x$cores)
+      pearl.strings <- parallel::mclapply(periphery.cases, travelingSalesman,
+        latlong = TRUE, mc.cores = x$cores)
+
+      invisible(lapply(names(pearl.strings), function(nm) {
+        polygon(cholera::latlong.regular.cases[pearl.strings[[nm]], vars],
+          col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = 0.5),
+          border = "black")
+      }))
+    }
+
     title(main = "Expected Pump Neighborhoods: Walking")
   }
 }
