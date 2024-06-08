@@ -162,6 +162,20 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
           col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = 0.5),
           border = "black")
       }))
+
+    } else if (type == "streets") {
+      snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE,
+        add.roads = FALSE)
+
+      invisible(lapply(names(x$cases), function(nm) {
+        sel <- cholera::latlong.sim.ortho.proj$case %in% x$cases[[nm]]
+        rd.seg <- unique(cholera::latlong.sim.ortho.proj[sel, "road.segment"])
+        e.data <- edges[edges$id %in% rd.seg, ]
+        segments(e.data$lon1, e.data$lat1, e.data$lon2, e.data$lat2,
+          col = x$snow.colors[nm], lwd = 3)
+      }))
+
+      addPump(latlong = TRUE)
     }
 
     title(main = "Expected Pump Neighborhoods: Walking")
