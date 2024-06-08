@@ -1,3 +1,8 @@
+### cholera 0.8.0.9331
+
+- add plot.latlong_walking(type = "streets").
+
+
 ### cholera 0.8.0.9330
 
 - return 'nearest.pump' in latlongNeighborhoodWalking().
