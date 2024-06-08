@@ -55,6 +55,7 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   names(neighborhood.paths) <- pumpID
 
   out <- list(neigh.data = neigh.data,
+              nearest.pump = nearest.pump,
               paths = neighborhood.paths,
               cases = stats::setNames(neighborhood.cases, paste0("p", pumpID)),
               vestry = vestry,

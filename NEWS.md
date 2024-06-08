@@ -1,3 +1,8 @@
+### cholera 0.8.0.9330
+
+- return 'nearest.pump' in latlongNeighborhoodWalking().
+
+
 ### cholera 0.8.0.9329
 
 - return 'cores' in latlongNeighborhoodWalking().
@@ -6,6 +11,7 @@
 ### cholera 0.8.0.9328
 
 - add/set plot.latlong_walking(type = "area.points").
+- add plot.latlong_walking(type = "area.polygons").
 
 
 ### cholera 0.8.0.9327
