@@ -167,6 +167,8 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
       snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE,
         add.roads = FALSE)
 
+      edges <- x$neigh.data$edges
+
       invisible(lapply(names(x$cases), function(nm) {
         sel <- cholera::latlong.sim.ortho.proj$case %in% x$cases[[nm]]
         rd.seg <- unique(cholera::latlong.sim.ortho.proj[sel, "road.segment"])
