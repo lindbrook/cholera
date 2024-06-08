@@ -1,3 +1,8 @@
+### cholera 0.8.0.9332
+
+- extract 'edges' for plot.latlong_walking(type = "streets").
+
+
 ### cholera 0.8.0.9331
 
 - add plot.latlong_walking(type = "streets").
