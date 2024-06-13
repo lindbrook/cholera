@@ -1,3 +1,8 @@
+### cholera 0.8.0.9334
+
+- enable pump.select argument in latlongNearestPump().
+
+
 ### cholera 0.8.0.9333
 
 - compute whole and split segments in plot.latlong_walking(type = "streets").

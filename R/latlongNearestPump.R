@@ -87,11 +87,11 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
   }
 
   if (vestry) {
-    ortho.pump <- cholera::latlong.ortho.pump.vestry
-    pmp <- cholera::pumps.vestry
+    ortho.pump <- cholera::latlong.ortho.pump.vestry[p.sel, ]
+    pmp <- cholera::pumps.vestry[p.sel, ]
   } else {
-    ortho.pump <- cholera::latlong.ortho.pump
-    pmp <- cholera::pumps
+    ortho.pump <- cholera::latlong.ortho.pump[p.sel, ]
+    pmp <- cholera::pumps[p.sel, ]
   }
 
   ortho.addr$node <- paste0(ortho.addr$lon, "_&_", ortho.addr$lat)
