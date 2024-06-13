@@ -170,7 +170,7 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
       road.segments <- roadSegments(latlong = TRUE)
       g <- x$neigh.data$g
       edges <- x$neigh.data$edges
-      p.nodes <- x$neigh.data$nodes.pump
+      p.nodes <- x$neigh.data$nodes.pump[x$pump.select, ]
 
       endpt.pump <- parallel::mclapply(road.segments$id, function(e) {
         e.data <- edges[edges$id == e, ]
