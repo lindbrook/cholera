@@ -167,14 +167,127 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
       snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE,
         add.roads = FALSE)
 
+      road.segments <- roadSegments(latlong = TRUE)
+      g <- x$neigh.data$g
       edges <- x$neigh.data$edges
+      p.nodes <- x$neigh.data$nodes.pump
 
-      invisible(lapply(names(x$cases), function(nm) {
-        sel <- cholera::latlong.sim.ortho.proj$case %in% x$cases[[nm]]
-        rd.seg <- unique(cholera::latlong.sim.ortho.proj[sel, "road.segment"])
-        e.data <- edges[edges$id %in% rd.seg, ]
+      endpt.pump <- parallel::mclapply(road.segments$id, function(e) {
+        e.data <- edges[edges$id == e, ]
+        parsed <- strsplit(e.data$id2, "-")
+        nominal.id <- vapply(parsed, function(x) as.integer(x[3]), integer(1L))
+        e.data <- e.data[order(nominal.id), ]
+        ep1 <- e.data[1, "node1"]
+        ep2 <- e.data[nrow(e.data), "node2"]
+
+        ds <- lapply(list(ep1, ep2), function(ep) {
+          igraph::distances(g, ep, p.nodes$node, weights = edges$d)
+        })
+
+        ep.pmp <- vapply(ds, which.min, integer(1L))
+        ep.pmp.d <- vapply(ds, min, numeric(1L))
+        data.frame(id = e, ep = 1:2, pump = ep.pmp, dist = ep.pmp.d)
+      }, mc.cores = x$cores)
+
+      endpt.test <- vapply(endpt.pump, function(x) {
+        length(unique(x$pump)) == 1
+      }, logical(1L))
+
+      ## whole segments ##
+
+      whole.seg <- road.segments$id[endpt.test]
+
+      pmp <- vapply(endpt.pump[endpt.test], function(x) {
+        unique(x$pump)
+      }, integer(1L))
+
+      invisible(lapply(seq_along(whole.seg), function(i) {
+        e.data <- edges[edges$id %in% whole.seg[i], ]
         segments(e.data$lon1, e.data$lat1, e.data$lon2, e.data$lat2,
-          col = x$snow.colors[nm], lwd = 3)
+          col = x$snow.colors[paste0("p", pmp[i])], lwd = 3)
+      }))
+
+      ## split/partial segments ##
+
+      origin <- data.frame(lon = min(cholera::roads$lon),
+                           lat = min(cholera::roads$lat))
+      topleft <- data.frame(lon = min(cholera::roads$lon),
+                            lat = max(cholera::roads$lat))
+      bottomright <- data.frame(lon = max(cholera::roads$lon),
+                                lat = min(cholera::roads$lat))
+
+      split.seg <- road.segments$id[!endpt.test]
+
+      split.data <- endpt.pump[!endpt.test]
+      names(split.data) <- split.seg
+
+      split.seg.dist <- vapply(split.seg, function(s) {
+        sum(edges[edges$id == s, "d"])
+      }, numeric(1L))
+
+      mid.point <- parallel::mclapply(seq_along(split.data), function(i) {
+        rd <- road.segments[road.segments$id == names(split.data)[i], ]
+        ep.data <- split.data[[i]]
+        seg.dist <- split.seg.dist[i]
+        mid.pt <- sum(ep.data$d, seg.dist) / 2
+
+        # 1 = end point 1 is left/west; 2 = end point 2 is left/west
+        left.endpt <- which.min(c(rd$lon1, rd$lon2))
+
+        rd.data <- data.frame(lon = c(rd$lon1, rd$lon2),
+                              lat = c(rd$lat1, rd$lat2))
+
+        rd.data <- do.call(rbind, lapply(seq_along(rd.data$lon), function(i) {
+          tmp <- rd.data[i, c("lon", "lat")]
+          x.proj <- c(tmp$lon, origin$lat)
+          y.proj <- c(origin$lon, tmp$lat)
+          m.lon <- geosphere::distGeo(y.proj, tmp)
+          m.lat <- geosphere::distGeo(x.proj, tmp)
+          data.frame(x = m.lon, y = m.lat)
+        }))
+
+        ols <- stats::lm(y ~ x, rd.data)
+        slope <- stats::coef(ols)[2]
+        theta <- atan(slope)
+
+        mid.pt.delta <- coordinateDelta(mid.pt, theta)
+
+        if (left.endpt == 1) {
+          delta.left <- coordinateDelta(ep.data[1, "dist"], theta)
+          delta.right <- coordinateDelta(ep.data[2, "dist"], theta)
+          pump.left <- rd.data[1, ] - delta.left
+          pump.right <- rd.data[2, ] + delta.right
+        } else if (left.endpt == 2) {
+          delta.left <- coordinateDelta(ep.data[2, "dist"], theta)
+          delta.right <- coordinateDelta(ep.data[1, "dist"], theta)
+          pump.left <- data.frame(x = rd.data[2, "x"] - delta.left$x,
+                                  y = rd.data[2, "y"] - delta.left$y)
+          pump.right <- data.frame(x = rd.data[1, "x"] + delta.left$x,
+                                   y = rd.data[1, "y"] + delta.left$y)
+        }
+
+        soln <- meterLatLong(pump.left + mid.pt.delta, origin, topleft,
+          bottomright)
+
+        data.frame(seg = names(split.data)[i], soln,
+                   pump.left = ep.data$pump[left.endpt],
+                   pump.right = ep.data$pump[-left.endpt],
+                   left.endpt = left.endpt)
+      }, mc.cores = x$cores)
+
+      invisible(lapply(mid.point, function(dat) {
+        rd.seg <- road.segments[road.segments$id == dat$seg, ]
+        if (dat$left.endpt == 1) {
+          segments(rd.seg$lon1, rd.seg$lat1, dat$lon, dat$lat,
+            col = x$snow.colors[paste0("p", dat$pump.left)], lwd = 3)
+          segments(rd.seg$lon2, rd.seg$lat2, dat$lon, dat$lat,
+            col = x$snow.colors[paste0("p", dat$pump.left)], lwd = 3)
+        } else if (dat$left.endpt == 2) {
+          segments(rd.seg$lon2, rd.seg$lat2, dat$lon, dat$lat,
+            col = x$snow.colors[paste0("p", dat$pump.left)], lwd = 3)
+          segments(rd.seg$lon1, rd.seg$lat1, dat$lon, dat$lat,
+            col = x$snow.colors[paste0("p", dat$pump.left)], lwd = 3)
+        }
       }))
 
       addPump(latlong = TRUE)
@@ -182,4 +295,8 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
 
     title(main = "Expected Pump Neighborhoods: Walking")
   }
+}
+
+coordinateDelta <- function(h, theta) {
+  data.frame(x = h * cos(theta), y = h * sin(theta), row.names = NULL)
 }
