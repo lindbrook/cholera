@@ -72,7 +72,7 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for latlongNeighborhoodWalking().
 #'
 #' @param x An object of class "latlong_walking" created by \code{latlongNeighborhoodWalking()}.
-#' @param type Character. For case.set = "expected", area.points" or "area.polygons".
+#' @param type Character. "area.points", "area.polygons" or "streets". For latlongNeighborhoodWalking)case.set = "expected"). 
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
@@ -170,7 +170,7 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
       road.segments <- roadSegments(latlong = TRUE)
       g <- x$neigh.data$g
       edges <- x$neigh.data$edges
-      p.nodes <- x$neigh.data$nodes.pump
+      p.nodes <- x$neigh.data$nodes.pump[x$pump.select, ]
 
       endpt.pump <- parallel::mclapply(road.segments$id, function(e) {
         e.data <- edges[edges$id == e, ]
