@@ -76,8 +76,6 @@ latlongNearestPump <- function(pump.select = NULL, metric = "walking",
 latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
   g <- dat$g
   edges <- dat$edges
-  nodes <- dat$nodes
-  nodes.pump <- dat$nodes.pump
 
   if (case.set == "observed") {
     ortho.addr <- cholera::latlong.ortho.addr
