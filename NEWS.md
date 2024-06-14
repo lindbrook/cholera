@@ -1,3 +1,8 @@
+### cholera 0.8.0.9338
+
+- contextualize pumps for plot(latlongNeighborhoodWalking(case.set = "snow")).
+
+
 ### cholera 0.8.0.9337
 
 - add contextual pumps in plot.latlong_walking().
