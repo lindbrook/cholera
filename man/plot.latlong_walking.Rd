@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class "latlong_walking" created by \code{latlongNeighborhoodWalking()}.}
 
-\item{type}{Character. "area.points", "area.polygons" or "streets". For latlongNeighborhoodWalking)case.set = "expected").}
+\item{type}{Character. "area.points", "area.polygons" or "streets". For latlongNeighborhoodWalking(case.set = "expected").}
 
 \item{...}{Additional plotting parameters.}
 }
