@@ -81,7 +81,7 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
   vars <- c("lon", "lat")
   p.data <- x$pump.data
 
-  if (!is.null(x$pump.select)) {
+  if (!is.null(x$pump.select) | x$case.set == "snow") {
     pump.id <- selectPump(p.data, pump.select = x$pump.select,
       vestry = x$vestry)
   }
@@ -290,7 +290,7 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
     title(main = "Expected Pump Neighborhoods: Walking")
   }
 
-  if (is.null(x$pump.select)) {
+  if (is.null(x$pump.select) & x$case.set != "snow") {
     if (x$case.set == "expected" & type == "area.points") {
       points(p.data[, vars], col = "white", lwd = 2, pch = 24)
       text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1,
@@ -300,8 +300,13 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
       text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
     }
   } else {
-    sel <- p.data$id %in% pump.id
-    unsel <- setdiff(p.data$id, pump.id)
+    if (x$case.set == "snow") {
+      sel <- p.data$id %in% unique(x$nearest.pump$pump)
+      unsel <- setdiff(p.data$id,  unique(x$nearest.pump$pump))
+    } else {
+      sel <- p.data$id %in% pump.id
+      unsel <- setdiff(p.data$id, pump.id)
+    }
 
     if (x$case.set == "expected" & type == "area.points") {
       points(p.data[sel, vars], col = "white", lwd = 2, pch = 24)
