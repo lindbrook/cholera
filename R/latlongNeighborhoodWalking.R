@@ -72,13 +72,19 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for latlongNeighborhoodWalking().
 #'
 #' @param x An object of class "latlong_walking" created by \code{latlongNeighborhoodWalking()}.
-#' @param type Character. "area.points", "area.polygons" or "streets". For latlongNeighborhoodWalking)case.set = "expected"). 
+#' @param type Character. "area.points", "area.polygons" or "streets". For latlongNeighborhoodWalking(case.set = "expected").
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
 plot.latlong_walking <- function(x, type = "area.points", ...) {
   vars <- c("lon", "lat")
+  p.data <- x$pump.data
+
+  if (!is.null(x$pump.select)) {
+    pump.id <- selectPump(p.data, pump.select = x$pump.select,
+      vestry = x$vestry)
+  }
 
   if (x$case.set %in% c("observed", "snow")) {
     snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
@@ -102,24 +108,6 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
       points(cholera::fatalities.address[sel, vars], pch = 20, cex = 0.75,
         col = x$snow.colors[nm])
     }))
-
-    p.data <- x$pump.data
-
-    if (is.null(x$pump.select)) {
-      points(p.data[, vars], col = x$snow.colors, lwd = 2, pch = 24)
-      text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
-    } else {
-      pump.id <- selectPump(p.data, pump.select = x$pump.select,
-        vestry = x$vestry)
-      sel <- p.data$id %in% pump.id
-      unsel <- setdiff(p.data$id, pump.id)
-      points(p.data[sel, vars], col = x$snow.colors[sel], lwd = 2, pch = 24)
-      text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
-        pos = 1)
-      points(p.data[unsel, vars], col = "gray", lwd = 2, pch = 24)
-      text(p.data[unsel, vars], labels = paste0("p", p.data$id[unsel]),
-        cex = 0.9, pos = 1, col = "gray")
-    }
 
     if (x$case.set == "snow") {
       if (is.null(x$pump.select)) {
@@ -147,10 +135,9 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
       }))
 
       addRoads(latlong = TRUE, col = "white")
-      addPump(latlong = TRUE, col = "white")
 
     } else if (type == "area.polygons") {
-      snowMap(latlong = TRUE, add.cases = FALSE)
+      snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
 
       periphery.cases <- parallel::mclapply(x$cases, peripheryCases,
         latlong = TRUE, mc.cores = x$cores)
@@ -170,7 +157,12 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
       road.segments <- roadSegments(latlong = TRUE)
       g <- x$neigh.data$g
       edges <- x$neigh.data$edges
-      p.nodes <- x$neigh.data$nodes.pump[x$pump.select, ]
+
+      if (is.null(x$pump.select)) {
+        p.nodes <- x$neigh.data$nodes.pump
+      } else {
+        p.nodes <- x$neigh.data$nodes.pump[x$pump.select, ]
+      }
 
       endpt.pump <- parallel::mclapply(road.segments$id, function(e) {
         e.data <- edges[edges$id == e, ]
@@ -184,13 +176,18 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
           igraph::distances(g, ep, p.nodes$node, weights = edges$d)
         })
 
-        ep.pmp <- vapply(ds, which.min, integer(1L))
+        if (is.null(x$pump.select)) {
+          ep.pmp <- vapply(ds, which.min, integer(1L))
+        } else {
+          ep.pmp <- pump.id[vapply(ds, which.min, integer(1L))]
+        }
+
         ep.pmp.d <- vapply(ds, min, numeric(1L))
         data.frame(id = e, ep = 1:2, pump = ep.pmp, dist = ep.pmp.d)
       }, mc.cores = x$cores)
 
-      endpt.test <- vapply(endpt.pump, function(x) {
-        length(unique(x$pump)) == 1
+      endpt.test <- vapply(endpt.pump, function(ep) {
+        length(unique(ep$pump)) == 1
       }, logical(1L))
 
       ## whole segments ##
@@ -289,11 +286,36 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
             col = x$snow.colors[paste0("p", dat$pump.left)], lwd = 3)
         }
       }))
+    }
+    title(main = "Expected Pump Neighborhoods: Walking")
+  }
 
-      addPump(latlong = TRUE)
+  if (is.null(x$pump.select)) {
+    if (x$case.set == "expected" & type == "area.points") {
+      points(p.data[, vars], col = "white", lwd = 2, pch = 24)
+      text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1,
+        col = "white")
+    } else {
+      points(p.data[, vars], col = x$snow.colors, lwd = 2, pch = 24)
+      text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
+    }
+  } else {
+    sel <- p.data$id %in% pump.id
+    unsel <- setdiff(p.data$id, pump.id)
+
+    if (x$case.set == "expected" & type == "area.points") {
+      points(p.data[sel, vars], col = "white", lwd = 2, pch = 24)
+      text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
+        pos = 1, col = "white")
+    } else {
+      points(p.data[sel, vars], col = x$snow.colors[sel], lwd = 2, pch = 24)
+      text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
+        pos = 1)
     }
 
-    title(main = "Expected Pump Neighborhoods: Walking")
+    points(p.data[unsel, vars], col = "gray", lwd = 2, pch = 24)
+    text(p.data[unsel, vars], labels = paste0("p", p.data$id[unsel]),
+      cex = 0.9, pos = 1, col = "gray")
   }
 }
 

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9337
+
+- add contextual pumps in plot.latlong_walking().
+
+
 ### cholera 0.8.0.9336
 
 - use pump IDs in latlongNearestPump().
