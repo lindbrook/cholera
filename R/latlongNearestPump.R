@@ -172,8 +172,8 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
     }
 
     # other pump cases
-    min.dist <- vapply(distances, function(x) x[which.min(x)], numeric(1L))
-    p.id <- vapply(distances, which.min, integer(1L))
+    min.dist <- vapply(distances, min, numeric(1L))
+    p.id <- p.sel[vapply(distances, which.min, integer(1L))]
     idx <- seq_along(ortho.addr$case)
 
     short.path <- parallel::mclapply(idx, function(i) {
