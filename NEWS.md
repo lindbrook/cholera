@@ -1,3 +1,8 @@
+### cholera 0.8.0.9336
+
+- use pump IDs in latlongNearestPump().
+
+
 ### cholera 0.8.0.9335
 
 - enable pump.select argument for plot.latlong_walking(type = "streets").
