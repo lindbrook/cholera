@@ -1,3 +1,9 @@
+### cholera 0.8.0.9339
+
+- amend pump graphics for "area.points" and "area.polygons" in
+  plot.latlong_walking().
+
+
 ### cholera 0.8.0.9338
 
 - contextualize pumps for plot(latlongNeighborhoodWalking(case.set = "snow")).

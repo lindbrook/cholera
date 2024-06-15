@@ -134,19 +134,22 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
           col = x$snow.colors[nm], pch = 15)
       }))
 
-      addRoads(latlong = TRUE, col = "white")
+      addRoads(latlong = TRUE, col = "black")
 
     } else if (type == "area.polygons") {
-      snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
+      snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE, 
+        add.roads = FALSE)
 
       periphery.cases <- parallel::mclapply(x$cases, peripheryCases,
         latlong = TRUE, mc.cores = x$cores)
       pearl.strings <- parallel::mclapply(periphery.cases, travelingSalesman,
         latlong = TRUE, mc.cores = x$cores)
 
+      addRoads(latlong = TRUE, col = "black")
+
       invisible(lapply(names(pearl.strings), function(nm) {
         polygon(cholera::latlong.regular.cases[pearl.strings[[nm]], vars],
-          col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = 0.5),
+          col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = 2/3),
           border = "black")
       }))
 
@@ -292,11 +295,14 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
 
   if (is.null(x$pump.select) & x$case.set != "snow") {
     if (x$case.set == "expected" & type == "area.points") {
-      points(p.data[, vars], col = "white", lwd = 2, pch = 24)
+      points(p.data[, vars], col = "white", pch = 24)
       text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1,
         col = "white")
+    } else if (x$case.set == "expected" & type == "area.polygons") {
+      points(p.data[, vars], pch = 24)
+      text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
     } else {
-      points(p.data[, vars], col = x$snow.colors, lwd = 2, pch = 24)
+      points(p.data[, vars], col = x$snow.colors, pch = 24)
       text(p.data[, vars], labels = paste0("p", p.data$id), cex = 0.9, pos = 1)
     }
   } else {
@@ -309,16 +315,20 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
     }
 
     if (x$case.set == "expected" & type == "area.points") {
-      points(p.data[sel, vars], col = "white", lwd = 2, pch = 24)
+      points(p.data[sel, vars], col = "white", pch = 24)
       text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
         pos = 1, col = "white")
+    } else if (x$case.set == "expected" & type == "area.polygons") {
+      points(p.data[sel, vars], pch = 24)
+      text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
+        pos = 1)
     } else {
-      points(p.data[sel, vars], col = x$snow.colors[sel], lwd = 2, pch = 24)
+      points(p.data[sel, vars], col = x$snow.colors[sel], pch = 24)
       text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
         pos = 1)
     }
 
-    points(p.data[unsel, vars], col = "gray", lwd = 2, pch = 24)
+    points(p.data[unsel, vars], col = "gray", pch = 24)
     text(p.data[unsel, vars], labels = paste0("p", p.data$id[unsel]),
       cex = 0.9, pos = 1, col = "gray")
   }
