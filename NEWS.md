@@ -1,3 +1,8 @@
+### cholera 0.8.0.9340
+
+- add/set segmentLength(latlong = FALSE).
+
+
 ### cholera 0.8.0.9339
 
 - amend pump graphics for "area.points" and "area.polygons" in
