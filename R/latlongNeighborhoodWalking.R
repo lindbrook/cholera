@@ -137,7 +137,7 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
       addRoads(latlong = TRUE, col = "black")
 
     } else if (type == "area.polygons") {
-      snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE, 
+      snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE,
         add.roads = FALSE)
 
       periphery.cases <- parallel::mclapply(x$cases, peripheryCases,
@@ -319,7 +319,7 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
       text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
         pos = 1, col = "white")
     } else if (x$case.set == "expected" & type == "area.polygons") {
-      points(p.data[sel, vars], pch = 24)
+      points(p.data[sel, vars], pch = 24, lwd = 1.5)
       text(p.data[sel, vars], labels = paste0("p", p.data$id[sel]), cex = 0.9,
         pos = 1)
     } else {

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9343
+
+- amend pump icons in plot.latlong_walking(type = "area.polygons").
+
+
 ### cholera 0.8.0.9342
 
 - add latlongSegmentLocator() prototype.
