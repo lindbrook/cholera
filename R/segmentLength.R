@@ -1,33 +1,52 @@
 #' Compute length of road segment.
 #'
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number used to identify the sub-segments.
-#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
+#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion. latlong = TRUE only returns meters.
+#' @param latlong Logical.
 #' @return An R vector of length one.
 #' @export
 #' @examples
 #' segmentLength("242-1")
 #' segmentLength("242-1", distance.unit = "yard")
 
-segmentLength <- function(id = "216-1", distance.unit = "meter") {
+segmentLength <- function(id = "216-1", distance.unit = "meter",
+  latlong = FALSE) {
+
   if (is.character(id) == FALSE) stop('id\'s type must be character.')
-  if (id %in% cholera::road.segments$id == FALSE) stop("Invalid segment ID.")
+  if (all(id %in% cholera::road.segments$id == FALSE)) {
+    stop("No valid segment ID(s).", call. = FALSE)
+  } else if (any(id %in% cholera::road.segments$id == FALSE)) {
+    message("Invalid segment ID(s) removed.")
+    id <- id[id %in% cholera::road.segments$id]
+  }
 
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
     stop('distance.unit must be "meter", "yard" or "native".')
   }
 
-  dat <- cholera::road.segments[cholera::road.segments$id == id, ]
-
-  distances <- vapply(dat$id, function(i) {
-    stats::dist(rbind(as.matrix(dat[dat$id == i, c("x1", "y1")]),
-                      as.matrix(dat[dat$id == i, c("x2", "y2")])))
-  }, numeric(1L))
-
-  if (distance.unit == "native") {
-    sum(distances)
-  } else if (distance.unit == "yard") {
-    unitMeter(sum(distances), "yard")
-  } else if (distance.unit == "meter") {
-    unitMeter(sum(distances), "meter")
+  if (latlong) {
+    rd.segs <- roadSegments(latlong = latlong)
+    dat <- rd.segs[rd.segs$id %in% id, ]
+    ds <- vapply(seq_along(dat$id), function(i) {
+      p1 <- dat[i, c("lon1", "lat1")]
+      p2 <- dat[i, c("lon2", "lat2")]
+      geosphere::distGeo(p1, p2)
+    }, numeric(1L))
+    names(ds) <- id
+    distances <- ds
+  } else {
+    dat <- cholera::road.segments[cholera::road.segments$id %in% id, ]
+    ds <- vapply(dat$id, function(id) {
+      stats::dist(rbind(as.matrix(dat[dat$id == id, c("x1", "y1")]),
+                        as.matrix(dat[dat$id == id, c("x2", "y2")])))
+    }, numeric(1L))
+    if (distance.unit == "native") {
+      distances <- ds
+    } else if (distance.unit == "yard") {
+      distances <- unitMeter(ds, "yard")
+    } else if (distance.unit == "meter") {
+      distances <- unitMeter(ds, "meter")
+    }
   }
+  distances
 }
