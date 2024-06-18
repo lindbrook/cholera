@@ -1,3 +1,8 @@
+### cholera 0.8.0.9341
+
+- amend syntax in roadSegments().
+
+
 ### cholera 0.8.0.9340
 
 - add/set segmentLength(latlong = FALSE).

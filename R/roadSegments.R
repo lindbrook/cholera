@@ -10,8 +10,8 @@ roadSegments <- function(latlong = FALSE) {
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
   dat <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
-  out <- lapply(unique(dat$street), function(i) {
-    st <- dat[dat$street == i, ]
+  out <- lapply(unique(dat$street), function(s) {
+    st <- dat[dat$street == s, ]
     names(st)[names(st) %in% vars] <- paste0(vars, 1)
     seg.end <- st[-1, paste0(vars, 1)]
     names(seg.end) <- paste0(vars, 2)
