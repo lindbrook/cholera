@@ -1,3 +1,8 @@
+### cholera 0.8.0.9342
+
+- add latlongSegmentLocator() prototype.
+
+
 ### cholera 0.8.0.9341
 
 - amend syntax in roadSegments().
