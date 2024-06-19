@@ -1,12 +1,18 @@
-#' Compute distance between case fatalities.
+#' Compute distance between case fatalities (meters).
 #'
 #' @param a Numeric. Case ID.
 #' @param b Numeric. Case ID.
-#' @param meters Logical. Compute metric (meters) or nominal distance.
+#' @param latlong Logical.
 #' @export
 
-caseDistance <- function(a = 19, b = 263, meters = FALSE) {
-  sel <- cholera::fatalities$case %in% c(a, b)
-  d <- stats::dist(cholera::fatalities[sel, c("x", "y")])
-  ifelse(meters, cholera::unitMeter(d), d)
+caseDistance <- function(a = 19, b = 263, latlong = FALSE) {
+  if (latlong) {
+    vars <- c("lon", "lat")
+    p1 <- cholera::fatalities[cholera::fatalities$case == a, vars]
+    p2 <- cholera::fatalities[cholera::fatalities$case == b, vars]
+    geosphere::distGeo(p1, p2)
+  } else {
+    sel <- cholera::fatalities$case %in% c(a, b)
+    unitMeter(stats::dist(cholera::fatalities[sel, c("x", "y")]))
+  }
 }

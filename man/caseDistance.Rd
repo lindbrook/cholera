@@ -2,17 +2,17 @@
 % Please edit documentation in R/caseDistance.R
 \name{caseDistance}
 \alias{caseDistance}
-\title{Compute distance between case fatalities.}
+\title{Compute distance between case fatalities (meters).}
 \usage{
-caseDistance(a = 19, b = 263, meters = FALSE)
+caseDistance(a = 19, b = 263, latlong = FALSE)
 }
 \arguments{
 \item{a}{Numeric. Case ID.}
 
 \item{b}{Numeric. Case ID.}
 
-\item{meters}{Logical. Compute metric (meters) or nominal distance.}
+\item{latlong}{Logical.}
 }
 \description{
-Compute distance between case fatalities.
+Compute distance between case fatalities (meters).
 }
