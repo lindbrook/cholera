@@ -1,3 +1,8 @@
+### cholera 0.8.0.9346
+
+- add/set caseDistance(latlong = FALSE).
+
+
 ### cholera 0.8.0.9345
 
 - add/set addCase(latlong = FALSE).
