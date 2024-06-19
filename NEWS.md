@@ -1,3 +1,8 @@
+### cholera 0.8.0.9344
+
+- add/set addIndexCase(latlong = FALSE).
+
+
 ### cholera 0.8.0.9343
 
 - amend pump icons in plot.latlong_walking(type = "area.polygons").
