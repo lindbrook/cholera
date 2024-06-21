@@ -109,11 +109,13 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' \dontrun{
 #' plot(neighborhoodWalking())
 #' plot(neighborhoodWalking(case.set = "expected"))
-#' plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
+#' plot(neighborhoodWalking(case.set = "expected"), type = "roads")
 #' plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.walking <- function(x, type = "roads", tsp.method = "repetitive_nn", ...) {
+plot.walking <- function(x, type = "area.points", tsp.method = "repetitive_nn",
+  ...) {
+
   if (type %in% c("roads", "area.points", "area.polygons") == FALSE) {
     stop('type must be "roads", "area.points", "area.polygons".')
   }

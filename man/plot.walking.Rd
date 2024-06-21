@@ -4,8 +4,8 @@
 \alias{plot.walking}
 \title{Plot method for neighborhoodWalking().}
 \usage{
-\method{plot}{walking}(x, type = "roads", tsp.method = "repetitive_nn",
-  ...)
+\method{plot}{walking}(x, type = "area.points",
+  tsp.method = "repetitive_nn", ...)
 }
 \arguments{
 \item{x}{An object of class "walking" created by \code{neighborhoodWalking()}.}
@@ -29,7 +29,7 @@ When plotting area graphs with simulated data (i.e., \code{case.set = "expected"
 \dontrun{
 plot(neighborhoodWalking())
 plot(neighborhoodWalking(case.set = "expected"))
-plot(neighborhoodWalking(case.set = "expected"), type = "area.points")
+plot(neighborhoodWalking(case.set = "expected"), type = "roads")
 plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 }
 }
