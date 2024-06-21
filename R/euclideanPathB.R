@@ -668,10 +668,6 @@ pumpPumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, origin, pmp,
 latlongEuclideanPosts <- function(ego.xy, alter.xy, h, ew, ns) {
   origin <- data.frame(lon = min(cholera::roads[, ew]),
                        lat = min(cholera::roads[, ns]))
-  topleft <- data.frame(lon = min(cholera::roads[, ew]),
-                        lat = max(cholera::roads[, ns]))
-  bottomright <- data.frame(lon = max(cholera::roads[, ew]),
-                            lat = min(cholera::roads[, ns]))
 
   ego.cartesian <- latlongCartesian(ego.xy, origin)
   alter.cartesian <- latlongCartesian(alter.xy, origin)
@@ -685,8 +681,7 @@ latlongEuclideanPosts <- function(ego.xy, alter.xy, h, ew, ns) {
 
   conversion <- lapply(seq_len(nrow(cartesian.posts)), function(i) {
     coords.tmp <- cartesian.posts[i, c("x", "y")]
-    coord.conversion <- meterLatLong(coords.tmp, origin, topleft, bottomright)
-    coord.conversion[, c("lon", "lat")]
+    meterLatLong(coords.tmp)[, c("lon", "lat")]
   })
 
   data.frame(post = h, do.call(rbind, conversion))

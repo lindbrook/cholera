@@ -200,15 +200,7 @@ latlongOrthoAddress <- function(multi.core = TRUE, radius = 60) {
 
   coords <- rbind(coordsA, coordsB)
   coords <- coords[order(coords$case), ]
-
-  origin <- data.frame(lon = min(cholera::roads$lon),
-                       lat = min(cholera::roads$lat))
-  topleft <- data.frame(lon = min(cholera::roads$lon),
-                        lat = max(cholera::roads$lat))
-  bottomright <- data.frame(lon = max(cholera::roads$lon),
-                            lat = min(cholera::roads$lat))
-
-  est.lonlat <- meterLatLong(coords, origin, topleft, bottomright)
+  est.lonlat <- meterLatLong(coords)
   est.lonlat <- est.lonlat[order(est.lonlat$case), ]
 
   # Portland Mews (case 286) and Portland Street (case 369 @ St James Workhouse)

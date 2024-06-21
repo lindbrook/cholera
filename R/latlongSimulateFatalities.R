@@ -108,19 +108,13 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
   coords <- do.call(rbind, orthogonal.projection)
 
   # translate from geo-cartesian to latlong #
-  origin <- data.frame(lon = min(cholera::roads$lon),
-                       lat = min(cholera::roads$lat))
-  topleft <- data.frame(lon = min(cholera::roads$lon),
-                        lat = max(cholera::roads$lat))
-  bottomright <- data.frame(lon = max(cholera::roads$lon),
-                            lat = min(cholera::roads$lat))
-
+ 
   proj <- parallel::mclapply(seq_len(nrow(coords)), function(i) {
-    meterLatLong(coords[i, ], origin, topleft, bottomright)
+    meterLatLong(coords[i, ])
   }, mc.cores = cores)
 
   reg <- parallel::mclapply(seq_len(nrow(regular.cases)), function(i) {
-    meterLatLong(regular.cases[i, ], origin, topleft, bottomright)
+    meterLatLong(regular.cases[i, ])
   }, mc.cores = cores)
 
   list(reg = do.call(rbind, reg), sim = do.call(rbind, proj))

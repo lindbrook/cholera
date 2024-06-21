@@ -82,15 +82,12 @@ pumpsVoronoiPolygons <- function(vestry = FALSE) {
 #' invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
 
 latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
-
   origin <- data.frame(lon = min(cholera::roads$lon),
                        lat = min(cholera::roads$lat))
   topleft <- data.frame(lon = min(cholera::roads$lon),
                         lat = max(cholera::roads$lat))
   bottomright <- data.frame(lon = max(cholera::roads$lon),
                             lat = min(cholera::roads$lat))
-  topright <- data.frame(lon = max(cholera::roads$lon),
-                         lat = max(cholera::roads$lat))
 
   if (vestry) {
     pump.data <- cholera::pumps.vestry
@@ -136,7 +133,7 @@ latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
   cells.df$cell <- as.numeric(ids[, 2])
   cells.df$vertex <- as.numeric(ids[, 3])
   row.names(cells.df) <- NULL
-  est.lonlat <- meterLatLong(cells.df, origin, topleft, bottomright)
+  est.lonlat <- meterLatLong(cells.df)
   est.lonlat <- est.lonlat[order(est.lonlat$cell, est.lonlat$vertex), ]
   cells <- split(est.lonlat, est.lonlat$cell)
   names(cells) <- paste0("p", pump.id)
@@ -147,10 +144,10 @@ latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
   triangles.lat <- sort(unique(triangles.df$y), decreasing = TRUE)
   triangles.df$id <- rep(seq_along(triangles), each = 3)
   triangles.df$vertex <- rep(1:3, length(triangles))
-  est.lonlat <- meterLatLong(triangles.df, origin, topleft, bottomright)
+  est.lonlat <- meterLatLong(triangles.df)
   est.lonlat <- est.lonlat[order(est.lonlat$id, est.lonlat$vertex), ]
   triangles <- split(est.lonlat, est.lonlat$id)
- 
+
   list(cells = cells, triangles = triangles)
 }
 

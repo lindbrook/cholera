@@ -184,13 +184,7 @@ plot.latlong_euclidean_path <- function(x, zoom = TRUE, mileposts = TRUE,
       })
 
       milepost.coords <- do.call(rbind, milepost.coords)
-
-      # compute milepost latlong coordinates
-      topleft <- data.frame(lon = min(cholera::roads$lon),
-                            lat = max(cholera::roads$lat))
-      bottomright <- data.frame(lon = max(cholera::roads$lon),
-                                lat = min(cholera::roads$lat))
-      milepost.coords <- meterLatLong(milepost.coords, origin, topleft, bottomright)
+      milepost.coords <- meterLatLong(milepost.coords)
 
       # mileposts as arrows
       arrow.data <- milepost.coords[, vars]

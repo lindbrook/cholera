@@ -211,10 +211,6 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
 
       origin <- data.frame(lon = min(cholera::roads$lon),
                            lat = min(cholera::roads$lat))
-      topleft <- data.frame(lon = min(cholera::roads$lon),
-                            lat = max(cholera::roads$lat))
-      bottomright <- data.frame(lon = max(cholera::roads$lon),
-                                lat = min(cholera::roads$lat))
 
       split.seg <- road.segments$id[!endpt.test]
 
@@ -266,8 +262,7 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
                                    y = rd.data[1, "y"] + delta.left$y)
         }
 
-        soln <- meterLatLong(pump.left + mid.pt.delta, origin, topleft,
-          bottomright)
+        soln <- meterLatLong(pump.left + mid.pt.delta)
 
         data.frame(seg = names(split.data)[i], soln,
                    pump.left = ep.data$pump[left.endpt],

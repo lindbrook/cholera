@@ -294,10 +294,7 @@ argyllHouse <- function() {
 
   origin <- data.frame(lon = min(cholera::roads[, "lon"]),
                        lat = min(cholera::roads[, "lat"]))
-  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
-                        lat = max(cholera::roads[, "lat"]))
-  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
-                            lat = min(cholera::roads[, "lat"]))
+
   NW <- roadSegEndpt(seg.id = "116-2", endpt.sel = 2L, latlong = TRUE)
   NE <- roadSegEndpt(seg.id = "144-1", endpt.sel = 2L, latlong = TRUE)
   SW <- roadSegEndpt(seg.id = "161-1", endpt.sel = 2L, latlong = TRUE)
@@ -317,8 +314,8 @@ argyllHouse <- function() {
   SW <- geo.cartesian$SW
   SE <- geo.cartesian$SE
   argyll <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
-  vars <- c("lon", "lat")
-  label.latlong <- meterLatLong(argyll, origin, topleft, bottomright)[, vars]
+
+  label.latlong <- meterLatLong(argyll)[,  c("lon", "lat")]
 
   seg.id <- "162-1"
   proj <- segmentTrigonometryAddress(seg.id = seg.id, delta = "neg")
@@ -379,10 +376,6 @@ cravenChapel <- function() {
 
   origin <- data.frame(lon = min(cholera::roads[, "lon"]),
                        lat = min(cholera::roads[, "lat"]))
-  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
-                        lat = max(cholera::roads[, "lat"]))
-  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
-                            lat = min(cholera::roads[, "lat"]))
 
   proj.cartesian <- projCartesian(proj.latlong, origin)
   coord.cartesian <- coordsCartesian(proj.latlong, origin)
@@ -393,7 +386,7 @@ cravenChapel <- function() {
   proj.label <- data.frame(x = proj.cartesian$x + delta.x,
                            y = proj.cartesian$y + delta.y)
 
-  label.latlong <- meterLatLong(proj.label, origin, topleft, bottomright)
+  label.latlong <- meterLatLong(proj.label)
 
   data.frame(case = 1013L,
              road.segment = seg.id,
@@ -421,10 +414,6 @@ lionBrewery <- function() {
 
   origin <- data.frame(lon = min(cholera::roads[, "lon"]),
                        lat = min(cholera::roads[, "lat"]))
-  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
-                        lat = max(cholera::roads[, "lat"]))
-  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
-                            lat = min(cholera::roads[, "lat"]))
 
   NW <- roadSegEndpt(seg.id = seg.id, endpt.sel = 1L, latlong = TRUE)
   NE <- roadSegEndpt(seg.id = seg.id, endpt.sel = 2L, latlong = TRUE)
@@ -446,8 +435,7 @@ lionBrewery <- function() {
   SE <- geo.cartesian$SE
   lion <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
 
-  vars <- c("lon", "lat")
-  label.latlong <- meterLatLong(lion, origin, topleft, bottomright)[, vars]
+  label.latlong <- meterLatLong(lion)[, c("lon", "lat")]
 
   proj.nominal <- segmentTrigonometryAddress(seg.id = seg.id, delta = "pos")
   proj.latlong <- segmentTrigonometryAddress(seg.id = seg.id, delta = "pos",
@@ -522,10 +510,6 @@ magistratesCourt <- function() {
 
   origin <- data.frame(lon = min(cholera::roads[, "lon"]),
                        lat = min(cholera::roads[, "lat"]))
-  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
-                        lat = max(cholera::roads[, "lat"]))
-  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
-                            lat = min(cholera::roads[, "lat"]))
 
   cartesian <- lapply(list(gt.marlb, mews), function(coords) {
     do.call(rbind, lapply(1:2, function(i) {
@@ -560,7 +544,7 @@ magistratesCourt <- function() {
   label.cartesian <- data.frame(x = proj.cartesian$x - delta$x,
                                 y = proj.cartesian$y - delta$y)
 
-  label.latlong <- meterLatLong(label.cartesian, origin, topleft, bottomright)
+  label.latlong <- meterLatLong(label.cartesian)
 
   data.frame(case = 1015L,
              road.segment = seg.id,
@@ -630,10 +614,6 @@ modelLodgingHouses <- function() {
   ## latlong label ##
   origin <- data.frame(lon = min(cholera::roads[, "lon"]),
                        lat = min(cholera::roads[, "lat"]))
-  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
-                        lat = max(cholera::roads[, "lat"]))
-  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
-                            lat = min(cholera::roads[, "lat"]))
 
   NW <- roadSegEndpt(seg.id = "225-1", endpt.sel = 2L, latlong = TRUE)
   NE <- roadSegEndpt(seg.id = "225-1", endpt.sel = 1L, latlong = TRUE)
@@ -657,7 +637,7 @@ modelLodgingHouses <- function() {
   pt <- segmentIntersection(NW$x, NW$y, SE$x, SE$y, NE$x, NE$y, SW$x, SW$y)
 
   vars <- c("lon", "lat")
-  label.latlong <- meterLatLong(pt, origin, topleft, bottomright)[, vars]
+  label.latlong <- meterLatLong(pt)[, vars]
 
   ## latlong address (proj) ##
   rd.segs <- roadSegments(latlong = TRUE)
@@ -702,7 +682,8 @@ modelLodgingHouses <- function() {
   delta.y <- h * sin(theta)
   proj.geo.cartesian <- data.frame(x = geo.cartesian1[1, ]$x + delta.x,
                                    y = geo.cartesian1[1, ]$y + delta.y)
-  proj.latlong <- meterLatLong(proj.geo.cartesian, origin, topleft, bottomright)
+
+  proj.latlong <- meterLatLong(proj.geo.cartesian)
 
   data.frame(case = 1017L,
              road.segment = "245-1",
@@ -755,10 +736,6 @@ stJamesWorkhouse <- function() {
 
   origin <- data.frame(lon = min(cholera::roads[, "lon"]),
                        lat = min(cholera::roads[, "lat"]))
-  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
-                        lat = max(cholera::roads[, "lat"]))
-  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
-                            lat = min(cholera::roads[, "lat"]))
 
   workhouse.west.geo <- roadSegEndpt(seg.id = "148-1", endpt.sel = 1L,
     latlong = TRUE)
@@ -782,7 +759,7 @@ stJamesWorkhouse <- function() {
   geo.cartesian.lab <- data.frame(x = geo.cartesian[2, "x"] + delta.x,
                                   y = geo.cartesian[2, "y"] + delta.y)
 
-  label.latlong <- meterLatLong(geo.cartesian.lab, origin, topleft, bottomright)
+  label.latlong <- meterLatLong(geo.cartesian.lab)
 
   data.frame(case = 1019L,
              road.segment = seg.id,
@@ -833,10 +810,6 @@ stLukesChurch <- function() {
 
   origin <- data.frame(lon = min(cholera::roads[, "lon"]),
                        lat = min(cholera::roads[, "lat"]))
-  topleft <- data.frame(lon = min(cholera::roads[, "lon"]),
-                        lat = max(cholera::roads[, "lat"]))
-  bottomright <- data.frame(lon = max(cholera::roads[, "lon"]),
-                            lat = min(cholera::roads[, "lat"]))
 
   taylor.data <- roadSegmentData(seg.id = "221-1", latlong = TRUE)
   taylor.data <- segmentGeoCartesian(taylor.data, origin)
@@ -860,7 +833,8 @@ stLukesChurch <- function() {
   transversal <- rbind(taylor.data[1, ], data.frame(x = x.proj, y = y.proj))
   delta <- trignometricDelta(transversal)
   geo.cartesian <- data.frame(x = x.proj + delta$x, y = y.proj + delta$y)
-  label.latlong <- meterLatLong(geo.cartesian, origin, topleft, bottomright)
+
+  label.latlong <- meterLatLong(geo.cartesian)
 
   vars <- c("lon", "lat")
   label.latlong <- stats::setNames(label.latlong[, vars],  paste0(vars, ".lab"))
@@ -1018,10 +992,7 @@ segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
     ns <- varsB[2]
     origin <- data.frame(lon = min(cholera::roads[, ew]),
                          lat = min(cholera::roads[, ns]))
-    topleft <- data.frame(lon = min(cholera::roads[, ew]),
-                          lat = max(cholera::roads[, ns]))
-    bottomright <- data.frame(lon = max(cholera::roads[, ew]),
-                              lat = min(cholera::roads[, ns]))
+
     rd.segs <- roadSegments(latlong = TRUE)
     seg <- rd.segs[rd.segs$id == seg.id, ]
     alpha <- stats::setNames(seg[, paste0(varsB, 1)], varsB)
@@ -1059,7 +1030,7 @@ segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
                       y = seg.data[1, ]$y - delta.y, row.names = NULL)
   }
 
-  if (latlong) out <- meterLatLong(out, origin, topleft, bottomright)[, varsB]
+  if (latlong) out <- meterLatLong(out)[, varsB]
   out
 }
 
