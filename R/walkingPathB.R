@@ -549,10 +549,6 @@ milePostsB <- function(path.data, dat, destination, distance.unit, ds, latlong,
     if (latlong) {
       origin <- data.frame(lon = min(cholera::roads[, ew]),
                            lat = min(cholera::roads[, ns]))
-      topleft <- data.frame(lon = min(cholera::roads[, ew]),
-                            lat = max(cholera::roads[, ns]))
-      bottomright <- data.frame(lon = max(cholera::roads[, ew]),
-                                lat = min(cholera::roads[, ns]))
       if (any(segment.census > 1)) {
         single.arrow.data <- arrowDataB(single.post.seg, census, distance.unit,
           latlong, milepost.unit, seg.data, origin)
@@ -581,8 +577,8 @@ milePostsB <- function(path.data, dat, destination, distance.unit, ds, latlong,
     arrow.head <- arrow.data[, paste0(c("x", "y"), 2)]
 
     if (latlong) {
-      arrow.tail <- meterLatLong(arrow.tail, origin, topleft, bottomright)
-      arrow.head <- meterLatLong(arrow.head, origin, topleft, bottomright)
+      arrow.tail <- meterLatLong(arrow.tail)
+      arrow.head <- meterLatLong(arrow.head)
     } else {
       arrow.tail <- stats::setNames(arrow.data[, paste0(c("x", "y"), 1)], vars)
       arrow.head <- stats::setNames(arrow.data[, paste0(c("x", "y"), 2)], vars)

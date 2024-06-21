@@ -13,10 +13,6 @@ latlongOrthoLandmarks <- function(multi.core = TRUE) {
 
   origin <- data.frame(lon = min(cholera::roads$lon),
                        lat = min(cholera::roads$lat))
-  topleft <- data.frame(lon = min(cholera::roads$lon),
-                        lat = max(cholera::roads$lat))
-  bottomright <- data.frame(lon = max(cholera::roads$lon),
-                            lat = min(cholera::roads$lat))
 
   # roads #
 
@@ -144,6 +140,6 @@ latlongOrthoLandmarks <- function(multi.core = TRUE) {
   }, mc.cores = cores)
 
   coords <- do.call(rbind, orthogonal.projection)
-  est.lonlat <- meterLatLong(coords, origin, topleft, bottomright)
+  est.lonlat <- meterLatLong(coords)
   est.lonlat[order(est.lonlat$id), ]
 }
