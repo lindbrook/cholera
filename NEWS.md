@@ -1,3 +1,8 @@
+### cholera 0.8.0.9349
+
+- set plot.walking(type = "area.points").
+
+
 ### cholera 0.8.0.9348
 
 - use amended meterLatLong().
