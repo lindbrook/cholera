@@ -1,3 +1,8 @@
+### cholera 0.8.0.9347
+
+- embed origin, topleft and bottomright in meterLatLong().
+
+
 ### cholera 0.8.0.9346
 
 - add/set caseDistance(latlong = FALSE).

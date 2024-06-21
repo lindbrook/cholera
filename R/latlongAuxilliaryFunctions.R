@@ -76,15 +76,17 @@ meterLatitude <- function(coords, origin, topleft, delta = 0.000025) {
 #' Convert meters-East to longitude.
 #'
 #' @param coords Object. Data frame of coordinates.
-#' @param origin Object. Bottom left corner of map.
-#' @param topleft Object. Top left corner of map.
-#' @param bottomright Object. Bottom right corner of map.
 #' @param delta Numeric. Increment between simulated values.
 #' @importFrom geosphere distGeo
 #' @noRd
 
-meterLatLong <- function(coords, origin, topleft, bottomright,
-  delta = 0.000025) {
+meterLatLong <- function(coords, delta = 0.000025) {
+  origin <- data.frame(lon = min(cholera::roads$lon),
+                       lat = min(cholera::roads$lat))
+  topleft <- data.frame(lon = min(cholera::roads$lon),
+                        lat = max(cholera::roads$lat))
+  bottomright <- data.frame(lon = max(cholera::roads$lon),
+                            lat = min(cholera::roads$lat))
 
   est.lat <- meterLatitude(coords, origin, topleft)
 
