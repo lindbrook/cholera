@@ -13,7 +13,7 @@ latlongSegmentLocator(segment.id = "216-1", zoom = TRUE,
 \arguments{
 \item{segment.id}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.}
 
-\item{zoom}{Logical.}
+\item{zoom}{Logical or Numeric. Numeric values in meters.}
 
 \item{cases}{Character. Plot cases: \code{NULL}, "address" or "fatality".}
 

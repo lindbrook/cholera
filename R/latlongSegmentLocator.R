@@ -2,7 +2,7 @@
 #'
 #' Highlight road segment and its cases.
 #' @param segment.id Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.
-#' @param zoom Logical.
+#' @param zoom Logical or Numeric. Numeric values in meters.
 #' @param cases Character. Plot cases: \code{NULL}, "address" or "fatality".
 #' @param token Character. "id" or "point".
 #' @param add.title Logical. Include title.
@@ -59,9 +59,42 @@ latlongSegmentLocator <- function(segment.id = "216-1", zoom = TRUE,
     xlim <- range(cholera::roads$lon)
     ylim <- range(cholera::roads$lat)
   } else {
-    sel <- rd.segs$id %in% segment.id
-    xlim <- range(rd.segs[sel, c("lon1", "lon2")])
-    ylim <- range(rd.segs[sel, c("lat1", "lat2")])
+    if (is.logical(zoom) | zoom == 0) {
+      sel <- rd.segs$id %in% segment.id
+      xlim <- range(rd.segs[sel, paste0("lon", 1:2)])
+      ylim <- range(rd.segs[sel, paste0("lat", 1:2)])
+    } else if (zoom != 0) {
+      dat <- stats::setNames(rd.segs[, c("id", paste0(vars, 1))], c("id", vars))
+      ones <- geoCartesian(dat)
+      dat <- stats::setNames(rd.segs[, c("id", paste0(vars, 2))], c("id", vars))
+      twos <- geoCartesian(dat)
+
+      new.vars <- c("x", "y")
+      ones <- stats::setNames(ones,  c("id", paste0(new.vars, 1)))
+      twos <- stats::setNames(twos,  c("id", paste0(new.vars, 2)))
+      cartestian.rd.segs <- merge(ones, twos, by = "id")
+      cart.seg <- cartestian.rd.segs[cartestian.rd.segs$id %in% segment.id, ]
+
+      cart.x.range <- range(cart.seg[, paste0("x", 1:2)])
+      cart.y.range <- range(cart.seg[, paste0("y", 1:2)])
+
+      pad <- c(zoom, -zoom)
+      xlim <- cart.x.range + pad
+      ylim <- cart.y.range + pad
+      
+      xlim.delta <- xlim[2] - xlim[1]
+      ylim.delta <- ylim[2] - ylim[1]
+
+      if (xlim.delta <= 0 | ylim.delta <= 0) {
+        xlim <- cart.x.range
+        ylim <- cart.y.range
+        message("Note: zoom = ",  zoom, " too far! Use smaller.")
+      }
+
+      range.data <- meterLatLong(data.frame(x = xlim, y = ylim))
+      xlim <- range.data$lon
+      ylim <- range.data$lat
+    }
   }
 
   plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = NA,
