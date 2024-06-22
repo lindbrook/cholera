@@ -1,3 +1,8 @@
+### cholera 0.8.0.9350
+
+- set/fix limit for positive zoom in geoCartesianStreetLocator().
+
+
 ### cholera 0.8.0.9349
 
 - set plot.walking(type = "area.points").

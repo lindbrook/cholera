@@ -45,6 +45,15 @@ geoCartesianStreetLocator <- function(street.name = NULL, zoom = TRUE,
       pad <- c(zoom, -zoom)
       xlim <- range(cartesian.rd[sel, "x"]) + pad
       ylim <- range(cartesian.rd[sel, "y"]) + pad
+
+      xlim.delta <- xlim[2] - xlim[1]
+      ylim.delta <- ylim[2] - ylim[1]
+
+      if (xlim.delta <= 0 | ylim.delta <= 0) {
+        xlim <- range(cartesian.rd[sel, "x"])
+        ylim <- range(cartesian.rd[sel, "y"])
+        message("Note: zoom = ",  zoom, " too far! Use smaller.")
+      }
     }
   }
 
