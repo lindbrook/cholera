@@ -59,7 +59,7 @@ latlongSegmentLocator <- function(segment.id = "216-1", zoom = TRUE,
     xlim <- range(cholera::roads$lon)
     ylim <- range(cholera::roads$lat)
   } else {
-    if (is.logical(zoom) | zoom == 0) {
+    if (isTRUE(zoom) | zoom == 0) {
       sel <- rd.segs$id %in% segment.id
       xlim <- range(rd.segs[sel, paste0("lon", 1:2)])
       ylim <- range(rd.segs[sel, paste0("lat", 1:2)])
@@ -81,7 +81,7 @@ latlongSegmentLocator <- function(segment.id = "216-1", zoom = TRUE,
       pad <- c(zoom, -zoom)
       xlim <- cart.x.range + pad
       ylim <- cart.y.range + pad
-      
+
       xlim.delta <- xlim[2] - xlim[1]
       ylim.delta <- ylim[2] - ylim[1]
 
