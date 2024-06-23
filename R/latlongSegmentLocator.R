@@ -102,7 +102,7 @@ latlongSegmentLocator <- function(segment.id = "216-1", zoom = TRUE,
   roads.list <- split(cholera::roads[, vars], cholera::roads$street)
   invisible(lapply(roads.list, lines, col = "gray"))
 
-  if (zoom == TRUE) {
+  if (isTRUE(zoom) | is.numeric(zoom)) {
     if (is.null(cases) == FALSE) {
       sel <- cholera::latlong.ortho.addr$road.segment %in% segment.id
       seg.ortho <- cholera::latlong.ortho.addr[sel, ]

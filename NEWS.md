@@ -1,3 +1,8 @@
+### cholera 0.8.0.9352
+
+- show cases with numeric zoom in latlongSegmentLocator().
+
+
 ### cholera 0.8.0.9351
 
 - add numeric zoom in latlongSegmentLocator().
