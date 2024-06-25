@@ -81,7 +81,6 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
             text(cholera::fatalities[seg.cases, c("x", "y")],
               labels = cholera::fatalities$case[seg.cases], cex = cex.text)
           }
-
         }
       } else if (cases == "address") {
         text(cholera::fatalities.address[!seg.anchors, c("x", "y")],
@@ -111,8 +110,17 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
   text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1,
     col = "blue")
 
-  if (highlight) segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
-  if (add.title) title(main = paste0(st$name, ": Segment # ", id))
+  if (highlight) {
+    lapply(id, function(seg) {
+      s.data <- cholera::road.segments[cholera::road.segments$id == seg, ]
+      segments(s.data$x1, s.data$y1, s.data$x2, s.data$y2, col = "red", lwd = 3)
+    })
+  }
+
+  if (add.title) {
+    seg.nm <- cholera::road.segments[cholera::road.segments$id == id, "name"]
+    title(main = paste0(seg.nm, ": Segment # ", id))
+  }
 
   segment.length <- segmentLength(id, distance.unit)
 

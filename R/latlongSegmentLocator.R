@@ -70,8 +70,8 @@ latlongSegmentLocator <- function(segment.id = "216-1", zoom = TRUE,
       twos <- geoCartesian(dat)
 
       new.vars <- c("x", "y")
-      ones <- stats::setNames(ones,  c("id", paste0(new.vars, 1)))
-      twos <- stats::setNames(twos,  c("id", paste0(new.vars, 2)))
+      ones <- stats::setNames(ones, c("id", paste0(new.vars, 1)))
+      twos <- stats::setNames(twos, c("id", paste0(new.vars, 2)))
       cartestian.rd.segs <- merge(ones, twos, by = "id")
       cart.seg <- cartestian.rd.segs[cartestian.rd.segs$id %in% segment.id, ]
 
