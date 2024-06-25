@@ -181,40 +181,41 @@ latlongSegmentLocator <- function(segment.id = "216-1", zoom = TRUE,
     }
   }
 
-  if (highlight) {
-    lapply(segment.id, function(seg) {
-      s.data <- rd.segs[rd.segs$id == seg, ]
-      segments(s.data$lon1, s.data$lat1, s.data$lon2, s.data$lat2, col = "red",
-        lwd = 3)
-    })
-  }
-
-  if (add.title) {
-    if (length(segment.id) == 1) {
-      title(main = segment.id)
-    } else if (length(segment.id) > 1) {
-      title(main = paste(segment.id, collapse = ", "))
-    }
-  }
-
-  if (add.subtitle) {
-    if (length(segment.id) == 1) {
-      segment.length <- segmentLength(segment.id, distance.unit, latlong = TRUE)
-    } else {
-      segment.length <- sum(segmentLength(segment.id, distance.unit,
-        latlong = TRUE))
-    }
-    est.time <- distanceTime(segment.length, distance.unit = distance.unit,
-      time.unit = time.unit, walking.speed = walking.speed)
-
-    nominal.time <- nominalTime(est.time, time.unit)
-
-    if (distance.unit == "meter") {
-      subtitle <- paste(round(segment.length, 1), "m;", nominal.time)
-    } else if (distance.unit == "yard") {
-      subtitle <- paste(round(segment.length, 1), "yd;", nominal.time)
+  if (!is.null(segment.id)) {
+    if (highlight) {
+      lapply(segment.id, function(seg) {
+        tmp <- rd.segs[rd.segs$id == seg, ]
+        segments(tmp$lon1, tmp$lat1, tmp$lon2, tmp$lat2, col = "red", lwd = 3)
+      })
     }
 
-    title(sub = paste(subtitle, "@", walking.speed, "km/hr"))
+    if (add.title) {
+      if (length(segment.id) == 1) {
+        title(main = segment.id)
+      } else if (length(segment.id) > 1) {
+        title(main = paste(segment.id, collapse = ", "))
+      }
+    }
+
+    if (add.subtitle) {
+      if (length(segment.id) == 1) {
+        segment.length <- segmentLength(segment.id, distance.unit, latlong = TRUE)
+      } else {
+        segment.length <- sum(segmentLength(segment.id, distance.unit,
+          latlong = TRUE))
+      }
+      est.time <- distanceTime(segment.length, distance.unit = distance.unit,
+        time.unit = time.unit, walking.speed = walking.speed)
+
+      nominal.time <- nominalTime(est.time, time.unit)
+
+      if (distance.unit == "meter") {
+        subtitle <- paste(round(segment.length, 1), "m;", nominal.time)
+      } else if (distance.unit == "yard") {
+        subtitle <- paste(round(segment.length, 1), "yd;", nominal.time)
+      }
+
+      title(sub = paste(subtitle, "@", walking.speed, "km/hr"))
+    }
   }
 }
