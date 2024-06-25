@@ -1,3 +1,8 @@
+### cholera 0.8.0.9354
+
+- allow NULL street id in segmentLocator().
+
+
 ### cholera 0.8.0.9353
 
 - use latlongSegmentLocator() numeric zoom in segmentLocator().
