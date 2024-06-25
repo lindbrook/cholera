@@ -4,7 +4,7 @@
 \alias{segmentLocator}
 \title{Locate road segment by ID.}
 \usage{
-segmentLocator(id = "216-1", zoom = 0.5, cases = "address",
+segmentLocator(id = "216-1", zoom = FALSE, cases = "address",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
   add.title = TRUE, add.subtitle = TRUE, highlight = TRUE,
   cex.text = 0.67)
@@ -12,7 +12,7 @@ segmentLocator(id = "216-1", zoom = 0.5, cases = "address",
 \arguments{
 \item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
 
-\item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.}
+\item{zoom}{Logical or Numeric. Numeric values pad segment end points in meters (appox). Negative values zoom out. Positive values zoom in.}
 
 \item{cases}{Character. Plot cases: \code{NULL}, "address" or "fatality".}
 

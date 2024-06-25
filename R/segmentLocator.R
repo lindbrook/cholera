@@ -2,7 +2,7 @@
 #'
 #' Highlights the selected road segment and its cases.
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.
-#' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.
+#' @param zoom Logical or Numeric. Numeric values pad segment end points in meters (appox). Negative values zoom out. Positive values zoom in.
 #' @param cases Character. Plot cases: \code{NULL}, "address" or "fatality".
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @param time.unit Character. "hour", "minute", or "second".
@@ -20,7 +20,7 @@
 #' segmentLocator("216-1")
 #' segmentLocator("216-1", distance.unit = "yard")
 
-segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
+segmentLocator <- function(id = "216-1", zoom = FALSE, cases = "address",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
   add.title = TRUE, add.subtitle = TRUE, highlight = TRUE, cex.text = 0.67) {
 
@@ -35,33 +35,48 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
     stop('distance.unit must be "meter", "yard" or "native".', call. = FALSE)
   }
 
-  st <- cholera::road.segments[cholera::road.segments$id == id, ]
+  if (is.null(id) | isFALSE(zoom)) {
+    xlim <- range(cholera::roads$x)
+    ylim <- range(cholera::roads$y)
+  } else {
+    if (isTRUE(zoom) | zoom == 0) {
+      sel <- cholera::road.segments$id %in% id
+      xlim <- range(cholera::road.segments[sel, paste0("x", 1:2)])
+      ylim <- range(cholera::road.segments[sel, paste0("y", 1:2)])
+    } else if (zoom != 0) {
+      sel <- cholera::road.segments$id %in% id
+      nom.seg <- cholera::road.segments[sel, ]
+      vars <- c("x", "y")
 
-  if (is.logical(zoom)) {
-    if (zoom) {
-      padding <- 0.1
-      x.rng <- c(min(st[, c("x1", "x2")]) - padding,
-                 max(st[, c("x1", "x2")]) + padding)
-      y.rng <- c(min(st[, c("y1", "y2")]) - padding,
-                 max(st[, c("y1", "y2")]) + padding)
-    } else {
-      x.rng <- range(cholera::roads$x)
-      y.rng <- range(cholera::roads$y)
+      seg.data <- rbind(stats::setNames(nom.seg[, paste0(vars, 1)], vars),
+                        stats::setNames(nom.seg[, paste0(vars, 2)], vars))
+
+      ols <- stats::lm(y ~ x, data = seg.data)
+      segment.slope <- stats::coef(ols)[2]
+      theta <- atan(segment.slope)
+
+      pad <- abs(zoom) / unitMeter(1)
+      delta.x <- pad * cos(theta)
+      delta.y <- pad * sin(theta)
+
+      x.range <- range(seg.data$x)
+      y.range <- range(seg.data$y)
+
+      if (zoom < 0) {
+        xlim <- c(x.range[1] - delta.x, x.range[2] + delta.x)
+        ylim <- c(y.range[1] - delta.y, y.range[2] + delta.y)
+      } else if (zoom > 0) {
+        xlim <- c(x.range[1] + delta.x, x.range[2] - delta.x)
+        ylim <- c(y.range[1] + delta.y, y.range[2] - delta.y)
+      }
     }
-  } else if (is.numeric(zoom)) {
-    if (zoom >= 0) {
-      x.rng <- c(min(st[, c("x1", "x2")]) - zoom,
-                 max(st[, c("x1", "x2")]) + zoom)
-      y.rng <- c(min(st[, c("y1", "y2")]) - zoom,
-                 max(st[, c("y1", "y2")]) + zoom)
-    } else stop("If numeric, zoom must be >= 0.", call. = FALSE)
-  } else stop("zoom must either be logical or numeric.", call. = FALSE)
+  }
 
   roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)
 
   if ((is.logical(zoom) & zoom == TRUE) | is.numeric(zoom)) {
-    plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
-      pch = NA, asp = 1)
+    plot(cholera::fatalities[, c("x", "y")], xlim = xlim, ylim = ylim, pch = NA,
+      asp = 1)
     invisible(lapply(roads.list, lines, col = "gray"))
 
     if (is.null(cases) == FALSE) {
@@ -81,7 +96,6 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
             text(cholera::fatalities[seg.cases, c("x", "y")],
               labels = cholera::fatalities$case[seg.cases], cex = cex.text)
           }
-
         }
       } else if (cases == "address") {
         text(cholera::fatalities.address[!seg.anchors, c("x", "y")],
@@ -111,8 +125,17 @@ segmentLocator <- function(id = "216-1", zoom = 0.5, cases = "address",
   text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1,
     col = "blue")
 
-  if (highlight) segments(st$x1, st$y1, st$x2, st$y2, col = "red", lwd = 3)
-  if (add.title) title(main = paste0(st$name, ": Segment # ", id))
+  if (highlight) {
+    lapply(id, function(seg) {
+      s.data <- cholera::road.segments[cholera::road.segments$id == seg, ]
+      segments(s.data$x1, s.data$y1, s.data$x2, s.data$y2, col = "red", lwd = 3)
+    })
+  }
+
+  if (add.title) {
+    seg.nm <- cholera::road.segments[cholera::road.segments$id == id, "name"]
+    title(main = paste0(seg.nm, ": Segment # ", id))
+  }
 
   segment.length <- segmentLength(id, distance.unit)
 
