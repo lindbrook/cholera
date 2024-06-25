@@ -70,6 +70,15 @@ segmentLocator <- function(id = "216-1", zoom = FALSE, cases = "address",
         xlim <- c(x.range[1] + delta.x, x.range[2] - delta.x)
         ylim <- c(y.range[1] + delta.y, y.range[2] - delta.y)
       }
+
+      xlim.delta <- xlim[2] - xlim[1]
+      ylim.delta <- ylim[2] - ylim[1]
+
+      if (xlim.delta <= 0 | ylim.delta <= 0) {
+        xlim <- x.range
+        ylim <- y.range
+        message("Note: zoom = ",  zoom, " too far! Use smaller.")
+      }
     }
   }
 
