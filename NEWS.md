@@ -1,3 +1,8 @@
+### cholera 0.8.0.9353
+
+- use latlongSegmentLocator() numeric zoom in segmentLocator().
+
+
 ### cholera 0.8.0.9352
 
 - show cases with numeric zoom in latlongSegmentLocator().
