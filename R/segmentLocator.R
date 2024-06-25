@@ -24,11 +24,12 @@ segmentLocator <- function(id = "216-1", zoom = FALSE, cases = "address",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
   add.title = TRUE, add.subtitle = TRUE, highlight = TRUE, cex.text = 0.67) {
 
-  if (is.character(id) == FALSE) stop('id\'s type must be a character.',
-    call. = FALSE)
-
-  if (id %in% cholera::road.segments$id == FALSE) {
-    stop("Invalid segment ID. See cholera::road.segments.", call. = FALSE)
+  if (is.null(id) == FALSE) {
+    if (is.character(id) == FALSE) {
+      stop('id must be a character.', call. = FALSE)
+    } else if (id %in% cholera::road.segments$id == FALSE) {
+      stop("Invalid segment ID. See cholera::road.segments.", call. = FALSE)
+    }
   }
 
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
@@ -125,35 +126,35 @@ segmentLocator <- function(id = "216-1", zoom = FALSE, cases = "address",
   text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id, pos = 1,
     col = "blue")
 
-  if (highlight) {
-    lapply(id, function(seg) {
-      s.data <- cholera::road.segments[cholera::road.segments$id == seg, ]
-      segments(s.data$x1, s.data$y1, s.data$x2, s.data$y2, col = "red", lwd = 3)
-    })
-  }
+  if (!is.null(id)) {
+    if (highlight) {
+      lapply(id, function(seg) {
+        tmp <- cholera::road.segments[cholera::road.segments$id == seg, ]
+        segments(tmp$x1, tmp$y1, tmp$x2, tmp$y2, col = "red", lwd = 3)
+      })
+    }
 
-  if (add.title) {
-    seg.nm <- cholera::road.segments[cholera::road.segments$id == id, "name"]
-    title(main = paste0(seg.nm, ": Segment # ", id))
-  }
+    if (add.title) {
+      seg.nm <- cholera::road.segments[cholera::road.segments$id == id, "name"]
+      title(main = paste0(seg.nm, ": Segment # ", id))
+    }
 
-  segment.length <- segmentLength(id, distance.unit)
+    if (add.subtitle) {
+      segment.length <- segmentLength(id, distance.unit)
+      est.time <- distanceTime(segment.length, distance.unit = distance.unit,
+        time.unit = time.unit, walking.speed = walking.speed)
+      nominal.time <- nominalTime(est.time, time.unit)
 
-  est.time <- distanceTime(segment.length, distance.unit = distance.unit,
-    time.unit = time.unit, walking.speed = walking.speed)
-
-  nominal.time <- nominalTime(est.time, time.unit)
-
-  if (add.subtitle) {
-    if (distance.unit == "native") {
-      title(sub = paste(round(segment.length, 2), "units;", nominal.time, "@",
-        walking.speed, "km/hr"))
-    } else if (distance.unit == "meter") {
-      title(sub = paste(round(segment.length, 2), "meters;", nominal.time, "@",
-        walking.speed, "km/hr"))
-    } else if (distance.unit == "yard") {
-      title(sub = paste(round(segment.length, 2), "yards;", nominal.time, "@",
-        walking.speed, "km/hr"))
+      if (distance.unit == "native") {
+        title(sub = paste(round(segment.length, 2), "units;", nominal.time, "@",
+          walking.speed, "km/hr"))
+      } else if (distance.unit == "meter") {
+        title(sub = paste(round(segment.length, 2), "meters;", nominal.time,
+          "@", walking.speed, "km/hr"))
+      } else if (distance.unit == "yard") {
+        title(sub = paste(round(segment.length, 2), "yards;", nominal.time, "@",
+          walking.speed, "km/hr"))
+      }
     }
   }
 }
