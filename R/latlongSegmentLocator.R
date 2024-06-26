@@ -199,11 +199,13 @@ latlongSegmentLocator <- function(segment.id = "216-1", zoom = TRUE,
 
     if (add.subtitle) {
       if (length(segment.id) == 1) {
-        segment.length <- segmentLength(segment.id, distance.unit, latlong = TRUE)
+        segment.length <- segmentLength(segment.id, distance.unit,
+          latlong = TRUE)
       } else {
         segment.length <- sum(segmentLength(segment.id, distance.unit,
           latlong = TRUE))
       }
+
       est.time <- distanceTime(segment.length, distance.unit = distance.unit,
         time.unit = time.unit, walking.speed = walking.speed)
 
