@@ -1,3 +1,8 @@
+### cholera 0.8.0.9357
+
+- add segmentLocatorB() prototype.
+
+
 ### cholera 0.8.0.9356
 
 - allow NULL segment.id in latlongSegmentLocator().
