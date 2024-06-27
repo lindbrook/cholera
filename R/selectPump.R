@@ -22,15 +22,15 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
       }
     }
 
-    if (metric == "walking") {
-      if (length(pump.select) == 1) {
-        if (pump.select == 2) {
-          msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
-          msg2 <- " It's an isolate, unreachable for observed fatalities."
-          stop(msg1, msg2, call. = FALSE)
-        }
-      }
-    }
+    # if (metric == "walking") {
+    #   if (length(pump.select) == 1) {
+    #     if (pump.select == 2) {
+    #       msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
+    #       msg2 <- " It's an isolate, unreachable for observed fatalities."
+    #       stop(msg1, msg2, call. = FALSE)
+    #     }
+    #   }
+    # }
 
     destination.chk <- vapply(pump.select, function(x) {
       if (is.numeric(x)) {
