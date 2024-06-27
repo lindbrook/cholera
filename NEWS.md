@@ -1,3 +1,8 @@
+### cholera 0.8.0.9358
+
+- temporarily allow sole selection of pump 2 (isolate) in selectPump().
+
+
 ### cholera 0.8.0.9357
 
 - add segmentLocatorB() prototype.
