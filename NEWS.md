@@ -1,3 +1,10 @@
+### cholera 0.8.0.9359
+
+- archive latlongSegmentLocator().
+- promote segmentLocatorB() to segmentLocator().
+- add "nominal" distance subtitle.
+
+
 ### cholera 0.8.0.9358
 
 - temporarily allow sole selection of pump 2 (isolate) in selectPump().
