@@ -2,19 +2,34 @@
 % Please edit documentation in R/segmentLocator.R
 \name{segmentLocator}
 \alias{segmentLocator}
-\title{Locate road segment by ID.}
+\title{Plot/Locate road segment by ID.}
 \usage{
-segmentLocator(id = "216-1", zoom = FALSE, cases = "address",
-  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+segmentLocator(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
+  cases = "address", token = "id", vestry = FALSE, add.pump = TRUE,
   add.title = TRUE, add.subtitle = TRUE, highlight = TRUE,
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
   cex.text = 0.67)
 }
 \arguments{
-\item{id}{Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number to identify the segment.}
+\item{segment.id}{Character. A vector of segment IDs. See Note.}
 
-\item{zoom}{Logical or Numeric. Numeric values pad segment end points in meters (appox). Negative values zoom out. Positive values zoom in.}
+\item{zoom}{Logical or Numeric. Positive value zoom in. Negative values zoom out.}
 
-\item{cases}{Character. Plot cases: \code{NULL}, "address" or "fatality".}
+\item{latlong}{Logical. Longitude and latitude coordiantes}
+
+\item{cases}{Character. Cases to plot: \code{NULL}, "address" or "fatality".}
+
+\item{token}{Character. Cases as "id" or "point".}
+
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
+
+\item{add.pump}{Logical. Include pumps.}
+
+\item{add.title}{Logical. Include title.}
+
+\item{add.subtitle}{Logical. Include subtitle.}
+
+\item{highlight}{Logical. Highlight selected segment(s) and cases.}
 
 \item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 
@@ -22,25 +37,21 @@ segmentLocator(id = "216-1", zoom = FALSE, cases = "address",
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
-\item{add.title}{Logical. Print title.}
-
-\item{add.subtitle}{Logical. Print subtitle.}
-
-\item{highlight}{Logical. Highlight selected road and its cases.}
-
 \item{cex.text}{Numeric.}
 }
 \value{
 A base R graphics plot.
 }
 \description{
-Highlights the selected road segment and its cases.
+Highlight selected road segment(s) and cases.
 }
 \note{
-With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2").  See \code{cholera::road.segments}.
+With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2"). See \code{cholera::road.segments}.
 }
 \examples{
-segmentLocator("190-1")
 segmentLocator("216-1")
+segmentLocator("216-1", zoom = -10)
+segmentLocator("216-1", latlong = TRUE, zoom = -10)
 segmentLocator("216-1", distance.unit = "yard")
+segmentLocator("216-1", zoom = FALSE)
 }
