@@ -33,7 +33,7 @@ Suggests: ggplot2,
           knitr,
           rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Roxygen: list(old_usage = TRUE)
 Encoding: UTF-8
 Language: en-US
