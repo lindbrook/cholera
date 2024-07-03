@@ -1,3 +1,8 @@
+### cholera 0.8.0.9360
+
+- add streetNameLocatorB() prototype.
+
+
 ### cholera 0.8.0.9359
 
 - archive latlongSegmentLocator().
