@@ -1,3 +1,8 @@
+### cholera 0.8.0.9361
+
+- fix numerical zoom in streetNameLocatorB(latlong = FALSE).
+
+
 ### cholera 0.8.0.9360
 
 - add streetNameLocatorB() prototype.

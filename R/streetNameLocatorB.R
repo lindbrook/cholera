@@ -85,12 +85,11 @@ streetNameLocatorB <- function(street.name = "Broad Street", zoom = TRUE,
     xlim <- range(rds[, ew])
     ylim <- range(rds[, ns])
   } else if (isTRUE(zoom) | is.numeric(zoom)) {
+    sel <- rds$name %in% street.name
+    xlim <- range(rds[sel, ew])
+    ylim <- range(rds[sel, ns])
 
-    if (isTRUE(zoom) | zoom == 0) {
-      sel <- rds$name %in% street.name
-      xlim <- range(rds[sel, ew])
-      ylim <- range(rds[sel, ns])
-    } else if (zoom != 0) {
+    if (zoom != 0) {
       if (latlong) {
         geo.vars <- c("lon", "lat")
 
