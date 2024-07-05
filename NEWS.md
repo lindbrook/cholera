@@ -1,7 +1,7 @@
 ### cholera 0.8.0.9363
 
 - add caseLocatorB() prototype.
-- add case to xlim, ylim.
+- include case when computing xlim and ylim.
 
 
 ### cholera 0.8.0.9362

@@ -46,10 +46,10 @@ caseLocatorB <- function(case = 1, zoom = FALSE, observed = TRUE,
     sim.proj.data <- cholera::sim.ortho.proj
   }
 
+  vars <- c(ew, ns)
+
   if (vestry) pmp <- cholera::pumps.vestry
   else pmp <- cholera::pumps
-
-  vars <- c(ew, ns)
 
   if (!is.numeric(case)) stop("case must be numeric.", call. = FALSE)
 
@@ -68,33 +68,29 @@ caseLocatorB <- function(case = 1, zoom = FALSE, observed = TRUE,
 
   if (observed) {
     case.seg <- proj.data[proj.data$case == case, "road.segment"]
-    seg.data <- rd.segs[rd.segs$id == case.seg, ]
+    if (exists("case0")) {
+      case.data <- cholera::fatalities[cholera::fatalities$case == case0, vars]
+    } else {
+      case.data <- cholera::fatalities[cholera::fatalities$case == case, vars]
+    }
   } else {
     case.seg <- sim.proj.data[sim.proj.data$case == case, "road.segment"]
-    seg.data <- rd.segs[rd.segs$id == case.seg, ]
+    case.data <- reg.data[case, vars]
   }
 
+  seg.data <- rd.segs[rd.segs$id == case.seg, ]
+
   if (add == TRUE) {
-    if (observed) {
-      if (latlong) {
-        points(cholera::fatalities[cholera::fatalities$case == case0, vars],
-          col = col, lwd = 2)
-      } else {
-        points(cholera::fatalities[cholera::fatalities$case == case, vars],
-          col = col, lwd = 2)
-      }
-    } else {
-      points(reg.data[case, vars], col = col, lwd = 2)
-    }
+    points(case.data, col = col, lwd = 2)
   } else {
     if (data == FALSE) {
       if (isFALSE(zoom)) {
-        xlim <- range(cholera::roads[, ew])
-        ylim <- range(cholera::roads[, ns])
+        xlim <- range(rd.segs[, paste0(ew, 1:2)])
+        ylim <- range(rd.segs[, paste0(ns, 1:2)])
       } else if (isTRUE(zoom) | is.numeric(zoom)) {
         sel <- rd.segs$id %in% case.seg
-        xlim <- range(rd.segs[sel, paste0(ew, 1:2)])
-        ylim <- range(rd.segs[sel, paste0(ns, 1:2)])
+        xlim <- range(rd.segs[sel, paste0(ew, 1:2)], case.data[, ew])
+        ylim <- range(rd.segs[sel, paste0(ns, 1:2)], case.data[, ns])
 
         if (zoom != 0) {
           if (latlong) {
@@ -118,8 +114,10 @@ caseLocatorB <- function(case = 1, zoom = FALSE, observed = TRUE,
             st.seg <- rd.segs[rd.segs$id %in% case.seg, "id"]
             cart.rd <- cartestian.rds[cartestian.rds$id %in% st.seg, ]
 
-            cart.x.range <- range(cart.rd[, paste0("x", 1:2)])
-            cart.y.range <- range(cart.rd[, paste0("y", 1:2)])
+            cart.case <- geoCartesianCoord(case.data)
+
+            cart.x.range <- range(cart.rd[, paste0("x", 1:2)], cart.case$x)
+            cart.y.range <- range(cart.rd[, paste0("y", 1:2)], cart.case$y)
 
             pad <- c(zoom, -zoom)
             xlim <- cart.x.range + pad
@@ -178,45 +176,37 @@ caseLocatorB <- function(case = 1, zoom = FALSE, observed = TRUE,
       text(pmp[, vars], label = pmp$id, pos = 1)
 
       if (observed) {
-        if (latlong) {
-          points(cholera::fatalities[cholera::fatalities$case == case0, vars],
-            col = col, lwd = 2)
-        } else {
-          points(cholera::fatalities[cholera::fatalities$case == case, vars],
-            col = col, lwd = 2)
-        }
+        points(case.data, col = col, lwd = 2)
+
         if (isTRUE(zoom) | is.numeric(zoom)) {
           if (highlight.segment) {
             segments(seg.data[, paste0(ew, 1)], seg.data[, paste0(ns, 1)],
                      seg.data[, paste0(ew, 2)], seg.data[, paste0(ns, 2)],
                      col = "red", lwd = 2)
-          }
-          if (add.title) {
-            title(main = paste0("Observed Case #", case, "; ", seg.data$name,
-              " ", seg.data$id))
-          }
-        } else {
-          if (add.title) {
-            title(main = paste0("Observed Case #", case, "; ", seg.data$name))
           }
         }
 
+        if (add.title) {
+          if (exists("case0")) {
+            title(main = paste0("Observed Case #", case0, "; ", seg.data$name))
+          } else {
+            title(main = paste0("Observed Case #", case, "; ", seg.data$name))
+          }
+        }
       } else {
         points(reg.data[case, vars], col = col, lwd = 2)
+
         if (isTRUE(zoom) | is.numeric(zoom)) {
           if (highlight.segment) {
             segments(seg.data[, paste0(ew, 1)], seg.data[, paste0(ns, 1)],
                      seg.data[, paste0(ew, 2)], seg.data[, paste0(ns, 2)],
                      col = "red", lwd = 2)
           }
-          if (add.title) {
-            title(main = paste0("Simulated Case #", case, "; ", seg.data$name,
-              " ", seg.data$id))
-          }
-        } else {
-          if (add.title) {
-            title(main = paste0("Simulated Case #", case, "; ", seg.data$name))
-          }
+        }
+
+        if (add.title) {
+          title(main = paste0("Simulated Case #", case, "; ", seg.data$name,
+            " ", seg.data$id))
         }
       }
     } else list(case = case, segment.data = seg.data)
