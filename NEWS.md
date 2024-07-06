@@ -1,3 +1,9 @@
+### cholera 0.8.0.9363
+
+- add caseLocatorB() prototype.
+- include case when computing xlim and ylim.
+
+
 ### cholera 0.8.0.9362
 
 - add streetNumberLocatorB() prototype.
