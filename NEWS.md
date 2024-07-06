@@ -1,3 +1,8 @@
+### cholera 0.8.0.9364
+
+- add geoCartesianCoord().
+
+
 ### cholera 0.8.0.9363
 
 - add caseLocatorB() prototype.

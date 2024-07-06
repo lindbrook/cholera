@@ -31,6 +31,24 @@ geoCartesian <- function(dat = cholera::pumps, case.address = FALSE) {
   }))
 }
 
+#' Compute geo-cartesian coordinates.
+#'
+#' Compute geo-cartesian distance from origin to pump and translate into
+#` horizontal (East-West) and vertical (North-South) components.
+#' @param case.data Object. Data.
+#' @importFrom geosphere distGeo
+#' @noRd
+
+geoCartesianCoord <- function(case.data) {
+  origin <- data.frame(lon = min(cholera::roads$lon),
+                       lat = min(cholera::roads$lat))
+  x.proj <- c(case.data$lon, origin$lat)
+  y.proj <- c(origin$lon, case.data$lat)
+  m.lon <- geosphere::distGeo(y.proj, case.data)
+  m.lat <- geosphere::distGeo(x.proj, case.data)
+  data.frame(x = m.lon, y = m.lat)
+}
+
 #' Compute rectangle vertices.
 #'
 #' @param x Object. Points/pixel count.
