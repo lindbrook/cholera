@@ -1,3 +1,9 @@
+### cholera 0.8.0.9366
+
+- use neighborhoodVoronoi() as wrapper for voronoiNominal() and 
+  voronoiLatlong().
+
+
 ### cholera 0.8.0.9365
 
 - use neighborhoodEuclidean() as wrapper for euclideanNominal() and 

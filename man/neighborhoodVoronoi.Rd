@@ -4,7 +4,7 @@
 \alias{neighborhoodVoronoi}
 \title{Compute Voronoi pump neighborhoods.}
 \usage{
-neighborhoodVoronoi(pump.select = NULL, vestry = FALSE,
+neighborhoodVoronoi(pump.select = NULL, vestry = FALSE, latlong = FALSE,
   case.location = "anchor", pump.location = "nominal",
   polygon.vertices = FALSE)
 }
@@ -12,6 +12,8 @@ neighborhoodVoronoi(pump.select = NULL, vestry = FALSE,
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
+
+\item{latlong}{Logical. Longitude and latitude coordiantes}
 
 \item{case.location}{Character. "address" or "anchor". "address" uses the x-y coordinates of \code{ortho.proj}. "anchor" uses the x-y coordinates of \code{fatalities.address}.}
 
@@ -40,6 +42,7 @@ An R list with 12 objects.
 Group cases into neighborhoods using Voronoi tessellation.
 }
 \examples{
+\dontrun{
 neighborhoodVoronoi()
 neighborhoodVoronoi(vestry = TRUE)
 neighborhoodVoronoi(pump.select = 6:7)
@@ -49,4 +52,5 @@ neighborhoodVoronoi(pump.select = -6, polygon.vertices = TRUE)
 # coordinates for vertices also available in the returned object.
 dat <- neighborhoodVoronoi(pump.select = -6)
 dat$coordinates
+}
 }
