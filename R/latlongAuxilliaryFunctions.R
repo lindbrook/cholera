@@ -31,7 +31,7 @@ geoCartesian <- function(dat = cholera::pumps, case.address = FALSE) {
   }))
 }
 
-#' Compute geo-cartesian coordinates.
+#' Compute geo-cartesian coordinates from longitude/latitude.
 #'
 #' Compute geo-cartesian distance from origin to pump and translate into
 #` horizontal (East-West) and vertical (North-South) components.
