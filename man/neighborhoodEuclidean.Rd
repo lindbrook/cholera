@@ -5,32 +5,29 @@
 \title{Compute Euclidean path pump neighborhoods.}
 \usage{
 neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
-  case.location = "address", case.set = "observed", multi.core = TRUE,
-  dev.mode = FALSE)
+  case.set = "observed", latlong = FALSE, case.location = "address",
+  pump.location = "address", multi.core = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
+\item{case.set}{Character. "observed" or "expected".}
+
+\item{latlong}{Logical. Longitude and latitude coordiantes}
+
 \item{case.location}{Character. "address" or "orthogonal". For \code{case.set = "observed"}: "address" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "address" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.}
 
-\item{case.set}{Character. "observed" or "expected".}
+\item{pump.location}{Character. "address" or "orthogonal". "address" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \value{
-An R vector.
+An R list.
 }
 \description{
 Plots star graph from pump to its cases.
-}
-\examples{
-\dontrun{
-neighborhoodEuclidean()
-neighborhoodEuclidean(-6)
-neighborhoodEuclidean(pump.select = 6:7)
-}
 }

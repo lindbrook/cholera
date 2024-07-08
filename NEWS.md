@@ -1,3 +1,9 @@
+### cholera 0.8.0.9365
+
+- use neighborhoodEuclidean() as wrapper for euclideanNominal() and 
+  euclideanLatlong().
+
+
 ### cholera 0.8.0.9364
 
 - add geoCartesianCoord().

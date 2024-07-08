@@ -7,9 +7,9 @@
 #' @param case.set Character. "observed" or "expected".
 #' @param pump.location Character. "address" or "orthogonal". "address" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}.
 #' @importFrom sp point.in.polygon
-#' @export
+#' @noRd
 
-latlongNeighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
+euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
   case.location = "address", case.set = "observed", pump.location = "address") {
 
   if (case.location %in% c("address", "orthogonal") == FALSE) {
