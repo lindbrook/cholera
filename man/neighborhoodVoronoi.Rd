@@ -5,7 +5,7 @@
 \title{Compute Voronoi pump neighborhoods.}
 \usage{
 neighborhoodVoronoi(pump.select = NULL, vestry = FALSE, latlong = FALSE,
-  case.location = "anchor", pump.location = "nominal",
+  case.location = "nominal", pump.location = "nominal",
   polygon.vertices = FALSE)
 }
 \arguments{
@@ -15,9 +15,9 @@ neighborhoodVoronoi(pump.select = NULL, vestry = FALSE, latlong = FALSE,
 
 \item{latlong}{Logical. Longitude and latitude coordiantes}
 
-\item{case.location}{Character. "address" or "anchor". "address" uses the x-y coordinates of \code{ortho.proj}. "anchor" uses the x-y coordinates of \code{fatalities.address}.}
+\item{case.location}{Character. "nominal" or "orthogonal". "nominal" uses the x-y coordinates of \code{fatalities.address}. "orthogonal"uses the x-y coordinates of \code{ortho.proj}.}
 
-\item{pump.location}{Character. "address" or "nominal". "address" uses the x-y coordinates of \code{ortho.proj.pump} or \code{ortho.proj.pump.vestry}. "nominal" uses the x-y coordinates of \code{pumps} or \code{pumps.vestry}.}
+\item{pump.location}{Character. "nominal" or "orthogonal". "nominal" uses the x-y coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the x-y coordinates of \code{ortho.proj.pump} or \code{ortho.proj.pump.vestry}.}
 
 \item{polygon.vertices}{Logical. \code{TRUE} returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for \code{sp::point.in.polygon()} as used in \code{print.voronoi()} method.}
 }

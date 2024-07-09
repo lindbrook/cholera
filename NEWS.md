@@ -2,6 +2,8 @@
 
 - use neighborhoodVoronoi() as wrapper for voronoiNominal() and 
   voronoiLatlong().
+- set "nominal" and "orthogonal" as arguments for case.location and 
+  pump.location.
 
 
 ### cholera 0.8.0.9365
