@@ -1,3 +1,8 @@
+### cholera 0.8.0.9367
+
+- change "case.location" argument to 'location' with values "nominal" or "orthogonal" in euclideanPath().
+
+
 ### cholera 0.8.0.9366
 
 - use neighborhoodVoronoi() as wrapper for voronoiNominal() and 
