@@ -5,9 +5,9 @@
 \title{Compute path of the Euclidean distance between cases and/or pumps.}
 \usage{
 euclideanPath(origin = 1, destination = NULL, type = "case-pump",
-  case.location = "address", case.set = "observed",
-  landmark.cases = TRUE, vestry = FALSE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5)
+  location = "nominal", case.set = "observed", landmark.cases = TRUE,
+  vestry = FALSE, distance.unit = "meter", time.unit = "second",
+  walking.speed = 5)
 }
 \arguments{
 \item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
@@ -16,7 +16,7 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 
 \item{type}{Character "case-pump", "cases" or "pumps".}
 
-\item{case.location}{Character. "address" or "orthogonal". For \code{case.set = "observed"}: "address" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "address" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.}
+\item{location}{Character. "nominal" or "orthogonal" coordinates for cases and pumps. For \code{case.set = "observed"}: "nominal" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "nominal" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.}
 
 \item{case.set}{Character. "observed" or "expected".}
 
@@ -37,7 +37,7 @@ An R list with 3 data frames: x-y coordinates for the origin and destination, an
 Compute path of the Euclidean distance between cases and/or pumps.
 }
 \note{
-The function uses a case's "address" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
+The function uses a case's "nominal" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
 }
 \examples{
 # path from case 1 to nearest pump.
