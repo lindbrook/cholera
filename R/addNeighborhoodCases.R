@@ -1,6 +1,6 @@
 #' Add observed cases by neighborhood.
 #'
-#' Add cases to a plot as "address" or "fatalities" and as points or IDs.
+#' Add cases to a plot as "nominal" or "fatalities" and as points or IDs.
 #' @param pump.subset Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.
 #' @param pump.select Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param metric Character. Type of neighborhood: "euclidean" or "walking".
@@ -12,7 +12,7 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest walking path weighted by road length. \code{FALSE} computes shortest walking path in terms of the number of nodes.
 #' @param color Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}
-#' @param case.location Character. "address" uses \code{fatalities}; "orthogonal" uses \code{ortho.proj}.
+#' @param location Character. "nominal" uses \code{fatalities}; "orthogonal" uses \code{ortho.proj}.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
@@ -28,7 +28,7 @@
 addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   metric = "walking", type = "stack.base", token = "point", text.size = 0.5,
   pch = 16, point.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
-  case.location = "address", alpha.level = 0.5, multi.core = TRUE) {
+  location = "nominal", alpha.level = 0.5, multi.core = TRUE) {
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
     stop('metric must be "euclidean" or "walking".')
@@ -42,15 +42,15 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
     stop('token must be "id" or "point".')
   }
 
-  if (case.location %in% c("address", "orthogonal") == FALSE) {
-    stop('case.location must be "address" or "orthogonal".')
+  if (location %in% c("nominal", "orthogonal") == FALSE) {
+    stop('location must be "nominal" or "orthogonal".')
   }
 
   cores <- multiCore(multi.core)
 
   arguments <- list(pump.select = pump.select,
                     vestry = vestry,
-                    case.location = case.location,
+                    location = location,
                     multi.core = cores)
 
   if (metric == "euclidean") {
@@ -58,7 +58,7 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
     nearest.pump <- data.frame(case = eucl.data$anchor,
                                pump = eucl.data$nearest.pump)
   } else if (metric == "walking") {
-    arguments$case.location <- NULL
+    arguments$location <- NULL
     walk.data <- do.call("nearestPump", arguments)
     nearest.pump <- walk.data$distance[, c("case", "pump")]
   }
@@ -94,13 +94,13 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   addr.data <- cholera::ortho.proj
   nom.data <- cholera::fatalities
 
-  if (case.location == "address") {
+  if (location == "nominal") {
     case.data <- nom.data
     vars <- c("x", "y")
-  } else if (case.location == "orthogonal") {
+  } else if (location == "orthogonal") {
     case.data <- addr.data
     vars <- c("x.proj", "y.proj")
-  } else stop("Invalid case.location!")
+  } else stop("Invalid 'location'!")
 
   invisible(lapply(selected.pumps, function(x) {
     addr <- nearest.pump[nearest.pump$pump == x, "case"]
