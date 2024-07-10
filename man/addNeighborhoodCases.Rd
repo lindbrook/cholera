@@ -7,7 +7,7 @@
 addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
   metric = "walking", type = "stack.base", token = "point",
   text.size = 0.5, pch = 16, point.size = 0.5, vestry = FALSE,
-  weighted = TRUE, color = NULL, case.location = "address",
+  weighted = TRUE, color = NULL, location = "nominal",
   alpha.level = 0.5, multi.core = TRUE)
 }
 \arguments{
@@ -33,14 +33,14 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 
 \item{color}{Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}}
 
-\item{case.location}{Character. "address" uses \code{fatalities}; "orthogonal" uses \code{ortho.proj}.}
+\item{location}{Character. "nominal" uses \code{fatalities}; "orthogonal" uses \code{ortho.proj}.}
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
 \description{
-Add cases to a plot as "address" or "fatalities" and as points or IDs.
+Add cases to a plot as "nominal" or "fatalities" and as points or IDs.
 }
 \examples{
 \dontrun{
