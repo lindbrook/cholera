@@ -3,32 +3,25 @@
 #' Plots star graph from pump to its cases.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param case.location Character. "address" or "orthogonal". "address" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
+#' @param location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
 #' @param case.set Character. "observed" or "expected".
-#' @param pump.location Character. "address" or "orthogonal". "address" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}.
+
 #' @importFrom sp point.in.polygon
 #' @noRd
 
 euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
-  case.location = "address", case.set = "observed", pump.location = "address") {
-
-  if (case.location %in% c("address", "orthogonal") == FALSE) {
-    stop('case.location must be "address" or "orthogonal".', call. = FALSE)
-  } else {
-    if (case.location == "orthogonal") statistic <- "orthogonal"
-    else if (case.location == "address") statistic <- "address"
-  }
+  location = "nominal", case.set = "observed") {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".', call. = FALSE)
   }
 
-  if (pump.location %in% c("address", "orthogonal") == FALSE) {
-    stop('pump.location must be "address" or "orthogonal".', call. = FALSE)
-  } else if (pump.location == "orthogonal") {
+  if (location %in% c("nominal", "orthogonal") == FALSE) {
+    stop('location must be "nominal" or "orthogonal".', call. = FALSE)
+  } else if (location == "orthogonal") {
     if (vestry) pump.data <- cholera::latlong.ortho.pump.vestry
     else pump.data <- cholera::latlong.ortho.pump
-  } else if (pump.location == "address") {
+  } else if (location == "nominal") {
     if (vestry) pump.data <- cholera::pumps.vestry
     else pump.data <- cholera::pumps
   }
@@ -42,15 +35,15 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
   }
 
   if (case.set == "observed") {
-    if (statistic == "address") {
+    if (location == "nominal") {
       case.data <- cholera::fatalities.address
-    } else if (statistic == "orthogonal") {
+    } else if (location == "orthogonal") {
       case.data <- cholera::latlong.ortho.addr
     }
   } else if (case.set == "expected") {
-    if (statistic == "address") {
+    if (location == "nominal") {
       case.data <- cholera::latlong.regular.cases
-    } else if (statistic == "orthogonal") {
+    } else if (location == "orthogonal") {
       case.data <- cholera::latlong.sim.ortho.proj
     }
   }
@@ -64,7 +57,7 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
               vestry = vestry,
               cells = cells,
               pump.data = pump.data,
-              case.location = case.location,
+              location = location,
               case.set = case.set,
               snow.colors = snowColors(vestry = vestry),
               statistic.data = statistic.data)
@@ -80,6 +73,25 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
 #' @export
 
 plot.latlongEuclidean <- function(x, type = "star", ...) {
+  if (!type %in% c("area.points", "area.polygons", "star")) {
+    stop('type must be "area.points", "area.polygons" or "star".',
+      call. = FALSE)
+  }
+
+  if (type %in% c("area.points", "area.polygons")) {
+    if (x$case.set != "expected") {
+      stop('area plots valid only when case.set = "expected".', call. = FALSE)
+    }
+  }
+
+  if (x$location == "orthogonal") {
+    if (x$case.set != "observed") {
+      msgA <- 'location = "orthogonal" valid '
+      msgB <- 'only with case.set = "observed".'
+      stop(msgA, msgB, call. = FALSE)
+    }
+  }
+
   pump.id <- x$pump.id
   vars <- c("lon", "lat")
 
@@ -110,17 +122,17 @@ plot.latlongEuclidean <- function(x, type = "star", ...) {
   }
 
   if (!is.null(pump.id)) {
-    if (x$case.location == "address") {
-      title(main = paste0("Pump Neighborhoods: Euclidean (address)", "\n",
+    if (x$location == "nominal") {
+      title(main = paste0("Pump Neighborhoods: Euclidean (nominal)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
-    } else if (x$case.location == "orthogonal") {
+    } else if (x$location == "orthogonal") {
       title(main = paste0("Pump Neighborhoods: Euclidean (orthogonal)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
     }
   } else {
-    if (x$case.location == "address") {
-      title(main = "Pump Neighborhoods: Euclidean (address)")
-    } else if (x$case.location == "orthogonal") {
+    if (x$location == "nominal") {
+      title(main = "Pump Neighborhoods: Euclidean (nominal)")
+    } else if (x$location == "orthogonal") {
       title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
     }
   }
@@ -128,20 +140,20 @@ plot.latlongEuclidean <- function(x, type = "star", ...) {
 
 latlongEuclideanCases <- function(x, vars) {
   if (x$case.set == "observed") {
-    if (x$case.location == "address") {
+    if (x$location == "nominal") {
       dat <- cholera::fatalities.address
       names(dat)[names(dat) == "anchor"] <- "case"
-    } else if (x$case.location == "orthogonal") {
+    } else if (x$location == "orthogonal") {
       dat <- cholera::latlong.ortho.addr
     }
   } else if (x$case.set == "expected") {
-    if (x$case.location == "address") {
+    if (x$location == "nominal") {
       dat <- cholera::latlong.regular.cases
       dat$case <- seq_len(nrow(dat))
-    } else if (x$case.location == "orthogonal") {
+    } else if (x$location == "orthogonal") {
       dat <- cholera::latlong.sim.ortho.proj
     }
-  } else stop()
+  } # else stop()
 
   case.partition <- lapply(x$statistic.data, function(neighbor) {
     dat$case[neighbor == 1]
@@ -187,10 +199,10 @@ latlongEuclideanStar <- function(x, vars) {
 
 latlongEuclideanAreaPolygons <- function(x) {
   if (x$case.set == "expected") {
-    if (x$case.location == "address") {
+    if (x$location == "nominal") {
       dat <- cholera::latlong.regular.cases
       dat$case <- seq_len(nrow(dat))
-    } else if (x$case.location == "orthogonal") {
+    } else if (x$location == "orthogonal") {
       dat <- cholera::latlong.sim.ortho.proj
     }
   }

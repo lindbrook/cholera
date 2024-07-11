@@ -4,7 +4,7 @@
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param case.set Character. "observed" or "expected".
-#' @param case.location Character. "address" or "orthogonal". For \code{case.set = "observed"}: "address" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "address" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.
+#' @param location Character. "nominal" or "orthogonal". For \code{case.set = "observed"}: "nominal" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "nominal" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R vector.
@@ -17,15 +17,15 @@
 #' }
 
 euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
-  case.set = "observed", case.location = "address", multi.core = TRUE,
+  case.set = "observed", location = "nominal", multi.core = TRUE,
   dev.mode = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".', call. = FALSE)
   }
 
-  if (case.location %in% c("address", "orthogonal") == FALSE) {
-    stop('case.location must be "address" or "orthogonal".', call. = FALSE)
+  if (location %in% c("nominal", "orthogonal") == FALSE) {
+    stop('location must be "nominal" or "orthogonal".', call. = FALSE)
   }
 
   cores <- multiCore(multi.core)
@@ -42,9 +42,9 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
 
   if (case.set == "observed") {
     observed <- TRUE
-    if (case.location == "address") {
+    if (location == "nominal") {
       anchors <- cholera::fatalities.address$anchor
-    } else if (case.location == "orthogonal") {
+    } else if (location == "orthogonal") {
       anchors <- cholera::ortho.proj$case
     }
   } else if (case.set == "expected") {
@@ -55,16 +55,16 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
   if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
     cl <- parallel::makeCluster(cores)
     parallel::clusterExport(cl = cl, envir = environment(),
-      varlist = c("pump.id", "vestry", "case.set", "case.location"))
+      varlist = c("pump.id", "vestry", "case.set", "location"))
     nearest.pump <- parallel::parLapply(cl, anchors, function(x) {
       cholera::euclideanPath(x, destination = pump.id, vestry = vestry,
-        case.set = case.set, case.location = case.location)$data$pump
+        case.set = case.set, location = location)$data$pump
     })
     parallel::stopCluster(cl)
   } else {
     nearest.pump <- parallel::mclapply(anchors, function(x) {
       euclideanPath(x, destination = pump.id, vestry = vestry,
-        case.set = case.set, case.location = case.location)$data$pump
+        case.set = case.set, location = location)$data$pump
     }, mc.cores = cores)
   }
 
@@ -72,7 +72,7 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
               pump.select = pump.select,
               vestry = vestry,
               case.set = case.set,
-              case.location = case.location,
+              location = location,
               pump.id = pump.id,
               snow.colors = snow.colors,
               anchors = anchors,
@@ -109,7 +109,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
 
   if (type %in% c("area.points", "area.polygons")) {
     if (x$case.set != "expected") {
-      stop('area plots valid only when case.set = "expected".')
+      stop('area plots valid only when case.set = "expected".', call. = FALSE)
     }
   }
 
@@ -156,10 +156,10 @@ euclideanStar <- function(x, anchors, nearest.pump, pump.data,
     n.color <- x$snow.colors[paste0("p", nearest.pump[i])]
 
     if (x$observed) {
-      if (x$case.location == "address") {
+      if (x$location == "nominal") {
         sel <- cholera::fatalities.address$anchor %in% anchors[i]
         n.data <- cholera::fatalities.address[sel, ]
-      } else if (x$case.location == "orthogonal") {
+      } else if (x$location == "orthogonal") {
         sel <- cholera::ortho.proj$case %in% anchors[i]
         n.data <- cholera::ortho.proj[sel, ]
         vars <- c("case", "x.proj", "y.proj")
@@ -180,8 +180,7 @@ euclideanStar <- function(x, anchors, nearest.pump, pump.data,
   if (add.observed.points) {
     if (x$case.set == "observed") {
       addNeighborhoodCases(pump.select = x$pump.select, vestry = x$vestry,
-        metric = "euclidean", case.location = x$case.location,
-        multi.core = x$cores)
+        metric = "euclidean", location = x$location, multi.core = x$cores)
     }
   }
 }
@@ -226,7 +225,7 @@ euclideanAreaPolygons <- function(x, nearest.pump) {
 #' }
 
 print.euclidean <- function(x, ...) {
-  print(x[c("pump.id", "case.set", "case.location", "vestry")])
+  print(x[c("pump.id", "case.set", "location", "vestry")])
 }
 
 #' Summary method for neighborhoodEuclidean().
