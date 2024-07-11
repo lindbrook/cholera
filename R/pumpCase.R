@@ -29,9 +29,9 @@ pumpCase.euclidean <- function(x, case = "address") {
 #' @export
 pumpCase.voronoi <- function(x, case = "orthogonal") {
   output <- x$statistic.data
-  if (x$case.location == "orthogonal") {
+  if (x$location == "orthogonal") {
     lapply(output, function(x) cholera::ortho.proj$case[x == 1])
-  } else if (x$case.location == "nominal") {
+  } else if (x$location == "nominal") {
     lapply(output, function(x) cholera::fatalities.address$anchor[x == 1])
   }
 }

@@ -3,41 +3,37 @@
 #' Group cases into neighborhoods using Voronoi tessellation.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param case.location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
-#' @param pump.location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude coordinates of \code{pumps} or \code{pumps.vestry}. "orthogonal" uses the longitude and latitude coordinates of \code{latlong.ortho.pump} or \code{latlong.ortho.pump.vestry}.
+#' @param location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
 #' @importFrom sp point.in.polygon
 #' @noRd
 
 voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
-  case.location = "nominal", pump.location = "nominal") {
+  location = "nominal") {
 
   snow.colors <- snowColors(vestry = vestry)
 
-  if (case.location %in% c("nominal", "orthogonal") == FALSE) {
-    stop('case.location must be "nominal" or "orthogonal".', call. = FALSE)
-  } # else {
-  #   if (case.location == "orthogonal") statistic <- "orthogonal"
-  #   else if (case.location == "nominal") statistic <- "nominal"
-  # }
+  if (location %in% c("nominal", "orthogonal") == FALSE) {
+    stop('location must be "nominal" or "orthogonal".', call. = FALSE)
+  }
 
-  if (pump.location %in% c("nominal", "orthogonal") == FALSE) {
-    stop('pump.location must be "nominal" or "orthogonal".', call. = FALSE)
-  } else if (pump.location == "orthogonal") {
+  if (location %in% c("nominal", "orthogonal") == FALSE) {
+    stop('location must be "nominal" or "orthogonal".', call. = FALSE)
+  } else if (location == "orthogonal") {
     if (vestry) pump.data <- cholera::latlong.ortho.pump.vestry
     else pump.data <- cholera::latlong.ortho.pump
-  } else if (pump.location == "nominal") {
+  } else if (location == "nominal") {
     if (vestry) pump.data <- cholera::pumps.vestry
     else pump.data <- cholera::pumps
   }
 
   cells.triangles <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
 
-  if (case.location == "orthogonal") {
+  if (location == "orthogonal") {
     statistic.data <- lapply(cells.triangles$cells, function(c) {
       sp::point.in.polygon(cholera::latlong.ortho.addr$lon,
         cholera::latlong.ortho.addr$lat, c$lon, c$lat)
     })
-  } else if (case.location == "nominal") {
+  } else if (location == "nominal") {
     statistic.data <- lapply(cells.triangles$cells, function(c) {
       sp::point.in.polygon(cholera::fatalities.address$lon,
         cholera::fatalities.address$lat, c$lon, c$lat)
@@ -53,7 +49,7 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
 
   out <- list(pump.select = pump.select, pump.id = pump.id, vestry = vestry,
     cells.triangles = cells.triangles, pump.data = pump.data,
-    statistic.data = statistic.data, case.location = case.location,
+    statistic.data = statistic.data, location = location,
     snow.colors = snow.colors)
 
   class(out) <- "latlongVoronoi"
@@ -80,17 +76,17 @@ plot.latlongVoronoi <- function(x, add.pumps = TRUE,
   if (add.pumps) pumpTokens(x, type = NULL, latlong = TRUE)
 
   if (!is.null(pump.id)) {
-    if (x$case.location == "nominal") {
+    if (x$location == "nominal") {
       title(main = paste0("Pump Neighborhoods: Voronoi (nominal)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
-    } else if (x$case.location == "orthogonal") {
+    } else if (x$location == "orthogonal") {
       title(main = paste0("Pump Neighborhoods: Voronoi (orthogonal)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
     }
   } else {
-    if (x$case.location == "nominal") {
+    if (x$location == "nominal") {
       title(main = "Pump Neighborhoods: Voronoi (nominal)")
-    } else if (x$case.location == "orthogonal") {
+    } else if (x$location == "orthogonal") {
       title(main = "Pump Neighborhoods: Voronoi (orthogonal)")
     }
   }
@@ -156,7 +152,7 @@ plotLatlongEuclideanPaths <- function(x, pump.id, vars) {
 }
 
 plotLatlongVoronoiCases <- function(x, vars) {
-  if (x$case.location == "nominal") {
+  if (x$location == "nominal") {
     case.partition <- lapply(x$statistic.data, function(dat) {
       cholera::fatalities.address$anchor[dat == 1]
     })
@@ -165,7 +161,7 @@ plotLatlongVoronoiCases <- function(x, vars) {
       points(cholera::fatalities.address[sel, vars], col = x$snow.colors[nm],
         pch = 20, cex = 0.75)
     }))
-  } else if (x$case.location == "orthogonal") {
+  } else if (x$location == "orthogonal") {
     case.partition <- lapply(x$statistic.data, function(dat) {
       cholera::latlong.ortho.addr$case[dat == 1]
     })
