@@ -5,7 +5,6 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
 #' @param case.set Character. "observed" or "expected".
-
 #' @importFrom sp point.in.polygon
 #' @noRd
 
