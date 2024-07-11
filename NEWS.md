@@ -1,3 +1,9 @@
+### cholera 0.8.0.9371
+
+- change "case.location" argument to 'location' with values "nominal" or 
+  "orthogonal" in neighborhoodVoronoi().
+
+
 ### cholera 0.8.0.9370
 
 - change "case.location" argument to 'location' with values "nominal" or 
