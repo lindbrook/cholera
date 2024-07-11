@@ -1,3 +1,9 @@
+### cholera 0.8.0.9369
+
+- change "case.location" argument to 'location' with values "nominal" or 
+  "orthogonal" in addNeighborhoodEuclidean().
+  
+
 ### cholera 0.8.0.9368
 
 - change "case.location" argument to 'location' with values "nominal" or 
