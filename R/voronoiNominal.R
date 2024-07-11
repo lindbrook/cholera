@@ -78,8 +78,6 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
     }
   }
 
-
-
   x.rng <- range(cholera::roads$x)
   y.rng <- range(cholera::roads$y)
 
