@@ -42,7 +42,7 @@ neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
 
   if (latlong) {
     args <- list(pump.select = pump.select, vestry = vestry,
-      location = location)
+      location = location, polygon.vertices = polygon.vertices)
     out <- do.call("voronoiLatlong", args)
   } else {
     args <- list(pump.select = pump.select, vestry = vestry,
