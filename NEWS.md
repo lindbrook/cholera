@@ -1,3 +1,8 @@
+### cholera 0.8.0.9372
+
+- amend cell names for voronoiNominal(polygon.vertices = TRUE).
+
+
 ### cholera 0.8.0.9371
 
 - change "case.location" argument to 'location' with values "nominal" or 
