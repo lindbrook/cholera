@@ -114,6 +114,8 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
     coordinates <- voronoiPolygons(pump.data[pump.select,], cholera::roads)
   }
 
+  names(coordinates) <- paste0("p", pump.number)
+
   if (location == "orthogonal") {
     statistic.data <- lapply(coordinates, function(cell) {
       sp::point.in.polygon(cholera::ortho.proj$x.proj,
