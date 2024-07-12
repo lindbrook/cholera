@@ -4,11 +4,12 @@
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
+#' @param polygon.vertices Logical. \code{TRUE} returns a list of lon-lat coordinates of the vertices of Voronoi cells.
 #' @importFrom sp point.in.polygon
 #' @noRd
 
 voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
-  location = "nominal") {
+  location = "nominal", polygon.vertices = FALSE) {
 
   snow.colors <- snowColors(vestry = vestry)
 
@@ -53,7 +54,24 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
     snow.colors = snow.colors)
 
   class(out) <- "latlongVoronoi"
-  out
+
+  if (polygon.vertices) {
+    out <- lapply(out$cells.triangles$cells, function(dat) {
+      tmp <- dat[, c("lon", "lat")]
+      row.names(tmp) <- NULL
+      tmp
+    })
+
+    if (!is.null(pump.select)) {
+      names(out) <- paste0("p", pump.id)  
+    } else {
+      if (vestry) names(out) <- paste0("p", cholera::pumps.vestry$id)
+      else names(out) <- paste0("p", cholera::pumps$id)
+    }
+    out
+  } else {
+    out
+  }  
 }
 
 #' Plot method for voronoiLatlong()

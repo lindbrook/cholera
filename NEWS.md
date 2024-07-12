@@ -1,3 +1,8 @@
+### cholera 0.8.0.9373
+
+- add neighborhoodVoronoi(latlong = TRUE, polygon.vertices = TRUE).
+
+
 ### cholera 0.8.0.9372
 
 - amend cell names for voronoiNominal(polygon.vertices = TRUE).
