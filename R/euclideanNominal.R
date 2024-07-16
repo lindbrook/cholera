@@ -4,6 +4,7 @@
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param case.set Character. "observed" or "expected".
+#' @param case.select Character. Fatalities: "all" or "address".
 #' @param location Character. "nominal" or "orthogonal". For \code{case.set = "observed"}: "nominal" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "nominal" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
@@ -17,8 +18,8 @@
 #' }
 
 euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
-  case.set = "observed", location = "nominal", multi.core = TRUE,
-  dev.mode = FALSE) {
+  case.set = "observed", case.select = "address", location = "nominal",
+  multi.core = TRUE, dev.mode = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".', call. = FALSE)
@@ -41,28 +42,28 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
     metric = "euclidean", vestry = vestry)
 
   if (case.set == "observed") {
-    observed <- TRUE
-    if (location == "nominal") {
-      anchors <- cholera::fatalities.address$anchor
-    } else if (location == "orthogonal") {
-      anchors <- cholera::ortho.proj$case
+    if (case.select == "address") {
+      case.num <- cholera::fatalities.address$anchor
+    } else if (case.select == "all") {
+      case.num <- cholera::fatalities$case
+    } else {
+      stop('case.set must be "all" or "address".', call. = FALSE)
     }
   } else if (case.set == "expected") {
-    anchors <- seq_len(nrow(cholera::regular.cases))
-    observed <- FALSE
+    case.num <- seq_len(nrow(cholera::regular.cases))
   }
 
   if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
     cl <- parallel::makeCluster(cores)
     parallel::clusterExport(cl = cl, envir = environment(),
       varlist = c("pump.id", "vestry", "case.set", "location"))
-    nearest.pump <- parallel::parLapply(cl, anchors, function(x) {
+    nearest.pump <- parallel::parLapply(cl, case.num, function(x) {
       cholera::euclideanPath(x, destination = pump.id, vestry = vestry,
         case.set = case.set, location = location)$data$pump
     })
     parallel::stopCluster(cl)
   } else {
-    nearest.pump <- parallel::mclapply(anchors, function(x) {
+    nearest.pump <- parallel::mclapply(case.num, function(x) {
       euclideanPath(x, destination = pump.id, vestry = vestry,
         case.set = case.set, location = location)$data$pump
     }, mc.cores = cores)
@@ -72,11 +73,11 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
               pump.select = pump.select,
               vestry = vestry,
               case.set = case.set,
+              case.select = case.select,
               location = location,
               pump.id = pump.id,
               snow.colors = snow.colors,
-              anchors = anchors,
-              observed = observed,
+              case.num = case.num,
               nearest.pump = unlist(nearest.pump),
               cores = cores,
               dev.mode = dev.mode)
@@ -116,7 +117,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
   pump.data <- x$pump.data
   pump.id <- x$pump.id
-  anchors <- x$anchors
+  case.num <- x$case.num
   pump.select <- x$pump.select
   nearest.pump <- x$nearest.pump
 
@@ -126,10 +127,10 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
     } else if (x$case.set == "expected") {
       addRoads(col = "black")
     }
-    euclideanStar(x, anchors, nearest.pump, pump.data,
+    euclideanStar(x, case.num, nearest.pump, pump.data,
       add.observed.points = add.observed.points)
   } else if (type == "area.points") {
-    euclideanAreaPoints(x, anchors, nearest.pump)
+    euclideanAreaPoints(x, case.num, nearest.pump)
     addRoads(col = "black")
   } else if (type == "area.polygons") {
     euclideanAreaPolygons(x, nearest.pump)
@@ -148,27 +149,26 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   }
 }
 
-euclideanStar <- function(x, anchors, nearest.pump, pump.data,
+euclideanStar <- function(x, case.num, nearest.pump, pump.data,
   add.observed.points = add.observed.points) {
 
-  invisible(lapply(seq_along(anchors), function(i) {
+  invisible(lapply(seq_along(case.num), function(i) {
     p.data <- pump.data[pump.data$id == nearest.pump[i], ]
     n.color <- x$snow.colors[paste0("p", nearest.pump[i])]
 
-    if (x$observed) {
+    if (x$case.set == "observed") {
       if (x$location == "nominal") {
-        sel <- cholera::fatalities.address$anchor %in% anchors[i]
-        n.data <- cholera::fatalities.address[sel, ]
+        sel <- cholera::fatalities$case %in% case.num[i]
+        n.data <- cholera::fatalities[sel, ]
       } else if (x$location == "orthogonal") {
-        sel <- cholera::ortho.proj$case %in% anchors[i]
+        sel <- cholera::ortho.proj$case %in% case.num[i]
         n.data <- cholera::ortho.proj[sel, ]
         vars <- c("case", "x.proj", "y.proj")
         names(n.data)[names(n.data) %in% vars] <- c("x", "y", "anchor")
       }
-      c.data <- n.data[n.data$anchor == anchors[i], ]
-      segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color, lwd = 0.5)
+      segments(n.data$x, n.data$y, p.data$x, p.data$y, col = n.color, lwd = 0.5)
     } else {
-      n.data <- cholera::regular.cases[anchors[i], ]
+      n.data <- cholera::regular.cases[case.num[i], ]
       lapply(seq_len(nrow(n.data)), function(case) {
         c.data <- n.data[case, ]
         segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
@@ -180,15 +180,17 @@ euclideanStar <- function(x, anchors, nearest.pump, pump.data,
   if (add.observed.points) {
     if (x$case.set == "observed") {
       addNeighborhoodCases(pump.select = x$pump.select, vestry = x$vestry,
-        metric = "euclidean", location = x$location, multi.core = x$cores)
+        metric = "euclidean", case.set = x$case.set,
+        case.select = x$case.select, location = x$location,
+        multi.core = x$cores)
     }
   }
 }
 
-euclideanAreaPoints <- function(x, anchors, nearest.pump) {
-  invisible(lapply(seq_along(anchors), function(i) {
+euclideanAreaPoints <- function(x, case.num, nearest.pump) {
+  invisible(lapply(seq_along(case.num), function(i) {
     n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
-    n.data <- cholera::regular.cases[anchors[i], ]
+    n.data <- cholera::regular.cases[case.num[i], ]
     lapply(seq_len(nrow(n.data)), function(case) {
       c.data <- n.data[case, ]
       points(c.data$x, c.data$y, col = n.color, pch = 16, cex = 1.25)

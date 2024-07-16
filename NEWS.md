@@ -1,3 +1,8 @@
+### cholera 0.8.0.9375
+
+- add/set neighborhoodEuclidean(case.select = "address").
+
+
 ### cholera 0.8.0.9374
 
 - add/set addNeighborhoodCases(case.set = "observed", case.select = "address").
