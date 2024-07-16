@@ -5,8 +5,8 @@
 \title{Compute Euclidean path pump neighborhoods.}
 \usage{
 neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
-  case.set = "observed", latlong = FALSE, location = "nominal",
-  multi.core = TRUE, dev.mode = FALSE)
+  case.set = "observed", case.select = "address", latlong = FALSE,
+  location = "nominal", multi.core = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
@@ -14,6 +14,8 @@ neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
 \item{case.set}{Character. "observed" or "expected".}
+
+\item{case.select}{Character. Fatalities: "all" or "address".}
 
 \item{latlong}{Logical. Longitude and latitude coordiantes}
 
