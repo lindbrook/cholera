@@ -21,8 +21,7 @@ voronoiPDF <- function(path, vestry = FALSE, pch = 46, cex = 1) {
     pre <- paste0(file.nm)
   }
 
-  vertices <- cholera::voronoiPolygons(dat[, c("x", "y")],
-    rw.data = frame.corners)
+  vertices <- voronoiPolygons(dat[, c("x", "y")], rw.data = frame.corners)
 
   rng <- mapRange()
 
