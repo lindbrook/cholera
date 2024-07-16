@@ -5,9 +5,9 @@
 \title{Add observed cases by neighborhood.}
 \usage{
 addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
-  metric = "walking", type = "stack.base", token = "point",
-  text.size = 0.5, pch = 16, point.size = 0.5, vestry = FALSE,
-  weighted = TRUE, color = NULL, location = "nominal",
+  metric = "walking", case.set = "observed", case.select = "address",
+  location = "nominal", token = "point", text.size = 0.5, pch = 16,
+  point.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
   alpha.level = 0.5, multi.core = TRUE)
 }
 \arguments{
@@ -17,7 +17,11 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 
 \item{metric}{Character. Type of neighborhood: "euclidean" or "walking".}
 
-\item{type}{Character. Type of case: "stack.base" (base of stack), or "stack" (entire stack). For observed = TRUE.}
+\item{case.set}{Character. "observed" or "expected".}
+
+\item{case.select}{Character. Fatalities: "all" or "address".}
+
+\item{location}{Character. "nominal" uses \code{fatalities}; "orthogonal" uses \code{ortho.proj}.}
 
 \item{token}{Character. Type of token to plot: "point" or "id".}
 
@@ -32,8 +36,6 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 \item{weighted}{Logical. \code{TRUE} computes shortest walking path weighted by road length. \code{FALSE} computes shortest walking path in terms of the number of nodes.}
 
 \item{color}{Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors().}}
-
-\item{location}{Character. "nominal" uses \code{fatalities}; "orthogonal" uses \code{ortho.proj}.}
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
