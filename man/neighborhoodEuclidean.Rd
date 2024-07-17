@@ -6,7 +6,8 @@
 \usage{
 neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
   case.set = "observed", case.select = "address", latlong = FALSE,
-  location = "nominal", multi.core = TRUE, dev.mode = FALSE)
+  location = "nominal", brute.force = FALSE, multi.core = TRUE,
+  dev.mode = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
@@ -20,6 +21,8 @@ neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 \item{latlong}{Logical. Longitude and latitude coordiantes}
 
 \item{location}{Character. "nominal" or "orthogonal". For \code{case.set = "observed"}: "nominal" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "nominal" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.}
+
+\item{brute.force}{Logical. For latlong = FALSE. TRUE computes nearest pump for each case. FALSE uses Voronoi cells as shortcut.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 
