@@ -1,3 +1,8 @@
+### cholera 0.8.0.9377
+
+- enable negative numerical selection in validatePump().
+
+
 ### cholera 0.8.0.9376
 
 - add/set euclideanNominal(brute.force = FALSE).
