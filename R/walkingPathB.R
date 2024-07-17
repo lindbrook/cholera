@@ -1164,23 +1164,38 @@ validatePump <- function(x, pmp, vestry) {
     out <- pmp$id
     out.nm <- pmp$street
   } else if (is.numeric(x)) {
-    if (all(!x %in% pmp$id)) {
+    if (all(!abs(x) %in% pmp$id)) {
       stop("For vestry = ", vestry, ", pump IDs range from 1 to ", nrow(pmp),
         "." , call. = FALSE)
-    } else if (any(!x %in% pmp$id)) {
-      message("For vestry = ", vestry, ", pump IDs range from 1 to ", nrow(pmp),
-        ".")
-      x <- x[x %in% pmp$id]
-      out.nm <- pmp[pmp$id %in% x, ]$street
-    } else {
-      out <- x
-      out.nm <- pmp[pmp$id %in% x, ]$street
+    } else if (all(abs(x) %in% pmp$id)) {
+      if (all(x > 0)) {
+        out <- x
+        out.nm <- pmp[pmp$id %in% x, ]$street
+      } else if (all(x < 0)) {
+        sel <- !pmp$id %in% abs(x)
+        out <- pmp$id[sel]
+        out.nm <- pmp[sel, "street"]
+      } else stop("pump IDs should be all positive or all negative.",
+          call. = FALSE)
+    } else if (any(abs(x) %in% pmp$id)) {
+      message("Note: for vestry = ", vestry, ", abs(pump ID) range from 1 to ",
+        nrow(pmp), ".")
+      if (all(x > 0)) {
+        out <- x[x %in% pmp$id]
+        out.nm <- pmp[pmp$id %in% x, ]$street
+      } else if (all(x < 0)) {
+        sel <- !pmp$id %in% abs(x)
+        out <- pmp$id[sel]
+        out.nm <- pmp[sel, "street"]
+      } else stop("pump IDs should be all positive or all negative.",
+          call. = FALSE)
     }
   } else if (is.character(x)) {
     x <- caseAndSpace(x)
     if (all(!x %in% pmp$street)) {
       stop("For vestry = ", vestry,
-        ", pump (street) name not found. Check spelling or cholera::pumps.")
+        ", pump (street) name not found. Check spelling or cholera::pumps.",
+        call. = FALSE)
     } else if (any(!x %in% pmp$street)) {
       message("For vestry = ", vestry,
         ", pump (street) name not found. Check spelling or cholera::pumps.")
