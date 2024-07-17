@@ -6,6 +6,7 @@
 #' @param case.set Character. "observed" or "expected".
 #' @param case.select Character. Fatalities: "all" or "address".
 #' @param location Character. "nominal" or "orthogonal". For \code{case.set = "observed"}: "nominal" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "nominal" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.
+#' @param brute.force Logical. TRUE computes nearest pump for each case. FALSE uses Voronoi cells as shortcut.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return An R vector.
@@ -19,7 +20,7 @@
 
 euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
   case.set = "observed", case.select = "address", location = "nominal",
-  multi.core = TRUE, dev.mode = FALSE) {
+  brute.force = FALSE, multi.core = TRUE, dev.mode = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".', call. = FALSE)
@@ -53,20 +54,44 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
     case.num <- seq_len(nrow(cholera::regular.cases))
   }
 
-  if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
-    cl <- parallel::makeCluster(cores)
-    parallel::clusterExport(cl = cl, envir = environment(),
-      varlist = c("pump.id", "vestry", "case.set", "location"))
-    nearest.pump <- parallel::parLapply(cl, case.num, function(x) {
-      cholera::euclideanPath(x, destination = pump.id, vestry = vestry,
-        case.set = case.set, location = location)$data$pump
-    })
-    parallel::stopCluster(cl)
+  if (brute.force) {
+    if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
+      cl <- parallel::makeCluster(cores)
+      parallel::clusterExport(cl = cl, envir = environment(),
+        varlist = c("pump.id", "vestry", "case.set", "location"))
+      nearest.pump <- parallel::parLapply(cl, case.num, function(x) {
+        cholera::euclideanPath(x, destination = pump.id, vestry = vestry,
+          case.set = case.set, location = location)$data$pump
+      })
+      parallel::stopCluster(cl)
+    } else {
+      nearest.pump <- parallel::mclapply(case.num, function(x) {
+        euclideanPath(x, destination = pump.id, vestry = vestry,
+          case.set = case.set, location = location)$data$pump
+      }, mc.cores = cores)
+    }
+
+    nearest.pump <- unlist(nearest.pump)
+
   } else {
-    nearest.pump <- parallel::mclapply(case.num, function(x) {
-      euclideanPath(x, destination = pump.id, vestry = vestry,
-        case.set = case.set, location = location)$data$pump
-    }, mc.cores = cores)
+    if (case.set == "observed") {
+      case.data <- cholera::fatalities[cholera::fatalities$case %in% case.num, ]
+    } else if (case.set == "expected"){
+      case.data <- cholera::regular.cases
+    }
+
+    sel <- pump.data$id %in% pump.id
+    cells <- voronoiPolygons(pump.data[sel, c("x", "y")], rw.data = mapRange())
+    names(cells) <- pump.id
+
+    cell.census <- lapply(names(cells), function(nm) {
+      cell <- cells[[nm]]
+      census <- sp::point.in.polygon(case.data$x, case.data$y, cell$x, cell$y)
+      census[census == 1] <- as.numeric(nm)
+      census
+    })
+
+    nearest.pump <- rowSums(do.call(cbind, cell.census))
   }
 
   out <- list(pump.data = pump.data,
@@ -78,7 +103,7 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
               pump.id = pump.id,
               snow.colors = snow.colors,
               case.num = case.num,
-              nearest.pump = unlist(nearest.pump),
+              nearest.pump = nearest.pump,
               cores = cores,
               dev.mode = dev.mode)
 

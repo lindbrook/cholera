@@ -1,3 +1,8 @@
+### cholera 0.8.0.9376
+
+- add/set euclideanNominal(brute.force = FALSE).
+
+
 ### cholera 0.8.0.9375
 
 - add/set neighborhoodEuclidean(case.select = "address").
