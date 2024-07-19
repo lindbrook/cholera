@@ -249,6 +249,13 @@ simulateFatalities <- function(compute = FALSE, multi.core = TRUE,
 
     rc <- do.call(rbind, regular.cases)
     rc <- rc[order(as.numeric(row.names(rc))), ]
-    list(sim.ortho.proj = sim.ortho.proj, regular.cases = rc)
+    list(regular.cases = rc, sim.ortho.proj = sim.ortho.proj)
   }
 }
+
+# approx. 1/2 hr
+# sim <- simulateFatalities(compute = TRUE)
+# regular.cases <- sim$regular.cases
+# sim.ortho.proj <- sim$sim.ortho.proj
+# usethis::use_data(regular.cases, overwrite = TRUE)
+# usethis::use_data(sim.ortho.proj, overwrite = TRUE)

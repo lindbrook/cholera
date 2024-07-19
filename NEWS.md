@@ -1,3 +1,8 @@
+### cholera 0.8.0.9379
+
+- amend regular.cases and sim.ortho.proj.
+
+
 ### cholera 0.8.0.9378
 
 - promote caseLocatorB() to caseLocator().
