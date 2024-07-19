@@ -1,3 +1,8 @@
+### cholera 0.8.0.9378
+
+- promote caseLocatorB() to caseLocator().
+
+
 ### cholera 0.8.0.9377
 
 - enable negative numerical selection in validatePump().

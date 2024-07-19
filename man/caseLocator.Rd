@@ -4,8 +4,9 @@
 \alias{caseLocator}
 \title{Locate case by numerical ID.}
 \usage{
-caseLocator(case = 1, zoom = 1, observed = TRUE, add.title = TRUE,
-  highlight.segment = TRUE, data = FALSE, add = FALSE, col = "red")
+caseLocator(case = 1, zoom = FALSE, observed = TRUE, latlong = FALSE,
+  add.title = TRUE, highlight.segment = TRUE, data = FALSE,
+  add = FALSE, col = "red", vestry = FALSE)
 }
 \arguments{
 \item{case}{Numeric or Integer. Whole number between 1 and 578.}
@@ -13,6 +14,8 @@ caseLocator(case = 1, zoom = 1, observed = TRUE, add.title = TRUE,
 \item{zoom}{Logical or Numeric.A numeric value >= 0 controls the degree of zoom. The default is 1.}
 
 \item{observed}{Logical. \code{TRUE} for observed. \code{FALSE} for simulated.}
+
+\item{latlong}{Logical. Longitude and latitude coordiantes}
 
 \item{add.title}{Logical. Include title.}
 
@@ -23,6 +26,8 @@ caseLocator(case = 1, zoom = 1, observed = TRUE, add.title = TRUE,
 \item{add}{Logical. Add to existing plot or separate plot.}
 
 \item{col}{Character. Point color.}
+
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 }
 \value{
 A base R graphics plot.
@@ -34,4 +39,5 @@ Highlight selected observed or simulated case and its home road segment.
 caseLocator(290)
 caseLocator(290, zoom = TRUE)
 caseLocator(290, observed = FALSE)
+caseLocator(290, latlong = TRUE, zoom = TRUE)
 }

@@ -4,21 +4,51 @@
 #' @param case Numeric or Integer. Whole number between 1 and 578.
 #' @param zoom Logical or Numeric.A numeric value >= 0 controls the degree of zoom. The default is 1.
 #' @param observed Logical. \code{TRUE} for observed. \code{FALSE} for simulated.
+#' @param latlong Logical. Longitude and latitude coordiantes
 #' @param add.title Logical. Include title.
 #' @param highlight.segment Logical. Highlight case's segment.
 #' @param data Logical. Output data.
 #' @param add Logical. Add to existing plot or separate plot.
 #' @param col Character. Point color.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @return A base R graphics plot.
-#' @import graphics
 #' @export
 #' @examples
 #' caseLocator(290)
 #' caseLocator(290, zoom = TRUE)
 #' caseLocator(290, observed = FALSE)
+#' caseLocator(290, latlong = TRUE, zoom = TRUE)
 
-caseLocator <- function(case = 1, zoom = 1, observed = TRUE, add.title = TRUE,
-  highlight.segment = TRUE, data = FALSE, add = FALSE, col = "red") {
+caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
+  latlong = FALSE, add.title = TRUE, highlight.segment = TRUE, data = FALSE,
+  add = FALSE, col = "red", vestry = FALSE) {
+
+  if (latlong) {
+    asp  <- 1.6
+    ew <- "lon"
+    ns <- "lat"
+    proj.data <- cholera::latlong.ortho.addr
+    rd.segs <- roadSegments(latlong = latlong)
+    reg.data <- cholera::latlong.regular.cases
+    sim.proj.data <- cholera::latlong.sim.ortho.proj
+    if (isFALSE(case %in% proj.data$case)) {
+      case0 <- case
+      case <- cholera::anchor.case[cholera::anchor.case$case == case, "anchor"]
+    }
+  } else {
+    asp  <- 1
+    ew <- "x"
+    ns <- "y"
+    proj.data <- cholera::ortho.proj
+    rd.segs <- cholera::road.segments
+    reg.data <- cholera::regular.cases
+    sim.proj.data <- cholera::sim.ortho.proj
+  }
+
+  vars <- c(ew, ns)
+
+  if (vestry) pmp <- cholera::pumps.vestry
+  else pmp <- cholera::pumps
 
   if (!is.numeric(case)) stop("case must be numeric.", call. = FALSE)
 
@@ -28,119 +58,155 @@ caseLocator <- function(case = 1, zoom = 1, observed = TRUE, add.title = TRUE,
         call. = FALSE)
     }
   } else {
-    if (case %in% seq_len(nrow(cholera::regular.cases)) == FALSE) {
-      stop("Simulated case must be a whole number between 1 and 19,993.",
-        call. = FALSE)
+    if (case %in% seq_len(nrow(reg.data)) == FALSE) {
+      reg.obs.ct <- format(nrow(reg.data), big.mark = ",")
+      stop("Simulated case must be a whole number between 1 and ", reg.obs.ct,
+        ".", call. = FALSE)
     }
   }
 
-  if (add == TRUE) {
-    if (observed) {
-      points(cholera::fatalities[cholera::fatalities$case == case,
-        c("x", "y")], col = col, lwd = 2)
+  if (observed) {
+    case.seg <- proj.data[proj.data$case == case, "road.segment"]
+    if (exists("case0")) {
+      case.data <- cholera::fatalities[cholera::fatalities$case == case0, vars]
     } else {
-      points(cholera::regular.cases[case, c("x", "y")],
-        col = col, lwd = 2)
+      case.data <- cholera::fatalities[cholera::fatalities$case == case, vars]
     }
   } else {
-    if (observed) {
-      case.seg <- cholera::ortho.proj[cholera::ortho.proj$case == case,
-        "road.segment"]
-      seg.data <- cholera::road.segments[cholera::road.segments$id ==
-        case.seg, ]
-    } else {
-      case.seg <- cholera::sim.ortho.proj[cholera::sim.ortho.proj$case == case,
-        "road.segment"]
-      seg.data <- cholera::road.segments[cholera::road.segments$id ==
-        case.seg, ]
-    }
+    case.seg <- sim.proj.data[sim.proj.data$case == case, "road.segment"]
+    case.data <- reg.data[case, vars]
+  }
 
+  seg.data <- rd.segs[rd.segs$id == case.seg, ]
+
+  if (add == TRUE) {
+    points(case.data, col = col, lwd = 2)
+  } else {
     if (data == FALSE) {
-      if ((is.logical(zoom) & zoom == TRUE) | is.numeric(zoom)) {
-        sel <- cholera::fatalities$case == case
+      if (isFALSE(zoom)) {
+        xlim <- range(rd.segs[, paste0(ew, 1:2)])
+        ylim <- range(rd.segs[, paste0(ns, 1:2)])
+      } else if (isTRUE(zoom)) {
+        sel <- rd.segs$id %in% case.seg
+        xlim <- range(rd.segs[sel, paste0(ew, 1:2)], case.data[, ew])
+        ylim <- range(rd.segs[sel, paste0(ns, 1:2)], case.data[, ns])
+      } else if (is.numeric(zoom)) {
+        if (latlong) {
+          geo.vars <- c("lon", "lat")
 
-        if (is.logical(zoom)) {
-          padding <- 0.1
+          seg.vars <- paste0(geo.vars, 1)
+          dat <- stats::setNames(rd.segs[, c("id", seg.vars)],
+            c("id", geo.vars))
+          ones <- geoCartesian(dat)
 
-          if (observed) {
-            x.rng <- c(cholera::fatalities[sel, "x"] - padding,
-                       cholera::fatalities[sel, "x"] + padding)
-            y.rng <- c(cholera::fatalities[sel, "y"] - padding,
-                       cholera::fatalities[sel, "y"] + padding)
-          } else {
-            x.rng <- c(cholera::regular.cases[case, "x"] - padding,
-                       cholera::regular.cases[case, "x"] + padding)
-            y.rng <- c(cholera::regular.cases[case, "y"] - padding,
-                       cholera::regular.cases[case, "y"] + padding)
+          seg.vars <- paste0(geo.vars, 2)
+          dat <- stats::setNames(rd.segs[, c("id", seg.vars)],
+            c("id", geo.vars))
+          twos <- geoCartesian(dat)
+
+          new.vars <- c("x", "y")
+          ones <- stats::setNames(ones, c("id", paste0(new.vars, 1)))
+          twos <- stats::setNames(twos, c("id", paste0(new.vars, 2)))
+          cartestian.rds <- merge(ones, twos, by = "id")
+
+          st.seg <- rd.segs[rd.segs$id %in% case.seg, "id"]
+          cart.rd <- cartestian.rds[cartestian.rds$id %in% st.seg, ]
+
+          cart.case <- geoCartesianCoord(case.data)
+
+          cart.x.range <- range(cart.rd[, paste0("x", 1:2)], cart.case$x)
+          cart.y.range <- range(cart.rd[, paste0("y", 1:2)], cart.case$y)
+
+          pad <- c(zoom, -zoom)
+          xlim <- cart.x.range + pad
+          ylim <- cart.y.range + pad
+
+          xlim.delta <- xlim[2] - xlim[1]
+          ylim.delta <- ylim[2] - ylim[1]
+
+          if (xlim.delta <= 0 | ylim.delta <= 0) {
+            xlim <- cart.x.range
+            ylim <- cart.y.range
+            message("Note: zoom = ",  zoom, " too far! Use smaller.")
           }
-        } else if (is.numeric(zoom)) {
-          if (zoom >= 0) {
-            if (observed) {
-              x.rng <- c(cholera::fatalities[sel, "x"] - zoom,
-                         cholera::fatalities[sel, "x"] + zoom)
-              y.rng <- c(cholera::fatalities[sel, "y"] - zoom,
-                         cholera::fatalities[sel, "y"] + zoom)
-            } else {
-              x.rng <- c(cholera::regular.cases[case, "x"] - zoom,
-                         cholera::regular.cases[case, "x"] + zoom)
-              y.rng <- c(cholera::regular.cases[case, "y"] - zoom,
-                         cholera::regular.cases[case, "y"] + zoom)
-            }
-          } else stop("If numeric, zoom must be >= 0.")
-        } else stop("zoom must either be logical or numeric.")
 
-      } else {
-        x.rng <- range(cholera::roads$x)
-        y.rng <- range(cholera::roads$y)
+          range.data <- meterLatLong(data.frame(x = xlim, y = ylim))
+          xlim <- range.data$lon
+          ylim <- range.data$lat
+
+        } else {
+          ols <- stats::lm(y ~ x, data = data.frame(x = xlim, y = ylim))
+          slope <- stats::coef(ols)[2]
+          theta <- atan(slope)
+
+          pad <- abs(zoom) / unitMeter(1)
+          delta.x <- pad * cos(theta)
+          delta.y <- pad * sin(theta)
+
+          if (zoom < 0) {
+            xlim <- c(xlim[1] - delta.x, xlim[2] + delta.x)
+            ylim <- c(ylim[1] - delta.y, ylim[2] + delta.y)
+          } else if (zoom > 0) {
+            xlim <- c(xlim[1] + delta.x, xlim[2] - delta.x)
+            ylim <- c(ylim[1] + delta.y, ylim[2] - delta.y)
+          }
+
+          xlim.delta <- xlim[2] - xlim[1]
+          ylim.delta <- ylim[2] - ylim[1]
+
+          if (xlim.delta <= 0 | ylim.delta <= 0) {
+            sel <- rd.segs$id %in% case.seg
+            xlim <- range(rd.segs[sel, paste0(ew, 1:2)])
+            ylim <- range(rd.segs[sel, paste0(ns, 1:2)])
+            message("Note: zoom = ",  zoom, " too far! Use smaller.")
+          }
+        }
       }
 
-      roads.list <- split(cholera::roads[, c("x", "y")], cholera::roads$street)
+      plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = 15,
+        cex = 0.5, col = "gray", asp = asp)
 
-      plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
-        pch = 15, cex = 0.5, col = "gray", asp = 1)
+      roads.list <- split(cholera::roads[, vars], cholera::roads$street)
       invisible(lapply(roads.list, lines, col = "gray"))
-      points(cholera::pumps[, c("x", "y")], pch = 17, cex = 1, col = "blue")
-      text(cholera::pumps[, c("x", "y")], label = cholera::pumps$id,
-        pos = 1)
+
+      points(pmp[, vars], pch = 17, cex = 1, col = "blue")
+      text(pmp[, vars], label = pmp$id, pos = 1)
 
       if (observed) {
-        points(cholera::fatalities[cholera::fatalities$case == case,
-          c("x", "y")], col = col, lwd = 2)
+        points(case.data, col = col, lwd = 2)
 
-        if (zoom) {
+        if (isTRUE(zoom) | is.numeric(zoom)) {
           if (highlight.segment) {
-            segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2,
-              col = "red", lwd = 2)
-          }
-          if (add.title) {
-            title(main = paste0("Observed Case #", case, "; ", seg.data$name,
-              " ", seg.data$id))
-          }
-        } else {
-          if (add.title) {
-            title(main = paste0("Observed Case #", case, "; ", seg.data$name))
+            segments(seg.data[, paste0(ew, 1)], seg.data[, paste0(ns, 1)],
+                     seg.data[, paste0(ew, 2)], seg.data[, paste0(ns, 2)],
+                     col = "red", lwd = 2)
           }
         }
 
+        if (add.title) {
+          if (exists("case0")) {
+            title(main = paste0("Observed Case #", case0, "; ", seg.data$name))
+          } else {
+            title(main = paste0("Observed Case #", case, "; ", seg.data$name))
+          }
+        }
       } else {
-        points(cholera::regular.cases[case, c("x", "y")],
-          col = col, lwd = 2)
+        points(reg.data[case, vars], col = col, lwd = 2)
 
-        if (zoom) {
+        if (isTRUE(zoom) | is.numeric(zoom)) {
           if (highlight.segment) {
-            segments(seg.data$x1, seg.data$y1, seg.data$x2, seg.data$y2,
-              col = "red", lwd = 2)
+            segments(seg.data[, paste0(ew, 1)], seg.data[, paste0(ns, 1)],
+                     seg.data[, paste0(ew, 2)], seg.data[, paste0(ns, 2)],
+                     col = "red", lwd = 2)
           }
-          if (add.title) {
-            title(main = paste0("Simulated Case #", case, "; ", seg.data$name,
-              " ", seg.data$id))
-          }
-        } else {
-          if (add.title) {
-            title(main = paste0("Simulated Case #", case, "; ", seg.data$name))
-          }
+        }
+
+        if (add.title) {
+          title(main = paste0("Simulated Case #", case, "; ", seg.data$name,
+            " ", seg.data$id))
         }
       }
     } else list(case = case, segment.data = seg.data)
   }
 }
+
