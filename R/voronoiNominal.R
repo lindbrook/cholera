@@ -23,16 +23,6 @@
 #'   \item{\code{vestry}: "vestry" from voronoiNominal().}
 #' }
 #' @noRd
-#' @examples
-#' voronoiNominal()
-#' voronoiNominal(vestry = TRUE)
-#' voronoiNominal(pump.select = 6:7)
-#' voronoiNominal(pump.select = -6)
-#' voronoiNominal(pump.select = -6, polygon.vertices = TRUE)
-#'
-#' # coordinates for vertices also available in the returned object.
-#' dat <- voronoiNominal(pump.select = -6)
-#' dat$coordinates
 
 voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
   location = "nominal", polygon.vertices = FALSE) {
