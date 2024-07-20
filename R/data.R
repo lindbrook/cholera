@@ -181,7 +181,7 @@
 
 #' Road "address" of simulated (i.e., "expected") cases.
 #'
-#' @format A data frame with 6 variables that records the "address" of 20,004 simulate cases along the network of roads.
+#' @format A data frame with 6 variables that records the "address" of 19,993 simulate cases along the network of roads.
 #' \describe{
 #'     \item{\code{road.segment}}{"address" road segment}
 #'     \item{\code{x.proj}}{x-coordinate}
@@ -303,9 +303,9 @@
 
 #' "Expected" cases.
 #'
-#' The result of using sp::spsample() and sp::Polygon() to generate 20,004 regularly spaced simulated cases within the map's borders.
+#' The result of using sp::spsample() and sp::Polygon() to generate 19,993 regularly spaced simulated cases within the map's borders.
 #'
-#' @format A data frame with 2 variable that records the position of 20,004 "expected" cases fitted by sp::spsample().
+#' @format A data frame with 2 variable that records the position of 19,993 "expected" cases fitted by sp::spsample().
 #'  \describe{
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
