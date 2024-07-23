@@ -5,7 +5,7 @@
 \alias{latlong.sim.ortho.proj}
 \title{Road "address" of simulated (i.e., "expected") cases (latlong).}
 \format{
-A data frame with 8 variables that records the "address" of 20,000 regularly spaced simulated Cartesian/geodesic cases regularly spaced across map.
+A data frame with 8 variables that records the "address" of 19,993 regularly spaced simulated Cartesian/geodesic cases regularly spaced across map.
 \describe{
     \item{\code{case}}{numeric case ID}
     \item{\code{road.segment}}{"address" road segment}
