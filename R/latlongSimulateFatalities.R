@@ -14,7 +14,10 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
   if (recompute) {
     regular.cases <- latlongRegularCartesianCases()
   } else {
-    regular.cases <- cholera::latlong.regular.cases
+    regular.cases <- cholera::regular.cases
+    if (any(names(regular.cases) %in% c("lon", "lat"))) {
+      regular.cases <- regular.cases[, c("x", "y")]
+    }
   }
 
   rd <- cholera::roads[!cholera::roads$street %in% cholera::border, ]
@@ -108,7 +111,7 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
   coords <- do.call(rbind, orthogonal.projection)
 
   # translate from geo-cartesian to latlong #
- 
+
   proj <- parallel::mclapply(seq_len(nrow(coords)), function(i) {
     meterLatLong(coords[i, ])
   }, mc.cores = cores)
