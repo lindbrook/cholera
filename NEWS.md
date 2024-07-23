@@ -1,3 +1,8 @@
+### cholera 0.8.0.9381
+
+- use regular.cases with latlongSimulateFatalities(recompute = FALSE).
+
+
 ### cholera 0.8.0.9380
 
 - restore regular.cases and sim.ortho.proj.
