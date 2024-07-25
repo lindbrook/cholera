@@ -2,65 +2,38 @@
 % Please edit documentation in R/euclideanPath.R
 \name{euclideanPath}
 \alias{euclideanPath}
-\title{Compute path of the Euclidean distance between cases and/or pumps.}
+\title{Compute Euclidean path coordinates from observed case/landmark to nearest/selected pump.}
 \usage{
 euclideanPath(origin = 1, destination = NULL, type = "case-pump",
-  location = "nominal", case.set = "observed", landmark.cases = TRUE,
-  vestry = FALSE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5)
+  vestry = FALSE, latlong = FALSE, case.set = "observed",
+  location = "nominal", weighted = TRUE, distance.unit = "meter",
+  time.unit = "second", walking.speed = 5, include.landmarks = TRUE)
 }
 \arguments{
-\item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
+\item{origin}{Numeric. Vector of origin(s) (numeric ID or character name landmark/pump ).}
 
-\item{destination}{Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns the closest pump, "anchor" case or landmark.}
+\item{destination}{Numeric. Vector of destination(s) (numeric or landmark/pump name).}
 
-\item{type}{Character "case-pump", "cases" or "pumps".}
+\item{type}{Character. Path case to pump. FALSE is all other combinations of cases, landmarks and pumps.}
 
-\item{location}{Character. "nominal" or "orthogonal" coordinates for cases and pumps. For \code{case.set = "observed"}: "nominal" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "nominal" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
+
+\item{latlong}{Logical.}
 
 \item{case.set}{Character. "observed" or "expected".}
 
-\item{landmark.cases}{Logical. \code{TRUE} includes landmarks as cases.}
+\item{location}{Character. For cases and pumps. "anchor, "fatality" or "orthogonal.}
 
-\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
+\item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 
-\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.}
+\item{distance.unit}{Character. Unit of distance: "meter" or "yard".}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
-\item{walking.speed}{Numeric. Default is 5 km/hr.}
-}
-\value{
-An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
+\item{walking.speed}{Numeric. Walking speed in km/hr.}
+
+\item{include.landmarks}{Logical. Include landmarks as cases.}
 }
 \description{
-Compute path of the Euclidean distance between cases and/or pumps.
-}
-\note{
-The function uses a case's "nominal" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
-}
-\examples{
-# path from case 1 to nearest pump.
-euclideanPath(1)
-
-# path from pump 1 to nearest case.
-euclideanPath(NULL, 1)
-
-# path from case 1 to pump 6.
-euclideanPath(1, 6)
-
-# exclude pump 7 from consideration.
-euclideanPath(1, -7)
-
-# path from case 1 to case 6.
-euclideanPath(1, 6, type = "cases")
-
-# path from pump 1 to pump 6.
-euclideanPath(1, 6, type = "pumps")
-
-# compute multiple cases.
-lapply(1:3, euclideanPath)
-
-# plot path
-plot(euclideanPath(1))
+Compute Euclidean path coordinates from observed case/landmark to nearest/selected pump.
 }

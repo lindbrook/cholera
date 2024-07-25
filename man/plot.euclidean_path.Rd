@@ -4,17 +4,24 @@
 \alias{plot.euclidean_path}
 \title{Plot the path of the Euclidean distance between cases and/or pumps.}
 \usage{
-\method{plot}{euclidean_path}(x, zoom = 0.5, unit.posts = "distance",
-  unit.interval = NULL, ...)
+\method{plot}{euclidean_path}(x, zoom = TRUE, long.title = TRUE,
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
+  alpha.level = 1, ...)
 }
 \arguments{
 \item{x}{An object of class "euclidean_path" created by euclideanPath().}
 
 \item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.}
 
-\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts; \code{NULL} for no posts.}
+\item{long.title}{Logical. Tile with names.}
 
-\item{unit.interval}{Numeric. Set interval between posts. When \code{unit.posts} is "distance", \code{unit.interval} automatically defaults to 50 meters. When \code{unit.posts} is "time", \code{unit.interval} automatically defaults to 60 seconds.}
+\item{mileposts}{Logical. Plot mile/time posts.}
+
+\item{milepost.unit}{Character. "distance" or "time".}
+
+\item{milepost.interval}{Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).}
+
+\item{alpha.level}{Numeric. Alpha level transparency for path: a value in [0, 1].}
 
 \item{...}{Additional plotting parameters.}
 }
@@ -23,8 +30,4 @@ A base R plot.
 }
 \description{
 Plot the path of the Euclidean distance between cases and/or pumps.
-}
-\examples{
-plot(euclideanPath(15))
-plot(euclideanPath(15), unit.posts = "time")
 }
