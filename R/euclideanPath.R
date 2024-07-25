@@ -1,610 +1,179 @@
-#' Compute path of the Euclidean distance between cases and/or pumps.
+#' Compute Euclidean path coordinates from observed case/landmark to nearest/selected pump.
 #'
-#' @param origin Numeric or Character. Numeric ID of case or pump. Character landmark name.
-#' @param destination Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}, which returns the closest pump, "anchor" case or landmark.
-#' @param type Character "case-pump", "cases" or "pumps".
-#' @param location Character. "nominal" or "orthogonal" coordinates for cases and pumps. For \code{case.set = "observed"}: "nominal" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "nominal" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.
+#' @param origin Numeric. Vector of origin(s) (numeric ID or character name landmark/pump ).
+#' @param destination Numeric. Vector of destination(s) (numeric or landmark/pump name).
+#' @param type Character. Path case to pump. FALSE is all other combinations of cases, landmarks and pumps.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
+#' @param latlong Logical.
 #' @param case.set Character. "observed" or "expected".
-#' @param landmark.cases Logical. \code{TRUE} includes landmarks as cases.
-#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
-#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on unit distances.
+#' @param location Character. For cases and pumps. "anchor, "fatality" or "orthogonal.
+#' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
+#' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
-#' @param walking.speed Numeric. Default is 5 km/hr.
-#' @note The function uses a case's "nominal" (i.e., "anchor" case of a stack) to compute distance. Time is computed using \code{distanceTime()}.
-#' @return An R list with 3 data frames: x-y coordinates for the origin and destination, and a summary of results.
+#' @param walking.speed Numeric. Walking speed in km/hr.
+#' @param include.landmarks Logical. Include landmarks as cases.
+#' @importFrom geosphere distGeo
 #' @export
-#' @examples
-#' # path from case 1 to nearest pump.
-#' euclideanPath(1)
-#'
-#' # path from pump 1 to nearest case.
-#' euclideanPath(NULL, 1)
-#'
-#' # path from case 1 to pump 6.
-#' euclideanPath(1, 6)
-#'
-#' # exclude pump 7 from consideration.
-#' euclideanPath(1, -7)
-#'
-#' # path from case 1 to case 6.
-#' euclideanPath(1, 6, type = "cases")
-#'
-#' # path from pump 1 to pump 6.
-#' euclideanPath(1, 6, type = "pumps")
-#'
-#' # compute multiple cases.
-#' lapply(1:3, euclideanPath)
-#'
-#' # plot path
-#' plot(euclideanPath(1))
 
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
-  location = "nominal", case.set = "observed", landmark.cases = TRUE,
-  vestry = FALSE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5) {
+  vestry = FALSE, latlong = FALSE, case.set = "observed", location = "nominal",
+  weighted = TRUE, distance.unit = "meter", time.unit = "second",
+  walking.speed = 5, include.landmarks = TRUE) {
+
+  meter.to.yard <- 1.09361
 
   if (is.null(origin) & is.null(destination)) {
-    stop("If origin = NULL, you must supply a destination.", call. = FALSE)
+    stop("You must provide at least one origin or destination.", call. = FALSE)
   }
 
-  if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('unit must be "meter", "yard" or "native".', call. = FALSE)
-  }
-
-  if (time.unit %in% c("hour", "minute", "second") == FALSE) {
-    stop('time.unit must be "hour", "minute" or "second".', call. = FALSE)
-  }
-
-  if (type %in% c("case-pump", "cases", "pumps") == FALSE) {
+  if (!type %in% c("case-pump", "cases", "pumps")) {
     stop('type must be "case-pump", "cases" or "pumps".', call. = FALSE)
   }
 
+  if (any(is.character(origin))) origin <- caseLandmarks(origin)
+  if (any(is.character(destination))) destination <- caseLandmarks(destination)
+
+  if (!include.landmarks & type %in% c("case-pump", "cases")) {
+    msg <- 'landmarks not considered when include.landmarks = FALSE.'
+    if (is.numeric(origin)) {
+      if (origin > 1000L) stop(msg, call. = FALSE)
+    } else if (is.character(origin)) {
+      lndmrk.test <- origin %in% cholera::landmarksB$name |
+                     origin %in% cholera::landmark.squaresB$name
+      if (lndmrk.test) stop(msg, call. = FALSE)
+    }
+    if (is.numeric(destination)) {
+      if (destination > 1000L) stop(msg, call. = FALSE)
+    } else if (is.character(destination)) {
+      lndmrk.test <- destination %in% cholera::landmarksB$name |
+                     destination %in% cholera::landmark.squaresB$name
+      if (lndmrk.test) stop(msg, call. = FALSE)
+    }
+  }
+
+  # Change type to "cases" in presence of destination landmarks
   if (is.character(destination)) {
-    if (type != "cases") stop('type must be "cases".', call. = FALSE)
+    dest.nm <- c(cholera::landmark.squaresB$name, cholera::landmarksB$name)
+    if (any(destination %in% dest.nm) & type != "cases") type <- "cases"
+  } else if (is.numeric(destination)) {
+    dest.num <- c(cholera::landmark.squaresB$case, cholera::landmarksB$case)
+    if (any(destination %in% dest.num) & type != "cases") type <- "cases"
   }
 
-  if (!location %in% c("nominal", "orthogonal")) {
-    stop('location must be "nominal" or "orthogonal".', call. = FALSE)
-  }
-
-  if (!case.set %in% c("observed", "expected")) {
-    stop('case.set must be "observed" or "expected".', call. = FALSE)
-  }
-
-  if (case.set == "observed") {
-    ct <- nrow(cholera::fatalities)
-  } else if (case.set == "expected") {
-    ct <- nrow(cholera::regular.cases)
-  }
-
-  if (location == "nominal") {
+  if (location %in% c("nominal", "anchor")) {
     if (vestry) {
-      p.data <- cholera::pumps.vestry
+      pmp <- cholera::pumps.vestry
     } else {
-      p.data <- cholera::pumps
+      pmp <- cholera::pumps
     }
   } else if (location == "orthogonal") {
     if (vestry) {
-      p.data <- cholera::ortho.proj.pump.vestry
-      p.data$street <- cholera::pumps.vestry$street
+      pmp <- cholera::ortho.proj.pump.vestry
+      pmp$street <- cholera::pumps.vestry$street
     } else {
-      p.data <- cholera::ortho.proj.pump
-      p.data$street <- cholera::pumps$street
+      pmp <- cholera::ortho.proj.pump
+      pmp$street <- cholera::pumps$street
     }
+    newvars <- c("x", "y", "id")
+    names(pmp)[names(pmp) %in% c("x.proj", "y.proj", "pump.id")] <- newvars
   }
-
-  p.count <- nrow(p.data)
-  p.ID <- seq_len(p.count)
-
-  if (location == "nominal") {
-    coords <- c("x", "y")
-    pump.var <- "id"
-  } else if (location == "orthogonal") {
-    coords <- c("x.proj", "y.proj")
-    pump.var <- "pump.id"
-  }
-
-  case.coords <- c("case", coords)
-
-  # ----- #
 
   if (type == "case-pump") {
-    if (is.null(destination)) {
-      if (is.null(origin)) {
-        stop("If origin is set to NULL, you must provide a destination pump!",
-          call. = FALSE)
-      } else {
-        alters <- p.data
-      }
-    } else {
-      if (any(abs(destination) %in% p.ID)) {
-        alters <- p.data[destination, ]
-      } else {
-        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count,
-          call. = FALSE)
-      }
-    }
+    origin.chk <- validateCase(origin, case.set, location, include.landmarks)
+    orgn <- origin.chk$out
+    orgn.nm <- origin.chk$out.nm
 
-    if (is.null(origin)) {
-      if (case.set == "observed") {
-        if (location == "nominal") {
-          egos <- cholera::fatalities[, case.coords]
-        } else if (location == "orthogonal") {
-          egos <- cholera::ortho.proj[, case.coords]
-        }
-      } else if (case.set == "expected") {
-        if (location == "nominal") {
-          case.id <- seq_len(nrow(cholera::regular.cases))
-          egos <- data.frame(case = case.id, cholera::regular.cases)
-        } else if (location == "orthogonal") {
-          egos <- cholera::sim.ortho.proj[, case.coords]
-        }
-      }
-
-      if (landmark.cases) {
-        egos <- rbind(egos, cholera::landmarks[, case.coords])
-      }
-
-      d <- vapply(seq_len(nrow(egos)), function(i) {
-        c(stats::dist(rbind(egos[i, coords], alters[, coords])))
-      }, numeric(1L))
-
-      sel <- which.min(d)
-      nearest.case <- egos$case[sel]
-
-      if (nearest.case > 20000) {
-        anchor.sel <- cholera::landmarks$case == nearest.case
-        anchor <- cholera::landmarks[anchor.sel, "name"]
-        ego <- cholera::landmarks[anchor.sel, coords]
-      } else {
-        anchor <- nearest.case
-        if (case.set == "observed") {
-          if (location == "nominal") {
-            ego.select <- cholera::ortho.proj$case == anchor
-            ego <- cholera::ortho.proj[ego.select, ]
-          } else if (location == "nominal") {
-            ego.select <- cholera::fatalities$case == anchor
-            ego <- cholera::fatalities[ego.select, ]
-          }
-        } else if (case.set == "expected") {
-          if (location == "nominal") {
-            ego <- cholera::regular.cases[anchor, ]
-          } else if (location == "orthogonal") {
-            ego.select <- cholera::sim.ortho.proj$case == anchor
-            ego <- cholera::sim.ortho.proj[ego.select, ]
-          }
-        }
-      }
-
-      ego <- ego[, coords]
-      alter <- alters[, coords]
-
-      out <- data.frame(case = anchor,
-                        anchor = nearest.case,
-                        pump.name = alters[, "street"],
-                        pump = alters[, pump.var],
-                        distance = d[sel],
-                        stringsAsFactors = FALSE)
-
-    } else {
-      if (is.numeric(origin)) {
-        if (origin %in% seq_len(ct)) {
-          if (case.set == "observed") {
-            if (location == "nominal") {
-              ego.id <- origin
-              ego.sel <- cholera::fatalities$case == origin
-              ego <- cholera::fatalities[ego.sel, coords]
-            } else if (location == "orthogonal") {
-              ego.sel <- cholera::ortho.proj$case == origin
-              ego.id <- cholera::ortho.proj[ego.sel, "case"]
-              ego <- cholera::ortho.proj[ego.sel, coords]
-            }
-          } else if (case.set == "expected") {
-            if (location == "nominal") {
-              ego.id <- origin
-              ego <- cholera::regular.cases[origin, coords]
-            } else if (location == "orthogonal") {
-              ego.sel <- cholera::sim.ortho.proj$case == origin
-              ego.id <- cholera::sim.ortho.proj[ego.sel, "case"]
-              ego <- cholera::sim.ortho.proj[ego.sel, coords]
-            }
-          }
-        } else {
-          txt1 <- 'With type = "case-pump" and case.set = '
-          txt2 <- 'origin must be between 1 and '
-          stop(txt1, case.set, ", ", txt2, ct, ".", call. = FALSE)
-        }
-      }
-
-      if (is.character(origin)) {
-        origin <- caseAndSpace(origin)
-
-        if (origin %in% cholera::landmark.squares$name) {
-          ego.sel <- grepl(origin, cholera::landmarks$name)
-        } else if (origin %in% cholera::landmarks$name) {
-          ego.sel <- cholera::landmarks$name == origin
-        } else {
-          stop('Use a valid landmark name.', call. = FALSE)
-        }
-
-        ego.id <- cholera::landmarks[ego.sel, "case"]
-        coord.sel <- cholera::landmarks$case %in% ego.id
-        ego <- cholera::landmarks[coord.sel, coords]
-      }
-
-      if (nrow(ego) == 1) {
-        d <- vapply(alters[, pump.var], function(i) {
-          c(stats::dist(rbind(alters[alters[, pump.var] == i, coords], ego)))
-        }, numeric(1L))
-
-        sel <- which.min(d)
-
-        out <- data.frame(case = origin,
-                          anchor = ego.id,
-                          pump = alters[sel, pump.var],
-                          pump.name = alters[sel, "street"],
-                          distance = d[sel],
-                          stringsAsFactors = FALSE)
-
-        alter <- alters[sel, coords]
-
-      } else if (nrow(ego) > 1) {
-        ds <- lapply(seq_len(nrow(ego)), function(i) {
-          vapply(alters[, pump.var], function(j) {
-            dat <- rbind(alters[alters[, pump.var] == j, coords], ego[i, ])
-            c(stats::dist(dat))
-          }, numeric(1L))
-        })
-
-        exit.data <- expand.grid(alters[, pump.var], ego.id)
-        exit.space <- stats::setNames(exit.data, c("pump", "exit"))
-        exit.space$d <- unlist(ds)
-        exit.soln <- exit.space[which.min(exit.space$d), ]
-        sel <- cholera::landmarks$case == exit.soln$exit
-
-        out <- data.frame(case = cholera::landmarks[sel, "name"],
-                          anchor = exit.soln$exit,
-                          pump = exit.soln$pump,
-                          pump.name = alters[sel, "street"],
-                          distance = exit.soln$d,
-                          stringsAsFactors = FALSE)
-
-        alter <- alters[alters[, pump.var] == exit.soln$pump, coords]
-        ego <- cholera::landmarks[sel, coords]
-      }
-    }
-
-  # ----- #
+    destination.chk <- validatePump(destination, pmp, vestry)
+    dstn <- destination.chk$out
+    dstn.nm <- destination.chk$out.nm
 
   } else if (type == "cases") {
-    rev.flag <- is.null(origin) & is.null(destination) == FALSE
+    origin.chk <- validateCase(origin, case.set, location, include.landmarks)
+    orgn <- origin.chk$out
+    orgn.nm <- origin.chk$out.nm
 
-    if (rev.flag) {
-      tmp <- origin
-      origin <- destination
-      destination <- tmp
-    }
-
-    if (case.set == "observed") {
-      if (location == "nominal") {
-        case.data <- cholera::fatalities[, case.coords]
-      } else if (location == "orthogonal") {
-        case.data <- cholera::ortho.proj[, case.coords]
-      }
-    } else if (case.set == "expected") {
-      if (location == "nominal") {
-        case.id <- seq_len(nrow(cholera::regular.cases))
-        case.data <- data.frame(case = case.id, cholera::regular.cases)
-      } else if (location == "orthogonal") {
-        case.data <- cholera::sim.ortho.proj[, case.coords]
-      }
-    }
-
-    if (landmark.cases) {
-      case.data <- rbind(case.data, cholera::landmarks[, case.coords])
-      st.james.cases <- cholera::anchor.case[cholera::anchor.case$anchor == 369,
-        "case"]
-      st.james.landmark <- cholera::landmarks[cholera::landmarks$name ==
-        "St James Workhouse", "case"]
-      st.james <- c(st.james.cases, st.james.landmark)
-    }
-
-    if (is.numeric(origin)) {
-      origin.anchor <- cholera::anchor.case[cholera::anchor.case$case ==
-        origin, "anchor"]
-      origin.stack <- cholera::anchor.case[cholera::anchor.case$anchor ==
-        origin.anchor, "case"]
-
-      if (length(origin.stack) > 1 & is.numeric(destination)) {
-        if (origin %in% origin.stack & destination %in% origin.stack) {
-          stop("origin and destination are at same address!", call. = FALSE)
-        }
-      }
-
-      if (origin.anchor %in% st.james.cases) {
-        origin.stack <- st.james
-      }
-    }
-
-    if (is.character(origin)) {
-      origin <- caseAndSpace(origin)
-      landmark.test1 <- origin %in% cholera::landmark.squares$name
-      landmark.test2 <- origin %in% cholera::landmarks$name
-
-      ego.sel <- grepl(origin, cholera::landmarks$name)
-
-      if (!landmark.test1 & !landmark.test2) {
-        stop('Use a valid landmark name for the origin.', call. = FALSE)
-
-      } else if (origin == "St James Workhouse") {
-        origin.anchor <- st.james.landmark
-        origin.stack <- st.james
-
-      } else if (origin %in% cholera::landmark.squares$name) {
-        origin.anchor <- cholera::landmarks[ego.sel, "case"]
-        sq.segments <- cholera::landmarks[ego.sel, "road.segment"]
-
-        if (any(cholera::ortho.proj$road.segment %in% sq.segments)) {
-          sq.cases <- cholera::ortho.proj[cholera::ortho.proj$road.segment %in%
-            sq.segments, "case"]
-          origin.stack <- c(sq.cases, origin.anchor)
-        } else origin.stack <- origin.anchor
-
-      } else {
-        origin.anchor <- cholera::landmarks[ego.sel, "case"]
-        origin.stack <- origin.anchor
-      }
-    }
-
-    if (is.null(destination)) {
-      alters <- case.data[case.data$case %in% origin.stack == FALSE, ]
-    } else {
-      if (is.numeric(destination)) {
-        if (all(destination > 0)) {
-          alters.sel <- case.data$case %in% destination
-        } else if (all(destination < 0)) {
-          alters.sel <- case.data$case %in% abs(destination) == FALSE
-        } else {
-          stop("Destination must be all positive or all negative.",
-            call. = FALSE)
-        }
-        alters <- case.data[alters.sel & case.data$case != origin, case.coords]
-      }
-
-      if (is.character(destination)) {
-        destination <- caseAndSpace(destination)
-
-        if (is.character(origin)) {
-          if (origin == destination) {
-            stop("origin and destination are at same address!", call. = FALSE)
-          }
-        }
-
-        landmark.test1 <- destination %in% cholera::landmark.squares$name
-        landmark.test2 <- destination %in% cholera::landmarks$name
-
-        alter.sel <- grepl(destination, cholera::landmarks$name)
-
-        if (!landmark.test1 & !landmark.test2) {
-          stop('Use a valid landmark name for the destination.', call. = FALSE)
-
-        } else if (destination == "St James Workhouse") {
-          destination.anchor <- st.james.landmark
-          destination.stack <- st.james
-
-        } else if (destination %in% cholera::landmark.squares$name) {
-          destination.anchor <- cholera::landmarks[alter.sel, "case"]
-          sq.segments <- cholera::landmarks[alter.sel, "road.segment"]
-
-          if (any(cholera::ortho.proj$road.segment %in% sq.segments)) {
-            sq.cases <- cholera::ortho.proj[cholera::ortho.proj$road.segment
-              %in% sq.segments, "case"]
-            destination.stack <- c(sq.cases, destination.anchor)
-          } else {
-            destination.stack <- destination.anchor
-          }
-
-        } else {
-          destination.anchor <- cholera::landmarks[alter.sel, "case"]
-          destination.stack <- destination.anchor
-        }
-
-        alters <- case.data[case.data$case %in% destination.stack, case.coords]
-      }
-    }
-
-    if (origin == "St James Workhouse") {
-      ego <- case.data[case.data$case == st.james.landmark, case.coords]
-    } else {
-      ego <- case.data[case.data$case %in% origin.anchor, case.coords]
-    }
-
-    if (nrow(ego) == 1) {
-      d <- vapply(alters$case, function(i) {
-        dat <- rbind(alters[alters$case == i, coords], ego[, coords])
-        c(stats::dist(dat))
-      }, numeric(1L))
-
-      sel <- which.min(d)
-
-      if (is.character(destination) == FALSE) {
-        b.case <- cholera::anchor.case$case == alters[sel, "case"]
-        b.anchor <- cholera::anchor.case[b.case, "anchor"]
-        out <- data.frame(caseA = origin,
-                          anchorA = origin.anchor,
-                          caseB = alters[sel, "case"],
-                          anchorB = b.anchor,
-                          distance = d[sel],
-                          stringsAsFactors = FALSE)
-      } else {
-        b.anchor <- alters[sel, "case"]
-        out <- data.frame(caseA = origin,
-                          anchorA = origin.anchor,
-                          caseB = destination,
-                          anchorB = alters[sel, "case"],
-                          distance = d[sel],
-                          stringsAsFactors = FALSE)
-      }
-
-    } else if (nrow(ego) > 1) {
-      ds <- lapply(ego$case, function(i) {
-        vapply(alters$case, function(j) {
-          dat <- rbind(alters[alters$case == j, coords],
-                       ego[ego$case == i, coords])
-          c(stats::dist(dat))
-        }, numeric(1L))
-      })
-
-      exit.space <- stats::setNames(expand.grid(alters$case, ego$case),
-        c("case", "exit"))
-      exit.space$d <- unlist(ds)
-      exit.soln <- exit.space[which.min(exit.space$d), ]
-
-      case.a <- exit.soln$exit
-      case.b <- exit.soln$case
-
-      ego <- ego[ego$case == case.a, coords]
-
-      if (case.a < 20000) {
-        anchor.a <- cholera::anchor.case[cholera::anchor.case$case == case.a,
-          "anchor"]
-      } else if (case.a > 20000) {
-        anchor.a <- case.a
-        case.a <- cholera::landmarks[cholera::landmarks$case == case.a, "name"]
-      }
-
-      if (case.b < 20000) {
-        anchor.b <- cholera::anchor.case[cholera::anchor.case$case == case.b,
-          "anchor"]
-      } else if (case.b > 20000) {
-        anchor.b <- case.b
-        case.b <- cholera::landmarks[cholera::landmarks$case == case.b, "name"]
-      }
-
-      out <- data.frame(caseA = case.a,
-                        anchorA = anchor.a,
-                        caseB = case.b,
-                        anchorB = anchor.b,
-                        distance = exit.soln$d,
-                        stringsAsFactors = FALSE)
-
-    }
-
-    ego <- ego[, coords]
-    alter <- case.data[case.data$case == out$anchorB, coords]
-
-    if (rev.flag) {
-      tmp.case <- out$caseA
-      tmp.anchor <- out$anchorA
-      out$caseA <- out$caseB
-      out$anchorA <- out$anchorB
-      out$caseB <- tmp.case
-      out$anchorB <- tmp.anchor
-
-      tmp <- ego
-      ego <- alter
-      alter <- tmp
-
-      tmp <- origin
-      origin <- destination
-      destination <- tmp
-    }
-
-  # ----- #
+    destination.chk <- validateCase(destination, case.set, location,
+      include.landmarks)
+    dstn <- destination.chk$out
+    dstn.nm <- destination.chk$out.nm
 
   } else if (type == "pumps") {
-    if (identical(all.equal(origin, destination), TRUE)) {
-      stop("Origin must different from destination.", call. = FALSE)
-    }
+    origin.chk <- validatePump(origin, pmp, vestry)
+    orgn <- origin.chk$out
+    orgn.nm <- origin.chk$out.nm
 
-    rev.flag <- is.null(origin) & is.null(destination) == FALSE
-
-    if (rev.flag) {
-      tmp <- origin
-      origin <- destination
-      destination <- tmp
-    }
-
-    if (origin %in% p.ID == FALSE) {
-      txt1 <- 'With type = "pumps", case.set = '
-      txt2 <- 'and vestry = '
-      txt3 <- ', the origin must be between 1 and '
-      stop(txt1, case.set, ", ", txt2, vestry, txt3, ct, ".", call. = FALSE)
-    } else {
-      ego <- p.data[p.data[, pump.var] == origin, ]
-    }
-
-    if (!is.null(destination)) {
-      if (any(abs(destination) %in% p.ID == FALSE)) {
-        stop('With vestry = ', vestry, ', 1 >= |destination| <= ', p.count,
-          ".", call. = FALSE)
-      } else {
-        if (all(destination > 0)) {
-          alters <- p.data[destination, ]
-        } else if (all(destination < 0)) {
-          alters <- p.data[p.data[, pump.var] %in% abs(destination) == FALSE, ]
-        }
-        alters <- alters[alters[, pump.var] != origin, ]
-      }
-    } else {
-      alters <- p.data[p.data[, pump.var] != origin, ]
-    }
-
-    d <- vapply(alters[, pump.var], function(i) {
-      dat <- rbind(ego[, coords], alters[alters[, pump.var] == i, coords])
-      c(stats::dist(dat))
-    }, numeric(1L))
-
-    sel <- which.min(d)
-
-    if (rev.flag) {
-      out <- data.frame(pumpA = alters[, pump.var][sel],
-                        pumpB = ego[, pump.var],
-                        pump.nameA = alters$street[sel],
-                        pump.nameB = ego$street,
-                        distance = d[sel],
-                        stringsAsFactors = FALSE)
-    } else {
-      out <- data.frame(pumpA = ego[, pump.var],
-                        pumpB = alters[, pump.var][sel],
-                        pump.nameA = ego$street,
-                        pump.nameB = alters$street[sel],
-                        distance = d[sel],
-                        stringsAsFactors = FALSE)
-    }
-
-    ego <- ego[, coords]
-    alter <- alters[sel, coords]
+    destination.chk <- validatePump(destination, pmp, vestry)
+    dstn <- destination.chk$out
+    dstn.nm <- destination.chk$out.nm
   }
 
-  # ----- #
-
-  if (distance.unit == "meter") {
-    out$distance <- unitMeter(out$distance, "meter")
-  } else if (distance.unit == "yard") {
-    out$distance <- unitMeter(out$distance, "yard")
-  } else if (distance.unit == "native") {
-    out$distance <- unitMeter(out$distance, "native")
+  if (type == "case-pump") {
+    path.data <- casePumpEucl(orgn, orgn.nm, destination, dstn, latlong, pmp,
+      vestry, case.set, location)
+  } else if (type == "cases") {
+    path.data <- caseCaseEucl(orgn, orgn.nm, destination, dstn,
+      include.landmarks, latlong, origin, vestry, location)
+  } else if (type == "pumps") {
+    path.data <- pumpPumpEucl(orgn, orgn.nm, destination, dstn, latlong, origin,
+      pmp, vestry)
   }
 
-  out$time <- distanceTime(out$distance, distance.unit = distance.unit,
-    time.unit = time.unit, walking.speed = walking.speed)
+  if (length(orgn) > 1) orgn <- path.data$data$orgn
+  if (length(orgn.nm) > 1) orgn.nm <- path.data$data$orgn.nm
+  nearest.dest <- path.data$data$nearest.dest
 
-  output <- list(ego = ego,
-                 alter = alter,
-                 origin = origin,
+  if (latlong) {
+    p1 <- path.data$ego
+    p2 <- path.data$alter
+    d <- geosphere::distGeo(p1, p2)
+  } else {
+    d <- unitMeter(path.data$data$d, distance.unit = distance.unit)
+  }
+
+  if (latlong) {
+    walking.time <- walkingTime(d, time.unit = time.unit,
+      walking.speed = walking.speed)
+  } else {
+    walking.time <- distanceTime(d, distance.unit = distance.unit,
+      time.unit = time.unit, walking.speed = walking.speed)
+  }
+
+  if (as.integer(nearest.dest) < 1000L) {
+    if (type %in% c("case-pump", "pumps")) {
+      dest.nm <- pmp[pmp$id == nearest.dest, ]$street
+    } else if (type == "cases") {
+      dest.nm <- nearest.dest
+    }
+  } else if (as.integer(nearest.dest) >= 1000L) {
+    sel <- cholera::landmarksB$case == as.integer(nearest.dest)
+    dest.nm <- cholera::landmarksB[sel, ]$name
+    if (grepl("Square", dest.nm)) {
+      sel <- cholera::landmarksB$case == nearest.dest
+      tmp <- strsplit(cholera::landmarksB[sel, ]$name, "-")
+      dest.nm <- unlist(tmp)[1]
+    }
+  }
+
+  data.summary <- data.frame(orig = orgn,
+                             dest = nearest.dest,
+                             orig.nm = orgn.nm,
+                             dest.nm = dest.nm,
+                             distance = d,
+                             time = walking.time,
+                             type = type,
+                             row.names = NULL)
+
+  output <- list(ego = path.data$ego,
+                 alter = path.data$alter,
+                 data = data.summary,
                  destination = destination,
-                 type = type,
-                 case.set = case.set,
-                 alters = alters,
                  vestry = vestry,
-                 location = location,
                  distance.unit = distance.unit,
+                 latlong = latlong,
+                 location = location,
+                 pmp = pmp,
                  time.unit = time.unit,
-                 d = out$distance,
-                 t = out$time,
-                 walking.speed = walking.speed,
-                 data = out)
+                 walking.speed = walking.speed)
 
   class(output) <- "euclidean_path"
   output
@@ -614,278 +183,253 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #'
 #' @param x An object of class "euclidean_path" created by euclideanPath().
 #' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.
-#' @param unit.posts Character. "distance" for mileposts; "time" for timeposts; \code{NULL} for no posts.
-#' @param unit.interval Numeric. Set interval between posts. When \code{unit.posts} is "distance", \code{unit.interval} automatically defaults to 50 meters. When \code{unit.posts} is "time", \code{unit.interval} automatically defaults to 60 seconds.
+#' @param long.title Logical. Tile with names.
+#' @param mileposts Logical. Plot mile/time posts.
+#' @param milepost.unit Character. "distance" or "time".
+#' @param milepost.interval Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).
+#' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
-#' @examples
-#' plot(euclideanPath(15))
-#' plot(euclideanPath(15), unit.posts = "time")
 
-plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
-  unit.interval = NULL, ...) {
+plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
+  alpha.level = 1, ...) {
 
-  if (!inherits(x, "euclidean_path")) {
-    stop('"x"\'s class must be "euclidean_path".', call. = FALSE)
-  }
-
-  rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
-  map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-  roads.list <- split(rd[, c("x", "y")], rd$street)
-  border.list <- split(map.frame[, c("x", "y")], map.frame$street)
-
-  colors <- cholera::snowColors(x$vestry)
-
-  if (x$location == "nominal") {
-    coords <- c("x", "y")
-    names(x$ego) <- coords
-    names(x$alter) <- coords
-  }
-
+  path.data <- x$data
+  type <- x$data$type
   ego.xy <- x$ego
   alter.xy <- x$alter
-  dat <- rbind(alter.xy, ego.xy) # alter before ego for arrow order
+  dat <- rbind(alter.xy, ego.xy)
+  pmp <- x$pmp
+  orig <- path.data$orig
+  dest <- path.data$dest
 
-  if (x$location == "orthogonal") dat <- stats::setNames(dat, c("x", "y"))
+  colors <- snowColors(x$vestry)
+  distance.unit <- x$distance.unit
+  latlong <- x$latlong
+  time.unit <- x$time.unit
+  walking.speed <- x$walking.speed
 
-  ## city square data ##
-
-  if (any(grepl("case", names(x$data)))) {
-    ego <- unlist(x$data[, grepl("case", names(x$data))][1])
-    alter <- unlist(x$data[, grepl("case", names(x$data))][2])
-    if (is.character(ego)) {
-      if (grepl("Square", ego)) {
-        if (x$origin == "Soho Square") {
-          sq.sel <- cholera::landmark.squares$name == "Soho Square"
-        } else if (x$origin == "Golden Square") {
-          sq.sel <- cholera::landmark.squares$name == "Golden Square"
-        }
-        sq.center.origin <- cholera::landmark.squares[sq.sel, c("x", "y")]
-      }
-    }
-    if (is.character(alter)) {
-      if (grepl("Square", alter)) {
-        if (x$destination == "Soho Square") {
-          sq.sel <- cholera::landmark.squares$name == "Soho Square"
-        } else if (x$destination == "Golden Square") {
-          sq.sel <- cholera::landmark.squares$name == "Golden Square"
-        }
-        sq.center.destination <- cholera::landmark.squares[sq.sel, c("x", "y")]
-      }
-    }
-    if (grepl("Square", ego) & grepl("Square", alter)) {
-      dat.plus <- rbind(dat, sq.center.origin, sq.center.destination)
-    } else if (grepl("Square", ego) & !grepl("Square", alter)) {
-      dat.plus <- rbind(dat, sq.center.origin)
-    } else if (!grepl("Square", ego) & grepl("Square", alter)) {
-      dat.plus <- rbind(dat, sq.center.destination)
-    } else dat.plus <- dat
+  if (distance.unit == "meter") {
+    d.unit <- "m"
+  } else if (distance.unit == "yard") {
+    d.unit <- "yd"
   }
 
-  if (x$type %in% c("case-pump", "cases")) {
-    if (is.logical(zoom)) {
-      if (zoom) {
-        x.rng <- c(min(dat.plus$x) - zoom, max(dat.plus$x) + zoom)
-        y.rng <- c(min(dat.plus$y) - zoom, max(dat.plus$y) + zoom)
-      } else {
-        x.rng <- range(cholera::roads$x)
-        y.rng <- range(cholera::roads$y)
-      }
-    } else if (is.numeric(zoom)) {
-      if (zoom >= 0) {
-        x.rng <- c(min(dat.plus$x) - zoom, max(dat.plus$x) + zoom)
-        y.rng <- c(min(dat.plus$y) - zoom, max(dat.plus$y) + zoom)
-      } else stop("If numeric, zoom must be >= 0.", call. = FALSE)
-    } else stop("zoom must either be logical or numeric.", call. = FALSE)
-  } else if (x$type == "pumps") {
-    if (is.logical(zoom)) {
-      if (zoom) {
-        x.rng <- c(min(dat$x) - zoom, max(dat$x) + zoom)
-        y.rng <- c(min(dat$y) - zoom, max(dat$y) + zoom)
-      } else {
-        x.rng <- range(cholera::roads$x)
-        y.rng <- range(cholera::roads$y)
-      }
-    } else if (is.numeric(zoom)) {
-      if (zoom >= 0) {
-        x.rng <- c(min(dat$x) - zoom, max(dat$x) + zoom)
-        y.rng <- c(min(dat$y) - zoom, max(dat$y) + zoom)
-      } else stop("If numeric, zoom must be >= 0.", call. = FALSE)
-    } else stop("zoom must either be logical or numeric.", call. = FALSE)
+  if (milepost.unit == "distance") {
+    path.length <- path.data$distance
+  } else if (milepost.unit == "time") {
+    path.length <- (3600L * path.data$distance) / (1000L * walking.speed)
   }
 
-  plot(cholera::fatalities[, c("x", "y")], xlim = x.rng, ylim = y.rng,
-    xlab = "x", ylab = "y", pch = 15, cex = 0.5, col = "lightgray", asp = 1)
-  invisible(lapply(roads.list, lines, col = "lightgray"))
-  invisible(lapply(border.list, lines))
+  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
+  fatality <- cholera::fatalities
+  fatality.ortho <- cholera::latlong.ortho.addr
+  land <- cholera::landmarksB
 
-  if (x$vestry) {
-    pump.names <- paste0("p", cholera::pumps.vestry$id)
-    points(cholera::pumps.vestry[, c("x", "y")], pch = 24, cex = 1,
-      col = colors)
-    text(cholera::pumps.vestry[, c("x", "y")], label = pump.names, pos = 1)
+  if (latlong) {
+    ew <- "lon"
+    ns <- "lat"
+    asp <- 1.6
   } else {
-    pump.names <- paste0("p", cholera::pumps$id)
-    points(cholera::pumps[, c("x", "y")], pch = 24, cex = 1, col = colors)
-    text(cholera::pumps[, c("x", "y")], label = pump.names, pos = 1)
+    ew <- "x"
+    ns <- "y"
+    asp <- 1L
   }
 
-  if (x$type == "case-pump") {
-    case.color <- colors[paste0("p", x$data$pump)]
-    points(ego.xy, col = "red")
-    if (is.numeric(ego)) {
-      text(ego.xy, labels = x$data$case, pos = 1, col = "red")
-    } else if (is.character(ego)) {
-      if (grepl("Soho Square", ego)) {
-        text(sq.center.origin$x, sq.center.origin$y,
-          labels = "Soho\nSquare", col = "red", cex = 0.8)
-      } else if (grepl("Golden Square", ego)) {
-        text(sq.center.origin$x, sq.center.origin$y,
-          labels = "Golden\nSquare", col = "red", cex = 0.8)
-      } else {
-        text(cholera::landmarks[cholera::landmarks$name == ego,
-          c("x.proj", "y.proj")], labels = ego, pos = 1, col = "red")
-      }
-    }
+  vars <- c(ew, ns)
+  padding <- ifelse(latlong, 0.000125, 0.25)
 
-  } else if (x$type == "cases") {
-    case.color <- "blue"
-    points(ego.xy, col = case.color)
-    points(alter.xy, col = case.color)
-    if (is.numeric(ego)) {
-      text(ego.xy, labels = x$data$caseA, pos = 1, col = "red")
-    } else if (is.character(ego)) {
-      if (grepl("Soho Square", ego)) {
-        text(sq.center.origin$x, sq.center.origin$y,
-          labels = "Soho\nSquare", col = "red", cex = 0.8)
-      } else if (grepl("Golden Square", ego)) {
-        text(sq.center.origin$x, sq.center.origin$y,
-          labels = "Golden\nSquare", col = "red", cex = 0.8)
-      } else {
-        text(cholera::landmarks[cholera::landmarks$name == ego,
-          c("x.proj", "y.proj")], labels = ego, pos = 1, col = "red")
-      }
-    }
-    if (is.numeric(alter)) {
-      text(alter.xy, labels = x$data$caseB, pos = 1, col = "red")
-    } else if (is.character(alter)) {
-      if (grepl("Soho Square", alter)) {
-        text(sq.center.destination$x, sq.center.destination$y,
-          labels = "Soho\nSquare", col = "red", cex = 0.8)
-      } else if (grepl("Golden Square", alter)) {
-        text(sq.center.destination$x, sq.center.destination$y,
-          labels = "Golden\nSquare", col = "red", cex = 0.8)
-      } else {
-        text(cholera::landmarks[cholera::landmarks$name == alter,
-          c("x.proj", "y.proj")], labels = alter, pos = 1, col = "red")
-      }
-    }
-
-  } else if (x$type == "pumps") {
-    case.color <- "blue"
-  }
-
-  if (x$type == "case-pump") {
-    if (is.numeric(x$data$case)) {
-      title(main = paste("Case", x$data$anchor, "to Pump", x$data$pump))
-    } else if (is.character(x$data$case)) {
-      title(main = paste(x$data$case, "to Pump", x$data$pump))
-    }
-
-  } else if (x$type == "cases") {
-    if (is.numeric(x$data$caseA) & is.numeric(x$data$caseB)) {
-      title(main = paste("Case", x$data$anchorA, "to Case", x$data$anchorB))
-    } else if (is.character(x$data$caseA) & is.numeric(x$data$caseB)) {
-      title(main = paste(x$data$caseA, "to Case", x$data$anchorB))
-    } else if (is.numeric(x$data$caseA) & is.character(x$data$caseB)) {
-      title(main = paste("Case", x$data$anchorA, "to", x$data$caseB))
-    } else if (is.character(x$data$caseA) & is.character(x$data$caseB)) {
-      title(main = paste(x$data$caseA, "to", x$data$caseB))
-    }
-
-  } else if (x$type == "pumps") {
-    title(main = paste("Pump", x$data$pumpA, "to Pump", x$data$pumpB))
-  }
-
-  d.unit <- distanceUnit(x$distance.unit)
-  nominal.time <- nominalTime(x$t, x$time.unit)
-
-  # mileposts #
-
-  if (is.null(unit.posts)) {
-    arrows(ego.xy$x, ego.xy$y, alter.xy$x, alter.xy$y, col = case.color,
-      lwd = 3, length = 0.075)
-    title(sub = paste(round(x$d, 1), d.unit, nominal.time, "@", x$walking.speed,
-      "km/hr"))
-  } else {
-    if (unit.posts %in% c("distance", "time") == FALSE) {
-      stop('If specified, unit.posts must be "distance" or "time".',
-        call. = FALSE)
+  if (is.logical(zoom)) {
+    if (zoom) {
+      map.data <- mapDataRange(dat, land, path.data, vars, ew, ns)
+      xlim <- c(min(map.data[, ew]) - padding, max(map.data[, ew]) + padding)
+      ylim <- c(min(map.data[, ns]) - padding, max(map.data[, ns]) + padding)
     } else {
-      if (is.null(unit.interval)) {
-        if (unit.posts == "distance")  {
-          unit.interval <- 50 * x$walking.speed / 5
-        } else if (unit.posts == "time") {
-          unit.interval <- 60 * x$walking.speed / 5
-        }
-      } else {
-        if (!is.numeric(unit.interval)) {
-          stop('unit.interval must be numeric.', call. = FALSE)
-        }
-      }
-
-      if (unit.posts == "distance") {
-        tot <- unitMeter(stats::dist(dat))
-        h <- seq(0, tot, unit.interval) / cholera::unitMeter(1)
-      } else if (unit.posts == "time") {
-        tot <- distanceTime(unitMeter(stats::dist(dat)),
-          walking.speed = x$walking.speed)
-        h <- seq(0, tot, unit.interval) * 1000 * x$walking.speed / 60^2 /
-          cholera::unitMeter(1)
-      } else {
-        stop('Specify unit.posts.', call. = FALSE)
-      }
-
-      ols <- stats::lm(y ~ x, data = dat)
-      edge.slope <- stats::coef(ols)[2]
-      edge.intercept <- stats::coef(ols)[1]
-      theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
-
-      post.coords <- quandrantCoordinates(dat[2:1, ], h, theta)
-
-      arrow.data <- data.frame(x = c(post.coords$x, ego.xy$x),
-                               y = c(post.coords$y, ego.xy$y))
-
-      arrow.list <- lapply(seq_len(nrow(arrow.data) - 1), function(i) {
-        a.data <- cbind(arrow.data[i, ], arrow.data[i + 1, ])
-        stats::setNames(a.data, c("x1", "y1", "x2", "y2"))
-      })
-
-      invisible(lapply(arrow.list, function(seg) {
-        zero.length.x <- round(abs(seg$x1 - seg$x2), 2) == 0
-        zero.length.y <- round(abs(seg$y1 - seg$y2), 2) == 0
-
-        if (any(zero.length.x | zero.length.y)) {
-          drawPath(dat, case.color, compute.coords = FALSE)
-          text(seg[, c("x1", "y1")], labels = ">", srt = theta * 180L / pi,
-            col = case.color, cex = 1.5)
-        } else {
-          arrows(seg$x1, seg$y1, seg$x2, seg$y2, length = 0.075,
-            col = case.color, lwd = 3, code = 1)
-        }
-      }))
+      map.data <- rbind(frame, rd)
+      xlim <- range(map.data[, ew])
+      ylim <- range(map.data[, ns])
     }
-
-    if (unit.posts == "distance") {
-      post.info <- paste("posts @", unit.interval, "m intervals")
-    } else if (unit.posts == "time") {
-      post.info <- paste("posts @", unit.interval, "sec intervals")
-    }
-
-    title(sub = paste(round(x$d, 1), d.unit, nominal.time, "@", x$walking.speed,
-      "km/hr;", post.info))
+  } else if (is.numeric(zoom)) {
+    if (zoom >= 0) {
+      xlim <- c(min(dat[, ew]) - zoom * (padding),
+                max(dat[, ew]) + zoom * (padding))
+      ylim <- c(min(dat[, ns]) - zoom * (padding),
+                max(dat[, ns]) + zoom * (padding))
+    } else stop("If numeric, zoom must be >= 0.")
   }
+
+  if (type == "case-pump") {
+    p.sel <- paste0("p", path.data$dest)
+    case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
+  } else {
+    case.color <- "blue"
+  }
+
+  plot(rd[, vars], pch = NA, asp = asp, xlim = xlim, ylim = ylim)
+  roads.list <- split(rd[, vars], rd$street)
+  frame.list <- split(frame[, vars], frame$street)
+  invisible(lapply(roads.list, lines, col = "lightgray"))
+  invisible(lapply(frame.list, lines))
+  points(fatality[, vars], col = "lightgray", pch = 16, cex = 0.5)
+  points(pmp[, vars], pch = 24, col = grDevices::adjustcolor(colors,
+    alpha.f = alpha.level))
+  text(pmp[, vars], pos = 1, labels = paste0("p", pmp$id))
+
+  if (type %in% c("case-pump", "cases")) {
+    if (orig < 1000L) {
+      points(fatality[fatality$case == orig, vars], col = "red")
+      text(fatality[fatality$case == orig, vars], pos = 1, labels = orig,
+        col = "red")
+    } else if (orig >= 1000L) {
+      points(land[land$case == orig, vars], col = "red")
+      land.tmp <- land[land$case == orig, ]
+
+      if (grepl("Square", land.tmp$name)) {
+        sq.label <- unlist(strsplit(land.tmp$name, "-"))[1]
+        label.parse <- unlist(strsplit(sq.label, "[ ]"))
+        sq.label <- paste0(label.parse[1], "\n", label.parse[2])
+        obs.sq <- paste(label.parse, collapse = " ")
+        sel <- cholera::landmark.squaresB$name == obs.sq
+        text(cholera::landmark.squaresB[sel, c(ew, ns)], labels = sq.label,
+          col = "red", cex = 0.8)
+      } else {
+        label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
+        names(label.dat) <- vars
+        if (grepl("St", land.tmp$name)) {
+          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+          land.label <- paste0(paste(label.parse[1], label.parse[2]), "\n",
+            label.parse[3])
+        } else {
+          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+          if (length(label.parse) == 2) {
+            land.label <- paste0(label.parse[1], "\n", label.parse[2])
+          } else if (length(label.parse) == 3) {
+            land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
+                                 label.parse[3])
+          }
+        }
+        text(label.dat, labels = land.label, col = "red", cex = 0.8)
+      }
+    }
+
+    if (type == "cases") {
+      if (dest < 1000L) {
+        points(fatality[fatality$case == dest, vars], col = "red")
+        text(fatality[fatality$case == dest, vars], pos = 1, labels = dest,
+          col = "red")
+      } else if (dest >= 1000L) {
+        points(land[land$case == dest, vars], col = "red")
+        land.tmp <- land[land$case == dest, ]
+        if (grepl("Square", land.tmp$name)) {
+          sel <- cholera::landmark.squaresB$name == path.data$dest.nm
+          label.dat <- cholera::landmark.squaresB[sel, ]
+          label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
+          sq.label <- paste0(label.parse[1], "\n", label.parse[2])
+          text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",
+            cex = 0.8)
+        } else if (land.tmp[, ew] != land.tmp[, paste0(ew, ".lab")]) {
+          label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
+          names(label.dat) <- vars
+          if (grepl("St", land.tmp$name)) {
+            label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+            land.label <- paste0(paste(label.parse[1], label.parse[2]), "\n",
+                                       label.parse[3])
+          } else {
+            label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+            if (length(label.parse) == 2) {
+              land.label <- paste0(label.parse[1], "\n", label.parse[2])
+            } else if (length(label.parse) == 3) {
+              land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
+                                   label.parse[3])
+            }
+          }
+          text(label.dat, labels = land.label, col = "red", cex = 0.8)
+        } else {
+          label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
+          names(label.dat) <- vars
+          label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
+          land.label <- paste0(label.parse[1], "\n", label.parse[2])
+          text(land[land$case == dest, vars], labels = land.label, col = "red",
+            cex = 0.8)
+        }
+      }
+    }
+  }
+
+  if (x$location == "orthogonal") points(ego.xy[, vars], pch = 0)
+
+  arrows(ego.xy[, ew], ego.xy[, ns], alter.xy[, ew], alter.xy[, ns],
+    col = case.color, lwd = 3, length = 0.075)
+
+  d <- paste(round(path.data$distance, 1), d.unit)
+  t <- paste(round(path.data$time, 1), paste0(time.unit, "s"), "@",
+    walking.speed, "km/hr")
+
+  if (mileposts) {
+    if (is.null(milepost.interval)) {
+      if (milepost.unit == "distance") {
+        milepost.interval <- 50
+      } else if (milepost.unit == "time") {
+        milepost.interval <- 60
+      }
+    }
+
+    if (milepost.unit == "distance") {
+      h <- seq(0, path.data$distance, milepost.interval)
+      if (isFALSE(latlong)) h <- h / unitMeter(1)
+    } else if (milepost.unit == "time") {
+      h <- seq(0, path.data$time, milepost.interval)
+      if (isFALSE(latlong)) {
+        h <- h * 1000 * x$walking.speed / 60^2 / unitMeter(1)
+      }
+    } else stop('Specify milepost.unit', call. = FALSE)
+
+    if (latlong) ols <- stats::lm(lat ~ lon, data = dat)
+    else ols <- stats::lm(y ~ x, data = dat)
+
+    edge.slope <- stats::coef(ols)[2]
+    theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
+
+    if (latlong) {
+      post.coords <- latlongEuclideanPosts(ego.xy, alter.xy, h, ew, ns)
+    } else {
+      post.coords <- quandrantCoordinates(dat[2:1, ], h, theta)
+    }
+
+    arrow.data <- data.frame(x = c(post.coords[, ew], ego.xy[, ew]),
+                             y = c(post.coords[, ns], ego.xy[, ns]))
+
+    arrow.list <- lapply(seq_len(nrow(arrow.data) - 1), function(i) {
+      a.data <- cbind(arrow.data[i, ], arrow.data[i + 1, ])
+      stats::setNames(a.data, c(paste0(c(ew, ns), 1), paste0(c(ew, ns), 2)))
+    })
+
+    invisible(lapply(arrow.list, function(seg) {
+      arrows(seg[, paste0(ew, 1)], seg[, paste0(ns, 1)],
+             seg[, paste0(ew, 2)], seg[, paste0(ns, 2)],
+             length = 0.075, col = case.color, lwd = 3, code = 1)
+    }))
+
+    if (milepost.unit == "distance") {
+      if (distance.unit == "meter") {
+        post.info <- paste("posts at", milepost.interval, "m intervals")
+      } else if (distance.unit == "yard") {
+        post.info <- paste("posts at", milepost.interval, "yd intervals")
+      }
+    } else if (milepost.unit == "time") {
+      post.info <- paste("posts at", milepost.interval, "sec intervals")
+    } else {
+      stop('"milepost.unit" muster either be "distance" or "time".')
+    }
+    title(sub = paste(d, t, post.info, sep = "; "))
+  } else {
+    title(sub = paste(d, t, sep = "; "))
+  }
+
+  longTitle(long.title, type, pmp, path.data, orig, land)
 }
 
 #' Print method for euclideanPath().
@@ -895,14 +439,333 @@ plot.euclidean_path <- function(x, zoom = 0.5, unit.posts = "distance",
 #' @param ... Additional parameters.
 #' @return An R data frame.
 #' @export
-#' @examples
-#' euclideanPath(1)
-#' print(euclideanPath(1))
 
 print.euclidean_path <- function(x, ...) {
   if (!inherits(x, "euclidean_path")) {
     stop('"x"\'s class must be "euclidean_path".')
   }
-
   print(x[c("ego", "alter", "data")])
+}
+
+casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
+  vestry, case.set, location) {
+
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
+
+  if (case.set == "observed") {
+    if (location %in% c("nominal", "anchor")) {
+      if (location == "anchor") {
+        if (orgn %in% cholera::anchor.case$anchor == FALSE) {
+          sel <- cholera::anchor.case$case %in% orgn
+          orgn <- cholera::anchor.case[sel, "anchor"]
+        }
+      }
+
+      fatal <- cholera::fatalities$case %in% orgn
+      land <- cholera::landmarksB$case %in% orgn
+      # sq <- cholera::landmark.squaresB$case %in% orgn  # via validateCase()!
+
+      if (any(fatal) & any(land)) {
+        a <- cholera::fatalities[fatal, vars]
+        b <- cholera::landmarksB[land, vars]
+        ego.coords <- rbind(a, b)
+      } else if (all(!fatal) & any(land)) {
+        ego.coords <- cholera::landmarksB[land, vars]
+      } else if (any(fatal) & all(!land)) {
+        ego.coords <- cholera::fatalities[fatal, vars]
+      }
+    } else if (location == "orthogonal") {
+      fatal <- cholera::ortho.proj$case %in% orgn
+      land <- cholera::landmarksB$case %in% orgn
+
+      if (any(fatal) & any(land)) {
+        vars.ortho <- paste0(vars, ".proj")
+        a <- stats::setNames(cholera::ortho.proj[fatal, vars.ortho], vars)
+        b <- cholera::landmarksB[land, vars]
+        ego.coords <- rbind(a, b)
+      } else if (all(!fatal) & any(land)) {
+        ego.coords <- cholera::landmarksB[land, vars]
+      } else if (any(fatal) & all(!land)) {
+        a <- cholera::ortho.proj[fatal, paste0(vars, ".proj")]
+        ego.coords <- stats::setNames(a, vars)
+      }
+    }
+
+  } else if (case.set == "expected") {
+    if (latlong) {
+      if (location %in% c("anchor", "nominal")) {
+        case.data <- cholera::latlong.regular.cases
+      } else if (location == "orthogonal") {
+        case.data <- cholera::latlong.sim.ortho.proj
+      }
+    } else {
+      if (case.set == "observed") {
+        if (location == "nominal") {
+          case.data <- cholera::fatalities
+        } else if (location == "orthogonal") {
+          case.data <- cholera::ortho.proj
+        }
+
+      } else if (case.set == "expected") {
+        if (location == "nominal") {
+          case.data <- cholera::regular.cases
+        } else if (location == "orthogonal") {
+          case.data <- cholera::sim.ortho.proj
+        }
+      }
+    }
+  }
+
+  alter.coords <- pmp[pmp$id %in% dstn, vars]
+
+  sel <- seq_len(nrow(alter.coords))
+
+  if (nrow(ego.coords) == 1) {
+    d <- stats::dist(rbind(ego.coords, alter.coords))[sel]
+    d.sel <- which.min(d)
+
+    nearest.pump <- pmp[d.sel, "id"]
+    nearest.d <- min(d)
+
+    ego <- ego.coords
+    alter <- alter.coords[d.sel, ]
+  } else if (length(ego.coords) > 1) {
+    d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
+      stats::dist(rbind(ego.coords[i, ], alter.coords))[sel]
+    })
+    ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+    orgn <- orgn[ego.id]
+    orgn.nm <- orgn.nm[ego.id]
+    d <- d.multi.ego[[ego.id]]
+    nearest.pump <- dstn[which.min(d)]
+    nearest.d <- min(d)
+
+    ego <- ego.coords[ego.id, ]
+    alter <- alter.coords[which.min(d), ]
+  }
+
+  data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
+    nearest.dest = nearest.pump, d = nearest.d)
+
+  list(ego = ego, alter = alter, data = data.summary)
+}
+
+caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
+  latlong, origin, vestry, location) {
+
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
+
+  sq.cases <- sort(c(sqCases("Golden"), sqCases("Soho")))
+
+  if (is.null(origin) & !is.null(destination)) {
+    sq.destination <- (grepl("Square", destination) |
+                       destination %in% sq.cases) &
+                      is.null(origin)
+
+    if (sq.destination) {
+      if (is.character(orgn)) variable <- "name"
+      else if (is.numeric(orgn)) variable <- "case"
+      gold <- sqCases("Golden", variable)
+      soho <- sqCases("Soho", variable)
+
+       if (any(dstn %in% gold)) {
+        sel <- !orgn %in% gold
+        orgn <- orgn[sel]
+        orgn.nm <- orgn.nm[sel]
+      }
+
+      if (any(dstn %in% soho)) {
+        sel <- !orgn %in% soho
+        orgn <- orgn[sel]
+        orgn.nm <- orgn.nm[sel]
+      }
+    }
+
+    if (any(dstn %in% orgn)) {
+      sel <- !orgn %in% dstn
+      orgn <- orgn[sel]
+      orgn.nm <- orgn.nm[sel]
+    }
+  }
+
+  # Origin (egos) #
+
+  if (location %in% c("nominal", "anchor")) {
+    if (location == "anchor") {
+      if (orgn %in% cholera::anchor.case$anchor == FALSE) {
+        sel <- cholera::anchor.case$case %in% orgn
+        orgn <- cholera::anchor.case[sel, "anchor"]
+      }
+    }
+
+    fatal <- cholera::fatalities$case %in% orgn
+    land <- cholera::landmarksB$case %in% orgn
+
+    if (any(fatal) & any(land)) {
+      a <- cholera::fatalities[fatal, vars]
+      b <- cholera::landmarksB[land, vars]
+      ego.coords <- rbind(a, b)
+      orgn <- c(a$case, b$case)
+
+    } else if (all(!fatal) & any(land)) {
+      ego.coords <- cholera::landmarksB[land, vars]
+      orgn <- cholera::landmarksB[land, "case"]
+
+    } else if (any(fatal) & all(!land)) {
+      ego.coords <- cholera::fatalities[fatal, vars]
+      orgn <- cholera::fatalities[fatal, "case"]
+    }
+
+    if (!is.null(origin) & is.null(destination)) {
+      sq.origin <- (grepl("Square", origin) |
+                    origin %in% sq.cases) &
+                   is.null(destination)
+
+      if (any(sq.origin)) {
+        if (is.character(dstn)) variable <- "name"
+        else if (is.numeric(dstn)) variable <- "case"
+        gold <- sqCases("Golden", variable)
+        soho <- sqCases("Soho", variable)
+        if (any(orgn %in% gold)) dstn <- dstn[!dstn %in% gold]
+        if (any(orgn %in% soho)) dstn <- dstn[!dstn %in% soho]
+      }
+    }
+
+    # Destination (alters) #
+
+    if (location == "anchor") {
+      if (dstn %in% cholera::anchor.case$anchor == FALSE) {
+        sel <- cholera::anchor.case$case %in% dstn
+        dstn <- cholera::anchor.case[sel, "anchor"]
+      }
+    }
+
+    if (any(orgn %in% dstn)) dstn <- dstn[!dstn %in% orgn]
+
+    fatal <- cholera::fatalities$case %in% dstn
+    land <- cholera::landmarksB$case %in% dstn
+
+    if (any(fatal) & any(land)) {
+      a <- cholera::fatalities[fatal, vars]
+      b <- cholera::landmarksB[land, vars]
+      alter.coords <- rbind(a, b)
+      dstn <- c(a$case, b$case)
+
+    } else if (all(!fatal) & any(land)) {
+      alter.coords <- cholera::landmarksB[land, vars]
+      dstn <- cholera::landmarksB[land, "case"]
+
+    } else if (any(fatal) & all(!land)) {
+      alter.coords <- cholera::fatalities[fatal, vars]
+      dstn <- cholera::fatalities[fatal, "case"]
+    }
+  }
+
+  sel <- seq_len(nrow(alter.coords))
+
+  if (nrow(ego.coords) == 1) {
+    d <- stats::dist(rbind(ego.coords, alter.coords))[sel]
+    nearest.dest <- dstn[which.min(d)]
+    nearest.d <- min(d)
+
+    ego <- ego.coords
+    alter <- alter.coords[which.min(d), ]
+  } else if (length(ego.coords) > 1) {
+    d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
+      stats::dist(rbind(ego.coords[i, ], alter.coords))[sel]
+    })
+    ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+    orgn <- orgn[ego.id]
+    orgn.nm <- orgn.nm[ego.id]
+    d <- d.multi.ego[[ego.id]]
+    nearest.dest <- dstn[which.min(d)]
+    nearest.d <- min(d)
+
+    ego <- ego.coords[ego.id, ]
+    alter <- alter.coords[which.min(d), ]
+  }
+
+  data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
+    nearest.dest = nearest.dest, d = nearest.d)
+
+  list(ego = ego, alter = alter, data = data.summary)
+}
+
+pumpPumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, origin, pmp,
+  vestry, location) {
+
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
+
+  if (!is.null(origin) & is.null(destination)) {
+    if (any(orgn %in% dstn)) dstn <- dstn[!dstn %in% orgn]
+  }
+
+  if (is.null(origin) & !is.null(destination)) {
+    if (any(dstn %in% orgn)) orgn <- orgn[!orgn %in% dstn]
+  }
+
+  ego.coords <- pmp[pmp$id %in% orgn, vars]
+  alter.coords <- pmp[pmp$id %in% dstn, vars]
+
+  sel <- seq_len(nrow(alter.coords))
+
+  if (nrow(ego.coords) == 1) {
+    d <- stats::dist(rbind(ego.coords, alter.coords))[sel]
+    nearest.pump <- dstn[which.min(d)]
+    nearest.d <- min(d)
+
+    ego <- ego.coords
+    alter <- alter.coords[which.min(d), ]
+  } else if (length(ego.coords) > 1) {
+    d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
+      stats::dist(rbind(ego.coords[i, ], alter.coords))[sel]
+    })
+    ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+    orgn <- orgn[ego.id]
+    orgn.nm <- orgn.nm[ego.id]
+    d <- d.multi.ego[[ego.id]]
+    nearest.pump <- dstn[which.min(d)]
+    nearest.d <- min(d)
+
+    ego <- ego.coords[ego.id, ]
+    alter <- alter.coords[which.min(d), ]
+  }
+
+  data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
+    nearest.dest = nearest.pump, d = nearest.d)
+
+  list(ego = ego, alter = alter, data = data.summary)
+}
+
+latlongEuclideanPosts <- function(ego.xy, alter.xy, h, ew, ns) {
+  origin <- data.frame(lon = min(cholera::roads[, ew]),
+                       lat = min(cholera::roads[, ns]))
+
+  ego.cartesian <- latlongCartesian(ego.xy, origin)
+  alter.cartesian <- latlongCartesian(alter.xy, origin)
+  meter.coords <- rbind(ego.cartesian, alter.cartesian)
+
+  ols <- stats::lm(y ~ x, data = meter.coords)
+  path.slope <- stats::coef(ols)[2]
+  theta <- ifelse(is.na(path.slope), pi / 2, atan(path.slope))
+
+  cartesian.posts <- quandrantCoordinates(meter.coords, h, theta)
+
+  conversion <- lapply(seq_len(nrow(cartesian.posts)), function(i) {
+    coords.tmp <- cartesian.posts[i, c("x", "y")]
+    meterLatLong(coords.tmp)[, c("lon", "lat")]
+  })
+
+  data.frame(post = h, do.call(rbind, conversion))
+}
+
+latlongCartesian <- function(xy, origin) {
+  x.proj <- c(xy$lon, origin$lat)
+  y.proj <- c(origin$lon, xy$lat)
+  m.lon <- geosphere::distGeo(y.proj, xy)
+  m.lat <- geosphere::distGeo(x.proj, xy)
+  data.frame(x = m.lon, y = m.lat)
 }

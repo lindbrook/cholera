@@ -17,7 +17,3 @@ An R data frame.
 \description{
 Summary output.
 }
-\examples{
-euclideanPath(1)
-print(euclideanPath(1))
-}
