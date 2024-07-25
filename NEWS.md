@@ -1,3 +1,8 @@
+### cholera 0.8.0.9384
+
+- add validateCase(case.set, location).
+
+
 ### cholera 0.8.0.9383
 
 - archive euclideanPathB().
