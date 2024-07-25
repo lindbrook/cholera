@@ -1092,19 +1092,29 @@ landmarkCase <- function(string) {
   string
 }
 
-validateCase <- function(x, include.landmarks) {
-  case.id <- cholera::fatalities$case
-  case.nm <- paste(case.id)
-  case.msg <- "Cases range from 1 to 578."
+validateCase <- function(x, case.set, location, include.landmarks) {
+  if (case.set == "observed") {
+    case.id <- cholera::fatalities$case
+    case.nm <- paste(case.id)
+    case.msg <- paste0("Cases range from 1 to ", length(case.id), ".")
 
-  if (include.landmarks) {
-    case.id <- c(case.id,
-                 cholera::landmark.squaresB$case,
-                 cholera::landmarksB$case)
-    case.nm <- c(case.nm,
-                 cholera::landmark.squaresB$name,
-                 cholera::landmarksB$name)
-    case.msg <- "Cases range from 1 to 578; Landmarks from 1000 to 1021."
+    if (include.landmarks) {
+      case.id <- c(case.id,
+                   cholera::landmark.squaresB$case,
+                   cholera::landmarksB$case)
+      case.nm <- c(case.nm,
+                   cholera::landmark.squaresB$name,
+                   cholera::landmarksB$name)
+      lndmrk.end <- max(c(cholera::landmark.squaresB$case,
+                          cholera::landmarksB$case))
+      case.msg1 <- paste0("Cases range from 1 to ", length(case.id), ";")
+      case.msg2 <- paste0("Landmarks from 1000 to ", lndmrk.end, ".")
+      case.msg <- paste(case.msg1, case.msg2)
+    }
+  } else if (case.set == "expected") {
+    case.id <- cholera::latlong.sim.ortho.proj$case
+    case.nm <- paste(case.id)
+    case.msg <- paste0("Cases range from 1 to ", length(case.id), ".")
   }
 
   if (is.null(x)) {
@@ -1115,8 +1125,12 @@ validateCase <- function(x, include.landmarks) {
       message(case.msg)
     } else {
       if (any(x < 1000L)) {
-        sel <- cholera::anchor.case$case %in% x
-        out <- cholera::anchor.case[sel, "anchor"]
+        if (location == "anchor") {
+          sel <- cholera::anchor.case$case %in% x
+          out <- cholera::anchor.case[sel, "anchor"]
+        } else if (location %in% c("nominal", "orthogonal")) {
+          out <- x
+        }
         out.nm <- paste(out)
       } else if (any(x >= 1000L)) {
         if (any(x %in% cholera::landmark.squaresB$case)) {
