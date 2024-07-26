@@ -67,15 +67,25 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       pmp <- cholera::pumps
     }
   } else if (location == "orthogonal") {
-    if (vestry) {
-      pmp <- cholera::ortho.proj.pump.vestry
-      pmp$street <- cholera::pumps.vestry$street
+    if (latlong) {
+      if (vestry) {
+        pmp <- cholera::latlong.ortho.pump.vestry
+        pmp$street <- cholera::pumps.vestry$street
+      } else {
+        pmp <- cholera::latlong.ortho.pump
+        pmp$street <- cholera::pumps$street
+      }
     } else {
-      pmp <- cholera::ortho.proj.pump
-      pmp$street <- cholera::pumps$street
+      if (vestry) {
+        pmp <- cholera::ortho.proj.pump.vestry
+        pmp$street <- cholera::pumps.vestry$street
+      } else {
+        pmp <- cholera::ortho.proj.pump
+        pmp$street <- cholera::pumps$street
+      }
+      newvars <- c("x", "y", "id")
+      names(pmp)[names(pmp) %in% c("x.proj", "y.proj", "pump.id")] <- newvars
     }
-    newvars <- c("x", "y", "id")
-    names(pmp)[names(pmp) %in% c("x.proj", "y.proj", "pump.id")] <- newvars
   }
 
   if (type == "case-pump") {
@@ -476,43 +486,44 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
         ego.coords <- cholera::fatalities[fatal, vars]
       }
     } else if (location == "orthogonal") {
-      fatal <- cholera::ortho.proj$case %in% orgn
-      land <- cholera::landmarksB$case %in% orgn
+      if (latlong) {
+        ortho <- cholera::latlong.ortho.addr
+
+        sel <- cholera::anchor.case$case %in% orgn
+        orgn <- cholera::anchor.case[sel, "anchor"]
+
+        fatal <- ortho$case %in% orgn
+        land <- cholera::landmarksB$case %in% orgn
+      } else {
+        ortho <- cholera::ortho.proj
+        fatal <- ortho$case %in% orgn
+        land <- cholera::landmarksB$case %in% orgn
+      }
 
       if (any(fatal) & any(land)) {
-        vars.ortho <- paste0(vars, ".proj")
-        a <- stats::setNames(cholera::ortho.proj[fatal, vars.ortho], vars)
+        a <- ortho[fatal, vars]
         b <- cholera::landmarksB[land, vars]
         ego.coords <- rbind(a, b)
       } else if (all(!fatal) & any(land)) {
         ego.coords <- cholera::landmarksB[land, vars]
       } else if (any(fatal) & all(!land)) {
-        a <- cholera::ortho.proj[fatal, paste0(vars, ".proj")]
-        ego.coords <- stats::setNames(a, vars)
+        ego.coords <- ortho[fatal, vars]
       }
     }
 
   } else if (case.set == "expected") {
     if (latlong) {
       if (location %in% c("anchor", "nominal")) {
-        case.data <- cholera::latlong.regular.cases
+        ego.coords <- cholera::latlong.regular.cases[, vars]
       } else if (location == "orthogonal") {
-        case.data <- cholera::latlong.sim.ortho.proj
+        ego.coords <- cholera::latlong.sim.ortho.proj[, vars]
       }
     } else {
-      if (case.set == "observed") {
-        if (location == "nominal") {
-          case.data <- cholera::fatalities
-        } else if (location == "orthogonal") {
-          case.data <- cholera::ortho.proj
-        }
-
-      } else if (case.set == "expected") {
-        if (location == "nominal") {
-          case.data <- cholera::regular.cases
-        } else if (location == "orthogonal") {
-          case.data <- cholera::sim.ortho.proj
-        }
+      if (location %in% c("anchor", "nominal")) {
+        ego.coords <- cholera::regular.cases[, vars]
+      } else if (location == "orthogonal") {
+        vars.ortho <- paste0(vars, ".proj")
+        ego.coords <- cholera::sim.ortho.proj[, vars.ortho]
       }
     }
   }

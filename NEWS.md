@@ -1,3 +1,8 @@
+### cholera 0.8.0.9387
+
+- enable euclideanPath(latlong = TRUE, location = "orthogonal").
+
+
 ### cholera 0.8.0.9386
 
 - add a stop() for validateCase(location) error.
