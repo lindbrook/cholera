@@ -1,3 +1,8 @@
+### cholera 0.8.0.9386
+
+- add a stop() for validateCase(location) error.
+
+
 ### cholera 0.8.0.9385
 
 - add/set euclideanPath(case.set = "observed", location = "nominal").

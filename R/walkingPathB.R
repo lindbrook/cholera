@@ -1130,6 +1130,9 @@ validateCase <- function(x, case.set, location, include.landmarks) {
           out <- cholera::anchor.case[sel, "anchor"]
         } else if (location %in% c("nominal", "orthogonal")) {
           out <- x
+        } else {
+          stop('location must be "anchor", "nominal" or "orthogonal".', 
+            call. = FALSE)
         }
         out.nm <- paste(out)
       } else if (any(x >= 1000L)) {
