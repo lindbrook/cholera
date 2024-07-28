@@ -1,3 +1,8 @@
+### cholera 0.8.0.9388
+
+- add geoCartestianSimulation() prototype.
+
+
 ### cholera 0.8.0.9387
 
 - enable euclideanPath(latlong = TRUE, location = "orthogonal").
