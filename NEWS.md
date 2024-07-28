@@ -1,6 +1,6 @@
 ### cholera 0.8.0.9388
 
-- add geoCartestianSimulation() prototype.
+- add geoCartesianSimulation() prototype.
 
 
 ### cholera 0.8.0.9387

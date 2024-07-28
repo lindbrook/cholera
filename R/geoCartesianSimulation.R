@@ -7,7 +7,7 @@
 #' @importFrom sp spsample
 #' @noRd
 
-geoCartestianSimulation <- function(simulated.obs = 20000L, delta = 0.000025) {
+geoCartesianSimulation <- function(simulated.obs = 20000L, delta = 0.000025) {
   frame <- cholera::frame.data
 
   origin <- data.frame(lon = min(frame$lon), lat = min(frame$lat))
