@@ -496,6 +496,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
         land <- cholera::landmarksB$case %in% orgn
       } else {
         ortho <- cholera::ortho.proj
+        names(ortho)[names(ortho) %in% paste0(vars, ".proj")] <- vars
         fatal <- ortho$case %in% orgn
         land <- cholera::landmarksB$case %in% orgn
       }
