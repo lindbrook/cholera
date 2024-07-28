@@ -236,8 +236,9 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
 
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
+
   fatality <- cholera::fatalities
-  fatality.ortho <- cholera::latlong.ortho.addr
+
   land <- cholera::landmarksB
 
   if (latlong) {
@@ -291,9 +292,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
 
   if (type %in% c("case-pump", "cases")) {
     if (orig < 1000L) {
-      points(fatality[fatality$case == orig, vars], col = "red")
-      text(fatality[fatality$case == orig, vars], pos = 1, labels = orig,
-        col = "red")
+      points(ego.xy, col = "red")
+      text(ego.xy, pos = 1, labels = orig, col = "red")
     } else if (orig >= 1000L) {
       points(land[land$case == orig, vars], col = "red")
       land.tmp <- land[land$case == orig, ]
@@ -328,9 +328,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
 
     if (type == "cases") {
       if (dest < 1000L) {
-        points(fatality[fatality$case == dest, vars], col = "red")
-        text(fatality[fatality$case == dest, vars], pos = 1, labels = dest,
-          col = "red")
+        points(alter.xy, col = "red")
+        text(alter.xy, pos = 1, labels = dest, col = "red")
       } else if (dest >= 1000L) {
         points(land[land$case == dest, vars], col = "red")
         land.tmp <- land[land$case == dest, ]
