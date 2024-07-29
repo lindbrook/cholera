@@ -180,6 +180,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
                  vestry = vestry,
                  distance.unit = distance.unit,
                  latlong = latlong,
+                 case.set = case.set,
                  location = location,
                  pmp = pmp,
                  time.unit = time.unit,
@@ -235,8 +236,9 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
 
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
+
   fatality <- cholera::fatalities
-  fatality.ortho <- cholera::latlong.ortho.addr
+
   land <- cholera::landmarksB
 
   if (latlong) {
@@ -290,9 +292,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
 
   if (type %in% c("case-pump", "cases")) {
     if (orig < 1000L) {
-      points(fatality[fatality$case == orig, vars], col = "red")
-      text(fatality[fatality$case == orig, vars], pos = 1, labels = orig,
-        col = "red")
+      points(ego.xy, col = "red")
+      text(ego.xy, pos = 1, labels = orig, col = "red")
     } else if (orig >= 1000L) {
       points(land[land$case == orig, vars], col = "red")
       land.tmp <- land[land$case == orig, ]
@@ -327,9 +328,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
 
     if (type == "cases") {
       if (dest < 1000L) {
-        points(fatality[fatality$case == dest, vars], col = "red")
-        text(fatality[fatality$case == dest, vars], pos = 1, labels = dest,
-          col = "red")
+        points(alter.xy, col = "red")
+        text(alter.xy, pos = 1, labels = dest, col = "red")
       } else if (dest >= 1000L) {
         points(land[land$case == dest, vars], col = "red")
         land.tmp <- land[land$case == dest, ]
@@ -496,6 +496,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
         land <- cholera::landmarksB$case %in% orgn
       } else {
         ortho <- cholera::ortho.proj
+        names(ortho)[names(ortho) %in% paste0(vars, ".proj")] <- vars
         fatal <- ortho$case %in% orgn
         land <- cholera::landmarksB$case %in% orgn
       }
@@ -514,16 +515,17 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
   } else if (case.set == "expected") {
     if (latlong) {
       if (location %in% c("anchor", "nominal")) {
-        ego.coords <- cholera::latlong.regular.cases[, vars]
+        ego.coords <- cholera::latlong.regular.cases[orgn, vars]
       } else if (location == "orthogonal") {
-        ego.coords <- cholera::latlong.sim.ortho.proj[, vars]
+        ego.coords <- cholera::latlong.sim.ortho.proj[orgn, vars]
       }
     } else {
       if (location %in% c("anchor", "nominal")) {
-        ego.coords <- cholera::regular.cases[, vars]
+        ego.coords <- cholera::regular.cases[orgn, vars]
       } else if (location == "orthogonal") {
         vars.ortho <- paste0(vars, ".proj")
-        ego.coords <- cholera::sim.ortho.proj[, vars.ortho]
+        ego.coords <- cholera::sim.ortho.proj[orgn, vars.ortho]
+        names(ego.coords) <- vars
       }
     }
   }
