@@ -1,3 +1,11 @@
+### cholera 0.8.0.9389
+
+- export case.set in euclideanPath().
+- clean plot.euclidean_path().
+- fix casePumpEucl(location = "orthogonal") with case.set == "observed".
+- fix casePumpEucl(case.set == "expected").
+
+
 ### cholera 0.8.0.9388
 
 - add geoCartesianSimulation() prototype.
