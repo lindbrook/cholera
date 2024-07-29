@@ -1,3 +1,8 @@
+### cholera 0.8.0.9390
+
+- amend validateCase(case.set = "expected").
+
+
 ### cholera 0.8.0.9389
 
 - export case.set in euclideanPath().
