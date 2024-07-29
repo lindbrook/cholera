@@ -1111,67 +1111,86 @@ validateCase <- function(x, case.set, location, include.landmarks) {
       case.msg2 <- paste0("Landmarks from 1000 to ", lndmrk.end, ".")
       case.msg <- paste(case.msg1, case.msg2)
     }
+
+    if (is.null(x)) {
+        out <- case.id
+        out.nm <- case.nm
+    } else if (is.numeric(x)) {
+      if (any(!x %in% case.id)) {
+        message(case.msg)
+      } else {
+        if (any(x < 1000L)) {
+          if (location == "anchor") {
+            sel <- cholera::anchor.case$case %in% x
+            out <- cholera::anchor.case[sel, "anchor"]
+          } else if (location %in% c("nominal", "orthogonal")) {
+            out <- x
+          } else {
+            stop('location must be "anchor", "nominal" or "orthogonal".',
+                 call. = FALSE)
+          }
+          out.nm <- paste(out)
+        } else if (any(x >= 1000L)) {
+          if (any(x %in% cholera::landmark.squaresB$case)) {
+            sel <- cholera::landmark.squaresB$case %in% x
+            sq.nm <- cholera::landmark.squaresB[sel, ]$name
+            id.sel <- grepl(sq.nm, cholera::landmarksB$name)
+            out.sq <- cholera::landmarksB$case[id.sel]
+          } else if (any(x %in% cholera::landmarksB$case)) {
+            sel <- cholera::landmarksB$case %in% x
+            out <- cholera::landmarksB[sel, ]$case
+            out.nm <- cholera::landmarksB[sel, ]$name
+          }
+
+          if (exists("out") & exists("out.sq")) {
+            out <- c(out, out.sq)
+            sel <- cholera::landmarksB$case %in% out.sq
+            nm.sq <- cholera::landmarksB[sel, ]$name
+            out.nm <- c(out, nm.sq)
+          } else if (!exists("out") & exists("out.sq")) {
+            out <- out.sq
+            sel <- cholera::landmarksB$case %in% out.sq
+            nm.sq <- cholera::landmarksB[sel, ]$name
+            out.nm <- nm.sq
+          }
+        }
+      }
+    } else if (is.character(x)) {
+      if (any(x %in% cholera::landmark.squaresB$name)) {
+        sel <- grep(x, cholera::landmarksB$name)
+        out <- cholera::landmarksB[sel, ]$case
+        out.nm <- cholera::landmarksB[sel, ]$name
+      } else if (any(x %in% cholera::landmarksB$name)) {
+        sel <- cholera::landmarksB$name %in% x
+        out <- cholera::landmarksB[sel, ]$case
+        out.nm <- cholera::landmarksB[sel, ]$name
+      } else if (all(!x %in% case.nm)) {
+        stop("Landmark not found. Check spelling or cholera::landmarksB.")
+      }
+    }
+
   } else if (case.set == "expected") {
-    case.id <- cholera::latlong.sim.ortho.proj$case
+    case.id <- cholera::sim.ortho.proj$case # equiv. to latlong.sim.ortho.proj
     case.nm <- paste(case.id)
     case.msg <- paste0("Cases range from 1 to ", length(case.id), ".")
-  }
 
-  if (is.null(x)) {
-    out <- case.id
-    out.nm <- case.nm
-  } else if (is.numeric(x)) {
-    if (any(!x %in% case.id)) {
-      message(case.msg)
+    if (is.null(x)) {
+      out <- case.id
+      out.nm <- case.nm
     } else {
-      if (any(x < 1000L)) {
-        if (location == "anchor") {
-          sel <- cholera::anchor.case$case %in% x
-          out <- cholera::anchor.case[sel, "anchor"]
-        } else if (location %in% c("nominal", "orthogonal")) {
+      x <- ifelse(!is.numeric(x), as.numeric(x), x)
+
+      if (any(!x %in% case.id)) message(case.msg)
+      else {
+        if (location %in% c("anchor", "nominal", "orthogonal")) {
           out <- x
         } else {
-          stop('location must be "anchor", "nominal" or "orthogonal".', 
+          stop('location must be "anchor", "nominal" or "orthogonal".',
             call. = FALSE)
-        }
-        out.nm <- paste(out)
-      } else if (any(x >= 1000L)) {
-        if (any(x %in% cholera::landmark.squaresB$case)) {
-          sel <- cholera::landmark.squaresB$case %in% x
-          sq.nm <- cholera::landmark.squaresB[sel, ]$name
-          id.sel <- grepl(sq.nm, cholera::landmarksB$name)
-          out.sq <- cholera::landmarksB$case[id.sel]
-        } else if (any(x %in% cholera::landmarksB$case)) {
-          sel <- cholera::landmarksB$case %in% x
-          out <- cholera::landmarksB[sel, ]$case
-          out.nm <- cholera::landmarksB[sel, ]$name
-        }
-
-        if (exists("out") & exists("out.sq")) {
-          out <- c(out, out.sq)
-          sel <- cholera::landmarksB$case %in% out.sq
-          nm.sq <- cholera::landmarksB[sel, ]$name
-          out.nm <- c(out, nm.sq)
-        } else if (!exists("out") & exists("out.sq")) {
-          out <- out.sq
-          sel <- cholera::landmarksB$case %in% out.sq
-          nm.sq <- cholera::landmarksB[sel, ]$name
-          out.nm <- nm.sq
         }
       }
     }
-  } else if (is.character(x)) {
-    if (any(x %in% cholera::landmark.squaresB$name)) {
-      sel <- grep(x, cholera::landmarksB$name)
-      out <- cholera::landmarksB[sel, ]$case
-      out.nm <- cholera::landmarksB[sel, ]$name
-    } else if (any(x %in% cholera::landmarksB$name)) {
-      sel <- cholera::landmarksB$name %in% x
-      out <- cholera::landmarksB[sel, ]$case
-      out.nm <- cholera::landmarksB[sel, ]$name
-    } else if (all(!x %in% case.nm)) {
-      stop("Landmark not found. Check spelling or cholera::landmarksB.")
-    }
+    out.nm <- paste(out)
   }
   list(out = out, out.nm = out.nm)
 }
