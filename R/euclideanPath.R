@@ -515,16 +515,17 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
   } else if (case.set == "expected") {
     if (latlong) {
       if (location %in% c("anchor", "nominal")) {
-        ego.coords <- cholera::latlong.regular.cases[, vars]
+        ego.coords <- cholera::latlong.regular.cases[orgn, vars]
       } else if (location == "orthogonal") {
-        ego.coords <- cholera::latlong.sim.ortho.proj[, vars]
+        ego.coords <- cholera::latlong.sim.ortho.proj[orgn, vars]
       }
     } else {
       if (location %in% c("anchor", "nominal")) {
-        ego.coords <- cholera::regular.cases[, vars]
+        ego.coords <- cholera::regular.cases[orgn, vars]
       } else if (location == "orthogonal") {
         vars.ortho <- paste0(vars, ".proj")
-        ego.coords <- cholera::sim.ortho.proj[, vars.ortho]
+        ego.coords <- cholera::sim.ortho.proj[orgn, vars.ortho]
+        names(ego.coords) <- vars
       }
     }
   }
