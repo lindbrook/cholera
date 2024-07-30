@@ -5,6 +5,8 @@
 #' @param type Character. Path case to pump. FALSE is all other combinations of cases, landmarks and pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param latlong Logical.
+#' @param case.set Character. "observed" or "expected".
+#' @param location Character. For cases and pumps. "anchor, "fatality" or "orthogonal.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
@@ -14,8 +16,9 @@
 #' @export
 
 walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
-  vestry = FALSE, latlong = FALSE, weighted = TRUE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5, include.landmarks = TRUE) {
+  vestry = FALSE, latlong = FALSE, case.set = "observed", location = "nominal",
+  weighted = TRUE, distance.unit = "meter", time.unit = "second", 
+  walking.speed = 5, include.landmarks = TRUE) {
 
   meter.to.yard <- 1.09361
 

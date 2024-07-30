@@ -1,3 +1,9 @@
+### cholera 0.8.0.9391
+
+- add/set walkingPathB(case.set = "observed", location = "nominal").
+- use amended validateCase() in walkingPathB().
+
+
 ### cholera 0.8.0.9390
 
 - amend validateCase(case.set = "expected").

@@ -5,9 +5,9 @@
 \title{Compute walking path from case/landmark to nearest or selected pump.}
 \usage{
 walkingPathB(origin = 1, destination = NULL, type = "case-pump",
-  vestry = FALSE, latlong = FALSE, weighted = TRUE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  include.landmarks = TRUE)
+  vestry = FALSE, latlong = FALSE, case.set = "observed",
+  ocation = "nominal", weighted = TRUE, distance.unit = "meter",
+  time.unit = "second", walking.speed = 5, include.landmarks = TRUE)
 }
 \arguments{
 \item{origin}{Numeric. Vector of origin(s) (numeric or case/landmark name).}
@@ -20,6 +20,8 @@ walkingPathB(origin = 1, destination = NULL, type = "case-pump",
 
 \item{latlong}{Logical.}
 
+\item{case.set}{Character. "observed" or "expected".}
+
 \item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 
 \item{distance.unit}{Character. Unit of distance: "meter" or "yard".}
@@ -29,6 +31,8 @@ walkingPathB(origin = 1, destination = NULL, type = "case-pump",
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{include.landmarks}{Logical. Include landmarks as cases.}
+
+\item{location}{Character. For cases and pumps. "anchor, "fatality" or "orthogonal.}
 }
 \description{
 Compute walking path from case/landmark to nearest or selected pump.
