@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2024-04-30
+2024-07-30
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -83,6 +83,9 @@ Sandra Hempel. 2013. “Obituary: John Snow”. *The Lancet*. 381(9874):
 
 Jonathan Hodge and Gregory Radick, eds. 2003. *The Cambridge Companion
 to Darwin*. New York: Cambridge University Press.
+
+Lucy Inglis. 2014 (2013). *Georgian London: Into the Streets*. New York:
+Penguin Group.
 
 Stephen Inwood. 1998. *A History of London*. New York: Carroll & Graf
 Publishers.
