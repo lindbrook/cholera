@@ -61,7 +61,7 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
   else pmp <- cholera::pumps
 
   if (type == "case-pump") {
-    origin.chk <- validateCase(origin, include.landmarks)
+    origin.chk <- validateCase(origin, case.set, location, include.landmarks)
     orgn <- origin.chk$out
     orgn.nm <- origin.chk$out.nm
 
