@@ -30,6 +30,14 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('type must be "case-pump", "cases" or "pumps".', call. = FALSE)
   }
 
+  if (!case.set %in% c("observed", "expected")) {
+    stop('case.set must be "case-observed" or "expected".', call. = FALSE)
+  }
+
+  if (!location %in% c("nominal", "anchor", "orthogonal")) {
+    stop('type must be "anchor", "nominal" or "orthogonal".', call. = FALSE)
+  }
+
   if (any(is.character(origin))) origin <- caseLandmarks(origin)
   if (any(is.character(destination))) destination <- caseLandmarks(destination)
 
