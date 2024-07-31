@@ -1,3 +1,9 @@
+### cholera 0.8.0.9392
+
+- add exception for landmarks in casePumpEucl().
+- check case.set and location arguments in euclideanPath().
+
+
 ### cholera 0.8.0.9391
 
 - add/set walkingPathB(case.set = "observed", location = "nominal").

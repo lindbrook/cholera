@@ -473,10 +473,12 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
 
   if (case.set == "observed") {
     if (location %in% c("nominal", "anchor")) {
-      if (location == "anchor") {
-        if (orgn %in% cholera::anchor.case$anchor == FALSE) {
-          sel <- cholera::anchor.case$case %in% orgn
-          orgn <- cholera::anchor.case[sel, "anchor"]
+      if (any(orgn < 1000L)) {
+        if (location == "anchor") {
+          if (orgn %in% cholera::anchor.case$anchor == FALSE) {
+            sel <- cholera::anchor.case$case %in% orgn
+            orgn <- cholera::anchor.case[sel, "anchor"]
+          }
         }
       }
 
