@@ -25,7 +25,6 @@ Imports: curl,
          sp,
          tanaka,
          terra,
-         tools,
          threejs,
          TSP,
          viridisLite
