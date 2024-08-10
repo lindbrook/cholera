@@ -69,7 +69,7 @@ validateCase <- function(x, case.set, include.landmarks, square.intersections) {
         dropped <- paste(setdiff(x0, x), collapse = ", ")
         message("Invalid IDs (", dropped, ") dropped.")
         out <- x
-      } else if (all(!x %in% case.nm)) {
+      } else if (all(x %in% case.nm)) {
         out <- x
       }
       out.nm <- out

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9394
+
+- fix typo in validateCase().
+
+
 ### cholera 0.8.0.9393
 
 - amend validateCase(); move it and validatePump() to validate.R.
