@@ -6,19 +6,20 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param latlong Logical.
 #' @param case.set Character. "observed" or "expected".
-#' @param location Character. For cases and pumps. "anchor, "fatality" or "orthogonal.
+#' @param location Character. For cases and pumps. "nominal", "anchor" or "orthogonal".
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param include.landmarks Logical. Include landmarks as cases.
+#' @param square.intersections Logical. Include landmarks square road intersections.
 #' @importFrom geosphere distGeo
 #' @export
 
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed", location = "nominal",
   weighted = TRUE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5, include.landmarks = TRUE) {
+  walking.speed = 5, include.landmarks = TRUE, square.intersections = FALSE) {
 
   meter.to.yard <- 1.09361
 
@@ -38,29 +39,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('type must be "anchor", "nominal" or "orthogonal".', call. = FALSE)
   }
 
-  if (any(is.character(origin))) origin <- caseLandmarks(origin)
-  if (any(is.character(destination))) destination <- caseLandmarks(destination)
-
-  if (!include.landmarks & type %in% c("case-pump", "cases")) {
-    msg <- 'landmarks not considered when include.landmarks = FALSE.'
-    if (is.numeric(origin)) {
-      if (origin > 1000L) stop(msg, call. = FALSE)
-    } else if (is.character(origin)) {
-      lndmrk.test <- origin %in% cholera::landmarksB$name |
-                     origin %in% cholera::landmark.squaresB$name
-      if (lndmrk.test) stop(msg, call. = FALSE)
-    }
-    if (is.numeric(destination)) {
-      if (destination > 1000L) stop(msg, call. = FALSE)
-    } else if (is.character(destination)) {
-      lndmrk.test <- destination %in% cholera::landmarksB$name |
-                     destination %in% cholera::landmark.squaresB$name
-      if (lndmrk.test) stop(msg, call. = FALSE)
-    }
-  }
-
   # Change type to "cases" in presence of destination landmarks
-  if (is.character(destination)) {
+  if (any(is.character(destination))) {
     dest.nm <- c(cholera::landmark.squaresB$name, cholera::landmarksB$name)
     if (any(destination %in% dest.nm) & type != "cases") type <- "cases"
   } else if (is.numeric(destination)) {
@@ -97,7 +77,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   }
 
   if (type == "case-pump") {
-    origin.chk <- validateCase(origin, case.set, location, include.landmarks)
+    origin.chk <- validateCase(origin, case.set, include.landmarks,
+      square.intersections)
     orgn <- origin.chk$out
     orgn.nm <- origin.chk$out.nm
 
@@ -106,12 +87,13 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     dstn.nm <- destination.chk$out.nm
 
   } else if (type == "cases") {
-    origin.chk <- validateCase(origin, case.set, location, include.landmarks)
+    origin.chk <- validateCase(origin, case.set, include.landmarks,
+      square.intersections)
     orgn <- origin.chk$out
     orgn.nm <- origin.chk$out.nm
 
-    destination.chk <- validateCase(destination, case.set, location,
-      include.landmarks)
+    destination.chk <- validateCase(destination, case.set, include.landmarks,
+      square.intersections)
     dstn <- destination.chk$out
     dstn.nm <- destination.chk$out.nm
 
@@ -127,7 +109,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   if (type == "case-pump") {
     path.data <- casePumpEucl(orgn, orgn.nm, destination, dstn, latlong, pmp,
-      vestry, case.set, location)
+      vestry, case.set, location, square.intersections)
   } else if (type == "cases") {
     path.data <- caseCaseEucl(orgn, orgn.nm, destination, dstn,
       include.landmarks, latlong, origin, vestry, location)

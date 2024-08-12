@@ -7,7 +7,8 @@
 euclideanPath(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed",
   location = "nominal", weighted = TRUE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5, include.landmarks = TRUE)
+  time.unit = "second", walking.speed = 5, include.landmarks = TRUE,
+  square.intersections = FALSE)
 }
 \arguments{
 \item{origin}{Numeric. Vector of origin(s) (numeric ID or character name landmark/pump ).}
@@ -22,7 +23,7 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 
 \item{case.set}{Character. "observed" or "expected".}
 
-\item{location}{Character. For cases and pumps. "anchor, "fatality" or "orthogonal.}
+\item{location}{Character. For cases and pumps. "nominal", "anchor" or "orthogonal".}
 
 \item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 
@@ -33,6 +34,8 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{include.landmarks}{Logical. Include landmarks as cases.}
+
+\item{square.intersections}{Logical. Include landmarks square road intersections.}
 }
 \description{
 Compute Euclidean path coordinates from observed case/landmark to nearest/selected pump.
