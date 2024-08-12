@@ -1,3 +1,8 @@
+### cholera 0.8.0.9396
+
+- fix validateCase() for character cases.
+
+
 ### cholera 0.8.0.9395
 
 - add/set euclideanPath(square.intersections = FALSE); amend location argument.

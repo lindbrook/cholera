@@ -41,13 +41,11 @@ validateCase <- function(x, case.set, include.landmarks, square.intersections) {
         out <- x
       }
       out.nm <- paste(out)
-
     } else if (is.character(x)) {
       x <- vapply(x, caseAndSpace, character(1L))
 
       if (all(!x %in% case.nm)) {
         stop("No valid IDs!  Check spelling or cholera::landmarksB")
-
       } else if (any(!x %in% case.nm)) {
         x0 <- x
         x.ok <- x[x %in% case.nm]
@@ -68,12 +66,13 @@ validateCase <- function(x, case.set, include.landmarks, square.intersections) {
 
         dropped <- paste(setdiff(x0, x), collapse = ", ")
         message("Invalid IDs (", dropped, ") dropped.")
-        out <- x
+        out <- case.id[which(case.nm == x)]
       } else if (all(x %in% case.nm)) {
-        out <- x
+        out <- case.id[which(case.nm == x)]
       }
       out.nm <- out
     }
+
   } else if (case.set == "expected") {
     case.id <- cholera::sim.ortho.proj$case # equiv. to latlong.sim.ortho.proj
     case.msg <- paste0("Case IDs range from 1 to ", length(case.id), ".")
