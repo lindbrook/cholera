@@ -41,13 +41,11 @@ validateCase <- function(x, case.set, include.landmarks, square.intersections) {
         out <- x
       }
       out.nm <- paste(out)
-
     } else if (is.character(x)) {
       x <- vapply(x, caseAndSpace, character(1L))
 
       if (all(!x %in% case.nm)) {
         stop("No valid IDs!  Check spelling or cholera::landmarksB")
-
       } else if (any(!x %in% case.nm)) {
         x0 <- x
         x.ok <- x[x %in% case.nm]
