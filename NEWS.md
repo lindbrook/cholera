@@ -1,3 +1,8 @@
+### cholera 0.8.0.9397
+
+- archive caseLandmarks() and prior validateCase() and validatePump().
+
+
 ### cholera 0.8.0.9396
 
 - fix validateCase() for character cases.
