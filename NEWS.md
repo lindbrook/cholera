@@ -1,6 +1,7 @@
 ### cholera 0.8.0.9395
 
 - add/set euclideanPath(square.intersections = FALSE); amend location argument.
+- amend casePumpEucl().
 
 
 ### cholera 0.8.0.9394
