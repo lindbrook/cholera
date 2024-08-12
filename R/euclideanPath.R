@@ -6,19 +6,20 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.
 #' @param latlong Logical.
 #' @param case.set Character. "observed" or "expected".
-#' @param location Character. For cases and pumps. "anchor, "fatality" or "orthogonal.
+#' @param location Character. For cases and pumps. "nominal", "anchor" or "orthogonal".
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param include.landmarks Logical. Include landmarks as cases.
+#' @param square.intersections Logical. Include landmarks square road intersections.
 #' @importFrom geosphere distGeo
 #' @export
 
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed", location = "nominal",
   weighted = TRUE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5, include.landmarks = TRUE) {
+  walking.speed = 5, include.landmarks = TRUE, square.intersections = FALSE) {
 
   meter.to.yard <- 1.09361
 
@@ -38,29 +39,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('type must be "anchor", "nominal" or "orthogonal".', call. = FALSE)
   }
 
-  if (any(is.character(origin))) origin <- caseLandmarks(origin)
-  if (any(is.character(destination))) destination <- caseLandmarks(destination)
-
-  if (!include.landmarks & type %in% c("case-pump", "cases")) {
-    msg <- 'landmarks not considered when include.landmarks = FALSE.'
-    if (is.numeric(origin)) {
-      if (origin > 1000L) stop(msg, call. = FALSE)
-    } else if (is.character(origin)) {
-      lndmrk.test <- origin %in% cholera::landmarksB$name |
-                     origin %in% cholera::landmark.squaresB$name
-      if (lndmrk.test) stop(msg, call. = FALSE)
-    }
-    if (is.numeric(destination)) {
-      if (destination > 1000L) stop(msg, call. = FALSE)
-    } else if (is.character(destination)) {
-      lndmrk.test <- destination %in% cholera::landmarksB$name |
-                     destination %in% cholera::landmark.squaresB$name
-      if (lndmrk.test) stop(msg, call. = FALSE)
-    }
-  }
-
   # Change type to "cases" in presence of destination landmarks
-  if (is.character(destination)) {
+  if (any(is.character(destination))) {
     dest.nm <- c(cholera::landmark.squaresB$name, cholera::landmarksB$name)
     if (any(destination %in% dest.nm) & type != "cases") type <- "cases"
   } else if (is.numeric(destination)) {
@@ -97,7 +77,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   }
 
   if (type == "case-pump") {
-    origin.chk <- validateCase(origin, case.set, location, include.landmarks)
+    origin.chk <- validateCase(origin, case.set, include.landmarks,
+      square.intersections)
     orgn <- origin.chk$out
     orgn.nm <- origin.chk$out.nm
 
@@ -106,12 +87,13 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     dstn.nm <- destination.chk$out.nm
 
   } else if (type == "cases") {
-    origin.chk <- validateCase(origin, case.set, location, include.landmarks)
+    origin.chk <- validateCase(origin, case.set, include.landmarks,
+      square.intersections)
     orgn <- origin.chk$out
     orgn.nm <- origin.chk$out.nm
 
-    destination.chk <- validateCase(destination, case.set, location,
-      include.landmarks)
+    destination.chk <- validateCase(destination, case.set, include.landmarks,
+      square.intersections)
     dstn <- destination.chk$out
     dstn.nm <- destination.chk$out.nm
 
@@ -127,7 +109,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   if (type == "case-pump") {
     path.data <- casePumpEucl(orgn, orgn.nm, destination, dstn, latlong, pmp,
-      vestry, case.set, location)
+      vestry, case.set, location, square.intersections)
   } else if (type == "cases") {
     path.data <- caseCaseEucl(orgn, orgn.nm, destination, dstn,
       include.landmarks, latlong, origin, vestry, location)
@@ -466,12 +448,23 @@ print.euclidean_path <- function(x, ...) {
 }
 
 casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
-  vestry, case.set, location) {
+  vestry, case.set, location, square.intersections) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
   if (case.set == "observed") {
+    vars.lndmrk <- c("case", vars, "name")
+    lndmrk.sq <- cholera::landmark.squaresB[, vars.lndmrk]
+
+    if (square.intersections) {
+      lndmrk <- rbind(lndmrk.sq, cholera::landmarksB[, vars.lndmrk])
+    } else {
+      sq.intersections <- grep("Square", cholera::landmarksB$name)
+      lndmrk.etc <- cholera::landmarksB[-sq.intersections, vars.lndmrk]
+      lndmrk <- rbind(lndmrk.sq, lndmrk.etc[, vars.lndmrk])
+    }
+
     if (location %in% c("nominal", "anchor")) {
       if (any(orgn < 1000L)) {
         if (location == "anchor") {
@@ -483,15 +476,14 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
       }
 
       fatal <- cholera::fatalities$case %in% orgn
-      land <- cholera::landmarksB$case %in% orgn
-      # sq <- cholera::landmark.squaresB$case %in% orgn  # via validateCase()!
+      land <- lndmrk$case %in% orgn
 
       if (any(fatal) & any(land)) {
         a <- cholera::fatalities[fatal, vars]
-        b <- cholera::landmarksB[land, vars]
+        b <- lndmrk[land, vars]
         ego.coords <- rbind(a, b)
       } else if (all(!fatal) & any(land)) {
-        ego.coords <- cholera::landmarksB[land, vars]
+        ego.coords <- lndmrk[land, vars]
       } else if (any(fatal) & all(!land)) {
         ego.coords <- cholera::fatalities[fatal, vars]
       }
@@ -503,20 +495,20 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
         orgn <- cholera::anchor.case[sel, "anchor"]
 
         fatal <- ortho$case %in% orgn
-        land <- cholera::landmarksB$case %in% orgn
+        land <- lndmrk$case %in% orgn
       } else {
         ortho <- cholera::ortho.proj
         names(ortho)[names(ortho) %in% paste0(vars, ".proj")] <- vars
         fatal <- ortho$case %in% orgn
-        land <- cholera::landmarksB$case %in% orgn
+        land <- lndmrk$case %in% orgn
       }
 
       if (any(fatal) & any(land)) {
         a <- ortho[fatal, vars]
-        b <- cholera::landmarksB[land, vars]
+        b <- lndmrk[land, vars]
         ego.coords <- rbind(a, b)
       } else if (all(!fatal) & any(land)) {
-        ego.coords <- cholera::landmarksB[land, vars]
+        ego.coords <- lndmrk[land, vars]
       } else if (any(fatal) & all(!land)) {
         ego.coords <- ortho[fatal, vars]
       }
@@ -542,34 +534,60 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
 
   alter.coords <- pmp[pmp$id %in% dstn, vars]
 
-  sel <- seq_len(nrow(alter.coords))
+  if (nrow(ego.coords) == 1 & nrow(alter.coords) == 1) {
+    d <- stats::dist(rbind(ego.coords, alter.coords))
+    alter.id <- 1L
+    nearest.pump <- dstn
+    ego <- ego.coords
+    alter <- alter.coords
 
-  if (nrow(ego.coords) == 1) {
-    d <- stats::dist(rbind(ego.coords, alter.coords))[sel]
-    d.sel <- which.min(d)
+  } else if (nrow(ego.coords) == 1 & nrow(alter.coords) > 1) {
+    d.sel <- seq_len(nrow(alter.coords))
+    ds <- stats::dist(rbind(ego.coords, alter.coords))[d.sel]
 
-    nearest.pump <- pmp[d.sel, "id"]
-    nearest.d <- min(d)
+    d <- min(ds)
+    alter.id <- which.min(ds)
+    nearest.pump <- pmp[alter.id, "id"]
 
     ego <- ego.coords
-    alter <- alter.coords[d.sel, ]
-  } else if (length(ego.coords) > 1) {
+    alter <- alter.coords[alter.id, ]
+
+  } else if (nrow(ego.coords) > 1 & nrow(alter.coords) == 1) {
+    ds <- vapply(seq_len(nrow(ego.coords)), function(i) {
+      stats::dist(rbind(ego.coords[i, ], alter.coords))
+    }, numeric(1L))
+
+    d <- min(ds)
+    alter.id <- 1L
+    nearest.pump <- dstn
+
+    ego.id <- which.min(ds)
+    orgn <- orgn[ego.id]
+    orgn.nm <- orgn.nm[ego.id]
+
+    ego <- ego.coords[ego.id, ]
+    alter <- alter.coords
+
+
+
+  } else if (nrow(ego.coords) > 1 & nrow(alter.coords) > 1) {
     d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
       stats::dist(rbind(ego.coords[i, ], alter.coords))[sel]
     })
+
     ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
     orgn <- orgn[ego.id]
     orgn.nm <- orgn.nm[ego.id]
+
     d <- d.multi.ego[[ego.id]]
-    nearest.pump <- dstn[which.min(d)]
-    nearest.d <- min(d)
+    alter.id <- which.min(d)
 
     ego <- ego.coords[ego.id, ]
-    alter <- alter.coords[which.min(d), ]
+    alter <- alter.coords[alter.id, ]
   }
 
   data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
-    nearest.dest = nearest.pump, d = nearest.d)
+    nearest.dest = dstn[alter.id], d = d)
 
   list(ego = ego, alter = alter, data = data.summary)
 }
