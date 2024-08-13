@@ -1,3 +1,8 @@
+### cholera 0.8.0.9398
+
+- distinguish anchor and case in euclideanPath() and longTitle().
+
+
 ### cholera 0.8.0.9397
 
 - archive caseLandmarks() and prior validateCase() and validatePump().
