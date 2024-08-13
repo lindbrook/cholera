@@ -154,9 +154,9 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     }
   }
 
-  data.summary <- data.frame(orig = orgn,
+  data.summary <- data.frame(orig = path.data$data$orgn,
                              dest = nearest.dest,
-                             orig.nm = orgn.nm,
+                             orig.nm = path.data$data$orgn.nm,
                              dest.nm = dest.nm,
                              distance = d,
                              time = walking.time,
@@ -166,6 +166,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   output <- list(ego = path.data$ego,
                  alter = path.data$alter,
                  data = data.summary,
+                 origin = origin,
                  destination = destination,
                  vestry = vestry,
                  distance.unit = distance.unit,
@@ -429,7 +430,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
     title(sub = paste(d, t, sep = "; "))
   }
 
-  longTitle(long.title, type, pmp, path.data, orig, land)
+  longTitle(long.title, type, pmp, path.data, orig, land, x)
 }
 
 #' Print method for euclideanPath().

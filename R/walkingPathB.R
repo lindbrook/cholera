@@ -688,12 +688,16 @@ arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit,
   do.call(rbind, out)
 }
 
-longTitle <- function(long.title, type, pmp, path.data, orig, land) {
+longTitle <- function(long.title, type, pmp, path.data, orig, land, x) {
   if (long.title) {
     if (type == "case-pump") {
       p.nm <- pmp[pmp$id == path.data$dest, ]$street
       if (orig < 1000L) {
-        alpha <- paste("Case", orig)
+        if (x$location == "nominal") {
+          alpha <- paste("Case", orig)
+        } else if (x$location == "anchor") {
+          alpha <- paste0("Anchor ", orig, " (Case ", x$orig, ")")
+        }
         omega <- paste(p.nm, "Pump", paste0("(#", path.data$dest, ")"))
       } else if (orig >= 1000L) {
         c.nm <- land[land$case == orig, ]$name
