@@ -1,3 +1,8 @@
+### cholera 0.8.0.9400
+
+- update validateCase() in walkingPathB().
+
+
 ### cholera 0.8.0.9399
 
 - fix anchor orign.nm casePumpEucl().
