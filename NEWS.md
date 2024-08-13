@@ -1,3 +1,8 @@
+### cholera 0.8.0.9399
+
+- fix anchor orign.nm casePumpEucl().
+
+
 ### cholera 0.8.0.9398
 
 - distinguish anchor and case in euclideanPath() and longTitle().
