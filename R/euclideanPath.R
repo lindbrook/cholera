@@ -472,6 +472,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
           if (orgn %in% cholera::anchor.case$anchor == FALSE) {
             sel <- cholera::anchor.case$case %in% orgn
             orgn <- cholera::anchor.case[sel, "anchor"]
+            orgn.nm <- paste(orgn)
           }
         }
       }
@@ -568,8 +569,6 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
 
     ego <- ego.coords[ego.id, ]
     alter <- alter.coords
-
-
 
   } else if (nrow(ego.coords) > 1 & nrow(alter.coords) > 1) {
     d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
