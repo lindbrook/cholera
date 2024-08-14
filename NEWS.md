@@ -1,3 +1,12 @@
+### cholera 0.8.0.9401
+
+- remove lndmrk test.
+- add dstn.nm argument to caseCase().
+- return origin and location in walkingPathB().
+- add x argument to longTitle().
+- add anchor case filters to casePump() and caseCase().
+
+
 ### cholera 0.8.0.9400
 
 - update validateCase() in walkingPathB().

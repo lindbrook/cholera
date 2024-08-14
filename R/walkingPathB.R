@@ -30,24 +30,6 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('type must be "case-pump", "cases" or "pumps".', call. = FALSE)
   }
 
-  if (!include.landmarks & type %in% c("case-pump", "cases")) {
-    msg <- 'landmarks not considered when include.landmarks = FALSE.'
-    if (is.numeric(origin)) {
-      if (origin > 1000L) stop(msg, call. = FALSE)
-    } else if (is.character(origin)) {
-      lndmrk.test <- origin %in% cholera::landmarksB$name |
-                     origin %in% cholera::landmark.squaresB$name
-      if (lndmrk.test) stop(msg, call. = FALSE)
-    }
-    if (is.numeric(destination)) {
-      if (destination > 1000L) stop(msg, call. = FALSE)
-    } else if (is.character(destination)) {
-      lndmrk.test <- destination %in% cholera::landmarksB$name |
-                     destination %in% cholera::landmark.squaresB$name
-      if (lndmrk.test) stop(msg, call. = FALSE)
-    }
-  }
-
   # Change type to "cases" in presence of destination landmarks
   if (is.character(destination)) {
     dest.nm <- c(cholera::landmark.squaresB$name, cholera::landmarksB$name)
@@ -95,8 +77,8 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
     path.data <- casePump(orgn, orgn.nm, dstn, destination, network.data, pmp,
       vestry, weighted)
   } else if (type == "cases") {
-    path.data <- caseCase(orgn, orgn.nm, dstn, destination, include.landmarks,
-      network.data, origin, vestry, weighted)
+    path.data <- caseCase(orgn, orgn.nm, dstn, dstn.nm, destination,
+      include.landmarks, network.data, origin, vestry, weighted)
   } else if (type == "pumps") {
     path.data <- pumpPump(orgn, orgn.nm, dstn, destination, network.data,
       origin, pmp, vestry, weighted)
@@ -163,11 +145,13 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
 
   output <- list(path = path,
                  data = data.summary,
+                 origin = origin,
                  destination = destination,
                  vestry = vestry,
                  ds = ds,
                  distance.unit = distance.unit,
                  latlong = latlong,
+                 location = location,
                  edges = edges,
                  pmp = pmp,
                  time.unit = time.unit,
@@ -449,7 +433,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
     title(sub = paste(d, t, sep = "; "))
   }
 
-  longTitle(long.title, type, pmp, path.data, orig, land)
+  longTitle(long.title, type, pmp, path.data, orig, land, x)
 }
 
 #' Print method for walkingPathB().
@@ -784,6 +768,18 @@ casePump <- function(orgn, orgn.nm, dstn, destination, network.data, pmp,
   g <- network.data$g
   nodes <- network.data$nodes
 
+  if (any(orgn < 1000L)) {
+    fatal <- orgn[orgn < 1000L]
+    land <- orgn[orgn >= 1000L]
+    land.nm <- orgn.nm[orgn >= 1000L]
+
+    if (any(!fatal %in% cholera::anchor.case$anchor)) {
+      sel <- cholera::anchor.case$case %in% fatal
+      orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
+      orgn.nm <- c(paste(orgn), land.nm)
+    }
+  }
+
   ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
                 nodes[nodes$land %in% orgn, ]$node)
 
@@ -848,8 +844,8 @@ casePump <- function(orgn, orgn.nm, dstn, destination, network.data, pmp,
   list(orgn = orgn, orgn.nm = orgn.nm, nearest.dest = nearest.dest, p = p[[1]])
 }
 
-caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks,
-  network.data, origin, vestry, weighted) {
+caseCase <- function(orgn, orgn.nm, dstn, dstn.nm, destination,
+  include.landmarks, network.data, origin, vestry, weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
@@ -888,6 +884,18 @@ caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks,
     }
   }
 
+  if (any(orgn < 1000L)) {
+    fatal <- orgn[orgn < 1000L]
+    land <- orgn[orgn >= 1000L]
+    land.nm <- orgn.nm[orgn >= 1000L]
+
+    if (any(!fatal %in% cholera::anchor.case$anchor)) {
+      sel <- cholera::anchor.case$case %in% fatal
+      orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
+      orgn.nm <- c(paste(orgn), land.nm)
+    }
+  }
+
   ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
                 nodes[nodes$land %in% orgn, ]$node)
 
@@ -906,6 +914,18 @@ caseCase <- function(orgn, orgn.nm, dstn, destination, include.landmarks,
     }
 
     if (any(orgn %in% dstn)) dstn <- dstn[!dstn %in% orgn]
+  }
+
+  if (any(dstn < 1000L)) {
+    fatal <- dstn[dstn < 1000L]
+    land <- dstn[dstn >= 1000L]
+    land.nm <- dstn.nm[dstn >= 1000L]
+
+    if (any(!fatal %in% cholera::anchor.case$anchor)) {
+      sel <- cholera::anchor.case$case %in% fatal
+      dstn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
+      dstn.nm <- c(paste(dstn), land.nm)
+    }
   }
 
   alters <- nodes[nodes$case %in% dstn | nodes$land %in% dstn, ]
