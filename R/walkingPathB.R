@@ -768,6 +768,18 @@ casePump <- function(orgn, orgn.nm, dstn, destination, network.data, pmp,
   g <- network.data$g
   nodes <- network.data$nodes
 
+  if (any(orgn < 1000L)) {
+    fatal <- orgn[orgn < 1000L]
+    land <- orgn[orgn >= 1000L]
+    land.nm <- orgn.nm[orgn >= 1000L]
+
+    if (any(!fatal %in% cholera::anchor.case$anchor)) {
+      sel <- cholera::anchor.case$case %in% fatal
+      orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
+      orgn.nm <- c(paste(orgn), land.nm)
+    }
+  }
+
   ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
                 nodes[nodes$land %in% orgn, ]$node)
 
@@ -872,6 +884,18 @@ caseCase <- function(orgn, orgn.nm, dstn, dstn.nm, destination,
     }
   }
 
+  if (any(orgn < 1000L)) {
+    fatal <- orgn[orgn < 1000L]
+    land <- orgn[orgn >= 1000L]
+    land.nm <- orgn.nm[orgn >= 1000L]
+
+    if (any(!fatal %in% cholera::anchor.case$anchor)) {
+      sel <- cholera::anchor.case$case %in% fatal
+      orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
+      orgn.nm <- c(paste(orgn), land.nm)
+    }
+  }
+
   ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
                 nodes[nodes$land %in% orgn, ]$node)
 
@@ -890,6 +914,18 @@ caseCase <- function(orgn, orgn.nm, dstn, dstn.nm, destination,
     }
 
     if (any(orgn %in% dstn)) dstn <- dstn[!dstn %in% orgn]
+  }
+
+  if (any(dstn < 1000L)) {
+    fatal <- dstn[dstn < 1000L]
+    land <- dstn[dstn >= 1000L]
+    land.nm <- dstn.nm[dstn >= 1000L]
+
+    if (any(!fatal %in% cholera::anchor.case$anchor)) {
+      sel <- cholera::anchor.case$case %in% fatal
+      dstn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
+      dstn.nm <- c(paste(dstn), land.nm)
+    }
   }
 
   alters <- nodes[nodes$case %in% dstn | nodes$land %in% dstn, ]
