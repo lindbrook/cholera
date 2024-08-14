@@ -433,7 +433,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
     title(sub = paste(d, t, sep = "; "))
   }
 
-  longTitle(long.title, type, pmp, path.data, orig, land)
+  longTitle(long.title, type, pmp, path.data, orig, land, x)
 }
 
 #' Print method for walkingPathB().
