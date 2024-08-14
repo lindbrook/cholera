@@ -30,24 +30,6 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('type must be "case-pump", "cases" or "pumps".', call. = FALSE)
   }
 
-  if (!include.landmarks & type %in% c("case-pump", "cases")) {
-    msg <- 'landmarks not considered when include.landmarks = FALSE.'
-    if (is.numeric(origin)) {
-      if (origin > 1000L) stop(msg, call. = FALSE)
-    } else if (is.character(origin)) {
-      lndmrk.test <- origin %in% cholera::landmarksB$name |
-                     origin %in% cholera::landmark.squaresB$name
-      if (lndmrk.test) stop(msg, call. = FALSE)
-    }
-    if (is.numeric(destination)) {
-      if (destination > 1000L) stop(msg, call. = FALSE)
-    } else if (is.character(destination)) {
-      lndmrk.test <- destination %in% cholera::landmarksB$name |
-                     destination %in% cholera::landmark.squaresB$name
-      if (lndmrk.test) stop(msg, call. = FALSE)
-    }
-  }
-
   # Change type to "cases" in presence of destination landmarks
   if (is.character(destination)) {
     dest.nm <- c(cholera::landmark.squaresB$name, cholera::landmarksB$name)
