@@ -118,10 +118,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       pmp, vestry)
   }
 
-  if (length(orgn) > 1) orgn <- path.data$data$orgn
-  if (length(orgn.nm) > 1) orgn.nm <- path.data$data$orgn.nm
-  nearest.dest <- path.data$data$nearest.dest
-
   if (latlong) {
     p1 <- path.data$ego
     p2 <- path.data$alter
