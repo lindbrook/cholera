@@ -200,14 +200,35 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
   type <- x$data$type
   ego.xy <- x$ego
   alter.xy <- x$alter
-  dat <- rbind(alter.xy, ego.xy)
-  pmp <- x$pmp
-  orig <- path.data$orig
-  dest <- path.data$dest
+  latlong <- x$latlong
 
+  if (latlong) {
+    ew <- "lon"
+    ns <- "lat"
+    asp <- 1.6
+  } else {
+    ew <- "x"
+    ns <- "y"
+    asp <- 1L
+  }
+
+  vars <- c(ew, ns)
+
+  if (x$location %in% c("anchor", "orthogonal")) {
+    orgn.xy <- cholera::fatalities[cholera::fatalities$case %in% x$origin, vars]
+  }
+
+  if (exists("orgn.xy")) {
+    dat <- rbind(alter.xy, ego.xy, orgn.xy)
+  } else {
+    dat <- rbind(alter.xy, ego.xy)
+  }
+
+  pmp <- x$pmp
+  orig <- path.data$origin
+  dest <- path.data$destination
   colors <- snowColors(x$vestry)
   distance.unit <- x$distance.unit
-  latlong <- x$latlong
   time.unit <- x$time.unit
   walking.speed <- x$walking.speed
 
@@ -227,20 +248,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
 
   fatality <- cholera::fatalities
-
   land <- cholera::landmarksB
 
-  if (latlong) {
-    ew <- "lon"
-    ns <- "lat"
-    asp <- 1.6
-  } else {
-    ew <- "x"
-    ns <- "y"
-    asp <- 1L
-  }
-
-  vars <- c(ew, ns)
   padding <- ifelse(latlong, 0.000125, 0.25)
 
   if (is.logical(zoom)) {
@@ -283,6 +292,12 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
     if (orig < 1000L) {
       points(ego.xy, col = "red")
       text(ego.xy, pos = 1, labels = orig, col = "red")
+      if (x$location %in% c("anchor", "orthogonal")) {
+        if (exists("orgn.xy")) {
+          points(orgn.xy)
+          text(orgn.xy, pos = 1, labels = x$origin)
+        }
+      }
     } else if (orig >= 1000L) {
       points(land[land$case == orig, vars], col = "red")
       land.tmp <- land[land$case == orig, ]
