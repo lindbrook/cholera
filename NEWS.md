@@ -1,3 +1,10 @@
+### cholera 0.8.0.9402
+
+- amend variable names in euclideanPath().
+- separate milepost arrows from direct arrow in plot.euclidean_path().
+- include origin case when location %in% c("anchor", "orthogonal").
+
+
 ### cholera 0.8.0.9401
 
 - remove lndmrk test.

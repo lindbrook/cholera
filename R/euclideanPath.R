@@ -118,10 +118,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       pmp, vestry)
   }
 
-  if (length(orgn) > 1) orgn <- path.data$data$orgn
-  if (length(orgn.nm) > 1) orgn.nm <- path.data$data$orgn.nm
-  nearest.dest <- path.data$data$nearest.dest
-
   if (latlong) {
     p1 <- path.data$ego
     p2 <- path.data$alter
@@ -138,26 +134,28 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       time.unit = time.unit, walking.speed = walking.speed)
   }
 
+  nearest.dest <- path.data$data$nearest.dest
+
   if (as.integer(nearest.dest) < 1000L) {
     if (type %in% c("case-pump", "pumps")) {
-      dest.nm <- pmp[pmp$id == nearest.dest, ]$street
+      dstn.nm <- pmp[pmp$id == nearest.dest, ]$street
     } else if (type == "cases") {
-      dest.nm <- nearest.dest
+      dstn.nm <- nearest.dest
     }
   } else if (as.integer(nearest.dest) >= 1000L) {
     sel <- cholera::landmarksB$case == as.integer(nearest.dest)
-    dest.nm <- cholera::landmarksB[sel, ]$name
-    if (grepl("Square", dest.nm)) {
+    dstn.nm <- cholera::landmarksB[sel, ]$name
+    if (grepl("Square", dstn.nm)) {
       sel <- cholera::landmarksB$case == nearest.dest
       tmp <- strsplit(cholera::landmarksB[sel, ]$name, "-")
-      dest.nm <- unlist(tmp)[1]
+      dstn.nm <- unlist(tmp)[1]
     }
   }
 
-  data.summary <- data.frame(orig = path.data$data$orgn,
-                             dest = nearest.dest,
-                             orig.nm = path.data$data$orgn.nm,
-                             dest.nm = dest.nm,
+  data.summary <- data.frame(origin = path.data$data$orgn,
+                             destination = nearest.dest,
+                             origin.nm = path.data$data$orgn.nm,
+                             destination.nm = dstn.nm,
                              distance = d,
                              time = walking.time,
                              type = type,
@@ -202,14 +200,35 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
   type <- x$data$type
   ego.xy <- x$ego
   alter.xy <- x$alter
-  dat <- rbind(alter.xy, ego.xy)
-  pmp <- x$pmp
-  orig <- path.data$orig
-  dest <- path.data$dest
+  latlong <- x$latlong
 
+  if (latlong) {
+    ew <- "lon"
+    ns <- "lat"
+    asp <- 1.6
+  } else {
+    ew <- "x"
+    ns <- "y"
+    asp <- 1L
+  }
+
+  vars <- c(ew, ns)
+
+  if (x$location %in% c("anchor", "orthogonal")) {
+    orgn.xy <- cholera::fatalities[cholera::fatalities$case %in% x$origin, vars]
+  }
+
+  if (exists("orgn.xy")) {
+    dat <- rbind(alter.xy, ego.xy, orgn.xy)
+  } else {
+    dat <- rbind(alter.xy, ego.xy)
+  }
+
+  pmp <- x$pmp
+  orig <- path.data$origin
+  dest <- path.data$destination
   colors <- snowColors(x$vestry)
   distance.unit <- x$distance.unit
-  latlong <- x$latlong
   time.unit <- x$time.unit
   walking.speed <- x$walking.speed
 
@@ -229,20 +248,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
 
   fatality <- cholera::fatalities
-
   land <- cholera::landmarksB
 
-  if (latlong) {
-    ew <- "lon"
-    ns <- "lat"
-    asp <- 1.6
-  } else {
-    ew <- "x"
-    ns <- "y"
-    asp <- 1L
-  }
-
-  vars <- c(ew, ns)
   padding <- ifelse(latlong, 0.000125, 0.25)
 
   if (is.logical(zoom)) {
@@ -265,7 +272,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
   }
 
   if (type == "case-pump") {
-    p.sel <- paste0("p", path.data$dest)
+    p.sel <- paste0("p", path.data$destination)
     case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
   } else {
     case.color <- "blue"
@@ -285,6 +292,12 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
     if (orig < 1000L) {
       points(ego.xy, col = "red")
       text(ego.xy, pos = 1, labels = orig, col = "red")
+      if (x$location %in% c("anchor", "orthogonal")) {
+        if (exists("orgn.xy")) {
+          points(orgn.xy)
+          text(orgn.xy, pos = 1, labels = x$origin)
+        }
+      }
     } else if (orig >= 1000L) {
       points(land[land$case == orig, vars], col = "red")
       land.tmp <- land[land$case == orig, ]
@@ -325,7 +338,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
         points(land[land$case == dest, vars], col = "red")
         land.tmp <- land[land$case == dest, ]
         if (grepl("Square", land.tmp$name)) {
-          sel <- cholera::landmark.squaresB$name == path.data$dest.nm
+          sel <- cholera::landmark.squaresB$name == path.data$destination.nm
           label.dat <- cholera::landmark.squaresB[sel, ]
           label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
@@ -362,9 +375,6 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
 
   if (x$location == "orthogonal") points(ego.xy[, vars], pch = 0)
 
-  arrows(ego.xy[, ew], ego.xy[, ns], alter.xy[, ew], alter.xy[, ns],
-    col = case.color, lwd = 3, length = 0.075)
-
   d <- paste(round(path.data$distance, 1), d.unit)
   t <- paste(round(path.data$time, 1), paste0(time.unit, "s"), "@",
     walking.speed, "km/hr")
@@ -388,8 +398,10 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
       }
     } else stop('Specify milepost.unit', call. = FALSE)
 
-    if (latlong) ols <- stats::lm(lat ~ lon, data = dat)
-    else ols <- stats::lm(y ~ x, data = dat)
+    ptp <- rbind(alter.xy, ego.xy)
+
+    if (latlong) ols <- stats::lm(lat ~ lon, data = ptp)
+    else ols <- stats::lm(y ~ x, data = ptp)
 
     edge.slope <- stats::coef(ols)[2]
     theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
@@ -397,7 +409,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
     if (latlong) {
       post.coords <- latlongEuclideanPosts(ego.xy, alter.xy, h, ew, ns)
     } else {
-      post.coords <- quandrantCoordinates(dat[2:1, ], h, theta)
+      post.coords <- quandrantCoordinates(ptp[2:1, ], h, theta)
     }
 
     arrow.data <- data.frame(x = c(post.coords[, ew], ego.xy[, ew]),
@@ -427,6 +439,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
     }
     title(sub = paste(d, t, post.info, sep = "; "))
   } else {
+    arrows(ego.xy[, ew], ego.xy[, ns], alter.xy[, ew], alter.xy[, ns],
+      col = case.color, lwd = 3, length = 0.075)
     title(sub = paste(d, t, sep = "; "))
   }
 
@@ -466,17 +480,17 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
       lndmrk <- rbind(lndmrk.sq, lndmrk.etc[, vars.lndmrk])
     }
 
-    if (location %in% c("nominal", "anchor")) {
-      if (any(orgn < 1000L)) {
-        if (location == "anchor") {
-          if (orgn %in% cholera::anchor.case$anchor == FALSE) {
-            sel <- cholera::anchor.case$case %in% orgn
-            orgn <- cholera::anchor.case[sel, "anchor"]
-            orgn.nm <- paste(orgn)
-          }
+    if (any(orgn < 1000L)) {
+      if (location %in% c("anchor", "orthogonal")) {
+        if (orgn %in% cholera::anchor.case$anchor == FALSE) {
+          sel <- cholera::anchor.case$case %in% orgn
+          orgn <- cholera::anchor.case[sel, "anchor"]
+          orgn.nm <- paste(orgn)
         }
       }
+    }
 
+    if (location %in% c("nominal", "anchor")) {
       fatal <- cholera::fatalities$case %in% orgn
       land <- lndmrk$case %in% orgn
 
