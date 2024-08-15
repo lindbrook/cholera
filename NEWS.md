@@ -1,3 +1,8 @@
+### cholera 0.8.0.9404
+
+- move longTitle(), mapDataRange() and validate.R functions to pathFunctions.R.
+
+
 ### cholera 0.8.0.9403
 
 - use anchor case filter for all locations in casePumpEucl().
