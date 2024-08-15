@@ -480,17 +480,17 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
       lndmrk <- rbind(lndmrk.sq, lndmrk.etc[, vars.lndmrk])
     }
 
-    if (location %in% c("nominal", "anchor")) {
-      if (any(orgn < 1000L)) {
-        if (location == "anchor") {
-          if (orgn %in% cholera::anchor.case$anchor == FALSE) {
-            sel <- cholera::anchor.case$case %in% orgn
-            orgn <- cholera::anchor.case[sel, "anchor"]
-            orgn.nm <- paste(orgn)
-          }
+    if (any(orgn < 1000L)) {
+      if (location %in% c("anchor", "orthogonal")) {
+        if (orgn %in% cholera::anchor.case$anchor == FALSE) {
+          sel <- cholera::anchor.case$case %in% orgn
+          orgn <- cholera::anchor.case[sel, "anchor"]
+          orgn.nm <- paste(orgn)
         }
       }
+    }
 
+    if (location %in% c("nominal", "anchor")) {
       fatal <- cholera::fatalities$case %in% orgn
       land <- lndmrk$case %in% orgn
 
