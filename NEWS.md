@@ -1,3 +1,8 @@
+### cholera 0.8.0.9403
+
+- use anchor case filter for all locations in casePumpEucl().
+
+
 ### cholera 0.8.0.9402
 
 - amend variable names in euclideanPath().
