@@ -360,9 +360,6 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
 
   if (x$location == "orthogonal") points(ego.xy[, vars], pch = 0)
 
-  arrows(ego.xy[, ew], ego.xy[, ns], alter.xy[, ew], alter.xy[, ns],
-    col = case.color, lwd = 3, length = 0.075)
-
   d <- paste(round(path.data$distance, 1), d.unit)
   t <- paste(round(path.data$time, 1), paste0(time.unit, "s"), "@",
     walking.speed, "km/hr")
@@ -386,8 +383,10 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
       }
     } else stop('Specify milepost.unit', call. = FALSE)
 
-    if (latlong) ols <- stats::lm(lat ~ lon, data = dat)
-    else ols <- stats::lm(y ~ x, data = dat)
+    ptp <- rbind(alter.xy, ego.xy)
+
+    if (latlong) ols <- stats::lm(lat ~ lon, data = ptp)
+    else ols <- stats::lm(y ~ x, data = ptp)
 
     edge.slope <- stats::coef(ols)[2]
     theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
@@ -395,7 +394,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
     if (latlong) {
       post.coords <- latlongEuclideanPosts(ego.xy, alter.xy, h, ew, ns)
     } else {
-      post.coords <- quandrantCoordinates(dat[2:1, ], h, theta)
+      post.coords <- quandrantCoordinates(ptp[2:1, ], h, theta)
     }
 
     arrow.data <- data.frame(x = c(post.coords[, ew], ego.xy[, ew]),
@@ -425,6 +424,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
     }
     title(sub = paste(d, t, post.info, sep = "; "))
   } else {
+    arrows(ego.xy[, ew], ego.xy[, ns], alter.xy[, ew], alter.xy[, ns],
+      col = case.color, lwd = 3, length = 0.075)
     title(sub = paste(d, t, sep = "; "))
   }
 
