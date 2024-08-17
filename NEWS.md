@@ -1,3 +1,11 @@
+### cholera 0.8.0.9405
+
+- use geosphere::distGeo() for latlong in caseCaseEucl() and pumpPumpEucl().
+- fix for cases in same stack (type = "cases").
+- remove redundant code in euclideanPath(), caseCaseEucl() and pumpPumpEucl().
+- update syntax for caseCaseEucl() and pumpPumpEucl() in euclideanPath().
+
+
 ### cholera 0.8.0.9404
 
 - move longTitle(), mapDataRange() and validate.R functions to pathFunctions.R.

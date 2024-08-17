@@ -605,141 +605,102 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
   list(ego = ego, alter = alter, data = data.summary)
 }
 
-caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
-  latlong, origin, vestry, location) {
+caseCaseEucl <- function(orgn, orgn.nm, dstn, origin, destination,
+  include.landmarks, latlong, vestry, location, square.intersections) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
-  sq.cases <- sort(c(sqCases("Golden"), sqCases("Soho")))
-
-  if (is.null(origin) & !is.null(destination)) {
-    sq.destination <- (grepl("Square", destination) |
-                       destination %in% sq.cases) &
-                      is.null(origin)
-
-    if (sq.destination) {
-      if (is.character(orgn)) variable <- "name"
-      else if (is.numeric(orgn)) variable <- "case"
-      gold <- sqCases("Golden", variable)
-      soho <- sqCases("Soho", variable)
-
-       if (any(dstn %in% gold)) {
-        sel <- !orgn %in% gold
-        orgn <- orgn[sel]
-        orgn.nm <- orgn.nm[sel]
-      }
-
-      if (any(dstn %in% soho)) {
-        sel <- !orgn %in% soho
-        orgn <- orgn[sel]
-        orgn.nm <- orgn.nm[sel]
-      }
-    }
-
-    if (any(dstn %in% orgn)) {
-      sel <- !orgn %in% dstn
-      orgn <- orgn[sel]
-      orgn.nm <- orgn.nm[sel]
-    }
-  }
-
   # Origin (egos) #
 
-  if (location %in% c("nominal", "anchor")) {
-    if (location == "anchor") {
-      if (orgn %in% cholera::anchor.case$anchor == FALSE) {
-        sel <- cholera::anchor.case$case %in% orgn
-        orgn <- cholera::anchor.case[sel, "anchor"]
-      }
+  if (location %in% c("anchor", "orthogonal")) {
+    if (any(orgn %in% cholera::anchor.case$anchor == FALSE)) {
+      orgn.land <- orgn[orgn >= 1000L]
+      sel <- cholera::anchor.case$case %in% orgn[orgn < 1000L]
+      orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), orgn.land)
     }
 
-    fatal <- cholera::fatalities$case %in% orgn
-    land <- cholera::landmarksB$case %in% orgn
-
-    if (any(fatal) & any(land)) {
-      a <- cholera::fatalities[fatal, vars]
-      b <- cholera::landmarksB[land, vars]
-      ego.coords <- rbind(a, b)
-      orgn <- c(a$case, b$case)
-
-    } else if (all(!fatal) & any(land)) {
-      ego.coords <- cholera::landmarksB[land, vars]
-      orgn <- cholera::landmarksB[land, "case"]
-
-    } else if (any(fatal) & all(!land)) {
-      ego.coords <- cholera::fatalities[fatal, vars]
-      orgn <- cholera::fatalities[fatal, "case"]
-    }
-
-    if (!is.null(origin) & is.null(destination)) {
-      sq.origin <- (grepl("Square", origin) |
-                    origin %in% sq.cases) &
-                   is.null(destination)
-
-      if (any(sq.origin)) {
-        if (is.character(dstn)) variable <- "name"
-        else if (is.numeric(dstn)) variable <- "case"
-        gold <- sqCases("Golden", variable)
-        soho <- sqCases("Soho", variable)
-        if (any(orgn %in% gold)) dstn <- dstn[!dstn %in% gold]
-        if (any(orgn %in% soho)) dstn <- dstn[!dstn %in% soho]
-      }
-    }
-
-    # Destination (alters) #
-
-    if (location == "anchor") {
-      if (dstn %in% cholera::anchor.case$anchor == FALSE) {
-        sel <- cholera::anchor.case$case %in% dstn
-        dstn <- cholera::anchor.case[sel, "anchor"]
-      }
-    }
-
-    if (any(orgn %in% dstn)) dstn <- dstn[!dstn %in% orgn]
-
-    fatal <- cholera::fatalities$case %in% dstn
-    land <- cholera::landmarksB$case %in% dstn
-
-    if (any(fatal) & any(land)) {
-      a <- cholera::fatalities[fatal, vars]
-      b <- cholera::landmarksB[land, vars]
-      alter.coords <- rbind(a, b)
-      dstn <- c(a$case, b$case)
-
-    } else if (all(!fatal) & any(land)) {
-      alter.coords <- cholera::landmarksB[land, vars]
-      dstn <- cholera::landmarksB[land, "case"]
-
-    } else if (any(fatal) & all(!land)) {
-      alter.coords <- cholera::fatalities[fatal, vars]
-      dstn <- cholera::fatalities[fatal, "case"]
+    if (any(dstn %in% cholera::anchor.case$anchor == FALSE)) {
+      dstn.land <- dstn[dstn >= 1000L]
+      sel <- cholera::anchor.case$case %in% dstn[dstn < 1000L]
+      dstn <- c(unique(cholera::anchor.case[sel, "anchor"]), dstn.land)
     }
   }
 
-  sel <- seq_len(nrow(alter.coords))
+  if (length(intersect(orgn, dstn)) != 0) {
+    if (!is.null(origin) & is.null(destination)) {
+      dstn <- setdiff(dstn, orgn)
+    } else if (is.null(origin) & !is.null(destination)) {
+      orgn <- setdiff(orgn, dstn)
+    }
+  }
+
+  fatal <- cholera::fatalities$case %in% orgn
+  land <- cholera::landmarksB$case %in% orgn
+
+  if (any(fatal) & any(land)) {
+    a <- cholera::fatalities[fatal, vars]
+    b <- cholera::landmarksB[land, vars]
+    ego.coords <- rbind(a, b)
+  } else if (all(!fatal) & any(land)) {
+    ego.coords <- cholera::landmarksB[land, vars]
+  } else if (any(fatal) & all(!land)) {
+    ego.coords <- cholera::fatalities[fatal, vars]
+  }
+
+  # Destination (alters) #
+
+  fatal <- cholera::fatalities$case %in% dstn
+  land <- cholera::landmarksB$case %in% dstn
+
+  if (any(fatal) & any(land)) {
+    a <- cholera::fatalities[fatal, vars]
+    b <- cholera::landmarksB[land, vars]
+    alter.coords <- rbind(a, b)
+  } else if (all(!fatal) & any(land)) {
+    alter.coords <- cholera::landmarksB[land, vars]
+  } else if (any(fatal) & all(!land)) {
+    alter.coords <- cholera::fatalities[fatal, vars]
+  }
+
+  if (latlong) {
+    if (nrow(ego.coords) == 1) {
+      d <- geosphere::distGeo(ego.coords, alter.coords)
+    } else if (nrow(ego.coords) > 1) {
+      d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
+        geosphere::distGeo(ego.coords[i, ], alter.coords)
+      })
+      ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+      orgn <- orgn[ego.id]
+      orgn.nm <- orgn.nm[ego.id]
+      d <- d.multi.ego[[ego.id]]
+    }
+  } else {
+    d.sel <- seq_len(nrow(alter.coords))
+
+    if (nrow(ego.coords) == 1) {
+      d <- stats::dist(rbind(ego.coords, alter.coords))[d.sel]
+    } else if (nrow(ego.coords) > 1) {
+      d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
+        stats::dist(rbind(ego.coords[i, ], alter.coords))[d.sel]
+      })
+      ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+      orgn <- orgn[ego.id]
+      orgn.nm <- orgn.nm[ego.id]
+      d <- d.multi.ego[[ego.id]]
+    }
+  }
+
+  nearest.dest <- dstn[which.min(d)]
+  nearest.d <- min(d)
 
   if (nrow(ego.coords) == 1) {
-    d <- stats::dist(rbind(ego.coords, alter.coords))[sel]
-    nearest.dest <- dstn[which.min(d)]
-    nearest.d <- min(d)
-
     ego <- ego.coords
-    alter <- alter.coords[which.min(d), ]
-  } else if (length(ego.coords) > 1) {
-    d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
-      stats::dist(rbind(ego.coords[i, ], alter.coords))[sel]
-    })
-    ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
-    orgn <- orgn[ego.id]
-    orgn.nm <- orgn.nm[ego.id]
-    d <- d.multi.ego[[ego.id]]
-    nearest.dest <- dstn[which.min(d)]
-    nearest.d <- min(d)
-
+  } else if (nrow(ego.coords) > 1) {
     ego <- ego.coords[ego.id, ]
-    alter <- alter.coords[which.min(d), ]
   }
+
+  alter <- alter.coords[which.min(d), ]
 
   data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
     nearest.dest = nearest.dest, d = nearest.d)
@@ -747,8 +708,8 @@ caseCaseEucl <- function(orgn, orgn.nm, destination, dstn, include.landmarks,
   list(ego = ego, alter = alter, data = data.summary)
 }
 
-pumpPumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, origin, pmp,
-  vestry, location) {
+pumpPumpEucl <- function(orgn, orgn.nm, dstn, origin, destination, latlong,
+  pmp, vestry, location) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
@@ -761,32 +722,49 @@ pumpPumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, origin, pmp,
     if (any(dstn %in% orgn)) orgn <- orgn[!orgn %in% dstn]
   }
 
+  dstn <- setdiff(dstn, orgn)
+
   ego.coords <- pmp[pmp$id %in% orgn, vars]
   alter.coords <- pmp[pmp$id %in% dstn, vars]
 
-  sel <- seq_len(nrow(alter.coords))
+  if (latlong) {
+    if (nrow(ego.coords) == 1) {
+      d <- geosphere::distGeo(ego.coords, alter.coords)
+    } else if (nrow(ego.coords) > 1) {
+      d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
+        geosphere::distGeo(ego.coords[i, ], alter.coords)
+      })
+      ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+      orgn <- orgn[ego.id]
+      orgn.nm <- orgn.nm[ego.id]
+      d <- d.multi.ego[[ego.id]]
+    }
+  } else {
+    d.sel <- seq_len(nrow(alter.coords))
+
+    if (nrow(ego.coords) == 1) {
+      d <- stats::dist(rbind(ego.coords, alter.coords))[d.sel]
+    } else if (nrow(ego.coords) > 1) {
+      d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
+        stats::dist(rbind(ego.coords[i, ], alter.coords))[d.sel]
+      })
+      ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+      orgn <- orgn[ego.id]
+      orgn.nm <- orgn.nm[ego.id]
+      d <- d.multi.ego[[ego.id]]
+    }
+  }
+
+  nearest.pump <- dstn[which.min(d)]
+  nearest.d <- min(d)
 
   if (nrow(ego.coords) == 1) {
-    d <- stats::dist(rbind(ego.coords, alter.coords))[sel]
-    nearest.pump <- dstn[which.min(d)]
-    nearest.d <- min(d)
-
     ego <- ego.coords
-    alter <- alter.coords[which.min(d), ]
-  } else if (length(ego.coords) > 1) {
-    d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
-      stats::dist(rbind(ego.coords[i, ], alter.coords))[sel]
-    })
-    ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
-    orgn <- orgn[ego.id]
-    orgn.nm <- orgn.nm[ego.id]
-    d <- d.multi.ego[[ego.id]]
-    nearest.pump <- dstn[which.min(d)]
-    nearest.d <- min(d)
-
+  } else if (nrow(ego.coords) > 1) {
     ego <- ego.coords[ego.id, ]
-    alter <- alter.coords[which.min(d), ]
   }
+
+  alter <- alter.coords[which.min(d), ]
 
   data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
     nearest.dest = nearest.pump, d = nearest.d)
