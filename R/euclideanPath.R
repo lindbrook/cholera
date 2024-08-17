@@ -583,8 +583,9 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
     alter <- alter.coords
 
   } else if (nrow(ego.coords) > 1 & nrow(alter.coords) > 1) {
+    d.sel <- seq_len(nrow(alter.coords))
     d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
-      stats::dist(rbind(ego.coords[i, ], alter.coords))[sel]
+      stats::dist(rbind(ego.coords[i, ], alter.coords))[d.sel]
     })
 
     ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
