@@ -111,17 +111,15 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     path.data <- casePumpEucl(orgn, orgn.nm, destination, dstn, latlong, pmp,
       vestry, case.set, location, square.intersections)
   } else if (type == "cases") {
-    path.data <- caseCaseEucl(orgn, orgn.nm, destination, dstn,
-      include.landmarks, latlong, origin, vestry, location)
+    path.data <- caseCaseEucl(orgn, orgn.nm, dstn, origin, destination,
+      include.landmarks, latlong, vestry, location, square.intersections)
   } else if (type == "pumps") {
-    path.data <- pumpPumpEucl(orgn, orgn.nm, destination, dstn, latlong, origin,
-      pmp, vestry)
+    path.data <- pumpPumpEucl(orgn, orgn.nm, dstn, origin, destination, latlong,
+      pmp, vestry, location)
   }
 
   if (latlong) {
-    p1 <- path.data$ego
-    p2 <- path.data$alter
-    d <- geosphere::distGeo(p1, p2)
+    d <- path.data$data$d
   } else {
     d <- unitMeter(path.data$data$d, distance.unit = distance.unit)
   }
