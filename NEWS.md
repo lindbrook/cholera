@@ -1,3 +1,8 @@
+### cholera 0.8.0.9406
+
+- clean and clarify casePumpEucl(latlong = FALSE).
+
+
 ### cholera 0.8.0.9405
 
 - use geosphere::distGeo() for latlong in caseCaseEucl() and pumpPumpEucl().

@@ -108,8 +108,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   }
 
   if (type == "case-pump") {
-    path.data <- casePumpEucl(orgn, orgn.nm, destination, dstn, latlong, pmp,
-      vestry, case.set, location, square.intersections)
+    path.data <- casePumpEucl(orgn, orgn.nm, destination, dstn, dstn.nm,
+      latlong, pmp, vestry, case.set, location, square.intersections)
   } else if (type == "cases") {
     path.data <- caseCaseEucl(orgn, orgn.nm, dstn, origin, destination,
       include.landmarks, latlong, vestry, location, square.intersections)
@@ -460,8 +460,8 @@ print.euclidean_path <- function(x, ...) {
   print(x[c("ego", "alter", "data")])
 }
 
-casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
-  vestry, case.set, location, square.intersections) {
+casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
+  pmp, vestry, case.set, location, square.intersections) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
@@ -549,9 +549,6 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
   alter.coords <- pmp[pmp$id %in% dstn, vars]
 
   if (nrow(ego.coords) == 1 & nrow(alter.coords) == 1) {
-    d <- stats::dist(rbind(ego.coords, alter.coords))
-    alter.id <- 1L
-    nearest.pump <- dstn
     ego <- ego.coords
     alter <- alter.coords
 
@@ -561,7 +558,8 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
 
     d <- min(ds)
     alter.id <- which.min(ds)
-    nearest.pump <- pmp[alter.id, "id"]
+    dstn <- pmp[alter.id, "id"]
+    dstn.nm <- pmp[alter.id, "street"]
 
     ego <- ego.coords
     alter <- alter.coords[alter.id, ]
@@ -572,8 +570,6 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
     }, numeric(1L))
 
     d <- min(ds)
-    alter.id <- 1L
-    nearest.pump <- dstn
 
     ego.id <- which.min(ds)
     orgn <- orgn[ego.id]
@@ -588,19 +584,24 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, latlong, pmp,
       stats::dist(rbind(ego.coords[i, ], alter.coords))[d.sel]
     })
 
-    ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+    d <- min(unlist(d.multi.ego))
+
+    ego.dist <- vapply(d.multi.ego, min, numeric(1L))
+    ego.id <- which.min(ego.dist)
     orgn <- orgn[ego.id]
     orgn.nm <- orgn.nm[ego.id]
 
-    d <- d.multi.ego[[ego.id]]
-    alter.id <- which.min(d)
+    alter.dist <- d.multi.ego[[ego.id]]
+    alter.id <- which.min(alter.dist)
+    dstn <- dstn[alter.id]
+    dstn.nm <- dstn.nm[alter.id]
 
     ego <- ego.coords[ego.id, ]
     alter <- alter.coords[alter.id, ]
   }
 
   data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
-    nearest.dest = dstn[alter.id], d = d)
+    nearest.dest = dstn, d = d)
 
   list(ego = ego, alter = alter, data = data.summary)
 }
