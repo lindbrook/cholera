@@ -1,3 +1,8 @@
+### cholera 0.8.0.9407
+
+- enable negative selection in validateCase().
+
+
 ### cholera 0.8.0.9406
 
 - clean and clarify casePumpEucl(latlong = FALSE).
