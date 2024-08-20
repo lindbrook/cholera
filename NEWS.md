@@ -1,3 +1,8 @@
+### cholera 0.8.0.9408
+
+- fix negtive selection and remove location argument in caseCaseEucl().
+
+
 ### cholera 0.8.0.9407
 
 - enable negative selection in validateCase().
