@@ -119,16 +119,39 @@ validateCase <- function(x, case.set, include.landmarks, square.intersections) {
         out <- case.id
         out.nm <- case.nm
     } else if (is.numeric(x)) {
-      if (all(!x %in% case.id)) {
-        stop(case.msg, .call = FALSE)
-      } else if (any(!x %in% case.id)) {
+      if (all(abs(x) %in% case.id)) {
+        if (all(x > 0)) {
+          sel <- case.id %in% x
+        } else if (all(x < 0)) {
+          sel <- !case.id %in% abs(x)
+        } else stop("destination should be strictly positive or negative.",
+            call. = FALSE)
+
+        out <- case.id[sel]
+        out.nm <- case.nm[sel]
+
+      } else if (any(!abs(x) %in% case.id)) {
         dropped <- paste(x[!x %in% case.id], collapse = ", ")
-        message("Note: ", case.msg, " Invalid IDs (", dropped, ") dropped.")
-        out <- x[x %in% case.id]
-      } else {
-        out <- x
-      }
-      out.nm <- paste(out)
+
+        if (exists("lndmrk.msg")) {
+          message("Note: ", case.msg, " Invalid IDs (", dropped, ") dropped. ",
+            lndmrk.msg)
+        } else {
+          message("Note: ", case.msg, " Invalid IDs (", dropped, ") dropped.")
+        }
+
+        if (all(x > 0)) {
+          sel <- case.id %in% x
+        } else if (all(x < 0)) {
+          sel <- !case.id %in% abs(x)
+        } else stop("destination should be strictly positive or negative.",
+            call. = FALSE)
+
+        out <- case.id[sel]
+        out.nm <- case.nm[sel]
+
+      } else if (all(!abs(x) %in% case.id)) stop(case.msg, .call = FALSE)
+
     } else if (is.character(x)) {
       x <- vapply(x, caseAndSpace, character(1L))
 
