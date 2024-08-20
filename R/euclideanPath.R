@@ -112,7 +112,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       latlong, pmp, vestry, case.set, location, square.intersections)
   } else if (type == "cases") {
     path.data <- caseCaseEucl(orgn, orgn.nm, dstn, origin, destination,
-      include.landmarks, latlong, vestry, location, square.intersections)
+      include.landmarks, latlong, vestry, square.intersections)
   } else if (type == "pumps") {
     path.data <- pumpPumpEucl(orgn, orgn.nm, dstn, origin, destination, latlong,
       pmp, vestry, location)
@@ -607,29 +607,27 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 }
 
 caseCaseEucl <- function(orgn, orgn.nm, dstn, origin, destination,
-  include.landmarks, latlong, vestry, location, square.intersections) {
+  include.landmarks, latlong, vestry, square.intersections) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
   # Origin (egos) #
 
-  if (location %in% c("anchor", "orthogonal")) {
-    if (any(orgn %in% cholera::anchor.case$anchor == FALSE)) {
-      orgn.land <- orgn[orgn >= 1000L]
-      sel <- cholera::anchor.case$case %in% orgn[orgn < 1000L]
-      orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), orgn.land)
-    }
+  if (any(orgn %in% cholera::anchor.case$anchor == FALSE)) {
+    orgn.land <- orgn[orgn >= 1000L]
+    sel <- cholera::anchor.case$case %in% orgn[orgn < 1000L]
+    orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), orgn.land)
+  }
 
-    if (any(dstn %in% cholera::anchor.case$anchor == FALSE)) {
-      dstn.land <- dstn[dstn >= 1000L]
-      sel <- cholera::anchor.case$case %in% dstn[dstn < 1000L]
-      dstn <- c(unique(cholera::anchor.case[sel, "anchor"]), dstn.land)
-    }
+  if (any(dstn %in% cholera::anchor.case$anchor == FALSE)) {
+    dstn.land <- dstn[dstn >= 1000L]
+    sel <- cholera::anchor.case$case %in% dstn[dstn < 1000L]
+    dstn <- c(unique(cholera::anchor.case[sel, "anchor"]), dstn.land)
   }
 
   if (length(intersect(orgn, dstn)) != 0) {
-    if (!is.null(origin) & is.null(destination)) {
+    if (!is.null(origin) & is.null(destination) | all(destination < 0)) {
       dstn <- setdiff(dstn, orgn)
     } else if (is.null(origin) & !is.null(destination)) {
       orgn <- setdiff(orgn, dstn)
