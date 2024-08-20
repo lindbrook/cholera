@@ -549,6 +549,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
   alter.coords <- pmp[pmp$id %in% dstn, vars]
 
   if (nrow(ego.coords) == 1 & nrow(alter.coords) == 1) {
+    d <- stats::dist(rbind(ego.coords, alter.coords))
     ego <- ego.coords
     alter <- alter.coords
 

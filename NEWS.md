@@ -1,3 +1,8 @@
+### cholera 0.8.0.9409
+
+- compute missing distance 'd' in casePumpEucl().
+
+
 ### cholera 0.8.0.9408
 
 - fix negtive selection and remove location argument in caseCaseEucl().
