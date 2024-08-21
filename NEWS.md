@@ -1,6 +1,6 @@
 ### cholera 0.8.0.9412
 
-- remove redundant code in walkingPathB().
+- remove redundant code and update variable names in in walkingPathB().
 
 
 ### cholera 0.8.0.9411
