@@ -563,8 +563,8 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 
     d <- min(ds)
     alter.id <- which.min(ds)
-    dstn <- pmp[alter.id, "id"]
-    dstn.nm <- pmp[alter.id, "street"]
+    dstn <- dstn[alter.id]
+    dstn.nm <- dstn.nm[alter.id]
 
     if (nrow(ego.coords) == 1) ego <- ego.coords
     else if (nrow(ego.coords) > 1) ego <- ego.coords[ego.id, ]
@@ -583,8 +583,8 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 
       d <- min(ds)
       alter.id <- which.min(ds)
-      dstn <- pmp[alter.id, "id"]
-      dstn.nm <- pmp[alter.id, "street"]
+      dstn <- dstn[alter.id]
+      dstn.nm <- dstn.nm[alter.id]
 
       ego <- ego.coords
       alter <- alter.coords[alter.id, ]

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9411
+
+- fix pump selection in casePumpEucl().
+
+
 ### cholera 0.8.0.9410
 
 - enable casePumpEucl(latlong = TRUE).
