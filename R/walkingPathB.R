@@ -84,8 +84,6 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
       origin, pmp, vestry, weighted)
   }
 
-  if (length(orgn) > 1) orgn <- path.data$orgn
-  if (length(orgn.nm) > 1) orgn.nm <- path.data$orgn.nm
   nearest.dest <- path.data$nearest.dest
 
   p <- names(unlist(path.data$p))
@@ -118,30 +116,13 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
       time.unit = time.unit, walking.speed = walking.speed)
   }
 
-  if (as.integer(nearest.dest) < 1000L) {
-    if (type %in% c("case-pump", "pumps")) {
-      dest.nm <- pmp[pmp$id == nearest.dest, ]$street
-    } else if (type == "cases") {
-      dest.nm <- nearest.dest
-    }
-  } else if (as.integer(nearest.dest) >= 1000L) {
-    sel <- cholera::landmarksB$case == as.integer(nearest.dest)
-    dest.nm <- cholera::landmarksB[sel, ]$name
-    if (grepl("Square", dest.nm)) {
-      sel <- cholera::landmarksB$case == nearest.dest
-      tmp <- strsplit(cholera::landmarksB[sel, ]$name, "-")
-      dest.nm <- unlist(tmp)[1]
-    }
-  }
-
-  data.summary <- data.frame(orig = orgn,
-                             dest = as.integer(nearest.dest),
-                             orig.nm = orgn.nm,
-                             dest.nm = dest.nm,
+  data.summary <- data.frame(origin = path.data$orgn,
+                             destination = as.integer(nearest.dest),
+                             origin.nm = path.data$orgn.nm,
+                             destination.nm = dest.nm,
                              distance = sum(ds),
                              time = walking.time,
-                             type = type,
-                             row.names = NULL)
+                             type = type)
 
   output <- list(path = path,
                  data = data.summary,
@@ -180,8 +161,8 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
 
   path.data <- x$data
   type <- x$data$type
-  orig <- path.data$orig
-  dest <- path.data$dest
+  orig <- path.data$origin
+  dest <- path.data$destination
   destination <- x$destination
   colors <- snowColors(x$vestry)
   dat <- x$path
@@ -244,7 +225,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
   } else stop("zoom must either be logical or numeric.")
 
   if (type == "case-pump") {
-    p.sel <- paste0("p", path.data$dest)
+    p.sel <- paste0("p", path.data$destination)
     case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
   } else {
     case.color <- "blue"
@@ -308,7 +289,7 @@ plot.walking_path_B <- function(x, zoom = TRUE, long.title = TRUE,
         points(land[land$case == dest, vars], col = "red")
         land.tmp <- land[land$case == dest, ]
         if (grepl("Square", land.tmp$name)) {
-          sel <- cholera::landmark.squaresB$name == path.data$dest.nm
+          sel <- cholera::landmark.squaresB$name == path.data$destination.nm
           label.dat <- cholera::landmark.squaresB[sel, ]
           label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
