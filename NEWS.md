@@ -1,3 +1,8 @@
+### cholera 0.8.0.9410
+
+- enable casePumpEucl(latlong = TRUE).
+
+
 ### cholera 0.8.0.9409
 
 - compute missing distance 'd' in casePumpEucl().

@@ -548,57 +548,82 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 
   alter.coords <- pmp[pmp$id %in% dstn, vars]
 
-  if (nrow(ego.coords) == 1 & nrow(alter.coords) == 1) {
-    d <- stats::dist(rbind(ego.coords, alter.coords))
-    ego <- ego.coords
-    alter <- alter.coords
-
-  } else if (nrow(ego.coords) == 1 & nrow(alter.coords) > 1) {
-    d.sel <- seq_len(nrow(alter.coords))
-    ds <- stats::dist(rbind(ego.coords, alter.coords))[d.sel]
+  if (latlong) {
+    if (nrow(ego.coords) == 1) {
+      ds <- geosphere::distGeo(ego.coords, alter.coords)
+    } else if (nrow(ego.coords) > 1) {
+      d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
+        geosphere::distGeo(ego.coords[i, ], alter.coords)
+      })
+      ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
+      orgn <- orgn[ego.id]
+      orgn.nm <- orgn.nm[ego.id]
+      ds <- d.multi.ego[[ego.id]]
+    }
 
     d <- min(ds)
     alter.id <- which.min(ds)
     dstn <- pmp[alter.id, "id"]
     dstn.nm <- pmp[alter.id, "street"]
 
-    ego <- ego.coords
+    if (nrow(ego.coords) == 1) ego <- ego.coords
+    else if (nrow(ego.coords) > 1) ego <- ego.coords[ego.id, ]
+
     alter <- alter.coords[alter.id, ]
 
-  } else if (nrow(ego.coords) > 1 & nrow(alter.coords) == 1) {
-    ds <- vapply(seq_len(nrow(ego.coords)), function(i) {
-      stats::dist(rbind(ego.coords[i, ], alter.coords))
-    }, numeric(1L))
+  } else {
+    if (nrow(ego.coords) == 1 & nrow(alter.coords) == 1) {
+      d <- stats::dist(rbind(ego.coords, alter.coords))
+      ego <- ego.coords
+      alter <- alter.coords
 
-    d <- min(ds)
+    } else if (nrow(ego.coords) == 1 & nrow(alter.coords) > 1) {
+      d.sel <- seq_len(nrow(alter.coords))
+      ds <- stats::dist(rbind(ego.coords, alter.coords))[d.sel]
 
-    ego.id <- which.min(ds)
-    orgn <- orgn[ego.id]
-    orgn.nm <- orgn.nm[ego.id]
+      d <- min(ds)
+      alter.id <- which.min(ds)
+      dstn <- pmp[alter.id, "id"]
+      dstn.nm <- pmp[alter.id, "street"]
 
-    ego <- ego.coords[ego.id, ]
-    alter <- alter.coords
+      ego <- ego.coords
+      alter <- alter.coords[alter.id, ]
 
-  } else if (nrow(ego.coords) > 1 & nrow(alter.coords) > 1) {
-    d.sel <- seq_len(nrow(alter.coords))
-    d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
-      stats::dist(rbind(ego.coords[i, ], alter.coords))[d.sel]
-    })
+    } else if (nrow(ego.coords) > 1 & nrow(alter.coords) == 1) {
+      ds <- vapply(seq_len(nrow(ego.coords)), function(i) {
+        stats::dist(rbind(ego.coords[i, ], alter.coords))
+      }, numeric(1L))
 
-    d <- min(unlist(d.multi.ego))
+      d <- min(ds)
 
-    ego.dist <- vapply(d.multi.ego, min, numeric(1L))
-    ego.id <- which.min(ego.dist)
-    orgn <- orgn[ego.id]
-    orgn.nm <- orgn.nm[ego.id]
+      ego.id <- which.min(ds)
+      orgn <- orgn[ego.id]
+      orgn.nm <- orgn.nm[ego.id]
 
-    alter.dist <- d.multi.ego[[ego.id]]
-    alter.id <- which.min(alter.dist)
-    dstn <- dstn[alter.id]
-    dstn.nm <- dstn.nm[alter.id]
+      ego <- ego.coords[ego.id, ]
+      alter <- alter.coords
 
-    ego <- ego.coords[ego.id, ]
-    alter <- alter.coords[alter.id, ]
+    } else if (nrow(ego.coords) > 1 & nrow(alter.coords) > 1) {
+      d.sel <- seq_len(nrow(alter.coords))
+      d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
+        stats::dist(rbind(ego.coords[i, ], alter.coords))[d.sel]
+      })
+
+      d <- min(unlist(d.multi.ego))
+
+      ego.dist <- vapply(d.multi.ego, min, numeric(1L))
+      ego.id <- which.min(ego.dist)
+      orgn <- orgn[ego.id]
+      orgn.nm <- orgn.nm[ego.id]
+
+      alter.dist <- d.multi.ego[[ego.id]]
+      alter.id <- which.min(alter.dist)
+      dstn <- dstn[alter.id]
+      dstn.nm <- dstn.nm[alter.id]
+
+      ego <- ego.coords[ego.id, ]
+      alter <- alter.coords[alter.id, ]
+    }
   }
 
   data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
