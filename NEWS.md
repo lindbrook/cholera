@@ -1,3 +1,8 @@
+### cholera 0.8.0.9412
+
+- remove redundant code in walkingPathB().
+
+
 ### cholera 0.8.0.9411
 
 - fix pump selection in casePumpEucl().
