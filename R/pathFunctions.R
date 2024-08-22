@@ -155,6 +155,13 @@ validateCase <- function(x, case.set, include.landmarks, square.intersections) {
     } else if (is.character(x)) {
       x <- vapply(x, caseAndSpace, character(1L))
 
+      # Square exits
+      if (grepl("-", x)) {
+        nm.string <- unlist(strsplit(x, "-"))
+        ptB <- toupper(nm.string[2])
+        x <- paste0(nm.string[1], "-", ptB)
+      }
+
       if (all(!x %in% case.nm)) {
         stop("No valid IDs!  Check spelling or cholera::landmarksB")
       } else if (any(!x %in% case.nm)) {
@@ -177,11 +184,14 @@ validateCase <- function(x, case.set, include.landmarks, square.intersections) {
 
         dropped <- paste(setdiff(x0, x), collapse = ", ")
         message("Invalid IDs (", dropped, ") dropped.")
-        out <- case.id[which(case.nm == x)]
+        sel <- case.nm %in% x
+        out <- case.id[sel]
+        out.nm <- case.nm[sel]
       } else if (all(x %in% case.nm)) {
-        out <- case.id[which(case.nm == x)]
+        sel <- case.nm %in% x
+        out <- case.id[sel]
+        out.nm <- case.nm[sel]
       }
-      out.nm <- out
     }
 
   } else if (case.set == "expected") {
