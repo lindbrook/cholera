@@ -12,14 +12,13 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param include.landmarks Logical. Include landmarks as cases.
-#' @param square.intersections Logical. Include landmarks square road intersections.
 #' @importFrom geosphere distGeo
 #' @export
 
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed", location = "nominal",
   weighted = TRUE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5, include.landmarks = TRUE, square.intersections = FALSE) {
+  walking.speed = 5, include.landmarks = TRUE) {
 
   meter.to.yard <- 1.09361
 
@@ -77,8 +76,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   }
 
   if (type == "case-pump") {
-    origin.chk <- validateCase(origin, case.set, include.landmarks,
-      square.intersections)
+    origin.chk <- validateCase(origin, case.set, include.landmarks)
     orgn <- origin.chk$out
     orgn.nm <- origin.chk$out.nm
 
@@ -87,13 +85,11 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     dstn.nm <- destination.chk$out.nm
 
   } else if (type == "cases") {
-    origin.chk <- validateCase(origin, case.set, include.landmarks,
-      square.intersections)
+    origin.chk <- validateCase(origin, case.set, include.landmarks)
     orgn <- origin.chk$out
     orgn.nm <- origin.chk$out.nm
 
-    destination.chk <- validateCase(destination, case.set, include.landmarks,
-      square.intersections)
+    destination.chk <- validateCase(destination, case.set, include.landmarks)
     dstn <- destination.chk$out
     dstn.nm <- destination.chk$out.nm
 
@@ -109,10 +105,10 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   if (type == "case-pump") {
     path.data <- casePumpEucl(orgn, orgn.nm, destination, dstn, dstn.nm,
-      latlong, pmp, vestry, case.set, location, square.intersections)
+      latlong, pmp, vestry, case.set, location)
   } else if (type == "cases") {
     path.data <- caseCaseEucl(orgn, orgn.nm, dstn, origin, destination,
-      include.landmarks, latlong, vestry, square.intersections)
+      include.landmarks, latlong, vestry)
   } else if (type == "pumps") {
     path.data <- pumpPumpEucl(orgn, orgn.nm, dstn, origin, destination, latlong,
       pmp, vestry, location)
@@ -246,7 +242,15 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
 
   fatality <- cholera::fatalities
-  land <- cholera::landmarksB
+
+  sqB <- cholera::landmark.squaresB
+  sqB$road.segment <- NA
+  sqB$x.lab <- sqB$x
+  sqB$y.lab <- sqB$y
+  sqB$lon.lab <- sqB$lon
+  sqB$lat.lab <- sqB$lat
+  sqB <- sqB[, names(cholera::landmarksB)]
+  land <- rbind(sqB, cholera::landmarksB)
 
   padding <- ifelse(latlong, 0.000125, 0.25)
 
@@ -461,22 +465,15 @@ print.euclidean_path <- function(x, ...) {
 }
 
 casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
-  pmp, vestry, case.set, location, square.intersections) {
+  pmp, vestry, case.set, location) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
   if (case.set == "observed") {
     vars.lndmrk <- c("case", vars, "name")
-    lndmrk.sq <- cholera::landmark.squaresB[, vars.lndmrk]
-
-    if (square.intersections) {
-      lndmrk <- rbind(lndmrk.sq, cholera::landmarksB[, vars.lndmrk])
-    } else {
-      sq.intersections <- grep("Square", cholera::landmarksB$name)
-      lndmrk.etc <- cholera::landmarksB[-sq.intersections, vars.lndmrk]
-      lndmrk <- rbind(lndmrk.sq, lndmrk.etc[, vars.lndmrk])
-    }
+    lndmrk <- rbind(cholera::landmark.squaresB[, vars.lndmrk],
+                    cholera::landmarksB[, vars.lndmrk])
 
     if (any(orgn < 1000L)) {
       if (location %in% c("anchor", "orthogonal")) {
@@ -633,7 +630,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 }
 
 caseCaseEucl <- function(orgn, orgn.nm, dstn, origin, destination,
-  include.landmarks, latlong, vestry, square.intersections) {
+  include.landmarks, latlong, vestry) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
@@ -660,15 +657,19 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, origin, destination,
     }
   }
 
+  vars.lndmrk <- c("case", vars, "name")
+  lndmrk <- rbind(cholera::landmark.squaresB[, vars.lndmrk],
+                  cholera::landmarksB[, vars.lndmrk])
+
   fatal <- cholera::fatalities$case %in% orgn
-  land <- cholera::landmarksB$case %in% orgn
+  land <- lndmrk$case %in% orgn
 
   if (any(fatal) & any(land)) {
     a <- cholera::fatalities[fatal, vars]
-    b <- cholera::landmarksB[land, vars]
+    b <- lndmrk[land, vars]
     ego.coords <- rbind(a, b)
   } else if (all(!fatal) & any(land)) {
-    ego.coords <- cholera::landmarksB[land, vars]
+    ego.coords <- lndmrk[land, vars]
   } else if (any(fatal) & all(!land)) {
     ego.coords <- cholera::fatalities[fatal, vars]
   }
@@ -676,14 +677,14 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, origin, destination,
   # Destination (alters) #
 
   fatal <- cholera::fatalities$case %in% dstn
-  land <- cholera::landmarksB$case %in% dstn
+  land <- lndmrk$case %in% dstn
 
   if (any(fatal) & any(land)) {
     a <- cholera::fatalities[fatal, vars]
-    b <- cholera::landmarksB[land, vars]
+    b <- lndmrk[land, vars]
     alter.coords <- rbind(a, b)
   } else if (all(!fatal) & any(land)) {
-    alter.coords <- cholera::landmarksB[land, vars]
+    alter.coords <- lndmrk[land, vars]
   } else if (any(fatal) & all(!land)) {
     alter.coords <- cholera::fatalities[fatal, vars]
   }
