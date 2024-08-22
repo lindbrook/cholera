@@ -86,7 +86,7 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
   }
 }
 
-validateCase <- function(x, case.set, include.landmarks, square.intersections) {
+validateCase <- function(x, case.set, include.landmarks) {
   if (case.set == "observed") {
     case.id <- cholera::fatalities$case
     case.nm <- paste(case.id)
@@ -95,22 +95,13 @@ validateCase <- function(x, case.set, include.landmarks, square.intersections) {
     if (include.landmarks) {
       vars.lndmrk <- c("case", "name")
       lndmrk.sq <- cholera::landmark.squaresB[, vars.lndmrk]
+      lndmrk.etc <- cholera::landmarksB[, vars.lndmrk]
+      lndmrk <- rbind(lndmrk.sq, lndmrk.etc)
 
-      if (square.intersections) {
-        lndmrk <- rbind(lndmrk.sq, cholera::landmarksB[, vars.lndmrk])
-        lndmrk.msg <- paste0("Landmark IDs range from 1000 to ",
-          max(lndmrk$case), ".")
-      } else {
-        sq.intersections <- grep("Square", cholera::landmarksB$name)
-        lndmrk.etc <- cholera::landmarksB[-sq.intersections, vars.lndmrk]
-        lndmrk <- rbind(lndmrk.sq, lndmrk.etc)
+      lndmrk.msg1 <- "Landmark IDs range from "
+      lndmrk.msg2 <- paste0(min(lndmrk$case), ":", max(lndmrk$case), ".")
+      lndmrk.msg <- paste0(lndmrk.msg1, lndmrk.msg2)
 
-        lndmrk.msg1 <- "With square.intersections = FALSE, "
-        lndmrk.msg2 <- "landmark IDs range from 1000:1001 and "
-        lndmrk.msg3 <- paste0(min(lndmrk.etc$case), ":", max(lndmrk.etc$case),
-          ".")
-        lndmrk.msg <- paste0(lndmrk.msg1, lndmrk.msg2, lndmrk.msg3)
-      }
       case.id <- c(case.id, lndmrk$case)
       case.nm <- c(case.nm, lndmrk$name)
     }

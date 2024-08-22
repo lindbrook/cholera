@@ -1,3 +1,8 @@
+### cholera 0.8.0.9414
+
+- remove square.intersections argument.
+
+
 ### cholera 0.8.0.9413
 
 - fix validateCase() for character cases/landmarks.
