@@ -1,3 +1,8 @@
+### cholera 0.8.0.9419
+
+- add Square ID/name fix and clean code in caseCase().
+
+
 ### cholera 0.8.0.9418
 
 - fix pump name destination in walkingPathB().

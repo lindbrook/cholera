@@ -665,6 +665,12 @@ casePump <- function(orgn, orgn.nm, dstn, destination, network.data, pmp,
     }
   }
 
+  if (any(grepl("Square", orgn.nm))) {
+    land.tmp <- cholera::landmarksB[grepl(orgn.nm, cholera::landmarksB$name), ]
+    orgn <- land.tmp$case
+    orgn.nm <- land.tmp$name
+  }
+
   ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
                 nodes[nodes$land %in% orgn, ]$node)
 
