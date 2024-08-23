@@ -38,15 +38,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('type must be "anchor", "nominal" or "orthogonal".', call. = FALSE)
   }
 
-  # Change type to "cases" in presence of destination landmarks
-  if (any(is.character(destination))) {
-    dest.nm <- c(cholera::landmark.squaresB$name, cholera::landmarksB$name)
-    if (any(destination %in% dest.nm) & type != "cases") type <- "cases"
-  } else if (is.numeric(destination)) {
-    dest.num <- c(cholera::landmark.squaresB$case, cholera::landmarksB$case)
-    if (any(destination %in% dest.num) & type != "cases") type <- "cases"
-  }
-
   if (location %in% c("nominal", "anchor")) {
     if (vestry) {
       pmp <- cholera::pumps.vestry
