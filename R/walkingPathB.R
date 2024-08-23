@@ -665,6 +665,12 @@ casePump <- function(orgn, orgn.nm, dstn, destination, network.data, pmp,
     }
   }
 
+  if (any(grepl("Square", orgn.nm))) {
+    land.tmp <- cholera::landmarksB[grepl(orgn.nm, cholera::landmarksB$name), ]
+    orgn <- land.tmp$case
+    orgn.nm <- land.tmp$name
+  }
+
   ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
                 nodes[nodes$land %in% orgn, ]$node)
 
@@ -716,7 +722,7 @@ casePump <- function(orgn, orgn.nm, dstn, destination, network.data, pmp,
 
     alter.id <- which.min(d.multi.ego[[ego.id]])
     nr.alter.node <- dimnames(d.multi.ego[[ego.id]])[[2]][alter.id]
-    nearest.dest <- as.character(nodes[nodes$node == nr.alter.node, ]$pump)
+    nearest.dest <- nodes[nodes$node == nr.alter.node, ]$pump
 
     if (weighted) {
       p <- igraph::shortest_paths(g, nr.ego.node, nr.alter.node,
