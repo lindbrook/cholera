@@ -106,10 +106,12 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
       time.unit = time.unit, walking.speed = walking.speed)
   }
 
+  p.nm <- pmp[pmp$id == nearest.dest, "street"]
+
   data.summary <- data.frame(origin = path.data$orgn,
                              destination = as.integer(nearest.dest),
                              origin.nm = path.data$orgn.nm,
-                             destination.nm = dest.nm,
+                             destination.nm = p.nm,
                              distance = sum(ds),
                              time = walking.time,
                              type = type)
