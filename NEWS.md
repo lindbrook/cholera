@@ -1,3 +1,8 @@
+### cholera 0.8.0.9415
+
+- remove "outdated" landmark destination detection in euclideanPath().
+
+
 ### cholera 0.8.0.9414
 
 - remove square.intersections argument.
