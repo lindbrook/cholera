@@ -1,3 +1,8 @@
+### cholera 0.8.0.9418
+
+- fix pump name destination in walkingPathB().
+
+
 ### cholera 0.8.0.9417
 
 - remove "outdated" landmark destination detection in walkingPathB().
