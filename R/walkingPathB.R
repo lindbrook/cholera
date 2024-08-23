@@ -666,9 +666,19 @@ casePump <- function(orgn, orgn.nm, dstn, destination, network.data, pmp,
   }
 
   if (any(grepl("Square", orgn.nm))) {
-    land.tmp <- cholera::landmarksB[grepl(orgn.nm, cholera::landmarksB$name), ]
-    orgn <- land.tmp$case
-    orgn.nm <- land.tmp$name
+    if (length(orgn) > 1) {
+      if (any(cholera::landmark.squaresB$case %in% orgn)) {
+        orgn <- orgn[!orgn %in% cholera::landmark.squaresB$case]
+        orgn.nm <- orgn.nm[!orgn.nm %in% cholera::landmark.squaresB$name]
+      }
+    } else if (length(orgn) == 1) {
+      if (orgn.nm %in% cholera::landmark.squaresB$name) {
+        sel <- grepl(orgn.nm, cholera::landmarksB$name)
+        sq.tmp <- cholera::landmarksB[sel, ]
+        orgn <- sq.tmp$case
+        orgn.nm <- sq.tmp$name
+      }
+    }
   }
 
   ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
