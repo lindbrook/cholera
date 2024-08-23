@@ -1,3 +1,8 @@
+### cholera 0.8.0.9420
+
+- amend casePump() Square ID/name fix.
+
+
 ### cholera 0.8.0.9419
 
 - add Square ID/name fix and clean code in casePump().
