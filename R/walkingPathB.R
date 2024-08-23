@@ -30,15 +30,6 @@ walkingPathB <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('type must be "case-pump", "cases" or "pumps".', call. = FALSE)
   }
 
-  # Change type to "cases" in presence of destination landmarks
-  if (is.character(destination)) {
-    dest.nm <- c(cholera::landmark.squaresB$name, cholera::landmarksB$name)
-    if (any(destination %in% dest.nm) & type != "cases") type <- "cases"
-  } else if (is.numeric(destination)) {
-    dest.num <- c(cholera::landmark.squaresB$case, cholera::landmarksB$case)
-    if (any(destination %in% dest.num) & type != "cases") type <- "cases"
-  }
-
   if (vestry) pmp <- cholera::pumps.vestry
   else pmp <- cholera::pumps
 
