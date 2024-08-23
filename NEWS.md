@@ -1,3 +1,8 @@
+### cholera 0.8.0.9417
+
+- remove "outdated" landmark destination detection in walkingPathB().
+
+
 ### cholera 0.8.0.9416
 
 - amend error and warning messages in validateCase() and validatePump().
