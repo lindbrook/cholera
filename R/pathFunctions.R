@@ -154,7 +154,7 @@ validateCase <- function(x, case.set, include.landmarks) {
       }
 
       if (all(!x %in% case.nm)) {
-        ptA <- paste0("Case names are 1:", max(fatalities$case), ". ")
+        ptA <- paste0("Case names are 1:", max(cholera::fatalities$case), ". ")
         ptB <- "Landmarks names in landmark.squaresB or landmarksB. "
         ptC <- 'Or type = "cases"?'
         stop(ptA, ptB, ptC, call. = FALSE)
