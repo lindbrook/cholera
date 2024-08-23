@@ -154,7 +154,10 @@ validateCase <- function(x, case.set, include.landmarks) {
       }
 
       if (all(!x %in% case.nm)) {
-        stop("No valid IDs!  Check spelling or cholera::landmarksB")
+        ptA <- paste0("Case names are 1:", max(fatalities$case), ". ")
+        ptB <- "Landmarks names in landmark.squaresB or landmarksB. "
+        ptC <- 'Or type = "cases"?'
+        stop(ptA, ptB, ptC, call. = FALSE)
       } else if (any(!x %in% case.nm)) {
         x0 <- x
         x.ok <- x[x %in% case.nm]
@@ -256,13 +259,13 @@ validatePump <- function(x, pmp, vestry) {
     }
   } else if (is.character(x)) {
     x <- caseAndSpace(x)
+    ptA <- 'Pump (street) name not found (vestry = TRUE?). '
+    ptB <- 'For landmarks, use type = "cases".'
+
     if (all(!x %in% pmp$street)) {
-      stop("For vestry = ", vestry,
-        ", pump (street) name not found. Check spelling or cholera::pumps.",
-        call. = FALSE)
+      stop(ptA, ptB, call. = FALSE)
     } else if (any(!x %in% pmp$street)) {
-      message("For vestry = ", vestry,
-        ", pump (street) name not found. Check spelling or cholera::pumps.")
+      message(ptA, ptB, call. = FALSE)
       x <- x[x %in% pmp$street]
       out.nm <- pmp[pmp$id %in% x, ]$street
     } else {
