@@ -1,3 +1,8 @@
+### cholera 0.8.0.9422
+
+- amend caseCaseEucl(), esp. Squares.
+
+
 ### cholera 0.8.0.9421
 
 - use cholera::fatalities in validateCase().
