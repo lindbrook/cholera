@@ -1,3 +1,8 @@
+### cholera 0.8.0.9424
+
+- clean code and amend output of euclideanPath().
+
+
 ### cholera 0.8.0.9423
 
 - use any() in casePumpEucl()
