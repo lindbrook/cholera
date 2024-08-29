@@ -1,3 +1,9 @@
+### cholera 0.8.0.9423
+
+- use any() in casePumpEucl()
+- match caseCaseEucl() output in casePumpEucl().
+
+
 ### cholera 0.8.0.9422
 
 - amend caseCaseEucl(), esp. Squares.

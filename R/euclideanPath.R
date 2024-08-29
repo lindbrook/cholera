@@ -468,7 +468,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 
     if (any(orgn < 1000L)) {
       if (location %in% c("anchor", "orthogonal")) {
-        if (orgn %in% cholera::anchor.case$anchor == FALSE) {
+        if (any(!orgn %in% cholera::anchor.case$anchor)) {
           sel <- cholera::anchor.case$case %in% orgn
           orgn <- cholera::anchor.case[sel, "anchor"]
           orgn.nm <- paste(orgn)
@@ -615,7 +615,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
   }
 
   data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
-    nearest.dest = dstn, d = d)
+    dstn = dstn, dstn.nm = dstn.nm, d = d)
 
   list(ego = ego, alter = alter, data = data.summary)
 }
