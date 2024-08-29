@@ -1,3 +1,8 @@
+### cholera 0.8.0.9425
+
+- amend data.summary in pumpPumpEucl().
+
+
 ### cholera 0.8.0.9424
 
 - clean code and amend output of euclideanPath().
