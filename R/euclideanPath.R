@@ -615,7 +615,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
   }
 
   data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
-    nearest.dest = dstn, d = d)
+    dstn = dstn, dstn.nm = dstn.nm, d = d)
 
   list(ego = ego, alter = alter, data = data.summary)
 }
