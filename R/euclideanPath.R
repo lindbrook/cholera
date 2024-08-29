@@ -831,7 +831,7 @@ pumpPumpEucl <- function(orgn, orgn.nm, dstn, origin, destination, latlong,
   alter <- alter.coords[which.min(d), ]
 
   data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
-    nearest.dest = nearest.pump, d = nearest.d)
+    dstn = nearest.pump, dstn.nm = dstn.nm[which.min(d)], d = nearest.d)
 
   list(ego = ego, alter = alter, data = data.summary)
 }
