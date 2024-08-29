@@ -101,8 +101,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     path.data <- caseCaseEucl(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
       include.landmarks, latlong, vestry, location)
   } else if (type == "pumps") {
-    path.data <- pumpPumpEucl(orgn, orgn.nm, dstn, origin, destination, latlong,
-      pmp, vestry, location)
+    path.data <- pumpPumpEucl(orgn, orgn.nm, dstn, dstn.nm, origin, destination, 
+      latlong, pmp, vestry, location)
   }
 
   if (latlong) {
@@ -772,8 +772,8 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
   list(ego = ego, alter = alter, data = data.summary)
 }
 
-pumpPumpEucl <- function(orgn, orgn.nm, dstn, origin, destination, latlong,
-  pmp, vestry, location) {
+pumpPumpEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination, 
+  latlong, pmp, vestry, location) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9426
+
+- add 'dstn.nm' argument to pumpPumpEucl().
+
+
 ### cholera 0.8.0.9425
 
 - amend data.summary in pumpPumpEucl().
