@@ -1,7 +1,7 @@
 ### cholera 0.8.0.9423
 
-- use any()
-- match caseCaseEucl() output.
+- use any() in casePumpEucl()
+- match caseCaseEucl() output in casePumpEucl().
 
 
 ### cholera 0.8.0.9422
