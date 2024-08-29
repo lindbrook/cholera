@@ -119,28 +119,10 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       time.unit = time.unit, walking.speed = walking.speed)
   }
 
-  nearest.dest <- path.data$data$nearest.dest
-
-  if (as.integer(nearest.dest) < 1000L) {
-    if (type %in% c("case-pump", "pumps")) {
-      dstn.nm <- pmp[pmp$id == nearest.dest, ]$street
-    } else if (type == "cases") {
-      dstn.nm <- nearest.dest
-    }
-  } else if (as.integer(nearest.dest) >= 1000L) {
-    sel <- cholera::landmarksB$case == as.integer(nearest.dest)
-    dstn.nm <- cholera::landmarksB[sel, ]$name
-    if (grepl("Square", dstn.nm)) {
-      sel <- cholera::landmarksB$case == nearest.dest
-      tmp <- strsplit(cholera::landmarksB[sel, ]$name, "-")
-      dstn.nm <- unlist(tmp)[1]
-    }
-  }
-
   data.summary <- data.frame(origin = path.data$data$orgn,
-                             destination = nearest.dest,
+                             destination = path.data$data$dstn,
                              origin.nm = path.data$data$orgn.nm,
-                             destination.nm = dstn.nm,
+                             destination.nm = path.data$data$dstn.nm,
                              distance = d,
                              time = walking.time,
                              type = type,
