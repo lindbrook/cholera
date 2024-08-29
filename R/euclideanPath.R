@@ -658,7 +658,7 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
     if (any(grepl("Square", orgn.nm))) {
       sel <- cholera::landmark.squaresB$name %in% orgn.nm
       obs.sq <- cholera::landmark.squaresB$name[sel]
-      
+
       if (all(cholera::landmark.squaresB$case %in% orgn)) {
         sel <- unlist(lapply(obs.sq, function(nm) grep(nm, dstn.nm)))
         dstn <- dstn[-sel]
