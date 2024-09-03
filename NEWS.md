@@ -1,3 +1,8 @@
+### cholera 0.8.0.9427
+
+- promote streetNameLocatorB() to streetNameLocator().
+
+
 ### cholera 0.8.0.9426
 
 - add 'dstn.nm' argument to pumpPumpEucl().
