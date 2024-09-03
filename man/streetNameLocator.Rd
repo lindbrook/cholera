@@ -2,48 +2,56 @@
 % Please edit documentation in R/streetNameLocator.R
 \name{streetNameLocator}
 \alias{streetNameLocator}
-\title{Locate road by name.}
+\title{Locate street by names.}
 \usage{
-streetNameLocator(road.name = "Broad Street", zoom = FALSE,
-  cases = "address", token = "id", add.title = TRUE,
-  add.subtitle = TRUE, add.pump = TRUE, vestry = FALSE,
-  highlight = TRUE, distance.unit = "meter", time.unit = "minute",
-  walking.speed = 5)
+streetNameLocator(street.name = "Broad Street", zoom = TRUE,
+  latlong = FALSE, cases = "address", token = "id", vestry = FALSE,
+  add.pump = TRUE, add.title = TRUE, add.subtitle = TRUE,
+  highlight = TRUE, distance.unit = "meter", time.unit = "second",
+  walking.speed = 5, cex.text = 0.67)
 }
 \arguments{
-\item{road.name}{Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.}
+\item{street.name}{Character. A vector of street namess. See Note.}
 
-\item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is FALSE, which is equivalent to zero.}
+\item{zoom}{Logical or Numeric. Positive value zoom in. Negative values zoom out.}
 
-\item{cases}{Character. Plot cases: \code{NULL}, "address" or "fatality".}
+\item{latlong}{Logical. Longitude and latitude coordiantes}
 
-\item{token}{Character. "id" or "point".}
+\item{cases}{Character. Cases to plot: \code{NULL}, "address" or "fatality".}
 
-\item{add.title}{Logical. Include title.}
-
-\item{add.subtitle}{Logical. Include subtitle with road information.}
-
-\item{add.pump}{Logical. Include nearby pumps.}
+\item{token}{Character. Cases as "id" or "point".}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
-\item{highlight}{Logical. Highlight selected road and its cases.}
+\item{add.pump}{Logical. Include pumps.}
+
+\item{add.title}{Logical. Include title.}
+
+\item{add.subtitle}{Logical. Include subtitle.}
+
+\item{highlight}{Logical. Highlight selected segment(s) and cases.}
 
 \item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
+
+\item{cex.text}{Numeric.}
 }
 \value{
 A base R graphics plot.
 }
 \description{
-Highlight a road and its cases. See the list of road names in \code{vignette}("road.names").
+Highlight selected road segment(s) and cases.
+}
+\note{
+See \code{streetNames()}.
 }
 \examples{
-streetNameLocator("Oxford Street")
-streetNameLocator("oxford street")
-streetNameLocator("Cambridge Street", zoom = TRUE)
-streetNameLocator("Cambridge Street", zoom = 0.5)
+streetNameLocator("broad street")
+streetNameLocator("Broad Street", zoom = -10)
+streetNameLocator("Broad Street", latlong = TRUE, zoom = -10)
+streetNameLocator("Broad Street", distance.unit = "yard")
+streetNameLocator("Broad Street", zoom = FALSE)
 }

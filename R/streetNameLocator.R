@@ -1,56 +1,73 @@
-#' Locate road by name.
+#' Locate street by names.
 #'
-#' Highlight a road and its cases. See the list of road names in \code{vignette}("road.names").
-#' @param road.name Character vector. Note that \code{streetNameLocator}() tries to correct for case and to remove extra spaces.
-#' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is FALSE, which is equivalent to zero.
-#' @param cases Character. Plot cases: \code{NULL}, "address" or "fatality".
-#' @param token Character. "id" or "point".
-#' @param add.title Logical. Include title.
-#' @param add.subtitle Logical. Include subtitle with road information.
-#' @param add.pump Logical. Include nearby pumps.
+#' Highlight selected road segment(s) and cases.
+#' @param street.name Character. A vector of street namess. See Note.
+#' @param zoom Logical or Numeric. Positive value zoom in. Negative values zoom out.
+#' @param latlong Logical. Longitude and latitude coordiantes
+#' @param cases Character. Cases to plot: \code{NULL}, "address" or "fatality".
+#' @param token Character. Cases as "id" or "point".
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param highlight Logical. Highlight selected road and its cases.
+#' @param add.pump Logical. Include pumps.
+#' @param add.title Logical. Include title.
+#' @param add.subtitle Logical. Include subtitle.
+#' @param highlight Logical. Highlight selected segment(s) and cases.
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
+#' @param cex.text Numeric.
 #' @return A base R graphics plot.
 #' @import graphics
+#' @note See \code{streetNames()}.
 #' @export
 #' @examples
-#' streetNameLocator("Oxford Street")
-#' streetNameLocator("oxford street")
-#' streetNameLocator("Cambridge Street", zoom = TRUE)
-#' streetNameLocator("Cambridge Street", zoom = 0.5)
+#' streetNameLocator("broad street")
+#' streetNameLocator("Broad Street", zoom = -10)
+#' streetNameLocator("Broad Street", latlong = TRUE, zoom = -10)
+#' streetNameLocator("Broad Street", distance.unit = "yard")
+#' streetNameLocator("Broad Street", zoom = FALSE)
 
-streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
-  cases = "address", token = "id", add.title = TRUE, add.subtitle = TRUE,
-  add.pump = TRUE, vestry = FALSE, highlight = TRUE, distance.unit = "meter",
-  time.unit = "minute", walking.speed = 5) {
+streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
+  latlong = FALSE, cases = "address", token = "id", vestry = FALSE,
+  add.pump = TRUE, add.title = TRUE, add.subtitle = TRUE, highlight = TRUE,
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  cex.text = 0.67) {
 
-  real.road.names <- streetNames()
-  vars <- c("x", "y")
+  if (latlong) {
+    asp  <- 1.6
+    ew <- "lon"
+    ns <- "lat"
+    proj.data <- cholera::latlong.ortho.addr
+    rd.segs <- roadSegments(latlong = latlong)
+  } else {
+    asp  <- 1
+    ew <- "x"
+    ns <- "y"
+    proj.data <- cholera::ortho.proj
+    rd.segs <- cholera::road.segments
+  }
 
-  if (is.character(road.name) == FALSE) {
-    stop("Road name must be a character string.", call. = FALSE)
-  } else if (road.name %in% real.road.names == FALSE) {
-    case.name <- caseAndSpace(road.name)
-    if (case.name %in% real.road.names == FALSE) {
-      txt1 <- "Invalid road name. Check spelling or"
-      txt2 <- 'see list of road names in vignette("roads").'
-      error.msg <- paste(txt1, txt2)
+  rds <- cholera::roads
+  vars <- c(ew, ns)
+
+  if (!is.null(street.name)) {
+    street.name <- caseAndSpace(street.name)
+    st.obs <- street.name %in% rds$name
+    if (all(st.obs == FALSE)) {
+      error.msg <- "Invalid street name."
       stop(error.msg, call. = FALSE)
-    } else name <- case.name
-  } else name <- road.name
+    } else if (any(st.obs == FALSE)) {
+      no.err <- street.name[!st.obs]
+      no.msg <- "Misspelled or invalid sreet name."
+      message(paste(no.msg, paste(no.err, collapse = ", ")))
+      street.name <- street.name[st.obs]
+    }
+  }
 
-  if (is.null(cases) == FALSE) {
+  if (!is.null(cases)) {
     if (cases %in% c("address", "fatality") == FALSE) {
       stop('If specified, cases must either be "address" or "fatality".',
         call. = FALSE)
     }
-  }
-
-  if (token %in% c("id", "point") == FALSE) {
-    stop('token must be "id", or "point".', call. = FALSE)
   }
 
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
@@ -61,92 +78,145 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
     stop('time.unit must be "hour", "minute" or "second".', call. = FALSE)
   }
 
-  selected.road <- cholera::roads[cholera::roads$name == name, "street"]
-  roads.list <- split(cholera::roads[, vars], cholera::roads$street)
+  if (token %in% c("id", "point") == FALSE) {
+    stop('token must be "id", or "point".', call. = FALSE)
+  }
 
-  rng <- lapply(cholera::roads[cholera::roads$name == name, vars], range)
+  if (is.null(street.name) | isFALSE(zoom)) {
+    xlim <- range(rds[, ew])
+    ylim <- range(rds[, ns])
+  } else if (isTRUE(zoom) | is.numeric(zoom)) {
+    sel <- rds$name %in% street.name
+    xlim <- range(rds[sel, ew])
+    ylim <- range(rds[sel, ns])
 
-  if (is.logical(zoom)) {
-    if (zoom) {
-      radius <- 0.1
-      x.rng <- c(min(rng$x) - radius, max(rng$x) + radius)
-      y.rng <- c(min(rng$y) - radius, max(rng$y) + radius)
-    } else {
-      x.rng <- range(cholera::roads$x)
-      y.rng <- range(cholera::roads$y)
-    }
-  } else if (is.numeric(zoom)) {
-    if (zoom >= 0) {
-      x.rng <- c(min(rng$x) - zoom, max(rng$x) + zoom)
-      y.rng <- c(min(rng$y) - zoom, max(rng$y) + zoom)
-    } else stop("If numeric, zoom must be >= 0.", call. = FALSE)
-  } else stop("zoom must either be logical or numeric.", call. = FALSE)
+    if (zoom != 0) {
+      if (latlong) {
+        geo.vars <- c("lon", "lat")
 
-  plot(cholera::fatalities[, vars], xlim = x.rng, ylim = y.rng,
-    pch = NA, asp = 1)
-  invisible(lapply(roads.list, lines, col = "gray"))
+        seg.vars <- paste0(geo.vars, 1)
+        dat <- stats::setNames(rd.segs[, c("id", seg.vars)], c("id", geo.vars))
+        ones <- geoCartesian(dat)
 
-  if ((is.logical(zoom) & zoom == TRUE) | is.numeric(zoom)) {
-    if (is.null(cases) == FALSE) {
-      id <- cholera::road.segments[cholera::road.segments$name == name, "id"]
-      seg.ortho <- cholera::ortho.proj[cholera::ortho.proj$road.segment %in%
-        id, ]
-      seg.anchors <- cholera::fatalities.address$anchor %in% seg.ortho$case
-      seg.cases <- cholera::fatalities$case %in% seg.ortho$case
+        seg.vars <- paste0(geo.vars, 2)
+        dat <- stats::setNames(rd.segs[, c("id", seg.vars)], c("id", geo.vars))
+        twos <- geoCartesian(dat)
 
-      if (token == "id") {
-        if (cases == "fatality") {
-          text(cholera::fatalities[!seg.cases, vars],
-            labels = cholera::fatalities$case[!seg.cases], cex = 0.5)
-          if (any(seg.cases)) {
-            if (highlight) {
-              text(cholera::fatalities[seg.cases, vars],
-                labels = cholera::fatalities$case[seg.cases], cex = 0.5,
-                col = "red")
-            } else {
-              text(cholera::fatalities[seg.cases, vars],
-                labels = cholera::fatalities$case[seg.cases], cex = 0.5)
-            }
-          }
-        } else if (cases == "address") {
-          text(cholera::fatalities.address[!seg.anchors, vars],
-            labels = cholera::fatalities.address$anchor[!seg.anchors],
-            cex = 0.5)
-          if (any(seg.anchors)) {
-            if (highlight) {
-              text(cholera::fatalities.address[seg.anchors, vars],
-                labels = cholera::fatalities.address$anchor[seg.anchors],
-                cex = 0.5, col = "red")
-            } else {
-              text(cholera::fatalities.address[seg.anchors, vars],
-                labels = cholera::fatalities.address$anchor[seg.anchors],
-                cex = 0.5)
-            }
-          }
+        new.vars <- c("x", "y")
+        ones <- stats::setNames(ones, c("id", paste0(new.vars, 1)))
+        twos <- stats::setNames(twos, c("id", paste0(new.vars, 2)))
+        cartestian.rds <- merge(ones, twos, by = "id")
+
+        st.seg <- rd.segs[rd.segs$name %in% street.name, "id"]
+        cart.rd <- cartestian.rds[cartestian.rds$id %in% st.seg, ]
+
+        cart.x.range <- range(cart.rd[, paste0("x", 1:2)])
+        cart.y.range <- range(cart.rd[, paste0("y", 1:2)])
+
+        pad <- c(zoom, -zoom)
+        xlim <- cart.x.range + pad
+        ylim <- cart.y.range + pad
+
+        xlim.delta <- xlim[2] - xlim[1]
+        ylim.delta <- ylim[2] - ylim[1]
+
+        if (xlim.delta <= 0 | ylim.delta <= 0) {
+          xlim <- cart.x.range
+          ylim <- cart.y.range
+          message("Note: zoom = ",  zoom, " too far! Use smaller.")
         }
 
-      } else if (token == "point") {
-        if (cases == "fatality") {
-          points(cholera::fatalities[!seg.cases, vars], pch = 15, cex = 0.5)
-          if (any(seg.cases)) {
-            if (highlight) {
-              points(cholera::fatalities[seg.cases, vars], pch = 15, cex = 0.5,
-                col = "red")
-            } else {
-              points(cholera::fatalities[seg.cases, vars], pch = 15, cex = 0.5)
-            }
+        range.data <- meterLatLong(data.frame(x = xlim, y = ylim))
+        xlim <- range.data$lon
+        ylim <- range.data$lat
+
+      } else {
+        ols <- stats::lm(y ~ x, data = data.frame(x = xlim, y = ylim))
+        slope <- stats::coef(ols)[2]
+        theta <- atan(slope)
+
+        pad <- abs(zoom) / unitMeter(1)
+        delta.x <- pad * cos(theta)
+        delta.y <- pad * sin(theta)
+
+        if (zoom < 0) {
+          xlim <- c(xlim[1] - delta.x, xlim[2] + delta.x)
+          ylim <- c(ylim[1] - delta.y, ylim[2] + delta.y)
+        } else if (zoom > 0) {
+          xlim <- c(xlim[1] + delta.x, xlim[2] - delta.x)
+          ylim <- c(ylim[1] + delta.y, ylim[2] - delta.y)
+        }
+
+        ## diagnostic
+        # st.data <- rds[rds$name %in% street.name, vars]
+        # plot(st.data, asp = 1, xlim = xlim, ylim = ylim)
+        # abline(coef(ols)[1], slope, lty = "dotted")
+        # points(xy.lim, pch = 15)
+
+        xlim.delta <- xlim[2] - xlim[1]
+        ylim.delta <- ylim[2] - ylim[1]
+
+        if (xlim.delta <= 0 | ylim.delta <= 0) {
+          sel <- rds$name %in% street.name
+          xlim <- range(rds[sel, ew])
+          ylim <- range(rds[sel, ns])
+          message("Note: zoom = ",  zoom, " too far! Use smaller.")
+        }
+      }
+    }
+  }
+
+  plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = NA,
+    asp = asp)
+  addFrame(col = "gray", latlong = latlong)
+  addRoads(col = "gray", latlong = latlong)
+
+  if (zoom == TRUE | is.numeric(zoom)) {
+    if (is.null(cases) == FALSE) {
+      seg.id <- rd.segs[rd.segs$name %in% street.name, "id"]
+      seg.ortho <- proj.data[proj.data$road.segment %in% seg.id, ]
+
+      if (latlong) {
+        seg.anchors <- seg.ortho$case
+
+        sel <- cholera::anchor.case$anchor %in% seg.anchors
+        seg.cases <- cholera::anchor.case[sel, "case"]
+      } else {
+        seg.cases <- seg.ortho$case
+
+        sel <- cholera::anchor.case$case %in% seg.cases
+        seg.anchors <- unique(cholera::anchor.case[sel, "anchor"])
+      }
+
+      select.cases <- cholera::fatalities$case %in% seg.cases
+      select.anchors <- cholera::fatalities.address$anchor %in% seg.anchors
+
+      if (cases == "fatality") {
+        text(cholera::fatalities[!select.cases, vars],
+          labels = cholera::fatalities$case[!select.cases], cex = cex.text)
+        if (any(select.cases)) {
+          if (highlight) {
+            text(cholera::fatalities[select.cases, vars],
+              labels = cholera::fatalities$case[select.cases], cex = cex.text,
+              col = "red")
+          } else {
+            text(cholera::fatalities[select.cases, vars],
+              labels = cholera::fatalities$case[select.cases], cex = cex.text)
           }
-        } else if (cases == "address") {
-          points(cholera::fatalities.address[!seg.anchors, vars], pch = 15,
-            cex = 0.5)
-          if (any(seg.anchors)) {
-            if (highlight) {
-              points(cholera::fatalities.address[seg.anchors, vars], pch = 15,
-                cex = 0.5, col = "red")
-            } else {
-              points(cholera::fatalities.address[seg.anchors, vars], pch = 15,
-                cex = 0.5)
-            }
+        }
+      } else if (cases == "address") {
+        text(cholera::fatalities.address[!select.anchors, vars],
+          labels = cholera::fatalities.address$anchor[!select.anchors],
+          cex = cex.text)
+        if (any(select.anchors)) {
+          if (highlight) {
+            text(cholera::fatalities.address[select.anchors, vars],
+              labels = cholera::fatalities.address$anchor[select.anchors],
+              cex = cex.text, col = "red")
+          } else {
+            text(cholera::fatalities.address[select.anchors, vars],
+              labels = cholera::fatalities.address$anchor[select.anchors],
+              cex = cex.text)
           }
         }
       }
@@ -154,46 +224,50 @@ streetNameLocator <- function(road.name = "Broad Street", zoom = FALSE,
   }
 
   if (add.pump) {
-    if (vestry) {
-      points(cholera::pumps.vestry[, vars], pch = 17, cex = 1, col = "blue")
-      text(cholera::pumps.vestry[, vars],
-        label = paste0("p", cholera::pumps.vestry$id), pos = 1)
-    } else {
-      points(cholera::pumps[, vars], pch = 17, cex = 1, col = "blue")
-      text(cholera::pumps[, vars], label = paste0("p", cholera::pumps$id),
-        pos = 1)
-    }
+    addPump(col = "blue", pch = 17, latlong = latlong, vestry = vestry)
   }
 
-  if (highlight) {
-    invisible(lapply(roads.list[paste(selected.road)], lines, col = "red",
-      lwd = 3))
-  }
-
-  if (add.title) title(main = name)
-
-  if (add.subtitle) {
-    street.length <- streetLength(name, distance.unit)
-    est.time <- distanceTime(street.length, distance.unit = distance.unit,
-      time.unit = time.unit, walking.speed = walking.speed)
-
-    nominal.time <- nominalTime(est.time, time.unit)
-
-    if (distance.unit == "native") {
-      subtitle <- paste(round(street.length, 1), "units;", nominal.time)
-    } else if (distance.unit == "meter") {
-      subtitle <- paste(round(street.length, 1), "m;", nominal.time)
-    } else if (distance.unit == "yard") {
-      subtitle <- paste(round(street.length, 1), "yd;", nominal.time)
+  if (!is.null(street.name)) {
+     if (highlight) {
+      st.segs <- rd.segs[rd.segs$name %in% street.name, "id"]
+      invisible(lapply(st.segs, function(seg) {
+        tmp <- rd.segs[rd.segs$id == seg, ]
+        segments(tmp[, paste0(ew, 1)], tmp[, paste0(ns, 1)],
+                 tmp[, paste0(ew, 2)], tmp[, paste0(ns, 2)],
+                 col = "red", lwd = 3)
+      }))
     }
 
-    title(sub = paste(subtitle, "@", walking.speed, "km/hr"))
-  }
-}
+    if (add.title) {
+      if (length(street.name) == 1) {
+        title(main = street.name)
+      } else if (length(street.name) > 1) {
+        title(main = paste(street.name, collapse = ", "))
+      }
+    }
 
-wordCase <- function(x) {
-  # faster than tools::toTitleCase(), bytecode?
-  paste0(toupper(substr(x, 1, 1)), tolower(substr(x, 2, nchar(x))))
+    if (add.subtitle) {
+      st.segs <- rd.segs[rd.segs$name %in% street.name, "id"]
+
+      segment.length <- sum(segmentLength(st.segs, distance.unit,
+        latlong = latlong))
+
+      est.time <- distanceTime(segment.length, distance.unit = distance.unit,
+        time.unit = time.unit, walking.speed = walking.speed)
+
+      nominal.time <- nominalTime(est.time, time.unit)
+
+      if (distance.unit == "meter") {
+        subtitle <- paste(round(segment.length, 1), "m;", nominal.time)
+      } else if (distance.unit == "yard") {
+        subtitle <- paste(round(segment.length, 1), "yd;", nominal.time)
+      } else if (distance.unit == "native") {
+        subtitle <- paste(round(segment.length, 1), "units;", nominal.time)
+      }
+
+      title(sub = paste(subtitle, "@", walking.speed, "km/hr"))
+    }
+  }
 }
 
 #' @importFrom tools toTitleCase
@@ -324,4 +398,15 @@ caseAndSpace <- function(name) {
     }
   }
   string.out
+}
+
+computeCoords <- function(endpt, intercept, slope) {
+  y.prime <- slope * endpt$x + intercept
+  x.prime <- (y.prime - intercept) / slope
+  data.frame(x = x.prime, y = y.prime, row.names = NULL)
+}
+
+wordCase <- function(x) {
+  # faster than tools::toTitleCase(), bytecode?
+  paste0(toupper(substr(x, 1, 1)), tolower(substr(x, 2, nchar(x))))
 }
