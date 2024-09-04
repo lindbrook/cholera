@@ -647,7 +647,7 @@ arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit,
 }
 
 casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
-  pmp, vestry, weighted) {
+  vestry, weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
@@ -780,11 +780,6 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
       }
     }
   }
-
-  # ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
-  #               nodes[nodes$land %in% orgn, ]$node)
-
-
 
   if (any(dstn < 1000L)) {
     fatal <- dstn[dstn < 1000L]
