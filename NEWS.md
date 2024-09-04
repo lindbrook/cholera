@@ -1,3 +1,8 @@
+### cholera 0.8.0.9429
+
+- clean walkingPath(), casePump() and caseCase().
+
+
 ### cholera 0.8.0.9428
 
 - promote/amend walkingPathB() to walkingPath().
