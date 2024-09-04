@@ -2,70 +2,38 @@
 % Please edit documentation in R/walkingPath.R
 \name{walkingPath}
 \alias{walkingPath}
-\title{Compute the shortest walking path between cases and/or pumps.}
+\title{Compute walking path from case/landmark to nearest or selected pump.}
 \usage{
 walkingPath(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, weighted = TRUE, vestry = FALSE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  null.origin.landmark = FALSE)
+  vestry = FALSE, latlong = FALSE, case.set = "observed",
+  location = "nominal", weighted = TRUE, distance.unit = "meter",
+  time.unit = "second", walking.speed = 5, include.landmarks = TRUE)
 }
 \arguments{
-\item{origin}{Numeric or Character. Numeric ID of case or pump. Character landmark name.}
+\item{origin}{Numeric. Vector of origin(s) (numeric or case/landmark name).}
 
-\item{destination}{Numeric or Character. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case. Character landmark name (case insensitive).}
+\item{destination}{Numeric. Vector of destination(s) (numeric or landmark/pump name).}
 
-\item{type}{Character "case-pump", "cases" or "pumps".}
+\item{type}{Character. Path case to pump. FALSE is all other combinations of cases, landmarks and pumps.}
 
-\item{observed}{Logical. Use observed or "simulated" expected data.}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
-\item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of nodes.}
+\item{latlong}{Logical.}
 
-\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
+\item{case.set}{Character. "observed" or "expected".}
 
-\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is TRUE. See \code{vignette("roads")} for information on unit distances.}
+\item{location}{Character. For cases and pumps. "anchor, "fatality" or "orthogonal.}
+
+\item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
+
+\item{distance.unit}{Character. Unit of distance: "meter" or "yard".}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
-\item{null.origin.landmark}{Logical. Consider landmarks when origin = NULL and type = "case-pump".}
-}
-\value{
-An R list with two elements: a character vector of path nodes and a data frame summary.
+\item{include.landmarks}{Logical. Include landmarks as cases.}
 }
 \description{
-Compute the shortest walking path between cases and/or pumps.
-}
-\note{
-The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using \code{distanceTime()}. Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of "Inf".
-}
-\examples{
-\dontrun{
-# path from case 1 to nearest pump.
-walkingPath(1)
-
-# path from pump 1 to nearest case.
-walkingPath(NULL, 1)
-
-# path from case 1 to pump 6.
-walkingPath(1, 6)
-
-# exclude pump 7 from consideration.
-walkingPath(1, -7)
-
-# path from case 1 to case 6.
-walkingPath(1, 6, type = "cases")
-
-# path from pump 1 to pump 6.
-walkingPath(1, 6, type = "pumps")
-
-# for multiple cases.
-lapply(1:3, walkingPath)
-
-# path from case 1 to nearest pump.
-plot(walkingPath(1))
-
-# path from John Snow's residence to Broad Street pump.
-plot(walkingPath("John Snow", 7))
-}
+Compute walking path from case/landmark to nearest or selected pump.
 }
