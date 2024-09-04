@@ -7,7 +7,7 @@
 \method{print}{walking_path}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "walking_path" created by walkingPath().}
+\item{x}{An object of class "latlong_walking_path" created by latlongWalkingPath().}
 
 \item{...}{Additional parameters.}
 }
@@ -16,10 +16,4 @@ An R data frame.
 }
 \description{
 Summary output.
-}
-\examples{
-\dontrun{
-walkingPath()
-print(walkingPath())
-}
 }
