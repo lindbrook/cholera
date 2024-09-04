@@ -881,11 +881,21 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 }
 
 pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
-  network.data, pmp, vestry, weighted) {
+  network.data, vestry, weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
   nodes <- network.data$nodes
+
+  if (length(intersect(orgn, dstn)) != 0) {
+    if (!is.null(origin) & is.null(destination) | all(destination < 0)) {
+      dstn <- setdiff(dstn, orgn)
+      dstn.nm <- setdiff(dstn.nm, orgn.nm)
+    } else if (is.null(origin) & !is.null(destination)) {
+      orgn <- setdiff(orgn, dstn)
+      orgn.nm <- setdiff(orgn.nm, dstn.nm)
+    }
+  }
 
   egos <- nodes[nodes$pump %in% orgn, ]
   if (nrow(egos) > 1) egos <- egos[order(egos$pump), ]
@@ -929,12 +939,6 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
   alter.node <- altersB$node
   names(alter.node) <- altersB$pump
 
-  if (length(setdiff(orgn, egosB$pump) != 0)) {
-    sel <- orgn %in% setdiff(orgn, egosB$pump)
-    orgn <- orgn[!sel]
-    orgn.nm <- orgn.nm[!sel]
-  }
-
   if (length(ego.node) == 1) {
     if (weighted) {
       d <- igraph::distances(g, ego.node, alter.node, weights = edges$d)
@@ -943,7 +947,7 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     }
 
     nearest.node <- dimnames(d)[[2]][which.min(d)]
-    nearest.dstn <- as.character(alters[alters$node == nearest.node, ]$pump)
+    nearest.dstn <- alters[alters$node == nearest.node, ]$pump
 
     if (weighted) {
       p <- igraph::shortest_paths(g, ego.node, nearest.node,
@@ -965,7 +969,7 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 
     alter.id <- which.min(d.multi.ego[[ego.id]])
     nr.alter.node <- dimnames(d.multi.ego[[ego.id]])[[2]][alter.id]
-    nearest.dstn <- as.character(nodes[nodes$node == nr.alter.node, ]$pump)
+    nearest.dstn <- nodes[nodes$node == nr.alter.node, ]$pump
 
     if (weighted) {
       p <- igraph::shortest_paths(g, nr.ego.node, nr.alter.node,
@@ -978,5 +982,6 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     orgn.nm <- orgn.nm[ego.id]
   }
 
-  list(orgn = orgn, orgn.nm = orgn.nm, nearest.dstn = nearest.dstn, p = p[[1]])
+  list(orgn = orgn, orgn.nm = orgn.nm, dstn = nearest.dstn,
+       dstn.nm = dstn.nm[dstn == nearest.dstn], p = p[[1]])
 }

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9430
+
+- amend/update pumpPump().
+
+
 ### cholera 0.8.0.9429
 
 - clean walkingPath(), casePump() and caseCase().
