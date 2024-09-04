@@ -68,16 +68,14 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   if (type == "case-pump") {
     path.data <- casePump(orgn, orgn.nm, dstn, dstn.nm, destination,
-      network.data, pmp, vestry, weighted)
+      network.data, vestry, weighted)
   } else if (type == "cases") {
     path.data <- caseCase(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
       network.data, vestry, weighted)
   } else if (type == "pumps") {
     path.data <- pumpPump(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
-      network.data, pmp, vestry, weighted)
+      network.data, vestry, weighted)
   }
-
-  # nearest.dstn <- path.data$dstn
 
   p <- names(unlist(path.data$p))
   p.data <- do.call(rbind, strsplit(p, "_&_"))
@@ -109,13 +107,9 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
       time.unit = time.unit, walking.speed = walking.speed)
   }
 
-  # if (type == "case-pump") p.nm <- pmp[pmp$id == nearest.dstn, "street"]
-
   data.summary <- data.frame(origin = path.data$orgn,
-                             # destination = as.integer(nearest.dstn),
                              destination = path.data$dstn,
                              origin.nm = path.data$orgn.nm,
-                             # destination.nm = p.nm,
                              destination.nm = path.data$dstn.nm,
                              distance = sum(ds),
                              time = walking.time,
@@ -653,7 +647,7 @@ arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit,
 }
 
 casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
-  pmp, vestry, weighted) {
+  vestry, weighted) {
 
   edges <- network.data$edges
   g <- network.data$g
@@ -786,11 +780,6 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
       }
     }
   }
-
-  # ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
-  #               nodes[nodes$land %in% orgn, ]$node)
-
-
 
   if (any(dstn < 1000L)) {
     fatal <- dstn[dstn < 1000L]
