@@ -1,3 +1,8 @@
+### cholera 0.8.0.9431
+
+- promote addWalkingPathB() to addWalkingPath().
+
+
 ### cholera 0.8.0.9430
 
 - amend/update pumpPump().
