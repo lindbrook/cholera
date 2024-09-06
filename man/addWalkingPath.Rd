@@ -2,49 +2,50 @@
 % Please edit documentation in R/addWalkingPath.R
 \name{addWalkingPath}
 \alias{addWalkingPath}
-\title{Add the shortest walking path between a selected cases or pumps.}
+\title{Add walking path from case/landmark to nearest or selected pump. (prototype)}
 \usage{
 addWalkingPath(origin = 1, destination = NULL, type = "case-pump",
-  observed = TRUE, weighted = TRUE, vestry = FALSE,
-  distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  unit.posts = "distance", unit.interval = NULL, alpha.level = 1)
+  vestry = FALSE, latlong = FALSE, case.set = "observed",
+  location = "nominal", weighted = TRUE, distance.unit = "meter",
+  time.unit = "second", walking.speed = 5, include.landmarks = TRUE,
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
+  alpha.level = 1, ...)
 }
 \arguments{
-\item{origin}{Numeric or Integer. Numeric ID of case or pump.}
+\item{origin}{Numeric. Vector of origin(s) (numeric or case/landmark name).}
 
-\item{destination}{Numeric or Integer. Numeric ID(s) of case(s) or pump(s). Exclusion is possible via negative selection (e.g., -7). Default is \code{NULL}: this returns closest pump or "anchor" case. Character landmark name (case insensitive).}
+\item{destination}{Numeric. Vector of destination(s) (numeric or landmark/pump name).}
 
-\item{type}{Character "case-pump", "cases" or "pumps".}
+\item{type}{Character. Path case to pump. FALSE is all other combinations of cases, landmarks and pumps.}
 
-\item{observed}{Logical. Use observed or "simulated" expected data.}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the map in the Vestry Report. \code{FALSE} uses the 13 pumps from the original map.}
 
-\item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of nodes.}
+\item{latlong}{Logical.}
 
-\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
+\item{case.set}{Character. "observed" or "expected".}
 
-\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. \code{unit} is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.}
+\item{location}{Character. For cases and pumps. "anchor, "fatality" or "orthogonal.}
+
+\item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
+
+\item{distance.unit}{Character. Unit of distance: "meter" or "yard".}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
-\item{unit.posts}{Character. "distance" for mileposts; "time" for timeposts.}
+\item{include.landmarks}{Logical. Include landmarks as cases.}
 
-\item{unit.interval}{Numeric. Sets interval between posts: for "distance", the default is 50 meters; for "time", the default is 60 seconds.}
+\item{mileposts}{Logical. Plot mile/time posts.}
+
+\item{milepost.unit}{Character. "distance" or "time".}
+
+\item{milepost.interval}{Numeric. Mile post interval unit of distance (yard or meter) or unit of time (seconds).}
 
 \item{alpha.level}{Numeric. Alpha level transparency for path: a value in [0, 1].}
-}
-\value{
-An R list with two elements: a character vector of path nodes and a data frame summary.
+
+\item{...}{Additional plotting parameters.}
 }
 \description{
-Add the shortest walking path between a selected cases or pumps.
-}
-\note{
-The function uses a case's "address" (i.e., a stack's "anchor" case) to compute distance. Time is computed using cholera::distanceTime(). Adam and Eve Court, and Falconberg Court and Falconberg Mews, are disconnected from the larger road network; they form two isolated subgraphs. This has two consequences: first, only cases on Adam and Eve Court can reach pump 2 and those cases cannot reach any other pump; second, cases on Falconberg Court and Mews cannot reach any pump. Unreachable pumps will return distances of \code{Inf}. Arrow points represent mileposts or timeposts to the destination.
-}
-\examples{
-streetNameLocator("broad street", zoom = TRUE, highlight = FALSE,
-  add.subtitle = FALSE)
-addWalkingPath(447)
+Add walking path from case/landmark to nearest or selected pump. (prototype)
 }
