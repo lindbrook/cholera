@@ -1,3 +1,8 @@
+### cholera 0.8.0.9432
+
+- promote addEuclideanPathB() to addEuclideanPath().
+
+
 ### cholera 0.8.0.9431
 
 - promote addWalkingPathB() to addWalkingPath().
