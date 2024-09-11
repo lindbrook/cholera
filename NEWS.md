@@ -1,3 +1,8 @@
+### cholera 0.8.0.9433
+
+- incorporate case.select in location: neighborhoodEuclidean(latlong = FALSE).
+
+
 ### cholera 0.8.0.9432
 
 - promote addEuclideanPathB() to addEuclideanPath().

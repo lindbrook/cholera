@@ -5,10 +5,10 @@
 \title{Add observed cases by neighborhood.}
 \usage{
 addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
-  metric = "walking", case.set = "observed", case.select = "address",
-  location = "nominal", token = "point", text.size = 0.5, pch = 16,
-  point.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
-  alpha.level = 0.5, multi.core = TRUE)
+  metric = "walking", case.set = "observed", location = "nominal",
+  token = "point", text.size = 0.5, pch = 16, point.size = 0.5,
+  vestry = FALSE, weighted = TRUE, color = NULL, alpha.level = 0.5,
+  multi.core = TRUE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -19,9 +19,7 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 
 \item{case.set}{Character. "observed" or "expected".}
 
-\item{case.select}{Character. Fatalities: "all" or "address".}
-
-\item{location}{Character. "nominal" uses \code{fatalities}; "orthogonal" uses \code{ortho.proj}.}
+\item{location}{Character. "nominal", "anchor" or "orthogonal".}
 
 \item{token}{Character. Type of token to plot: "point" or "id".}
 

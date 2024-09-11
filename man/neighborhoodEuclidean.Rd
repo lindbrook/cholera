@@ -20,7 +20,7 @@ neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 
 \item{latlong}{Logical. Longitude and latitude coordiantes}
 
-\item{location}{Character. "nominal" or "orthogonal". For \code{case.set = "observed"}: "nominal" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "nominal" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.}
+\item{location}{Character. ""nominal", "anchor" or "orthogonal".}
 
 \item{brute.force}{Logical. For latlong = FALSE. TRUE computes nearest pump for each case. FALSE uses Voronoi cells as shortcut.}
 

@@ -6,7 +6,7 @@
 #' @param case.set Character. "observed" or "expected".
 #' @param case.select Character. Fatalities: "all" or "address".
 #' @param latlong Logical. Longitude and latitude coordiantes
-#' @param location Character. "nominal" or "orthogonal". For \code{case.set = "observed"}: "nominal" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "nominal" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.
+#' @param location Character. ""nominal", "anchor" or "orthogonal".
 #' @param brute.force Logical. For latlong = FALSE. TRUE computes nearest pump for each case. FALSE uses Voronoi cells as shortcut.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
@@ -24,8 +24,8 @@ neighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
     out <- do.call("euclideanLatlong", args)
   } else {
     args <- list(pump.select = pump.select, vestry = vestry,
-      case.set = case.set, case.select = case.select, location = location,
-      brute.force = brute.force, multi.core = multi.core, dev.mode = dev.mode)
+      case.set = case.set, location = location, brute.force = brute.force,
+      multi.core = multi.core, dev.mode = dev.mode)
     out <- do.call("euclideanNominal", args)
   }
   out

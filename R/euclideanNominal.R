@@ -4,8 +4,7 @@
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param case.set Character. "observed" or "expected".
-#' @param case.select Character. Fatalities: "all" or "address".
-#' @param location Character. "nominal" or "orthogonal". For \code{case.set = "observed"}: "nominal" uses \code{fatalities} and "orthogonal" uses \code{ortho.proj}. For \code{case.set = "expected"}: "nominal" uses \code{regular.cases} and "orthogonal" uses \code{sim.ortho.proj}.
+#' @param location Character. "nominal", "anchor" or "orthogonal". 
 #' @param brute.force Logical. TRUE computes nearest pump for each case. FALSE uses Voronoi cells as shortcut.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
@@ -19,15 +18,16 @@
 #' }
 
 euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
-  case.set = "observed", case.select = "address", location = "nominal",
-  brute.force = FALSE, multi.core = TRUE, dev.mode = FALSE) {
+  case.set = "observed", location = "nominal", brute.force = FALSE,
+  multi.core = TRUE, dev.mode = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".', call. = FALSE)
   }
 
-  if (location %in% c("nominal", "orthogonal") == FALSE) {
-    stop('location must be "nominal" or "orthogonal".', call. = FALSE)
+  if (location %in% c("nominal", "anchor", "orthogonal") == FALSE) {
+    stop('location must be "nominal", "anchor", or "orthogonal".',
+      call. = FALSE)
   }
 
   cores <- multiCore(multi.core)
@@ -43,12 +43,10 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
     metric = "euclidean", vestry = vestry)
 
   if (case.set == "observed") {
-    if (case.select == "address") {
+    if (location %in% c("anchor", "orthogonal")) {
       case.num <- cholera::fatalities.address$anchor
-    } else if (case.select == "all") {
+    } else if (location == "nominal") {
       case.num <- cholera::fatalities$case
-    } else {
-      stop('case.set must be "all" or "address".', call. = FALSE)
     }
   } else if (case.set == "expected") {
     case.num <- seq_len(nrow(cholera::regular.cases))
@@ -98,7 +96,6 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
               pump.select = pump.select,
               vestry = vestry,
               case.set = case.set,
-              case.select = case.select,
               location = location,
               pump.id = pump.id,
               snow.colors = snow.colors,
@@ -182,7 +179,7 @@ euclideanStar <- function(x, case.num, nearest.pump, pump.data,
     n.color <- x$snow.colors[paste0("p", nearest.pump[i])]
 
     if (x$case.set == "observed") {
-      if (x$location == "nominal") {
+      if (x$location %in% c("nominal", "anchor")) {
         sel <- cholera::fatalities$case %in% case.num[i]
         n.data <- cholera::fatalities[sel, ]
       } else if (x$location == "orthogonal") {
@@ -205,8 +202,7 @@ euclideanStar <- function(x, case.num, nearest.pump, pump.data,
   if (add.observed.points) {
     if (x$case.set == "observed") {
       addNeighborhoodCases(pump.select = x$pump.select, vestry = x$vestry,
-        metric = "euclidean", case.set = x$case.set,
-        case.select = x$case.select, location = x$location,
+        metric = "euclidean", case.set = x$case.set, location = x$location,
         multi.core = x$cores)
     }
   }

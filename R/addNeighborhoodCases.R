@@ -5,8 +5,7 @@
 #' @param pump.select Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param metric Character. Type of neighborhood: "euclidean" or "walking".
 #' @param case.set Character. "observed" or "expected".
-#' @param case.select Character. Fatalities: "all" or "address".
-#' @param location Character. "nominal" uses \code{fatalities}; "orthogonal" uses \code{ortho.proj}.
+#' @param location Character. "nominal", "anchor" or "orthogonal".
 #' @param token Character. Type of token to plot: "point" or "id".
 #' @param text.size Numeric. Size of case ID text.
 #' @param pch Numeric.
@@ -27,29 +26,25 @@
 #' }
 
 addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
-  metric = "walking", case.set = "observed", case.select = "address",
-  location = "nominal", token = "point", text.size = 0.5, pch = 16,
-  point.size = 0.5, vestry = FALSE, weighted = TRUE, color = NULL,
-  alpha.level = 0.5, multi.core = TRUE) {
+  metric = "walking", case.set = "observed", location = "nominal",
+  token = "point", text.size = 0.5, pch = 16, point.size = 0.5, vestry = FALSE,
+  weighted = TRUE, color = NULL, alpha.level = 0.5, multi.core = TRUE) {
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
-    stop('metric must be "euclidean" or "walking".')
+    stop('metric must be "euclidean" or "walking".', call. = FALSE)
   }
 
   if (case.set %in% c("observed", "expected") == FALSE) {
-    stop('case.set must be "observed" or "expected".')
+    stop('case.set must be "observed" or "expected".', call. = FALSE)
   }
 
-  if (case.select %in% c("all", "address") == FALSE) {
-    stop('case.select must be "all" or "address".')
+   if (location %in% c("nominal", "anchor", "orthogonal") == FALSE) {
+    stop('location must be "nominal", "anchor", or "orthogonal".',
+      call. = FALSE)
   }
 
   if (token %in% c("id", "point") == FALSE) {
-    stop('token must be "id" or "point".')
-  }
-
-  if (location %in% c("nominal", "orthogonal") == FALSE) {
-    stop('location must be "nominal" or "orthogonal".')
+    stop('token must be "id" or "point".', call. = FALSE)
   }
 
   cores <- multiCore(multi.core)
@@ -60,7 +55,7 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
                     multi.core = cores)
 
   if (metric == "euclidean") {
-    arguments <- c(arguments, case.set = case.set, case.select = case.select)
+    arguments <- c(arguments, case.set = case.set)
     eucl.data <- do.call("neighborhoodEuclidean", arguments)
     nearest.pump <- data.frame(case = eucl.data$case.num,
                                pump = eucl.data$nearest.pump)
@@ -98,17 +93,19 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
     }
   }
 
-  if (location == "nominal") {
-    if (case.select == "all") {
-      case.data <- cholera::fatalities
-    } else if (case.select == "address") {
-      sel <- cholera::fatalities.address$anchor
-      case.data <-  cholera::fatalities[cholera::fatalities$case %in% sel, ]
-    }
+  if (location %in% c("nominal", "anchor")) {
     vars <- c("x", "y")
   } else if (location == "orthogonal") {
-    case.data <- cholera::ortho.proj
     vars <- c("x.proj", "y.proj")
+  }
+
+  if (location == "nominal") {
+    case.data <- cholera::fatalities
+  } else if (location == "anchor") {
+    sel <- cholera::fatalities.address$anchor
+    case.data <-  cholera::fatalities[cholera::fatalities$case %in% sel, ]
+  } else if (location == "orthogonal") {
+    case.data <- cholera::ortho.proj
   } else stop("Invalid 'location'!")
 
   invisible(lapply(selected.pumps, function(x) {
