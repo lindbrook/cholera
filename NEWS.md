@@ -1,3 +1,8 @@
+### cholera 0.8.0.9435
+
+- amend latlongSimulateFatalities() prototype.
+
+
 ### cholera 0.8.0.9434
 
 - incorporate case.select in location: neighborhoodEuclidean(latlong = TRUE).
