@@ -2,23 +2,15 @@
 #'
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param radius Numeric. Radius for \code{withinRadius()} to find road segment endpoints.
-#' @param recompute Logical. Recompute regular cases.
+#' @param simulated.obs Numeric. Number of simulated cases.
 #' @note radius = 75 - appox. 1 hr; radius = 100 - appox. 1.5 hr
 #' @noRd
 
 latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
-  recompute = FALSE) {
+  simulated.obs = 20000L) {
 
   cores <- multiCore(multi.core)
-
-  if (recompute) {
-    regular.cases <- latlongRegularCartesianCases()
-  } else {
-    regular.cases <- cholera::regular.cases
-    if (any(names(regular.cases) %in% c("lon", "lat"))) {
-      regular.cases <- regular.cases[, c("x", "y")]
-    }
-  }
+  reg.cases <- latlongRegularCartesianCases(simulated.obs)
 
   rd <- cholera::roads[!cholera::roads$street %in% cholera::border, ]
   cart.rd <- data.frame(street = rd$street, geoCartesian(rd))
@@ -36,10 +28,10 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
   cart.rd.segs <- do.call(rbind, cart.rd.segs)
   seg.endpts <- c("x1", "y1", "x2", "y2")
 
-  idx <- seq_len(nrow(regular.cases))
+  idx <- seq_len(nrow(reg.cases))
 
   orthogonal.projection <- parallel::mclapply(idx, function(i) {
-    case <- regular.cases[i, ]
+    case <- reg.cases[i, ]
 
     within.radius <- lapply(cart.rd.segs$id, function(x) {
       dat <- cart.rd.segs[cart.rd.segs$id == x, ]
@@ -116,8 +108,8 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
     meterLatLong(coords[i, ])
   }, mc.cores = cores)
 
-  reg <- parallel::mclapply(seq_len(nrow(regular.cases)), function(i) {
-    meterLatLong(regular.cases[i, ])
+  reg <- parallel::mclapply(seq_len(nrow(reg.cases)), function(i) {
+    meterLatLong(reg.cases[i, ])
   }, mc.cores = cores)
 
   list(reg = do.call(rbind, reg), sim = do.call(rbind, proj))
@@ -141,7 +133,7 @@ latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
 #' @importFrom sp spsample
 #' @noRd
 
-latlongRegularCartesianCases <- function(simulated.obs = 20000L) {
+latlongRegularCartesianCases <- function(simulated.obs) {
   origin <- data.frame(lon = min(cholera::roads$lon),
                        lat = min(cholera::roads$lat))
 
