@@ -3,44 +3,41 @@
 #' Plots star graph from pump to its cases.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
 #' @param case.set Character. "observed" or "expected".
+#' @param location "nominal", "anchor" or "orthogonal".
 #' @importFrom sp point.in.polygon
 #' @noRd
 
 euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
-  location = "nominal", case.set = "observed") {
+  case.set = "observed", location = "nominal") {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".', call. = FALSE)
   }
 
-  if (location %in% c("nominal", "orthogonal") == FALSE) {
-    stop('location must be "nominal" or "orthogonal".', call. = FALSE)
+  if (location %in% c("nominal", "anchor", "orthogonal") == FALSE) {
+    stop('location must be "nominal", "anchor" or "orthogonal".', call. = FALSE)
   } else if (location == "orthogonal") {
     if (vestry) pump.data <- cholera::latlong.ortho.pump.vestry
     else pump.data <- cholera::latlong.ortho.pump
-  } else if (location == "nominal") {
+  } else if (location %in% c("anchor", "nominal")) {
     if (vestry) pump.data <- cholera::pumps.vestry
     else pump.data <- cholera::pumps
   }
 
   cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)$cells
-
-  if (is.null(pump.select)) {
-    pump.id <- pump.select
-  } else {
-    pump.id <- selectPump(pump.data, pump.select, "euclidean", vestry)
-  }
+  pump.id <- selectPump(pump.data, pump.select, "euclidean", vestry)
 
   if (case.set == "observed") {
     if (location == "nominal") {
+      case.data <- cholera::fatalities
+    } else if (location == "anchor") {
       case.data <- cholera::fatalities.address
     } else if (location == "orthogonal") {
       case.data <- cholera::latlong.ortho.addr
     }
   } else if (case.set == "expected") {
-    if (location == "nominal") {
+    if (location %in% c("nominal", "anchor")) {
       case.data <- cholera::latlong.regular.cases
     } else if (location == "orthogonal") {
       case.data <- cholera::latlong.sim.ortho.proj
@@ -56,8 +53,8 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
               vestry = vestry,
               cells = cells,
               pump.data = pump.data,
-              location = location,
               case.set = case.set,
+              location = location,
               snow.colors = snowColors(vestry = vestry),
               statistic.data = statistic.data)
 
@@ -140,19 +137,21 @@ plot.latlongEuclidean <- function(x, type = "star", ...) {
 latlongEuclideanCases <- function(x, vars) {
   if (x$case.set == "observed") {
     if (x$location == "nominal") {
+      dat <- cholera::fatalities
+    } else if (x$location == "anchor") {
       dat <- cholera::fatalities.address
       names(dat)[names(dat) == "anchor"] <- "case"
     } else if (x$location == "orthogonal") {
       dat <- cholera::latlong.ortho.addr
     }
   } else if (x$case.set == "expected") {
-    if (x$location == "nominal") {
+    if (x$location %in% c("nominal", "anchor")) {
       dat <- cholera::latlong.regular.cases
       dat$case <- seq_len(nrow(dat))
     } else if (x$location == "orthogonal") {
       dat <- cholera::latlong.sim.ortho.proj
     }
-  } # else stop()
+  }
 
   case.partition <- lapply(x$statistic.data, function(neighbor) {
     dat$case[neighbor == 1]
@@ -160,23 +159,34 @@ latlongEuclideanCases <- function(x, vars) {
 
   invisible(lapply(names(case.partition), function(nm) {
     sel <- dat$case %in% case.partition[[nm]]
-    points(dat[sel, vars], col = x$snow.colors[nm], pch = 20, cex = 0.75)
+    points(dat[sel, vars], col = x$snow.colors[nm], pch = 20, cex = 0.5)
   }))
 }
 
 latlongEuclideanStar <- function(x, vars) {
   if (x$case.set == "observed") {
-    cases <- cholera::fatalities.address
+    if (x$location == "nominal") {
+      cases <- cholera::fatalities
+    } else if (x$location == "anchor") {
+      cases <- cholera::fatalities.address
+      names(cases)[names(cases) == "anchor"] <- "case"
+    } else if (x$location == "orthogonal") {
+      cases <- cholera::latlong.ortho.addr
+    }
+
   } else if (x$case.set == "expected") {
-    cases <- cholera::latlong.regular.cases
-    cases$anchor <- seq_len(nrow(cases))
+    if (x$location %in% c("nominal", "anchor")) {
+      cases <- cholera::latlong.regular.cases
+      cases$case <- seq_len(nrow(cases))
+    } else if (x$location == "orthogonal") {
+      cases <- cholera::latlong.sim.ortho.proj
+    }
   }
 
-  if (is.null(x$pump.id)) pump.id <- x$pump.data$id
-  else pump.id <- x$pump.id
+  pump.id <- x$pump.id
 
-  nearest.pump <- do.call(rbind, lapply(cases$anchor, function(a) {
-    p1 <- cases[cases$anchor == a, vars]
+  nearest.pump <- do.call(rbind, lapply(cases$case, function(cs) {
+    p1 <- cases[cases$case == cs, vars]
     d <- vapply(pump.id, function(p) {
       p2 <- x$pump.data[x$pump.data$id == p, vars]
       geosphere::distGeo(p1, p2)
@@ -184,12 +194,12 @@ latlongEuclideanStar <- function(x, vars) {
     near.id <- which.min(d)
     if (is.null(pump.id)) p.nr <- x$pump.data$id[near.id]
     else p.nr <- pump.id[near.id]
-    data.frame(case = a, pump = p.nr, meters = d[near.id])
+    data.frame(case = cs, pump = p.nr, meters = d[near.id])
   }))
 
-  invisible(lapply(nearest.pump$case, function(c) {
-    ego <- cases[cases$anchor == c, vars]
-    p <- nearest.pump[nearest.pump$case == c, "pump"]
+  invisible(lapply(nearest.pump$case, function(cs) {
+    ego <- cases[cases$case == cs, vars]
+    p <- nearest.pump[nearest.pump$case == cs, "pump"]
     alter <- x$pump.data[x$pump.data$id == p, vars]
     segments(ego$lon, ego$lat, alter$lon, alter$lat,
              col = x$snow.colors[paste0("p", p)], lwd = 0.5)
@@ -198,7 +208,7 @@ latlongEuclideanStar <- function(x, vars) {
 
 latlongEuclideanAreaPolygons <- function(x) {
   if (x$case.set == "expected") {
-    if (x$location == "nominal") {
+    if (x$location %in% c("nominal", "anchor")) {
       dat <- cholera::latlong.regular.cases
       dat$case <- seq_len(nrow(dat))
     } else if (x$location == "orthogonal") {

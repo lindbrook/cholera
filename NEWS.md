@@ -1,3 +1,8 @@
+### cholera 0.8.0.9434
+
+- incorporate case.select in location: neighborhoodEuclidean(latlong = TRUE).
+
+
 ### cholera 0.8.0.9433
 
 - incorporate case.select in location: neighborhoodEuclidean(latlong = FALSE).
