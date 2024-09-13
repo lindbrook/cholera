@@ -1,3 +1,8 @@
+### cholera 0.8.0.9436
+
+- amend latlong.regular.cases and latlong.sim.ortho.proj.
+
+
 ### cholera 0.8.0.9435
 
 - amend latlongSimulateFatalities() prototype.
