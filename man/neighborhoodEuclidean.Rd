@@ -20,7 +20,7 @@ neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 
 \item{latlong}{Logical. Longitude and latitude coordiantes}
 
-\item{location}{Character. ""nominal", "anchor" or "orthogonal".}
+\item{location}{Character. "nominal", "anchor" or "orthogonal".}
 
 \item{brute.force}{Logical. For latlong = FALSE. TRUE computes nearest pump for each case. FALSE uses Voronoi cells as shortcut.}
 

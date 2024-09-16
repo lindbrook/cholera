@@ -6,7 +6,7 @@
 #' @param case.set Character. "observed" or "expected".
 #' @param case.select Character. Fatalities: "all" or "address".
 #' @param latlong Logical. Longitude and latitude coordiantes
-#' @param location Character. ""nominal", "anchor" or "orthogonal".
+#' @param location Character. "nominal", "anchor" or "orthogonal".
 #' @param brute.force Logical. For latlong = FALSE. TRUE computes nearest pump for each case. FALSE uses Voronoi cells as shortcut.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
