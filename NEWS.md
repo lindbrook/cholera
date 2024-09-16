@@ -1,3 +1,8 @@
+### cholera 0.8.0.9437
+
+- fix/enable vector of street names in streetNameLocator().
+
+
 ### cholera 0.8.0.9436
 
 - amend latlong.regular.cases and latlong.sim.ortho.proj.
