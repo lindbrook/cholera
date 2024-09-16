@@ -2,7 +2,7 @@
 % Please edit documentation in R/streetNameLocator.R
 \name{streetNameLocator}
 \alias{streetNameLocator}
-\title{Locate street by names.}
+\title{Locate street(s) by name(s).}
 \usage{
 streetNameLocator(street.name = "Broad Street", zoom = TRUE,
   latlong = FALSE, cases = "address", token = "id", vestry = FALSE,
@@ -11,9 +11,9 @@ streetNameLocator(street.name = "Broad Street", zoom = TRUE,
   walking.speed = 5, cex.text = 0.67)
 }
 \arguments{
-\item{street.name}{Character. A vector of street namess. See Note.}
+\item{street.name}{Character. A street name or vector of street names (e.g., "Broad Street", "Poland Street").}
 
-\item{zoom}{Logical or Numeric. Positive value zoom in. Negative values zoom out.}
+\item{zoom}{Logical or Numeric. Positive values zoom in. Negative values zoom out.}
 
 \item{latlong}{Logical. Longitude and latitude coordiantes}
 
@@ -43,7 +43,7 @@ streetNameLocator(street.name = "Broad Street", zoom = TRUE,
 A base R graphics plot.
 }
 \description{
-Highlight selected road segment(s) and cases.
+Highlight selected road(s) and cases.
 }
 \note{
 See \code{streetNames()}.

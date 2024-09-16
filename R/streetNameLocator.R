@@ -1,8 +1,8 @@
-#' Locate street by names.
+#' Locate street(s) by name(s).
 #'
-#' Highlight selected road segment(s) and cases.
-#' @param street.name Character. A vector of street namess. See Note.
-#' @param zoom Logical or Numeric. Positive value zoom in. Negative values zoom out.
+#' Highlight selected road(s) and cases.
+#' @param street.name Character. A street name or vector of street names (e.g., "Broad Street", "Poland Street").
+#' @param zoom Logical or Numeric. Positive values zoom in. Negative values zoom out.
 #' @param latlong Logical. Longitude and latitude coordiantes
 #' @param cases Character. Cases to plot: \code{NULL}, "address" or "fatality".
 #' @param token Character. Cases as "id" or "point".
@@ -50,7 +50,7 @@ streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
   vars <- c(ew, ns)
 
   if (!is.null(street.name)) {
-    street.name <- caseAndSpace(street.name)
+    street.name <- vapply(street.name, caseAndSpace, character(1L))
     st.obs <- street.name %in% rds$name
     if (all(st.obs == FALSE)) {
       error.msg <- "Invalid street name."
