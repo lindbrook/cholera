@@ -1,3 +1,8 @@
+### cholera 0.8.0.9438
+
+- promote streetNumberLocatorB() to streetNumberLocator().
+
+
 ### cholera 0.8.0.9437
 
 - fix/enable vector of street names in streetNameLocator().

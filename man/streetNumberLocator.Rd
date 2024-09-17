@@ -2,46 +2,56 @@
 % Please edit documentation in R/streetNumberLocator.R
 \name{streetNumberLocator}
 \alias{streetNumberLocator}
-\title{Locate road by numerical ID.}
+\title{Locate street by its numerical ID.}
 \usage{
-streetNumberLocator(road.number = 216, zoom = FALSE, cases = "address",
-  token = "id", add.title = TRUE, add.subtitle = TRUE, add.pump = TRUE,
-  vestry = FALSE, highlight = TRUE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5)
+streetNumberLocator(street.number = 216, zoom = TRUE, latlong = FALSE,
+  cases = "address", token = "id", vestry = FALSE, add.pump = TRUE,
+  add.title = TRUE, add.subtitle = TRUE, highlight = TRUE,
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
+  cex.text = 0.67)
 }
 \arguments{
-\item{road.number}{Numeric or integer. A whole number between 1 and 528.}
+\item{street.number}{Character. A vector of segment IDs. See Note.}
 
-\item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is FALSE, which is equivalent to zero.}
+\item{zoom}{Logical or Numeric. Positive value zoom in. Negative values zoom out.}
 
-\item{cases}{Character. Plot cases: \code{NULL}, "address" or "fatality".}
+\item{latlong}{Logical. Longitude and latitude coordiantes}
 
-\item{token}{Character. "id" or "point".}
+\item{cases}{Character. Cases to plot: \code{NULL}, "address" or "fatality".}
 
-\item{add.title}{Logical. Include title.}
-
-\item{add.subtitle}{Logical. Include subtitle with road information.}
-
-\item{add.pump}{Logical. Include nearby pumps.}
+\item{token}{Character. Cases as "id" or "point".}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
-\item{highlight}{Logical. Highlight selected road and its cases.}
+\item{add.pump}{Logical. Include pumps.}
 
-\item{distance.unit}{Character. Unit of measurement: "meter" or "yard". Default is \code{NULL}, which returns the map's native scale.}
+\item{add.title}{Logical. Include title.}
+
+\item{add.subtitle}{Logical. Include subtitle.}
+
+\item{highlight}{Logical. Highlight selected segment(s) and cases.}
+
+\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion.}
 
 \item{time.unit}{Character. "hour", "minute", or "second".}
 
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
+
+\item{cex.text}{Numeric.}
 }
 \value{
 A base R graphics plot.
 }
 \description{
-Highlight a road and its cases. See \code{cholera::roads} for numerical IDs and \code{vignette}("road.names") for details.
+Highlight selected road segment(s) and cases.
+}
+\note{
+See \code{cholera::roads}.
 }
 \examples{
-streetNumberLocator(243)
-streetNumberLocator(243, zoom = TRUE)
-streetNumberLocator(243, zoom = 0.5)
+streetNumberLocator(216)
+streetNumberLocator(216, zoom = -10)
+streetNumberLocator(216, latlong = TRUE, zoom = -10)
+streetNumberLocator(216, distance.unit = "yard")
+streetNumberLocator(216, zoom = FALSE)
 }
