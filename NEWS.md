@@ -1,3 +1,8 @@
+### cholera 0.8.0.9439
+
+- archive latlongStreetNameLocator().
+
+
 ### cholera 0.8.0.9438
 
 - promote streetNumberLocatorB() to streetNumberLocator().
