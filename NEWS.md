@@ -1,3 +1,8 @@
+### cholera 0.8.0.9440
+
+- archive latlongEuclideanPath().
+
+
 ### cholera 0.8.0.9439
 
 - archive latlongStreetNameLocator().
