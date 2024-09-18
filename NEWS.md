@@ -1,3 +1,9 @@
+### cholera 0.8.0.9442
+
+- archive latlongNeighborhoodVoronoi().
+- amend class name in pumpTokens() and voronoiLatlong()
+
+
 ### cholera 0.8.0.9441
 
 - make latlongVoronoi() internal.

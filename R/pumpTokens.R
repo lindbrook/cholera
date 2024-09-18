@@ -16,12 +16,12 @@ pumpTokens <- function(x, type, latlong = FALSE) {
 
   if (!is.null(x$pump.select)) p.obs <- sort(x$pump.id)
   
-  if (inherits(x, "voronoi") | inherits(x, "latlongVoronoi")) {
+  if (inherits(x, "voronoi") | inherits(x, "voronoiLatlong")) {
     x$case.set <-  "observed"
   } 
 
   if (x$case.set == "observed") {
-    if (inherits(x, "voronoi") | inherits(x, "latlongVoronoi")) {
+    if (inherits(x, "voronoi") | inherits(x, "voronoiLatlong")) {
       if (is.null(x$pump.select)) {
         points(all.data, pch = 2, lwd = 2, col = x$snow.colors)
         text(all.data, pos = 1, cex = 0.9, labels = all.labels)
