@@ -53,7 +53,7 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
     statistic.data = statistic.data, location = location,
     snow.colors = snow.colors)
 
-  class(out) <- "latlongVoronoi"
+  class(out) <- "voronoiLatlong"
 
   if (polygon.vertices) {
     out <- lapply(out$cells.triangles$cells, function(dat) {
@@ -63,7 +63,7 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
     })
 
     if (!is.null(pump.select)) {
-      names(out) <- paste0("p", pump.id)  
+      names(out) <- paste0("p", pump.id)
     } else {
       if (vestry) names(out) <- paste0("p", cholera::pumps.vestry$id)
       else names(out) <- paste0("p", cholera::pumps$id)
@@ -71,7 +71,7 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
     out
   } else {
     out
-  }  
+  }
 }
 
 #' Plot method for voronoiLatlong()
@@ -82,18 +82,17 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.latlongVoronoi <- function(x, add.pumps = TRUE, 
+plot.voronoiLatlong <- function(x, add.pumps = TRUE,
   delaunay.voronoi = "voronoi", euclidean.paths = FALSE, ...) {
 
-  pump.id <- x$pump.id
   vars <- c("lon", "lat")
 
   snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE,
     add.pumps = FALSE)
-  
+
   if (add.pumps) pumpTokens(x, type = NULL, latlong = TRUE)
 
-  if (!is.null(pump.id)) {
+  if (!is.null(x$pump.id)) {
     if (x$location == "nominal") {
       title(main = paste0("Pump Neighborhoods: Voronoi (nominal)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
@@ -134,7 +133,7 @@ plot.latlongVoronoi <- function(x, add.pumps = TRUE,
   }
 
   if (euclidean.paths) {
-    plotLatlongEuclideanPaths(x, pump.id, vars)
+    plotLatlongEuclideanPaths(x, x$pump.id, vars)
   } else {
     plotLatlongVoronoiCases(x, vars)
   }
@@ -199,6 +198,6 @@ plotLatlongVoronoiCases <- function(x, vars) {
 #' @return A list of argument values.
 #' @export
 
-print.latlongVoronoi <- function(x, ...) {
+print.voronoiLatlong <- function(x, ...) {
   print(x[c("pump.select", "vestry")])
 }
