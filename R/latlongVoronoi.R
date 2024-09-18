@@ -74,7 +74,7 @@ pumpsVoronoiPolygons <- function(vestry = FALSE) {
 #'
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @export
+#' @noRd
 #' @examples
 #' snowMap(latlong = TRUE)
 #' cells <- latlongVoronoi()$cells
@@ -150,7 +150,7 @@ latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
   list(cells = cells, triangles = triangles)
 }
 
-# voronoi.polygons <- latlongVoronoi()
-# voronoi.polygons.vestry <- latlongVoronoi(vestry = TRUE)
+# voronoi.polygons <- cholera:::latlongVoronoi()
+# voronoi.polygons.vestry <- cholera:::latlongVoronoi(vestry = TRUE)
 # usethis::use_data(voronoi.polygons, overwrite = TRUE)
 # usethis::use_data(voronoi.polygons.vestry, overwrite = TRUE)
