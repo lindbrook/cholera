@@ -1,3 +1,8 @@
+### cholera 0.8.0.9441
+
+- make latlongVoronoi() internal.
+
+
 ### cholera 0.8.0.9440
 
 - archive latlongEuclideanPath().
