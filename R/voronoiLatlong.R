@@ -27,7 +27,7 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
     else pump.data <- cholera::pumps
   }
 
-  cells.triangles <- latlongVoronoi(pump.select = pump.select, vestry = vestry)
+  cells.triangles <- latlongVoronoiVertices(pump.select = pump.select, vestry = vestry)
 
   if (location == "orthogonal") {
     statistic.data <- lapply(cells.triangles$cells, function(c) {
@@ -193,7 +193,7 @@ plotLatlongVoronoiCases <- function(x, vars) {
 #' Print method for voronoiLatlong().
 #'
 #' Parameter values for voronoiLatlong().
-#' @param x An object of class "latlongVoronoi" created by \code{voronoiLatlong()}.
+#' @param x An object of class "voronoiLatlong" created by \code{voronoiLatlong()}.
 #' @param ... Additional arguments.
 #' @return A list of argument values.
 #' @export

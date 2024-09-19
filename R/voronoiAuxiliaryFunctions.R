@@ -77,10 +77,10 @@ pumpsVoronoiPolygons <- function(vestry = FALSE) {
 #' @noRd
 #' @examples
 #' snowMap(latlong = TRUE)
-#' cells <- latlongVoronoi()$cells
+#' cells <- cholera:::latlongVoronoiVertices()$cells
 #' invisible(lapply(cells, function(x) polygon(x[, c("lon", "lat")])))
 
-latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
+latlongVoronoiVertices <- function(pump.select = NULL, vestry = FALSE) {
   origin <- data.frame(lon = min(cholera::roads$lon),
                        lat = min(cholera::roads$lat))
   topleft <- data.frame(lon = min(cholera::roads$lon),
@@ -150,7 +150,7 @@ latlongVoronoi <- function(pump.select = NULL, vestry = FALSE) {
   list(cells = cells, triangles = triangles)
 }
 
-# voronoi.polygons <- cholera:::latlongVoronoi()
-# voronoi.polygons.vestry <- cholera:::latlongVoronoi(vestry = TRUE)
+# voronoi.polygons <- cholera:::latlongVoronoiVertices()
+# voronoi.polygons.vestry <- cholera:::latlongVoronoiVertices(vestry = TRUE)
 # usethis::use_data(voronoi.polygons, overwrite = TRUE)
 # usethis::use_data(voronoi.polygons.vestry, overwrite = TRUE)

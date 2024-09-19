@@ -7,7 +7,7 @@
 \method{print}{voronoiLatlong}(x, ...)
 }
 \arguments{
-\item{x}{An object of class "latlongVoronoi" created by \code{voronoiLatlong()}.}
+\item{x}{An object of class "voronoiLatlong" created by \code{voronoiLatlong()}.}
 
 \item{...}{Additional arguments.}
 }

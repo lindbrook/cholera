@@ -25,7 +25,8 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
     else pump.data <- cholera::pumps
   }
 
-  cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)$cells
+  cells <- latlongVoronoiVertices(pump.select = pump.select,
+    vestry = vestry)$cells
   pump.id <- selectPump(pump.data, pump.select, "euclidean", vestry)
 
   if (case.set == "observed") {
