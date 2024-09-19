@@ -17,7 +17,8 @@ addDelaunay <- function(pump.select = NULL, vestry = FALSE, color = "black",
   line.type = "solid", line.width = 1, latlong = FALSE) {
 
   if (latlong) {
-    tri <- latlongVoronoi(pump.select = pump.select, vestry = vestry)$triangles
+    tri <- latlongVoronoiVertices(pump.select = pump.select,
+      vestry = vestry)$triangles
     invisible(lapply(tri, function(x) {
       polygon(x[, c("lon", "lat")], border = color, lty = line.type, 
         lwd = line.width)

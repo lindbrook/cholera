@@ -1,3 +1,9 @@
+### cholera 0.8.0.9443
+
+- rename latlongVoronoi.R to walkingAuxiliaryFunctions.R
+- rename latlongVoronoi() to latlongVoronoiVertices().
+
+
 ### cholera 0.8.0.9442
 
 - archive latlongNeighborhoodVoronoi().

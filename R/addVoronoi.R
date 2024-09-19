@@ -19,7 +19,8 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE,
   line.width = 1, latlong = FALSE) {
 
   if (latlong) {
-    cells <- latlongVoronoi(pump.select = pump.select, vestry = vestry)$cells
+    cells <- latlongVoronoiVertices(pump.select = pump.select,
+      vestry = vestry)$cells
     invisible(lapply(cells, function(x) {
       polygon(x[, c("lon", "lat")], border = color, lty = line.type, 
         lwd = line.width)
