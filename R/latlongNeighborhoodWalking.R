@@ -7,7 +7,7 @@
 #' @param case.set Character. "observed" or "expected".
 #' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
-#' @export
+#' @noRd
 
 latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   case.set = "observed", weighted = TRUE, multi.core = TRUE) {
@@ -75,7 +75,7 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @param type Character. "area.points", "area.polygons" or "streets". For latlongNeighborhoodWalking(case.set = "expected").
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
-#' @export
+#' @noRd
 
 plot.latlong_walking <- function(x, type = "area.points", ...) {
   vars <- c("lon", "lat")

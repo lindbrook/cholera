@@ -6,7 +6,7 @@
 #' @param embed.addr Logical. Embed case address into graph network.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @importFrom geosphere distGeo
-#' @export
+#' @noRd
 
 latlongNeighborhoodData <- function(vestry = FALSE, case.set = "observed",
   embed.addr = TRUE, multi.core = TRUE) {
@@ -72,7 +72,7 @@ latlongNeighborhoodData <- function(vestry = FALSE, case.set = "observed",
 #' @param x An 'igraph' object of class "latlong_neighborhood_data" created by \code{latlongNeighborhoodData()}.
 #' @param ... Additional plotting parameters.
 #' @return An igraph base graphics plot.
-#' @export
+#' @noRd
 
 plot.latlong_neighborhood_data <- function(x, ...) {
   plot(x$g, vertex.label = NA, vertex.size = 2, ...)
