@@ -1,3 +1,9 @@
+### cholera 0.8.0.9445
+
+- make latlongNeighborhoodData(), latlongNeighborhoodDataB() and 
+  latlongNeighborhoodWalking() internal.
+
+
 ### cholera 0.8.0.9444
 
 - move walkingTime() to walkingTime.R.
