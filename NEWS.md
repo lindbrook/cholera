@@ -1,3 +1,8 @@
+### cholera 0.8.0.9444
+
+- move walkingTime() to walkingTime.R.
+
+
 ### cholera 0.8.0.9443
 
 - rename latlongVoronoi.R to walkingAuxiliaryFunctions.R

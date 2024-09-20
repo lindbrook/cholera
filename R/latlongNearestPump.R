@@ -200,18 +200,3 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
   list(case = case, pump = pump, distance = distance, path = path)
 }
 
-# latlong.nearest.pump <- latlongNearestPump()
-# latlong.nearest.pump.vestry <- latlongNearestPump(vestry = TRUE)
-# usethis::use_data(latlong.nearest.pump, overwrite = TRUE)
-# usethis::use_data(latlong.nearest.pump.vestry, overwrite = TRUE)
-
-walkingTime <- function(dist.data, time.unit = "second", walking.speed = 5) {
-  if (time.unit == "hour") {
-    out <- dist.data / (1000L * walking.speed)
-  } else if (time.unit == "minute") {
-    out <- (60L * dist.data) / (1000L * walking.speed)
-  } else if (time.unit == "second") {
-    out <- (3600L * dist.data) / (1000L * walking.speed)
-  }
-  out
-}
