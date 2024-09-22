@@ -4,8 +4,8 @@
 \alias{plot.walking}
 \title{Plot method for neighborhoodWalking().}
 \usage{
-\method{plot}{walking}(x, type = "area.points",
-  tsp.method = "repetitive_nn", ...)
+\method{plot}{walking}(x, type = "roads", tsp.method = "repetitive_nn",
+  ...)
 }
 \arguments{
 \item{x}{An object of class "walking" created by \code{neighborhoodWalking()}.}

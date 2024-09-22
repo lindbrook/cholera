@@ -113,7 +113,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.walking <- function(x, type = "area.points", tsp.method = "repetitive_nn",
+plot.walking <- function(x, type = "roads", tsp.method = "repetitive_nn",
   ...) {
 
   if (type %in% c("roads", "area.points", "area.polygons") == FALSE) {

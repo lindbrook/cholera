@@ -72,12 +72,12 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for latlongNeighborhoodWalking().
 #'
 #' @param x An object of class "latlong_walking" created by \code{latlongNeighborhoodWalking()}.
-#' @param type Character. "area.points", "area.polygons" or "streets". For latlongNeighborhoodWalking(case.set = "expected").
+#' @param type Character. "area.points", "area.polygons" or "roads". For latlongNeighborhoodWalking(case.set = "expected").
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @noRd
 
-plot.latlong_walking <- function(x, type = "area.points", ...) {
+plot.latlong_walking <- function(x, type = "roads", ...) {
   vars <- c("lon", "lat")
   p.data <- x$pump.data
 
@@ -153,7 +153,7 @@ plot.latlong_walking <- function(x, type = "area.points", ...) {
           border = "black")
       }))
 
-    } else if (type == "streets") {
+    } else if (type == "roads") {
       snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE,
         add.roads = FALSE)
 
