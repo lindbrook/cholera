@@ -22,9 +22,8 @@ pumpFatalities <- function(pump.select = NULL, metric = "walking",
 
   if (latlong) {
     cores <- multiCore(multi.core)
-    nr.pump <- latlongNearestPump(pump.select = pump.select, metric = metric,
-      vestry = vestry, multi.core = cores)
-    if (metric == "walking") nr.pump <- nr.pump$distance
+    nr.pump <- nearestPump(pump.select = pump.select, metric = metric,
+      vestry = vestry, multi.core = cores, latlong = TRUE)
   } else {
     nr.pump <- nearestPump(pump.select = pump.select, metric = metric,
       vestry = vestry)$distance
@@ -37,9 +36,9 @@ pumpFatalities <- function(pump.select = NULL, metric = "walking",
     by.x = "case", by.y = "anchor")
 
   fatality.ct <- lapply(p.fatality$case, function(c) {
-      z <- p.fatality[p.fatality$case == c, ]
-      rep(z$pump, z$ct)
-    })
+    z <- p.fatality[p.fatality$case == c, ]
+    rep(z$pump, z$ct)
+  })
 
   table(unlist(fatality.ct))
 }
