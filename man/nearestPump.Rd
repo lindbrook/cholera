@@ -2,12 +2,11 @@
 % Please edit documentation in R/nearestPump.R
 \name{nearestPump}
 \alias{nearestPump}
-\title{Compute shortest distances or paths to selected pumps.}
+\title{Compute shortest distances to selected pumps.}
 \usage{
 nearestPump(pump.select = NULL, metric = "walking", vestry = FALSE,
-  weighted = TRUE, case.set = "observed", distance.unit = "meter",
-  time.unit = "second", walking.speed = 5, multi.core = TRUE,
-  dev.mode = FALSE)
+  weighted = TRUE, case.set = "observed", latlong = FALSE,
+  multi.core = TRUE, dev.mode = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}
@@ -18,24 +17,14 @@ nearestPump(pump.select = NULL, metric = "walking", vestry = FALSE,
 
 \item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 
-\item{case.set}{Character. "observed", "expected", or "snow".}
+\item{case.set}{Character. "observed" or "expected" # or "snow".}
 
-\item{distance.unit}{Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.}
-
-\item{time.unit}{Character. "hour", "minute", or "second".}
-
-\item{walking.speed}{Numeric. Walking speed in km/hr.}
+\item{latlong}{Logical. \code{TRUE} Use longitude and latitude coordinates.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
-\value{
-An R data frame or list of 'igraph' path nodes.
-}
 \description{
-Compute shortest distances or paths to selected pumps.
-}
-\note{
-Time is computed using \code{distanceTime()}.
+Compute shortest distances to selected pumps.
 }
