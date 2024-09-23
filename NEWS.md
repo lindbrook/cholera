@@ -1,3 +1,10 @@
+### cholera 0.8.0.9447
+
+- amend/set nearestPump(latlong = FALSE).
+- archive latlongNearestPump().
+- add nearestPumpNominal() and nearestPumpLatlong().
+
+
 ### cholera 0.8.0.9446
 
 - set type = "roads" in plot.walking() and plot.latlong_walking().
