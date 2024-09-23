@@ -1,3 +1,8 @@
+### cholera 0.8.0.9449
+
+- fix pumpFatalities(latlong = FALSE).
+
+
 ### cholera 0.8.0.9448
 
 - fix pumpFatalities() and use nearestPump().

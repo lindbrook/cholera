@@ -26,7 +26,7 @@ pumpFatalities <- function(pump.select = NULL, metric = "walking",
       vestry = vestry, multi.core = cores, latlong = TRUE)
   } else {
     nr.pump <- nearestPump(pump.select = pump.select, metric = metric,
-      vestry = vestry)$distance
+      vestry = vestry)
   }
 
   tbl <- table(cholera::anchor.case$anchor)
