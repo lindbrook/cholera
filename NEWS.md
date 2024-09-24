@@ -1,3 +1,8 @@
+### cholera 0.8.0.9450
+
+- fix pumpFatalities(metric = "euclidean") and use do.call().
+
+
 ### cholera 0.8.0.9449
 
 - fix pumpFatalities(latlong = FALSE).
