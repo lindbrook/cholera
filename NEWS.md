@@ -1,3 +1,8 @@
+### cholera 0.8.0.9451
+
+- update euclideanPath() argument in nearestPumpNominal().
+
+
 ### cholera 0.8.0.9450
 
 - fix pumpFatalities(metric = "euclidean") and use do.call().

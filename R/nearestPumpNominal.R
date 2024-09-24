@@ -61,16 +61,16 @@ nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
 
     if (dev.mode | win.exception) {
       cl <- parallel::makeCluster(cores)
-      parallel::clusterExport(cl = cl, envir = environment(), 
-        varlist = c("p.sel", "obs", "vestry"))
+      parallel::clusterExport(cl = cl, envir = environment(),
+        varlist = c("p.sel", "case.set", "vestry"))
       distance.data <- parallel::parLapply(cl, anchors, function(x) {
-        cholera::euclideanPath(x, destination = p.sel, observed = obs,
+        euclideanPath(x, destination = p.sel, case.set = case.set,
           vestry = vestry)$data
       })
       parallel::stopCluster(cl)
     } else {
       distance.data <- parallel::mclapply(anchors, function(x) {
-        cholera::euclideanPath(x, destination = p.sel, observed = obs,
+        euclideanPath(x, destination = p.sel, case.set = case.set,
           vestry = vestry)$data
       }, mc.cores = cores)
     }
