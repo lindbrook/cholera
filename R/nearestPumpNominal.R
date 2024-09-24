@@ -14,9 +14,9 @@
 #' @noRd
 #' @return An R data frame or list of 'igraph' path nodes.
 
-nearestPumpNominal <- function(pump.select = NULL, metric = "walking", 
-  vestry = FALSE, weighted = TRUE, case.set = "observed", 
-  distance.unit = "meter", time.unit = "second", walking.speed = 5, 
+nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
+  vestry = FALSE, weighted = TRUE, case.set = "observed",
+  distance.unit = "meter", time.unit = "second", walking.speed = 5,
   multi.core = TRUE, dev.mode = FALSE) {
 
   if (vestry) {
@@ -25,14 +25,11 @@ nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
     pump.data <- cholera::pumps
   }
 
-  p.sel <- selectPump(pump.data, pump.select = pump.select, metric = metric, 
+  p.sel <- selectPump(pump.data, pump.select = pump.select, metric = metric,
     vestry = vestry)
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
     stop('case.set must be "observed", "expected" or "snow".')
-  } else {
-    if (case.set == "observed" | case.set == "snow") obs <- TRUE
-    else if (case.set == "expected") obs <- FALSE
   }
 
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
