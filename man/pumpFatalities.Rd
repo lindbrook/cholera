@@ -24,7 +24,7 @@ Compute fatalities by pump.
 \examples{
 \dontrun{
 pumpFatalities(pump.select = -7)
-pumpFatalities(metric = "euclidean")
+pumpFatalities(latlong = TRUE)
 pumpFatalities(metric = "euclidean", vestry = TRUE)
 }
 }

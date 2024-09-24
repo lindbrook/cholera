@@ -9,7 +9,7 @@
 #' @examples
 #' \dontrun{
 #' pumpFatalities(pump.select = -7)
-#' pumpFatalities(metric = "euclidean")
+#' pumpFatalities(latlong = TRUE)
 #' pumpFatalities(metric = "euclidean", vestry = TRUE)
 #' }
 
@@ -20,13 +20,17 @@ pumpFatalities <- function(pump.select = NULL, metric = "walking",
     stop('metric must be "euclidean" or "walking".', call. = FALSE)
   }
 
+  args <- list(pump.select = pump.select, metric = metric, vestry = vestry)
+
   if (latlong) {
-    cores <- multiCore(multi.core)
-    nr.pump <- nearestPump(pump.select = pump.select, metric = metric,
-      vestry = vestry, multi.core = cores, latlong = TRUE)
-  } else {
-    nr.pump <- nearestPump(pump.select = pump.select, metric = metric,
-      vestry = vestry)
+    args <- c(args, list(latlong = TRUE, multi.core = multiCore(multi.core)))
+  }
+
+  nr.pump <- do.call("nearestPump", args)
+
+  if (metric == "euclidean") {
+    sel <- names(nr.pump) %in% c("origin", "destination")
+    names(nr.pump)[sel] <- c("case", "pump")
   }
 
   tbl <- table(cholera::anchor.case$anchor)
