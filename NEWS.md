@@ -1,3 +1,8 @@
+### cholera 0.8.0.9453
+
+- return paths in nearestPump().
+
+
 ### cholera 0.8.0.9452
 
 - make unitMeter() internal.

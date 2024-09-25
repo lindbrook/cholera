@@ -16,12 +16,10 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
 
   if (latlong) {
     cores <- multiCore(multi.core)
-    nr.pump <- nearestPumpLatlong(pump.select = pump.select, metric = metric,
+    nearestPumpLatlong(pump.select = pump.select, metric = metric,
       vestry = vestry, case.set = case.set, multi.core = cores)
-    if (metric == "walking") nr.pump <- nr.pump$distance
   } else {
-    nr.pump <- nearestPumpNominal(pump.select = pump.select, metric = metric,
-      vestry = vestry, case.set = case.set)$distance
+    nearestPumpNominal(pump.select = pump.select, metric = metric,
+      vestry = vestry, case.set = case.set)
   }
-  nr.pump
 }
