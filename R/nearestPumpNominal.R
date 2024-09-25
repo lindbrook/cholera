@@ -47,7 +47,7 @@ nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
   win.exception <- w1 | w2
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
-    stop('metric must either be "euclidean" or "walking".')
+    stop('metric must either be "euclidean" or "walking".', call. = FALSE)
 
   } else if (metric == "euclidean") {
     if (case.set == "observed") {
