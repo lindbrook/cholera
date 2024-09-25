@@ -5,7 +5,8 @@
 \title{Compute walking path pump neighborhoods.}
 \usage{
 neighborhoodWalking(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  case.set = "observed", multi.core = TRUE, dev.mode = FALSE)
+  case.set = "observed", multi.core = TRUE, dev.mode = FALSE,
+  latlong = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps. Note that you can't just select the pump on Adam and Eve Court (#2) because it's technically an isolate.}
@@ -19,18 +20,8 @@ neighborhoodWalking(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 
 \item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
-}
-\value{
-An R list with 7 objects:
-\itemize{
-  \item{\code{paths}: list of paths to nearest or selected pump(s).}
-  \item{\code{cases}: list of cases by pump.}
-  \item{\code{vestry}: "vestry" from neighborhoodWalking().}
-  \item{\code{observed}: "observed" from neighborhoodWalking().}
-  \item{\code{pump.select}: "pump.select" from neighborhoodWalking().}
-  \item{\code{cores}: number of cores to use for parallel implementation.}
-  \item{\code{metric}: incremental metric used to find cut point on split road segments.}
-}
+
+\item{latlong}{Logical.}
 }
 \description{
 Group cases into neighborhoods based on walking distance.

@@ -4,13 +4,13 @@
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps. Note that you can't just select the pump on Adam and Eve Court (#2) because it's technically an isolate.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 # #' @param case.location Character. "address" or "orthogonal". "address" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
-#' @param case.set Character. "observed" or "expected".
 #' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
+#' @param case.set Character. "observed" or "expected".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @noRd
 
-latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
-  case.set = "observed", weighted = TRUE, multi.core = TRUE) {
+walkingLatlong <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
+  case.set = "observed", multi.core = TRUE) {
 
   if (!case.set %in% c("expected", "observed", "snow")) {
     stop('case.location must be "observed", "expected" or "snow".',
@@ -28,11 +28,12 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 
   pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
-  nearest.data <- latlongNearestPump(pump.select = pump.id,
-                                     case.set = case.set,
-                                     vestry = vestry,
-                                     weighted = weighted,
-                                     multi.core = cores)
+  nearest.data <- nearestPump(pump.select = pump.id,
+                              case.set = case.set,
+                              vestry = vestry,
+                              weighted = weighted,
+                              multi.core = cores,
+                              latlong = TRUE)
 
   nearest.dist <- nearest.data$distance
   nearest.path <- nearest.data$path
@@ -65,19 +66,19 @@ latlongNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
               case.set = case.set,
               cores = cores)
 
-  class(out) <- "latlong_walking"
+  class(out) <- "walking_latlong"
   out
 }
 
-#' Plot method for latlongNeighborhoodWalking().
+#' Plot method for walkingLatlong().
 #'
-#' @param x An object of class "latlong_walking" created by \code{latlongNeighborhoodWalking()}.
-#' @param type Character. "area.points", "area.polygons" or "roads". For latlongNeighborhoodWalking(case.set = "expected").
+#' @param x An object of class "latlong_walking" created by \code{walkingLatlongwalkingLatlong()}.
+#' @param type Character. "area.points", "area.polygons" or "roads". For walkingLatlong(case.set = "expected").
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
-#' @noRd
+#' @export
 
-plot.latlong_walking <- function(x, type = "roads", ...) {
+plot.walking_latlong <- function(x, type = "roads", ...) {
   vars <- c("lon", "lat")
   p.data <- x$pump.data
 
