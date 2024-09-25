@@ -1,3 +1,8 @@
+### cholera 0.8.0.9452
+
+- make unitMeter() internal.
+
+
 ### cholera 0.8.0.9451
 
 - update euclideanPath() argument in nearestPumpNominal().

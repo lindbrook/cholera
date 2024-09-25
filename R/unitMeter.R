@@ -3,7 +3,7 @@
 #' A best guess estimate.
 #' @param x Numeric. Nominal map distance.
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" uses the map's nominal scale. See \code{vignette("roads")} for information on conversion.
-#' @export
+#' @noRd
 
 unitMeter <- function(x, distance.unit = "meter") {
   if (is.numeric(x) == FALSE) stop('x must be numeric.')
