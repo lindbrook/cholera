@@ -1,3 +1,8 @@
+### cholera 0.8.0.9454
+
+- use stop(call. = FALSE) in nearestPumpNominal().
+
+
 ### cholera 0.8.0.9453
 
 - return paths in nearestPump().
