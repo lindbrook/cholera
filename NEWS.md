@@ -1,3 +1,10 @@
+### cholera 0.8.0.9455
+
+- add/set neighborhoodWalking(latlong = FALSE).
+- add walkingNominal() and walkingLatlong().
+- archive latlongNeighborhoodWalking().
+
+
 ### cholera 0.8.0.9454
 
 - use stop(call. = FALSE) in nearestPumpNominal().
