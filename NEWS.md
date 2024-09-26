@@ -1,3 +1,8 @@
+### cholera 0.8.0.9456
+
+- set addKernelDensity(multi.core = FALSE).
+
+
 ### cholera 0.8.0.9455
 
 - add/set neighborhoodWalking(latlong = FALSE).

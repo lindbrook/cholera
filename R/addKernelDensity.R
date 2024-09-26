@@ -29,7 +29,7 @@
 
 addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
   neighborhood.type = "walking", data = "unstacked", bandwidth = 0.5,
-  color = "black", line.type = "solid", multi.core = TRUE) {
+  color = "black", line.type = "solid", multi.core = FALSE) {
 
   if (!is.null(data) & !all(data %in% c("unstacked", "address", "fatality"))) {
     stop('data must be "unstacked", "address" or "fatality".')
