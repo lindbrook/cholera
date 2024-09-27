@@ -1,3 +1,8 @@
+### cholera 0.8.0.9458
+
+ - amend Windows and/or cores = 1 exception in nearestPumpNominal().
+
+
 ### cholera 0.8.0.9457
 
 - amend QGIS URL and update latlong syntax in README.

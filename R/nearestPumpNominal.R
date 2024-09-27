@@ -59,7 +59,12 @@ nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
         cholera::fatalities.address$anchor]
     }
 
-    if (dev.mode | win.exception) {
+    if (cores == 1 | !win.exception) {
+      distance.data <- lapply(anchors, function(x) {
+        euclideanPath(x, destination = p.sel, case.set = case.set,
+          vestry = vestry)$data
+      })
+    } else if (dev.mode | win.exception) {
       cl <- parallel::makeCluster(cores)
       parallel::clusterExport(cl = cl, envir = environment(),
         varlist = c("p.sel", "case.set", "vestry"))
@@ -68,12 +73,12 @@ nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
           vestry = vestry)$data
       })
       parallel::stopCluster(cl)
-    } else {
+    } else if (.Platform$OS.type != "windows") {
       distance.data <- parallel::mclapply(anchors, function(x) {
         euclideanPath(x, destination = p.sel, case.set = case.set,
           vestry = vestry)$data
       }, mc.cores = cores)
-    }
+    } else stop("nearestPump error")
 
     out.distance <- do.call(rbind, distance.data)
     out.distance$anchor <- NULL
@@ -143,7 +148,58 @@ nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
       case <- nodes[nodes$anchor != 0 & nodes$anchor < 20000, "anchor"]
       exp.case <- case[case %in% FCM.cases == FALSE]
 
-      if (dev.mode | win.exception) {
+
+      if (cores == 1 | !win.exception) {
+        ## Adam and Eve Court (#2): 106 expected cases ##
+        if (is.null(pump.select) == FALSE & 2 %in% p.sel == FALSE) {
+          exp.case.AE <- exp.case[exp.case %in% AE.cases]
+          exp.case.not_AE <- exp.case[exp.case %in% AE.cases == FALSE]
+
+          nearest.pump <- lapply(exp.case.not_AE, function(x) {
+            case.node <- nodes[nodes$anchor == x, "node"]
+            if (is.null(pump.select)) {
+              d <- c(igraph::distances(g, case.node, nodes.pump$node,
+                weights = edges$d))
+            } else {
+              d <- c(igraph::distances(g, case.node, nodes.pump[p.sel, "node"],
+                weights = edges$d))
+            }
+            names(d) <- p.sel
+            p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
+            data.frame(case = x,
+                       pump = p,
+                       distance = min(d[is.infinite(d) == FALSE]))
+          })
+
+          out.distance <- do.call(rbind, nearest.pump)
+          out.distance.AE <- data.frame(case = exp.case.AE, pump = NA,
+            distance = NA)
+          out.distance <- rbind(out.distance, out.distance.AE)
+
+        } else if (is.null(pump.select) |
+                  (is.null(pump.select) == FALSE & 2 %in% p.sel == TRUE)) {
+
+          nearest.pump <- lapply(exp.case, function(x) {
+            case.node <- nodes[nodes$anchor == x, "node"]
+            if (is.null(pump.select)) {
+              d <- c(igraph::distances(g, case.node, nodes.pump$node,
+                weights = edges$d))
+            } else {
+              d <- c(igraph::distances(g, case.node, nodes.pump[p.sel, "node"],
+                weights = edges$d))
+            }
+            names(d) <- p.sel
+            p <- as.numeric(names(which.min(d[is.infinite(d) == FALSE])))
+            data.frame(case = x,
+                       pump = p,
+                       distance = min(d[is.infinite(d) == FALSE]))
+          })
+
+          out.distance <- do.call(rbind, nearest.pump)
+        }
+
+
+      } else if (dev.mode | win.exception) {
         ## Adam and Eve Court (#2): 106 expected cases ##
         if (is.null(pump.select) == FALSE & 2 %in% p.sel == FALSE) {
           exp.case.AE <- exp.case[exp.case %in% AE.cases]
@@ -208,7 +264,7 @@ nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
           out.distance <- do.call(rbind, nearest.pump)
         }
 
-      } else {
+      } else if (.Platform$OS.type != "windows") {
 
         ## Adam and Eve Court (#2): 106 expected cases ##
         if (is.null(pump.select) == FALSE & 2 %in% p.sel == FALSE) {
@@ -307,7 +363,47 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode, win.exception) {
   AE.cases <- cholera::sim.ortho.proj[sel, "case"]
 
   paths <- function(x) {
-    if (dev.mode | win.exception) {
+    if (cores == 1 | !win.exception) {
+      pths <- lapply(x, function(a) {
+        case.node <- nodes[nodes$anchor == a, "node"]
+        if (weighted) {
+          if (case.set == "observed") {
+            p <- igraph::shortest_paths(g, case.node,
+              nodes.pump[nodes.pump$pump != 2, "node"], weights = edges$d)$vpath
+            stats::setNames(p, nodes.pump[nodes.pump$pump != 2, "pump"])
+          } else if (case.set == "expected") {
+            if (a %in% AE.cases) {
+              p.nodes <- nodes.pump[nodes.pump$pump == 2, "node"]
+              p <- igraph::shortest_paths(g, case.node, p.nodes,
+                                          weights = edges$d)$vpath
+              stats::setNames(p, nodes.pump[nodes.pump$pump == 2, "pump"])
+            } else {
+              p.nodes <- nodes.pump[nodes.pump$pump != 2, "node"]
+              p <- igraph::shortest_paths(g, case.node, p.nodes,
+                                          weights = edges$d)$vpath
+              stats::setNames(p, nodes.pump[nodes.pump$pump != 2, "pump"])
+            }
+          }
+        } else {
+          if (case.set == "observed") {
+            p <- igraph::shortest_paths(g, case.node,
+              nodes.pump[nodes.pump$pump != 2, "node"])$vpath
+            stats::setNames(p, nodes.pump[nodes.pump$pump != 2, "pump"])
+          } else if (case.set == "expected") {
+            if (a %in% AE.cases) {
+              p.nodes <- nodes.pump[nodes.pump$pump == 2, "node"]
+              p <- igraph::shortest_paths(g, case.node, p.nodes)$vpath
+              stats::setNames(p, nodes.pump[nodes.pump$pump == 2, "pump"])
+            } else {
+              p.nodes <- nodes.pump[nodes.pump$pump != 2, "node"]
+              p <- igraph::shortest_paths(g, case.node, p.nodes)$vpath
+              stats::setNames(p, nodes.pump[nodes.pump$pump != 2, "pump"])
+            }
+          }
+        }
+      })
+
+    } else if (dev.mode | win.exception) {
       cl <- parallel::makeCluster(cores)
       parallel::clusterExport(cl = cl, envir = environment(),
         varlist = c("weighted", "case.set", "g", "nodes", "edges",
@@ -353,7 +449,7 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode, win.exception) {
 
       parallel::stopCluster(cl)
 
-    } else {
+    } else if (.Platform$OS.type != "windows") {
       pths <- parallel::mclapply(x, function(a) {
         case.node <- nodes[nodes$anchor == a, "node"]
         if (weighted) {
@@ -393,12 +489,36 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode, win.exception) {
         }
       }, mc.cores = cores)
     }
-
     pths
   }
 
   distances <- function(x) {
-    if (dev.mode | win.exception) {
+    if (cores == 1 | !win.exception) {
+      dists <- lapply(x, function(a) {
+        case.node <- nodes[nodes$anchor == a, "node"]
+        if (weighted) {
+          if (case.set == "observed") {
+            d <- c(igraph::distances(g, case.node,
+              nodes.pump[nodes.pump$pump != 2, "node"], weights = edges$d))
+            stats::setNames(d, nodes.pump[nodes.pump$pump != 2, "pump"])
+          } else if (case.set == "expected") {
+            d <- c(igraph::distances(g, case.node, nodes.pump$node,
+                                     weights = edges$d))
+            stats::setNames(d, nodes.pump$pump)
+          }
+        } else {
+          if (case.set == "observed") {
+            d <- c(igraph::distances(g, case.node,
+              nodes.pump[nodes.pump$pump != 2, "node"]))
+            stats::setNames(d, nodes.pump[nodes.pump$pump != 2, "pump"])
+          } else if (case.set == "expected") {
+            d <- c(igraph::distances(g, case.node, nodes.pump$node))
+            stats::setNames(d, nodes.pump$pump)
+          }
+        }
+      })
+
+    } else if (dev.mode | win.exception) {
       cl <- parallel::makeCluster(cores)
       parallel::clusterExport(cl = cl, envir = environment(),
         varlist = c("weighted", "case.set", "g", "nodes", "edges",
@@ -429,7 +549,7 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode, win.exception) {
 
       parallel::stopCluster(cl)
 
-    } else {
+    } else if (.Platform$OS.type != "windows") {
       dists <- parallel::mclapply(x, function(a) {
         case.node <- nodes[nodes$anchor == a, "node"]
         if (weighted) {
@@ -454,7 +574,6 @@ pathData <- function(dat, weighted, case.set, cores, dev.mode, win.exception) {
         }
       }, mc.cores = cores)
     }
-
     dists
   }
 
