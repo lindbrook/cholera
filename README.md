@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9456-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.8.0.9457-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -236,8 +236,8 @@ preliminary, limited support for georeferenced (longitude and latitude)
 versions of some data and functions. This support goes beyond a proof of
 concept but is currently less than a complete re-implementation of the
 package’s native (non-georeferenced) functionality. The georeferencing
-was done manually using [QGIS](https://qgis.org/en/site/); specifically
-its Georeferencer tool and its interface to
+was done manually using [QGIS](https://qgis.org/); specifically its
+Georeferencer tool and its interface to
 [OpenStreetMap](https://www.openstreetmap.org). The target coordinate
 reference system (CRS) of these data is EPSG:4326. What makes this
 effort preliminary is that the choice of ground control points,
@@ -254,33 +254,33 @@ snowMap(latlong = TRUE)
 <img src="man/figures/README-latlong-1.png" width="50%" />
 
 ``` r
-plot(walkingPathB(latlong = TRUE))
-plot(walkingPathB())  # Dodson and Tobler native scale for comparison
+plot(walkingPath(latlong = TRUE))
+plot(walkingPath())  # Dodson and Tobler native scale for comparison
 ```
 
 <img src="man/figures/README-latlong_walking_path-1.png" width="50%" /><img src="man/figures/README-latlong_walking_path-2.png" width="50%" />
 
 ``` r
-plot(latlongEuclideanPath())
+plot(euclideanPath(latlong = TRUE))
 plot(euclideanPath())  # Dodson and Tobler native scale for comparison
 ```
 
 <img src="man/figures/README-latlong_euclidean_path-1.png" width="50%" /><img src="man/figures/README-latlong_euclidean_path-2.png" width="50%" />
 
 ``` r
-plot(latlongNeighborhoodEuclidean())
+plot(neighborhoodEuclidean(latlong = TRUE))
 ```
 
 <img src="man/figures/README-latlong_euclidean-1.png" width="50%" />
 
 ``` r
-plot(latlongNeighborhoodVoronoi())
+plot(neighborhoodVoronoi(latlong = TRUE))
 ```
 
 <img src="man/figures/README-latlong_voronoi-1.png" width="50%" />
 
 ``` r
-plot(latlongNeighborhoodWalking())
+plot(neighborhoodWalking(latlong = TRUE))
 ```
 
 <img src="man/figures/README-latlong_walking-1.png" width="50%" />

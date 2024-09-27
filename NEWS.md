@@ -1,3 +1,8 @@
+### cholera 0.8.0.9457
+
+- amend QGIS URL and update latlong syntax in README.
+
+
 ### cholera 0.8.0.9456
 
 - set addKernelDensity(multi.core = FALSE).

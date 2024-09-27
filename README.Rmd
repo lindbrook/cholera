@@ -143,7 +143,7 @@ Parallelization is implemented using the 'parallel' package, which is part of th
 
 #### longitude and latitude
 
-['cholera'](https://cran.r-project.org/package=cholera) now has preliminary, limited support for georeferenced (longitude and latitude) versions of some data and functions. This support goes beyond a proof of concept but is currently less than a complete re-implementation of the package's native (non-georeferenced) functionality. The georeferencing was done manually using [QGIS](https://qgis.org/en/site/); specifically its Georeferencer tool and its interface to [OpenStreetMap](https://www.openstreetmap.org). The target coordinate reference system (CRS) of these data is EPSG:4326. What makes this effort preliminary is that the choice of ground control points, transformation type (e.g., thin plate spine), and resampling method (e.g., nearest neighbor) are still in flux. Thus, results and coordinates may change in the future. 
+['cholera'](https://cran.r-project.org/package=cholera) now has preliminary, limited support for georeferenced (longitude and latitude) versions of some data and functions. This support goes beyond a proof of concept but is currently less than a complete re-implementation of the package's native (non-georeferenced) functionality. The georeferencing was done manually using [QGIS](https://qgis.org/); specifically its Georeferencer tool and its interface to [OpenStreetMap](https://www.openstreetmap.org). The target coordinate reference system (CRS) of these data is EPSG:4326. What makes this effort preliminary is that the choice of ground control points, transformation type (e.g., thin plate spine), and resampling method (e.g., nearest neighbor) are still in flux. Thus, results and coordinates may change in the future. 
 
 Six functions are available:
 
@@ -152,25 +152,25 @@ snowMap(latlong = TRUE)
 ```
 
 ```{r latlong_walking_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%", fig.show = "hold"}
-plot(walkingPathB(latlong = TRUE))
-plot(walkingPathB())  # Dodson and Tobler native scale for comparison
+plot(walkingPath(latlong = TRUE))
+plot(walkingPath())  # Dodson and Tobler native scale for comparison
 ```
 
 ```{r latlong_euclidean_path, fig.width = 5.5, fig.height = 5.5, out.width = "50%", fig.show = "hold"}
-plot(latlongEuclideanPath())
+plot(euclideanPath(latlong = TRUE))
 plot(euclideanPath())  # Dodson and Tobler native scale for comparison
 ```
 
 ```{r latlong_euclidean, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
-plot(latlongNeighborhoodEuclidean())
+plot(neighborhoodEuclidean(latlong = TRUE))
 ```
 
 ```{r latlong_voronoi, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
-plot(latlongNeighborhoodVoronoi())
+plot(neighborhoodVoronoi(latlong = TRUE))
 ```
 
 ```{r latlong_walking, fig.width = 5.5, fig.height = 5.5, out.width = "50%"}
-plot(latlongNeighborhoodWalking())
+plot(neighborhoodWalking(latlong = TRUE))
 ```
 
 ```{r tanaka, eval = FALSE, echo = FALSE}
