@@ -9,27 +9,25 @@ output: github_document
 knitr::opts_chunk$set(collapse = TRUE, comment = ">")
 library(cholera)
 ```
+By default, `addKernelDensity()` pools all observations into a single neighborhood:
 
-By default, the `addKernelDensity()` function pools all observations:
-
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center"}
 snowMap()
 addKernelDensity()
 ```
 
-However, this presuppose that all cases have a common source. To consider the possible existence of multiple pump neighborhoods, the function provides two ways to explore hypothetical scenarios.
+To consider the possibility of multiple pump neighborhoods, you can do the following. 
 
-By using the `pump.select` argument, you can define a "population" of pump neighborhoods by specify the pumps to consider:
+To define a set of neighborhoods based on a selection of pumps (i.e., distribute cases across the selection), use the `pump.select` argument :
 
-
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center"}
 snowMap()
 addKernelDensity(pump.select = c(6, 8))
 ```
 
-By using the `pump.subset` argument, you can define the subset of the "population" to consider:
+To view the subset of "local" neighborhoods you're interested in, use the `pump.subset` argument.
 
-
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center"}
 snowMap()
 addKernelDensity(pump.subset = c(6, 8))
+```

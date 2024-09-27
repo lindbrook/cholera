@@ -1,3 +1,8 @@
+### cholera 0.8.0.9459
+
+- copyedit "Kernel Density Plot" vignette.
+
+
 ### cholera 0.8.0.9458
 
  - amend Windows and/or cores = 1 exception in nearestPumpNominal().

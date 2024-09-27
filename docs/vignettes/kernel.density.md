@@ -1,33 +1,37 @@
 Kernel Density Plot
 ================
 lindbrook
-2019-01-10
+2024-09-27
 
-By default, the `addKernelDensity()` function pools all observations:
+By default, `addKernelDensity()` pools all observations into a single
+neighborhood:
 
 ``` r
 snowMap()
 addKernelDensity()
 ```
 
-<img src="kernel.density_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
+<img src="kernel.density_files/figure-gfm/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
 
-However, this presuppose that all cases have a common source. To consider the possible existence of multiple pump neighborhoods, the function provides two ways to explore hypothetical scenarios.
+To consider the possibility of multiple pump neighborhoods, you can do
+the following.
 
-By using the `pump.select` argument, you can define a "population" of pump neighborhoods by specify the pumps to consider:
+To define a set of neighborhoods based on a selection of pumps (i.e.,
+distribute cases across the selection), use the `pump.select` argument :
 
 ``` r
 snowMap()
 addKernelDensity(pump.select = c(6, 8))
 ```
 
-<img src="kernel.density_files/figure-markdown_github/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
+<img src="kernel.density_files/figure-gfm/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
 
-By using the `pump.subset` argument, you can define the subset of the "population" to consider:
+To view the subset of “local” neighborhoods you’re interested in, use
+the `pump.subset` argument.
 
 ``` r
 snowMap()
 addKernelDensity(pump.subset = c(6, 8))
 ```
 
-<img src="kernel.density_files/figure-markdown_github/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
+<img src="kernel.density_files/figure-gfm/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
