@@ -13,43 +13,25 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = ">")
 library(cholera)
 ```
+By default, `addKernelDensity()` pools all observations into a single neighborhood:
 
-By default, the `addKernelDensity()` function pools all observations:
-
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE, eval = FALSE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center"}
 snowMap()
 addKernelDensity()
 ```
 
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE, eval = TRUE}
-snowMap()
-addKernelDensity(multi.core = FALSE)
-```
+To consider the possibility of multiple pump neighborhoods, you can do the following. 
 
-However, this presuppose that all cases have a common source. To consider the possible existence of multiple pump neighborhoods, the function provides two ways to explore hypothetical scenarios.
+To define a set of neighborhoods based on a selection of pumps (i.e., distribute cases across the selection), use the `pump.select` argument :
 
-By using the `pump.select` argument, you can define a "population" of pump neighborhoods by specify the pumps to consider:
-
-
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE, eval = FALSE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center"}
 snowMap()
 addKernelDensity(pump.select = c(6, 8))
 ```
 
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE, eval = TRUE}
-snowMap()
-addKernelDensity(pump.select = c(6, 8), multi.core = FALSE)
-```
+To view the subset of "local" neighborhoods you're interested in, use the `pump.subset` argument.
 
-By using the `pump.subset` argument, you can define the subset of the "population" to consider:
-
-
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE, eval = FALSE}
+```{r fig.width = 5, fig.height = 5, fig.align = "center"}
 snowMap()
 addKernelDensity(pump.subset = c(6, 8))
-```
-
-```{r fig.width = 5, fig.height = 5, fig.align = "center", echo = FALSE, eval = TRUE}
-snowMap()
-addKernelDensity(pump.subset = c(6, 8), multi.core = FALSE)
 ```
