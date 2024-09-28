@@ -1,3 +1,8 @@
+### cholera 0.8.0.9460
+
+- add single core/Windows exception in nearestPumpLatlong().
+
+
 ### cholera 0.8.0.9459
 
 - copyedit "Kernel Density Plot" vignette.

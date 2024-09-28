@@ -36,23 +36,44 @@ nearestPumpLatlong <- function(pump.select = NULL, metric = "walking",
     p.sel <- selectPump(pump.data, pump.select = pump.select,
       metric = "euclidean", vestry = vestry)
 
-    out <- parallel::mclapply(cholera::fatalities.address$anchor, function(x) {
-      sel <- cholera::fatalities.address$anchor == x
-      ego <- cholera::fatalities.address[sel, vars]
+    if (cores == 1 | .Platform$OS.type == "windows") {
+      out <- lapply(cholera::fatalities.address$anchor, function(x) {
+        sel <- cholera::fatalities.address$anchor == x
+        ego <- cholera::fatalities.address[sel, vars]
 
-      if (is.null(pump.select)) {
-        alters <- pump.data[, c("id", vars)]
-      } else {
-        alters <- pump.data[pump.data$id %in% p.sel, c("id", vars)]
-      }
+        if (is.null(pump.select)) {
+          alters <- pump.data[, c("id", vars)]
+        } else {
+          alters <- pump.data[pump.data$id %in% p.sel, c("id", vars)]
+        }
 
-      d <- vapply(alters$id, function(id) {
-        geosphere::distGeo(ego, alters[alters$id == id, vars])
-      }, numeric(1L))
+        d <- vapply(alters$id, function(id) {
+          geosphere::distGeo(ego, alters[alters$id == id, vars])
+        }, numeric(1L))
 
-      sel <- which.min(d)
-      data.frame(case = x, pump = alters$id[sel], distance = d[sel])
-    }, mc.cores = cores)
+        sel <- which.min(d)
+        data.frame(case = x, pump = alters$id[sel], distance = d[sel])
+      })
+    } else if (cores > 1 & .Platform$OS.type != "windows") {
+      anchr <- cholera::fatalities.address$anchor
+      out <- parallel::mclapply(anchr, function(x) {
+        sel <- cholera::fatalities.address$anchor == x
+        ego <- cholera::fatalities.address[sel, vars]
+
+        if (is.null(pump.select)) {
+          alters <- pump.data[, c("id", vars)]
+        } else {
+          alters <- pump.data[pump.data$id %in% p.sel, c("id", vars)]
+        }
+
+        d <- vapply(alters$id, function(id) {
+          geosphere::distGeo(ego, alters[alters$id == id, vars])
+        }, numeric(1L))
+
+        sel <- which.min(d)
+        data.frame(case = x, pump = alters$id[sel], distance = d[sel])
+      }, mc.cores = cores)
+    }
 
     out <- do.call(rbind, out)
 
@@ -98,9 +119,15 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
   ortho.pump$node <- paste0(ortho.pump$lon, "_&_", ortho.pump$lat)
 
   if (case.set %in% c("observed", "expected", "snow")) {
-    distances <- parallel::mclapply(ortho.addr$node, function(case.node) {
-      igraph::distances(g, case.node, ortho.pump$node, weights = edges$d)
-    }, mc.cores = cores)
+    if (cores == 1 | .Platform$OS.type == "windows") {
+      distances <- lapply(ortho.addr$node, function(case.node) {
+        igraph::distances(g, case.node, ortho.pump$node, weights = edges$d)
+      })
+    } else if (cores > 1 & .Platform$OS.type != "windows") {
+      distances <- parallel::mclapply(ortho.addr$node, function(case.node) {
+        igraph::distances(g, case.node, ortho.pump$node, weights = edges$d)
+      }, mc.cores = cores)
+    }
 
     names(distances) <- ortho.addr$case
 
@@ -142,13 +169,25 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
       # cases inside of pump isolate neighborhood
       idx <- seq_along(case.pump.isolate)
 
-      paths.pump.isolate <- parallel::mclapply(idx, function(i) {
-        sel <- ortho.addr.pump.isolate$case == case.pump.isolate[i]
-        case.node <- ortho.addr.pump.isolate[sel, "node"]
-        sel <- ortho.pump$id == pump.isolate.id[i]
-        pump.node <- ortho.pump[sel, "node"]
-        igraph::shortest_paths(g, case.node, pump.node, weights = edges$d)$vpath
-      }, mc.cores = cores)
+      if (cores == 1 | .Platform$OS.type == "windows") {
+        paths.pump.isolate <- lapply(idx, function(i) {
+          sel <- ortho.addr.pump.isolate$case == case.pump.isolate[i]
+          case.node <- ortho.addr.pump.isolate[sel, "node"]
+          sel <- ortho.pump$id == pump.isolate.id[i]
+          pump.node <- ortho.pump[sel, "node"]
+          igraph::shortest_paths(g, case.node, pump.node,
+            weights = edges$d)$vpath
+        })
+      } else if (cores > 1 & .Platform$OS.type != "windows") {
+        paths.pump.isolate <- parallel::mclapply(idx, function(i) {
+          sel <- ortho.addr.pump.isolate$case == case.pump.isolate[i]
+          case.node <- ortho.addr.pump.isolate[sel, "node"]
+          sel <- ortho.pump$id == pump.isolate.id[i]
+          pump.node <- ortho.pump[sel, "node"]
+          igraph::shortest_paths(g, case.node, pump.node,
+            weights = edges$d)$vpath
+        }, mc.cores = cores)
+      }
 
       names(paths.pump.isolate) <- case.pump.isolate
 
@@ -176,11 +215,19 @@ latlong_pathData <- function(dat, p.sel, case.set, vestry, weighted, cores) {
     p.id <- p.sel[vapply(distances, which.min, integer(1L))]
     idx <- seq_along(ortho.addr$case)
 
-    short.path <- parallel::mclapply(idx, function(i) {
-      case.node <- ortho.addr[i, "node"]
-      pump.node <- ortho.pump[ortho.pump$id == p.id[i], "node"]
-      igraph::shortest_paths(g, case.node, pump.node, weights = edges$d)$vpath
-    }, mc.cores = cores)
+    if (cores == 1 | .Platform$OS.type == "windows") {
+      short.path <- lapply(idx, function(i) {
+        case.node <- ortho.addr[i, "node"]
+        pump.node <- ortho.pump[ortho.pump$id == p.id[i], "node"]
+        igraph::shortest_paths(g, case.node, pump.node, weights = edges$d)$vpath
+      })
+    } else if (cores > 1 & .Platform$OS.type != "windows") {
+      short.path <- parallel::mclapply(idx, function(i) {
+        case.node <- ortho.addr[i, "node"]
+        pump.node <- ortho.pump[ortho.pump$id == p.id[i], "node"]
+        igraph::shortest_paths(g, case.node, pump.node, weights = edges$d)$vpath
+      }, mc.cores = cores)
+    }
 
     names(short.path) <- ortho.addr$case
   }
