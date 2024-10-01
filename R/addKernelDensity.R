@@ -9,6 +9,7 @@
 #' @param line.type Character. Line type for contour lines.
 #' @param data Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @param latlong Logical.
 #' @return Add contours to a graphics plot.
 #' @note This function uses \code{KernSmooth::bkde2D()}.
 #' @export
@@ -29,7 +30,7 @@
 
 addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
   neighborhood.type = "walking", data = "unstacked", bandwidth = 0.5,
-  color = "black", line.type = "solid", multi.core = FALSE) {
+  color = "black", line.type = "solid", multi.core = FALSE, latlong = FALSE) {
 
   if (!is.null(data) & !all(data %in% c("unstacked", "address", "fatality"))) {
     stop('data must be "unstacked", "address" or "fatality".')
@@ -48,8 +49,14 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
   }
 
   cores <- multiCore(multi.core)
-  vars <- c("x", "y")
-  bw <- rep(bandwidth, 2)
+
+  if (latlong) {
+    vars <- c("lon", "lat")
+    bw <- rep(50 * bandwidth, 2)
+  } else {
+    vars <- c("x", "y")
+    bw <- rep(bandwidth, 2)
+  }
 
   if (is.null(pump.select)) {
     if (all(is.character(pump.subset))) {
@@ -62,18 +69,31 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
           dat <- cholera::fatalities[, vars]
         }
 
-        kde <- KernSmooth::bkde2D(dat, bandwidth = bw)
-
-        contour(x = kde$x1, y = kde$x2, z = kde$fhat, col = color, 
-          lty = line.type, add = TRUE)
+        if (latlong) {
+          origin <- data.frame(lon = min(cholera::roads$lon),
+                               lat = min(cholera::roads$lat))
+          x.proj <- data.frame(lon = dat$lon, lat = origin$lat)
+          y.proj <- data.frame(lon = origin$lon, lat = dat$lat)
+          m.lon <- geosphere::distGeo(y.proj, dat)
+          m.lat <- geosphere::distGeo(x.proj, dat)
+          geodesic.data <- data.frame(x = m.lon, y = m.lat)
+          kde <- KernSmooth::bkde2D(geodesic.data, bandwidth = bw)
+          coords <- meterLatLong(data.frame(x = kde$x1, y = kde$x2))
+          contour(x = coords$lon, y = coords$lat, z = kde$fhat, col = color,
+            lty = line.type, add = TRUE)
+        } else {
+          kde <- KernSmooth::bkde2D(dat, bandwidth = bw)
+          contour(x = kde$x1, y = kde$x2, z = kde$fhat, col = color,
+            lty = line.type, add = TRUE)
+        }
 
       } else if (pump.subset == "individual") {
         if (neighborhood.type == "walking") {
-          n.data <- neighborhoodWalking(multi.core = cores)
+          n.data <- neighborhoodWalking(latlong = latlong, multi.core = cores)
           cases <- pumpCase(n.data)
 
         } else if (neighborhood.type == "voronoi") {
-          n.data <- neighborhoodVoronoi()
+          n.data <- neighborhoodVoronoi(latlong = latlong)
           cases <- pumpCase(n.data)
           empty.cell <- vapply(cases, length, numeric(1L))
           cases <- cases[empty.cell != 0]
@@ -82,19 +102,34 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
         kde <- lapply(cases, function(id) {
           sel <- cholera::fatalities.address$anchor %in% id
           dat <- cholera::fatalities.address[sel, vars]
+          if (latlong) {
+            origin <- data.frame(lon = min(cholera::roads$lon),
+                                 lat = min(cholera::roads$lat))
+            x.proj <- data.frame(lon = dat$lon, lat = origin$lat)
+            y.proj <- data.frame(lon = origin$lon, lat = dat$lat)
+            m.lon <- geosphere::distGeo(y.proj, dat)
+            m.lat <- geosphere::distGeo(x.proj, dat)
+            dat <- data.frame(x = m.lon, y = m.lat)
+          }
           KernSmooth::bkde2D(dat, bandwidth = bw)
         })
 
         invisible(lapply(names(kde), function(nm) {
           dat <- kde[[nm]]
-          contour(x = dat$x1, y = dat$x2, z = dat$fhat, col = snowColors()[nm], 
-            lty = line.type, add = TRUE)
+          if (latlong) {
+            coords <- meterLatLong(data.frame(x = dat$x1, y = dat$x2))
+            contour(x = coords$lon, y = coords$lat, z = dat$fhat,
+              col = snowColors()[nm], lty = line.type, add = TRUE)
+          } else {
+            contour(x = dat$x1, y = dat$x2, z = dat$fhat,
+              col = snowColors()[nm], lty = line.type, add = TRUE)
+          }
         }))
       }
 
     } else if (all(is.numeric(pump.subset))) {
       if (neighborhood.type == "walking") {
-        n.data <- neighborhoodWalking(multi.core = cores)
+        n.data <- neighborhoodWalking(latlong = latlong, multi.core = cores)
         obs.neighborhood <- as.numeric(names(n.data$paths))
 
         if (any(abs(pump.subset) %in% obs.neighborhood == FALSE)) {
@@ -113,7 +148,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
         }
 
       } else if (neighborhood.type == "voronoi") {
-        n.data <- neighborhoodVoronoi()
+        n.data <- neighborhoodVoronoi(latlong = latlong)
         cases <- pumpCase(n.data)
         empty.cell <- vapply(cases, length, numeric(1L))
         cases <- cases[empty.cell != 0]
@@ -122,30 +157,61 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
       kde <- lapply(cases, function(id) {
         sel <- cholera::fatalities.address$anchor %in% id
         dat <- cholera::fatalities.address[sel, vars]
+        if (latlong) {
+          origin <- data.frame(lon = min(cholera::roads$lon),
+                               lat = min(cholera::roads$lat))
+          x.proj <- data.frame(lon = dat$lon, lat = origin$lat)
+          y.proj <- data.frame(lon = origin$lon, lat = dat$lat)
+          m.lon <- geosphere::distGeo(y.proj, dat)
+          m.lat <- geosphere::distGeo(x.proj, dat)
+          dat <- data.frame(x = m.lon, y = m.lat)
+        }
         KernSmooth::bkde2D(dat, bandwidth = bw)
       })
 
       invisible(lapply(names(kde), function(nm) {
         dat <- kde[[nm]]
-        contour(x = dat$x1, y = dat$x2, z = dat$fhat,
-          col = snowColors()[nm], lty = line.type, add = TRUE)
+        if (latlong) {
+          coords <- meterLatLong(data.frame(x = dat$x1, y = dat$x2))
+          contour(x = coords$lon, y = coords$lat, z = dat$fhat,
+            col = snowColors()[nm], lty = line.type, add = TRUE)
+        } else {
+          contour(x = dat$x1, y = dat$x2, z = dat$fhat,
+            col = snowColors()[nm], lty = line.type, add = TRUE)
+        }
       }))
     }
 
   } else {
-    n.data <- neighborhoodWalking(pump.select, multi.core = cores)
+    n.data <- neighborhoodWalking(pump.select, latlong = latlong,
+      multi.core = cores)
     cases <- pumpCase(n.data)
 
     kde <- lapply(cases, function(id) {
       sel <- cholera::fatalities.address$anchor %in% id
       dat <- cholera::fatalities.address[sel, vars]
+      if (latlong) {
+        origin <- data.frame(lon = min(cholera::roads$lon),
+                             lat = min(cholera::roads$lat))
+        x.proj <- data.frame(lon = dat$lon, lat = origin$lat)
+        y.proj <- data.frame(lon = origin$lon, lat = dat$lat)
+        m.lon <- geosphere::distGeo(y.proj, dat)
+        m.lat <- geosphere::distGeo(x.proj, dat)
+        dat <- data.frame(x = m.lon, y = m.lat)
+      }
       KernSmooth::bkde2D(dat, bandwidth = bw)
     })
 
     invisible(lapply(names(kde), function(nm) {
       dat <- kde[[nm]]
-      contour(x = dat$x1, y = dat$x2, z = dat$fhat,
-        col = snowColors()[nm], lty = line.type, add = TRUE)
+      if (latlong) {
+        coords <- meterLatLong(data.frame(x = dat$x1, y = dat$x2))
+        contour(x = coords$lon, y = coords$lat, z = dat$fhat,
+          col = snowColors()[nm], lty = line.type, add = TRUE)
+      } else {
+        contour(x = dat$x1, y = dat$x2, z = dat$fhat,
+          col = snowColors()[nm], lty = line.type, add = TRUE)
+      }
     }))
   }
 }

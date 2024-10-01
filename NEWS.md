@@ -1,3 +1,8 @@
+### cholera 0.8.0.9463
+
+- add/set addKernelDensity(latlong = FALSE).
+
+
 ### cholera 0.8.0.9462
 
 - add/amend methods for pumpCase().
