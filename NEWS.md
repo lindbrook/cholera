@@ -1,3 +1,8 @@
+### cholera 0.8.0.9461
+
+- amend classes for euclideanLatlong() and walkingLatlong().
+
+
 ### cholera 0.8.0.9460
 
 - add single core/Windows exception in nearestPumpLatlong().

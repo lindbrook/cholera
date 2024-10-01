@@ -59,17 +59,17 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
               snow.colors = snowColors(vestry = vestry),
               statistic.data = statistic.data)
 
-  class(out) <- "latlongEuclidean"
+  class(out) <- "euclideanLatlong"
   out
 }
 
-#' Plot method for latlongNeighborhoodEuclidean()
+#' Plot method for euclideanLatlong()
 #' @param x Object.
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.latlongEuclidean <- function(x, type = "star", ...) {
+plot.euclideanLatlong <- function(x, type = "star", ...) {
   if (!type %in% c("area.points", "area.polygons", "star")) {
     stop('type must be "area.points", "area.polygons" or "star".',
       call. = FALSE)
