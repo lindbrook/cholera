@@ -66,7 +66,7 @@ walkingLatlong <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
               case.set = case.set,
               cores = cores)
 
-  class(out) <- "walking_latlong"
+  class(out) <- "walkingLatlong"
   out
 }
 
@@ -78,7 +78,7 @@ walkingLatlong <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 #' @return A base R plot.
 #' @export
 
-plot.walking_latlong <- function(x, type = "roads", ...) {
+plot.walkingLatlong <- function(x, type = "roads", ...) {
   vars <- c("lon", "lat")
   p.data <- x$pump.data
 
