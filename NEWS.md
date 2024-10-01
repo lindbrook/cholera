@@ -1,3 +1,8 @@
+### cholera 0.8.0.9462
+
+- add/amend methods for pumpCase().
+
+
 ### cholera 0.8.0.9461
 
 - amend classes for euclideanLatlong() and walkingLatlong().

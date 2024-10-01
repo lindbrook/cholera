@@ -17,17 +17,32 @@ pumpCase <- function(x, case) UseMethod("pumpCase", x)
 pumpCase.default <- function(x, case) NULL
 
 #' @export
-pumpCase.euclidean <- function(x, case = "address") {
+pumpCase.euclidean <- function(x, case = "anchor") {
   pumps <- sort(unique(x$nearest.pump))
   out <- lapply(pumps, function(p) {
-    x$anchors[x$nearest.pump == p]
+    cholera::fatalities$case[x$nearest.pump == p]
   })
-
+  if (case == "anchor") {
+    out <- lapply(out, function(x) {
+      x[x %in% cholera::fatalities.address$anchor]
+    })
+  } else if (case != "fatality") stop('case must be "anchor" or "fatality".')
   stats::setNames(out, paste0("p", pumps))
 }
 
 #' @export
-pumpCase.voronoi <- function(x, case = "orthogonal") {
+pumpCase.euclidean_latlong <- function(x, case = "anchor") {
+  census <- lapply(x$statistic.data, function(x) which(x == 1))
+  if (case == "anchor") {
+    census <- lapply(census, function(x) {
+      x[x %in% cholera::fatalities.address$anchor]
+    })
+  } else if (case != "fatality") stop('case must be "anchor" or "fatality".')
+  census
+}
+
+#' @export
+pumpCase.voronoi <- function(x, case = "nominal") {
   output <- x$statistic.data
   if (x$location == "orthogonal") {
     lapply(output, function(x) cholera::ortho.proj$case[x == 1])
@@ -37,12 +52,33 @@ pumpCase.voronoi <- function(x, case = "orthogonal") {
 }
 
 #' @export
-pumpCase.walking <- function(x, case = "address") {
-  if (case == "address") {
+pumpCase.voronoiLatlong <- function(x, case = "nominal") {
+  output <- x$statistic.data
+  if (x$location == "orthogonal") {
+    lapply(output, function(x) cholera::ortho.proj$case[x == 1])
+  } else if (x$location == "nominal") {
+    lapply(output, function(x) cholera::fatalities.address$anchor[x == 1])
+  }
+}
+
+#' @export
+pumpCase.walking <- function(x, case = "anchor") {
+  if (case == "fatality") {
     x$cases
-  } else if (case == "fatality") {
+  } else if (case == "anchor") {
     lapply(x$cases, function(dat) {
       cholera::anchor.case[cholera::anchor.case$anchor %in% dat, "case"]
     })
-  } else stop('case must either be "address" or "fatality"')
+  } else stop('case must either be "anchor" or "fatality"')
+}
+
+#' @export
+pumpCase.walkingLatlong <- function(x, case = "anchor") {
+  if (case == "fatality") {
+    x$cases
+  } else if (case == "anchor") {
+    lapply(x$cases, function(dat) {
+      cholera::anchor.case[cholera::anchor.case$anchor %in% dat, "case"]
+    })
+  } else stop('case must either be "anchor" or "fatality"')
 }
