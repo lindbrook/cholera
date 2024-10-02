@@ -1,3 +1,9 @@
+### cholera 0.8.0.9464
+
+- use lapply() for peripheryCases() and travelingSalesman() in 
+  plot.walkingLatlong().
+
+
 ### cholera 0.8.0.9463
 
 - add/set addKernelDensity(latlong = FALSE).

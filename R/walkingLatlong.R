@@ -141,10 +141,9 @@ plot.walkingLatlong <- function(x, type = "roads", ...) {
       snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE,
         add.roads = FALSE)
 
-      periphery.cases <- parallel::mclapply(x$cases, peripheryCases,
-        latlong = TRUE, mc.cores = x$cores)
-      pearl.strings <- parallel::mclapply(periphery.cases, travelingSalesman,
-        latlong = TRUE, mc.cores = x$cores)
+      periphery.cases <- lapply(x$cases, peripheryCases, latlong = TRUE)
+      pearl.strings <- lapply(periphery.cases, travelingSalesman,
+        latlong = TRUE)
 
       addRoads(latlong = TRUE, col = "black")
 
