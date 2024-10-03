@@ -5,7 +5,7 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param case.set Character. "observed" or "expected".
 #' @param case.select Character. Fatalities: "all" or "address".
-#' @param latlong Logical. Longitude and latitude coordiantes
+#' @param latlong Logical. Longitude and latitude coordinates
 #' @param location Character. "nominal", "anchor" or "orthogonal".
 #' @param brute.force Logical. For latlong = FALSE. TRUE computes nearest pump for each case. FALSE uses Voronoi cells as shortcut.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.

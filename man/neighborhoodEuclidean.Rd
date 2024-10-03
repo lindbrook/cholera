@@ -18,7 +18,7 @@ neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 
 \item{case.select}{Character. Fatalities: "all" or "address".}
 
-\item{latlong}{Logical. Longitude and latitude coordiantes}
+\item{latlong}{Logical. Longitude and latitude coordinates}
 
 \item{location}{Character. "nominal", "anchor" or "orthogonal".}
 

@@ -15,7 +15,7 @@ streetNameLocator(street.name = "Broad Street", zoom = TRUE,
 
 \item{zoom}{Logical or Numeric. Positive values zoom in. Negative values zoom out.}
 
-\item{latlong}{Logical. Longitude and latitude coordiantes}
+\item{latlong}{Logical. Longitude and latitude coordinates}
 
 \item{cases}{Character. Cases to plot: \code{NULL}, "address" or "fatality".}
 

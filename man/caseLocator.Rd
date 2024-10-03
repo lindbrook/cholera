@@ -15,7 +15,7 @@ caseLocator(case = 1, zoom = FALSE, observed = TRUE, latlong = FALSE,
 
 \item{observed}{Logical. \code{TRUE} for observed. \code{FALSE} for simulated.}
 
-\item{latlong}{Logical. Longitude and latitude coordiantes}
+\item{latlong}{Logical. Longitude and latitude coordinates}
 
 \item{add.title}{Logical. Include title.}
 

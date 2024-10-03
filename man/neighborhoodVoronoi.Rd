@@ -12,7 +12,7 @@ neighborhoodVoronoi(pump.select = NULL, vestry = FALSE, latlong = FALSE,
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
-\item{latlong}{Logical. Longitude and latitude coordiantes}
+\item{latlong}{Logical. Longitude and latitude coordinates}
 
 \item{location}{Character. "nominal" or "orthogonal". "nominal" uses the x-y coordinates of \code{fatalities.address}. "orthogonal"uses the x-y coordinates of \code{ortho.proj}.}
 

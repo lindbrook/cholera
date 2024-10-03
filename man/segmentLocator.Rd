@@ -15,7 +15,7 @@ segmentLocator(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
 
 \item{zoom}{Logical or Numeric. Positive value zoom in. Negative values zoom out.}
 
-\item{latlong}{Logical. Longitude and latitude coordiantes}
+\item{latlong}{Logical. Longitude and latitude coordinates}
 
 \item{cases}{Character. Cases to plot: \code{NULL}, "address" or "fatality".}
 
