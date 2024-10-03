@@ -14,12 +14,13 @@ nearestPump <- function(pump.select = NULL, metric = "walking", vestry = FALSE,
   weighted = TRUE, case.set = "observed", latlong = FALSE, multi.core = TRUE,
   dev.mode = FALSE) {
 
+  cores <- multiCore(multi.core)
+  args <- list(pump.select = pump.select, metric = metric, vestry = vestry,
+               case.set = case.set, multi.core = cores)
+
   if (latlong) {
-    cores <- multiCore(multi.core)
-    nearestPumpLatlong(pump.select = pump.select, metric = metric,
-      vestry = vestry, case.set = case.set, multi.core = cores)
+    do.call("nearestPumpLatlong", args)
   } else {
-    nearestPumpNominal(pump.select = pump.select, metric = metric,
-      vestry = vestry, case.set = case.set)
+    do.call("nearestPumpNominal", c(args, dev.mode = dev.mode))
   }
 }
