@@ -1,3 +1,8 @@
+### cholera 0.8.0.9466
+
+- add/set addNeighborhoodCases(latlong = FALSE).
+
+
 ### cholera 0.8.0.9465
 
 - use do.call() in nearestPump().
