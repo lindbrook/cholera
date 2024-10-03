@@ -345,7 +345,7 @@ nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
   if ((case.set == "observed" | case.set == "snow") & metric == "walking") {
     list(path = out.path, distance = out.distance)
   } else {
-    list(distance = out.distance)
+    out.distance
   }
 }
 

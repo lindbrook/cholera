@@ -1,3 +1,9 @@
+### cholera 0.8.0.9465
+
+- use do.call() in nearestPump().
+- return data frame for nearestPumpNominal(metric = "euclidean").
+
+
 ### cholera 0.8.0.9464
 
 - use lapply() for peripheryCases() and travelingSalesman() in 
