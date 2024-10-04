@@ -2,13 +2,13 @@
 % Please edit documentation in R/addNeighborhoodCases.R
 \name{addNeighborhoodCases}
 \alias{addNeighborhoodCases}
-\title{Add observed cases by neighborhood.}
+\title{Add observed neighborhood cases.}
 \usage{
 addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
   metric = "walking", case.set = "observed", location = "nominal",
   token = "point", text.size = 0.5, pch = 16, point.size = 0.5,
   vestry = FALSE, weighted = TRUE, color = NULL, alpha.level = 0.5,
-  multi.core = TRUE)
+  latlong = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
@@ -37,6 +37,8 @@ addNeighborhoodCases(pump.subset = NULL, pump.select = NULL,
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
+\item{latlong}{Logical. Longitude and latitude coordinates.}
+
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
 \description{
@@ -45,9 +47,21 @@ Add cases to a plot as "nominal" or "fatalities" and as points or IDs.
 \examples{
 \dontrun{
 snowMap(add.cases = FALSE)
+addNeighborhoodCases()
+
+snowMap(add.cases = FALSE)
 addNeighborhoodCases(pump.subset = c(6, 10))
 
 snowMap(add.cases = FALSE)
 addNeighborhoodCases(pump.select = c(6, 10))
+
+snowMap(add.cases = FALSE, latlong = TRUE)
+addNeighborhoodCases(latlong = TRUE)
+
+snowMap(add.cases = FALSE, latlong = TRUE)
+addNeighborhoodCases(pump.subset = c(6, 10), latlong = TRUE)
+
+snowMap(add.cases = FALSE, latlong = TRUE)
+addNeighborhoodCases(pump.select = c(6, 10), latlong = TRUE)
 }
 }
