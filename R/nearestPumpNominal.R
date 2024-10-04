@@ -5,6 +5,7 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected", or "snow".
+#' @param location Character. For cases and pumps. "nominal", "anchor" or "orthogonal".
 #' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. Meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
@@ -15,7 +16,7 @@
 #' @return An R data frame or list of 'igraph' path nodes.
 
 nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
-  vestry = FALSE, weighted = TRUE, case.set = "observed",
+  vestry = FALSE, weighted = TRUE, case.set = "observed", location = "nominal",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
   multi.core = TRUE, dev.mode = FALSE) {
 
@@ -51,32 +52,36 @@ nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
 
   } else if (metric == "euclidean") {
     if (case.set == "observed") {
-      anchors <- cholera::fatalities.address$anchor
+      if (location == "nominal") {
+        case <- cholera::fatalities$case
+      } else if (location %in% c("anchor", "orthogonal")) {
+        case <- cholera::fatalities.address$anchor
+      }
     } else if (case.set == "expected") {
-      anchors <- seq_len(nrow(cholera::regular.cases))
+      case <- seq_len(nrow(cholera::regular.cases))
     } else if (case.set == "snow") {
-      anchors <- cholera::snow.neighborhood[cholera::snow.neighborhood %in%
+      case <- cholera::snow.neighborhood[cholera::snow.neighborhood %in%
         cholera::fatalities.address$anchor]
     }
 
     if (cores == 1 | !win.exception) {
-      distance.data <- lapply(anchors, function(x) {
+      distance.data <- lapply(case, function(x) {
         euclideanPath(x, destination = p.sel, case.set = case.set,
-          vestry = vestry)$data
+          location = location, vestry = vestry)$data
       })
     } else if (dev.mode | win.exception) {
       cl <- parallel::makeCluster(cores)
       parallel::clusterExport(cl = cl, envir = environment(),
         varlist = c("p.sel", "case.set", "vestry"))
-      distance.data <- parallel::parLapply(cl, anchors, function(x) {
+      distance.data <- parallel::parLapply(cl, case, function(x) {
         euclideanPath(x, destination = p.sel, case.set = case.set,
-          vestry = vestry)$data
+          location = location, vestry = vestry)$data
       })
       parallel::stopCluster(cl)
     } else if (.Platform$OS.type != "windows") {
-      distance.data <- parallel::mclapply(anchors, function(x) {
+      distance.data <- parallel::mclapply(case, function(x) {
         euclideanPath(x, destination = p.sel, case.set = case.set,
-          vestry = vestry)$data
+          location = location, vestry = vestry)$data
       }, mc.cores = cores)
     } else stop("nearestPump error")
 
