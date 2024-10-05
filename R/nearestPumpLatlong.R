@@ -5,6 +5,7 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected" # or "snow".
+#' @param location Character. For cases and pumps. "nominal", "anchor" or "orthogonal".
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
@@ -13,8 +14,8 @@
 #' @return An R data frame or list of 'igraph' path nodes.
 
 nearestPumpLatlong <- function(pump.select = NULL, metric = "walking",
-  vestry = FALSE, weighted = TRUE, case.set = "observed", time.unit = "second",
-  walking.speed = 5, multi.core = TRUE) {
+  vestry = FALSE, weighted = TRUE, case.set = "observed", location = "nominal",
+  time.unit = "second", walking.speed = 5, multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
   vars <- c("lon", "lat")
@@ -29,17 +30,46 @@ nearestPumpLatlong <- function(pump.select = NULL, metric = "walking",
     stop('case.set must be "observed", "expected" or "snow".', call. = FALSE)
   }
 
+  if (location %in% c("nominal", "anchor", "orthogonal") == FALSE) {
+    stop('location must be "nominal", "anchor", or "orthogonal".',
+      call. = FALSE)
+  }
+
   if (metric %in% c("euclidean", "walking") == FALSE) {
     stop('metric must either be "euclidean" or "walking".', call. = FALSE)
-
   } else if (metric == "euclidean") {
-    p.sel <- selectPump(pump.data, pump.select = pump.select,
-      metric = "euclidean", vestry = vestry)
+    if (case.set == "observed") {
+      if (location == "nominal") {
+        case <- cholera::fatalities$case
+        case.data <- cholera::fatalities
+      } else if (location == "anchor") {
+        case <- cholera::fatalities.address$anchor
+        case.data <- cholera::fatalities.address
+      } else if (location == "orthogonal") {
+        case <- cholera::ortho.proj$case
+        case.data <- cholera::ortho.proj
+      }
+    } else if (case.set == "expected") {
+      case <- seq_len(nrow(cholera::regular.cases))
+      case.data <- cholera::regular.cases
+    } else if (case.set == "snow") {
+      sel <- cholera::snow.neighborhood %in% cholera::fatalities.address$anchor
+      case <- cholera::snow.neighborhood[sel, ]
+      case.data <- cholera::snow.neighborhood
+    }
+
+    p.sel <- selectPump(pump.data, pump.select = pump.select, metric = metric,
+      vestry = vestry)
 
     if (cores == 1 | .Platform$OS.type == "windows") {
-      out <- lapply(cholera::fatalities.address$anchor, function(x) {
-        sel <- cholera::fatalities.address$anchor == x
-        ego <- cholera::fatalities.address[sel, vars]
+      out <- lapply(case, function(x) {
+        if (location %in% c("nominal", "orthogonal")) {
+          sel <- case.data$case == x
+        } else if (location == "anchor") {
+          sel <- case.data$anchor == x
+        }
+
+        ego <- case.data[sel == x, vars]
 
         if (is.null(pump.select)) {
           alters <- pump.data[, c("id", vars)]
@@ -55,10 +85,14 @@ nearestPumpLatlong <- function(pump.select = NULL, metric = "walking",
         data.frame(case = x, pump = alters$id[sel], distance = d[sel])
       })
     } else if (cores > 1 & .Platform$OS.type != "windows") {
-      anchr <- cholera::fatalities.address$anchor
-      out <- parallel::mclapply(anchr, function(x) {
-        sel <- cholera::fatalities.address$anchor == x
-        ego <- cholera::fatalities.address[sel, vars]
+      out <- parallel::mclapply(case, function(x) {
+        if (location %in% c("nominal", "orthogonal")) {
+          sel <- case.data$case == x
+        } else if (location == "anchor") {
+          sel <- case.data$anchor == x
+        }
+
+        ego <- case.data[sel, vars]
 
         if (is.null(pump.select)) {
           alters <- pump.data[, c("id", vars)]

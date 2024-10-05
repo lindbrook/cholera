@@ -1,3 +1,8 @@
+### cholera 0.8.0.9468
+
+- add/set nearestPumpLatlong(location = "nominal").
+
+
 ### cholera 0.8.0.9467
 
 - add/set nearestPumpNominal(location = "nominal").
