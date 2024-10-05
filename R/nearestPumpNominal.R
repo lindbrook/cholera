@@ -33,6 +33,11 @@ nearestPumpNominal <- function(pump.select = NULL, metric = "walking",
     stop('case.set must be "observed", "expected" or "snow".')
   }
 
+  if (location %in% c("nominal", "anchor", "orthogonal") == FALSE) {
+    stop('location must be "nominal", "anchor", or "orthogonal".',
+      call. = FALSE)
+  }
+
   if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
     stop('distance.unit must be "meter", "yard" or "native".')
   }
