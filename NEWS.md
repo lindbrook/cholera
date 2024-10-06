@@ -1,3 +1,8 @@
+### cholera 0.8.0.9469
+
+- remove unused code in travelingSalesman().
+
+
 ### cholera 0.8.0.9468
 
 - add/set nearestPumpLatlong(location = "nominal").

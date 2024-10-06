@@ -14,7 +14,7 @@ pearlStringRadius <- function(latlong = FALSE) {
 
 peripheryCases <- function(n.points, latlong = FALSE) {
   radius <- pearlStringRadius(latlong = latlong)
-  
+
   if (latlong) {
     n.area <- cholera::latlong.regular.cases[n.points, c("x", "y")]
   } else {
@@ -48,10 +48,10 @@ peripheryCases <- function(n.points, latlong = FALSE) {
 
 travelingSalesman <- function(vertices, latlong = FALSE,
   tsp.method = "repetitive_nn") {
-  
+
   methods <- c("identity", "random", "nearest_insertion", "farthest_insertion",
     "cheapest_insertion", "arbitrary_insertion", "nn", "repetitive_nn")
-    # "two_opt", "concorde", "linkern") # don't work in `parallel` implementation.
+    # "two_opt", "concorde", "linkern") # parallelization doesn't work.
 
   if (tsp.method %in% methods == FALSE) {
     stop('tsp.method must be "identity", "random", "nearest_insertion",
@@ -62,15 +62,10 @@ travelingSalesman <- function(vertices, latlong = FALSE,
   if (latlong) {
     dat <- cholera::latlong.regular.cases[, c("x", "y")]
   } else {
-    dat <- cholera::regular.cases  
+    dat <- cholera::regular.cases
   }
 
   d <- stats::dist(dat[vertices, ])
-  distances <- data.frame(t(utils::combn(vertices, 2)), c(d),
-    stringsAsFactors = FALSE)
-  names(distances) <- c("a", "b", "dist")
-  distances$pathID <- paste0(distances$a, "-", distances$b)
-  distances$rev.pathID <- paste0(distances$b, "-", distances$a)
   tsp <- TSP::TSP(d, labels = vertices)
   soln <- TSP::solve_TSP(tsp, method = tsp.method)
   names(soln)
