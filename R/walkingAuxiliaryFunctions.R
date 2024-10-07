@@ -664,3 +664,7 @@ splitOutcomes <- function(x, splits.segs, sim.proj, splits, splits.pump) {
 
   output
 }
+
+index0 <- function(x) {
+  stats::setNames(data.frame(t(utils::combn(length(x), 2))), c("v1", "v2"))
+}

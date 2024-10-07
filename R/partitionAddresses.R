@@ -94,8 +94,7 @@ partitionAddresses <- function(inter.point.dist = 0.15) {
 #' @noRd
 
 thresholdAddressGraph <- function(inter.point.dist = 0.15) {
-  idx <- data.frame(t(utils::combn(cholera::fatalities.address$anchor, 2)))
-  names(idx) <- c("v1", "v2")
+  idx <- index0(cholera::fatalities.address$anchor)
   d <- stats::dist(cholera::fatalities.address[, c("x", "y")])
   addr.dist <- data.frame(idx, d = c(d))
   overlap <- addr.dist[addr.dist$d <= inter.point.dist, ]

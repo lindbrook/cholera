@@ -1,3 +1,8 @@
+### cholera 0.8.0.9470
+
+- amend/use index0().
+
+
 ### cholera 0.8.0.9469
 
 - remove unused code in travelingSalesman().

@@ -237,8 +237,7 @@ ntupleOpenClosed <- function(ntuple, subgraphs) {
 }
 
 thresholdOrthoAddressGraph <- function(inter.point.dist = 0.15) {
-  idx <- data.frame(t(utils::combn(cholera::fatalities.address$anchor, 2)))
-  names(idx) <- c("v1", "v2")
+  idx <- index0(cholera::fatalities.address$anchor)
   sel <- cholera::ortho.proj$case %in% cholera::fatalities.address$anchor
   d <- stats::dist(cholera::ortho.proj[sel, c("x.proj", "y.proj")])
   addr.dist <- data.frame(idx, d = c(d))
