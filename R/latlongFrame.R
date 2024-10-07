@@ -94,8 +94,7 @@ thresholdFrameGraph <- function(inter.point.dist = 0.15) {
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
   dat$point.id <- paste0(dat$x, "-", dat$y)
   dat <- dat[!duplicated(dat$point.id), ]
-  idx <- data.frame(t(utils::combn(dat$id, 2)))
-  names(idx) <- c("v1", "v2")
+  idx <- index0(dat$id)
   d <- stats::dist(dat[, c("x", "y")])
   frame.pt.dist <- data.frame(idx, d = c(d))
   frame.pt.dist <- frame.pt.dist[frame.pt.dist$d <= inter.point.dist, ]
@@ -115,8 +114,7 @@ partitionFrame <- function(inter.point.dist = 0.15) {
   dat$point.id <- paste0(dat$x, "-", dat$y)
   dat <- dat[!duplicated(dat$point.id), ]
 
-  idx <- data.frame(t(utils::combn(dat$id, 2)))
-  names(idx) <- c("v1", "v2")
+  idx <- index0(dat$id)
   d <- stats::dist(dat[, c("x", "y")])
   frame.pt.dist <- data.frame(idx, d = c(d))
   frame.pt.dist <- frame.pt.dist[frame.pt.dist$d <= inter.point.dist, ]

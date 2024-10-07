@@ -21,8 +21,7 @@ thresholdFatalitiesGraph <- function(inter.point.dist = 0.15) {
 fatalitiesGraphData <- function(inter.point.dist = 0.15) {
   sel <- !cholera::fatalities$case %in% cholera::fatalities.address$anchor
   dat <- cholera::fatalities[sel, ]
-  idx <- data.frame(t(utils::combn(dat$case, 2)))
-  names(idx) <- c("v1", "v2")
+  idx <- index0(dat$case)
   d <- stats::dist(dat[, c("x", "y")])
   fatality.dist <- data.frame(idx, d = c(d))
   proximate <- fatality.dist[fatality.dist$d <= inter.point.dist, ]

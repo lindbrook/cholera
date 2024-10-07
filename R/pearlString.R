@@ -71,8 +71,6 @@ travelingSalesman <- function(vertices, latlong = FALSE,
   names(soln)
 }
 
-index0 <- function(x) as.data.frame(t(utils::combn(length(x), 2)))
-
 ## diagnostic plots ##
 
 #' Plot periphery cases.

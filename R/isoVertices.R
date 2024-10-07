@@ -42,7 +42,7 @@ iso_vertices <- function(i, isobands, pump.dist, ortho.dist, diag.dist) {
   d <- c(stats::dist(cholera::regular.cases[vertices, ]))
   d <- stats::setNames(as.data.frame(d), "d")
   idx <- index0(vertices)
-  distance <- data.frame(v1 = vertices[idx$V1], v2 = vertices[idx$V2],
+  distance <- data.frame(v1 = vertices[idx$v1], v2 = vertices[idx$v2],
     d = signif(d), stringsAsFactors = FALSE)
 
   adjacency <- distance[distance$d == ortho.dist | distance$d == diag.dist, ]
