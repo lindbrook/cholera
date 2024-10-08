@@ -1,3 +1,8 @@
+### cholera 0.8.0.9471
+
+- add addNeighborhoodWalkingLatlong() prototype.
+
+
 ### cholera 0.8.0.9470
 
 - amend/use index0().
