@@ -1,3 +1,8 @@
+### cholera 0.8.0.9472
+
+- add pump/street name to output of nearestPump(latlong = TRUE)$distance.
+
+
 ### cholera 0.8.0.9471
 
 - add addNeighborhoodWalkingLatlong() prototype.
