@@ -121,8 +121,16 @@ nearestPumpLatlong <- function(pump.select = NULL, metric = "walking",
     path.data <- latlong_pathData(dat, p.sel, case.set, vestry, weighted, cores)
     walking.time <- walkingTime(path.data$distance, time.unit = time.unit,
       walking.speed = walking.speed)
+
+    pump.name <- path.data$pump
+
+    for (p in pump.data$id) {
+      pump.name[pump.name == p] <- pump.data[pump.data$id == p, "street"]
+    }
+
     distance <- data.frame(case = path.data$case, pump = path.data$pump,
-      distance = path.data$distance, time = walking.time)
+      pump.name = pump.name, distance = path.data$distance, time = walking.time)
+
     out <- list(neigh.data = dat, distance = distance, path = path.data$path)
   }
   out
