@@ -22,6 +22,24 @@ auditEdge <- function(p, edges, output = "logical") {
   }
 }
 
+identifyEdge <- function(p, edges, output = "logical") {
+  if (output == "logical") {
+    vapply(seq_along(p[-1]), function(i) {
+      ab <- edges$node1 %in% p[i] & edges$node2 %in% p[i + 1]
+      ba <- edges$node2 %in% p[i] & edges$node1 %in% p[i + 1]
+      which(ab | ba)
+    }, numeric(1L))
+  } else if (output == "id2") {
+    vapply(seq_along(p[-1]), function(i) {
+      ab <- edges$node1 %in% p[i] & edges$node2 %in% p[i + 1]
+      ba <- edges$node2 %in% p[i] & edges$node1 %in% p[i + 1]
+      edges[which(ab | ba), "id2"]
+    }, character(1L))
+  } else {
+    stop('"output" must either "logical" or "id2".')
+  }
+}
+
 checkSegment <- function(s, dat, edges, p.node, sub.edge = FALSE) {
   if (sub.edge) {
     s.data <- edges[edges$id2 == s, ]
