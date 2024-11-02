@@ -5,31 +5,21 @@
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected" or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
-#' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @param latlong Logical.
 #' @export
 
 walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  case.set = "observed", multi.core = TRUE, dev.mode = FALSE, latlong = FALSE) {
+  case.set = "observed", latlong = FALSE) {
 
-  cores <- multiCore(multi.core)
-  win.exception <- .Platform$OS.type == "windows" & cores > 1
-  if (win.exception) cores <- 1L
+  if (case.set %in% c("observed", "expected", "snow") == FALSE) {
+    stop('case.set must be "observed", "expected" or "snow".', call. = FALSE)
+  }
 
   if (vestry) {
     pump.data <- cholera::pumps.vestry
   } else {
     pump.data <- cholera::pumps
   }
-
-  p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
-
-  if (case.set %in% c("observed", "expected", "snow") == FALSE) {
-    stop('case.set must be "observed", "expected" or "snow".', call. = FALSE)
-  }
-
-  snow.colors <- snowColors(vestry = vestry)
 
   dat <- neighborhoodDataB(case.set = case.set, vestry = vestry,
     latlong = latlong)
@@ -42,6 +32,8 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   case.data <- nodes[nodes$case != 0, ]
   case.data <- case.data[order(case.data$case), ]
   case <- case.data$case
+
+  p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
   ds <- lapply(case, function(x) {
     igraph::distances(graph = g,
@@ -85,7 +77,7 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
               neigh.edges = neigh.edges,
               case.set = case.set,
               p.sel = p.sel,
-              snow.colors = snow.colors,
+              snow.colors = snowColors(vestry = vestry),
               pump.select = pump.select,
               latlong = latlong)
 
@@ -161,12 +153,10 @@ plot.walkingB <- function(x, type = "roads", tsp.method = "repetitive_nn",
   if (is.null(x$pump.select)) {
     title(main = "Pump Neighborhoods: Walking")
   } else {
-    if (length(x$pump.select) > 1) {
-      title(main = paste0("Pump Neighborhoods: Walking", "\n", "Pumps ",
-        paste(sort(x$pump.select), collapse = ", ")))
-    } else if (length(x$pump.select) == 1) {
-      title(main = paste0("Pump Neighborhoods: Walking", "\n", "Pump ",
-        paste(sort(x$pump.select), collapse = ", ")))
-    }
+    if (length(x$pump.select) > 1) pmp <- "Pumps "
+    else if (length(x$pump.select) == 1) pmp <- "Pump "
+
+    title(main = paste0("Pump Neighborhoods: Walking", "\n", pmp,
+      paste(sort(x$pump.select), collapse = ", ")))
   }
 }

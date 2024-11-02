@@ -1,3 +1,8 @@
+### cholera 0.8.0.9474
+
+- clean walkingB() code.
+
+
 ### cholera 0.8.0.9473
 
 - add walkingB() prototype.
