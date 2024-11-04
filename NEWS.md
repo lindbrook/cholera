@@ -1,3 +1,8 @@
+### cholera 0.8.0.9475
+
+- limit computation of paths to case.set == "observed"; re-enable multi.core.
+
+
 ### cholera 0.8.0.9474
 
 - clean walkingB() code.
