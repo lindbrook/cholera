@@ -6,14 +6,18 @@
 #' @param weighted Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param case.set Character. "observed", "expected" or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
 #' @param latlong Logical.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 
 walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  case.set = "observed", latlong = FALSE) {
+  case.set = "observed", latlong = FALSE, multi.core = TRUE) {
 
   if (case.set %in% c("observed", "expected", "snow") == FALSE) {
     stop('case.set must be "observed", "expected" or "snow".', call. = FALSE)
   }
+
+  cores <- multiCore(multi.core)
+  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
 
   if (vestry) {
     pump.data <- cholera::pumps.vestry
@@ -35,51 +39,65 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
   p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
-  ds <- lapply(case, function(x) {
+  ds <- parallel::mclapply(case, function(x) {
     igraph::distances(graph = g,
                       v = nodes[nodes$case == x, "node"],
                       to = nodes.pump[nodes.pump$pump %in% p.sel, "node"],
                       weights = edges$d)
-  })
+  }, mc.cores = cores)
 
   d <- vapply(ds, min, numeric(1L))
 
   pump <- p.sel[vapply(ds, which.min, numeric(1L))]
   pump.nm <- paste0("p", sort(unique(pump)))
 
-  paths <- lapply(seq_along(case), function(i) {
-    igraph::shortest_paths(graph = g,
-                           from = nodes[nodes$case == case[i], "node"],
-                           to = nodes.pump[nodes.pump$pump == pump[i], "node"],
-                           weights = edges$d)$vpath
-  })
+  nr.pump <- data.frame(case = case, pump = pump, distance = d)
 
-  names(paths) <- case
+  ## compute paths for case.set == "observed" ##
+  if (case.set == "observed" | case.set == "snow") {
+    paths <- parallel::mclapply(seq_along(case), function(i) {
+      igraph::shortest_paths(graph = g,
+        from = nodes[nodes$case == case[i], "node"],
+        to = nodes.pump[nodes.pump$pump == pump[i], "node"],
+        weights = edges$d)$vpath
+    }, mc.cores = cores)
 
-  pump.case <- lapply(sort(unique(pump)), function(x) case[pump %in% x])
-  names(pump.case) <- pump.nm
+    names(paths) <- case
 
-  path.pump <- lapply(sort(unique(pump)), function(x) paths[pump %in% x])
-  names(path.pump) <- pump.nm
+    case.pump <- lapply(sort(unique(pump)), function(x) case[pump %in% x])
+    names(case.pump) <- pump.nm
 
-  neigh.edges <- lapply(names(path.pump), function(nm) {
-    p.neigh <- path.pump[[nm]]
-    p <- lapply(p.neigh, function(x) names(unlist(x)))
-    edge.id <- lapply(p, identifyEdge, edges)
-    edges[unique(unlist(edge.id)), "id2"]
-  })
+    path.pump <- lapply(sort(unique(pump)), function(x) paths[pump %in% x])
+    names(path.pump) <- pump.nm
 
-  names(neigh.edges) <- pump.nm
+    neigh.edges <- lapply(names(path.pump), function(nm) {
+      p.neigh <- path.pump[[nm]]
+      p <- lapply(p.neigh, function(x) names(unlist(x)))
+      edge.id <- parallel::mclapply(p, identifyEdge, edges, mc.cores = cores)
+      edges[unique(unlist(edge.id)), "id2"]
+    })
 
-  out <- list(pump.case = pump.case,
-              pump.data = pump.data,
-              edges = edges,
-              neigh.edges = neigh.edges,
-              case.set = case.set,
-              p.sel = p.sel,
-              snow.colors = snowColors(vestry = vestry),
-              pump.select = pump.select,
-              latlong = latlong)
+    names(neigh.edges) <- pump.nm
+
+    out <- list(case.pump = case.pump,
+                pump.data = pump.data,
+                edges = edges,
+                neigh.edges = neigh.edges,
+                case.set = case.set,
+                p.sel = p.sel,
+                snow.colors = snowColors(vestry = vestry),
+                pump.select = pump.select,
+                latlong = latlong)
+  } else {
+    out <- list(nr.pump = nr.pump,
+                pump.data = pump.data,
+                case.set = case.set,
+                p.sel = p.sel,
+                snow.colors = snowColors(vestry = vestry),
+                pump.select = pump.select,
+                latlong = latlong)
+
+  }
 
   class(out) <- "walkingB"
   out
@@ -121,40 +139,45 @@ plot.walkingB <- function(x, type = "roads", tsp.method = "repetitive_nn",
 
   snowMap(add.cases = FALSE, add.pumps = FALSE, latlong = x$latlong)
 
-  invisible(lapply(names(neigh.edges), function(nm) {
-    n.edges <- edges[edges$id2 %in% neigh.edges[[nm]], ]
-    segments(n.edges[, seg.vars[1]], n.edges[, seg.vars[2]],
-             n.edges[, seg.vars[3]], n.edges[, seg.vars[4]],
-             lwd = 2, col = x$snow.colors[nm])
-  }))
+  if (x$case.set == "observed") {
+    invisible(lapply(names(neigh.edges), function(nm) {
+      n.edges <- edges[edges$id2 %in% neigh.edges[[nm]], ]
+      segments(n.edges[, seg.vars[1]], n.edges[, seg.vars[2]],
+               n.edges[, seg.vars[3]], n.edges[, seg.vars[4]],
+               lwd = 2, col = x$snow.colors[nm])
+    }))
 
-  invisible(lapply(names(x$pump.case), function(nm) {
-    sel <- cholera::fatalities.address$anchor %in% x$pump.case[[nm]]
-    points(cholera::fatalities.address[sel, vars], pch = 20,
-      cex = 0.75, col = x$snow.colors[nm])
-  }))
+    invisible(lapply(names(x$case.pump), function(nm) {
+      sel <- cholera::fatalities.address$anchor %in% x$case.pump[[nm]]
+      points(cholera::fatalities.address[sel, vars], pch = 20,
+             cex = 0.75, col = x$snow.colors[nm])
+    }))
 
-  if (is.null(x$pump.select)) {
-    points(x$pump.data[, vars], pch = 24, lwd = 2, col = x$snow.colors)
-    text(x$pump.data[, vars], pos = 1, cex = 0.9,
-      labels = paste0("p", x$pump.data$id))
-  } else {
-    obs <- x$pump.data$id %in% x$p.sel
-    pos.data <- x$pump.data[obs, vars]
-    neg.data <- x$pump.data[!obs, vars]
-    pos.labels <- paste0("p", x$pump.data$id[obs])
-    neg.labels <- paste0("p", x$pump.data$id[!obs])
-    points(pos.data, pch = 24, lwd = 2, col = x$snow.colors[obs])
-    points(neg.data, pch = 24, lwd = 1, col = "gray")
-    text(pos.data, pos = 1, cex = 0.9, labels = pos.labels)
-    text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
+    if (is.null(x$pump.select)) {
+      points(x$pump.data[, vars], pch = 24, lwd = 2, col = x$snow.colors)
+      text(x$pump.data[, vars], pos = 1, cex = 0.9,
+           labels = paste0("p", x$pump.data$id))
+    } else {
+      obs <- x$pump.data$id %in% x$p.sel
+      pos.data <- x$pump.data[obs, vars]
+      neg.data <- x$pump.data[!obs, vars]
+      pos.labels <- paste0("p", x$pump.data$id[obs])
+      neg.labels <- paste0("p", x$pump.data$id[!obs])
+      points(pos.data, pch = 24, lwd = 2, col = x$snow.colors[obs])
+      points(neg.data, pch = 24, lwd = 1, col = "gray")
+      text(pos.data, pos = 1, cex = 0.9, labels = pos.labels)
+      text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
+    }
   }
 
   if (is.null(x$pump.select)) {
     title(main = "Pump Neighborhoods: Walking")
   } else {
-    if (length(x$pump.select) > 1) pmp <- "Pumps "
-    else if (length(x$pump.select) == 1) pmp <- "Pump "
+    if (length(x$pump.select) > 1) {
+      pmp <- "Pumps "
+    } else if (length(x$pump.select) == 1) {
+      pmp <- "Pump "
+    }
 
     title(main = paste0("Pump Neighborhoods: Walking", "\n", pmp,
       paste(sort(x$pump.select), collapse = ", ")))
