@@ -1,7 +1,7 @@
 ### cholera 0.8.0.9476
 
 - add code for 'area.points' and 'area.polygons' in 
-  plot.walkingB(case.set = "expected")
+  plot.walkingB(case.set = "expected").
 - return 'case.pump' with walkingB(case.set = "expected").
 
 
