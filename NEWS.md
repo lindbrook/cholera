@@ -1,3 +1,10 @@
+### cholera 0.8.0.9476
+
+- add code for 'area.points' and 'area.polygons' in 
+  plot.walkingB(case.set = "expected")
+- return 'case.pump' with walkingB(case.set = "expected").
+
+
 ### cholera 0.8.0.9475
 
 - limit computation of paths to case.set == "observed"; re-enable multi.core.

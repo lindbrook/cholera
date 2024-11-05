@@ -172,6 +172,43 @@ plot.walkingB <- function(x, type = "roads", tsp.method = "repetitive_nn",
       text(pos.data, pos = 1, cex = 0.9, labels = pos.labels)
       text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
     }
+
+  } else if (x$case.set == "expected") {
+    snowMap(add.cases = FALSE, add.pumps = FALSE, add.roads = FALSE)
+
+    if (x$latlong) {
+      reg.cases <- cholera::latlong.regular.cases
+    } else {
+      reg.cases <- cholera::regular.cases
+    }
+
+    if (type == "roads") {
+      if (x$latlong) {
+        sim.proj <- cholera::latlong.sim.ortho.proj
+      } else {
+        sim.proj <- cholera::sim.ortho.proj
+      }
+      sim.proj.segs <- unique(sim.proj$road.segment)
+
+    } else if (type == "area.points") {
+      points(reg.cases[x$nr.pump$case, vars], pch = 15, cex = 1.25,
+        col = x$snow.colors[paste0("p", x$nr.pump$pump)])
+      addRoads(col = "black", latlong = x$latlong)
+
+    } else if (type == "area.polygons") {
+      neighborhood.cases <- x$case.pump
+      periphery.cases <- parallel::mclapply(neighborhood.cases,
+        peripheryCases, mc.cores = x$cores)
+      pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
+        tsp.method = tsp.method, mc.cores = x$cores)
+
+      addRoads(col = "black", latlong = x$latlong)
+
+      invisible(lapply(names(pearl.string), function(nm) {
+        polygon(cholera::regular.cases[pearl.string[[nm]], ],
+          col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = 2/3))
+      }))
+    }
   }
 
   if (is.null(x$pump.select)) {
