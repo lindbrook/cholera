@@ -234,7 +234,7 @@ plot.walking <- function(x, type = "roads", tsp.method = "repetitive_nn",
         parallel::stopCluster(cl)
       } else {
         periphery.cases <- parallel::mclapply(neighborhood.cases,
-          peripheryCases, mc.cores = x$core)
+          peripheryCases, mc.cores = x$cores)
         pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
           tsp.method = tsp.method, mc.cores = x$cores)
       }
