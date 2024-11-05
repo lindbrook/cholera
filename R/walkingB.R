@@ -53,6 +53,9 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
   nr.pump <- data.frame(case = case, pump = pump, distance = d)
 
+  case.pump <- lapply(sort(unique(pump)), function(x) case[pump %in% x])
+  names(case.pump) <- pump.nm
+
   ## compute paths for case.set == "observed" ##
   if (case.set == "observed" | case.set == "snow") {
     paths <- parallel::mclapply(seq_along(case), function(i) {
@@ -89,7 +92,8 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
                 pump.select = pump.select,
                 latlong = latlong)
   } else {
-    out <- list(nr.pump = nr.pump,
+    out <- list(case.pump = case.pump,
+                nr.pump = nr.pump,
                 pump.data = pump.data,
                 case.set = case.set,
                 p.sel = p.sel,
@@ -149,14 +153,14 @@ plot.walkingB <- function(x, type = "roads", tsp.method = "repetitive_nn",
 
     invisible(lapply(names(x$case.pump), function(nm) {
       sel <- cholera::fatalities.address$anchor %in% x$case.pump[[nm]]
-      points(cholera::fatalities.address[sel, vars], pch = 20,
-             cex = 0.75, col = x$snow.colors[nm])
+      points(cholera::fatalities.address[sel, vars], pch = 20, cex = 0.75,
+        col = x$snow.colors[nm])
     }))
 
     if (is.null(x$pump.select)) {
       points(x$pump.data[, vars], pch = 24, lwd = 2, col = x$snow.colors)
       text(x$pump.data[, vars], pos = 1, cex = 0.9,
-           labels = paste0("p", x$pump.data$id))
+        labels = paste0("p", x$p.sel))
     } else {
       obs <- x$pump.data$id %in% x$p.sel
       pos.data <- x$pump.data[obs, vars]
@@ -167,6 +171,43 @@ plot.walkingB <- function(x, type = "roads", tsp.method = "repetitive_nn",
       points(neg.data, pch = 24, lwd = 1, col = "gray")
       text(pos.data, pos = 1, cex = 0.9, labels = pos.labels)
       text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
+    }
+
+  } else if (x$case.set == "expected") {
+    snowMap(add.cases = FALSE, add.pumps = FALSE, add.roads = FALSE)
+
+    if (x$latlong) {
+      reg.cases <- cholera::latlong.regular.cases
+    } else {
+      reg.cases <- cholera::regular.cases
+    }
+
+    if (type == "roads") {
+      if (x$latlong) {
+        sim.proj <- cholera::latlong.sim.ortho.proj
+      } else {
+        sim.proj <- cholera::sim.ortho.proj
+      }
+      sim.proj.segs <- unique(sim.proj$road.segment)
+
+    } else if (type == "area.points") {
+      points(reg.cases[x$nr.pump$case, vars], pch = 15, cex = 1.25,
+        col = x$snow.colors[paste0("p", x$nr.pump$pump)])
+      addRoads(col = "black", latlong = x$latlong)
+
+    } else if (type == "area.polygons") {
+      neighborhood.cases <- x$case.pump
+      periphery.cases <- parallel::mclapply(neighborhood.cases,
+        peripheryCases, mc.cores = x$cores)
+      pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
+        tsp.method = tsp.method, mc.cores = x$cores)
+
+      addRoads(col = "black", latlong = x$latlong)
+
+      invisible(lapply(names(pearl.string), function(nm) {
+        polygon(cholera::regular.cases[pearl.string[[nm]], ],
+          col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = 2/3))
+      }))
     }
   }
 
