@@ -1,3 +1,8 @@
+### cholera 0.8.0.9477
+
+- return 'cores' with walkingB().
+
+
 ### cholera 0.8.0.9476
 
 - add code for 'area.points' and 'area.polygons' in 

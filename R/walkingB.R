@@ -90,7 +90,8 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
                 p.sel = p.sel,
                 snow.colors = snowColors(vestry = vestry),
                 pump.select = pump.select,
-                latlong = latlong)
+                latlong = latlong,
+                cores = cores)
   } else {
     out <- list(case.pump = case.pump,
                 nr.pump = nr.pump,
@@ -99,8 +100,8 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
                 p.sel = p.sel,
                 snow.colors = snowColors(vestry = vestry),
                 pump.select = pump.select,
-                latlong = latlong)
-
+                latlong = latlong,
+                cores = cores)
   }
 
   class(out) <- "walkingB"
