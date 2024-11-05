@@ -153,14 +153,14 @@ plot.walkingB <- function(x, type = "roads", tsp.method = "repetitive_nn",
 
     invisible(lapply(names(x$case.pump), function(nm) {
       sel <- cholera::fatalities.address$anchor %in% x$case.pump[[nm]]
-      points(cholera::fatalities.address[sel, vars], pch = 20,
-             cex = 0.75, col = x$snow.colors[nm])
+      points(cholera::fatalities.address[sel, vars], pch = 20, cex = 0.75,
+        col = x$snow.colors[nm])
     }))
 
     if (is.null(x$pump.select)) {
       points(x$pump.data[, vars], pch = 24, lwd = 2, col = x$snow.colors)
       text(x$pump.data[, vars], pos = 1, cex = 0.9,
-           labels = paste0("p", x$pump.data$id))
+        labels = paste0("p", x$p.sel))
     } else {
       obs <- x$pump.data$id %in% x$p.sel
       pos.data <- x$pump.data[obs, vars]
