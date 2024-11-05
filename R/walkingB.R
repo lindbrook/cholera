@@ -53,6 +53,9 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
   nr.pump <- data.frame(case = case, pump = pump, distance = d)
 
+  case.pump <- lapply(sort(unique(pump)), function(x) case[pump %in% x])
+  names(case.pump) <- pump.nm
+
   ## compute paths for case.set == "observed" ##
   if (case.set == "observed" | case.set == "snow") {
     paths <- parallel::mclapply(seq_along(case), function(i) {
@@ -89,7 +92,8 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
                 pump.select = pump.select,
                 latlong = latlong)
   } else {
-    out <- list(nr.pump = nr.pump,
+    out <- list(case.pump = case.pump,
+                nr.pump = nr.pump,
                 pump.data = pump.data,
                 case.set = case.set,
                 p.sel = p.sel,
