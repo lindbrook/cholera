@@ -128,7 +128,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
       if (latlong) nodes <- embed.data[order(embed.data$lon, embed.data$lat), ]
       else nodes <- embed.data[order(embed.data$x, embed.data$y), ]
 
-      tmp <- nodes[, vars]
+      tmp <- unique(nodes[, vars])
       tmp <- cbind(tmp[-nrow(tmp), ], tmp[-1, ])
       coord.nms <- paste0(names(tmp), c(rep(1, 2), rep(2, 2)))
       names(tmp) <- coord.nms

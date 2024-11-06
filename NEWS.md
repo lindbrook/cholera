@@ -1,3 +1,8 @@
+### cholera 0.8.0.9478
+
+- fix duplicate road segment endpoints (self-loops) in embedNodes().
+
+
 ### cholera 0.8.0.9477
 
 - return 'cores' with walkingB().
