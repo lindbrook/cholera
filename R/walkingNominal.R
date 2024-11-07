@@ -34,47 +34,66 @@ walkingNominal <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
                               multi.core = cores,
                               dev.mode = dev.mode)
 
-  nearest.dist <- nearest.data$distance
-  nearest.path <- nearest.data$path
-
   if (case.set == "snow") {
     sel <- cholera::snow.neighborhood %in% cholera::fatalities.address$anchor
     snow.anchors <- cholera::snow.neighborhood[sel]
-    nearest.pump <- data.frame(case = snow.anchors, pump = nearest.dist$pump)
+    nearest.pump <- data.frame(case = snow.anchors,
+                               pump = nearest.data$distance$pump)
+
   } else if (case.set == "observed") {
-    nearest.pump <- data.frame(case = cholera::fatalities.address$anchor,
-                               pump = nearest.dist$pump)
+    nearest.pump <- nearest.data$distance[, c("case", "pump")]
+    pump.id <- sort(unique(nearest.pump$pump))
+
+    neighborhood.cases <- lapply(pump.id, function(p) {
+      nearest.pump[nearest.pump$pump == p, "case"]
+    })
+
+    names(neighborhood.cases) <- pump.id
+
+    nearest.path <- nearest.data$path
+
+    neighborhood.paths <- lapply(pump.id, function(p) {
+      n.case <- neighborhood.cases[[paste(p)]]
+      nearest.path[which(nearest.pump$case %in% n.case)]
+    })
+
+    names(neighborhood.paths) <- pump.id
+    names(neighborhood.cases) <- paste0("p", pump.id)
+
+    out <- list(paths = neighborhood.paths,
+                cases = neighborhood.cases,
+                vestry = vestry,
+                weighted = weighted,
+                case.set = case.set,
+                pump.select = pump.select,
+                snow.colors = snow.colors,
+                pump.id = pump.id,
+                cores = cores,
+                metric = 1 / unitMeter(1),
+                dev.mode = dev.mode)
+
   } else if (case.set == "expected") {
-    nearest.pump <- data.frame(case = nearest.dist$case,
-                               pump = nearest.dist$pump)
+    nearest.pump <- nearest.data[, c("case", "pump")]
+    pump.id <- sort(unique(nearest.pump$pump))
+
+    neighborhood.cases <- lapply(pump.id, function(p) {
+      nearest.pump[nearest.pump$pump == p, "case"]
+    })
+
+    p.nm <- paste0("p", pump.id)
+    names(neighborhood.cases) <- p.nm
+
+    out <- list(cases = neighborhood.cases,
+                vestry = vestry,
+                weighted = weighted,
+                case.set = case.set,
+                pump.select = pump.select,
+                snow.colors = snow.colors,
+                pump.id = pump.id,
+                cores = cores,
+                metric = 1 / unitMeter(1),
+                dev.mode = dev.mode)
   }
-
-  pump.id <- sort(unique(nearest.dist$pump))
-
-  neighborhood.cases <- lapply(pump.id, function(p) {
-    nearest.pump[nearest.pump$pump == p, "case"]
-  })
-
-  names(neighborhood.cases) <- pump.id
-
-  neighborhood.paths <- lapply(pump.id, function(p) {
-    n.case <- neighborhood.cases[[paste(p)]]
-    nearest.path[which(nearest.pump$case %in% n.case)]
-  })
-
-  names(neighborhood.paths) <- pump.id
-
-  out <- list(paths = neighborhood.paths,
-              cases = stats::setNames(neighborhood.cases, paste0("p", pump.id)),
-              vestry = vestry,
-              weighted = weighted,
-              case.set = case.set,
-              pump.select = pump.select,
-              snow.colors = snow.colors,
-              pump.id = pump.id,
-              cores = cores,
-              metric = 1 / unitMeter(1),
-              dev.mode = dev.mode)
 
   class(out) <- "walking"
   out

@@ -1,3 +1,8 @@
+### cholera 0.8.0.9479
+
+- temp fix for "observed" and "expected" walkingNominal(case.set).
+
+
 ### cholera 0.8.0.9478
 
 - fix duplicate road segment endpoints (self-loops) in embedNodes().
