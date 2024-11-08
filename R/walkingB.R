@@ -132,18 +132,8 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 #' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. type = "roads" inspired by Shiode et. al. (2015).
 #' @export
 
-plot.walkingB <- function(x, type = "roads", tsp.method = "repetitive_nn",
+plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
   ...) {
-
-  if (type %in% c("roads", "area.points", "area.polygons") == FALSE) {
-    stop('type must be "roads", "area.points", "area.polygons".', call. = FALSE)
-  }
-
-  if (type %in% c("area.points", "area.polygons")) {
-    if (x$case.set != "expected") {
-      stop('area plots valid only when case.set = "expected".', call. = FALSE)
-    }
-  }
 
   edges <- x$edges
   neigh.edges <- x$neigh.edges
