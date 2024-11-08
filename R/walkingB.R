@@ -35,7 +35,21 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
   case.data <- nodes[nodes$case != 0, ]
   case.data <- case.data[order(case.data$case), ]
-  case <- case.data$case
+
+  # Falconberg Court and Mews: exclude cases from isolate roads without pump #
+  if (case.set == "expected") {
+    if (latlong) {
+      sim.proj <- cholera::latlong.sim.ortho.proj
+    } else {
+      sim.proj <- cholera::sim.ortho.proj
+    }
+    falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
+    sel <- sim.proj$road.segment %in% falconberg.ct.mews
+    FCM.cases <- sim.proj[sel, "case"]
+    case <- sim.proj[!sim.proj$case %in% FCM.cases, "case"]
+  } else {
+    case <- case.data$case
+  }
 
   p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 

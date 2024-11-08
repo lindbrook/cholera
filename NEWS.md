@@ -1,3 +1,8 @@
+### cholera 0.8.0.9480
+
+- add exception for Falconberg Court and Mews isolates in walkingB().
+
+
 ### cholera 0.8.0.9479
 
 - temp fix for "observed" and "expected" walkingNominal(case.set).
