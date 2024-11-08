@@ -1,3 +1,9 @@
+### cholera 0.8.0.9481
+
+- add/use pumpTokensB() prototype.
+- return 'pump.select' with walkingB().
+
+
 ### cholera 0.8.0.9480
 
 - add exception for Falconberg Court and Mews isolates in walkingB().

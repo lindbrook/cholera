@@ -213,6 +213,8 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
           col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = 2/3))
       }))
     }
+
+    pumpTokensB(x, type)
   }
 
   if (is.null(x$pump.select)) {
