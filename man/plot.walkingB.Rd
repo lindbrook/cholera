@@ -4,8 +4,8 @@
 \alias{plot.walkingB}
 \title{Plot method for walkingB().}
 \usage{
-\method{plot}{walkingB}(x, type = "roads", tsp.method = "repetitive_nn",
-  ...)
+\method{plot}{walkingB}(x, type = "area.points",
+  tsp.method = "repetitive_nn", ...)
 }
 \arguments{
 \item{x}{An object of class "walking" created by \code{walkingNominal()}.}
