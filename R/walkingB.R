@@ -25,6 +25,9 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
     pump.data <- cholera::pumps
   }
 
+  # pumps to consider or target
+  p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
+
   dat <- neighborhoodDataB(case.set = case.set, vestry = vestry,
     latlong = latlong)
 
@@ -36,22 +39,28 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   case.data <- nodes[nodes$case != 0, ]
   case.data <- case.data[order(case.data$case), ]
 
-  # Falconberg Court and Mews: exclude cases from isolate roads without pump #
+
   if (case.set == "expected") {
     if (latlong) {
       sim.proj <- cholera::latlong.sim.ortho.proj
     } else {
       sim.proj <- cholera::sim.ortho.proj
     }
+
+    # Falconberg Court and Mews: isolate roads without a pump #
     falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
     sel <- sim.proj$road.segment %in% falconberg.ct.mews
     FCM.cases <- sim.proj[sel, "case"]
     case <- sim.proj[!sim.proj$case %in% FCM.cases, "case"]
+
+    ## Adam and Eve Court: isolate with pump (#2) ##
+    sel <- cholera::road.segments$name == "Adam and Eve Court"
+    adam.eve.ct <- cholera::road.segments[sel, "id"]
+    AE.cases <- sim.proj[sim.proj$road.segment == adam.eve.ct , "case"]
+    if (!2L %in% p.sel) case <- case[!case %in% AE.cases]
   } else {
     case <- case.data$case
   }
-
-  p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
   ds <- parallel::mclapply(case, function(x) {
     igraph::distances(graph = g,
