@@ -1,3 +1,8 @@
+### cholera 0.8.0.9483
+
+- add regularCases().
+
+
 ### cholera 0.8.0.9482
 
 - add exception for Adam and Eve Court isolate in walkingB().
