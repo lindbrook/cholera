@@ -1,3 +1,8 @@
+### cholera 0.8.0.9484
+
+- amend sim.ortho.proj.
+
+
 ### cholera 0.8.0.9483
 
 - add regularCases().
