@@ -2,26 +2,24 @@
 % Please edit documentation in R/simulateFatalities.R
 \name{simulateFatalities}
 \alias{simulateFatalities}
-\title{Generate simulated fatalities.}
+\title{Project simulated fatalities onto road network}
 \usage{
-simulateFatalities(compute = FALSE, multi.core = TRUE,
-  simulated.obs = 20000L, dev.mode = FALSE)
+simulateFatalities(recompute.regular.cases = FALSE, simulated.obs = 20000L,
+  multi.core = TRUE)
 }
 \arguments{
-\item{compute}{Logical. \code{TRUE} computes data. \code{FALSE} uses pre-computed data. For replication of data used in the package,}
+\item{recompute.regular.cases}{Logical. \code{TRUE} re-computes regular data. \code{FALSE} uses pre-computed data. For replication of data used in the package.}
+
+\item{simulated.obs}{Numeric. Number of regular cases.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.}
-
-\item{simulated.obs}{Numeric. Number of sample cases.}
-
-\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
 }
 \value{
-An R list with two elements: \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}
+An R data frame: \code{\link{sim.ortho.proj}}.
 }
 \description{
-Places regularly spaced "simulated" or "expected" cases across the face of the map. The function finds the "addresses" of cases via orthogonal projection or simple proximity. These data are used to generate "expected" pump neighborhoods. The function relies on \code{sp::spsample()} and \code{sp::Polygon()}.
+Places regularly spaced "simulated" or "expected" cases across the face of the map and then finds the "addresses" of those cases via orthogonal projection or simple proximity to road graph network . These data are used to generate "expected" pump neighborhoods.
 }
 \note{
-This function is computationally intensive. With "simulated.obs" set to 20,000 simulated cases (actually generating 19,993 cases). This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}. In real world terms, the distance between of these simulated cases is approximately 6 meters.
+This function is computationally intensive. With "simulated.obs" set to 20,000 (generating 19,993 cases). This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}. In real world terms, the distance between simulated cases is approximately 6 meters.
 }
