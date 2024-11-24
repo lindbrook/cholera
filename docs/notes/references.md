@@ -1,7 +1,7 @@
 references
 ================
 lindbrook
-2024-07-30
+2024-11-23
 
 Peter Ackroyd. 2000 (2003). *London: The Biography*. New York: Anchor
 Books.
@@ -28,6 +28,9 @@ York: Longman.
 The Cholera Inquiry Committee. 1855. *Report On The Cholera Outbreak In
 The Parish Of St. James, Westminster, During The Autumn Of 1854*.
 London: John Churchill.
+
+Nadja Durbach. 2005. *Bodily Matters: The Anti-Vaccination Movement in
+England, 1853–1907*. Durham: Duke University Press.
 
 Michael Durey. 1979. *The Return of the Plague: British Society and the
 Cholera 1831-2*. London: Gill and Macmillan Humanities Press.
@@ -121,6 +124,9 @@ Karl Marx and Friedrich Engels. 1983. *Collected Works: Letters*. Vols.
 
 Deirdre Mask. 2020. *The Address Book: What Street Addresses Reveal
 about Identity, Race, Wealth, and Power*. New York: St Martin’s Griffin.
+
+Mark Miodownik. 2024. *It’s a Gas: THe Sublime and Elusive Elements That
+Expand Our World*. New York: Mariner Books.
 
 R. J. Morris. 1976. *Cholera 1832: The Social Response to An Epidemic*.
 New York: Holmes & Meier.
