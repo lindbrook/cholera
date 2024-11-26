@@ -1,6 +1,12 @@
+### cholera 0.8.0.9486
+
+- start simulated orthogonal projection cases at 10,001.
+
+
 ### cholera 0.8.0.9485
 
 - add new simulateFatalities() prototype.
+- amend simulateFatalities() documentation.
 
 
 ### cholera 0.8.0.9484
