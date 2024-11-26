@@ -1,8 +1,8 @@
 #' Project simulated fatalities onto road network
 #'
-#' Places regularly spaced "simulated" or "expected" cases across the face of the map and then finds the "addresses" of those cases via orthogonal projection or simple proximity to road graph network . These data are used to generate "expected" pump neighborhoods.
+#' Places regularly spaced "simulated" or "expected" cases across the face of the map and then finds the "addresses" of those cases via orthogonal projection or simple proximity to road graph network. These data are used to generate "expected" pump neighborhoods.
 #' @param recompute.regular.cases Logical. \code{TRUE} re-computes regular data. \code{FALSE} uses pre-computed data. For replication of data used in the package.
-#' @param simulated.obs Numeric. Number of regular cases.
+#' @param simulated.obs Numeric. Number of regular cases. For use with \code{recompute.regular.cases = TRUE}.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.
 #' @return An R data frame: \code{\link{sim.ortho.proj}}.
 #' @note This function is computationally intensive. With "simulated.obs" set to 20,000 (generating 19,993 cases). This function documents the code that generates \code{\link{sim.ortho.proj}} and \code{\link{regular.cases}}. In real world terms, the distance between simulated cases is approximately 6 meters.
