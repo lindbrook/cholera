@@ -1,3 +1,8 @@
+### cholera 0.8.0.9487
+
+- add/use cholera::meter.to.yard (1.093613).
+
+
 ### cholera 0.8.0.9486
 
 - start simulated orthogonal projection cases at 10,001.

@@ -543,3 +543,12 @@
 #'  }
 #' @docType data
 "landmark.squaresB"
+
+#' Meter to yard conversion factor.
+#'
+#' @format A vector of length one.
+#'  \describe{
+#'     \item{\code{meter.to.yard}}{conversion factor = 1.093613}
+#'  }
+#' @docType data
+"meter.to.yard"
