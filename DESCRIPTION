@@ -11,7 +11,7 @@ URL: https://github.com/lindbrook/cholera
 BugReports: https://github.com/lindbrook/cholera/issues
 License: GPL (>= 2)
 LazyData: true
-Depends: R (>= 3.4)
+Depends: R (>= 3.5)
 Imports: curl,
          deldir (>= 1.0-2),
          elevatr,
