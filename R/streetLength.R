@@ -56,7 +56,7 @@ streetLength <- function(road = "Oxford Street", distance.unit = "meter",
     if (distance.unit == "meter") {
       sum(distances)
     } else if (distance.unit == "yard") {
-      1.093613 * sum(distances)
+      cholera::meter.to.yard * sum(distances)
     }
   } else {
     distances <- vapply(dat$id, function(i) {
