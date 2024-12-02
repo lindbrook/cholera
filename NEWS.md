@@ -1,3 +1,8 @@
+### cholera 0.8.0.9489
+
+- amend/fix validateCase().
+
+
 ### cholera 0.8.0.9488
 
 - temp fix for landmarks in longTitle() and mapDataRange().
