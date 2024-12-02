@@ -1,3 +1,8 @@
+### cholera 0.8.0.9488
+
+- temp fix for landmarks in longTitle() and mapDataRange().
+
+
 ### cholera 0.8.0.9487
 
 - add/use cholera::meter.to.yard (1.093613).
