@@ -112,6 +112,14 @@ validateCase <- function(x, case.set, include.landmarks) {
         out <- case.id
         out.nm <- case.nm
     } else if (is.numeric(x)) {
+      if (any(!x %in% case.id)) {
+        if (!include.landmarks) {
+          stop('For case.set = "observed", ', case.msg, call. = FALSE)
+        } else {
+          stop('For case.set = "observed" and include.landmarks = TRUE, ',
+            case.msg, "\n", lndmrk.msg, call. = FALSE)
+        }
+      }
       if (all(abs(x) %in% case.id)) {
         if (all(x > 0)) {
           sel <- case.id %in% x
@@ -192,7 +200,22 @@ validateCase <- function(x, case.set, include.landmarks) {
 
   } else if (case.set == "expected") {
     case.id <- cholera::sim.ortho.proj$case # equiv. to latlong.sim.ortho.proj
-    case.msg <- paste0("Case IDs range from 1 to ", length(case.id), ".")
+    case.nm <- paste(case.id)
+    case.msg <- paste0("Case IDs range from 10001 to ", max(case.id), ".")
+
+    if (include.landmarks) {
+      vars.lndmrk <- c("case", "name")
+      lndmrk.sq <- cholera::landmark.squaresB[, vars.lndmrk]
+      lndmrk.etc <- cholera::landmarksB[, vars.lndmrk]
+      lndmrk <- rbind(lndmrk.sq, lndmrk.etc)
+
+      lndmrk.msg1 <- "Landmark IDs range from "
+      lndmrk.msg2 <- paste0(min(lndmrk$case), ":", max(lndmrk$case), ".")
+      lndmrk.msg <- paste0(lndmrk.msg1, lndmrk.msg2)
+
+      case.id <- c(case.id, lndmrk$case)
+      case.nm <- c(case.nm, lndmrk$name)
+    }
 
     if (is.null(x)) {
       out <- case.id
@@ -201,7 +224,14 @@ validateCase <- function(x, case.set, include.landmarks) {
       x <- ifelse(!is.numeric(x), as.numeric(x), x)
 
       if (all(!x %in% case.id)) {
-        stop(case.msg)
+        if (any(!x %in% case.id)) {
+          if (!include.landmarks) {
+            stop('For case.set = "expected", ', case.msg, call. = FALSE)
+          } else {
+            stop('For case.set = "expected" and include.landmarks = TRUE, ',
+              case.msg, "\n", lndmrk.msg, call. = FALSE)
+          }
+        }
       } else if (any(!x %in% case.id)) {
         dropped <- paste(x[!x %in% case.id], collapse = ", ")
         message("Note: ", case.msg, " Invalid IDs (", dropped, ") dropped.")
