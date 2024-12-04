@@ -197,7 +197,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
       edges$node2 <- paste0(edges$x2, "_&_", edges$y2)
       edges$d <- vapply(seq_len(nrow(edges)), function(i) {
         stats::dist(rbind(stats::setNames(edges[i, paste0(vars, 1)], vars),
-                          stats::setNames(edges[i, paste0(vars, 1)], vars)))
+                          stats::setNames(edges[i, paste0(vars, 2)], vars)))
       }, numeric(1L))
     }
 
