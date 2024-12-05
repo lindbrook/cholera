@@ -1,3 +1,8 @@
+### cholera 0.8.0.9491
+
+- add edgesLength() to embedNodes.R.
+
+
 ### cholera 0.8.0.9490
 
 - fix edge distances in embedNodes() with all embeddings = FALSE.
