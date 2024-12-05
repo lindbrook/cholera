@@ -322,3 +322,15 @@ orthoPumpsC <- function(vestry = TRUE, latlong = FALSE) {
   }
   out
 }
+
+edgesLength <- function(e, multi.core = TRUE) {
+  cores <- multiCore(multi.core)
+  vars <- c("x", "y")
+  ones <- stats::setNames(e[, paste0(vars, 1)], vars)
+  twos <- stats::setNames(e[, paste0(vars, 2)], vars)
+  idx <- seq_along(ones$x)
+  e$d <- unlist(parallel::mclapply(idx, function(i) {
+    stats::dist(rbind(ones[i, ], twos[i, ]))
+  }, mc.cores = cores))
+  e
+}
