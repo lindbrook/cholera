@@ -1,3 +1,8 @@
+### cholera 0.8.0.9492
+
+- add orthogonalProjectionFatalities() prototype.
+
+
 ### cholera 0.8.0.9491
 
 - add edgesLength() to embedNodes.R.
