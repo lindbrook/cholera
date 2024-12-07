@@ -85,46 +85,43 @@ orthogonalProjectionFatalities <- function(case.type = "address", radius = 4,
       ortho.location$type <- "ortho"
     }
 
-    ## nearest road segment endpoint ##
-    sel <- cholera::road.segments$id %in% within.radius
+    ## nearest endpoint of nearest road segment (sum of distance to endpts) ##
+
+    ortho <- stats::na.omit(ortho)
+    unbisected.segs <- setdiff(within.radius, ortho$road.segment)
+    sel <- cholera::road.segments$id %in% unbisected.segs
     candidates <- cholera::road.segments[sel, ]
 
-    no.bisect1 <- stats::setNames(candidates[, paste0(vars, 1)], vars)
-    no.bisect2 <- stats::setNames(candidates[, paste0(vars, 2)], vars)
-    no.bisect <- rbind(no.bisect1, no.bisect2)
+    ep.dist <- lapply(unbisected.segs, function(seg) {
+      tmp <- candidates[candidates$id == seg, ]
+      ep1 <- stats::setNames(tmp[, paste0(vars, 1)], vars)
+      ep2 <- stats::setNames(tmp[, paste0(vars, 2)], vars)
+      vapply(list(ep1, ep2), function(endpt) {
+        stats::dist(rbind(case[, vars], endpt))
+      }, numeric(1L))
+    })
 
-    endpt.dist <- vapply(seq_len(nrow(no.bisect)), function(i) {
-      stats::dist(rbind(case[, vars], no.bisect[i, ]))
-    }, numeric(1L))
+    ep.dist <- stats::setNames(data.frame(unbisected.segs,
+      do.call(rbind, ep.dist)), c("seg", "d1", "d2"))
 
-    nearest.endpt <- which.min(endpt.dist)
+    nr.seg <- ep.dist[which.min(rowSums(ep.dist[, c("d1", "d2")])), ]
+    nr.ep <- which.min(ep.dist[ep.dist$seg == nr.seg$seg, c("d1", "d2")])
+    nr.coords <- candidates[candidates$id == nr.seg$seg, paste0(vars, nr.ep)]
 
-    if (nearest.endpt <= nrow(ortho)) {
-      c.data <- cbind(candidates[nearest.endpt, c("id", "x1", "y1")],
-                      endpt.dist[nearest.endpt])
-    } else {
-      sel <- nearest.endpt - nrow(ortho)
-      c.data <- cbind(candidates[sel, c("id", "x2", "y2")],
-                      endpt.dist[nearest.endpt])
-    }
-
-    c.data$type <- "eucl"
-    prox.location <- stats::setNames(c.data, names(ortho.location))
+    prox.location <- data.frame(road.segment = nr.seg$seg,
+      x.proj = unname(nr.coords[1]), y.proj = unname(nr.coords[2]),
+      dist = nr.seg[, paste0("d", nr.ep)], type = "eucl")
 
     nearest <- which.min(c(ortho.location$dist, prox.location$dist))
 
     if (nearest == 1) {
-      out <- ortho.location
+      ortho.location
     } else if (nearest == 2) {
-      out <- prox.location
+      prox.location
     }
-    out
   }, mc.cores = cores)
 
   ortho.proj <- data.frame(case = id, do.call(rbind, orthogonal.projection))
   row.names(ortho.proj) <- NULL
-
-  if (any(is.na(ortho.proj))) stop("Can't find a road.", call. = FALSE)
-
   ortho.proj
 }
