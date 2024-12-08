@@ -31,16 +31,13 @@ orthogonalProjectionFatalities <- function(case.type = "address", radius = 4,
       case.id <- case$case
     }
 
-    within.radius <- lapply(cholera::road.segments$id, function(x) {
-      dat <- cholera::road.segments[cholera::road.segments$id == x, ]
-      d1 <- stats::dist(rbind(case[, vars],
-                              stats::setNames(dat[, paste0(vars, 1)], vars)))
-      d2 <- stats::dist(rbind(case[, vars],
-                              stats::setNames(dat[, paste0(vars, 2)], vars)))
-      if (d1 <= radius | d2 <= radius) unique(dat$id)
-    })
-
-    within.radius <- unlist(within.radius)
+    ones <- rbind(case[, vars],
+      stats::setNames(cholera::road.segments[, paste0(vars, 1)], vars))
+    twos <- rbind(case[, vars],
+      stats::setNames(cholera::road.segments[, paste0(vars, 2)], vars))
+    d1 <- as.matrix(dist(ones))[-1, 1]
+    d2 <- as.matrix(dist(twos))[-1, 1]
+    within.radius <-cholera::road.segments$id[d1 <= radius & d2 <= radius]
 
     ortho.proj.test <- lapply(within.radius, function(seg.id) {
       ortho.data <- orthogonalProjection(case.id, seg.id, observed = TRUE,
@@ -92,25 +89,24 @@ orthogonalProjectionFatalities <- function(case.type = "address", radius = 4,
     sel <- cholera::road.segments$id %in% unbisected.segs
     candidates <- cholera::road.segments[sel, ]
 
-    ep.dist <- lapply(unbisected.segs, function(seg) {
-      tmp <- candidates[candidates$id == seg, ]
-      ep1 <- stats::setNames(tmp[, paste0(vars, 1)], vars)
-      ep2 <- stats::setNames(tmp[, paste0(vars, 2)], vars)
-      vapply(list(ep1, ep2), function(endpt) {
-        stats::dist(rbind(case[, vars], endpt))
-      }, numeric(1L))
-    })
+    ones <- rbind(case[, vars],
+      stats::setNames(candidates[, paste0(vars, 1)], vars))
+    twos <- rbind(case[, vars],
+      stats::setNames(candidates[, paste0(vars, 2)], vars))
 
-    ep.dist <- stats::setNames(data.frame(unbisected.segs,
-      do.call(rbind, ep.dist)), c("seg", "d1", "d2"))
+    ep.dist <- data.frame(seg = unbisected.segs,
+                          d1 = as.matrix(dist(ones))[-1, 1],
+                          d2 = as.matrix(dist(twos))[-1, 1])
 
     nr.seg <- ep.dist[which.min(rowSums(ep.dist[, c("d1", "d2")])), ]
     nr.ep <- which.min(ep.dist[ep.dist$seg == nr.seg$seg, c("d1", "d2")])
     nr.coords <- candidates[candidates$id == nr.seg$seg, paste0(vars, nr.ep)]
 
     prox.location <- data.frame(road.segment = nr.seg$seg,
-      x.proj = unname(nr.coords[1]), y.proj = unname(nr.coords[2]),
-      dist = nr.seg[, paste0("d", nr.ep)], type = "eucl")
+                                x.proj = unname(nr.coords[1]),
+                                y.proj = unname(nr.coords[2]),
+                                dist = nr.seg[, paste0("d", nr.ep)],
+                                type = "eucl")
 
     nearest <- which.min(c(ortho.location$dist, prox.location$dist))
 
