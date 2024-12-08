@@ -1,3 +1,8 @@
+### cholera 0.8.0.9493
+
+- leverage dist() more in orthogonalProjectionFatalities().
+
+
 ### cholera 0.8.0.9492
 
 - add orthogonalProjectionFatalities() prototype.
