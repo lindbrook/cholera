@@ -1,3 +1,8 @@
+### cholera 0.8.0.9494
+
+- amend/set orthogonalProjectionFatalities(radius = 2).
+
+
 ### cholera 0.8.0.9493
 
 - leverage dist() more in orthogonalProjectionFatalities().

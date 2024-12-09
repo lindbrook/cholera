@@ -7,7 +7,7 @@
 #' @return An R data frame.
 #' @noRd
 
-orthogonalProjectionFatalities <- function(case.type = "address", radius = 4,
+orthogonalProjectionFatalities <- function(case.type = "address", radius = 2,
   multi.core = TRUE) {
 
   cores <- multiCore(multi.core)
