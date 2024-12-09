@@ -35,8 +35,8 @@ orthogonalProjectionFatalities <- function(case.type = "address", radius = 2,
       stats::setNames(cholera::road.segments[, paste0(vars, 1)], vars))
     twos <- rbind(case[, vars],
       stats::setNames(cholera::road.segments[, paste0(vars, 2)], vars))
-    d1 <- as.matrix(dist(ones))[-1, 1]
-    d2 <- as.matrix(dist(twos))[-1, 1]
+    d1 <- as.matrix(stats::dist(ones))[-1, 1]
+    d2 <- as.matrix(stats::dist(twos))[-1, 1]
     within.radius <-cholera::road.segments$id[d1 <= radius & d2 <= radius]
 
     ortho.proj.test <- lapply(within.radius, function(seg.id) {
@@ -95,8 +95,8 @@ orthogonalProjectionFatalities <- function(case.type = "address", radius = 2,
       stats::setNames(candidates[, paste0(vars, 2)], vars))
 
     ep.dist <- data.frame(seg = unbisected.segs,
-                          d1 = as.matrix(dist(ones))[-1, 1],
-                          d2 = as.matrix(dist(twos))[-1, 1])
+                          d1 = as.matrix(stats::dist(ones))[-1, 1],
+                          d2 = as.matrix(stats::dist(twos))[-1, 1])
 
     nr.seg <- ep.dist[which.min(rowSums(ep.dist[, c("d1", "d2")])), ]
     nr.ep <- which.min(ep.dist[ep.dist$seg == nr.seg$seg, c("d1", "d2")])
