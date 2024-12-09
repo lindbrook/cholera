@@ -1,3 +1,8 @@
+### cholera 0.8.0.9495
+
+- add segment ID to title and temp fix for simulated case # in caseLocator().
+
+
 ### cholera 0.8.0.9494
 
 - amend/set orthogonalProjectionFatalities(radius = 2).

@@ -73,7 +73,8 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
       case.data <- cholera::fatalities[cholera::fatalities$case == case, vars]
     }
   } else {
-    case.seg <- sim.proj.data[sim.proj.data$case == case, "road.segment"]
+    case.seg <- sim.proj.data[sim.proj.data$case == case + 10000L, 
+      "road.segment"]
     case.data <- reg.data[case, vars]
   }
 
@@ -185,9 +186,11 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
 
         if (add.title) {
           if (exists("case0")) {
-            title(main = paste0("Observed Case #", case0, "; ", seg.data$name))
+            title(main = paste0("Obs Case ", case0, "; ", seg.data$name, " ",
+              seg.data$id))
           } else {
-            title(main = paste0("Observed Case #", case, "; ", seg.data$name))
+            title(main = paste0("Obs Case ", case, "; ", seg.data$name, " ",
+              seg.data$id))
           }
         }
       } else {
@@ -202,7 +205,7 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
         }
 
         if (add.title) {
-          title(main = paste0("Simulated Case #", case, "; ", seg.data$name,
+          title(main = paste0("Sim Case ", case + 10000L, "; ", seg.data$name, 
             " ", seg.data$id))
         }
       }
