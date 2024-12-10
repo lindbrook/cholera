@@ -1,3 +1,8 @@
+### cholera 0.8.0.9498
+
+- add exception for roadSegmentFix() cases in orthogonalProjectionFatalities().
+
+
 ### cholera 0.8.0.9497
 
 - change case 18 to 19 on segment 290-1 in roadSegmentFix().
