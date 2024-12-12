@@ -111,7 +111,6 @@ orthogonalProjectionFatalities <- function(case.type = "address", radius = 2,
                                   y.proj = unname(nr.coords[2]),
                                   dist = get(paste0("d", nr.ep)),
                                   type = "eucl")
-
     } else {
       ortho <- stats::na.omit(ortho)
       unbisected.segs <- setdiff(within.radius, ortho$road.segment)
@@ -128,8 +127,13 @@ orthogonalProjectionFatalities <- function(case.type = "address", radius = 2,
                             d1 = as.matrix(stats::dist(ones))[-1, 1],
                             d2 = as.matrix(stats::dist(twos))[-1, 1])
 
+      # select segment by minimum total euclidean distance to endpoints
       nr.seg <- ep.dist[which.min(rowSums(ep.dist[, c("d1", "d2")])), ]
-      nr.ep <- which.min(ep.dist[ep.dist$seg == nr.seg$seg, c("d1", "d2")])
+
+      # select closest endpoint of nearest segment
+      nr.ep <- which.min(nr.seg[ c("d1", "d2")])
+
+      # extract endpoint coordinates
       nr.coords <- candidates[candidates$id == nr.seg$seg, paste0(vars, nr.ep)]
 
       prox.location <- data.frame(road.segment = nr.seg$seg,
