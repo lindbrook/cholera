@@ -1,3 +1,9 @@
+### cholera 0.8.0.9499
+
+- add simulateFatalitiesB() prototype.
+- amend computation of nr.seg in orthogonalProjectionFatalities().
+
+
 ### cholera 0.8.0.9498
 
 - add exception for roadSegmentFix() cases in orthogonalProjectionFatalities().
