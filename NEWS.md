@@ -1,3 +1,8 @@
+### cholera 0.8.0.9502
+
+- add a different St James Workhouse exception to simulateFatalitiesB().
+
+
 ### cholera 0.8.0.9501
 
 - add St James Workhouse exception to orthogonalProjectionFatalities().

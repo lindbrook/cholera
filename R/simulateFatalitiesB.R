@@ -1,4 +1,4 @@
-#' Project simulated fatalities onto road network
+#' Project simulated fatalities onto road network.
 #'
 #' Places regularly spaced "simulated" or "expected" cases across the face of the map and then finds the "addresses" of those cases via orthogonal projection or simple proximity to road graph network. These data are used to generate "expected" pump neighborhoods.
 #' @param recompute.regular.cases Logical. \code{TRUE} re-computes regular data. \code{FALSE} uses pre-computed data. For replication of data used in the package.
@@ -20,18 +20,22 @@ simulateFatalitiesB <- function(recompute.regular.cases = FALSE,
     reg.cases <- cholera::regular.cases
   }
 
+  # St James Workhouse exception: exclude segment from Poland Street
+  sel <- cholera::road.segments$name != "St James Workhouse"
+  rd.segs <- cholera::road.segments[sel, ]
+
   idx <- seq_len(nrow(reg.cases))
   vars <- c("x", "y")
 
   orthogonal.projection <- parallel::mclapply(idx, function(i) {
     case <- reg.cases[i, ]
     ones <- rbind(case[, vars],
-      stats::setNames(cholera::road.segments[, paste0(vars, 1)], vars))
+                  stats::setNames(rd.segs[, paste0(vars, 1)], vars))
     twos <- rbind(case[, vars],
-      stats::setNames(cholera::road.segments[, paste0(vars, 2)], vars))
+                  stats::setNames(rd.segs[, paste0(vars, 2)], vars))
     d1 <- as.matrix(stats::dist(ones))[-1, 1]
     d2 <- as.matrix(stats::dist(twos))[-1, 1]
-    within.radius <- cholera::road.segments$id[d1 <= radius & d2 <= radius]
+    within.radius <- rd.segs$id[d1 <= radius & d2 <= radius]
 
     ortho.proj.test <- lapply(within.radius, function(seg.id) {
       ortho.data <- orthogonalProjection(case = i, segment.id = seg.id,
@@ -39,8 +43,7 @@ simulateFatalitiesB <- function(recompute.regular.cases = FALSE,
       x.proj <- ortho.data$x.proj
       y.proj <- ortho.data$y.proj
 
-      sel <- cholera::road.segments$id == seg.id
-      seg.data <- cholera::road.segments[sel, c("x1", "y1", "x2", "y2")]
+      seg.data <- rd.segs[rd.segs$id == seg.id, c("x1", "y1", "x2", "y2")]
 
       seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
                            y = c(seg.data$y1, seg.data$y2))
@@ -78,13 +81,12 @@ simulateFatalitiesB <- function(recompute.regular.cases = FALSE,
 
     ortho <- stats::na.omit(ortho)
     unbisected.segs <- setdiff(within.radius, ortho$road.segment)
-    sel <- cholera::road.segments$id %in% unbisected.segs
-    candidates <- cholera::road.segments[sel, ]
+    candidates <- rd.segs[rd.segs$id %in% unbisected.segs, ]
 
     ones <- rbind(case[, vars],
-      stats::setNames(candidates[, paste0(vars, 1)], vars))
+                  stats::setNames(candidates[, paste0(vars, 1)], vars))
     twos <- rbind(case[, vars],
-      stats::setNames(candidates[, paste0(vars, 2)], vars))
+                  stats::setNames(candidates[, paste0(vars, 2)], vars))
 
     ep.dist <- data.frame(seg = unbisected.segs,
                           d1 = as.matrix(stats::dist(ones))[-1, 1],
