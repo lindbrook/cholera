@@ -16,13 +16,39 @@ orthogonalProjectionFatalities <- function(case.type = "address", radius = 2,
 
   if (case.type == "address") {
     obs.cases <- cholera::fatalities.address
-    id <- obs.cases$anchor
+    ids <- obs.cases$anchor
   } else if (case.type == "fatality") {
     obs.cases <- cholera::fatalities
-    id <- obs.cases$case
+    ids <- obs.cases$case
   }
 
-  orthogonal.projection <- parallel::mclapply(id, function(x) {
+  # set St James Workhouse cases at Poland Street "entrance".
+
+  sel <- cholera::anchor.case$anchor == 369
+  workhouse.cases <- cholera::anchor.case[sel, "case"]
+
+  poland.seg <- "194-1"
+  sel <- cholera::road.segments$id == poland.seg
+  poland.st.north <- cholera::road.segments[sel, paste0(vars, 1)]
+  names(poland.st.north) <- vars
+
+  sel <- ids[ids %in% workhouse.cases]
+  workhouse <- cholera::fatalities[cholera::fatalities$case %in% sel, vars]
+
+  ds <- as.matrix(stats::dist(rbind(poland.st.north, workhouse)))[-1, 1]
+
+  ortho.proj.workhouse <- data.frame(case = sel,
+                                     road.segment = poland.seg,
+                                     x.proj = poland.st.north$x,
+                                     y.proj = poland.st.north$y,
+                                     dist = ds,
+                                     type = "eucl")
+
+  ids <- ids[!ids %in% workhouse.cases]
+
+  # compute other orthogonal coordianates
+
+  orthogonal.projection <- parallel::mclapply(ids, function(x) {
     if (case.type == "address") {
       case <- obs.cases[obs.cases$anchor == x, ]
       case.id <- case$anchor
@@ -35,9 +61,7 @@ orthogonalProjectionFatalities <- function(case.type = "address", radius = 2,
       sel <- vapply(manual.classification, function(x) {
         case.id %in% x
       }, logical(1L))
-
       within.radius <- names(manual.classification[sel])
-
     } else {
       ones <- rbind(case[, vars],
         stats::setNames(cholera::road.segments[, paste0(vars, 1)], vars))
@@ -152,7 +176,9 @@ orthogonalProjectionFatalities <- function(case.type = "address", radius = 2,
     }
   }, mc.cores = cores)
 
-  ortho.proj <- data.frame(case = id, do.call(rbind, orthogonal.projection))
+  ortho.proj <- data.frame(case = ids, do.call(rbind, orthogonal.projection))
+  ortho.proj <- rbind(ortho.proj, ortho.proj.workhouse)
+  ortho.proj <- ortho.proj[order(ortho.proj$case), ]
   row.names(ortho.proj) <- NULL
   ortho.proj
 }

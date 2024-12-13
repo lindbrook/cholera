@@ -1,3 +1,8 @@
+### cholera 0.8.0.9501
+
+- add St James Workhouse exception to orthogonalProjectionFatalities().
+
+
 ### cholera 0.8.0.9500
 
 - change case 19 back to 18 on segment 290-1 in roadSegmentFix().
