@@ -1,3 +1,8 @@
+### cholera 0.8.0.9504
+
+- prioritize orthogonal over Euclidean in orthogonalProjectionFatalities().
+
+
 ### cholera 0.8.0.9503
 
 - set orthogonalProjectionFatalities(case.type = "fatality").
