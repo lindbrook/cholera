@@ -1,3 +1,8 @@
+### cholera 0.8.0.9505
+
+- add cases 56 and 286 to segment "160-3" in roadSegmentFix().
+
+
 ### cholera 0.8.0.9504
 
 - prioritize orthogonal over Euclidean in orthogonalProjectionFatalities().
@@ -20,7 +25,7 @@
 
 ### cholera 0.8.0.9500
 
-- change case 19 back to 18 on segment 290-1 in roadSegmentFix().
+- change case 19 back to 18 on segment "290-1" in roadSegmentFix().
 
 
 ### cholera 0.8.0.9499
@@ -36,7 +41,7 @@
 
 ### cholera 0.8.0.9497
 
-- change case 18 to 19 on segment 290-1 in roadSegmentFix().
+- change case 18 to 19 on segment "290-1" in roadSegmentFix().
 
 
 ### cholera 0.8.0.9496
