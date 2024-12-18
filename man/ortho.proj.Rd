@@ -7,11 +7,12 @@
 \format{
 A data frame with 5 variables that records the position of the orthogonal projection of the 578 cases onto the network of roads.
  \describe{
+    \item{\code{case}}{numeric case ID}
     \item{\code{road.segment}}{"address" road segment}
     \item{\code{x.proj}}{x-coordinate}
     \item{\code{y.proj}}{y-coordinate}
-    \item{\code{ortho.dist}}{orthogonal distance to home road segment}
-    \item{\code{case}}{numeric case ID}
+    \item{\code{dist}}{distance to home road segment}
+    \item{\code{type}}{type of distance: orthogonal to road or Euclidean to endpoint}
  }
 }
 \usage{

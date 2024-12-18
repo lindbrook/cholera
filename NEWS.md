@@ -1,3 +1,9 @@
+### cholera 0.8.0.9506
+
+- amend case 440 in ortho.proj: Euclidean distance to road endpoint.
+- use ortho.proj created by orthogonalProjectionFatalities(). 
+
+
 ### cholera 0.8.0.9505
 
 - add cases 56 and 286 to segment "160-3" in roadSegmentFix().
