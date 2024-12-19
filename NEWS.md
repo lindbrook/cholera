@@ -1,3 +1,8 @@
+### cholera 0.8.0.9508
+
+- add simulateFatalitiesB() version of sim.ortho.proj.
+
+
 ### cholera 0.8.0.9507
 
 - adopt orthogonalProjectionFatalities() strategy in simulateFatalitiesB().
