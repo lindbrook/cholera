@@ -1,3 +1,8 @@
+### cholera 0.8.0.9507
+
+- adopt orthogonalProjectionFatalities() strategy in simulateFatalitiesB().
+
+
 ### cholera 0.8.0.9506
 
 - amend case 440 in ortho.proj: Euclidean distance to road endpoint.
