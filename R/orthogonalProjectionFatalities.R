@@ -73,8 +73,8 @@ orthogonalProjectionFatalities <- function(case.type = "fatality", radius = 2,
     }
 
     ortho.proj.test <- lapply(within.radius, function(seg.id) {
-      ortho.data <- orthogonalProjection(case.id, seg.id, observed = TRUE,
-        case.data = case)
+      ortho.data <- orthogonalProjection(case = case.id, segment.id = seg.id, 
+        observed = TRUE, case.data = case)
       x.proj <- ortho.data$x.proj
       y.proj <- ortho.data$y.proj
 

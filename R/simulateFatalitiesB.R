@@ -60,63 +60,49 @@ simulateFatalitiesB <- function(recompute.regular.cases = FALSE,
           c(x.proj, y.proj))))
         ortho.pts <- data.frame(x.proj, y.proj)
         data.frame(road.segment = seg.id, ortho.pts, ortho.dist)
-      } else {
-        null.out <- data.frame(matrix(NA, ncol = 4))
-        names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
-        null.out
       }
     })
 
     ortho <- do.call(rbind, ortho.proj.test)
 
-    if (all(is.na(ortho$ortho.dist))) {
-      ortho.location <- ortho[1, ]
-      names(ortho.location)[names(ortho.location) == "ortho.dist"] <- "dist"
-      ortho.location$type <- NA
+    if (all(!is.na(ortho$ortho.dist))) {
+      projection <- ortho[which.min(ortho$ortho.dist), ]
+      names(projection)[names(projection) == "ortho.dist"] <- "dist"
+      projection$type <- "ortho"
     } else {
-      ortho.location <- ortho[which.min(ortho$ortho.dist), ]
-      names(ortho.location)[names(ortho.location) == "ortho.dist"] <- "dist"
-      ortho.location$type <- "ortho"
-    }
+      ## nearest endpoint of nearest road segment (sum of distance to endpts) ##
 
-    ortho <- stats::na.omit(ortho)
-    unbisected.segs <- setdiff(within.radius, ortho$road.segment)
-    candidates <- rd.segs[rd.segs$id %in% unbisected.segs, ]
+      unbisected.segs <- setdiff(within.radius, ortho$road.segment)
+      candidates <- rd.segs[rd.segs$id %in% unbisected.segs, ]
 
-    ones <- rbind(case[, vars],
-                  stats::setNames(candidates[, paste0(vars, 1)], vars))
-    twos <- rbind(case[, vars],
-                  stats::setNames(candidates[, paste0(vars, 2)], vars))
+      ones <- rbind(case[, vars],
+                    stats::setNames(candidates[, paste0(vars, 1)], vars))
+      twos <- rbind(case[, vars],
+                    stats::setNames(candidates[, paste0(vars, 2)], vars))
 
-    ep.dist <- data.frame(seg = unbisected.segs,
-                          d1 = as.matrix(stats::dist(ones))[-1, 1],
-                          d2 = as.matrix(stats::dist(twos))[-1, 1])
+      ep.dist <- data.frame(seg = unbisected.segs,
+                            d1 = as.matrix(stats::dist(ones))[-1, 1],
+                            d2 = as.matrix(stats::dist(twos))[-1, 1])
 
-    # select segment by minimum total euclidean distance to endpoints
-    nr.seg <- ep.dist[which.min(rowSums(ep.dist[, c("d1", "d2")])), ]
+      # select segment by minimum total euclidean distance to endpoints
+      nr.seg <- ep.dist[which.min(rowSums(ep.dist[, c("d1", "d2")])), ]
 
-    # select closest endpoint of nearest segment
-    nr.ep <- which.min(nr.seg[ c("d1", "d2")])
+      # select closest endpoint of nearest segment
+      nr.ep <- which.min(nr.seg[ c("d1", "d2")])
 
-    # extract endpoint coordinates
-    nr.coords <- candidates[candidates$id == nr.seg$seg, paste0(vars, nr.ep)]
+      # extract endpoint coordinates
+      nr.coords <- candidates[candidates$id == nr.seg$seg, paste0(vars, nr.ep)]
 
-    prox.location <- data.frame(road.segment = nr.seg$seg,
+      projection <- data.frame(road.segment = nr.seg$seg,
                                 x.proj = unname(nr.coords[1]),
                                 y.proj = unname(nr.coords[2]),
                                 dist = nr.seg[, paste0("d", nr.ep)],
                                 type = "eucl")
-
-    nearest <- which.min(c(ortho.location$dist, prox.location$dist))
-
-    if (nearest == 1) {
-      ortho.location
-    } else if (nearest == 2) {
-      prox.location
     }
+    projection
   }, mc.cores = cores)
 
-  sim.ortho.proj <- data.frame(case = idx + 10000L,
+  sim.ortho.proj <- data.frame(case = idx,
     do.call(rbind, orthogonal.projection))
   row.names(sim.ortho.proj) <- NULL
 
