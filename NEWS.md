@@ -1,3 +1,8 @@
+### cholera 0.8.0.9509
+
+- amend balance between ortho and Eucl proximity in simulateFatalitiesB().
+
+
 ### cholera 0.8.0.9508
 
 - add simulateFatalitiesB() version of sim.ortho.proj.
