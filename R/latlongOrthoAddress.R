@@ -28,7 +28,7 @@ latlongOrthoAddress <- function(multi.core = TRUE, radius = 60) {
   seg.endpts <- c("x1", "y1", "x2", "y2")
 
   # classification errors due to bar orientation (Dodson and Tobler - nominal)
-  road.segment.fix <- roadSegmentFix()
+  road.segment.fix <- caseRoadClassificationFix()
 
   # check for segments with multiple cases
   multi.audit <- vapply(road.segment.fix, function(x) {

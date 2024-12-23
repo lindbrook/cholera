@@ -29,7 +29,7 @@ unstackFatalities <- function(multi.core = TRUE, compute = FALSE,
     ortho.proj$case <- fixed.fatalities$case
 
     # classification errors due to bar orientation
-    road.segment.fix <- roadSegmentFix()
+    road.segment.fix <- caseRoadClassificationFix()
 
     # Recompute orthogonal distances
     ortho.projB <- orthoProjB(fixed.fatalities, road.segment.fix, cores,

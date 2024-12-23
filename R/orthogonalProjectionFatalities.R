@@ -12,7 +12,7 @@ orthogonalProjectionFatalities <- function(case.type = "fatality", radius = 2,
 
   vars <- c("x", "y")
   cores <- multiCore(multi.core)
-  manual.classification <- roadSegmentFix()
+  manual.classification <- caseRoadClassificationFix()
 
   if (case.type == "address") {
     obs.cases <- cholera::fatalities.address
