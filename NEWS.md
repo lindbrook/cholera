@@ -1,6 +1,6 @@
 ### cholera 0.8.0.9510
 
-- renmae roadSegmentFix() to caseRoadClassificationFix().
+- rename roadSegmentFix() to caseRoadClassificationFix().
 
 
 ### cholera 0.8.0.9509
