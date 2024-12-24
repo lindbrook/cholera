@@ -3,7 +3,7 @@
 #' Fixes two apparent coding errors using three misplaced cases.
 #' @seealso \code{vignette("duplicate.missing.cases")}
 #' @return An R data frame.
-#' @export
+#' @noRd
 
 fixFatalities <- function() {
   data.fix <- data.frame(x = c(12.56974, 12.53617, 12.33145),
