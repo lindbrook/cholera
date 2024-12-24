@@ -1,3 +1,8 @@
+### cholera 0.8.0.9511
+
+- make fixFatalities() internal.
+
+
 ### cholera 0.8.0.9510
 
 - rename roadSegmentFix() to caseRoadClassificationFix().
