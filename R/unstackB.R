@@ -10,8 +10,8 @@
 
 unstackFatalitiesB <- function(multi.core = TRUE, dev.mode = FALSE) {
   cores <- multiCore(multi.core)
-  fatalities.fixed <- fixFatalities()
-  ortho.proj <- orthogonalProjectionFatalitiesB(fatalities.fixed, cores,
+  fixed.fatalities <- fixFatalities()
+  ortho.proj <- orthogonalProjectionFatalitiesB(fixed.fatalities, cores,
     dev.mode)
   ortho.proj <- do.call(rbind, ortho.proj)
 
@@ -30,7 +30,7 @@ unstackFatalitiesB <- function(multi.core = TRUE, dev.mode = FALSE) {
   cutpoint <- 0.05
   multiple.obs <- road.incidence[road.incidence$count > 1, ]
   multiple.address <- multipleAddressB(multiple.obs, ortho.proj,
-    fatalities.fixed, cutpoint, cores, dev.mode)
+    fixed.fatalities, cutpoint, cores, dev.mode)
 
   multiple.unstacked <- multipleUnstackB(multiple.address, cores, dev.mode)
   multiple.unstacked <- do.call(rbind,multiple.unstacked)
@@ -42,7 +42,7 @@ unstackFatalitiesB <- function(multi.core = TRUE, dev.mode = FALSE) {
   single.unstacked$multiple.obs.seg <- "No"
 
   unstacked <- rbind(multiple.unstacked, single.unstacked)
-  unstacked <- merge(unstacked, fatalities.fixed, by.x = "anchor",
+  unstacked <- merge(unstacked, fixed.fatalities, by.x = "anchor",
     by.y = "case")
 
   fatalities.unstacked <- unstacked[, c("case", "x", "y")]
@@ -189,28 +189,28 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
       out <- prox.location
     }
 
-    data.frame(case = case, out)
+    data.frame(case = case, out, row.names = NULL)
   }, mc.cores = cores)
 }
 
-multipleAddressB <- function(multiple.obs, ortho.proj, fatalities, cutpoint,
-  cores, dev.mode) {
+multipleAddressB <- function(multiple.obs, ortho.proj, fixed.fatalities,
+  cutpoint, cores, dev.mode) {
 
-  multiple_address <- function(id, ortho.proj, fatalities, cutpoint) {
+  multiple_address <- function(id, ortho.proj, fixed.fatalities, cutpoint) {
     cases <- ortho.proj[ortho.proj$road.segment == id, "case"]
     ortho <- ortho.proj[ortho.proj$road.segment == id, c("x.proj", "y.proj")]
-    orientation <- sign(fatalities[cases, c("x", "y")] - ortho)
+    orientation <- sign(fixed.fatalities[cases, c("x", "y")] - ortho)
 
-    sideA <- (orientation$x == -1 & orientation$y == 1) |
+    sideA <- (orientation$x == -1 & orientation$y ==  1) |
              (orientation$x == -1 & orientation$y == -1) |
-             (orientation$x == 0 & orientation$y == 1) |
-             (orientation$x == 1 & orientation$y == 0)
+             (orientation$x ==  0 & orientation$y ==  1) |
+             (orientation$x ==  1 & orientation$y ==  0)
 
     orientation$side <- ifelse(sideA, 1, 0)
 
     if (length(unique(orientation$side)) == 2) {
-      A <- as.numeric(row.names(orientation[orientation$side == 1, ]))
-      B <- as.numeric(row.names(orientation[orientation$side == 0, ]))
+      A <- cases[orientation$side == 1]
+      B <- cases[orientation$side == 0]
       dataA <- ortho.proj[ortho.proj$case %in% A, c("x.proj", "y.proj")]
       dataB <- ortho.proj[ortho.proj$case %in% B, c("x.proj", "y.proj")]
 
@@ -234,11 +234,9 @@ multipleAddressB <- function(multiple.obs, ortho.proj, fatalities, cutpoint,
       census <- c(outA, outB)
       out <- data.frame(case = as.numeric(names(census)), group = census)
       row.names(out) <- NULL
-    }
 
-    if (length(unique(orientation$side)) == 1) {
-      A <- as.numeric(row.names(orientation))
-      dataA <- ortho.proj[ortho.proj$case %in% A, c("x.proj", "y.proj")]
+    } else if (length(unique(orientation$side)) == 1) {
+      dataA <- ortho.proj[ortho.proj$case %in% cases, c("x.proj", "y.proj")]
 
       if (nrow(dataA) >= 2) {
         clusterA <- stats::hclust(stats::dist(dataA))
@@ -247,12 +245,13 @@ multipleAddressB <- function(multiple.obs, ortho.proj, fatalities, cutpoint,
         outA <- 1
       }
 
-      out <- data.frame(case = A, group = outA)
+      out <- data.frame(case = cases, group = outA)
       row.names(out) <- NULL
     }
 
-    out <- merge(out, ortho.proj[ortho.proj$road.segment == id,
-      c("case", "dist")], by = "case")
+    sel <- ortho.proj$road.segment == id
+    out <- merge(out, ortho.proj[sel, c("case", "dist")], by = "case")
+
     out <- out[order(out$group, out$dist), ]
     out$anchor <- ifelse(duplicated(out$group) == FALSE, 1, 0)
     data.frame(id = id, out)
@@ -261,14 +260,14 @@ multipleAddressB <- function(multiple.obs, ortho.proj, fatalities, cutpoint,
   if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
     cl <- parallel::makeCluster(cores)
     parallel::clusterExport(cl = cl, envir = environment(),
-      varlist = c("ortho.proj", "fatalities", "cutpoint"))
+      varlist = c("ortho.proj", "fixed.fatalities", "cutpoint"))
     addr <- parallel::parLapply(cl, multiple.obs$id, function(id) {
-      multiple_address(id, ortho.proj, fatalities, cutpoint)
+      multiple_address(id, ortho.proj, fixed.fatalities, cutpoint)
     })
     parallel::stopCluster(cl)
   } else {
     addr <- parallel::mclapply(multiple.obs$id, function(id) {
-      multiple_address(id, ortho.proj, fatalities, cutpoint)
+      multiple_address(id, ortho.proj, fixed.fatalities, cutpoint)
     }, mc.cores = cores)
   }
   addr
