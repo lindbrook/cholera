@@ -1,3 +1,8 @@
+### cholera 0.8.0.9512
+
+- add unstackFatalitiesB() prototype.
+
+
 ### cholera 0.8.0.9511
 
 - make fixFatalities() internal.
