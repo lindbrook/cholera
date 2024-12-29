@@ -1,3 +1,8 @@
+### cholera 0.8.0.9513
+
+- fix orthogonalProjectionFatalitiesB() for single/manual "within.radius".
+
+
 ### cholera 0.8.0.9512
 
 - add unstackFatalitiesB() prototype.

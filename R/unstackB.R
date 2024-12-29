@@ -69,11 +69,11 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
   vars <- c("x", "y")
   manual.classification <- caseRoadClassificationFix() # TODO add workhouse
 
-  parallel::mclapply(fatality.df$case, function(case) {
-    case.data <- fatality.df[fatality.df$case == case, vars]
-    if (case %in% unlist(manual.classification)) {
+  parallel::mclapply(fatality.df$case, function(case.id) {
+    case.data <- fatality.df[fatality.df$case == case.id, vars]
+    if (case.id %in% unlist(manual.classification)) {
       sel <- vapply(manual.classification, function(x) {
-        case %in% x
+        case.id %in% x
       }, logical(1L))
       within.radius <- names(manual.classification[sel])
     } else {
@@ -131,7 +131,30 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
 
     unbisected.segs <- setdiff(within.radius, ortho$road.segment)
 
-    if (length(unbisected.segs) != 0) {
+    if (length(within.radius) <= 1) {
+      sel <- cholera::road.segments$id == within.radius
+      candidates <- cholera::road.segments[sel, ]
+
+      ones <- stats::setNames(candidates[, paste0(vars, 1)], vars)
+      twos <- stats::setNames(candidates[, paste0(vars, 2)], vars)
+      ep.data <- rbind(case.data[, vars], ones, twos)
+      ep.dist <- as.matrix(stats::dist(ep.data))[-1, 1]
+
+      nearest <- which.min(ep.dist)
+
+      if (nearest == 1) {
+        var.sel <- paste0(vars, 1)
+      } else if (nearest == 2) {
+        var.sel <- paste0(vars, 2)
+      }
+
+      prox.location <- data.frame(road.segment = candidates$id,
+                                  x.proj = candidates[, var.sel[1]],
+                                  y.proj = candidates[, var.sel[2]],
+                                  dist = ep.dist[nearest],
+                                  type = "eucl")
+
+    } else if (length(unbisected.segs) > 1) {
       sel <- cholera::road.segments$id %in% unbisected.segs
       candidates <- cholera::road.segments[sel, ]
 
@@ -154,31 +177,6 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
                                   y.proj = candidates[nearest, var.sel[2]],
                                   dist = ep.dist[nearest],
                                   type = "eucl")
-
-    } else if (length(within.radius) == 1 &
-               identical(within.radius, ortho$road.segment)) {
-
-      sel <- cholera::road.segments$id == within.radius
-      candidates <- cholera::road.segments[sel, ]
-
-      ones <- stats::setNames(candidates[, paste0(vars, 1)], vars)
-      twos <- stats::setNames(candidates[, paste0(vars, 2)], vars)
-      ep.data <- rbind(case.data[, vars], ones, twos)
-      ep.dist <- as.matrix(stats::dist(ep.data))[-1, 1]
-
-      nearest <- which.min(ep.dist)
-
-      if (nearest == 1) {
-        var.sel <- paste0(vars, 1)
-      } else if (nearest == 2) {
-        var.sel <- paste0(vars, 2)
-      }
-
-      prox.location <- data.frame(road.segment = candidates$id,
-                                  x.proj = candidates[, var.sel[1]],
-                                  y.proj = candidates[, var.sel[2]],
-                                  dist = ep.dist[nearest],
-                                  type = "eucl")
     }
 
     nearest.sel <- which.min(c(ortho.location$dist, prox.location$dist))
@@ -189,7 +187,7 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
       out <- prox.location
     }
 
-    data.frame(case = case, out, row.names = NULL)
+    data.frame(case = case.id, out, row.names = NULL)
   }, mc.cores = cores)
 }
 
