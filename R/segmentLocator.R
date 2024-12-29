@@ -137,8 +137,8 @@ segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
         theta <- atan(segment.slope)
 
         pad <- abs(zoom) / unitMeter(1)
-        delta.x <- pad * cos(theta)
-        delta.y <- pad * sin(theta)
+        delta.x <- abs(pad * cos(theta))
+        delta.y <- abs(pad * sin(theta))
 
         x.range <- range(seg.data$x)
         y.range <- range(seg.data$y)
