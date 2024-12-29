@@ -13,7 +13,6 @@ unstackFatalitiesB <- function(multi.core = TRUE, dev.mode = FALSE) {
   fixed.fatalities <- fixFatalities()
   ortho.proj <- orthogonalProjectionFatalitiesB(fixed.fatalities, cores,
     dev.mode)
-  ortho.proj <- do.call(rbind, ortho.proj)
 
   ## Single and Multiple ##
 
@@ -33,8 +32,6 @@ unstackFatalitiesB <- function(multi.core = TRUE, dev.mode = FALSE) {
     fixed.fatalities, cutpoint, cores, dev.mode)
 
   multiple.unstacked <- multipleUnstackB(multiple.address, cores, dev.mode)
-  multiple.unstacked <- do.call(rbind,multiple.unstacked)
-  multiple.unstacked$multiple.obs.seg <- "Yes"
 
   single.unstacked <- do.call(rbind, single.address)
   single.unstacked[ c("group", "anchor",  "case.count")] <- 1
@@ -69,7 +66,7 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
   vars <- c("x", "y")
   manual.classification <- caseRoadClassificationFix() # TODO add workhouse
 
-  parallel::mclapply(fatality.df$case, function(case.id) {
+  out <- parallel::mclapply(fatality.df$case, function(case.id) {
     case.data <- fatality.df[fatality.df$case == case.id, vars]
     if (case.id %in% unlist(manual.classification)) {
       sel <- vapply(manual.classification, function(x) {
@@ -189,6 +186,7 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
 
     data.frame(case = case.id, out, row.names = NULL)
   }, mc.cores = cores)
+  do.call(rbind, out)
 }
 
 multipleAddressB <- function(multiple.obs, ortho.proj, fixed.fatalities,
@@ -292,5 +290,7 @@ multipleUnstackB <- function(multiple.address, cores, dev.mode) {
     unstacked <- parallel::mclapply(multiple.address, multiple_unstack,
       mc.cores = cores)
   }
-  unstacked
+  out <- do.call(rbind, unstacked)
+  out$multiple.obs.seg <- "Yes"
+  out
 }
