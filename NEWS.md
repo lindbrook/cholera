@@ -1,3 +1,9 @@
+### cholera 0.8.0.9514
+
+- export "fixed" fatalities with unstackFatalitiesB().
+- move do.call()'s into auxiliary functions().
+
+
 ### cholera 0.8.0.9513
 
 - fix orthogonalProjectionFatalitiesB() for single/manual "within.radius".
