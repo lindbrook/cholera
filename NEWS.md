@@ -1,3 +1,9 @@
+### cholera 0.8.0.9515
+
+- fix negative zoom in segmentLocator(), streetNameLocator() and 
+  streetNumberLocator().
+
+
 ### cholera 0.8.0.9514
 
 - export "fixed" fatalities with unstackFatalitiesB().

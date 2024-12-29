@@ -135,8 +135,8 @@ streetNumberLocator <- function(street.number = 216, zoom = TRUE,
         theta <- atan(slope)
 
         pad <- abs(zoom) / unitMeter(1)
-        delta.x <- pad * cos(theta)
-        delta.y <- pad * sin(theta)
+        delta.x <- abs(pad * cos(theta))
+        delta.y <- abs(pad * sin(theta))
 
         if (zoom < 0) {
           xlim <- c(xlim[1] - delta.x, xlim[2] + delta.x)
