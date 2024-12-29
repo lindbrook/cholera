@@ -55,6 +55,7 @@ unstackFatalitiesB <- function(multi.core = TRUE, dev.mode = FALSE) {
   anchor.case <- unstacked[, c("anchor", "case")]
 
   list(anchor.case = anchor.case,
+       fatalities = fixed.fatalities,
        fatalities.unstacked = fatalities.unstacked,
        fatalities.anchor = fatalities.anchor,
        ortho.proj = ortho.proj)
