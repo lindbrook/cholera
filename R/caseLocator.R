@@ -73,8 +73,7 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
       case.data <- cholera::fatalities[cholera::fatalities$case == case, vars]
     }
   } else {
-    case.seg <- sim.proj.data[sim.proj.data$case == case + 10000L, 
-      "road.segment"]
+    case.seg <- sim.proj.data[sim.proj.data$case == case,"road.segment"]
     case.data <- reg.data[case, vars]
   }
 
@@ -83,92 +82,99 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
   if (add == TRUE) {
     points(case.data, col = col, lwd = 2)
   } else {
-    if (data == FALSE) {
+    if (data == TRUE) {
+      list(case = case, segment.data = seg.data)
+    } else {
       if (isFALSE(zoom)) {
-        xlim <- range(rd.segs[, paste0(ew, 1:2)])
-        ylim <- range(rd.segs[, paste0(ns, 1:2)])
-      } else if (isTRUE(zoom)) {
+        xlim <- range(cholera::roads[, ew])
+        ylim <- range(cholera::roads[, ns])
+      } else if (isTRUE(zoom) | is.numeric(zoom)) {
         sel <- rd.segs$id %in% case.seg
-        xlim <- range(rd.segs[sel, paste0(ew, 1:2)], case.data[, ew])
-        ylim <- range(rd.segs[sel, paste0(ns, 1:2)], case.data[, ns])
-      } else if (is.numeric(zoom)) {
-        if (latlong) {
-          geo.vars <- c("lon", "lat")
+        xlim <- range(c(unlist(rd.segs[sel, paste0(ew, 1:2)]), case.data[, ew]))
+        ylim <- range(c(unlist(rd.segs[sel, paste0(ns, 1:2)]), case.data[, ns]))
 
-          seg.vars <- paste0(geo.vars, 1)
-          dat <- stats::setNames(rd.segs[, c("id", seg.vars)],
-            c("id", geo.vars))
-          ones <- geoCartesian(dat)
+        if (zoom != 0) {
+          if (latlong) {
+            geo.vars <- c("lon", "lat")
 
-          seg.vars <- paste0(geo.vars, 2)
-          dat <- stats::setNames(rd.segs[, c("id", seg.vars)],
-            c("id", geo.vars))
-          twos <- geoCartesian(dat)
+            seg.vars <- paste0(geo.vars, 1)
+            dat <- stats::setNames(rd.segs[, c("id", seg.vars)],
+                                   c("id", geo.vars))
+            ones <- geoCartesian(dat)
 
-          new.vars <- c("x", "y")
-          ones <- stats::setNames(ones, c("id", paste0(new.vars, 1)))
-          twos <- stats::setNames(twos, c("id", paste0(new.vars, 2)))
-          cartestian.rds <- merge(ones, twos, by = "id")
+            seg.vars <- paste0(geo.vars, 2)
+            dat <- stats::setNames(rd.segs[, c("id", seg.vars)],
+                                   c("id", geo.vars))
+            twos <- geoCartesian(dat)
 
-          st.seg <- rd.segs[rd.segs$id %in% case.seg, "id"]
-          cart.rd <- cartestian.rds[cartestian.rds$id %in% st.seg, ]
+            new.vars <- c("x", "y")
+            ones <- stats::setNames(ones, c("id", paste0(new.vars, 1)))
+            twos <- stats::setNames(twos, c("id", paste0(new.vars, 2)))
+            cartestian.rds <- merge(ones, twos, by = "id")
 
-          cart.case <- geoCartesianCoord(case.data)
+            st.seg <- rd.segs[rd.segs$id %in% case.seg, "id"]
+            cart.rd <- cartestian.rds[cartestian.rds$id %in% st.seg, ]
 
-          cart.x.range <- range(cart.rd[, paste0("x", 1:2)], cart.case$x)
-          cart.y.range <- range(cart.rd[, paste0("y", 1:2)], cart.case$y)
+            cart.case <- geoCartesianCoord(case.data)
 
-          pad <- c(zoom, -zoom)
-          xlim <- cart.x.range + pad
-          ylim <- cart.y.range + pad
+            cart.x.range <- range(cart.rd[, paste0("x", 1:2)], cart.case$x)
+            cart.y.range <- range(cart.rd[, paste0("y", 1:2)], cart.case$y)
 
-          xlim.delta <- xlim[2] - xlim[1]
-          ylim.delta <- ylim[2] - ylim[1]
+            pad <- c(zoom, -zoom)
+            xlim <- cart.x.range + pad
+            ylim <- cart.y.range + pad
 
-          if (xlim.delta <= 0 | ylim.delta <= 0) {
-            xlim <- cart.x.range
-            ylim <- cart.y.range
-            message("Note: zoom = ",  zoom, " too far! Use smaller.")
-          }
+            xlim.delta <- xlim[2] - xlim[1]
+            ylim.delta <- ylim[2] - ylim[1]
 
-          range.data <- meterLatLong(data.frame(x = xlim, y = ylim))
-          xlim <- range.data$lon
-          ylim <- range.data$lat
+            if (xlim.delta <= 0 | ylim.delta <= 0) {
+              xlim <- cart.x.range
+              ylim <- cart.y.range
+              message("Note: zoom = ",  zoom, " too far! Use smaller.")
+            }
 
-        } else {
-          ols <- stats::lm(y ~ x, data = data.frame(x = xlim, y = ylim))
-          slope <- stats::coef(ols)[2]
-          theta <- atan(slope)
+            range.data <- meterLatLong(data.frame(x = xlim, y = ylim))
+            xlim <- range.data$lon
+            ylim <- range.data$lat
 
-          pad <- abs(zoom) / unitMeter(1)
-          delta.x <- pad * cos(theta)
-          delta.y <- pad * sin(theta)
+          } else {
+            xs <- c(seg.data[, paste0(ew, 1)], seg.data[, paste0(ew, 2)])
+            ys <- c(seg.data[, paste0(ns, 1)], seg.data[, paste0(ns, 2)])
+            seg.df <- data.frame(x = xs, y = ys)
 
-          if (zoom < 0) {
-            xlim <- c(xlim[1] - delta.x, xlim[2] + delta.x)
-            ylim <- c(ylim[1] - delta.y, ylim[2] + delta.y)
-          } else if (zoom > 0) {
-            xlim <- c(xlim[1] + delta.x, xlim[2] - delta.x)
-            ylim <- c(ylim[1] + delta.y, ylim[2] - delta.y)
-          }
+            ols <- stats::lm(y ~ x, data = seg.df)
+            slope <- stats::coef(ols)[2]
+            theta <- atan(slope)
 
-          xlim.delta <- xlim[2] - xlim[1]
-          ylim.delta <- ylim[2] - ylim[1]
+            pad <- abs(zoom) / unitMeter(1)
+            delta.x <- abs(pad * cos(theta))
+            delta.y <- abs(pad * sin(theta))
 
-          if (xlim.delta <= 0 | ylim.delta <= 0) {
-            sel <- rd.segs$id %in% case.seg
-            xlim <- range(rd.segs[sel, paste0(ew, 1:2)])
-            ylim <- range(rd.segs[sel, paste0(ns, 1:2)])
-            message("Note: zoom = ",  zoom, " too far! Use smaller.")
+            if (zoom < 0) {
+              xlim <- c(xlim[1] - delta.x, xlim[2] + delta.x)
+              ylim <- c(ylim[1] - delta.y, ylim[2] + delta.y)
+            } else if (zoom > 0) {
+              xlim <- c(xlim[1] + delta.x, xlim[2] - delta.x)
+              ylim <- c(ylim[1] + delta.y, ylim[2] - delta.y)
+            }
+
+            xlim.delta <- xlim[2] - xlim[1]
+            ylim.delta <- ylim[2] - ylim[1]
+
+            if (xlim.delta <= 0 | ylim.delta <= 0) {
+              sel <- rd.segs$id %in% case.seg
+              xlim <- range(rd.segs[sel, paste0(ew, 1:2)])
+              ylim <- range(rd.segs[sel, paste0(ns, 1:2)])
+              message("Note: zoom = ",  zoom, " too far! Use smaller.")
+            }
           }
         }
       }
 
       plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = 15,
         cex = 0.5, col = "gray", asp = asp)
-
-      roads.list <- split(cholera::roads[, vars], cholera::roads$street)
-      invisible(lapply(roads.list, lines, col = "gray"))
+      addRoads(latlong = latlong)
+      addFrame(latlong = latlong)
 
       points(pmp[, vars], pch = 17, cex = 1, col = "blue")
       text(pmp[, vars], label = pmp$id, pos = 1)
@@ -187,10 +193,10 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
         if (add.title) {
           if (exists("case0")) {
             title(main = paste0("Obs Case ", case0, "; ", seg.data$name, " ",
-              seg.data$id))
+                                seg.data$id))
           } else {
             title(main = paste0("Obs Case ", case, "; ", seg.data$name, " ",
-              seg.data$id))
+                                seg.data$id))
           }
         }
       } else {
@@ -205,11 +211,10 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
         }
 
         if (add.title) {
-          title(main = paste0("Sim Case ", case + 10000L, "; ", seg.data$name, 
-            " ", seg.data$id))
+          title(main = paste0("Sim Case ", case, "; ", seg.data$name, " ",
+                              seg.data$id))
         }
       }
-    } else list(case = case, segment.data = seg.data)
+    }
   }
 }
-
