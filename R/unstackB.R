@@ -11,14 +11,13 @@
 unstackFatalitiesB <- function(multi.core = TRUE, dev.mode = FALSE) {
   cores <- multiCore(multi.core)
   fixed.fatalities <- fixFatalities()
-  ortho.proj <- orthogonalProjectionFatalitiesB(fixed.fatalities, cores,
-    dev.mode)
+  ortho.proj <- orthogonalProjectionFatalitiesB(fixed.fatalities, cores)
 
   ## Single and Multiple ##
 
-  road.incidence <- table(ortho.proj$road.segment)
+  road.incidence <- c(table(ortho.proj$road.segment))
   road.incidence <- data.frame(id = names(road.incidence),
-    count = c(road.incidence))
+    count = road.incidence)
 
   single.obs <- road.incidence[road.incidence$count == 1, ]
   single.address <- lapply(single.obs$id, function(id) {
@@ -61,11 +60,9 @@ unstackFatalitiesB <- function(multi.core = TRUE, dev.mode = FALSE) {
        ortho.proj = ortho.proj)
 }
 
-orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
-  radius = 2) {
-
+orthogonalProjectionFatalitiesB <- function(fatality.df, cores, radius = 2) {
   vars <- c("x", "y")
-  manual.classification <- caseRoadClassificationFix() # TODO add workhouse
+  manual.classification <- caseRoadClassificationFix()
 
   out <- parallel::mclapply(fatality.df$case, function(case.id) {
     case.data <- fatality.df[fatality.df$case == case.id, vars]
@@ -81,15 +78,16 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
         stats::setNames(cholera::road.segments[, paste0(vars, 2)], vars))
       d1 <- as.matrix(stats::dist(ones))[-1, 1]
       d2 <- as.matrix(stats::dist(twos))[-1, 1]
+
+      # choose road segment with _both_ endpoints <= radius
       within.radius <- cholera::road.segments$id[d1 <= radius & d2 <= radius]
     }
 
     ortho.proj.test <- lapply(within.radius, function(seg.id) {
       sel <- cholera::road.segments$id == seg.id
-      seg.data <- cholera::road.segments[sel, c("x1", "y1", "x2", "y2")]
-
-      seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
-                           y = c(seg.data$y1, seg.data$y2))
+      xs <- unlist(cholera::road.segments[sel, c("x1", "x2")])
+      ys <- unlist(cholera::road.segments[sel, c("y1", "y2")])
+      seg.df <- data.frame(x = xs, y = ys)
 
       ols <- stats::lm(y ~ x, data = seg.df)
       road.intercept <- stats::coef(ols)[1]
@@ -106,10 +104,9 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
       bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
 
       if (bisect.test) {
-        dat <- rbind(c(case.data$x, case.data$y), c(x.proj, y.proj))
-        ortho.dist <- c(stats::dist(dat))
         ortho.pts <- data.frame(x.proj, y.proj)
-        data.frame(road.segment = seg.id, ortho.pts, ortho.dist)
+        dat <- rbind(c(case.data$x, case.data$y), c(x.proj, y.proj))
+        data.frame(road.segment = seg.id, ortho.pts, dist = c(stats::dist(dat)))
       }
     })
 
@@ -120,8 +117,7 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
       na.df <- data.frame(matrix(ncol = length(na.vars)))
       ortho.location <- stats::setNames(na.df, na.vars)
     } else {
-      ortho.location <- ortho[which.min(ortho$ortho.dist), ]
-      names(ortho.location)[names(ortho.location) == "ortho.dist"] <- "dist"
+      ortho.location <- ortho[which.min(ortho$dist), ]
       ortho.location$type <- "ortho"
     }
 
@@ -138,6 +134,7 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
       ep.data <- rbind(case.data[, vars], ones, twos)
       ep.dist <- as.matrix(stats::dist(ep.data))[-1, 1]
 
+      # nearest endpoint of nearest road segment
       nearest <- which.min(ep.dist)
 
       if (nearest == 1) {
@@ -161,6 +158,7 @@ orthogonalProjectionFatalitiesB <- function(fatality.df, cores, dev.mode,
       ep.data <- rbind(case.data[, vars], ones, twos)
       ep.dist <- as.matrix(stats::dist(ep.data))[-1, 1]
 
+      # nearest endpoint of nearest road segment
       nearest <- which.min(ep.dist)
 
       if (nearest > nrow(candidates)) {
@@ -203,6 +201,7 @@ multipleAddressB <- function(multiple.obs, ortho.proj, fixed.fatalities,
              (orientation$x ==  0 & orientation$y ==  1) |
              (orientation$x ==  1 & orientation$y ==  0)
 
+    # side of street
     orientation$side <- ifelse(sideA, 1, 0)
 
     if (length(unique(orientation$side)) == 2) {

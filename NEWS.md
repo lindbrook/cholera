@@ -1,3 +1,8 @@
+### cholera 0.8.0.9517
+
+- clean and comment unstackFatalitiesB().
+
+
 ### cholera 0.8.0.9516
 
 - fix numerical zoom in caseLocator().
