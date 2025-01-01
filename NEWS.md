@@ -1,3 +1,8 @@
+### cholera 0.8.0.9518
+
+ - remove Workhouse exception and clean simulateFatalitiesB().
+ 
+
 ### cholera 0.8.0.9517
 
 - clean and comment unstackFatalitiesB().

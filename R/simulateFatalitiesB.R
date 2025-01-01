@@ -20,14 +20,11 @@ simulateFatalitiesB <- function(recompute.regular.cases = FALSE,
     reg.cases <- cholera::regular.cases
   }
 
-  # St James Workhouse exception: exclude segment from Poland Street
-  sel <- cholera::road.segments$name != "St James Workhouse"
-  rd.segs <- cholera::road.segments[sel, ]
-
   idx <- seq_len(nrow(reg.cases))
   vars <- c("x", "y")
+  rd.segs <- cholera::road.segments
 
-  orthogonal.projection <- parallel::mclapply(idx, function(i) {
+  orthogonal.proj <- parallel::mclapply(idx, function(i) {
     case <- reg.cases[i, ]
     ones <- rbind(case[, vars],
                   stats::setNames(rd.segs[, paste0(vars, 1)], vars))
@@ -44,7 +41,6 @@ simulateFatalitiesB <- function(recompute.regular.cases = FALSE,
       y.proj <- ortho.data$y.proj
 
       seg.data <- rd.segs[rd.segs$id == seg.id, c("x1", "y1", "x2", "y2")]
-
       seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
                            y = c(seg.data$y1, seg.data$y2))
 
@@ -59,19 +55,17 @@ simulateFatalitiesB <- function(recompute.regular.cases = FALSE,
         ortho.dist <- c(stats::dist(rbind(c(case$x, case$y),
           c(x.proj, y.proj))))
         ortho.pts <- data.frame(x.proj, y.proj)
-        data.frame(road.segment = seg.id, ortho.pts, ortho.dist)
+        data.frame(road.segment = seg.id, ortho.pts, dist = ortho.dist)
       }
     })
 
     ortho <- do.call(rbind, ortho.proj.test)
 
-    if (any(!is.na(ortho$ortho.dist))) {
-      ortho.location <- ortho[which.min(ortho$ortho.dist), ]
-      names(ortho.location)[names(ortho.location) == "ortho.dist"] <- "dist"
+    if (any(!is.na(ortho$dist))) {
+      ortho.location <- ortho[which.min(ortho$dist), ]
       ortho.location$type <- "ortho"
     } else {
       ortho.location <- ortho[1, ]
-      names(ortho.location)[names(ortho.location) == "ortho.dist"] <- "dist"
       ortho.location$type <- NA
     }
 
@@ -106,17 +100,15 @@ simulateFatalitiesB <- function(recompute.regular.cases = FALSE,
     } else if (nearest.sel == 2) {
       prox.location
     }
-
   }, mc.cores = cores)
 
-  sim.ortho.proj <- data.frame(case = idx,
-    do.call(rbind, orthogonal.projection))
+  sim.ortho.proj <- data.frame(case = idx, do.call(rbind, orthogonal.proj))
   row.names(sim.ortho.proj) <- NULL
 
   list(regular.cases = reg.cases, sim.ortho.proj = sim.ortho.proj)
 }
 
-# approx. 1/3 hr; odd-OK, even-not?
+# approx. 1/3 hr; 3.1 GHz Dual-Core Intel Core i5
 # sim <- simulateFatalities(recompute.regular.cases = TRUE)
 # regular.cases <- sim$regular.cases
 # sim.ortho.proj <- sim$sim.ortho.proj
