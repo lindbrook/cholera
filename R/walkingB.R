@@ -39,25 +39,17 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   case.data <- nodes[nodes$case != 0, ]
   case.data <- case.data[order(case.data$case), ]
 
-
   if (case.set == "expected") {
     if (latlong) {
       sim.proj <- cholera::latlong.sim.ortho.proj
     } else {
       sim.proj <- cholera::sim.ortho.proj
     }
-
     # Falconberg Court and Mews: isolate roads without a pump #
     falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
     sel <- sim.proj$road.segment %in% falconberg.ct.mews
     FCM.cases <- sim.proj[sel, "case"]
-    case <- sim.proj[!sim.proj$case %in% FCM.cases, "case"]
-
-    ## Adam and Eve Court: isolate with pump (#2) ##
-    sel <- cholera::road.segments$name == "Adam and Eve Court"
-    adam.eve.ct <- cholera::road.segments[sel, "id"]
-    AE.cases <- sim.proj[sim.proj$road.segment == adam.eve.ct , "case"]
-    if (!2L %in% p.sel) case <- case[!case %in% AE.cases]
+    case <- case.data$case[!case.data$case %in% FCM.cases]
   } else {
     case <- case.data$case
   }
@@ -70,10 +62,8 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   }, mc.cores = cores)
 
   d <- vapply(ds, min, numeric(1L))
-
   pump <- p.sel[vapply(ds, which.min, numeric(1L))]
   pump.nm <- paste0("p", sort(unique(pump)))
-
   nr.pump <- data.frame(case = case, pump = pump, distance = d)
 
   case.pump <- lapply(sort(unique(pump)), function(x) case[pump %in% x])
@@ -157,9 +147,8 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
     seg.vars <- paste0(vars, c(rep(1, 2), rep(2, 2)))
   }
 
-  snowMap(add.cases = FALSE, add.pumps = FALSE, latlong = x$latlong)
-
   if (x$case.set == "observed") {
+    snowMap(add.cases = FALSE, add.pumps = FALSE, latlong = x$latlong)
     invisible(lapply(names(neigh.edges), function(nm) {
       n.edges <- edges[edges$id2 %in% neigh.edges[[nm]], ]
       segments(n.edges[, seg.vars[1]], n.edges[, seg.vars[2]],
@@ -190,7 +179,8 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
     }
 
   } else if (x$case.set == "expected") {
-    snowMap(add.cases = FALSE, add.pumps = FALSE, add.roads = FALSE)
+    snowMap(add.cases = FALSE, add.pumps = FALSE, add.roads = FALSE, 
+      latlong = x$latlong)
 
     if (x$latlong) {
       reg.cases <- cholera::latlong.regular.cases

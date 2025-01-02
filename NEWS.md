@@ -1,3 +1,8 @@
+### cholera 0.8.0.9519
+
+- fix Falconberg Court and Mews isolate in walkingB(case.set = expected).
+
+
 ### cholera 0.8.0.9518
 
  - remove Workhouse exception and clean simulateFatalitiesB().
