@@ -1,3 +1,8 @@
+### cholera 0.8.0.9520
+
+- add case 296 to segment "137-3" in caseRoadClassificationFix().
+
+
 ### cholera 0.8.0.9519
 
 - fix Falconberg Court and Mews isolate in walkingB(case.set = expected).
