@@ -1,3 +1,8 @@
+### cholera 0.8.0.9523
+
+- use x$case.set in plot.walking_path().
+
+
 ### cholera 0.8.0.9522
 
 - pass case.set to neighborhoodDataB() and return it in walkingPath().

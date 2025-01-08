@@ -181,8 +181,15 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
 
   rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  fatality <- cholera::fatalities
-  fatality.ortho <- cholera::latlong.ortho.addr
+
+  if (x$case.set == "observed") {
+    fatality <- cholera::fatalities
+    fatality.ortho <- cholera::latlong.ortho.addr
+  } else if (x$case.set == "expected") {
+    fatality <- cholera::regular.cases
+    fatality.ortho <- cholera::sim.ortho.proj
+  }
+
   land <- cholera::landmarksB
 
   if (latlong) {
@@ -229,17 +236,25 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
   frame.list <- split(frame[, vars], frame$street)
   invisible(lapply(roads.list, lines, col = "lightgray"))
   invisible(lapply(frame.list, lines))
-  points(fatality[, vars], col = "lightgray", pch = 16, cex = 0.5)
+  if (x$case.set == "observed") {
+    points(fatality[, vars], col = "lightgray", pch = 16, cex = 0.5)
+  }
   points(pmp[, vars], pch = 24, col = grDevices::adjustcolor(colors,
     alpha.f = alpha.level))
   text(pmp[, vars], pos = 1, labels = paste0("p", pmp$id))
 
   if (type %in% c("case-pump", "cases")) {
-    if (orig < 1000L) {
-      points(fatality[fatality$case == orig, vars], col = "red")
-      text(fatality[fatality$case == orig, vars], pos = 1, labels = orig,
-        col = "red")
-    } else if (orig >= 1000L) {
+
+    if (orig < 1000L | orig > max(land$case)) {
+      if (x$case.set == "observed") {
+        sel <- fatality$case == orig
+      } else if (x$case == "expected") {
+        sel <- fatality.ortho$case == orig
+      }
+      points(fatality[sel, vars], col = "red")
+      text(fatality[sel, vars], pos = 1, labels = orig, col = "red")
+
+    } else if (orig >= 1000L & orig <= max(land$case)) {
       points(land[land$case == orig, vars], col = "red")
       land.tmp <- land[land$case == orig, ]
 
