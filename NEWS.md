@@ -1,3 +1,8 @@
+### cholera 0.8.0.9524
+
+- specify mode and algorithm in igraph: distances() and shortest_paths().
+
+
 ### cholera 0.8.0.9523
 
 - use x$case.set in plot.walking_path().
