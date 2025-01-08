@@ -64,7 +64,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     dstn.nm <- destination.chk$out.nm
   }
 
-  network.data <- neighborhoodDataB(vestry = vestry, latlong = latlong)
+  network.data <- neighborhoodDataB(vestry = vestry, case.set = case.set,
+    latlong = latlong)
 
   if (type == "case-pump") {
     path.data <- casePump(orgn, orgn.nm, dstn, dstn.nm, destination,
@@ -127,7 +128,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
                  edges = edges,
                  pmp = pmp,
                  time.unit = time.unit,
-                 walking.speed = walking.speed)
+                 walking.speed = walking.speed,
+                 case.set = case.set)
 
   class(output) <- "walking_path"
   output
