@@ -23,7 +23,7 @@ distanceTime <- function(x, distance.unit = "meter", time.unit = "second",
   if (distance.unit == "native") {
     speed <- walking.speed / unitMeter(1)
   } else if (distance.unit == "yard") {
-    speed <- walking.speed * 1.0936 # convert to yd/hr
+    speed <- walking.speed * cholera::meter.to.yard
   } else if (distance.unit == "meter") {
     speed <- walking.speed
   }
