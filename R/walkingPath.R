@@ -20,8 +20,6 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   weighted = TRUE, distance.unit = "meter", time.unit = "second",
   walking.speed = 5, include.landmarks = TRUE) {
 
-  meter.to.yard <- 1.09361
-
   if (is.null(origin) & is.null(destination)) {
     stop("You must provide at least one origin or destination.", call. = FALSE)
   }
