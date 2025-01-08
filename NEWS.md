@@ -1,3 +1,8 @@
+### cholera 0.8.0.9521
+
+- use meter.to.yard in distanceTime().
+
+
 ### cholera 0.8.0.9520
 
 - add case 296 to segment "137-3" in caseRoadClassificationFix().
