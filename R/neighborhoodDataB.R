@@ -11,7 +11,7 @@
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
 neighborhoodDataB <- function(vestry = FALSE, case.set = "observed",
-  embed.addr = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE, 
+  embed.addr = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
   latlong = FALSE) {
 
   args <- list(embed.addr = embed.addr, embed.landmarks = embed.landmarks,
