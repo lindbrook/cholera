@@ -1,3 +1,8 @@
+### cholera 0.8.0.9526
+
+- fix order of graph edges in embedNodes() for neighborhoodDataB().
+
+
 ### cholera 0.8.0.9525
 
 - remove mode and algorithm in igraph: distances() and shortest_paths().
