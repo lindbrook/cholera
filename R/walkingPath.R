@@ -664,8 +664,8 @@ arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit,
 casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
   vestry, weighted) {
 
-  edges <- network.data$edges
   g <- network.data$g
+  edges <- network.data$edges
   nodes <- network.data$nodes
 
   if (any(orgn < 1000L)) {
@@ -772,8 +772,8 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
 caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
   network.data, vestry, weighted) {
 
-  edges <- network.data$edges
   g <- network.data$g
+  edges <- network.data$edges
   nodes <- network.data$nodes
 
   if (any(orgn < 1000L)) {
@@ -913,8 +913,8 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
   network.data, vestry, weighted) {
 
-  edges <- network.data$edges
   g <- network.data$g
+  edges <- network.data$edges
   nodes <- network.data$nodes
 
   if (length(intersect(orgn, dstn)) != 0) {
