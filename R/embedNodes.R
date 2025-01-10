@@ -214,14 +214,6 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
     nodes <- nodes[, c(vars, "case", "land", "pump", "node")]
   }
 
-  if (!is.null(obs.segs)) {
-    edges <- edges[order(edges$street, edges$id2), ]
-  } else {
-    edges <- edges[order(edges$street, edges$id), ]
-  }
-
-  if (latlong) nodes <- nodes[order(nodes$lon, nodes$lat), ]
-  else nodes <- nodes[order(nodes$x, nodes$y), ]
   row.names(edges) <- NULL
   row.names(nodes) <- NULL
 
