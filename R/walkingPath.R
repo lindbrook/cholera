@@ -712,10 +712,9 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
   if (length(ego.node) == 1) {
     if (weighted) {
       d <- igraph::distances(graph = g, v = ego.node, to = alter.node, 
-        mode = "all", weights = edges$d, algorithm = "dijkstra")
+        weights = edges$d)
     } else {
-      d <- igraph::distances(graph = g, v = ego.node, to = alter.node, 
-        mode = "all", algorithm = "dijkstra")
+      d <- igraph::distances(graph = g, v = ego.node, to = alter.node)
     }
 
     nearest.node <- dimnames(d)[[2]][which.min(d)]
@@ -723,20 +722,18 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
 
     if (weighted) {
       p <- igraph::shortest_paths(graph = g, from = ego.node, 
-        to = alter.node[nearest.dstn], mode = "all", weights = edges$d,
-        algorithm = "dijkstra")$vpath
+        to = alter.node[nearest.dstn], weights = edges$d)$vpath
     } else {
       p <- igraph::shortest_paths(graph = g, from = ego.node, 
-        to = alter.node[nearest.dstn], mode = "all", algorithm = "dijkstra")
+        to = alter.node[nearest.dstn])
     }
   } else if (length(ego.node) > 1) {
     d.multi.ego <- lapply(ego.node, function(x) {
       if (weighted) {
-        igraph::distances(graph = g, from = x, to = alter.node, mode = "all",
-          weights = edges$d, algorithm = "dijkstra")
+        igraph::distances(graph = g, from = x, to = alter.node,
+          weights = edges$d)
       } else {
-        igraph::distances(raph = g, from = x, to = alter.node, mode = "all",
-          algorithm = "dijkstra")
+        igraph::distances(graph = g, from = x, to = alter.node)
       }
     })
 
@@ -757,11 +754,10 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
 
     if (weighted) {
       p <- igraph::shortest_paths(graph = g, from = nr.ego.node, 
-        to = nr.alter.node, mode = "all", weights = edges$d,
-        algorithm = "dijkstra")$vpath
+        to = nr.alter.node, weights = edges$d)$vpath
     } else {
       p <- igraph::shortest_paths(graph = g, from = nr.ego.node, 
-        to = nr.alter.node, mode = "all", algorithm = "dijkstra")
+        to = nr.alter.node)
     }
   }
 
@@ -851,10 +847,9 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
   if (length(ego.node) == 1) {
     if (weighted) {
       d <- igraph::distances(graph = g, from = ego.node, to = alter.node,
-        mode = "all", weights = edges$d, algorithm = "dijkstra")
+        weights = edges$d)
     } else {
-      d <- igraph::distances(raph = g, from = ego.node, to = alter.node,
-        mode = "all", algorithm = "dijkstra")
+      d <- igraph::distances(raph = g, from = ego.node, to = alter.node)
     }
 
     if (length(d) == 1) nearest.node <- dimnames(d)[[2]]
@@ -865,19 +860,17 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 
     if (weighted) {
       p <- igraph::shortest_paths(graph = g, from = ego.node, to = nearest.node,
-        mode = "all", weights = edges$d, algorithm = "dijkstra")$vpath
+        weights = edges$d)$vpath
     } else {
-      p <- igraph::shortest_paths(graph = g, from = ego.node, to = nearest.node,
-        mode = "all", algorithm = "dijkstra")
+      p <- igraph::shortest_paths(graph = g, from = ego.node, to = nearest.node)
     }
   } else if (length(ego.node) > 1) {
     d.multi.ego <- lapply(ego.node, function(x) {
       if (weighted) {
-        igraph::distances(graph = g, from = x, to = alter.node, mode = "all",
-          weights = edges$d, algorithm = "dijkstra")
+        igraph::distances(graph = g, from = x, to = alter.node,
+          weights = edges$d)
       } else {
-        igraph::distances(graph = g, from = x, to = alter.node, mode = "all",
-          algorithm = "dijkstra")
+        igraph::distances(graph = g, from = x, to = alter.node)
       }
     })
 
@@ -898,11 +891,10 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 
     if (weighted) {
       p <- igraph::shortest_paths(graph = g, from = nr.ego.node, 
-        to = nr.alter.node, mode = "all", weights = edges$d,
-        algorithm = "dijkstra")$vpath
+        to = nr.alter.node, weights = edges$d)$vpath
     } else {
       p <- igraph::shortest_paths(graph = g, from = nr.ego.node, 
-        to = nr.alter.node, mode = "all", algorithm = "dijkstra")
+        to = nr.alter.node)
     }
   }
 
@@ -972,10 +964,9 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
   if (length(ego.node) == 1) {
     if (weighted) {
       d <- igraph::distances(graph = g, from = ego.node, to = alter.node, 
-        mode = "all", weights = edges$d, algorithm = "dijkstra")
+        weights = edges$d)
     } else {
-      d <- igraph::distances(graph = g, from = ego.node, to = alter.node, 
-        mode = "all", algorithm = "dijkstra")
+      d <- igraph::distances(graph = g, from = ego.node, to = alter.node)
     }
 
     nearest.node <- dimnames(d)[[2]][which.min(d)]
@@ -983,20 +974,18 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 
     if (weighted) {
       p <- igraph::shortest_paths(graph = g, from = ego.node, to = nearest.node,
-        mode = "all", weights = edges$d, algorithm = "dijkstra")$vpath
+        weights = edges$d)$vpath
     } else {
-      p <- igraph::shortest_paths(graph = g, from = ego.node, to = nearest.node,
-        mode = "all", algorithm = "dijkstra")
+      p <- igraph::shortest_paths(graph = g, from = ego.node, to = nearest.node)
     }
 
   } else if (length(ego.node) > 1) {
     d.multi.ego <- lapply(ego.node, function(x) {
       if (weighted) {
         igraph::distances(graph = g, from = x, to = alter.node, 
-          mode = "all", weights = edges$d, algorithm = "dijkstra")
+          weights = edges$d)
       } else {
-        igraph::distances(graph = g, from = x, to = alter.node,
-          mode = "all", algorithm = "dijkstra")
+        igraph::distances(graph = g, from = x, to = alter.node)
       }
     })
 
@@ -1011,11 +1000,10 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 
     if (weighted) {
       p <- igraph::shortest_paths(graph = g, from = nr.ego.node, 
-        to = nr.alter.node, mode = "all", weights = edges$d,
-        algorithm = "dijkstra")$vpath
+        to = nr.alter.node, weights = edges$d)$vpath
     } else {
       p <- igraph::shortest_paths(raph = g, from = nr.ego.node, 
-        to = nr.alter.node, mode = "all", algorithm = "dijkstra")
+        to = nr.alter.node)
     }
 
     orgn <- orgn[ego.id]
