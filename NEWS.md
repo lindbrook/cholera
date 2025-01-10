@@ -1,3 +1,8 @@
+### cholera 0.8.0.9525
+
+- remove mode and algorithm in igraph: distances() and shortest_paths().
+
+
 ### cholera 0.8.0.9524
 
 - specify mode and algorithm in igraph: distances() and shortest_paths().
