@@ -78,26 +78,26 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   ## compute paths for case.set == "observed" ##
 
   if (case.set == "observed" | case.set == "snow") {
-    paths <- parallel::mclapply(seq_along(case), function(i) {
-      igraph::shortest_paths(graph = g,
-        from = nodes[nodes$case == case[i], "node"],
-        to = nodes.pump[nodes.pump$pump == pump[i], "node"],
-        weights = edges$d)$vpath
-    }, mc.cores = cores)
+    neigh.edges <- lapply(names(case.pump), function(p.nm) {
+      pump.sel <- p.select$pump == p.nm
 
-    names(paths) <- case
+      id2 <- lapply(case.pump[[p.nm]], function(cs) {
+        case.sel <- nodes$case == cs
+        p <- igraph::shortest_paths(graph = g,
+                                    from = nodes[case.sel, "node"],
+                                    to = p.select[pump.sel, "node"],
+                                    weights = edges$d)$vpath
+        p <- names(unlist(p))
 
-    case.pump <- lapply(sort(unique(pump)), function(x) case[pump %in% x])
-    names(case.pump) <- pump.nm
+        edge.select <- vapply(seq_along(p[-1]), function(i) {
+          ab <- edges$node1 %in% p[i] & edges$node2 %in% p[i + 1]
+          ba <- edges$node2 %in% p[i] & edges$node1 %in% p[i + 1]
+          which(ab | ba)
+        }, numeric(1L))
 
-    path.pump <- lapply(sort(unique(pump)), function(x) paths[pump %in% x])
-    names(path.pump) <- pump.nm
-
-    neigh.edges <- lapply(names(path.pump), function(nm) {
-      p.neigh <- path.pump[[nm]]
-      p <- lapply(p.neigh, function(x) names(unlist(x)))
-      edge.id <- parallel::mclapply(p, identifyEdge, edges, mc.cores = cores)
-      edges[unique(unlist(edge.id)), "id2"]
+        edges[edge.select, "id2"]
+      })
+      unique(unlist(id2))
     })
 
     obs.pump.nm <- paste0("p", obs.pump)

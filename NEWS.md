@@ -1,3 +1,8 @@
+### cholera 0.8.0.9527
+
+- amend computation of neighborhood edges in walkingB(case.set = "observed").
+
+
 ### cholera 0.8.0.9526
 
 - fix order of graph edges in embedNodes() for neighborhoodDataB().
