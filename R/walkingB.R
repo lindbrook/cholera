@@ -215,7 +215,8 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
 
       invisible(lapply(names(pearl.string), function(nm) {
         polygon(cholera::regular.cases[pearl.string[[nm]], ],
-          col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = 2/3))
+          col = grDevices::adjustcolor(x$snow.colors[paste0("p", nm)],
+          alpha.f = 2/3))
       }))
     }
 
