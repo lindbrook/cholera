@@ -197,7 +197,7 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
       sim.proj.segs <- unique(sim.proj$road.segment)
 
     } else if (type == "area.points") {
-      points(reg.cases[x$nr.pump$case, vars], pch = 15, cex = 1.25,
+      points(reg.cases[x$nr.pump$case - 2000L, vars], pch = 15, cex = 1.25,
         col = x$snow.colors[paste0("p", x$nr.pump$pump)])
       addRoads(col = "black", latlong = x$latlong)
 
