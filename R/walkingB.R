@@ -16,8 +16,11 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
     stop('case.set must be "observed", "expected" or "snow".', call. = FALSE)
   }
 
-  cores <- multiCore(multi.core)
-  if (.Platform$OS.type == "windows" & cores > 1) cores <- 1L
+  if (.Platform$OS.type == "windows") {
+    cores <- 1L
+  } else {
+    cores <- multiCore(multi.core)
+  }
 
   if (vestry) {
     pump.data <- cholera::pumps.vestry
