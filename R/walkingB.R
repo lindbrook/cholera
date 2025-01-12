@@ -37,42 +37,46 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   g <- dat$g
   nodes <- dat$nodes
   edges <- dat$edges
-  nodes.pump <- dat$nodes.pump
+
+  p.select <- nodes[nodes$pump != 0 & nodes$pump %in% p.sel, ]
+  p.select <- p.select[order(p.select$pump), ]
 
   case.data <- nodes[nodes$case != 0, ]
   case.data <- case.data[order(case.data$case), ]
 
-  if (case.set == "expected") {
+  if (case.set == "observed") {
+    case <- case.data$case
+  } else if (case.set == "expected") {
     if (latlong) {
       sim.proj <- cholera::latlong.sim.ortho.proj
     } else {
       sim.proj <- cholera::sim.ortho.proj
     }
+
     # Falconberg Court and Mews: isolate roads without a pump #
     falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
     sel <- sim.proj$road.segment %in% falconberg.ct.mews
     FCM.cases <- sim.proj[sel, "case"]
     case <- case.data$case[!case.data$case %in% FCM.cases]
-  } else {
-    case <- case.data$case
   }
 
   ds <- parallel::mclapply(case, function(x) {
     igraph::distances(graph = g,
                       v = nodes[nodes$case == x, "node"],
-                      to = nodes.pump[nodes.pump$pump %in% p.sel, "node"],
+                      to = p.select$node,
                       weights = edges$d)
   }, mc.cores = cores)
 
   d <- vapply(ds, min, numeric(1L))
   pump <- p.sel[vapply(ds, which.min, numeric(1L))]
-  pump.nm <- paste0("p", sort(unique(pump)))
   nr.pump <- data.frame(case = case, pump = pump, distance = d)
 
-  case.pump <- lapply(sort(unique(pump)), function(x) case[pump %in% x])
-  names(case.pump) <- pump.nm
+  obs.pump <- sort(unique(pump))
+  case.pump <- lapply(obs.pump, function(x) case[pump %in% x])
+  names(case.pump) <- obs.pump
 
   ## compute paths for case.set == "observed" ##
+
   if (case.set == "observed" | case.set == "snow") {
     paths <- parallel::mclapply(seq_along(case), function(i) {
       igraph::shortest_paths(graph = g,
@@ -96,7 +100,9 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
       edges[unique(unlist(edge.id)), "id2"]
     })
 
-    names(neigh.edges) <- pump.nm
+    obs.pump.nm <- paste0("p", obs.pump)
+    names(neigh.edges) <- obs.pump.nm
+    names(case.pump) <- obs.pump.nm
 
     out <- list(case.pump = case.pump,
                 pump.data = pump.data,
@@ -106,7 +112,6 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
                 pump.select = pump.select,
                 p.sel = p.sel,
                 snow.colors = snowColors(vestry = vestry),
-                pump.select = pump.select,
                 latlong = latlong,
                 cores = cores)
   } else {
@@ -117,7 +122,6 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
                 pump.select = pump.select,
                 p.sel = p.sel,
                 snow.colors = snowColors(vestry = vestry),
-                pump.select = pump.select,
                 latlong = latlong,
                 cores = cores)
   }
@@ -139,9 +143,6 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
   ...) {
 
-  edges <- x$edges
-  neigh.edges <- x$neigh.edges
-
   if (x$latlong) {
     vars <- c("lon", "lat")
     seg.vars <- paste0(vars, c(rep(1, 2), rep(2, 2)))
@@ -151,6 +152,8 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
   }
 
   if (x$case.set == "observed") {
+    edges <- x$edges
+    neigh.edges <- x$neigh.edges
     snowMap(add.cases = FALSE, add.pumps = FALSE, latlong = x$latlong)
     invisible(lapply(names(neigh.edges), function(nm) {
       n.edges <- edges[edges$id2 %in% neigh.edges[[nm]], ]
@@ -182,7 +185,7 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
     }
 
   } else if (x$case.set == "expected") {
-    snowMap(add.cases = FALSE, add.pumps = FALSE, add.roads = FALSE, 
+    snowMap(add.cases = FALSE, add.pumps = FALSE, add.roads = FALSE,
       latlong = x$latlong)
 
     if (x$latlong) {
