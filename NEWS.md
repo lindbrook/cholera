@@ -1,3 +1,8 @@
+### cholera 0.8.0.9529
+
+- amend ortho.proj and sim.ortho.proj.
+
+
 ### cholera 0.8.0.9528
 
 - fix colors in plot.walkingB(type = "area.polygons").

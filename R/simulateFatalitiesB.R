@@ -102,7 +102,8 @@ simulateFatalitiesB <- function(recompute.regular.cases = FALSE,
     }
   }, mc.cores = cores)
 
-  sim.ortho.proj <- data.frame(case = idx, do.call(rbind, orthogonal.proj))
+  sim.ortho.proj <- data.frame(case = idx + 2000L, 
+    do.call(rbind, orthogonal.proj))
   row.names(sim.ortho.proj) <- NULL
 
   list(regular.cases = reg.cases, sim.ortho.proj = sim.ortho.proj)
