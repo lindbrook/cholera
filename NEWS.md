@@ -1,3 +1,8 @@
+### cholera 0.8.0.9528
+
+- fix colors in plot.walkingB(type = "area.polygons").
+
+
 ### cholera 0.8.0.9527
 
 - amend computation of neighborhood edges in walkingB(case.set = "observed").
