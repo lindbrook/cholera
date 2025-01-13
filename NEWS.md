@@ -1,3 +1,8 @@
+### cholera 0.8.0.9530
+
+- change igraph::distances(from) to igraph::distances(v) in walkingPath().
+
+
 ### cholera 0.8.0.9529
 
 - amend ortho.proj and sim.ortho.proj.
