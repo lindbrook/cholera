@@ -264,7 +264,6 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
         sel <- cholera::landmark.squaresB$name == obs.sq
         text(cholera::landmark.squaresB[sel, c(ew, ns)], labels = sq.label,
           col = "red", cex = 0.8)
-        # text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
       } else {
         label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
         names(label.dat) <- vars
@@ -282,7 +281,6 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
           }
         }
         text(label.dat, labels = land.label, col = "red", cex = 0.8)
-        # text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
       }
     }
 
@@ -302,8 +300,6 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
           text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",
             cex = 0.8)
-          # text(land[land$case == dest, vars], pos = 1, labels = dest,
-          #   col = "red")
         } else if (land.tmp[, ew] != land.tmp[, paste0(ew, ".lab")]) {
           label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
           names(label.dat) <- vars
@@ -321,8 +317,6 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
             }
           }
           text(label.dat, labels = land.label, col = "red", cex = 0.8)
-          # text(land[land$case == dest, vars], pos = 1, labels = dest,
-          #   col = "red")
         } else {
           label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
           names(label.dat) <- vars
