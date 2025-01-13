@@ -705,7 +705,7 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
 
   if (length(ego.node) == 1) {
     if (weighted) {
-      d <- igraph::distances(graph = g, v = ego.node, to = alter.node, 
+      d <- igraph::distances(graph = g, v = ego.node, to = alter.node,
         weights = edges$d)
     } else {
       d <- igraph::distances(graph = g, v = ego.node, to = alter.node)
@@ -715,10 +715,10 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
     nearest.dstn <- as.character(alters[alters$node == nearest.node, ]$pump)
 
     if (weighted) {
-      p <- igraph::shortest_paths(graph = g, from = ego.node, 
+      p <- igraph::shortest_paths(graph = g, from = ego.node,
         to = alter.node[nearest.dstn], weights = edges$d)$vpath
     } else {
-      p <- igraph::shortest_paths(graph = g, from = ego.node, 
+      p <- igraph::shortest_paths(graph = g, from = ego.node,
         to = alter.node[nearest.dstn])
     }
   } else if (length(ego.node) > 1) {
@@ -747,10 +747,10 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
     nearest.dstn <- nodes[nodes$node == nr.alter.node, ]$pump
 
     if (weighted) {
-      p <- igraph::shortest_paths(graph = g, from = nr.ego.node, 
+      p <- igraph::shortest_paths(graph = g, from = nr.ego.node,
         to = nr.alter.node, weights = edges$d)$vpath
     } else {
-      p <- igraph::shortest_paths(graph = g, from = nr.ego.node, 
+      p <- igraph::shortest_paths(graph = g, from = nr.ego.node,
         to = nr.alter.node)
     }
   }
@@ -884,10 +884,10 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     nearest.dstn <- nodes[sel, ]$case + nodes[sel, ]$land
 
     if (weighted) {
-      p <- igraph::shortest_paths(graph = g, from = nr.ego.node, 
+      p <- igraph::shortest_paths(graph = g, from = nr.ego.node,
         to = nr.alter.node, weights = edges$d)$vpath
     } else {
-      p <- igraph::shortest_paths(graph = g, from = nr.ego.node, 
+      p <- igraph::shortest_paths(graph = g, from = nr.ego.node,
         to = nr.alter.node)
     }
   }
@@ -993,10 +993,10 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     nearest.dstn <- nodes[nodes$node == nr.alter.node, ]$pump
 
     if (weighted) {
-      p <- igraph::shortest_paths(graph = g, from = nr.ego.node, 
+      p <- igraph::shortest_paths(graph = g, from = nr.ego.node,
         to = nr.alter.node, weights = edges$d)$vpath
     } else {
-      p <- igraph::shortest_paths(raph = g, from = nr.ego.node, 
+      p <- igraph::shortest_paths(raph = g, from = nr.ego.node,
         to = nr.alter.node)
     }
 
