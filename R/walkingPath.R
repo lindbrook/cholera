@@ -724,10 +724,10 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
   } else if (length(ego.node) > 1) {
     d.multi.ego <- lapply(ego.node, function(x) {
       if (weighted) {
-        igraph::distances(graph = g, from = x, to = alter.node,
+        igraph::distances(graph = g, v = x, to = alter.node,
           weights = edges$d)
       } else {
-        igraph::distances(graph = g, from = x, to = alter.node)
+        igraph::distances(graph = g, v = x, to = alter.node)
       }
     })
 
@@ -840,10 +840,10 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 
   if (length(ego.node) == 1) {
     if (weighted) {
-      d <- igraph::distances(graph = g, from = ego.node, to = alter.node,
+      d <- igraph::distances(graph = g, v = ego.node, to = alter.node,
         weights = edges$d)
     } else {
-      d <- igraph::distances(raph = g, from = ego.node, to = alter.node)
+      d <- igraph::distances(raph = g, v = ego.node, to = alter.node)
     }
 
     if (length(d) == 1) nearest.node <- dimnames(d)[[2]]
@@ -861,10 +861,10 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
   } else if (length(ego.node) > 1) {
     d.multi.ego <- lapply(ego.node, function(x) {
       if (weighted) {
-        igraph::distances(graph = g, from = x, to = alter.node,
+        igraph::distances(graph = g, v = x, to = alter.node,
           weights = edges$d)
       } else {
-        igraph::distances(graph = g, from = x, to = alter.node)
+        igraph::distances(graph = g, v = x, to = alter.node)
       }
     })
 
@@ -957,10 +957,10 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 
   if (length(ego.node) == 1) {
     if (weighted) {
-      d <- igraph::distances(graph = g, from = ego.node, to = alter.node, 
+      d <- igraph::distances(graph = g, v = ego.node, to = alter.node,
         weights = edges$d)
     } else {
-      d <- igraph::distances(graph = g, from = ego.node, to = alter.node)
+      d <- igraph::distances(graph = g, v = ego.node, to = alter.node)
     }
 
     nearest.node <- dimnames(d)[[2]][which.min(d)]
@@ -976,10 +976,10 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
   } else if (length(ego.node) > 1) {
     d.multi.ego <- lapply(ego.node, function(x) {
       if (weighted) {
-        igraph::distances(graph = g, from = x, to = alter.node, 
+        igraph::distances(graph = g, v = x, to = alter.node,
           weights = edges$d)
       } else {
-        igraph::distances(graph = g, from = x, to = alter.node)
+        igraph::distances(graph = g, v = x, to = alter.node)
       }
     })
 
