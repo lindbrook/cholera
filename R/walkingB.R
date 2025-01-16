@@ -41,52 +41,33 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   p.select <- nodes[nodes$pump != 0 & nodes$pump %in% p.sel, ]
   p.select <- p.select[order(p.select$pump), ]
 
-  case.data <- nodes[nodes$case != 0, ]
-  case.data <- case.data[order(case.data$case), ]
-
   if (case.set == "observed") {
+    case.data <- nodes[nodes$case != 0, ]
+    case.data <- case.data[order(case.data$case), ]
     case <- case.data$case
-  } else if (case.set == "expected") {
-    if (latlong) {
-      sim.proj <- cholera::latlong.sim.ortho.proj
-    } else {
-      sim.proj <- cholera::sim.ortho.proj
-    }
 
-    # Falconberg Court and Mews: isolate roads without a pump #
-    falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
-    sel <- sim.proj$road.segment %in% falconberg.ct.mews
-    FCM.cases <- sim.proj[sel, "case"]
-    case <- case.data$case[!case.data$case %in% FCM.cases]
-  }
+    ds <- parallel::mclapply(case, function(x) {
+      igraph::distances(graph = g, v = nodes[nodes$case == x, "node"],
+        to = p.select$node, weights = edges$d)
+    }, mc.cores = cores)
 
-  ds <- parallel::mclapply(case, function(x) {
-    igraph::distances(graph = g,
-                      v = nodes[nodes$case == x, "node"],
-                      to = p.select$node,
-                      weights = edges$d)
-  }, mc.cores = cores)
+    d <- vapply(ds, min, numeric(1L))
+    pump <- p.sel[vapply(ds, which.min, numeric(1L))]
+    nr.pump <- data.frame(case = case, pump = pump, distance = d)
 
-  d <- vapply(ds, min, numeric(1L))
-  pump <- p.sel[vapply(ds, which.min, numeric(1L))]
-  nr.pump <- data.frame(case = case, pump = pump, distance = d)
+    obs.pump <- sort(unique(pump))
+    case.pump <- lapply(obs.pump, function(x) case[pump %in% x])
+    names(case.pump) <- obs.pump
 
-  obs.pump <- sort(unique(pump))
-  case.pump <- lapply(obs.pump, function(x) case[pump %in% x])
-  names(case.pump) <- obs.pump
+    ## compute observed path edges ##
 
-  ## compute paths for case.set == "observed" ##
-
-  if (case.set == "observed" | case.set == "snow") {
     neigh.edges <- lapply(names(case.pump), function(p.nm) {
       pump.sel <- p.select$pump == p.nm
 
       id2 <- lapply(case.pump[[p.nm]], function(cs) {
         case.sel <- nodes$case == cs
-        p <- igraph::shortest_paths(graph = g,
-                                    from = nodes[case.sel, "node"],
-                                    to = p.select[pump.sel, "node"],
-                                    weights = edges$d)$vpath
+        p <- igraph::shortest_paths(graph = g, from = nodes[case.sel, "node"],
+          to = p.select[pump.sel, "node"], weights = edges$d)$vpath
         p <- names(unlist(p))
 
         edge.select <- vapply(seq_along(p[-1]), function(i) {
