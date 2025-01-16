@@ -1,3 +1,9 @@
+### cholera 0.8.0.9531
+
+- use road segment endpoint approach for walkingB(case.set = "expected").
+- clean walkingB(case.set = "observed").
+
+
 ### cholera 0.8.0.9530
 
 - change igraph::distances(from) to igraph::distances(v) in walkingPath().
