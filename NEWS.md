@@ -1,3 +1,8 @@
+### cholera 0.8.0.9532
+
+- add optimizations to walkingB(case.set = "observed").
+
+
 ### cholera 0.8.0.9531
 
 - use road segment endpoint approach for walkingB(case.set = "expected").

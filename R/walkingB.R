@@ -46,13 +46,12 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
     case.data <- case.data[order(case.data$case), ]
     case <- case.data$case
 
-    ds <- parallel::mclapply(case, function(x) {
-      igraph::distances(graph = g, v = nodes[nodes$case == x, "node"],
-        to = p.select$node, weights = edges$d)
-    }, mc.cores = cores)
+    ds <- igraph::distances(graph = g, v = case.data$node, to = p.select$node,
+      weights = edges$d)
 
-    d <- vapply(ds, min, numeric(1L))
-    pump <- p.sel[vapply(ds, which.min, numeric(1L))]
+    id <- vapply(seq_len(nrow(ds)), function(i) which.min(ds[i, ]), numeric(1L))
+    d <- vapply(seq_along(id), function(i) ds[i, ][id[i]], numeric(1L))
+    pump <- vapply(seq_along(id), function(i) p.sel[id[i]], integer(1L))
     nr.pump <- data.frame(case = case, pump = pump, distance = d)
 
     obs.pump <- sort(unique(pump))
@@ -61,7 +60,7 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
     ## compute observed path edges ##
 
-    neigh.edges <- lapply(names(case.pump), function(p.nm) {
+    neigh.edges <- parallel::mclapply(names(case.pump), function(p.nm) {
       pump.sel <- p.select$pump == p.nm
 
       id2 <- lapply(case.pump[[p.nm]], function(cs) {
@@ -79,7 +78,7 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
         edges[edge.select, "id2"]
       })
       unique(unlist(id2))
-    })
+    }, mc.cores = cores)
 
     obs.pump.nm <- paste0("p", obs.pump)
     names(neigh.edges) <- obs.pump.nm
