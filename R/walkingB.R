@@ -96,7 +96,6 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
                 cores = cores)
 
   } else if (case.set == "expected") {
-
     ## Falconberg Court and Mews isolate
     falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
     sel <- !cholera::road.segments$id %in% falconberg.ct.mews
