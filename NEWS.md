@@ -1,3 +1,8 @@
+### cholera 0.8.0.9534
+
+- replace cutpoint with more descriptive midpoint in walkingB().
+
+
 ### cholera 0.8.0.9533
 
 - fix validateCase() for Square exits and expected case message.

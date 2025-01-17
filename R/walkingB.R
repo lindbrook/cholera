@@ -135,7 +135,7 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
     diff_pump.endpts <- endpt.data[endpt.data$pump1 != endpt.data$pump2, ]
 
-    cutpoints <- lapply(diff_pump.endpts$id, function(seg) {
+    midpoint <- lapply(diff_pump.endpts$id, function(seg) {
       sel <- diff_pump.endpts$id == seg
       seg.df <- data.frame(x = unlist(diff_pump.endpts[sel, c("x1", "x2")]),
                            y = unlist(diff_pump.endpts[sel, c("y1", "y2")]),
@@ -173,29 +173,29 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
                  y = c(extended.seg[ego, "y"] + delta.y))
     })
 
-    cutpoints <- data.frame(id = diff_pump.endpts$id, do.call(rbind, cutpoints),
+    midpoint <- data.frame(id = diff_pump.endpts$id, do.call(rbind, midpoint),
       row.names = NULL)
 
-    diff_pump.cases <- parallel::mclapply(cutpoints$id, function(seg) {
+    diff_pump.cases <- parallel::mclapply(midpoint$id, function(seg) {
       sel <- cholera::sim.ortho.proj$road.segment == seg
       seg.data <- cholera::sim.ortho.proj[sel, ]
 
-      cut.pt <- cutpoints[cutpoints$id == seg, c("x", "y")]
+      mid.pt <- midpoint[midpoint$id == seg, c("x", "y")]
       ep.data <- endpt.data[endpt.data$id == seg, ]
 
       case.data <- stats::setNames(seg.data[, c("x.proj", "y.proj")],
         c("x", "y"))
 
-      tmp <- lapply(seq_along(case.data$x), function(i) case.data[i, ] - cut.pt)
-      cut.pt.delta <- sign(do.call(rbind, tmp))
+      tmp <- lapply(seq_along(case.data$x), function(i) case.data[i, ] - mid.pt)
+      mid.pt.delta <- sign(do.call(rbind, tmp))
 
-      one <- sign(ep.data[, c("x1", "y1")] - cut.pt)
-      two <- sign(ep.data[, c("x2", "y2")] - cut.pt)
+      one <- sign(ep.data[, c("x1", "y1")] - mid.pt)
+      two <- sign(ep.data[, c("x2", "y2")] - mid.pt)
 
-      pmp <- vapply(seq_along(cut.pt.delta$x), function(i) {
-        if (all(cut.pt.delta[i, ] == one)) {
+      pmp <- vapply(seq_along(mid.pt.delta$x), function(i) {
+        if (all(mid.pt.delta[i, ] == one)) {
           ep.data[, paste0("pump", 1)]
-        } else if (all(cut.pt.delta[i, ] == two)) {
+        } else if (all(mid.pt.delta[i, ] == two)) {
           ep.data[, paste0("pump", 2)]
         }
       }, numeric(1L))
