@@ -1,3 +1,8 @@
+### cholera 0.8.0.9533
+
+- fix validateCase() for Square exits and expected case message.
+
+
 ### cholera 0.8.0.9532
 
 - add optimizations to walkingB(case.set = "observed").

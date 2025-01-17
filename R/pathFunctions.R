@@ -157,7 +157,7 @@ validateCase <- function(x, case.set, include.landmarks) {
       x <- vapply(x, caseAndSpace, character(1L))
 
       # Square exits
-      if (grepl("-", x)) {
+      if (any(grepl("-", x))) {
         nm.string <- unlist(strsplit(x, "-"))
         ptB <- toupper(nm.string[2])
         x <- paste0(nm.string[1], "-", ptB)
@@ -201,7 +201,8 @@ validateCase <- function(x, case.set, include.landmarks) {
   } else if (case.set == "expected") {
     case.id <- cholera::sim.ortho.proj$case # equiv. to latlong.sim.ortho.proj
     case.nm <- paste(case.id)
-    case.msg <- paste0("Case IDs range from 10001 to ", max(case.id), ".")
+    case.msg <- paste0("Expected case IDs range from ", min(case.id), " to ", 
+      max(case.id), ".")
 
     if (include.landmarks) {
       vars.lndmrk <- c("case", "name")
