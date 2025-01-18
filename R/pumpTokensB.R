@@ -53,7 +53,7 @@ pumpTokensB <- function(x, type) {
   } else if (x$case.set == "expected") {
     if (is.null(x$pump.select)) {
       if (type == "roads") {
-        points(all.data, pch = 24, lwd = 1.5, col = "black")
+        points(all.data, pch = 17, lwd = 1.5, col = x$snow.colors)
         text(all.data, pos = 1, cex = 0.9, labels = all.labels, col = "black")
       } else {
         points(all.data, pch = 24, bg = x$snow.colors, col = "white")
@@ -68,10 +68,10 @@ pumpTokensB <- function(x, type) {
 
       if (type == "roads") {
         if (is.null(x$pump.select)) {
-          points(all.data, pch = 24, col = "black")
+          points(all.data, pch = 17, col = x$snow.colors)
           text(all.data, pos = 1, cex = 0.9, col = "black", labels = all.labels)
         } else {
-          points(pos.data, pch = 24, col = "black")
+          points(pos.data, pch = 17, col = x$snow.colors[obs])
           text(pos.data, pos = 1, cex = 0.9, labels = pos.labels, col = "black")
           points(neg.data, pch = 24, col = "gray")
           text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
