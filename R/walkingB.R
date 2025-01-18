@@ -334,6 +334,11 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
           lwd = 2)
       }))
 
+      falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
+      sel <- cholera::road.segments$id %in% falconberg.ct.mews
+      FCM <- cholera::road.segments[sel, ]
+      segments(FCM$x1, FCM$y1, FCM$x2, FCM$y2, lty = "dotted")
+
     } else if (type == "area.points") {
       invisible(lapply(names(x$exp.pump.case), function(nm) {
         points(reg.cases[x$exp.pump.case[[nm]] - 2000L, ], pch = 15, cex = 1.25,
