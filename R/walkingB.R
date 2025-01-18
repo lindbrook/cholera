@@ -286,14 +286,11 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
 
     if (x$latlong) {
       reg.cases <- cholera::latlong.regular.cases
-      # sim.proj <- cholera::latlong.sim.ortho.proj
     } else {
       reg.cases <- cholera::regular.cases
-      # sim.proj <- cholera::sim.ortho.proj
     }
 
     if (type == "roads") {
-      # sim.proj.segs <- unique(sim.proj$road.segment)
 
     } else if (type == "area.points") {
       invisible(lapply(names(x$exp.pump.case), function(nm) {
