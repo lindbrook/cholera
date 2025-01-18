@@ -212,7 +212,35 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
     names(exp.pump.case) <- names(same_pump.cases)
 
+    diff_pump.road_segs <- lapply(midpoint$id, function(seg) {
+      vars <- c("x", "y")
+      mid.pt <- midpoint[midpoint$id == seg, vars]
+
+      ep.data <- endpt.data[endpt.data$id == seg, ]
+      tmp <- rbind(ep.data, ep.data)
+      tmp[1, c("x2", "y2")] <- mid.pt
+      tmp[2, c("x1", "y1")] <- mid.pt
+      tmp[, c("n1", "n2")] <- NULL
+      tmp$pump <- c(tmp[1, "pump1"], tmp[2, "pump2"])
+      tmp[, c("pump1", "pump2")] <- NULL
+
+      mid.d <- vapply(seq_along(tmp$street), function(i) {
+        stats::dist(rbind(stats::setNames(tmp[i, paste0(vars, 1)], vars),
+                          stats::setNames(tmp[i, paste0(vars, 2)], vars)))
+      }, numeric(1L))
+
+      tmp$d <- unlist(ep.data[, c("d1", "d2")]) + mid.d
+      tmp[, c("d1", "d2")] <- NULL
+      tmp$id <- paste0(tmp$street, "-", c("A", "Z"))
+      tmp
+    })
+
+    diff_pump.road_segs <- do.call(rbind, diff_pump.road_segs)
+    diff_pump.road_segs <- split(diff_pump.road_segs, diff_pump.road_segs$pump)
+
     out <- list(exp.pump.case = exp.pump.case,
+                same_pump.road_segs = same_pump.road_segs,
+                diff_pump.road_segs = diff_pump.road_segs,
                 pump.data = pump.data,
                 case.set = case.set,
                 pump.select = pump.select,
@@ -286,14 +314,30 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
 
     if (x$latlong) {
       reg.cases <- cholera::latlong.regular.cases
-      # sim.proj <- cholera::latlong.sim.ortho.proj
     } else {
       reg.cases <- cholera::regular.cases
-      # sim.proj <- cholera::sim.ortho.proj
     }
 
     if (type == "roads") {
-      # sim.proj.segs <- unique(sim.proj$road.segment)
+      invisible(lapply(names(x$same_pump.road_segs), function(nm) {
+        sel <- cholera::road.segments$id %in% x$same_pump.road_seg[[nm]]
+        tmp <- cholera::road.segments[sel, ]
+        pmp <- paste0("p", nm)
+        segments(tmp$x1, tmp$y1, tmp$x2, tmp$y2, col = x$snow.colors[pmp],
+          lwd = 2)
+      }))
+
+      invisible(lapply(names(x$diff_pump.road_segs), function(nm) {
+        tmp <- x$diff_pump.road_segs[[nm]]
+        pmp <- paste0("p", nm)
+        segments(tmp$x1, tmp$y1, tmp$x2, tmp$y2, col = x$snow.colors[pmp],
+          lwd = 2)
+      }))
+
+      falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
+      sel <- cholera::road.segments$id %in% falconberg.ct.mews
+      FCM <- cholera::road.segments[sel, ]
+      segments(FCM$x1, FCM$y1, FCM$x2, FCM$y2, lty = "dotted")
 
     } else if (type == "area.points") {
       invisible(lapply(names(x$exp.pump.case), function(nm) {
