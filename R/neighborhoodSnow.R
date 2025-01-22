@@ -142,9 +142,6 @@ plot.neighborhood_snow <- function(x, type = "area.points", ...) {
 
       sel <- cholera::sim.ortho.proj$road.segment == nm
       sim.segment <- cholera::sim.ortho.proj[sel, ]
-      # plot(sim.segment[, paste0(vars, ".proj")])
-      # plot(sim.segment$x.proj, rep(0, nrow(sim.segment)))
-      # abline(v = obs.case$x.proj, col = "red")
 
       if (exit == 1) {
         sim.segment[sim.segment$x.proj >= obs.case$x.proj, "case"]
