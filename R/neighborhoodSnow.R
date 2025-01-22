@@ -59,13 +59,23 @@ plot.neighborhood_snow <- function(x, type = "area.points",
   edges <- x$edges
   id2 <- unique(unlist(x$path.id2))
 
+  z <- walkingB(7)
+
   snowMap(add.cases = FALSE, add.pumps = FALSE)
 
   if (type == "roads") {
+    p7.col <- cholera::snowColors()["p7"]
     snow.edge <- edges[edges$id2 %in% id2, ]
     segments(snow.edge$x1, snow.edge$y1, snow.edge$x2, snow.edge$y2,
-      col = cholera::snowColors()["p7"], lwd = 2)
-
+      col = p7.col, lwd = 2)
+    pumpTokensB(z, type = "obseved")
+    sel <- cholera::fatalities.address$anchor %in% x$snow.anchors
+    points(cholera::fatalities.address[sel, vars], pch = 16, col = p7.col,
+      cex = 0.5)
+    if (missing.snow) {
+      points(cholera::fatalities.address[!sel, vars],  pch = 16, col = "red",
+        cex = 0.5)
+    }
   } else if (type %in% c("area.points", "area.polygons")) {
     seg.data <- data.frame(do.call(rbind, strsplit(id2, "-")))
     names(seg.data) <- c("street", "subseg")
@@ -160,11 +170,20 @@ plot.neighborhood_snow <- function(x, type = "area.points",
 
     if (type == "area.points") {
       points(sim.data, col = p7.col, pch = 16, cex = 0.25)
+      pumpTokensB(z, type = "obseved")
     } else if (type == "area.polygons") {
       periphery.cases <- peripheryCases(row.names(sim.data))
       pearl.string <- travelingSalesman(periphery.cases,
         tsp.method = "repetitive_nn")
       polygon(cholera::regular.cases[pearl.string, ], col = p7.col)
+      pumpTokensB(z, type = "obseved")
+    }
+
+    if (missing.snow) {
+      sel <- !cholera::fatalities.address$anchor %in% x$snow.anchors
+      points(cholera::fatalities.address[sel, vars],  pch = 16, col = "red",
+        cex = 0.5)
     }
   }
+  title("Snow's Graphical Annotation Neighborhood")
 }
