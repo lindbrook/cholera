@@ -1,3 +1,8 @@
+### cholera 0.8.0.9537
+
+- add neighborhoodSnow() prototype.
+
+
 ### cholera 0.8.0.9536
 
 - amend/restore n.points in peripheryCases().
