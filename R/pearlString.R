@@ -16,9 +16,9 @@ peripheryCases <- function(n.points, latlong = FALSE) {
   radius <- pearlStringRadius(latlong = latlong)
 
   if (latlong) {
-    n.area <- cholera::latlong.regular.cases[n.points - 2000L, c("x", "y")]
+    n.area <- cholera::latlong.regular.cases[n.points, c("x", "y")]
   } else {
-    n.area <- cholera::regular.cases[n.points - 2000L, ]
+    n.area <- cholera::regular.cases[n.points, ]
   }
 
   periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {

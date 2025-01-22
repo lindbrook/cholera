@@ -1,3 +1,8 @@
+### cholera 0.8.0.9536
+
+- amend/restore n.points in peripheryCases().
+
+
 ### cholera 0.8.0.9535
 
 - implement plot.walkingB(type = "roads").
