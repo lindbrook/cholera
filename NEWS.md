@@ -1,3 +1,9 @@
+### cholera 0.8.0.9538
+
+- add cases and pumps to plot.neighborhood_snow().
+- add/set plot.neighborhood_snow(missing.snow = TRUE).
+
+
 ### cholera 0.8.0.9537
 
 - add neighborhoodSnow() prototype.

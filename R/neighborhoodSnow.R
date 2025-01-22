@@ -36,7 +36,8 @@ neighborhoodSnow <- function(latlong = FALSE) {
 
   names(path.id2) <- snow.anchors
 
-  out <- list(edges = edges, path.id2 = path.id2, latlong = latlong)
+  out <- list(edges = edges, path.id2 = path.id2, snow.anchors = snow.anchors,
+    latlong = latlong)
   class(out) <- "neighborhood_snow"
   out
 }
@@ -45,23 +46,36 @@ neighborhoodSnow <- function(latlong = FALSE) {
 #'
 #' @param x An object of class "neighborhood_snow" created by \code{neighborhoodSnow()}.
 #' @param type Character. "roads", "area.points" or "area.polygons".
+#' @param missing.snow Logical. Plot missing anchor cases.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.neighborhood_snow <- function(x, type = "area.points", ...) {
+plot.neighborhood_snow <- function(x, type = "area.points",
+  missing.snow = TRUE, ...) {
+
   if (x$latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
   edges <- x$edges
   id2 <- unique(unlist(x$path.id2))
 
+  z <- walkingB(7)
+
   snowMap(add.cases = FALSE, add.pumps = FALSE)
 
   if (type == "roads") {
+    p7.col <- cholera::snowColors()["p7"]
     snow.edge <- edges[edges$id2 %in% id2, ]
     segments(snow.edge$x1, snow.edge$y1, snow.edge$x2, snow.edge$y2,
-      col = cholera::snowColors()["p7"], lwd = 2)
-
+      col = p7.col, lwd = 2)
+    pumpTokensB(z, type = "obseved")
+    sel <- cholera::fatalities.address$anchor %in% x$snow.anchors
+    points(cholera::fatalities.address[sel, vars], pch = 16, col = p7.col,
+      cex = 0.5)
+    if (missing.snow) {
+      points(cholera::fatalities.address[!sel, vars],  pch = 16, col = "red",
+        cex = 0.5)
+    }
   } else if (type %in% c("area.points", "area.polygons")) {
     seg.data <- data.frame(do.call(rbind, strsplit(id2, "-")))
     names(seg.data) <- c("street", "subseg")
@@ -141,9 +155,6 @@ plot.neighborhood_snow <- function(x, type = "area.points", ...) {
 
       sel <- cholera::sim.ortho.proj$road.segment == nm
       sim.segment <- cholera::sim.ortho.proj[sel, ]
-      # plot(sim.segment[, paste0(vars, ".proj")])
-      # plot(sim.segment$x.proj, rep(0, nrow(sim.segment)))
-      # abline(v = obs.case$x.proj, col = "red")
 
       if (exit == 1) {
         sim.segment[sim.segment$x.proj >= obs.case$x.proj, "case"]
@@ -159,11 +170,20 @@ plot.neighborhood_snow <- function(x, type = "area.points", ...) {
 
     if (type == "area.points") {
       points(sim.data, col = p7.col, pch = 16, cex = 0.25)
+      pumpTokensB(z, type = "obseved")
     } else if (type == "area.polygons") {
       periphery.cases <- peripheryCases(row.names(sim.data))
       pearl.string <- travelingSalesman(periphery.cases,
         tsp.method = "repetitive_nn")
       polygon(cholera::regular.cases[pearl.string, ], col = p7.col)
+      pumpTokensB(z, type = "obseved")
+    }
+
+    if (missing.snow) {
+      sel <- !cholera::fatalities.address$anchor %in% x$snow.anchors
+      points(cholera::fatalities.address[sel, vars],  pch = 16, col = "red",
+        cex = 0.5)
     }
   }
+  title("Snow's Graphical Annotation Neighborhood")
 }
