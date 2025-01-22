@@ -36,7 +36,8 @@ neighborhoodSnow <- function(latlong = FALSE) {
 
   names(path.id2) <- snow.anchors
 
-  out <- list(edges = edges, path.id2 = path.id2, latlong = latlong)
+  out <- list(edges = edges, path.id2 = path.id2, snow.anchors = snow.anchors,
+    latlong = latlong)
   class(out) <- "neighborhood_snow"
   out
 }
