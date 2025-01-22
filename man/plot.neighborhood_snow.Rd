@@ -4,12 +4,15 @@
 \alias{plot.neighborhood_snow}
 \title{Plot method for neighborhoodSnow().}
 \usage{
-\method{plot}{neighborhood_snow}(x, type = "area.points", ...)
+\method{plot}{neighborhood_snow}(x, type = "area.points",
+  missing.snow = TRUE, ...)
 }
 \arguments{
 \item{x}{An object of class "neighborhood_snow" created by \code{neighborhoodSnow()}.}
 
 \item{type}{Character. "roads", "area.points" or "area.polygons".}
+
+\item{missing.snow}{Logical. Plot missing anchor cases.}
 
 \item{...}{Additional plotting parameters.}
 }

@@ -46,10 +46,13 @@ neighborhoodSnow <- function(latlong = FALSE) {
 #'
 #' @param x An object of class "neighborhood_snow" created by \code{neighborhoodSnow()}.
 #' @param type Character. "roads", "area.points" or "area.polygons".
+#' @param missing.snow Logical. Plot missing anchor cases.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.neighborhood_snow <- function(x, type = "area.points", ...) {
+plot.neighborhood_snow <- function(x, type = "area.points",
+  missing.snow = TRUE, ...) {
+
   if (x$latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
