@@ -348,7 +348,7 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
       addRoads(col = "black", latlong = x$latlong)
 
     } else if (type == "area.polygons") {
-      neighborhood.cases <- x$exp.pump.case
+      neighborhood.cases <- lapply(x$exp.pump.case, function(x) x - 2000L)
       periphery.cases <- parallel::mclapply(neighborhood.cases,
         peripheryCases, mc.cores = x$cores)
       pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
