@@ -1,3 +1,8 @@
+### cholera 0.8.0.9540
+
+- set distanceTime() to use "native" or nominal distance.
+
+
 ### cholera 0.8.0.9539
 
 - make caseDistance() internal.

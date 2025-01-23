@@ -33,20 +33,12 @@ segmentLength <- function(id = "216-1", distance.unit = "meter",
       geosphere::distGeo(p1, p2)
     }, numeric(1L))
     names(ds) <- id
-    distances <- ds
   } else {
     dat <- cholera::road.segments[cholera::road.segments$id %in% id, ]
     ds <- vapply(dat$id, function(id) {
       stats::dist(rbind(as.matrix(dat[dat$id == id, c("x1", "y1")]),
                         as.matrix(dat[dat$id == id, c("x2", "y2")])))
     }, numeric(1L))
-    if (distance.unit == "native") {
-      distances <- ds
-    } else if (distance.unit == "yard") {
-      distances <- unitMeter(ds, "yard")
-    } else if (distance.unit == "meter") {
-      distances <- unitMeter(ds, "meter")
-    }
   }
-  distances
+  ds
 }
