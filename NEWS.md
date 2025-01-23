@@ -1,3 +1,8 @@
+### cholera 0.8.0.9539
+
+- make caseDistance() internal.
+
+
 ### cholera 0.8.0.9538
 
 - add cases and pumps to plot.neighborhood_snow().
