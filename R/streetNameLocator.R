@@ -248,14 +248,12 @@ streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
 
     if (add.subtitle) {
       st.segs <- rd.segs[rd.segs$name %in% street.name, "id"]
-
       segment.length <- sum(segmentLength(st.segs, distance.unit,
         latlong = latlong))
-
       est.time <- distanceTime(segment.length, distance.unit = distance.unit,
         time.unit = time.unit, walking.speed = walking.speed)
-
       nominal.time <- nominalTime(est.time, time.unit)
+      segment.length <- unitMeter(segment.length, distance.unit = distance.unit)
 
       if (distance.unit == "meter") {
         subtitle <- paste(round(segment.length, 1), "m;", nominal.time)

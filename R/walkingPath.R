@@ -101,10 +101,11 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     walking.time <- walkingTime(sum(ds), time.unit = time.unit,
       walking.speed = walking.speed)
   } else {
-    ds <- unitMeter(ds, distance.unit = distance.unit)
     walking.time <- distanceTime(sum(ds), distance.unit = distance.unit,
       time.unit = time.unit, walking.speed = walking.speed)
   }
+
+  ds <- unitMeter(ds, distance.unit = distance.unit)
 
   data.summary <- data.frame(origin = path.data$orgn,
                              destination = path.data$dstn,
