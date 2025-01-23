@@ -254,7 +254,6 @@ segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
 
       est.time <- distanceTime(segment.length, distance.unit = distance.unit,
         time.unit = time.unit, walking.speed = walking.speed)
-
       nominal.time <- nominalTime(est.time, time.unit)
 
       if (distance.unit == "meter") {
