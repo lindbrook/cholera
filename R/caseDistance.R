@@ -1,9 +1,9 @@
-#' Compute distance between case fatalities (meters).
+#' Compute Euclidean distance between case fatalities (meters).
 #'
 #' @param a Numeric. Case ID.
 #' @param b Numeric. Case ID.
 #' @param latlong Logical.
-#' @export
+#' @noRd
 
 caseDistance <- function(a = 19, b = 263, latlong = FALSE) {
   if (latlong) {
