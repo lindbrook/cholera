@@ -25,7 +25,7 @@ segmentLength <- function(id = "216-1", latlong = FALSE) {
     ds <- vapply(seq_along(dat$id), function(i) {
       p1 <- dat[i, c("lon1", "lat1")]
       p2 <- dat[i, c("lon2", "lat2")]
-      geosphere::distGeo(p1, p2)
+      geosphere::distGeo(p1, p2) / unitMeter(1)
     }, numeric(1L))
     names(ds) <- id
   } else {
