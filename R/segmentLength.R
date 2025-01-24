@@ -1,27 +1,22 @@
 #' Compute length of road segment.
 #'
 #' @param id Character. A concatenation of a street's numeric ID, a whole number between 1 and 528, and a second number used to identify the sub-segments.
-#' @param distance.unit Character. Unit of distance: "meter", "yard" or "native". "native" returns the map's native scale. See \code{vignette("roads")} for information on conversion. latlong = TRUE only returns meters.
 #' @param latlong Logical.
 #' @return An R vector of length one.
-#' @export
+#' @noRd
 #' @examples
 #' segmentLength("242-1")
-#' segmentLength("242-1", distance.unit = "yard")
+#' segmentLength("242-1", latlong = TRUE)
 
-segmentLength <- function(id = "216-1", distance.unit = "meter",
-  latlong = FALSE) {
-
-  if (is.character(id) == FALSE) stop('id\'s type must be character.')
+segmentLength <- function(id = "216-1", latlong = FALSE) {
+  if (is.character(id) == FALSE) {
+    stop('id\'s type must be character.', call. = FALSE)
+  }
   if (all(id %in% cholera::road.segments$id == FALSE)) {
     stop("No valid segment ID(s).", call. = FALSE)
   } else if (any(id %in% cholera::road.segments$id == FALSE)) {
     message("Invalid segment ID(s) removed.")
     id <- id[id %in% cholera::road.segments$id]
-  }
-
-  if (distance.unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('distance.unit must be "meter", "yard" or "native".')
   }
 
   if (latlong) {
