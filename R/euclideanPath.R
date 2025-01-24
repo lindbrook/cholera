@@ -105,15 +105,10 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   d <- path.data$data$d
 
-  if (latlong) {
-    walking.time <- walkingTime(d, time.unit = time.unit,
-      walking.speed = walking.speed)
-  } else {
-    walking.time <- distanceTime(d, distance.unit = distance.unit,
-      time.unit = time.unit, walking.speed = walking.speed)
-  }
+  walking.time <- distanceTime(d, distance.unit = distance.unit,
+    time.unit = time.unit, walking.speed = walking.speed)
 
-  d <- unitMeter(path.data$data$d, distance.unit = distance.unit)
+  d <- unitMeter(d, distance.unit = distance.unit)
 
   data.summary <- data.frame(origin = path.data$data$orgn,
                              destination = path.data$data$dstn,

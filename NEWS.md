@@ -1,6 +1,11 @@
+### cholera 0.8.0.9543
+
+- use native "d" as default for distanceTime() in euclideanPath().
+
+
 ### cholera 0.8.0.9542
 
-- convert meters to "native"/nominal units with segmentLength(latlong = TRUE).
+- convert meters to native/nominal units with segmentLength(latlong = TRUE).
 
 
 ### cholera 0.8.0.9541
