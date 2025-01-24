@@ -516,10 +516,10 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 
   if (latlong) {
     if (nrow(ego.coords) == 1) {
-      ds <- geosphere::distGeo(ego.coords, alter.coords)
+      ds <- geosphere::distGeo(ego.coords, alter.coords) / unitMeter(1)
     } else if (nrow(ego.coords) > 1) {
       d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
-        geosphere::distGeo(ego.coords[i, ], alter.coords)
+        geosphere::distGeo(ego.coords[i, ], alter.coords) / unitMeter(1)
       })
       ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
       orgn <- orgn[ego.id]
@@ -725,10 +725,10 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
 
   if (latlong) {
     if (nrow(ego.coords) == 1) {
-      d <- geosphere::distGeo(ego.coords, alter.coords)
+      d <- geosphere::distGeo(ego.coords, alter.coords) / unitMeter(1)
     } else if (nrow(ego.coords) > 1) {
       d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
-        geosphere::distGeo(ego.coords[i, ], alter.coords)
+        geosphere::distGeo(ego.coords[i, ], alter.coords) / unitMeter(1)
       })
       ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
       orgn <- orgn[ego.id]
@@ -789,10 +789,10 @@ pumpPumpEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
 
   if (latlong) {
     if (nrow(ego.coords) == 1) {
-      d <- geosphere::distGeo(ego.coords, alter.coords)
+      d <- geosphere::distGeo(ego.coords, alter.coords) / unitMeter(1)
     } else if (nrow(ego.coords) > 1) {
       d.multi.ego <- lapply(seq_len(nrow(ego.coords)), function(i) {
-        geosphere::distGeo(ego.coords[i, ], alter.coords)
+        geosphere::distGeo(ego.coords[i, ], alter.coords) / unitMeter(1)
       })
       ego.id <- which.min(vapply(d.multi.ego, min, numeric(1L)))
       orgn <- orgn[ego.id]
