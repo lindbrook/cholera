@@ -1,3 +1,8 @@
+### cholera 0.8.0.9541
+
+- remove distance.unit argument from segmentLength().
+
+
 ### cholera 0.8.0.9540
 
 - set distanceTime() to use "native" or nominal distance.
