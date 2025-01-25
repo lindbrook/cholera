@@ -1,3 +1,8 @@
+### cholera 0.8.0.9544
+
+- use native "d" as default for distanceTime() in walkingPath().
+
+
 ### cholera 0.8.0.9543
 
 - use native "d" as default for distanceTime() in euclideanPath().
