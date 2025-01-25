@@ -97,13 +97,10 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     edges[edge.sel, ]$d
   }, numeric(1L))
 
-  if (latlong) {
-    walking.time <- walkingTime(sum(ds), time.unit = time.unit,
-      walking.speed = walking.speed)
-  } else {
-    walking.time <- distanceTime(sum(ds), distance.unit = distance.unit,
-      time.unit = time.unit, walking.speed = walking.speed)
-  }
+  if (latlong) ds <- ds / unitMeter(1)
+
+  walking.time <- distanceTime(sum(ds), distance.unit = distance.unit,
+    time.unit = time.unit, walking.speed = walking.speed)
 
   ds <- unitMeter(ds, distance.unit = distance.unit)
 
