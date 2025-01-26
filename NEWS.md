@@ -1,3 +1,8 @@
+### cholera 0.8.0.9545
+
+- add/use nearestPumpB() prototype.
+
+
 ### cholera 0.8.0.9544
 
 - use native "d" as default for distanceTime() in walkingPath().
