@@ -1,3 +1,8 @@
+### cholera 0.8.0.9546
+
+- rename argument missing.snow to non.snow.cases in plot.neighborhood_snow().
+
+
 ### cholera 0.8.0.9545
 
 - add/use nearestPumpB() prototype.
