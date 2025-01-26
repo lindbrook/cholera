@@ -46,12 +46,12 @@ neighborhoodSnow <- function(latlong = FALSE) {
 #'
 #' @param x An object of class "neighborhood_snow" created by \code{neighborhoodSnow()}.
 #' @param type Character. "roads", "area.points" or "area.polygons".
-#' @param missing.snow Logical. Plot missing anchor cases.
+#' @param non.snow.cases Logical. Plot anchor cases outside Snow neighborhood.
 #' @param ... Additional plotting parameters.
 #' @export
 
 plot.neighborhood_snow <- function(x, type = "area.points",
-  missing.snow = TRUE, ...) {
+  non.snow.cases = TRUE, ...) {
 
   if (x$latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
@@ -72,7 +72,7 @@ plot.neighborhood_snow <- function(x, type = "area.points",
     sel <- cholera::fatalities.address$anchor %in% x$snow.anchors
     points(cholera::fatalities.address[sel, vars], pch = 16, col = p7.col,
       cex = 0.5)
-    if (missing.snow) {
+    if (non.snow.cases) {
       points(cholera::fatalities.address[!sel, vars],  pch = 16, col = "red",
         cex = 0.5)
     }
@@ -179,7 +179,7 @@ plot.neighborhood_snow <- function(x, type = "area.points",
       pumpTokensB(z, type = "obseved")
     }
 
-    if (missing.snow) {
+    if (non.snow.cases) {
       sel <- !cholera::fatalities.address$anchor %in% x$snow.anchors
       points(cholera::fatalities.address[sel, vars],  pch = 16, col = "red",
         cex = 0.5)
