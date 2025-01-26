@@ -28,12 +28,11 @@ walkingLatlong <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
   pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
-  nearest.data <- nearestPump(pump.select = pump.id,
-                              case.set = case.set,
-                              vestry = vestry,
-                              weighted = weighted,
-                              multi.core = cores,
-                              latlong = TRUE)
+  nearest.data <- nearestPumpB(pump.select = pump.id,
+                               case.set = case.set,
+                               vestry = vestry,
+                               weighted = weighted,
+                               latlong = TRUE)
 
   nearest.dist <- nearest.data$distance
   nearest.path <- nearest.data$path

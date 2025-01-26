@@ -27,12 +27,10 @@ walkingNominal <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   snow.colors <- snowColors(vestry = vestry)
   cores <- multiCore(multi.core)
 
-  nearest.data <- nearestPump(pump.select = pump.select,
-                              vestry = vestry,
-                              weighted = weighted,
-                              case.set = case.set,
-                              multi.core = cores,
-                              dev.mode = dev.mode)
+  nearest.data <- nearestPumpB(pump.select = pump.select,
+                               vestry = vestry,
+                               weighted = weighted,
+                               case.set = case.set)
 
   if (case.set == "snow") {
     sel <- cholera::snow.neighborhood %in% cholera::fatalities.address$anchor
