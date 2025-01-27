@@ -1,3 +1,8 @@
+### cholera 0.8.0.9547
+
+- amend caseCase() for duplicate nodes: case 369 and St James Workhouse 1019.
+
+
 ### cholera 0.8.0.9546
 
 - rename argument missing.snow to non.snow.cases in plot.neighborhood_snow().
