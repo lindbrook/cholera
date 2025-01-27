@@ -833,6 +833,8 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
   ego.node <- nodes[nodes$case %in% orgn | nodes$land %in% orgn, ]$node
 
   alters <- nodes[nodes$case %in% dstn | nodes$land %in% dstn, ]
+  # Anchor case 369 and landmark St James Workhouse
+  if (is.null(destination)) alters <- alters[alters$land != 1019, ]
   alter.node <- alters$node
   names(alter.node) <- alters$case + alters$land
 
