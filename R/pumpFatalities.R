@@ -23,7 +23,7 @@ pumpFatalities <- function(pump.select = NULL, metric = "walking",
   args <- list(pump.select = pump.select, metric = metric, vestry = vestry)
 
   if (latlong) {
-    args <- c(args, list(latlong = TRUE, multi.core = multiCore(multi.core)))
+    args <- c(args, list(latlong = TRUE))
   }
 
   nr.pump <- do.call("nearestPump", args)
