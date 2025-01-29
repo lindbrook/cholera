@@ -13,7 +13,7 @@
 #' @note Time is computed using \code{distanceTime()}.
 #' @noRd
 
-nearestPumpB <- function(pump.select = NULL, metric = "walking",
+nearestPump <- function(pump.select = NULL, metric = "walking",
   vestry = FALSE, weighted = TRUE, case.set = "observed", location = "nominal",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
   latlong = FALSE) {
