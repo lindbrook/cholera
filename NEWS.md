@@ -1,3 +1,8 @@
+### cholera 0.8.0.9549
+
+- use simplified nearestPump() in profile2D() and profile3D().
+
+
 ### cholera 0.8.0.9548
 
 - promote simplified nearestPumpB() to nearestPump().
