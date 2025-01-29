@@ -1,3 +1,8 @@
+### cholera 0.8.0.9550
+
+- remove multi.core argument for nearestPump() in pumpFatalities().
+
+
 ### cholera 0.8.0.9549
 
 - use simplified nearestPump() in profile2D() and profile3D().
