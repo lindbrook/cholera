@@ -1,3 +1,8 @@
+### cholera 0.8.0.9551
+
+- use simplified nearestPump() in simulateWalkingDistance().
+
+
 ### cholera 0.8.0.9550
 
 - remove multi.core argument for nearestPump() in pumpFatalities().

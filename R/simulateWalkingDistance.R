@@ -13,6 +13,6 @@ simulateWalkingDistance <- function(pump.select = 7, multi.core = TRUE,
   if (compute == FALSE) {
     cholera::sim.walking.distance
   } else {
-    nearestPumpB(pump.select = pump.select, case.set = "expected")$distance
+    nearestPump(pump.select = pump.select, case.set = "expected")$distance
   }
 }
