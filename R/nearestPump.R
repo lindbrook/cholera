@@ -18,7 +18,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
   latlong = FALSE) {
 
- if (!distance.unit %in% c("meter", "yard", "native")) {
+  if (!distance.unit %in% c("meter", "yard", "native")) {
     stop('distance.unit must be "meter", "yard" or "native".', call. = FALSE)
   }
 
@@ -33,7 +33,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
 
   pump.data <- pump.data[pump.data$id %in% p.sel, ]
 
-  if (metric == "walking" | (latlong = TRUE & metric == "euclidean")) {
+  if (metric == "walking" | (latlong == TRUE & metric == "euclidean")) {
     dat <- neighborhoodDataB(vestry = vestry, case.set = case.set,
       latlong = latlong)
 
