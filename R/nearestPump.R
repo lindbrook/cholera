@@ -164,6 +164,11 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
           nr.pump$pump[nr.pump$v2 == p.id[i]] <- pump.data$id[i]
         }
 
+        nr.pump <- lapply(split(nr.pump, nr.pump$v1), function(x) {
+          x[which.min(x$d), ]
+        })
+
+        nr.pump <- do.call(rbind, nr.pump)
 
         nr.pump$distance <- unitMeter(nr.pump$d, distance.unit = distance.unit)
         nr.pump$time <- distanceTime(nr.pump$d, distance.unit = distance.unit,
