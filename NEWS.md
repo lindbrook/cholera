@@ -1,3 +1,8 @@
+### cholera 0.8.0.9552
+
+- amend/optimize nearestPump().
+
+
 ### cholera 0.8.0.9551
 
 - use simplified nearestPump() in simulateWalkingDistance().

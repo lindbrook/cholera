@@ -10,16 +10,23 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param latlong Logical. \code{TRUE} Use longitude and latitude coordinates.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @note Time is computed using \code{distanceTime()}.
 #' @noRd
 
 nearestPump <- function(pump.select = NULL, metric = "walking",
   vestry = FALSE, weighted = TRUE, case.set = "observed", location = "nominal",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  latlong = FALSE) {
+  latlong = FALSE, multi.core = TRUE) {
 
   if (!distance.unit %in% c("meter", "yard", "native")) {
     stop('distance.unit must be "meter", "yard" or "native".', call. = FALSE)
+  }
+
+  if (.Platform$OS.type == "windows") {
+    cores <- 1L
+  } else {
+    cores <- multiCore(multi.core)
   }
 
   if (vestry) {
@@ -43,41 +50,41 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
     nodes.pump <- dat$nodes.pump[dat$nodes.pump$pump %in% p.sel, ]
   }
 
-  idx <- seq_len(nrow(cholera::fatalities.address))
+  if (case.set == "observed") {
+    case.data <- cholera::fatalities.address
+  } else if (case.set == "expected") {
+    case.data <- cholera::regular.cases
+  }
 
   if (latlong) {
     vars <- c("lon", "lat")
+    egos <- nodes[nodes$case != 0, ]
+    egos <- egos[order(egos$case), ]
+    alters <- nodes[nodes$pump != 0, ]
+    alters <- alters[order(alters$pump), ]
+
+    idx <- seq_len(nrow(egos))
 
     if (metric == "euclidean") {
-      pump.dist <- lapply(idx, function(i) {
-        egos <- nodes[nodes$case != 0, ]
-        egos <- egos[order(egos$case), ]
-        alters <- nodes[nodes$pump != 0, ]
-        alters <- alters[order(alters$pump), ]
-
+      pump.dist <- parallel::mclapply(idx, function(i) {
         ds <- geosphere::distGeo(egos[i, vars], alters[, vars])
-
         sel <- which.min(ds)
         d <- ds[sel] / unitMeter(1)
         p <- p.sel[sel]
         data.frame(pump = p, d = d)
-      })
+      }, mc.cores = cores)
 
       pump.dist <- do.call(rbind, pump.dist)
 
       t <- distanceTime(pump.dist$d, distance.unit = distance.unit,
         time.unit = time.unit, walking.speed = walking.speed)
 
-      nr.pump <- data.frame(case = cholera::fatalities.address$anchor,
-        pump = pump.dist$pump, distance = unitMeter(pump.dist$d, distance.unit),
-        time = t)
+      d <- unitMeter(pump.dist$d, distance.unit)
+
+      nr.pump <- data.frame(case = egos$case, pump = pump.dist$pump,
+        distance = d, time = t)
 
     } else if (metric == "walking") {
-      egos <- nodes[nodes$case != 0, ]
-      egos <- egos[order(egos$case), ]
-      alters <- nodes[nodes$pump != 0, ]
-      alters <- alters[order(alters$pump), ]
-
       ds <- igraph::distances(graph = g, v = egos$node, to = alters$node,
         weights = edges$d)
 
@@ -95,41 +102,96 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
 
   } else {
     vars <- c("x", "y")
+    idx <- seq_len(nrow(case.data))
 
     if (metric == "euclidean") {
-      pump.dist <- lapply(idx, function(i) {
-        dat <- rbind(cholera::fatalities.address[i, vars], pump.data[, vars])
-        ds <- stats::dist(dat)[1:nrow(pump.data)]
-        sel <- which.min(ds)
-        data.frame(pump = p.sel[sel], d = ds[sel])
-      })
+      if (case.set == "observed") {
+        dat <- rbind(case.data[, vars], pump.data[, vars])
+        ds <- stats::dist(dat)
+        n <- nrow(case.data) + nrow(pump.data)
 
-      pump.dist <- do.call(rbind, pump.dist)
+        values1 <- seq_len(n - 1)
+        times1 <- rev(values1)
+        v1 <- unlist(lapply(seq_along(values1), function(i) {
+          rep(values1[i], times1[i])
+        }))
 
-      t <- distanceTime(pump.dist$d, distance.unit = distance.unit,
-        time.unit = time.unit, walking.speed = walking.speed)
+        values2 <- seq_len(n)[-1]
+        v2 <- lapply(seq_along(values2), function(i) {
+          values2[i]:max(values2)
+        })
 
-      nr.pump <- data.frame(case = cholera::fatalities.address$anchor,
-        pump = pump.dist$pump, distance = unitMeter(pump.dist$d, distance.unit),
-        time = t)
+        distances <- data.frame(v1 = unlist(v1), v2 = unlist(v2))
+        distances$d <- c(ds)
+
+        sel <- distances$v1 %in% 1:nrow(case.data) &
+               distances$v2 %in% (nrow(case.data) + 1):n
+
+        nr.pump <- distances[sel, ]
+        nr.pump$case <- 0
+        nr.pump$pump <- 0
+
+        for (i in unique(nr.pump$v1)) {
+          nr.pump$case[nr.pump$v1 == i] <- case.data$anchor[i]
+        }
+
+        p.id <- unique(nr.pump$v2)
+
+        for (i in seq_along(p.id)) {
+          nr.pump$pump[nr.pump$v2 == p.id[i]] <- pump.data$id[i]
+        }
+
+        if (distance.unit == "meter") {
+          nr.pump$distance <- unitMeter(nr.pump$d)
+        } else if (distance.unit == "native") {
+          nr.pump$distance <- nr.pump$d
+        }
+
+        nr.pump$time <- distanceTime(nr.pump$d, distance.unit = distance.unit,
+          time.unit = time.unit, walking.speed = walking.speed)
+
+        nr.pump <- nr.pump[, !names(nr.pump) %in% c("v1", "v2", "d")]
+
+      } else if (case.set == "expected") {
+        pump.dist <- parallel::mclapply(idx, function(i) {
+          tmp <- rbind(case.data[i, vars], pump.data[, vars])
+          dat <- data.frame(tmp, row.names = NULL)
+          ds <- stats::dist(dat)[1:nrow(pump.data)]
+          pmp.id <- which.min(ds)
+          data.frame(case = i + 2000L, pump = p.sel[pmp.id], d = ds[pmp.id])
+        }, mc.cores = cores)
+
+        nr.pump <- do.call(rbind, pump.dist)
+        nr.pump$distance <- unitMeter(nr.pump$d, distance.unit)
+        nr.pump$time <- distanceTime(nr.pump$d, distance.unit = distance.unit,
+          time.unit = time.unit, walking.speed = walking.speed)
+
+        nr.pump <- nr.pump[, names(nr.pump) != "d"]
+      }
 
     } else if (metric == "walking") {
-      sel <- nodes$case %in% cholera::fatalities.address$anchor
-      anchors <- nodes[sel, ]
+      if (case.set == "observed") {
+        sel <- nodes$case %in% case.data$anchor
+        anchors <- nodes[sel, ]
+      } else if (case.set == "expected") {
+        anchors <- nodes[nodes$case != 0, ]
+      }
+
       anchors <- anchors[order(anchors$case), ]
 
       ds <- igraph::distances(graph = g, v = anchors$node, to = nodes.pump$node,
         weights = edges$d)
 
-      sel <- apply(ds, 1, which.min)
-      d <- vapply(seq_along(sel), function(i) ds[i, sel[i]], numeric(1L))
+      pmp.id <- apply(ds, 1, which.min)
+      d <- vapply(seq_along(pmp.id), function(i) ds[i, pmp.id[i]], numeric(1L))
 
       t <- distanceTime(d, distance.unit = distance.unit, time.unit = time.unit,
         walking.speed = walking.speed)
 
-      nr.pump <- data.frame(case = anchors$case, pump = p.sel[sel],
-        distance = unitMeter(d, distance.unit = distance.unit), time = t,
-        row.names = NULL)
+      d <- unitMeter(d, distance.unit = distance.unit)
+
+      nr.pump <- data.frame(case = anchors$case, pump = p.sel[pmp.id],
+        distance = d, time = t, row.names = NULL)
     }
   }
   nr.pump
