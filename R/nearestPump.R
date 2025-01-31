@@ -19,8 +19,20 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
   latlong = FALSE, multi.core = TRUE) {
 
+  if (!metric %in% c("euclidean", "walking")) {
+    stop('metric must be "euclidean" or "walking".', call. = FALSE)
+  }
+
+  if (!case.set %in% c("observed", "expected")) {
+    stop('case.set must be "observed" or "expected".', call. = FALSE)
+  }
+
   if (!distance.unit %in% c("meter", "yard", "native")) {
     stop('distance.unit must be "meter", "yard" or "native".', call. = FALSE)
+  }
+
+  if (!time.unit %in% c("hour", "minute", "second")) {
+    stop('distance.unit must be "hour", "minute" or "second".', call. = FALSE)
   }
 
   if (.Platform$OS.type == "windows") {
