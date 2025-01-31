@@ -81,17 +81,25 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
       pump.dist <- parallel::mclapply(idx, function(i) {
         ds <- geosphere::distGeo(egos[i, vars], alters[, vars])
         sel <- which.min(ds)
-        d <- ds[sel] / unitMeter(1)
+        d <- ds[sel]
         p <- p.sel[sel]
         data.frame(pump = p, d = d)
       }, mc.cores = cores)
 
       pump.dist <- do.call(rbind, pump.dist)
 
-      t <- distanceTime(pump.dist$d, distance.unit = distance.unit,
-        time.unit = time.unit, walking.speed = walking.speed)
+      if (distance.unit %in% c("native", "yard")) {
+        d <- pump.dist$d / unitMeter(1)
+        if (distance.unit == "yard") {
+          d <- unitMeter(d, distance.unit = "yard")
+        }
+      } else if (distance.unit == "meter") {
+        d <- pump.dist$d
+      }
 
-      d <- unitMeter(pump.dist$d, distance.unit)
+      t <- distanceTime(pump.dist$d / unitMeter(1L),
+        distance.unit = distance.unit, time.unit = time.unit,
+        walking.speed = walking.speed)
 
       nr.pump <- data.frame(case = egos$case, pump = pump.dist$pump,
         distance = d, time = t)
@@ -102,14 +110,17 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
 
       sel <- apply(ds, 1, which.min)
       p <- p.sel[sel]
+
       d <- vapply(seq_along(sel), function(i) ds[i, sel[i]], numeric(1L))
-      d <- d / unitMeter(1)
 
-      t <- distanceTime(d, distance.unit = distance.unit, time.unit = time.unit,
-        walking.speed = walking.speed)
+      t <- distanceTime(d / unitMeter(1), distance.unit = distance.unit,
+        time.unit = time.unit, walking.speed = walking.speed)
 
-      nr.pump <- data.frame(case = egos$case, pump = p, distance = unitMeter(d),
-        time = t)
+      if (distance.unit %in% c("native", "yards")) {
+        d <- unitMeter(d, distance.unit = distance.unit)
+      }
+
+      nr.pump <- data.frame(case = egos$case, pump = p, distance = d, time = t)
     }
 
   } else {
