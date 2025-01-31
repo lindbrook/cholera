@@ -164,12 +164,8 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
           nr.pump$pump[nr.pump$v2 == p.id[i]] <- pump.data$id[i]
         }
 
-        if (distance.unit == "meter") {
-          nr.pump$distance <- unitMeter(nr.pump$d)
-        } else if (distance.unit == "native") {
-          nr.pump$distance <- nr.pump$d
-        }
 
+        nr.pump$distance <- unitMeter(nr.pump$d, distance.unit = distance.unit)
         nr.pump$time <- distanceTime(nr.pump$d, distance.unit = distance.unit,
           time.unit = time.unit, walking.speed = walking.speed)
 
