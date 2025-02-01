@@ -259,13 +259,14 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 #' @param x An object of class "walking" created by \code{walkingNominal()}.
 #' @param type Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param tsp.method Character. Traveling salesperson problem algorithm.
+#' @param add Logical. Add graphic to plot.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. type = "roads" inspired by Shiode et. al. (2015).
 #' @export
 
 plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
-  ...) {
+  add = FALSE, ...) {
 
   if (x$latlong) {
     vars <- c("lon", "lat")
@@ -278,7 +279,7 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
   if (x$case.set == "observed") {
     edges <- x$edges
     neigh.edges <- x$neigh.edges
-    snowMap(add.cases = FALSE, add.pumps = FALSE, latlong = x$latlong)
+    if (!add) snowMap(add.cases = FALSE, add.pumps = FALSE, latlong = x$latlong)
     invisible(lapply(names(neigh.edges), function(nm) {
       n.edges <- edges[edges$id2 %in% neigh.edges[[nm]], ]
       segments(n.edges[, seg.vars[1]], n.edges[, seg.vars[2]],
@@ -309,7 +310,7 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
     }
 
   } else if (x$case.set == "expected") {
-    snowMap(add.cases = FALSE, add.pumps = FALSE, add.roads = FALSE,
+    if (!add) snowMap(add.cases = FALSE, add.pumps = FALSE, add.roads = FALSE,
       latlong = x$latlong)
 
     if (x$latlong) {
@@ -345,7 +346,7 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
           col = x$snow.colors[paste0("p", nm)])
       }))
 
-      addRoads(col = "black", latlong = x$latlong)
+      if (!add) addRoads(col = "black", latlong = x$latlong)
 
     } else if (type == "area.polygons") {
       neighborhood.cases <- lapply(x$exp.pump.case, function(x) x - 2000L)
@@ -354,7 +355,7 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
       pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
         tsp.method = tsp.method, mc.cores = x$cores)
 
-      addRoads(col = "black", latlong = x$latlong)
+      if (!add) addRoads(col = "black", latlong = x$latlong)
 
       invisible(lapply(names(pearl.string), function(nm) {
         polygon(cholera::regular.cases[pearl.string[[nm]], ],
@@ -363,19 +364,21 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
       }))
     }
 
-    pumpTokensB(x, type)
+    if (!add) pumpTokensB(x, type)
   }
 
-  if (is.null(x$pump.select)) {
-    title(main = "Pump Neighborhoods: Walking")
-  } else {
-    if (length(x$pump.select) > 1) {
-      pmp <- "Pumps "
-    } else if (length(x$pump.select) == 1) {
-      pmp <- "Pump "
-    }
+  if (!add) {
+    if (is.null(x$pump.select)) {
+      title(main = "Pump Neighborhoods: Walking")
+    } else {
+      if (length(x$pump.select) > 1) {
+        pmp <- "Pumps "
+      } else if (length(x$pump.select) == 1) {
+        pmp <- "Pump "
+      }
 
-    title(main = paste0("Pump Neighborhoods: Walking", "\n", pmp,
-      paste(sort(x$pump.select), collapse = ", ")))
+      title(main = paste0("Pump Neighborhoods: Walking", "\n", pmp,
+        paste(sort(x$pump.select), collapse = ", ")))
+    }
   }
 }

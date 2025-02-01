@@ -5,7 +5,7 @@
 \title{Plot method for walkingB().}
 \usage{
 \method{plot}{walkingB}(x, type = "area.points",
-  tsp.method = "repetitive_nn", ...)
+  tsp.method = "repetitive_nn", add = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "walking" created by \code{walkingNominal()}.}
@@ -13,6 +13,8 @@
 \item{type}{Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
 
 \item{tsp.method}{Character. Traveling salesperson problem algorithm.}
+
+\item{add}{Logical. Add graphic to plot.}
 
 \item{...}{Additional plotting parameters.}
 }

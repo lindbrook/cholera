@@ -1,3 +1,8 @@
+### cholera 0.8.0.9553
+
+- add/set plot.walkingB(add = FALSE).
+
+
 ### cholera 0.8.0.9552
 
 - amend/optimize nearestPump().
