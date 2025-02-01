@@ -2,45 +2,32 @@
 % Please edit documentation in R/addNeighborhoodWalking.R
 \name{addNeighborhoodWalking}
 \alias{addNeighborhoodWalking}
-\title{Add expected walking neighborhoods.}
+\title{Add walking neighborhoods.}
 \usage{
-addNeighborhoodWalking(pump.select = NULL, pump.subset = NULL,
-  vestry = FALSE, weighted = TRUE, path = NULL, path.color = NULL,
-  path.width = 3, alpha.level = 0.25, polygon.type = "solid",
-  polygon.col = NULL, polygon.lwd = 2, multi.core = TRUE,
-  dev.mode = FALSE, latlong = FALSE)
+addNeighborhoodWalking(pump.select = NULL, vestry = FALSE,
+  weighted = TRUE, case.set = "expected", latlong = FALSE,
+  type = "area.polygons", tsp.method = "repetitive_nn",
+  multi.core = TRUE)
 }
 \arguments{
-\item{pump.select}{Numeric. Numeric vector of pump IDs that define which pump neighborhoods to consider (i.e., specify the "population"). Negative selection possible. \code{NULL} selects all pumps.}
+\item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps. Note that you can't just select the pump on Adam and Eve Court (#2) because it's technically an isolate.}
 
-\item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} uses all pumps in \code{pump.select}.}
-
-\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
+\item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
 \item{weighted}{Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 
-\item{path}{Character. "expected" or "observed".}
+\item{case.set}{Character. "observed", "expected" or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.}
 
-\item{path.color}{Character. Use a single color for all paths. \code{NULL} uses neighborhood colors defined by \code{snowColors()}.}
+\item{latlong}{Logical.}
 
-\item{path.width}{Numeric. Set width of paths.}
+\item{type}{Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
 
-\item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
-
-\item{polygon.type}{Character. "perimeter" or "solid".}
-
-\item{polygon.col}{Character.}
-
-\item{polygon.lwd}{Numeric.}
+\item{tsp.method}{Character. Traveling salesperson problem algorithm.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
-
-\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
-
-\item{latlong}{Logical. Use estimated longitude and latitude.}
 }
 \description{
-Add expected walking neighborhoods.
+Add walking neighborhoods.
 }
 \examples{
 \dontrun{
