@@ -62,23 +62,12 @@ pumpCase.voronoiLatlong <- function(x, case = "nominal") {
 }
 
 #' @export
-pumpCase.walking <- function(x, case = "anchor") {
+pumpCase.walkingB <- function(x, case = "anchor") {
   if (case == "fatality") {
-    x$cases
-  } else if (case == "anchor") {
-    lapply(x$cases, function(dat) {
-      cholera::anchor.case[cholera::anchor.case$anchor %in% dat, "case"]
+    lapply(x$case.pump, function(vec) {
+      sort(cholera::anchor.case[cholera::anchor.case$anchor %in% vec, "case"])
     })
-  } else stop('case must either be "anchor" or "fatality"')
-}
-
-#' @export
-pumpCase.walkingLatlong <- function(x, case = "anchor") {
-  if (case == "fatality") {
-    x$cases
   } else if (case == "anchor") {
-    lapply(x$cases, function(dat) {
-      cholera::anchor.case[cholera::anchor.case$anchor %in% dat, "case"]
-    })
-  } else stop('case must either be "anchor" or "fatality"')
+    x$case.pum
+  } else stop('case must either be "anchor" or "fatality"', call. = FALSE)
 }
