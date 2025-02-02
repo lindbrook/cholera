@@ -1,3 +1,9 @@
+### cholera 0.8.0.9555
+
+- replace pumpCase.walking() and pumpCase.walkingLatlong() with 
+  pumpCase.walkingB().
+
+
 ### cholera 0.8.0.9554
 
 - add amended addNeighborhoodWalking() prototype.
