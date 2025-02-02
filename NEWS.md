@@ -1,3 +1,9 @@
+### cholera 0.8.0.9556
+
+- replace pumpCase.voronoi() and pumpCase.voronoiLatlong() with 
+  pumpCase.voronoi().
+  
+  
 ### cholera 0.8.0.9555
 
 - replace pumpCase.walking() and pumpCase.walkingLatlong() with 
