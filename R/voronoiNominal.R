@@ -125,9 +125,9 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
   class(out) <- c("voronoi", "voronoi_nominal")
 
   if (polygon.vertices) {
-    output$coordinates
+    out$coordinates
   } else {
-    output
+    out
   }
 }
 
