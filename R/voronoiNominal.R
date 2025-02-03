@@ -167,7 +167,7 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
     }
   }
 
-  pumpTokens(x, NULL)
+  pumpTokensB(x, NULL)
 
   if (delaunay.voronoi == "voronoi") {
     plot(x$voronoi, add = TRUE, wline = "tess", showpoints = FALSE,

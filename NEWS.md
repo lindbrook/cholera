@@ -1,3 +1,8 @@
+### cholera 0.8.0.9559
+
+- amend pumpTokensB() for Voronoi functions.
+
+
 ### cholera 0.8.0.9558
 
 - amend voronoiLatlong() and voronoiNominal() classes.

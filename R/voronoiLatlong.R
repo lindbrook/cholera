@@ -89,7 +89,7 @@ plot.voronoi_latlong <- function(x, add.pumps = TRUE,
   snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE,
     add.pumps = FALSE)
 
-  if (add.pumps) pumpTokens(x, type = NULL, latlong = TRUE)
+  if (add.pumps) pumpTokensB(x, type = NULL)
 
   if (!is.null(x$pump.id)) {
     if (x$location == "nominal") {

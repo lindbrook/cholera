@@ -12,17 +12,17 @@ pumpTokensB <- function(x, type) {
   all.data <- dat[, vars]
   all.labels <- paste0("p", dat$id)
 
-  if (inherits(x, "voronoi") | inherits(x, "voronoiLatlong")) {
+  if (inherits(x, "voronoi_nominal") | inherits(x, "voronoi_latlong")) {
     x$case.set <-  "observed"
   }
 
   if (x$case.set == "observed") {
-    if (inherits(x, "voronoi") | inherits(x, "voronoiLatlong")) {
-      if (is.null(x$pump.select)) {
+    if (inherits(x, "voronoi_nominal") | inherits(x, "voronoi_latlong")) {
+      if (is.null(x$pump.id)) {
         points(all.data, pch = 2, lwd = 2, col = x$snow.colors)
         text(all.data, pos = 1, cex = 0.9, labels = all.labels)
       } else {
-        obs <- dat$id %in% x$p.sel
+        obs <- dat$id %in% x$pump.id
         pos.data <- dat[obs, vars]
         neg.data <- dat[!obs, vars]
         pos.labels <- paste0("p", dat$id[obs])
