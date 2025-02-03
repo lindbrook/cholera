@@ -5,7 +5,9 @@
 \title{Plot method for walkingB().}
 \usage{
 \method{plot}{walkingB}(x, type = "area.points",
-  tsp.method = "repetitive_nn", add = FALSE, ...)
+  tsp.method = "repetitive_nn", add = FALSE, path.width = 2,
+  alpha.level = 0.5, polygon.type = "solid", polygon.col = NULL,
+  polygon.lwd = 2, ...)
 }
 \arguments{
 \item{x}{An object of class "walking" created by \code{walkingNominal()}.}
@@ -15,6 +17,16 @@
 \item{tsp.method}{Character. Traveling salesperson problem algorithm.}
 
 \item{add}{Logical. Add graphic to plot.}
+
+\item{path.width}{Numeric. Set width of paths.}
+
+\item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
+
+\item{polygon.type}{Character. "perimeter" or "solid".}
+
+\item{polygon.col}{Character.}
+
+\item{polygon.lwd}{Numeric.}
 
 \item{...}{Additional plotting parameters.}
 }

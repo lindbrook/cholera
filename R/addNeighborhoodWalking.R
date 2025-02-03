@@ -7,6 +7,11 @@
 #' @param latlong Logical.
 #' @param type Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param tsp.method Character. Traveling salesperson problem algorithm.
+#' @param path.width Numeric. Set width of paths.
+#' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
+#' @param polygon.type Character. "perimeter" or "solid".
+#' @param polygon.col Character.
+#' @param polygon.lwd Numeric.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @export
 #' @examples
@@ -17,7 +22,9 @@
 
 addNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   weighted = TRUE, case.set = "expected", latlong = FALSE,
-  type = "area.polygons", tsp.method = "repetitive_nn", multi.core = TRUE) {
+  type = "area.polygons", tsp.method = "repetitive_nn", path.width = 2,
+  alpha.level = 0.5, polygon.type = "solid", polygon.col = NULL,
+  polygon.lwd = 2, multi.core = TRUE) {
 
   if (.Platform$OS.type == "windows") cores <- 1L
   else cores <- multiCore(multi.core)
@@ -25,5 +32,8 @@ addNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   x <- walkingB(pump.select = pump.select, vestry = vestry, weighted = weighted,
     case.set = case.set, latlong = latlong, multi.core = cores)
 
-  plot(x, type = type, tsp.method = tsp.method, add = TRUE)
+  plot(x, type = type, tsp.method = tsp.method, add = TRUE,
+    path.width = path.width, alpha.level = alpha.level,
+    polygon.type = polygon.type, polygon.col = polygon.col,
+    polygon.lwd = polygon.lwd)
 }

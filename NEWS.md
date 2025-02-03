@@ -1,3 +1,8 @@
+### cholera 0.8.0.9565
+
+- add more graphical arguments to plot.walkingB() and addNeighborhoodWalking().
+
+
 ### cholera 0.8.0.9564
 
 - amend note for fatalities data frame.

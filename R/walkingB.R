@@ -260,13 +260,19 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 #' @param type Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param tsp.method Character. Traveling salesperson problem algorithm.
 #' @param add Logical. Add graphic to plot.
+#' @param path.width Numeric. Set width of paths.
+#' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
+#' @param polygon.type Character. "perimeter" or "solid".
+#' @param polygon.col Character.
+#' @param polygon.lwd Numeric.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. type = "roads" inspired by Shiode et. al. (2015).
 #' @export
 
 plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
-  add = FALSE, ...) {
+  add = FALSE, path.width = 2, alpha.level = 0.5, polygon.type = "solid",
+  polygon.col = NULL, polygon.lwd = 2, ...) {
 
   if (x$latlong) {
     vars <- c("lon", "lat")
@@ -284,7 +290,7 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
       n.edges <- edges[edges$id2 %in% neigh.edges[[nm]], ]
       segments(n.edges[, seg.vars[1]], n.edges[, seg.vars[2]],
                n.edges[, seg.vars[3]], n.edges[, seg.vars[4]],
-               lwd = 2, col = x$snow.colors[nm])
+               lwd = path.width, col = x$snow.colors[nm])
     }))
 
     invisible(lapply(names(x$case.pump), function(nm) {
@@ -325,14 +331,14 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
         tmp <- cholera::road.segments[sel, ]
         pmp <- paste0("p", nm)
         segments(tmp$x1, tmp$y1, tmp$x2, tmp$y2, col = x$snow.colors[pmp],
-          lwd = 2)
+          lwd = path.width)
       }))
 
       invisible(lapply(names(x$diff_pump.road_segs), function(nm) {
         tmp <- x$diff_pump.road_segs[[nm]]
         pmp <- paste0("p", nm)
         segments(tmp$x1, tmp$y1, tmp$x2, tmp$y2, col = x$snow.colors[pmp],
-          lwd = 2)
+          lwd = path.width)
       }))
 
       falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
@@ -357,11 +363,18 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
 
       if (!add) addRoads(col = "black", latlong = x$latlong)
 
-      invisible(lapply(names(pearl.string), function(nm) {
-        polygon(cholera::regular.cases[pearl.string[[nm]], ],
-          col = grDevices::adjustcolor(x$snow.colors[paste0("p", nm)],
-          alpha.f = 2/3))
-      }))
+      if (polygon.type == "perimeter") {
+        invisible(lapply(names(pearl.string), function(nm) {
+          polygon(cholera::regular.cases[pearl.string[[nm]], ],
+            border = x$snow.colors[paste0("p", nm)], lwd = polygon.lwd)
+        }))
+      } else if (polygon.type == "solid") {
+        invisible(lapply(names(pearl.string), function(nm) {
+          polygon(cholera::regular.cases[pearl.string[[nm]], ],
+            col = grDevices::adjustcolor(x$snow.colors[paste0("p", nm)],
+            alpha.f = alpha.level))
+        }))
+      }
     }
 
     if (!add) pumpTokensB(x, type)
