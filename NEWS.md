@@ -1,3 +1,8 @@
+### cholera 0.8.0.9557
+
+- amend selectPump() syntax.
+
+
 ### cholera 0.8.0.9556
 
 - replace pumpCase.voronoi() and pumpCase.voronoiLatlong() with 

@@ -39,8 +39,7 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
     pump.data <- cholera::pumps
   }
 
-  pump.id <- selectPump(pump.data, pump.select = pump.select,
-    metric = "euclidean", vestry = vestry)
+  pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
   if (case.set == "observed") {
     if (location %in% c("anchor", "orthogonal")) {

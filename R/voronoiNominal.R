@@ -51,21 +51,10 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
     }
   }
 
-  if (is.null(pump.select) == FALSE) {
-    if (is.numeric(pump.select) == FALSE) {
-      stop("pump.select must be numeric.", call. = FALSE)
-    }
-    p.count <- nrow(pump.data)
-    p.ID <- seq_len(p.count)
-    if (any(abs(pump.select) %in% p.ID == FALSE)) {
-      stop('With vestry = ', vestry, ', 1 >= |pump.select| <= ', p.count,
-        call. = FALSE)
-    }
-    msg1 <- 'If specified,'
-    msg2 <- "'pump.select' must include at least 2 different pumps."
-    if (length(unique(p.ID[pump.select])) < 2) {
-      stop(paste(msg1, msg2), call. = FALSE)
-    }
+  if (!is.null(pump.select)) {
+    pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
+  } else {
+    pump.id <- pump.select
   }
 
   x.rng <- range(cholera::roads$x)
@@ -74,15 +63,13 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
   snow.colors <- snowColors(vestry = vestry)
 
   if (is.null(pump.select)) {
-    pump.id <- pump.data$id
     voronoi <- deldir::deldir(pump.data[, c("x", "y")], rw = c(x.rng, y.rng),
       suppressMsge = TRUE)
     select.string <- NULL
   } else {
-    pump.id <- pump.data$id[pump.select]
-    voronoi <- deldir::deldir(pump.data[pump.select, c("x", "y")],
+    voronoi <- deldir::deldir(pump.data[pump.id, c("x", "y")],
       rw = c(x.rng, y.rng), suppressMsge = TRUE)
-    select.string <- paste(sort(pump.select), collapse = ", ")
+    select.string <- paste(sort(pump.id), collapse = ", ")
   }
 
   voronoi.order <- as.numeric(rownames(voronoi$summary))

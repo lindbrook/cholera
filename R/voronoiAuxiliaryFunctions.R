@@ -109,7 +109,7 @@ latlongVoronoiVertices <- function(pump.select = NULL, vestry = FALSE) {
     if (length(unique(p.ID[pump.select])) < 2) {
       stop(paste(msg1, msg2), call. = FALSE)
     }
-    pump.id <- selectPump(pump.data, pump.select, "euclidean", vestry)
+    pump.id <- selectPump(pump.data, pump.select, vestry)
   } else {
     pump.id <- pump.data$id
   }
