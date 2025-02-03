@@ -1,3 +1,8 @@
+### cholera 0.8.0.9562
+
+- use amended nearestPump() in walkingLatlong() and walkingNominal().
+
+
 ### cholera 0.8.0.9561
 
 - clean code in voronoiNominal().
