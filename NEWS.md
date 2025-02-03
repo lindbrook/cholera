@@ -1,3 +1,8 @@
+### cholera 0.8.0.9563
+
+- archive snowNeighborhood().
+
+
 ### cholera 0.8.0.9562
 
 - use amended nearestPump() in walkingLatlong() and walkingNominal().
