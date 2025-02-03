@@ -42,22 +42,17 @@ pumpCase.euclidean_latlong <- function(x, case = "anchor") {
 }
 
 #' @export
-pumpCase.voronoi <- function(x, case = "nominal") {
+pumpCase.voronoi <- function(x, case = "anchor") {
   output <- x$statistic.data
-  if (x$location == "orthogonal") {
+  if (case == "orthogonal") {
     lapply(output, function(x) cholera::ortho.proj$case[x == 1])
-  } else if (x$location == "nominal") {
+  } else if (case == "anchor") {
     lapply(output, function(x) cholera::fatalities.address$anchor[x == 1])
-  }
-}
-
-#' @export
-pumpCase.voronoiLatlong <- function(x, case = "nominal") {
-  output <- x$statistic.data
-  if (x$location == "orthogonal") {
-    lapply(output, function(x) cholera::ortho.proj$case[x == 1])
-  } else if (x$location == "nominal") {
-    lapply(output, function(x) cholera::fatalities.address$anchor[x == 1])
+  } else if (case == "fatality") {
+    case.pump <- lapply(output, function(x) cholera::fatalities$case[x == 1])
+    lapply(case.pump, function(vec) {
+      sort(cholera::anchor.case[cholera::anchor.case$anchor %in% vec, "case"])
+    })
   }
 }
 
