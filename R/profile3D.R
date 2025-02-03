@@ -25,9 +25,7 @@ profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
     pump.data <- cholera::pumps
   }
 
-  pump.id <- selectPump(pump.data, pump.select = NULL, metric = "euclidean",
-    vestry = FALSE) 
-  
+  pump.id <- selectPump(pump.data, pump.select = NULL, vestry = FALSE)
   nearest.pump <- nearestPump(pump.id)
 
   x <- cholera::fatalities.address$x

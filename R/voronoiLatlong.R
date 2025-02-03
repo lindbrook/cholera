@@ -42,8 +42,7 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
   }
 
   if (!is.null(pump.select)) {
-    pump.id <- selectPump(pump.data, pump.select = pump.select,
-      metric = "euclidean", vestry = vestry)
+    pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
   } else {
     pump.id <- pump.select
   }

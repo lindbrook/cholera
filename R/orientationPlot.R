@@ -25,7 +25,7 @@ orientationPlot <- function(pump.id = 6, pump.select = NULL,
 
   if (!is.null(pump.select)) {
     pump.select <- selectPump(pump.data, pump.select = pump.select,
-      metric = metric, vestry = vestry)
+      vestry = vestry)
   }
 
 

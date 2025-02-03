@@ -3,17 +3,10 @@
 #' Allows negative selection.
 #' @param pump.data Object. Pump data.
 #' @param pump.select Character of Numeric. Vector of numeric pump IDs or pump names (street names) to define a pump neighborhood. Negative selection possible. \code{NULL} selects all pumps.
-#' @param metric Character. "euclidean" or "walking".
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @noRd
 
-selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
-  vestry = FALSE) {
-
-  if (!metric %in% c("euclidean", "walking")) {
-    stop('metric must either be "euclidean" or "walking".', call. = FALSE)
-  }
-
+selectPump <- function(pump.data, pump.select = NULL, vestry = FALSE) {
   if (!is.null(pump.select)) {
     if (is.numeric(pump.select)) {
       if (any(!abs(pump.select) %in% pump.data$id)) {
@@ -21,16 +14,6 @@ selectPump <- function(pump.data, pump.select = NULL, metric = "walking",
           nrow(pump.data), ".", call. = FALSE)
       }
     }
-
-    # if (metric == "walking") {
-    #   if (length(pump.select) == 1) {
-    #     if (pump.select == 2) {
-    #       msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
-    #       msg2 <- " It's an isolate, unreachable for observed fatalities."
-    #       stop(msg1, msg2, call. = FALSE)
-    #     }
-    #   }
-    # }
 
     destination.chk <- vapply(pump.select, function(x) {
       if (is.numeric(x)) {

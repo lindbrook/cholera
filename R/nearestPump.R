@@ -47,9 +47,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
     pump.data <- cholera::pumps
   }
 
-  p.sel <- selectPump(pump.data, pump.select = pump.select, metric = metric,
-    vestry = vestry)
-
+  p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
   pump.data <- pump.data[pump.data$id %in% p.sel, ]
 
   if (metric == "walking" | (latlong == TRUE & metric == "euclidean")) {

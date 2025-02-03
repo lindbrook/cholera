@@ -27,7 +27,7 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
 
   cells <- latlongVoronoiVertices(pump.select = pump.select,
     vestry = vestry)$cells
-  pump.id <- selectPump(pump.data, pump.select, "euclidean", vestry)
+  pump.id <- selectPump(pump.data, pump.select, vestry)
 
   if (case.set == "observed") {
     if (location == "nominal") {
