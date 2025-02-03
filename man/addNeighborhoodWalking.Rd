@@ -6,8 +6,9 @@
 \usage{
 addNeighborhoodWalking(pump.select = NULL, vestry = FALSE,
   weighted = TRUE, case.set = "expected", latlong = FALSE,
-  type = "area.polygons", tsp.method = "repetitive_nn",
-  multi.core = TRUE)
+  type = "area.polygons", tsp.method = "repetitive_nn", path.width = 2,
+  alpha.level = 0.5, polygon.type = "solid", polygon.col = NULL,
+  polygon.lwd = 2, multi.core = TRUE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps. Note that you can't just select the pump on Adam and Eve Court (#2) because it's technically an isolate.}
@@ -23,6 +24,16 @@ addNeighborhoodWalking(pump.select = NULL, vestry = FALSE,
 \item{type}{Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
 
 \item{tsp.method}{Character. Traveling salesperson problem algorithm.}
+
+\item{path.width}{Numeric. Set width of paths.}
+
+\item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
+
+\item{polygon.type}{Character. "perimeter" or "solid".}
+
+\item{polygon.col}{Character.}
+
+\item{polygon.lwd}{Numeric.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
