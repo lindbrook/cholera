@@ -1,3 +1,8 @@
+### cholera 0.8.0.9564
+
+- amend note for fatalities data frame.
+
+
 ### cholera 0.8.0.9563
 
 - archive snowNeighborhood().

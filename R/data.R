@@ -41,7 +41,7 @@
 #'
 #' \code{\link{streetNumberLocator}}
 #'
-#' @note \code{\link{fixFatalities}} documents the code for these data. For details, see \code{vignette}("duplicate.missing.cases").
+#' @note fixFatalities() documents the code for these data. For details, see \code{vignette}("duplicate.missing.cases").
 #' @seealso  \code{\link{caseLocator}}
 #'
 #' \code{\link{streetNameLocator}}
