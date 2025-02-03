@@ -107,21 +107,22 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
 
   names(statistic.data) <- paste0("p", pump.number)
 
-  output <- list(pump.id = pump.id,
-                 voronoi = voronoi,
-                 location = location,
-                 snow.colors = snow.colors,
-                 x.rng = x.rng,
-                 y.rng = y.rng,
-                 select.string = select.string,
-                 expected.data = expected.data,
-                 coordinates = coordinates,
-                 statistic.data = statistic.data,
-                 pump.select = pump.select,
-                 vestry = vestry,
-                 statistic = location)
+  out <- list(pump.id = pump.id,
+              voronoi = voronoi,
+              location = location,
+              snow.colors = snow.colors,
+              x.rng = x.rng,
+              y.rng = y.rng,
+              select.string = select.string,
+              expected.data = expected.data,
+              coordinates = coordinates,
+              pump.data = pump.data,
+              statistic.data = statistic.data,
+              pump.select = pump.select,
+              vestry = vestry,
+              statistic = location)
 
-  class(output) <- "voronoi"
+  class(out) <- c("voronoi", "voronoi_nominal")
 
   if (polygon.vertices) {
     output$coordinates
@@ -145,7 +146,7 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @export
 
-plot.voronoi <- function(x, delaunay.voronoi = "voronoi",
+plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
   euclidean.paths = FALSE, ...) {
 
   snowMap(add.cases = FALSE, add.pumps = FALSE)
@@ -238,7 +239,7 @@ plot.voronoi <- function(x, delaunay.voronoi = "voronoi",
 #' @return A list of argument values.
 #' @export
 
-print.voronoi <- function(x, ...) {
+print.voronoi_nominal <- function(x, ...) {
   print(x[c("pump.id", "location", "vestry", "statistic")])
 }
 
@@ -252,7 +253,7 @@ print.voronoi <- function(x, ...) {
 #' \code{plot.voronoi()}
 #' @export
 
-summary.voronoi <- function(object, ...) {
+summary.voronoi_nominal <- function(object, ...) {
   census <- vapply(object$statistic.data, sum, numeric(1L))
   stats::setNames(census, paste0("p", object$pump.id))
 }

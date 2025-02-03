@@ -1,3 +1,8 @@
+### cholera 0.8.0.9558
+
+- amend voronoiLatlong() and voronoiNominal() classes.
+
+
 ### cholera 0.8.0.9557
 
 - amend selectPump() syntax.
