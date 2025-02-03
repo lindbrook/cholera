@@ -1,3 +1,8 @@
+### cholera 0.8.0.9561
+
+- clean code in voronoiNominal().
+
+
 ### cholera 0.8.0.9560
 
 - append latlong argument value in neighborhoodVoronoi().
