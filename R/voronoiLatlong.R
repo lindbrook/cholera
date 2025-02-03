@@ -52,7 +52,7 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
     statistic.data = statistic.data, location = location,
     snow.colors = snow.colors)
 
-  class(out) <- "voronoiLatlong"
+  class(out) <- c("voronoi", "voronoi_latlong")
 
   if (polygon.vertices) {
     out <- lapply(out$cells.triangles$cells, function(dat) {
@@ -81,7 +81,7 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.voronoiLatlong <- function(x, add.pumps = TRUE,
+plot.voronoi_latlong <- function(x, add.pumps = TRUE,
   delaunay.voronoi = "voronoi", euclidean.paths = FALSE, ...) {
 
   vars <- c("lon", "lat")
@@ -197,6 +197,6 @@ plotLatlongVoronoiCases <- function(x, vars) {
 #' @return A list of argument values.
 #' @export
 
-print.voronoiLatlong <- function(x, ...) {
+print.voronoi_latlong <- function(x, ...) {
   print(x[c("pump.select", "vestry")])
 }
