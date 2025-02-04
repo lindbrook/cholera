@@ -1,3 +1,8 @@
+### cholera 0.8.0.9566
+
+- amend pumpTokensB() for case.set = "expected" & type != "roads".
+
+
 ### cholera 0.8.0.9565
 
 - add more graphical arguments to plot.walkingB() and addNeighborhoodWalking().

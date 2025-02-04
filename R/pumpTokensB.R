@@ -78,14 +78,15 @@ pumpTokensB <- function(x, type) {
         }
       } else if (type %in% c("area.points", "area.polygons", "star")) {
         if (is.null(x$pump.select)) {
-          points(all.data, pch = 24, lwd = 2, bg = x$snow.colors, col = "white")
-          text(all.data, pos = 1, cex = 0.9, col = "white", labels = all.labels)
+          points(all.data, pch = 24, col = "black",
+            bg = grDevices::adjustcolor(x$snow.colors, alpha.f = 0.5))
+          text(all.data, pos = 1, cex = 0.9, col = "black", labels = all.labels)
         } else {
-          points(pos.data, pch = 24, lwd = 2, bg = x$snow.colors[obs],
-            col = "white")
-          text(pos.data, pos = 1, cex = 0.9, col = "white", labels = pos.labels)
-          points(neg.data, pch = 24, lwd = 1, col = "black")
-          text(neg.data, pos = 1, cex = 0.9, col = "black", labels = neg.labels)
+          points(pos.data, pch = 24, col = "black",
+            bg = grDevices::adjustcolor(x$snow.colors[obs], alpha.f = 0.5))
+          text(pos.data, pos = 1, cex = 0.9, col = "black", labels = pos.labels)
+          points(neg.data, pch = 24, col = "white")
+          text(neg.data, pos = 1, cex = 0.9, col = "white", labels = neg.labels)
         }
       }
     }
