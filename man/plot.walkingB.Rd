@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{walkingB}(x, type = "area.points",
   tsp.method = "repetitive_nn", add = FALSE, path.width = 2,
-  alpha.level = 0.5, polygon.type = "solid", polygon.col = NULL,
+  alpha.level = 0.75, polygon.type = "solid", polygon.col = NULL,
   polygon.lwd = 2, ...)
 }
 \arguments{
