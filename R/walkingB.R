@@ -271,7 +271,7 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 #' @export
 
 plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
-  add = FALSE, path.width = 2, alpha.level = 0.5, polygon.type = "solid",
+  add = FALSE, path.width = 2, alpha.level = 0.75, polygon.type = "solid",
   polygon.col = NULL, polygon.lwd = 2, ...) {
 
   if (x$latlong) {
@@ -377,7 +377,7 @@ plot.walkingB <- function(x, type = "area.points", tsp.method = "repetitive_nn",
       }
     }
 
-    if (!add) pumpTokensB(x, type)
+    if (!add) pumpTokensB(x, type, alpha.level, polygon.type)
   }
 
   if (!add) {

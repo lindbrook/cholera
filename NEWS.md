@@ -1,3 +1,8 @@
+### cholera 0.8.0.9567
+
+- add alpha.level and polygon.type args to pumpTokensB() and plot.walkingB().
+
+
 ### cholera 0.8.0.9566
 
 - amend pumpTokensB() for case.set = "expected" & type != "roads".
