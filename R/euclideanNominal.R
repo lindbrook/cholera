@@ -39,7 +39,7 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
     pump.data <- cholera::pumps
   }
 
-  pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
+  p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
   if (case.set == "observed") {
     if (location %in% c("anchor", "orthogonal")) {
@@ -55,15 +55,15 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
     if ((.Platform$OS.type == "windows" & cores > 1) | dev.mode) {
       cl <- parallel::makeCluster(cores)
       parallel::clusterExport(cl = cl, envir = environment(),
-        varlist = c("pump.id", "vestry", "case.set", "location"))
+        varlist = c("p.sel", "vestry", "case.set", "location"))
       nearest.pump <- parallel::parLapply(cl, case.num, function(x) {
-        cholera::euclideanPath(x, destination = pump.id, vestry = vestry,
+        cholera::euclideanPath(x, destination = p.sel, vestry = vestry,
           case.set = case.set, location = location)$data$pump
       })
       parallel::stopCluster(cl)
     } else {
       nearest.pump <- parallel::mclapply(case.num, function(x) {
-        euclideanPath(x, destination = pump.id, vestry = vestry,
+        euclideanPath(x, destination = p.sel, vestry = vestry,
           case.set = case.set, location = location)$data$pump
       }, mc.cores = cores)
     }
@@ -77,9 +77,9 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
       case.data <- cholera::regular.cases
     }
 
-    sel <- pump.data$id %in% pump.id
+    sel <- pump.data$id %in% p.sel
     cells <- voronoiPolygons(pump.data[sel, c("x", "y")], rw.data = mapRange())
-    names(cells) <- pump.id
+    names(cells) <- p.sel
 
     cell.census <- lapply(names(cells), function(nm) {
       cell <- cells[[nm]]
@@ -96,12 +96,13 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
               vestry = vestry,
               case.set = case.set,
               location = location,
-              pump.id = pump.id,
+              p.sel = p.sel,
               snow.colors = snow.colors,
               case.num = case.num,
               nearest.pump = nearest.pump,
               cores = cores,
-              dev.mode = dev.mode)
+              dev.mode = dev.mode,
+              latlong = FALSE)
 
   class(out) <- "euclidean"
   out
@@ -137,7 +138,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
 
   snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
   pump.data <- x$pump.data
-  pump.id <- x$pump.id
+  p.sel <- x$p.sel
   case.num <- x$case.num
   pump.select <- x$pump.select
   nearest.pump <- x$nearest.pump
@@ -247,7 +248,7 @@ euclideanAreaPolygons <- function(x, nearest.pump) {
 #' }
 
 print.euclidean <- function(x, ...) {
-  print(x[c("pump.id", "case.set", "location", "vestry")])
+  print(x[c("p.sel", "case.set", "location", "vestry")])
 }
 
 #' Summary method for neighborhoodEuclidean().

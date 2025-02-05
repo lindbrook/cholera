@@ -27,7 +27,7 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
 
   cells <- latlongVoronoiVertices(pump.select = pump.select,
     vestry = vestry)$cells
-  pump.id <- selectPump(pump.data, pump.select, vestry)
+  p.sel <- selectPump(pump.data, pump.select, vestry)
 
   if (case.set == "observed") {
     if (location == "nominal") {
@@ -50,14 +50,15 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
   })
 
   out <- list(pump.select = pump.select,
-              pump.id = pump.id,
+              p.sel = p.sel,
               vestry = vestry,
               cells = cells,
               pump.data = pump.data,
               case.set = case.set,
               location = location,
               snow.colors = snowColors(vestry = vestry),
-              statistic.data = statistic.data)
+              statistic.data = statistic.data,
+              latlong = TRUE)
 
   class(out) <- "euclideanLatlong"
   out
@@ -89,7 +90,7 @@ plot.euclideanLatlong <- function(x, type = "star", ...) {
     }
   }
 
-  pump.id <- x$pump.id
+  p.sel <- x$p.sel
   vars <- c("lon", "lat")
 
   if (x$case.set == "observed") {
@@ -118,7 +119,7 @@ plot.euclideanLatlong <- function(x, type = "star", ...) {
     pumpTokens(x, type, latlong = TRUE)
   }
 
-  if (!is.null(pump.id)) {
+  if (!is.null(p.sel)) {
     if (x$location == "nominal") {
       title(main = paste0("Pump Neighborhoods: Euclidean (nominal)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
@@ -184,17 +185,17 @@ latlongEuclideanStar <- function(x, vars) {
     }
   }
 
-  pump.id <- x$pump.id
+  p.sel <- x$p.sel
 
   nearest.pump <- do.call(rbind, lapply(cases$case, function(cs) {
     p1 <- cases[cases$case == cs, vars]
-    d <- vapply(pump.id, function(p) {
+    d <- vapply(p.sel, function(p) {
       p2 <- x$pump.data[x$pump.data$id == p, vars]
       geosphere::distGeo(p1, p2)
     }, numeric(1L))
     near.id <- which.min(d)
-    if (is.null(pump.id)) p.nr <- x$pump.data$id[near.id]
-    else p.nr <- pump.id[near.id]
+    if (is.null(p.sel)) p.nr <- x$pump.data$id[near.id]
+    else p.nr <- p.sel[near.id]
     data.frame(case = cs, pump = p.nr, meters = d[near.id])
   }))
 
