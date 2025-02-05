@@ -67,10 +67,14 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for euclideanLatlong()
 #' @param x Object.
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
+#' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
+#' @param polygon.type Character. "perimeter" or "solid".
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.euclideanLatlong <- function(x, type = "star", ...) {
+plot.euclideanLatlong <- function(x, type = "star", alpha.level = 0.5,
+  polygon.type = "solid", ...) {
+
   if (!type %in% c("area.points", "area.polygons", "star")) {
     stop('type must be "area.points", "area.polygons" or "star".',
       call. = FALSE)
@@ -96,7 +100,7 @@ plot.euclideanLatlong <- function(x, type = "star", ...) {
   if (x$case.set == "observed") {
     snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE,
       add.pumps = FALSE)
-    pumpTokens(x, type, latlong = TRUE)
+    pumpTokensB(x, type, alpha.level, polygon.type)
 
     if (!is.null(type)) {
       if (type == "star") {
@@ -116,7 +120,7 @@ plot.euclideanLatlong <- function(x, type = "star", ...) {
     else stop('type must be "star", "area.points" or "area.polygons".')
 
     addRoads(latlong = TRUE, col = "black")
-    pumpTokens(x, type, latlong = TRUE)
+    pumpTokensB(x, type, alpha.level, polygon.type)
   }
 
   if (!is.null(p.sel)) {

@@ -114,6 +114,8 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param add.observed.points Logical. Add observed fatality "addresses".
 #' @param add.title Logical. Add title.
+#' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
+#' @param polygon.type Character. "perimeter" or "solid".
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @note This uses an approximate computation of polygons, using the 'TSP' package, that may produce non-simple and/or overlapping polygons.
@@ -128,7 +130,7 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
 #' }
 
 plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
-  add.title = TRUE, ...) {
+  add.title = TRUE, alpha.level = 0.75, polygon.type = "solid", ...) {
 
   if (type %in% c("area.points", "area.polygons")) {
     if (x$case.set != "expected") {
@@ -159,7 +161,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
     addRoads(col = "black")
   }
 
-  pumpTokens(x, type)
+  pumpTokensB(x, type, alpha.level, polygon.type)
 
   if (add.title) {
     if (is.null(x$pump.select)) {
