@@ -1,3 +1,9 @@
+### cholera 0.8.0.9570
+
+- use p.sel for selected pumps; return latlong with euclideanNominal() and 
+  euclideanNominal().
+
+
 ### cholera 0.8.0.9569
 
 - amend pumpTokensB(type = "star") for case.set = "expected".
