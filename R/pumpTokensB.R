@@ -68,13 +68,11 @@ pumpTokensB <- function(x, type, alpha.level, polygon.type) {
         if (polygon.type == "solid") {
           points(all.data, pch = 24, col = "white", bg = bg.col)
           text(all.data, pos = 1, cex = 0.9, col = "white", labels = all.labels)
-
         } else if (polygon.type == "perimeter") {
           points(all.data, pch = 24, col = "black", bg = bg.col)
           text(all.data, pos = 1, cex = 0.9, col = "black", labels = all.labels)
         }
       }
-
     } else {
       obs <- dat$id %in% x$p.sel
       pos.data <- dat[obs, vars]
@@ -103,7 +101,6 @@ pumpTokensB <- function(x, type, alpha.level, polygon.type) {
           text(pos.data, pos = 1, cex = 0.9, col = "white", labels = pos.labels)
           points(neg.data, pch = 24, col = "black")
           text(neg.data, pos = 1, cex = 0.9, col = "black", labels = neg.labels)
-
         } else if (polygon.type == "perimeter") {
           points(pos.data, pch = 24, col = "black", bg = bg.col)
           text(pos.data, pos = 1, cex = 0.9, col = "black", labels = pos.labels)
