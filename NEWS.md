@@ -1,3 +1,9 @@
+### cholera 0.8.0.9571
+
+- add alpha.level and polygon.type args for pumpTokensB(), plot.euclidean() and 
+  plot.euclideanLatlong().
+  
+
 ### cholera 0.8.0.9570
 
 - use p.sel for selected pumps; return latlong with euclideanNominal() and 

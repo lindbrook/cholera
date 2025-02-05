@@ -5,7 +5,7 @@
 \title{Plot method for neighborhoodEuclidean().}
 \usage{
 \method{plot}{euclidean}(x, type = "star", add.observed.points = TRUE,
-  add.title = TRUE, ...)
+  add.title = TRUE, alpha.level = 0.75, polygon.type = "solid", ...)
 }
 \arguments{
 \item{x}{An object of class "euclidean" created by \code{neighborhoodEuclidean()}.}
@@ -15,6 +15,10 @@
 \item{add.observed.points}{Logical. Add observed fatality "addresses".}
 
 \item{add.title}{Logical. Add title.}
+
+\item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
+
+\item{polygon.type}{Character. "perimeter" or "solid".}
 
 \item{...}{Additional plotting parameters.}
 }
