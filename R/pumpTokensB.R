@@ -58,6 +58,10 @@ pumpTokensB <- function(x, type, alpha.level, polygon.type) {
         points(all.data, pch = 17, col = x$snow.colors)
         text(all.data, pos = 1, cex = 0.9, col = "black", labels = all.labels)
 
+      } else if (type == "star") {
+        points(all.data, pch = 24, bg = x$snow.colors, col = "white")
+        text(all.data, pos = 1, cex = 0.9, col = "white", labels = all.labels)
+
       } else if (type == "area.points") {
         points(all.data, pch = 24, col = "white", bg = x$snow.colors)
         text(all.data, pos = 1, cex = 0.9, col = "white", labels = all.labels)
@@ -68,13 +72,11 @@ pumpTokensB <- function(x, type, alpha.level, polygon.type) {
         if (polygon.type == "solid") {
           points(all.data, pch = 24, col = "white", bg = bg.col)
           text(all.data, pos = 1, cex = 0.9, col = "white", labels = all.labels)
-
         } else if (polygon.type == "perimeter") {
           points(all.data, pch = 24, col = "black", bg = bg.col)
           text(all.data, pos = 1, cex = 0.9, col = "black", labels = all.labels)
         }
       }
-
     } else {
       obs <- dat$id %in% x$p.sel
       pos.data <- dat[obs, vars]
@@ -88,7 +90,13 @@ pumpTokensB <- function(x, type, alpha.level, polygon.type) {
         points(neg.data, pch = 24, col = "gray")
         text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
 
-      } else if (type == "area.points") {
+      } else if (type == "star") {
+        points(pos.data, pch = 24, bg = x$snow.colors[obs], col = "white")
+        text(pos.data, pos = 1, cex = 0.9, labels = pos.labels, col = "white")
+        points(neg.data, pch = 3, col = "gray")
+        text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
+
+      } else if (type == c("area.points")) {
         points(pos.data, pch = 24, col = "white", bg = x$snow.colors[obs])
         text(pos.data, pos = 1, cex = 0.9, col = "white", labels = pos.labels)
         points(neg.data, pch = 3)
@@ -103,7 +111,6 @@ pumpTokensB <- function(x, type, alpha.level, polygon.type) {
           text(pos.data, pos = 1, cex = 0.9, col = "white", labels = pos.labels)
           points(neg.data, pch = 24, col = "black")
           text(neg.data, pos = 1, cex = 0.9, col = "black", labels = neg.labels)
-
         } else if (polygon.type == "perimeter") {
           points(pos.data, pch = 24, col = "black", bg = bg.col)
           text(pos.data, pos = 1, cex = 0.9, col = "black", labels = pos.labels)
