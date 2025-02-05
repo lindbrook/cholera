@@ -1,3 +1,8 @@
+### cholera 0.8.0.9569
+
+- amend pumpTokensB(type = "star") for case.set = "expected".
+
+
 ### cholera 0.8.0.9568
 
 - add pumpTokensB(type = "star").

@@ -93,8 +93,8 @@ pumpTokensB <- function(x, type, alpha.level, polygon.type) {
       } else if (type == "star") {
         points(pos.data, pch = 24, bg = x$snow.colors[obs], col = "white")
         text(pos.data, pos = 1, cex = 0.9, labels = pos.labels, col = "white")
-        points(neg.data, pch = 3, col = "gray")
-        text(neg.data, pos = 1, cex = 0.9, col = "gray", labels = neg.labels)
+        points(neg.data, pch = 2, col = "black")
+        text(neg.data, pos = 1, cex = 0.9, col = "black", labels = neg.labels)
 
       } else if (type == c("area.points")) {
         points(pos.data, pch = 24, col = "white", bg = x$snow.colors[obs])
