@@ -1,3 +1,8 @@
+### cholera 0.8.0.9568
+
+- add pumpTokensB(type = "star").
+
+
 ### cholera 0.8.0.9567
 
 - add alpha.level and polygon.type args to pumpTokensB() and plot.walkingB().
