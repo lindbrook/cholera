@@ -1,3 +1,8 @@
+### cholera 0.8.0.9572
+
+- amend computation of diff_pump.road_segs distances in walkingB().
+
+
 ### cholera 0.8.0.9571
 
 - add alpha.level and polygon.type args for pumpTokensB(), plot.euclidean() and 
