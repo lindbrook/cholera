@@ -224,12 +224,11 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
       tmp$pump <- c(tmp[1, "pump1"], tmp[2, "pump2"])
       tmp[, c("pump1", "pump2")] <- NULL
 
-      mid.d <- vapply(seq_along(tmp$street), function(i) {
+      tmp$d <- vapply(seq_along(tmp$street), function(i) {
         stats::dist(rbind(stats::setNames(tmp[i, paste0(vars, 1)], vars),
                           stats::setNames(tmp[i, paste0(vars, 2)], vars)))
       }, numeric(1L))
 
-      tmp$d <- unlist(ep.data[, c("d1", "d2")]) + mid.d
       tmp[, c("d1", "d2")] <- NULL
       tmp$id <- paste0(tmp$street, "-", c("A", "Z"))
       tmp
