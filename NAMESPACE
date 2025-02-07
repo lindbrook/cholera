@@ -3,7 +3,7 @@
 S3method(pearsonResiduals,default)
 S3method(pearsonResiduals,euclidean)
 S3method(pearsonResiduals,voronoi)
-S3method(pearsonResiduals,walking)
+S3method(pearsonResiduals,walkingB)
 S3method(plot,euclidean)
 S3method(plot,euclideanLatlong)
 S3method(plot,euclidean_path)
