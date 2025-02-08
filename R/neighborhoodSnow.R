@@ -47,11 +47,17 @@ neighborhoodSnow <- function(latlong = FALSE) {
 #' @param x An object of class "neighborhood_snow" created by \code{neighborhoodSnow()}.
 #' @param type Character. "roads", "area.points" or "area.polygons".
 #' @param non.snow.cases Logical. Plot anchor cases outside Snow neighborhood.
+#' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
+#' @param polygon.type Character. "perimeter" or "solid".
+#' @param polygon.col Character.
+#' @param polygon.lwd Numeric.
+#' @param add Logical. Add graphic to plot.
 #' @param ... Additional plotting parameters.
 #' @export
 
 plot.neighborhood_snow <- function(x, type = "area.points",
-  non.snow.cases = TRUE, ...) {
+  non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid", polygon.col = NULL,
+  polygon.lwd = NULL, add = FALSE, ...) {
 
   if (x$latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
@@ -59,16 +65,16 @@ plot.neighborhood_snow <- function(x, type = "area.points",
   edges <- x$edges
   id2 <- unique(unlist(x$path.id2))
 
-  z <- walkingB(7)
+  z <- walkingB(pump.select = 7)
 
-  snowMap(add.cases = FALSE, add.pumps = FALSE)
+  if (!add) snowMap(add.cases = FALSE, add.pumps = FALSE)
 
   if (type == "roads") {
     p7.col <- cholera::snowColors()["p7"]
     snow.edge <- edges[edges$id2 %in% id2, ]
     segments(snow.edge$x1, snow.edge$y1, snow.edge$x2, snow.edge$y2,
       col = p7.col, lwd = 2)
-    pumpTokensB(z, type = "obseved")
+    if (!add) pumpTokensB(z, type = "obseved")
     sel <- cholera::fatalities.address$anchor %in% x$snow.anchors
     points(cholera::fatalities.address[sel, vars], pch = 16, col = p7.col,
       cex = 0.5)
@@ -166,17 +172,30 @@ plot.neighborhood_snow <- function(x, type = "area.points",
     sim.partial <- cholera::regular.cases[unlist(sim.partial.case) - 2000L, ]
 
     sim.data <- rbind(sim.whole, sim.partial)
-    p7.col <- grDevices::adjustcolor(snowColors()["p7"], alpha.f = 2/3)
+    p7.col <- grDevices::adjustcolor(snowColors()["p7"], alpha.f = alpha.level)
 
     if (type == "area.points") {
       points(sim.data, col = p7.col, pch = 16, cex = 0.25)
-      pumpTokensB(z, type = "obseved")
+      if (!add) pumpTokensB(z, type = "obseved")
+
     } else if (type == "area.polygons") {
+      if (is.null(polygon.col)) polygon.col <- p7.col
+
       periphery.cases <- peripheryCases(row.names(sim.data))
       pearl.string <- travelingSalesman(periphery.cases,
         tsp.method = "repetitive_nn")
-      polygon(cholera::regular.cases[pearl.string, ], col = p7.col)
-      pumpTokensB(z, type = "obseved")
+
+      if (polygon.type == "perimeter") {
+        if (is.null(polygon.lwd)) polygon.lwd <- 3
+        polygon(cholera::regular.cases[pearl.string, ], border = polygon.col,
+          lwd = polygon.lwd)
+      } else if (polygon.type == "solid") {
+        if (is.null(polygon.lwd)) polygon.lwd <- 1
+        polygon(cholera::regular.cases[pearl.string, ], col = polygon.col,
+          lwd = polygon.lwd)
+      }
+
+      if (!add) pumpTokensB(z, type = "obseved")
     }
 
     if (non.snow.cases) {
@@ -185,5 +204,5 @@ plot.neighborhood_snow <- function(x, type = "area.points",
         cex = 0.5)
     }
   }
-  title("Snow's Graphical Annotation Neighborhood")
+  if (!add) title("Snow's Graphical Annotation Neighborhood")
 }
