@@ -1,3 +1,8 @@
+### cholera 0.8.0.9574
+
+- add neighborhoodSnow() and addNeighborhoodSnow().
+
+
 ### cholera 0.8.0.9573
 
 - amend pearsonResiduals(); add pearsonResiduals.walkingB().
