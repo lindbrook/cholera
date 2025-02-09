@@ -1,3 +1,8 @@
+### cholera 0.8.0.9575
+
+- archive addNeighborhoodWalkingLatlong().
+
+
 ### cholera 0.8.0.9574
 
 - add neighborhoodSnow() and addNeighborhoodSnow().
