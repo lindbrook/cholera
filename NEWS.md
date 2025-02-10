@@ -1,3 +1,8 @@
+### cholera 0.8.0.9577
+
+- amend pearsonResiduals() for pump selection.
+
+
 ### cholera 0.8.0.9576
 
 - amend pump.id in voronoiLatlong() and voronoiNominal().
