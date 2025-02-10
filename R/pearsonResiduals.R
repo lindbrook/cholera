@@ -73,9 +73,11 @@ pearsonResiduals.walkingB <- function(x) {
     sum(neigh$d)
   }, numeric(1L))
 
-  split.segs <- c(split.segs, 0)
-  names(split.segs)[length(split.segs)] <- "2"
-  split.segs <- split.segs[order(as.integer(names(split.segs)))]
+  if (2L %in% x$p.sel) {
+    split.segs <- c(split.segs, 0)
+    names(split.segs)[length(split.segs)] <- "2"
+    split.segs <- split.segs[order(as.integer(names(split.segs)))]
+  }
 
   exp.d <- whole.segs + split.segs
 
