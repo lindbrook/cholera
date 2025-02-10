@@ -51,11 +51,7 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
     }
   }
 
-  if (!is.null(pump.select)) {
-    pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
-  } else {
-    pump.id <- pump.select
-  }
+  pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
   x.rng <- range(cholera::roads$x)
   y.rng <- range(cholera::roads$y)

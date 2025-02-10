@@ -41,11 +41,7 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
     })
   }
 
-  if (!is.null(pump.select)) {
-    pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
-  } else {
-    pump.id <- pump.select
-  }
+  pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
   out <- list(pump.select = pump.select, pump.id = pump.id, vestry = vestry,
     cells.triangles = cells.triangles, pump.data = pump.data,
