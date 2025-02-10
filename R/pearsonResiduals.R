@@ -18,7 +18,7 @@ pearsonResiduals.default <- function(x) NULL
 #' @export
 pearsonResiduals.euclidean <- function(x) {
   obs <- unclass(table(x$nearest.pump))
-  exp <- unclass(table(neighborhoodEuclidean(pump.select = x$pump.id,
+  exp <- unclass(table(neighborhoodEuclidean(pump.select = x$pump.select,
     case.set = "expected", multi.core = x$cores)$nearest.pump))
 
   exp.data <- data.frame(Pump = as.numeric(names(exp)),
@@ -40,7 +40,7 @@ pearsonResiduals.euclidean <- function(x) {
 pearsonResiduals.voronoi <- function(x) {
   census <- x$statistic.data
   count <- vapply(census, sum, numeric(1L))
-  output <- data.frame(Pump = x$pump.data$id,
+  output <- data.frame(Pump = x$pump.id,
                        Count = count,
                        Percent = round(100 * count / sum(count), 2),
                        row.names = NULL)
