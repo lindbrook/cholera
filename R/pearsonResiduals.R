@@ -18,7 +18,7 @@ pearsonResiduals.default <- function(x) NULL
 #' @export
 pearsonResiduals.euclidean <- function(x) {
   obs <- unclass(table(x$nearest.pump))
-  exp <- unclass(table(neighborhoodEuclidean(pump.select = x$pump.id,
+  exp <- unclass(table(neighborhoodEuclidean(pump.select = x$pump.select,
     case.set = "expected", multi.core = x$cores)$nearest.pump))
 
   exp.data <- data.frame(Pump = as.numeric(names(exp)),
@@ -40,7 +40,7 @@ pearsonResiduals.euclidean <- function(x) {
 pearsonResiduals.voronoi <- function(x) {
   census <- x$statistic.data
   count <- vapply(census, sum, numeric(1L))
-  output <- data.frame(Pump = x$pump.data$id,
+  output <- data.frame(Pump = x$pump.id,
                        Count = count,
                        Percent = round(100 * count / sum(count), 2),
                        row.names = NULL)
@@ -73,9 +73,11 @@ pearsonResiduals.walkingB <- function(x) {
     sum(neigh$d)
   }, numeric(1L))
 
-  split.segs <- c(split.segs, 0)
-  names(split.segs)[length(split.segs)] <- "2"
-  split.segs <- split.segs[order(as.integer(names(split.segs)))]
+  if (2L %in% x$p.sel) {
+    split.segs <- c(split.segs, 0)
+    names(split.segs)[length(split.segs)] <- "2"
+    split.segs <- split.segs[order(as.integer(names(split.segs)))]
+  }
 
   exp.d <- whole.segs + split.segs
 
@@ -91,7 +93,7 @@ pearsonResiduals.walkingB <- function(x) {
   obs.data <- data.frame(Pump = as.numeric(names(obs.d)), Observed = obs.d)
 
   output <- merge(obs.data, exp.data, by = "Pump", all.y = TRUE)
-  output$Observed[is.na(output$Observed)] <- 0
+  if (any(is.na(output$Observed))) output$Observed[is.na(output$Observed)] <- 0
   output$Expected <- sum(output$Observed) * output$Percent / 100
   output$Pearson <- (output$Observed - output$Expected) / sqrt(output$Expected)
   output$Pearson <- round(output$Pearson, 2)
