@@ -93,7 +93,7 @@ pearsonResiduals.walkingB <- function(x) {
   obs.data <- data.frame(Pump = as.numeric(names(obs.d)), Observed = obs.d)
 
   output <- merge(obs.data, exp.data, by = "Pump", all.y = TRUE)
-  output$Observed[is.na(output$Observed)] <- 0
+  if (any(is.na(output$Observed))) output$Observed[is.na(output$Observed)] <- 0
   output$Expected <- sum(output$Observed) * output$Percent / 100
   output$Pearson <- (output$Observed - output$Expected) / sqrt(output$Expected)
   output$Pearson <- round(output$Pearson, 2)
