@@ -28,11 +28,10 @@ orientationPlot <- function(pump.id = 6, pump.select = NULL,
       vestry = vestry)
   }
 
-
   if (metric == "euclidean") {
     fn <- neighborhoodVoronoi(pump.select = pump.select, vestry = vestry)
   } else if (metric == "walking") {
-    fn <- neighborhoodWalking(pump.select = pump.select, vestry = vestry)
+    fn <- walkingB(pump.select = pump.select, vestry = vestry)
   }
 
   vars <- c("x", "y")
