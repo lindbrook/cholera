@@ -31,7 +31,7 @@ walkingB <- function(pump.select = NULL, vestry = FALSE, weighted = TRUE,
   # pumps to consider or target
   p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
-  dat <- neighborhoodDataB(case.set = case.set, vestry = vestry,
+  dat <- neighborhoodData(case.set = case.set, vestry = vestry,
     latlong = latlong)
 
   g <- dat$g

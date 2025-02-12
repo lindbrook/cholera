@@ -10,7 +10,7 @@
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
-neighborhoodDataB <- function(vestry = FALSE, case.set = "observed",
+neighborhoodData <- function(vestry = FALSE, case.set = "observed",
   embed.addr = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
   latlong = FALSE) {
 
@@ -27,4 +27,16 @@ neighborhoodDataB <- function(vestry = FALSE, case.set = "observed",
   out <- list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
   class(out) <- "neighborhood_data"
   out
+}
+
+#' Plot method for neighborhoodData().
+#'
+#' Visualize underlying road network (with or without cases and pumps).
+#' @param x An 'igraph' object of class "neighborhood_data" created by \code{neighborhoodData()}.
+#' @param ... Additional plotting parameters.
+#' @return A base R plot.
+#' @export
+
+plot.neighborhood_data <- function(x, ...) {
+  plot(x$g, vertex.label = NA, vertex.size = 2, ...)
 }
