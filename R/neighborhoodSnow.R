@@ -5,7 +5,7 @@
 #' @export
 
 neighborhoodSnow <- function(latlong = FALSE) {
-  dat <- neighborhoodDataB(case.set = "observed", vestry = FALSE,
+  dat <- neighborhoodData(case.set = "observed", vestry = FALSE,
     latlong = FALSE)
 
   g <- dat$g

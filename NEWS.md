@@ -1,3 +1,8 @@
+### cholera 0.8.0.9582
+
+- promote neighborhoodDataB() to neighborhoodData().
+
+
 ### cholera 0.8.0.9581
 
 - archive prior neighborhoodData().
