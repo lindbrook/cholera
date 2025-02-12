@@ -132,11 +132,26 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
         n.data <- walkingB(latlong = latlong, multi.core = cores)
         cases.list <- pumpCase(n.data)
 
+        p.nm <- names(cases.list)
+        p.obs <- as.integer(substr(p.nm, 2, nchar(p.nm)))
+
         if (all(pump.subset > 0)) {
-          cases <- cases.list[paste0("p", pump.subset)]
+          if (all(pump.subset %in% p.obs)) {
+            cases <- cases.list[paste0("p", pump.subset)]
+          } else {
+            stop('pump.subset valid only for pumps 3 through 12.',
+              call. = FALSE)
+          }
         } else if (all(pump.subset < 0)) {
-          sel <- names(cases.list) %in% paste0("p", abs(pump.subset)) == FALSE
-          cases <- cases.list[sel]
+          neg.pump <- paste0("p", abs(pump.subset))
+
+          if (all(neg.pump %in% p.nm)) {
+            sel <- !names(cases.list) %in% paste0("p", abs(pump.subset))
+            cases <- cases.list[sel]
+          } else {
+            stop('pump.subset valid only for pumps 3 through 12.',
+              call. = FALSE)
+          }
         } else {
           stop("Use all positive or all negative numbers for pump.subset.")
         }

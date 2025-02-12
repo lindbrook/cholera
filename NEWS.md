@@ -1,6 +1,7 @@
 ### cholera 0.8.0.9579
 
 - use walkingB() in addKernelDensity().
+- restrict pump.subset to observed pump neighborhoods.
 
 
 ### cholera 0.8.0.9578
