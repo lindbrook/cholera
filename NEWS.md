@@ -1,3 +1,8 @@
+### cholera 0.8.0.9580
+
+- archive addMilePosts().
+
+
 ### cholera 0.8.0.9579
 
 - use walkingB() in addKernelDensity().
