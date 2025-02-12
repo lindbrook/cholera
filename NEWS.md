@@ -1,3 +1,8 @@
+### cholera 0.8.0.9581
+
+- archive prior neighborhoodData().
+
+
 ### cholera 0.8.0.9580
 
 - archive addMilePosts().
