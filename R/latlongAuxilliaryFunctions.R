@@ -91,7 +91,7 @@ meterLatitude <- function(coords, origin, topleft, delta = 0.000025) {
   data.frame(m = y.unique, lat = est.lat)
 }
 
-#' Convert meters-East to longitude.
+#' Convert meters-East and meters-North to longitude and latitude.
 #'
 #' @param coords Object. Data frame of coordinates.
 #' @param delta Numeric. Increment between simulated values.
