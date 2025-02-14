@@ -1,3 +1,8 @@
+### cholera 0.8.0.9583
+
+- change class of neighborhoodSnow() to "snow"; move to snow.R.
+
+
 ### cholera 0.8.0.9582
 
 - promote neighborhoodDataB() to neighborhoodData().
