@@ -29,8 +29,9 @@ addNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   if (.Platform$OS.type == "windows") cores <- 1L
   else cores <- multiCore(multi.core)
 
-  x <- walkingB(pump.select = pump.select, vestry = vestry, weighted = weighted,
-    case.set = case.set, latlong = latlong, multi.core = cores)
+  x <- neighborhoodWalking(pump.select = pump.select, vestry = vestry,
+    weighted = weighted, case.set = case.set, latlong = latlong,
+    multi.core = cores)
 
   plot(x, type = type, tsp.method = tsp.method, add = TRUE,
     path.width = path.width, alpha.level = alpha.level,

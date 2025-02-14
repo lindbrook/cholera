@@ -19,6 +19,6 @@ Compute Pearson Residuals (prototype)
 \dontrun{
 pearsonResiduals(neighborhoodEuclidean())
 pearsonResiduals(neighborhoodVoronoi())
-pearsonResiduals(walkingB())
+pearsonResiduals(neighborhoodWalking())
 }
 }

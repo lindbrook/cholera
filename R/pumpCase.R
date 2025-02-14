@@ -57,7 +57,7 @@ pumpCase.voronoi <- function(x, case = "anchor") {
 }
 
 #' @export
-pumpCase.walkingB <- function(x, case = "anchor") {
+pumpCase.walking <- function(x, case = "anchor") {
   if (case == "fatality") {
     lapply(x$case.pump, function(vec) {
       sort(cholera::anchor.case[cholera::anchor.case$anchor %in% vec, "case"])

@@ -7,7 +7,7 @@
 #' \dontrun{
 #' pearsonResiduals(neighborhoodEuclidean())
 #' pearsonResiduals(neighborhoodVoronoi())
-#' pearsonResiduals(walkingB())
+#' pearsonResiduals(neighborhoodWalking())
 #' }
 
 pearsonResiduals <- function(x) UseMethod("pearsonResiduals", x)
@@ -53,9 +53,9 @@ pearsonResiduals.voronoi <- function(x) {
 }
 
 #' @export
-pearsonResiduals.walkingB <- function(x) {
+pearsonResiduals.walking <- function(x) {
   vars <- c("x", "y")
-  exp <- walkingB(x$p.sel, case.set = "expected")
+  exp <- neighborhoodWalking(x$p.sel, case.set = "expected")
 
   neigh.seg.ds <- lapply(exp$same_pump.road_segs, function(neigh) {
     neigh <- cholera::road.segments[cholera::road.segments$id %in% neigh, ]
