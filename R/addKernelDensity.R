@@ -89,7 +89,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
       } else if (pump.subset == "individual") {
         if (neighborhood.type == "walking") {
-          n.data <- walkingB(latlong = latlong, multi.core = cores)
+          n.data <- neighborhoodWalking(latlong = latlong, multi.core = cores)
           cases <- pumpCase(n.data)
 
         } else if (neighborhood.type == "voronoi") {
@@ -129,7 +129,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
 
     } else if (all(is.numeric(pump.subset))) {
       if (neighborhood.type == "walking") {
-        n.data <- walkingB(latlong = latlong, multi.core = cores)
+        n.data <- neighborhoodWalking(latlong = latlong, multi.core = cores)
         cases.list <- pumpCase(n.data)
 
         p.nm <- names(cases.list)
@@ -192,7 +192,7 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
     }
 
   } else {
-    n.data <- walkingB(pump.select, latlong = latlong,
+    n.data <- neighborhoodWalking(pump.select, latlong = latlong,
       multi.core = cores)
     cases <- pumpCase(n.data)
 
