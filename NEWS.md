@@ -1,4 +1,7 @@
-### cholera 0.8.0.9584
+### cholera 0.8.0.9585
+
+- clean up walkingAuxiliaryFunctions.R.
+
 
 ### cholera 0.8.0.9584
 
