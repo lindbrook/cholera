@@ -38,7 +38,7 @@ neighborhoodSnow <- function(latlong = FALSE) {
 
   out <- list(edges = edges, path.id2 = path.id2, snow.anchors = snow.anchors,
     latlong = latlong)
-  class(out) <- "neighborhood_snow"
+  class(out) <- "snow"
   out
 }
 
@@ -55,8 +55,8 @@ neighborhoodSnow <- function(latlong = FALSE) {
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.neighborhood_snow <- function(x, type = "area.points",
-  non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid", polygon.col = NULL,
+plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
+  alpha.level = 1/3, polygon.type = "solid", polygon.col = NULL,
   polygon.lwd = NULL, add = FALSE, ...) {
 
   if (x$latlong) vars <- c("lon", "lat")
@@ -65,7 +65,7 @@ plot.neighborhood_snow <- function(x, type = "area.points",
   edges <- x$edges
   id2 <- unique(unlist(x$path.id2))
 
-  z <- walkingB(pump.select = 7)
+  z <- neighborhoodWalking(pump.select = 7)
 
   if (!add) snowMap(add.cases = FALSE, add.pumps = FALSE)
 
