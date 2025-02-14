@@ -5,8 +5,7 @@
 \title{Compute walking path pump neighborhoods.}
 \usage{
 neighborhoodWalking(pump.select = NULL, vestry = FALSE, weighted = TRUE,
-  case.set = "observed", multi.core = TRUE, dev.mode = FALSE,
-  latlong = FALSE)
+  case.set = "observed", latlong = FALSE, multi.core = TRUE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps. Note that you can't just select the pump on Adam and Eve Court (#2) because it's technically an isolate.}
@@ -17,18 +16,10 @@ neighborhoodWalking(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
 \item{case.set}{Character. "observed", "expected" or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
-
-\item{dev.mode}{Logical. Development mode uses parallel::parLapply().}
-
 \item{latlong}{Logical.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
 \description{
 Group cases into neighborhoods based on walking distance.
-}
-\examples{
-\dontrun{
-neighborhoodWalking()
-neighborhoodWalking(pump.select = -6)
-}
 }
