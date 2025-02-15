@@ -1,6 +1,16 @@
-midpointNative <- function(diff_pump.endpts, endpt.data, same_pump.cases, 
+#' Compute the midpoint of "extended" road segments.
+#'
+#' For segments with endpoints with different nearest pumps using Dodson and Tobler's "native" data.
+#' @param diff_pump.endpts data.frame. Data for road segments with endpoints that have different nearest pumps.
+#' @param endpt.data data.frame. Road segment endpoint data about their nearest pump.
+#' @param same_pump.cases list. Cases classified by pump for road segments with endpoints with same nearest pump.
+#' @param cores Numeric or Integer. Number of cores to use for parallel computation.
+#' @note An "extended" road segment extends that line segment by the distance to the nearest pump. The midpoint is 1/2 the length of the extended segment.
+#' @noRd
+
+midpointNative <- function(diff_pump.endpts, endpt.data, same_pump.cases,
   cores) {
-  
+
   vars <- c("x", "y")
 
   midpoint <- lapply(diff_pump.endpts$id, function(seg) {
@@ -101,6 +111,7 @@ midpointNative <- function(diff_pump.endpts, endpt.data, same_pump.cases,
 
   diff_pump.road_segs <- do.call(rbind, diff_pump.road_segs)
   diff_pump.road_segs <- split(diff_pump.road_segs, diff_pump.road_segs$pump)
-  list(exp.pump.case = exp.pump.case, 
+  list(exp.pump.case = exp.pump.case,
        diff_pump.road_segs = diff_pump.road_segs)
 }
+
