@@ -1,11 +1,23 @@
-midpointLatlong <- function(diff_pump.endpts, endpt.data, same_pump.cases, 
+#' Compute the midpoint of "extended" road segments.
+#'
+#' For segments with endpoints with different nearest pumps using georeferenced Dodson and Tobler data.
+#' @param diff_pump.endpts data.frame. Data for road segments with endpoints that have different nearest pumps.
+#' @param endpt.data data.frame. Road segment endpoint data about their nearest pump.
+#' @param same_pump.cases list. Cases classified by pump for road segments with endpoints with same nearest pump.
+#' @param cores Numeric or Integer. Number of cores to use for parallel computation.
+#' @note An "extended" road segment extends that line segment by the distance to the nearest pump. The midpoint is 1/2 the length of the extended segment.
+#' @noRd
+
+midpointLatlong <- function(diff_pump.endpts, endpt.data, same_pump.cases,
   cores) {
-  
+
   vars <- c("lon", "lat")
 
   origin <- data.frame(lon = min(cholera::roads$lon),
                        lat = min(cholera::roads$lat))
 
+  # Transform longitude and latitude into Cartesian coordinates (East-West and
+  # North-South distances from map's origin) to do trigonometry.
   geo.cartesian <- lapply(diff_pump.endpts$id, function(id) {
     seg <- diff_pump.endpts[diff_pump.endpts$id == id, ]
     y1.proj <- c(origin$lon, seg$lat1)
@@ -57,6 +69,7 @@ midpointLatlong <- function(diff_pump.endpts, endpt.data, same_pump.cases,
                y = c(extended.seg[ego, "y"] + delta.y), row.names = NULL)
   })
 
+  # Translate back to longitude and latitude using meterLatLong()
   midpoint <- lapply(midpoint.cartesian, meterLatLong)
   midpoint <- do.call(rbind, midpoint)[, vars]
   midpoint <- data.frame(id = diff_pump.endpts$id, midpoint, row.names = NULL)
@@ -118,6 +131,6 @@ midpointLatlong <- function(diff_pump.endpts, endpt.data, same_pump.cases,
 
   diff_pump.road_segs <- do.call(rbind, diff_pump.road_segs)
   diff_pump.road_segs <- split(diff_pump.road_segs, diff_pump.road_segs$pump)
-  list(exp.pump.case = exp.pump.case, 
+  list(exp.pump.case = exp.pump.case,
        diff_pump.road_segs = diff_pump.road_segs)
 }

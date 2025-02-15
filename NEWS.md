@@ -1,3 +1,8 @@
+### cholera 0.8.0.9586
+
+- document midpointLatlong() and midpointNative().
+
+
 ### cholera 0.8.0.9585
 
 - clean up walkingAuxiliaryFunctions.R.
