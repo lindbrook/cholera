@@ -1,3 +1,8 @@
+### cholera 0.8.0.9587
+
+- use pump.select in pumpTokensB() for Voronoi functions.
+
+
 ### cholera 0.8.0.9586
 
 - document midpointLatlong() and midpointNative().

@@ -20,7 +20,7 @@ pumpTokensB <- function(x, type, alpha.level, polygon.type) {
 
   if (x$case.set == "observed") {
     if (inherits(x, "voronoi_nominal") | inherits(x, "voronoi_latlong")) {
-      if (is.null(x$pump.id)) {
+      if (is.null(x$pump.select)) {
         points(all.data, pch = 2, lwd = 2, col = x$snow.colors)
         text(all.data, pos = 1, cex = 0.9, labels = all.labels)
       } else {
