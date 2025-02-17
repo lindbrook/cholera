@@ -100,7 +100,7 @@ plot.euclideanLatlong <- function(x, type = "star", alpha.level = 0.5,
   if (x$case.set == "observed") {
     snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE,
       add.pumps = FALSE)
-    pumpTokensB(x, type, alpha.level, polygon.type)
+    pumpTokens(x, type, alpha.level, polygon.type)
 
     if (!is.null(type)) {
       if (type == "star") {
@@ -120,7 +120,7 @@ plot.euclideanLatlong <- function(x, type = "star", alpha.level = 0.5,
     else stop('type must be "star", "area.points" or "area.polygons".')
 
     addRoads(latlong = TRUE, col = "black")
-    pumpTokensB(x, type, alpha.level, polygon.type)
+    pumpTokens(x, type, alpha.level, polygon.type)
   }
 
   if (!is.null(p.sel)) {

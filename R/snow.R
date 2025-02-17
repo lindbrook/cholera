@@ -74,7 +74,7 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
     snow.edge <- edges[edges$id2 %in% id2, ]
     segments(snow.edge$x1, snow.edge$y1, snow.edge$x2, snow.edge$y2,
       col = p7.col, lwd = 2)
-    if (!add) pumpTokensB(z, type = "obseved")
+    if (!add) pumpTokens(z, type = "obseved")
     sel <- cholera::fatalities.address$anchor %in% x$snow.anchors
     points(cholera::fatalities.address[sel, vars], pch = 16, col = p7.col,
       cex = 0.5)
@@ -176,7 +176,7 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
 
     if (type == "area.points") {
       points(sim.data, col = p7.col, pch = 16, cex = 0.25)
-      if (!add) pumpTokensB(z, type = "obseved")
+      if (!add) pumpTokens(z, type = "obseved")
 
     } else if (type == "area.polygons") {
       if (is.null(polygon.col)) polygon.col <- p7.col
@@ -195,7 +195,7 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
           lwd = polygon.lwd)
       }
 
-      if (!add) pumpTokensB(z, type = "obseved")
+      if (!add) pumpTokens(z, type = "obseved")
     }
 
     if (non.snow.cases) {

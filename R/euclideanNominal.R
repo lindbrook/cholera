@@ -161,7 +161,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
     addRoads(col = "black")
   }
 
-  pumpTokensB(x, type, alpha.level, polygon.type)
+  pumpTokens(x, type, alpha.level, polygon.type)
 
   if (add.title) {
     if (is.null(x$pump.select)) {
