@@ -323,7 +323,7 @@ plot.walking <- function(x, type = "area.points", tsp.method = "repetitive_nn",
       }
     }
 
-    if (!add) pumpTokensB(x, type, alpha.level, polygon.type)
+    if (!add) pumpTokens(x, type, alpha.level, polygon.type)
   }
 
   if (!add) {
