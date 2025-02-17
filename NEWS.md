@@ -1,3 +1,8 @@
+### cholera 0.8.0.9588
+
+- promote pumpTokensB() to pumpTokens().
+
+
 ### cholera 0.8.0.9587
 
 - use pump.select in pumpTokensB() for Voronoi functions.
