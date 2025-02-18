@@ -221,7 +221,7 @@ euclideanAreaPoints <- function(x, case.num, nearest.pump) {
   }))
 }
 
-euclideanAreaPolygons <- function(x, nearest.pump) {
+euclideanAreaPolygons <- function(x, nearest.pump, alpha.level, polygon.type) {
   p.num <- sort(unique(nearest.pump))
   neighborhood.cases <- lapply(p.num, function(n) {
     which(nearest.pump == n)
@@ -229,11 +229,20 @@ euclideanAreaPolygons <- function(x, nearest.pump) {
   periphery.cases <- lapply(neighborhood.cases, peripheryCases)
   pearl.string <- lapply(periphery.cases, travelingSalesman)
   names(pearl.string) <- p.num
-  invisible(lapply(names(pearl.string), function(nm) {
-    sel <- paste0("p", nm)
-    polygon(cholera::regular.cases[pearl.string[[nm]], ],
-      col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = 2/3))
-  }))
+
+  if (polygon.type == "perimeter") {
+    invisible(lapply(names(pearl.string), function(nm) {
+      sel <- paste0("p", nm)
+      polygon(cholera::regular.cases[pearl.string[[nm]], ],
+        border = x$snow.colors[sel])
+    }))
+  } else if (polygon.type == "solid") {
+    invisible(lapply(names(pearl.string), function(nm) {
+      sel <- paste0("p", nm)
+      polygon(cholera::regular.cases[pearl.string[[nm]], ],
+        col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = alpha.level))
+    }))
+  }
 }
 
 #' Print method for neighborhoodEuclidean().

@@ -214,7 +214,7 @@ latlongEuclideanStar <- function(x, vars) {
   }))
 }
 
-latlongEuclideanAreaPolygons <- function(x) {
+latlongEuclideanAreaPolygons <- function(x, alpha.level, polygon.type) {
   if (x$case.set == "expected") {
     if (x$location %in% c("nominal", "anchor")) {
       dat <- cholera::latlong.regular.cases
@@ -236,8 +236,16 @@ latlongEuclideanAreaPolygons <- function(x) {
     travelingSalesman(x, latlong = TRUE)
   })
 
-  invisible(lapply(names(pearl.string), function(nm) {
-    polygon(dat[pearl.string[[nm]], c("lon", "lat")],
-      col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = 2/3))
-  }))
+  vars <- c("lon", "lat")
+
+  if (polygon.type == "perimeter") {
+    invisible(lapply(names(pearl.string), function(nm) {
+      polygon(dat[pearl.string[[nm]], vars], border = x$snow.colors[nm])
+    }))
+  } else if (polygon.type == "solid") {
+    invisible(lapply(names(pearl.string), function(nm) {
+      polygon(dat[pearl.string[[nm]], vars],
+        col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = alpha.level))
+    }))
+  }
 }
