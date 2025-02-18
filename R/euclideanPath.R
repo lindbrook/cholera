@@ -207,14 +207,14 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
 
   fatality <- cholera::fatalities
 
-  sqB <- cholera::landmark.squaresB
+  sqB <- cholera::landmark.squares
   sqB$road.segment <- NA
   sqB$x.lab <- sqB$x
   sqB$y.lab <- sqB$y
   sqB$lon.lab <- sqB$lon
   sqB$lat.lab <- sqB$lat
-  sqB <- sqB[, names(cholera::landmarksB)]
-  land <- rbind(sqB, cholera::landmarksB)
+  sqB <- sqB[, names(cholera::landmarks)]
+  land <- rbind(sqB, cholera::landmarks)
 
   padding <- ifelse(latlong, 0.000125, 0.25)
 
@@ -273,8 +273,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
         label.parse <- unlist(strsplit(sq.label, "[ ]"))
         sq.label <- paste0(label.parse[1], "\n", label.parse[2])
         obs.sq <- paste(label.parse, collapse = " ")
-        sel <- cholera::landmark.squaresB$name == obs.sq
-        text(cholera::landmark.squaresB[sel, c(ew, ns)], labels = sq.label,
+        sel <- cholera::landmark.squares$name == obs.sq
+        text(cholera::landmark.squares[sel, c(ew, ns)], labels = sq.label,
           col = "red", cex = 0.8)
       } else {
         label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
@@ -304,8 +304,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, long.title = TRUE,
         points(land[land$case == dest, vars], col = "red")
         land.tmp <- land[land$case == dest, ]
         if (grepl("Square", land.tmp$name)) {
-          sel <- cholera::landmark.squaresB$name == path.data$destination.nm
-          label.dat <- cholera::landmark.squaresB[sel, ]
+          sel <- cholera::landmark.squares$name == path.data$destination.nm
+          label.dat <- cholera::landmark.squares[sel, ]
           label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
           text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",
@@ -436,8 +436,8 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 
   if (case.set == "observed") {
     vars.lndmrk <- c("case", vars, "name")
-    lndmrk <- rbind(cholera::landmark.squaresB[, vars.lndmrk],
-                    cholera::landmarksB[, vars.lndmrk])
+    lndmrk <- rbind(cholera::landmark.squares[, vars.lndmrk],
+                    cholera::landmarks[, vars.lndmrk])
 
     if (any(orgn < 1000L)) {
       if (location %in% c("anchor", "orthogonal")) {
@@ -629,34 +629,34 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
 
   if (is.null(destination)) {
     if (any(grepl("Square", orgn.nm))) {
-      sel <- cholera::landmark.squaresB$name %in% orgn.nm
-      obs.sq <- cholera::landmark.squaresB$name[sel]
+      sel <- cholera::landmark.squares$name %in% orgn.nm
+      obs.sq <- cholera::landmark.squares$name[sel]
 
-      if (all(cholera::landmark.squaresB$case %in% orgn)) {
+      if (all(cholera::landmark.squares$case %in% orgn)) {
         sel <- unlist(lapply(obs.sq, function(nm) grep(nm, dstn.nm)))
         dstn <- dstn[-sel]
         dstn.nm <- dstn.nm[-sel]
-      } else if (any(!cholera::landmark.squaresB$case %in% orgn)) {
-        sel <- grep(obs.sq, cholera::landmarksB$name)
-        excl <- cholera::landmarksB$case[sel]
-        excl.nm <- cholera::landmarksB$name[sel]
+      } else if (any(!cholera::landmark.squares$case %in% orgn)) {
+        sel <- grep(obs.sq, cholera::landmarks$name)
+        excl <- cholera::landmarks$case[sel]
+        excl.nm <- cholera::landmarks$name[sel]
         dstn <- dstn[!dstn %in% excl]
         dstn.nm <- dstn.nm[!dstn.nm %in% excl.nm]
       }
     }
   } else if (is.null(origin)) {
     if (any(grepl("Square", dstn.nm))) {
-      sel <- cholera::landmark.squaresB$name %in% dstn.nm
-      obs.sq <- cholera::landmark.squaresB$name[sel]
+      sel <- cholera::landmark.squares$name %in% dstn.nm
+      obs.sq <- cholera::landmark.squares$name[sel]
 
-      if (all(cholera::landmark.squaresB$case %in% dstn)) {
+      if (all(cholera::landmark.squares$case %in% dstn)) {
         sel <- unlist(lapply(obs.sq, function(nm) grep(nm, orgn.nm)))
         orgn <- orgn[-sel]
         orgn.nm <- orgn.nm[-sel]
-      } else if (any(!cholera::landmark.squaresB$case %in% dstn)) {
-        sel <- grep(obs.sq, cholera::landmarksB$name)
-        excl <- cholera::landmarksB$case[sel]
-        excl.nm <- cholera::landmarksB$name[sel]
+      } else if (any(!cholera::landmark.squares$case %in% dstn)) {
+        sel <- grep(obs.sq, cholera::landmarks$name)
+        excl <- cholera::landmarks$case[sel]
+        excl.nm <- cholera::landmarks$name[sel]
         orgn <- orgn[!orgn %in% excl]
         orgn.nm <- orgn.nm[!orgn.nm %in% excl.nm]
       }
@@ -676,8 +676,8 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
   }
 
   vars.lndmrk <- c("case", vars, "name")
-  lndmrk <- rbind(cholera::landmark.squaresB[, vars.lndmrk],
-                  cholera::landmarksB[, vars.lndmrk])
+  lndmrk <- rbind(cholera::landmark.squares[, vars.lndmrk],
+                  cholera::landmarks[, vars.lndmrk])
 
   if (location == "orthogonal") {
     if (latlong) {

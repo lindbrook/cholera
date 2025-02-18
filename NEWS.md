@@ -1,3 +1,8 @@
+### cholera 0.8.0.958
+
+- promote landmarkDataB(), landmarksB and landmark.squaresB.
+
+
 ### cholera 0.8.0.9588
 
 - promote pumpTokensB() to pumpTokens().

@@ -72,7 +72,7 @@ addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
   fatality <- cholera::fatalities
   fatality.ortho <- cholera::latlong.ortho.addr
-  land <- cholera::landmarksB
+  land <- cholera::landmarks
 
   if (latlong) {
     ew <- "lon"
@@ -107,8 +107,8 @@ addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         label.parse <- unlist(strsplit(sq.label, "[ ]"))
         sq.label <- paste0(label.parse[1], "\n", label.parse[2])
         obs.sq <- paste(label.parse, collapse = " ")
-        sel <- cholera::landmark.squaresB$name == obs.sq
-        text(cholera::landmark.squaresB[sel, c(ew, ns)], labels = sq.label,
+        sel <- cholera::landmark.squares$name == obs.sq
+        text(cholera::landmark.squares[sel, c(ew, ns)], labels = sq.label,
           col = "red", cex = 0.8)
         # text(land[land$case == orig, vars], pos = 1, labels = orig, col = "red")
       } else {
@@ -142,8 +142,8 @@ addWalkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
         land.tmp <- land[land$case == dest, ]
         if (grepl("Square", land.tmp$name)) {
           dstn.sq <- unlist(strsplit(land.tmp$name, "-"))[1]
-          sel <- cholera::landmark.squaresB$name == dstn.sq
-          label.dat <- cholera::landmark.squaresB[sel, ]
+          sel <- cholera::landmark.squares$name == dstn.sq
+          label.dat <- cholera::landmark.squares[sel, ]
           label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
           text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",

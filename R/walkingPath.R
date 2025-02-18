@@ -186,7 +186,7 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
     fatality.ortho <- cholera::sim.ortho.proj
   }
 
-  land <- cholera::landmarksB
+  land <- cholera::landmarks
 
   if (latlong) {
     ew <- "lon"
@@ -259,8 +259,8 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
         label.parse <- unlist(strsplit(sq.label, "[ ]"))
         sq.label <- paste0(label.parse[1], "\n", label.parse[2])
         obs.sq <- paste(label.parse, collapse = " ")
-        sel <- cholera::landmark.squaresB$name == obs.sq
-        text(cholera::landmark.squaresB[sel, c(ew, ns)], labels = sq.label,
+        sel <- cholera::landmark.squares$name == obs.sq
+        text(cholera::landmark.squares[sel, c(ew, ns)], labels = sq.label,
           col = "red", cex = 0.8)
       } else {
         label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
@@ -292,8 +292,8 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
         land.tmp <- land[land$case == dest, ]
         if (grepl("Square", land.tmp$name)) {
           dstn.sq <- unlist(strsplit(land.tmp$name, "-"))[1]
-          sel <- cholera::landmark.squaresB$name == dstn.sq
-          label.dat <- cholera::landmark.squaresB[sel, ]
+          sel <- cholera::landmark.squares$name == dstn.sq
+          label.dat <- cholera::landmark.squares[sel, ]
           label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
           text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",
@@ -674,14 +674,14 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
 
   if (any(grepl("Square", orgn.nm))) {
     if (length(orgn) > 1) {
-      if (any(cholera::landmark.squaresB$case %in% orgn)) {
-        orgn <- orgn[!orgn %in% cholera::landmark.squaresB$case]
-        orgn.nm <- orgn.nm[!orgn.nm %in% cholera::landmark.squaresB$name]
+      if (any(cholera::landmark.squares$case %in% orgn)) {
+        orgn <- orgn[!orgn %in% cholera::landmark.squares$case]
+        orgn.nm <- orgn.nm[!orgn.nm %in% cholera::landmark.squares$name]
       }
     } else if (length(orgn) == 1) {
-      if (orgn.nm %in% cholera::landmark.squaresB$name) {
-        sel <- grepl(orgn.nm, cholera::landmarksB$name)
-        sq.tmp <- cholera::landmarksB[sel, ]
+      if (orgn.nm %in% cholera::landmark.squares$name) {
+        sel <- grepl(orgn.nm, cholera::landmarks$name)
+        sq.tmp <- cholera::landmarks[sel, ]
         orgn <- sq.tmp$case
         orgn.nm <- sq.tmp$name
       }
@@ -778,14 +778,14 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 
   if (any(grepl("Square", orgn.nm))) {
     if (length(orgn) > 1) {
-      if (any(cholera::landmark.squaresB$case %in% orgn)) {
-        orgn <- orgn[!orgn %in% cholera::landmark.squaresB$case]
-        orgn.nm <- orgn.nm[!orgn.nm %in% cholera::landmark.squaresB$name]
+      if (any(cholera::landmark.squares$case %in% orgn)) {
+        orgn <- orgn[!orgn %in% cholera::landmark.squares$case]
+        orgn.nm <- orgn.nm[!orgn.nm %in% cholera::landmark.squares$name]
       }
     } else if (length(orgn) == 1) {
-      if (orgn.nm %in% cholera::landmark.squaresB$name) {
-        sel <- grepl(orgn.nm, cholera::landmarksB$name)
-        sq.tmp <- cholera::landmarksB[sel, ]
+      if (orgn.nm %in% cholera::landmark.squares$name) {
+        sel <- grepl(orgn.nm, cholera::landmarks$name)
+        sq.tmp <- cholera::landmarks[sel, ]
         orgn <- sq.tmp$case
         orgn.nm <- sq.tmp$name
       }
@@ -806,14 +806,14 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
 
   if (any(grepl("Square", dstn.nm))) {
     if (length(dstn) > 1) {
-      if (any(cholera::landmark.squaresB$case %in% dstn)) {
-        dstn <- dstn[!dstn %in% cholera::landmark.squaresB$case]
-        dstn.nm <- dstn.nm[!dstn.nm %in% cholera::landmark.squaresB$name]
+      if (any(cholera::landmark.squares$case %in% dstn)) {
+        dstn <- dstn[!dstn %in% cholera::landmark.squares$case]
+        dstn.nm <- dstn.nm[!dstn.nm %in% cholera::landmark.squares$name]
       }
     } else if (length(dstn) == 1) {
-      if (dstn.nm %in% cholera::landmark.squaresB$name) {
-        sel <- grepl(dstn.nm, cholera::landmarksB$name)
-        sq.tmp <- cholera::landmarksB[sel, ]
+      if (dstn.nm %in% cholera::landmark.squares$name) {
+        sel <- grepl(dstn.nm, cholera::landmarks$name)
+        sq.tmp <- cholera::landmarks[sel, ]
         dstn <- sq.tmp$case
         dstn.nm <- sq.tmp$name
       }

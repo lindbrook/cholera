@@ -17,17 +17,17 @@ addLandmarkSquares <- function(latlong = FALSE, text.size = 0.5,
     vars <- c("lon", "lat")
 
     # Golden Square and Soho Square #
-    sel <- cholera::landmarksB$name %in% c("Golden Square-N", "Golden Square-S")
-    golden.NS <- cholera::landmarksB[sel, vars]
+    sel <- cholera::landmarks$name %in% c("Golden Square-N", "Golden Square-S")
+    golden.NS <- cholera::landmarks[sel, vars]
 
-    sel <- cholera::landmarksB$name %in% c("Golden Square-E", "Golden Square-W")
-    golden.EW <- cholera::landmarksB[sel, vars]
+    sel <- cholera::landmarks$name %in% c("Golden Square-E", "Golden Square-W")
+    golden.EW <- cholera::landmarks[sel, vars]
 
-    sel <- cholera::landmarksB$name %in% c("Soho Square-N", "Soho Square-S2")
-    soho.NS <- cholera::landmarksB[sel, vars]
+    sel <- cholera::landmarks$name %in% c("Soho Square-N", "Soho Square-S2")
+    soho.NS <- cholera::landmarks[sel, vars]
 
-    sel <- cholera::landmarksB$name %in% c("Soho Square-E", "Soho Square-W")
-    soho.EW <- cholera::landmarksB[sel, vars]
+    sel <- cholera::landmarks$name %in% c("Soho Square-E", "Soho Square-W")
+    soho.EW <- cholera::landmarks[sel, vars]
 
     golden <- squareCenter(golden.NS, golden.EW)
     text(golden, labels = "Golden\nSquare", cex = text.size, col = text.col)

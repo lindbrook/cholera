@@ -286,7 +286,7 @@ orthoAddrC <- function(case.set = "observed", latlong = FALSE) {
 }
 
 orthoLandC <- function(latlong = FALSE) {
-  dat <- cholera::landmarksB
+  dat <- cholera::landmarks
   sel.xy <- grepl("x", names(dat)) | grepl("y", names(dat))
   sel.latlong <- grepl("lon", names(dat)) | grepl("lat", names(dat))
   if (latlong) out <- dat[, !sel.xy]

@@ -3,31 +3,27 @@
 \docType{data}
 \name{landmarks}
 \alias{landmarks}
-\title{Orthogonal projection of landmarks onto road network.}
+\title{Landmark coordinates.}
 \format{
-A data frame with 12 variables that records the position of the orthogonal projection of landmarks onto the network of roads.
+A data frame of landmark coordinates with 20 observationas and 11 variables.
  \describe{
-    \item{\code{road.segment}}{"address" road segment}
-    \item{\code{x.proj}}{orthogonal x-coordinate}
-    \item{\code{y.proj}}{orthogonal y-coordinate}
-    \item{\code{ortho.dist}}{orthogonal distance to home road segment}
-     \item{\code{x}}{nominal x-coordinate}
-    \item{\code{y}}{nominal y-coordinate}
-    \item{\code{name}}{landmark name}
     \item{\code{case}}{numeric case ID}
+    \item{\code{road.segment}}{"address" road segment}
+    \item{\code{x}}{nominal x-coordinate}
+    \item{\code{y}}{nominal y-coordinate}
+    \item{\code{x.lab}}{label x-coordinate}
+    \item{\code{y.lab}}{label y-coordinate}
     \item{\code{lon}}{longitude}
     \item{\code{lat}}{latitude}
-    \item{\code{lon.proj}}{orthogonal longitude}
-    \item{\code{lat.proj}}{orthogonal latitude}
+    \item{\code{lon.lab}}{label longitude}
+    \item{\code{lat.lab}}{label latitude}
+    \item{\code{name}}{landmark name}
  }
 }
 \usage{
 landmarks
 }
 \description{
-Orthogonal projection of landmarks onto road network.
-}
-\note{
-\code{\link{landmarkData}} document the code for these data.
+Landmark coordinates.
 }
 \keyword{datasets}

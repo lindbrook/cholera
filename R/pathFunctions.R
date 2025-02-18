@@ -56,8 +56,8 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
     land.orig <- land[land$case %in% path.data$origin, ]
     if (grepl("Square", land.orig$name)) {
       sq.nm <- unlist(strsplit(path.data$origin.nm, "-"))[1]
-      sel <- grepl(sq.nm, cholera::landmarksB$name)
-      label.orig <- cholera::landmarksB[sel, vars]
+      sel <- grepl(sq.nm, cholera::landmarks$name)
+      label.orig <- cholera::landmarks[sel, vars]
     } else {
       label.orig <- land.orig[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
       names(label.orig) <- vars
@@ -69,8 +69,8 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
     land.dest <- land[land$case %in% path.data$destination, ]
     if (grepl("Square", land.dest$name)) {
       sq.nm <- unlist(strsplit(path.data$destination.nm, "-"))[1]
-      sel <- grepl(sq.nm, cholera::landmarksB$name)
-      label.dest <- cholera::landmarksB[sel, vars]
+      sel <- grepl(sq.nm, cholera::landmarks$name)
+      label.dest <- cholera::landmarks[sel, vars]
     } else {
       label.dest <- land.dest[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
       names(label.dest) <- vars
@@ -96,8 +96,8 @@ validateCase <- function(x, case.set, include.landmarks) {
 
     if (include.landmarks) {
       vars.lndmrk <- c("case", "name")
-      lndmrk.sq <- cholera::landmark.squaresB[, vars.lndmrk]
-      lndmrk.etc <- cholera::landmarksB[, vars.lndmrk]
+      lndmrk.sq <- cholera::landmark.squares[, vars.lndmrk]
+      lndmrk.etc <- cholera::landmarks[, vars.lndmrk]
       lndmrk <- rbind(lndmrk.sq, lndmrk.etc)
 
       lndmrk.msg1 <- "Landmark IDs range from "
@@ -206,8 +206,8 @@ validateCase <- function(x, case.set, include.landmarks) {
 
     if (include.landmarks) {
       vars.lndmrk <- c("case", "name")
-      lndmrk.sq <- cholera::landmark.squaresB[, vars.lndmrk]
-      lndmrk.etc <- cholera::landmarksB[, vars.lndmrk]
+      lndmrk.sq <- cholera::landmark.squares[, vars.lndmrk]
+      lndmrk.etc <- cholera::landmarks[, vars.lndmrk]
       lndmrk <- rbind(lndmrk.sq, lndmrk.etc)
 
       lndmrk.msg1 <- "Landmark IDs range from "
@@ -316,9 +316,9 @@ sqCases <- function(sq = "Golden", variable = "case") {
   if (!variable %in% c("case", "name")) {
     stop('variable must be "case" or "name".' )
   }
-  sel.A <- grep(sq, cholera::landmark.squaresB$name)
-  sel.B <- grep(sq, cholera::landmarksB$name)
-  a <- cholera::landmark.squaresB[sel.A, variable]
-  b <- cholera::landmarksB[sel.B, variable]
+  sel.A <- grep(sq, cholera::landmark.squares$name)
+  sel.B <- grep(sq, cholera::landmarks$name)
+  a <- cholera::landmark.squares[sel.A, variable]
+  b <- cholera::landmarks[sel.B, variable]
   c(a, b)
 }
