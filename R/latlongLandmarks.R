@@ -5,7 +5,7 @@
 #' @note This documents the computation of the latlong version of the landmarks data frame.
 
 latlongLandmarks <- function(path) {
-  lndmrks <- landmarkDataB()
+  lndmrks <- landmarkData()
   dat <- lndmrks[-grep("Square", lndmrks$name), ]
   dat <- dat[dat$name != "The Pantheon", ]
   k <- nrow(dat)
@@ -171,7 +171,7 @@ landmarksPDF <- function(path, orthogonal = FALSE, pch = 15, cex = 0.2) {
   }
   pre <- paste0(file.nm, ".")
   post <- "pdf"
-  dat <- landmarkDataB()
+  dat <- landmarkData()
 
   # Exclude Squares from georeferencing
   dat <- dat[-grep("Square", dat$name), ]

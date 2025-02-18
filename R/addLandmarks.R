@@ -17,35 +17,35 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
 
   if (latlong) {
     vars <- c("lon", "lat")
-    sel <- !grepl("Square", cholera::landmarksB$name)
-    lndmrks <- cholera::landmarksB$name[sel]
+    sel <- !grepl("Square", cholera::landmarks$name)
+    lndmrks <- cholera::landmarks$name[sel]
     lndmrks <- strsplit(lndmrks, " ")
     lndmrks <- vapply(lndmrks, function(x) {
       if (length(x) == 2L) paste(x, collapse = "\n")
       else if (length(x) == 3L) paste(x[1], paste(x[-1], collapse = "\n"))
     }, character(1L))
 
-    luke <- grepl("Church", cholera::landmarksB$name)
+    luke <- grepl("Church", cholera::landmarks$name)
 
-    text(cholera::landmarksB[sel & !luke, vars], cex = text.size,
+    text(cholera::landmarks[sel & !luke, vars], cex = text.size,
       col = text.col, labels = lndmrks[!grepl("Church", lndmrks)])
 
-    points(cholera::landmarksB[luke, vars], pch = 15, cex = 1/3)
-    text(cholera::landmarksB[luke, vars], cex = text.size, col = text.col,
+    points(cholera::landmarks[luke, vars], pch = 15, cex = 1/3)
+    text(cholera::landmarks[luke, vars], cex = text.size, col = text.col,
       labels = lndmrks[grepl("Church", lndmrks)], pos = 4)
 
     # Golden Square and Soho Square #
-    sel <- cholera::landmarksB$name %in% c("Golden Square-N", "Golden Square-S")
-    golden.NS <- cholera::landmarksB[sel, vars]
+    sel <- cholera::landmarks$name %in% c("Golden Square-N", "Golden Square-S")
+    golden.NS <- cholera::landmarks[sel, vars]
 
-    sel <- cholera::landmarksB$name %in% c("Golden Square-E", "Golden Square-W")
-    golden.EW <- cholera::landmarksB[sel, vars]
+    sel <- cholera::landmarks$name %in% c("Golden Square-E", "Golden Square-W")
+    golden.EW <- cholera::landmarks[sel, vars]
 
-    sel <- cholera::landmarksB$name %in% c("Soho Square-N", "Soho Square-S2")
-    soho.NS <- cholera::landmarksB[sel, vars]
+    sel <- cholera::landmarks$name %in% c("Soho Square-N", "Soho Square-S2")
+    soho.NS <- cholera::landmarks[sel, vars]
 
-    sel <- cholera::landmarksB$name %in% c("Soho Square-E", "Soho Square-W")
-    soho.EW <- cholera::landmarksB[sel, vars]
+    sel <- cholera::landmarks$name %in% c("Soho Square-E", "Soho Square-W")
+    soho.EW <- cholera::landmarks[sel, vars]
 
     golden <- squareCenter(golden.NS, golden.EW)
     text(golden, labels = "Golden\nSquare", cex = text.size, col = text.col)

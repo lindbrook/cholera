@@ -69,14 +69,14 @@ addEuclideanPath <- function(origin = 1, destination = NULL,
 
   fatality <- cholera::fatalities
 
-  sqB <- cholera::landmark.squaresB
+  sqB <- cholera::landmark.squares
   sqB$road.segment <- NA
   sqB$x.lab <- sqB$x
   sqB$y.lab <- sqB$y
   sqB$lon.lab <- sqB$lon
   sqB$lat.lab <- sqB$lat
-  sqB <- sqB[, names(cholera::landmarksB)]
-  land <- rbind(sqB, cholera::landmarksB)
+  sqB <- sqB[, names(cholera::landmarks)]
+  land <- rbind(sqB, cholera::landmarks)
 
   if (latlong) {
     ew <- "lon"
@@ -109,8 +109,8 @@ addEuclideanPath <- function(origin = 1, destination = NULL,
         label.parse <- unlist(strsplit(sq.label, "[ ]"))
         sq.label <- paste0(label.parse[1], "\n", label.parse[2])
         obs.sq <- paste(label.parse, collapse = " ")
-        sel <- cholera::landmark.squaresB$name == obs.sq
-        text(cholera::landmark.squaresB[sel, c(ew, ns)], labels = sq.label,
+        sel <- cholera::landmark.squares$name == obs.sq
+        text(cholera::landmark.squares[sel, c(ew, ns)], labels = sq.label,
           col = "red", cex = 0.8)
       } else {
         label.dat <- land.tmp[, c(paste0(ew, ".lab"), paste0(ns, ".lab"))]
@@ -141,8 +141,8 @@ addEuclideanPath <- function(origin = 1, destination = NULL,
         points(land[land$case == dest, vars], col = "red")
         land.tmp <- land[land$case == dest, ]
         if (grepl("Square", land.tmp$name)) {
-          sel <- cholera::landmark.squaresB$name == path.data$destination.nm
-          label.dat <- cholera::landmark.squaresB[sel, ]
+          sel <- cholera::landmark.squares$name == path.data$destination.nm
+          label.dat <- cholera::landmark.squares[sel, ]
           label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
           text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",
