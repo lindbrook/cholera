@@ -4,22 +4,34 @@
 \alias{addNeighborhoodEuclidean}
 \title{Add expected Euclidean pump neighborhoods.}
 \usage{
-addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
-  vestry = FALSE, location = "nominal", type = "star",
-  alpha.level = 0.5, multi.core = TRUE, dev.mode = FALSE)
+addNeighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
+  case.set = "observed", case.select = "address", latlong = FALSE,
+  location = "nominal", brute.force = FALSE, type = "star",
+  add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid",
+  multi.core = TRUE, dev.mode = FALSE)
 }
 \arguments{
-\item{pump.subset}{Numeric. Vector of numeric pump IDs to subset from the neighborhoods defined by \code{pump.select}. Negative selection possible. \code{NULL} selects all pumps in \code{pump.select}.}
-
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}
 
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.}
 
-\item{location}{Character. "nominal" or "orthogonal". "orthogonal" is the x-y coordinates of \code{sim.ortho.proj}. "nominal" is the x-y coordinates of \code{regular.cases}.}
+\item{case.set}{Character. "observed" or "expected".}
 
-\item{type}{Character. Type of plot: "star", "area.points" or "area.polygons".}
+\item{case.select}{Character. Fatalities: "all" or "address".}
+
+\item{latlong}{Logical. Longitude and latitude coordinates}
+
+\item{location}{Character. "nominal", "anchor" or "orthogonal".}
+
+\item{brute.force}{Logical. For latlong = FALSE. TRUE computes nearest pump for each case. FALSE uses Voronoi cells as shortcut.}
+
+\item{type}{Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
+
+\item{add.observed.points}{Logical. Add observed fatality "addresses".}
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
+
+\item{polygon.type}{Character. "perimeter" or "solid".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 
@@ -29,7 +41,7 @@ addNeighborhoodEuclidean(pump.subset = NULL, pump.select = NULL,
 R graphic elements.
 }
 \description{
-Add expected Euclidean pump neighborhoods.
+Plots star graph from pump to its cases.
 }
 \examples{
 \dontrun{
@@ -37,8 +49,7 @@ streetNameLocator("marshall street", zoom = 0.5, highlight = FALSE,
   add.subtitle = FALSE)
 addNeighborhoodEuclidean()
 
-streetNameLocator("marshall street", zoom = 0.5, highlight = FALSE,
-  add.subtitle = FALSE)
-addNeighborhoodEuclidean(type = "area.points")
+streetNameLocator("marshall street", zoom = -50, highlight = FALSE)
+addNeighborhoodEuclidean(case.set = "expected", type = "area.polygons")
 }
 }

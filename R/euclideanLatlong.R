@@ -67,13 +67,15 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for euclideanLatlong()
 #' @param x Object.
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
+#' @param add Logical. Add graphic to an existing plot.
+#' @param add.observed.points Logical. Add observed fatality "addresses".
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @param polygon.type Character. "perimeter" or "solid".
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.euclideanLatlong <- function(x, type = "star", alpha.level = 0.5,
-  polygon.type = "solid", ...) {
+plot.euclideanLatlong <- function(x, type = "star", add = FALSE,
+  add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid", ...) {
 
   if (!type %in% c("area.points", "area.polygons", "star")) {
     stop('type must be "area.points", "area.polygons" or "star".',
@@ -98,9 +100,10 @@ plot.euclideanLatlong <- function(x, type = "star", alpha.level = 0.5,
   vars <- c("lon", "lat")
 
   if (x$case.set == "observed") {
-    snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE,
-      add.pumps = FALSE)
-    pumpTokens(x, type, alpha.level, polygon.type)
+    if (!add) {
+      snowMap(latlong = TRUE, add.cases = FALSE, add.pumps = FALSE)
+      pumpTokens(x, type, alpha.level, polygon.type)
+    }
 
     if (!is.null(type)) {
       if (type == "star") {
@@ -108,39 +111,51 @@ plot.euclideanLatlong <- function(x, type = "star", alpha.level = 0.5,
       }
     }
 
-    latlongEuclideanCases(x, vars)
+    latlongEuclideanCases(x, vars, add.observed.points)
 
   } else if (x$case.set == "expected") {
-    snowMap(vestry = x$vestry, add.cases = FALSE, add.pumps = FALSE,
-      add.roads = FALSE, latlong = TRUE)
+    if (!add) {
+      snowMap(add.cases = FALSE, add.pumps = FALSE, add.roads = FALSE,
+        latlong = TRUE)
+    }
 
-    if (type == "star") latlongEuclideanStar(x, vars)
-    else if (type == "area.points") latlongEuclideanCases(x, vars)
-    else if (type == "area.polygons") latlongEuclideanAreaPolygons(x)
-    else stop('type must be "star", "area.points" or "area.polygons".')
+    if (type == "star") {
+      latlongEuclideanStar(x, vars)
+    } else if (type == "area.points") {
+      latlongEuclideanCases(x, vars, add.observed.points)
+    } else if (type == "area.polygons") {
+      latlongEuclideanAreaPolygons(x, alpha.level, polygon.type)
+    } else {
+      stop('type must be "star", "area.points" or "area.polygons".',
+        call. = FALSE)
+    }
 
-    addRoads(latlong = TRUE, col = "black")
-    pumpTokens(x, type, alpha.level, polygon.type)
+    if (!add) {
+      addRoads(latlong = TRUE, col = "black")
+      pumpTokens(x, type, alpha.level, polygon.type)
+    }
   }
 
-  if (!is.null(p.sel)) {
-    if (x$location == "nominal") {
-      title(main = paste0("Pump Neighborhoods: Euclidean (nominal)", "\n",
-        "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
-    } else if (x$location == "orthogonal") {
-      title(main = paste0("Pump Neighborhoods: Euclidean (orthogonal)", "\n",
-        "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
-    }
-  } else {
-    if (x$location == "nominal") {
-      title(main = "Pump Neighborhoods: Euclidean (nominal)")
-    } else if (x$location == "orthogonal") {
-      title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
+  if (!add) {
+    if (!is.null(p.sel)) {
+      if (x$location == "nominal") {
+        title(main = paste0("Pump Neighborhoods: Euclidean (nominal)", "\n",
+          "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+      } else if (x$location == "orthogonal") {
+        title(main = paste0("Pump Neighborhoods: Euclidean (orthogonal)", "\n",
+          "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+      }
+    } else {
+      if (x$location == "nominal") {
+        title(main = "Pump Neighborhoods: Euclidean (nominal)")
+      } else if (x$location == "orthogonal") {
+        title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
+      }
     }
   }
 }
 
-latlongEuclideanCases <- function(x, vars) {
+latlongEuclideanCases <- function(x, vars, add.observed.points) {
   if (x$case.set == "observed") {
     if (x$location == "nominal") {
       dat <- cholera::fatalities
@@ -163,10 +178,12 @@ latlongEuclideanCases <- function(x, vars) {
     dat$case[neighbor == 1]
   })
 
-  invisible(lapply(names(case.partition), function(nm) {
-    sel <- dat$case %in% case.partition[[nm]]
-    points(dat[sel, vars], col = x$snow.colors[nm], pch = 20, cex = 0.5)
-  }))
+  if (add.observed.points) {
+    invisible(lapply(names(case.partition), function(nm) {
+      sel <- dat$case %in% case.partition[[nm]]
+      points(dat[sel, vars], col = x$snow.colors[nm], pch = 20, cex = 0.5)
+    }))
+  }
 }
 
 latlongEuclideanStar <- function(x, vars) {
@@ -179,7 +196,6 @@ latlongEuclideanStar <- function(x, vars) {
     } else if (x$location == "orthogonal") {
       cases <- cholera::latlong.ortho.addr
     }
-
   } else if (x$case.set == "expected") {
     if (x$location %in% c("nominal", "anchor")) {
       cases <- cholera::latlong.regular.cases
@@ -212,7 +228,7 @@ latlongEuclideanStar <- function(x, vars) {
   }))
 }
 
-latlongEuclideanAreaPolygons <- function(x) {
+latlongEuclideanAreaPolygons <- function(x, alpha.level, polygon.type) {
   if (x$case.set == "expected") {
     if (x$location %in% c("nominal", "anchor")) {
       dat <- cholera::latlong.regular.cases
@@ -234,8 +250,16 @@ latlongEuclideanAreaPolygons <- function(x) {
     travelingSalesman(x, latlong = TRUE)
   })
 
-  invisible(lapply(names(pearl.string), function(nm) {
-    polygon(dat[pearl.string[[nm]], c("lon", "lat")],
-      col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = 2/3))
-  }))
+  vars <- c("lon", "lat")
+
+  if (polygon.type == "perimeter") {
+    invisible(lapply(names(pearl.string), function(nm) {
+      polygon(dat[pearl.string[[nm]], vars], border = x$snow.colors[nm])
+    }))
+  } else if (polygon.type == "solid") {
+    invisible(lapply(names(pearl.string), function(nm) {
+      polygon(dat[pearl.string[[nm]], vars],
+        col = grDevices::adjustcolor(x$snow.colors[nm], alpha.f = alpha.level))
+    }))
+  }
 }

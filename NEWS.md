@@ -1,4 +1,9 @@
-### cholera 0.8.0.958
+### cholera 0.8.0.9590
+
+- add/set plot.euclidean(add = FALSE).
+
+
+### cholera 0.8.0.9589
 
 - promote landmarkDataB(), landmarksB and landmark.squaresB.
 

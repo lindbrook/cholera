@@ -4,7 +4,7 @@
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry Report. \code{FALSE} uses the 13 in the original map.
 #' @param case.set Character. "observed" or "expected".
-#' @param location Character. "nominal", "anchor" or "orthogonal". 
+#' @param location Character. "nominal", "anchor" or "orthogonal".
 #' @param brute.force Logical. TRUE computes nearest pump for each case. FALSE uses Voronoi cells as shortcut.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
@@ -111,9 +111,10 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for neighborhoodEuclidean().
 #'
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
+
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
+#' @param add Logical. Add graphic to an existing plot.
 #' @param add.observed.points Logical. Add observed fatality "addresses".
-#' @param add.title Logical. Add title.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @param polygon.type Character. "perimeter" or "solid".
 #' @param ... Additional plotting parameters.
@@ -129,8 +130,8 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
 #' plot(neighborhoodEuclidean(case.set = "expected"), type = "area.polygons")
 #' }
 
-plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
-  add.title = TRUE, alpha.level = 0.75, polygon.type = "solid", ...) {
+plot.euclidean <- function(x, type = "star", add = FALSE,
+  add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid", ...) {
 
   if (type %in% c("area.points", "area.polygons")) {
     if (x$case.set != "expected") {
@@ -138,7 +139,7 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
     }
   }
 
-  snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
+  if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
   pump.data <- x$pump.data
   p.sel <- x$p.sel
   case.num <- x$case.num
@@ -146,24 +147,26 @@ plot.euclidean <- function(x, type = "star", add.observed.points = TRUE,
   nearest.pump <- x$nearest.pump
 
   if (type == "star") {
-    if (x$case.set == "observed") {
-      addRoads()
-    } else if (x$case.set == "expected") {
-      addRoads(col = "black")
+    if (!add) {
+      if (x$case.set == "observed") {
+        addRoads()
+      } else if (x$case.set == "expected") {
+        addRoads(col = "black")
+      }
     }
     euclideanStar(x, case.num, nearest.pump, pump.data,
       add.observed.points = add.observed.points)
   } else if (type == "area.points") {
     euclideanAreaPoints(x, case.num, nearest.pump)
-    addRoads(col = "black")
+    if (!add) addRoads(col = "black")
   } else if (type == "area.polygons") {
-    euclideanAreaPolygons(x, nearest.pump)
-    addRoads(col = "black")
+    euclideanAreaPolygons(x, nearest.pump, alpha.level, polygon.type)
+    if (!add) addRoads(col = "black")
   }
 
-  pumpTokens(x, type, alpha.level, polygon.type)
+  if (!add) pumpTokens(x, type, alpha.level, polygon.type)
 
-  if (add.title) {
+  if (!add){
     if (is.null(x$pump.select)) {
       title(main = "Pump Neighborhoods: Euclidean")
     } else {
@@ -221,7 +224,7 @@ euclideanAreaPoints <- function(x, case.num, nearest.pump) {
   }))
 }
 
-euclideanAreaPolygons <- function(x, nearest.pump) {
+euclideanAreaPolygons <- function(x, nearest.pump, alpha.level, polygon.type) {
   p.num <- sort(unique(nearest.pump))
   neighborhood.cases <- lapply(p.num, function(n) {
     which(nearest.pump == n)
@@ -229,11 +232,20 @@ euclideanAreaPolygons <- function(x, nearest.pump) {
   periphery.cases <- lapply(neighborhood.cases, peripheryCases)
   pearl.string <- lapply(periphery.cases, travelingSalesman)
   names(pearl.string) <- p.num
-  invisible(lapply(names(pearl.string), function(nm) {
-    sel <- paste0("p", nm)
-    polygon(cholera::regular.cases[pearl.string[[nm]], ],
-      col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = 2/3))
-  }))
+
+  if (polygon.type == "perimeter") {
+    invisible(lapply(names(pearl.string), function(nm) {
+      sel <- paste0("p", nm)
+      polygon(cholera::regular.cases[pearl.string[[nm]], ],
+        border = x$snow.colors[sel])
+    }))
+  } else if (polygon.type == "solid") {
+    invisible(lapply(names(pearl.string), function(nm) {
+      sel <- paste0("p", nm)
+      polygon(cholera::regular.cases[pearl.string[[nm]], ],
+        col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = alpha.level))
+    }))
+  }
 }
 
 #' Print method for neighborhoodEuclidean().
