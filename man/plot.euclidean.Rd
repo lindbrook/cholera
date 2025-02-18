@@ -4,17 +4,18 @@
 \alias{plot.euclidean}
 \title{Plot method for neighborhoodEuclidean().}
 \usage{
-\method{plot}{euclidean}(x, type = "star", add.observed.points = TRUE,
-  add.title = TRUE, alpha.level = 0.75, polygon.type = "solid", ...)
+\method{plot}{euclidean}(x, type = "star", add = FALSE,
+  add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid",
+  ...)
 }
 \arguments{
 \item{x}{An object of class "euclidean" created by \code{neighborhoodEuclidean()}.}
 
 \item{type}{Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
 
-\item{add.observed.points}{Logical. Add observed fatality "addresses".}
+\item{add}{Logical. Add graphic to an existing plot.}
 
-\item{add.title}{Logical. Add title.}
+\item{add.observed.points}{Logical. Add observed fatality "addresses".}
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 

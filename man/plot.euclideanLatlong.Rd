@@ -4,13 +4,18 @@
 \alias{plot.euclideanLatlong}
 \title{Plot method for euclideanLatlong()}
 \usage{
-\method{plot}{euclideanLatlong}(x, type = "star", alpha.level = 0.5,
-  polygon.type = "solid", ...)
+\method{plot}{euclideanLatlong}(x, type = "star", add = FALSE,
+  add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid",
+  ...)
 }
 \arguments{
 \item{x}{Object.}
 
 \item{type}{Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
+
+\item{add}{Logical. Add graphic to an existing plot.}
+
+\item{add.observed.points}{Logical. Add observed fatality "addresses".}
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
