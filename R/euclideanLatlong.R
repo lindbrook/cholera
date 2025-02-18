@@ -140,7 +140,7 @@ plot.euclideanLatlong <- function(x, type = "star", alpha.level = 0.5,
   }
 }
 
-latlongEuclideanCases <- function(x, vars) {
+latlongEuclideanCases <- function(x, vars, add.observed.points) {
   if (x$case.set == "observed") {
     if (x$location == "nominal") {
       dat <- cholera::fatalities
@@ -163,10 +163,12 @@ latlongEuclideanCases <- function(x, vars) {
     dat$case[neighbor == 1]
   })
 
-  invisible(lapply(names(case.partition), function(nm) {
-    sel <- dat$case %in% case.partition[[nm]]
-    points(dat[sel, vars], col = x$snow.colors[nm], pch = 20, cex = 0.5)
-  }))
+  if (add.observed.points) {
+    invisible(lapply(names(case.partition), function(nm) {
+      sel <- dat$case %in% case.partition[[nm]]
+      points(dat[sel, vars], col = x$snow.colors[nm], pch = 20, cex = 0.5)
+    }))
+  }
 }
 
 latlongEuclideanStar <- function(x, vars) {
