@@ -91,6 +91,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
                 case.set = case.set,
                 pump.select = pump.select,
                 p.sel = p.sel,
+                vestry = vestry,
                 snow.colors = snowColors(vestry = vestry),
                 latlong = latlong,
                 cores = cores)
@@ -175,6 +176,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
                 case.set = case.set,
                 pump.select = pump.select,
                 p.sel = p.sel,
+                vestry = vestry,
                 snow.colors = snowColors(vestry = vestry),
                 latlong = latlong,
                 cores = cores)
@@ -340,4 +342,21 @@ plot.walking <- function(x, type = "area.points", tsp.method = "repetitive_nn",
         paste(sort(x$pump.select), collapse = ", ")))
     }
   }
+}
+
+#' Print method for neighborhoodWalking().
+#'
+#' Parameter values for neighborhoodWalking().
+#' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
+#' @param ... Additional parameters.
+#' @return A list of argument values.
+#' @export
+#' @examples
+#' \dontrun{
+#' neighborhoodWalking()
+#' print(neighborhoodWalking())
+#' }
+
+print.walking <- function(x, ...) {
+  print(x[c("p.sel", "case.set", "vestry", "latlong")])
 }

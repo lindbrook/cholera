@@ -262,7 +262,7 @@ euclideanAreaPolygons <- function(x, nearest.pump, alpha.level, polygon.type) {
 #' }
 
 print.euclidean <- function(x, ...) {
-  print(x[c("p.sel", "case.set", "location", "vestry")])
+  print(x[c("p.sel", "case.set", "location", "vestry", "latlong")])
 }
 
 #' Summary method for neighborhoodEuclidean().

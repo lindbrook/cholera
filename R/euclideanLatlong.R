@@ -263,3 +263,20 @@ latlongEuclideanAreaPolygons <- function(x, alpha.level, polygon.type) {
     }))
   }
 }
+
+#' Print method for neighborhoodEuclidean(latlong = TRUE).
+#'
+#' @param x An object of class "euclideanLatlong" created by \code{neighborhoodEuclidean(latlong = TRUE)}.
+#' @param ... Additional parameters.
+#' @return A list of argument values.
+#' @export
+#' @examples
+#' \dontrun{
+#' neighborhoodEuclidean(latlong = TRUE)
+#' print(neighborhoodEuclidean(latlong = TRUE))
+#' }
+
+print.euclideanLatlong <- function(x, ...) {
+  print(x[c("p.sel", "case.set", "location", "vestry", "latlong")])
+}
+

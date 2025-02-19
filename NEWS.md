@@ -1,3 +1,8 @@
+### cholera 0.8.0.9591
+
+- add/amend print method for neighborhoodEuclidean() and neighborhoodWalking().
+
+
 ### cholera 0.8.0.9590
 
 - add/set plot.euclidean(add = FALSE).
