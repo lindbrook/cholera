@@ -1,3 +1,8 @@
+### cholera 0.8.0.9592
+
+- archive latlongNeighborhoodData() and latlongNeighborhoodDataB().
+
+
 ### cholera 0.8.0.9591
 
 - add/amend print method for neighborhoodEuclidean() and neighborhoodWalking().
