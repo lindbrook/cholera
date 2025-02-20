@@ -1,3 +1,8 @@
+### cholera 0.8.0.9595
+
+- add/set plot.walking_path(add = FALSE).
+
+
 ### cholera 0.8.0.9594
 
 - amend argument order in plot.walking().
