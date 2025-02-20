@@ -4,19 +4,18 @@
 \alias{plot.walking}
 \title{Plot method for neighborhoodWalking().}
 \usage{
-\method{plot}{walking}(x, type = "area.points",
-  tsp.method = "repetitive_nn", add = FALSE, path.width = 2,
-  alpha.level = 0.75, polygon.type = "solid", polygon.col = NULL,
-  polygon.lwd = 2, ...)
+\method{plot}{walking}(x, type = "area.points", add = FALSE,
+  tsp.method = "repetitive_nn", path.width = 2, alpha.level = 0.75,
+  polygon.type = "solid", polygon.col = NULL, polygon.lwd = 2, ...)
 }
 \arguments{
 \item{x}{An object of class "walking" created by \code{neighborhoodWalking()}.}
 
 \item{type}{Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
 
-\item{tsp.method}{Character. Traveling salesperson problem algorithm.}
-
 \item{add}{Logical. Add graphic to plot.}
+
+\item{tsp.method}{Character. Traveling salesperson problem algorithm.}
 
 \item{path.width}{Numeric. Set width of paths.}
 
