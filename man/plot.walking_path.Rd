@@ -4,14 +4,16 @@
 \alias{plot.walking_path}
 \title{Plot the walking path between selected cases and/or pumps.}
 \usage{
-\method{plot}{walking_path}(x, zoom = TRUE, long.title = TRUE,
-  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
-  alpha.level = 1, ...)
+\method{plot}{walking_path}(x, zoom = TRUE, add = FALSE,
+  long.title = TRUE, mileposts = TRUE, milepost.unit = "distance",
+  milepost.interval = NULL, alpha.level = 1, ...)
 }
 \arguments{
 \item{x}{An object of class "walking_path" created by walkingPath().}
 
 \item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. A value of 1 equals zoom = TRUE.}
+
+\item{add}{Logical. Add graphic to plot.}
 
 \item{long.title}{Logical. Tile with names.}
 

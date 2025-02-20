@@ -135,6 +135,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #'
 #' @param x An object of class "walking_path" created by walkingPath().
 #' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. A value of 1 equals zoom = TRUE.
+#' @param add Logical. Add graphic to plot.
 #' @param long.title Logical. Tile with names.
 #' @param mileposts Logical. Plot mile/time posts.
 #' @param milepost.unit Character. "distance" or "time".
@@ -144,7 +145,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' @return A base R plot.
 #' @export
 
-plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
+plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
   alpha.level = 1, ...) {
 
@@ -227,20 +228,21 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
     case.color <- "blue"
   }
 
-  plot(rd[, vars], pch = NA, asp = asp, xlim = xlim, ylim = ylim)
-  roads.list <- split(rd[, vars], rd$street)
-  frame.list <- split(frame[, vars], frame$street)
-  invisible(lapply(roads.list, lines, col = "lightgray"))
-  invisible(lapply(frame.list, lines))
-  if (x$case.set == "observed") {
-    points(fatality[, vars], col = "lightgray", pch = 16, cex = 0.5)
+  if (!add) {
+    plot(rd[, vars], pch = NA, asp = asp, xlim = xlim, ylim = ylim)
+    roads.list <- split(rd[, vars], rd$street)
+    frame.list <- split(frame[, vars], frame$street)
+    invisible(lapply(roads.list, lines, col = "lightgray"))
+    invisible(lapply(frame.list, lines))
+    if (x$case.set == "observed") {
+      points(fatality[, vars], col = "lightgray", pch = 16, cex = 0.5)
+    }
+    points(pmp[, vars], pch = 24, col = grDevices::adjustcolor(colors,
+      alpha.f = alpha.level))
+    text(pmp[, vars], pos = 1, labels = paste0("p", pmp$id))
   }
-  points(pmp[, vars], pch = 24, col = grDevices::adjustcolor(colors,
-    alpha.f = alpha.level))
-  text(pmp[, vars], pos = 1, labels = paste0("p", pmp$id))
 
   if (type %in% c("case-pump", "cases")) {
-
     if (orig < 1000L | orig > max(land$case)) {
       if (x$case.set == "observed") {
         sel <- fatality$case == orig
@@ -408,12 +410,12 @@ plot.walking_path <- function(x, zoom = TRUE, long.title = TRUE,
     } else {
       stop('"milepost.unit" muster either be "distance" or "time".')
     }
-    title(sub = paste(d, t, post.info, sep = "; "))
+    if (!add) title(sub = paste(d, t, post.info, sep = "; "))
   } else {
-    title(sub = paste(d, t, sep = "; "))
+    if (!add) title(sub = paste(d, t, sep = "; "))
   }
 
-  longTitle(long.title, type, pmp, path.data, orig, land, x)
+  if (!add) longTitle(long.title, type, pmp, path.data, orig, land, x)
 }
 
 #' Print method for walkingPath().
