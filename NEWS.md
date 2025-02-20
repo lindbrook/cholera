@@ -1,3 +1,8 @@
+### cholera 0.8.0.9593
+
+- add/set plot.euclidean_path(add = FALSE).
+
+
 ### cholera 0.8.0.9592
 
 - archive latlongNeighborhoodData() and latlongNeighborhoodDataB().

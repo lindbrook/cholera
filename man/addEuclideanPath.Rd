@@ -8,8 +8,8 @@ addEuclideanPath(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed",
   location = "nominal", weighted = TRUE, distance.unit = "meter",
   time.unit = "second", walking.speed = 5, include.landmarks = TRUE,
-  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
-  alpha.level = 1)
+  long.title = FALSE, mileposts = TRUE, milepost.unit = "distance",
+  milepost.interval = NULL, alpha.level = 1)
 }
 \arguments{
 \item{origin}{Numeric. Vector of origin(s) (numeric ID or character name landmark/pump ).}
@@ -35,6 +35,8 @@ addEuclideanPath(origin = 1, destination = NULL, type = "case-pump",
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{include.landmarks}{Logical. Include landmarks as cases.}
+
+\item{long.title}{Logical. Tile with names.}
 
 \item{mileposts}{Logical. Plot mile/time posts.}
 
