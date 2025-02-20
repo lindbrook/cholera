@@ -4,14 +4,16 @@
 \alias{plot.euclidean_path}
 \title{Plot the path of the Euclidean distance between cases and/or pumps.}
 \usage{
-\method{plot}{euclidean_path}(x, zoom = TRUE, long.title = TRUE,
-  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
-  alpha.level = 1, ...)
+\method{plot}{euclidean_path}(x, zoom = TRUE, add = FALSE,
+  long.title = TRUE, mileposts = TRUE, milepost.unit = "distance",
+  milepost.interval = NULL, alpha.level = 1, ...)
 }
 \arguments{
 \item{x}{An object of class "euclidean_path" created by euclideanPath().}
 
 \item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.}
+
+\item{add}{Logical. Add graphic to plot.}
 
 \item{long.title}{Logical. Tile with names.}
 
