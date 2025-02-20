@@ -1,3 +1,8 @@
+### cholera 0.8.0.9594
+
+- amend argument order in plot.walking().
+
+
 ### cholera 0.8.0.9593
 
 - add/set plot.euclidean_path(add = FALSE).

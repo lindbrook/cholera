@@ -190,8 +190,8 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
 #' @param type Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
-#' @param tsp.method Character. Traveling salesperson problem algorithm.
 #' @param add Logical. Add graphic to plot.
+#' @param tsp.method Character. Traveling salesperson problem algorithm.
 #' @param path.width Numeric. Set width of paths.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @param polygon.type Character. "perimeter" or "solid".
@@ -202,9 +202,9 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. type = "roads" inspired by Shiode et. al. (2015).
 #' @export
 
-plot.walking <- function(x, type = "area.points", tsp.method = "repetitive_nn",
-  add = FALSE, path.width = 2, alpha.level = 0.75, polygon.type = "solid",
-  polygon.col = NULL, polygon.lwd = 2, ...) {
+plot.walking <- function(x, type = "area.points", add = FALSE,
+  tsp.method = "repetitive_nn", path.width = 2, alpha.level = 0.75,
+  polygon.type = "solid", polygon.col = NULL, polygon.lwd = 2, ...) {
 
   if (x$latlong) {
     vars <- c("lon", "lat")
