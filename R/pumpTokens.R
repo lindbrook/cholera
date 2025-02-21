@@ -99,7 +99,7 @@ pumpTokens <- function(x, type, alpha.level, polygon.type) {
       } else if (type == c("area.points")) {
         points(pos.data, pch = 24, col = "white", bg = x$snow.colors[obs])
         text(pos.data, pos = 1, cex = 0.9, col = "white", labels = pos.labels)
-        points(neg.data, pch = 3)
+        points(neg.data, pch = 2)
         text(neg.data, pos = 1, cex = 0.9, col = "black", labels = neg.labels)
 
       } else if (type == "area.polygons") {
