@@ -1,3 +1,8 @@
+### cholera 0.8.0.9596
+
+- fix/set pch = 2 for "area.points" in pumpTokens().
+
+
 ### cholera 0.8.0.9595
 
 - add/set plot.walking_path(add = FALSE).
