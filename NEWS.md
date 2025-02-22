@@ -1,3 +1,9 @@
+### cholera 0.8.0.9597
+
+- add exception for p8 polygon with 
+  neighborhoodWalking(6:9, case.set = "expected").
+
+
 ### cholera 0.8.0.9596
 
 - fix/set pch = 2 for "area.points" in pumpTokens().
