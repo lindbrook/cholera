@@ -306,6 +306,14 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
       neighborhood.cases <- lapply(x$exp.pump.case, function(x) x - case.fix)
       periphery.cases <- parallel::mclapply(neighborhood.cases,
         peripheryCases, latlong = x$latlong, mc.cores = x$cores)
+
+      # p8 fix with pump.select = 6:9
+      if (identical(x$p.sel, 6:9)) {
+        # "Picadilly", "Bruton Street" (x2), "New Burlington Street" (x2)
+        sel <- periphery.cases$`8` %in% c("206", "4022", "3875", "7131", "7277")
+        periphery.cases$`8` <- periphery.cases$`8`[!sel]
+      }
+
       pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
         latlong = x$latlong, tsp.method = tsp.method, mc.cores = x$cores)
 
