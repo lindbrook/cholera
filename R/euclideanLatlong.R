@@ -25,10 +25,6 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
     else pump.data <- cholera::pumps
   }
 
-  cells <- latlongVoronoiVertices(pump.select = pump.select,
-    vestry = vestry)$cells
-  p.sel <- selectPump(pump.data, pump.select, vestry)
-
   if (case.set == "observed") {
     if (location == "nominal") {
       case.data <- cholera::fatalities
@@ -45,14 +41,22 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
     }
   }
 
-  statistic.data <- lapply(cells, function(cell) {
-    sp::point.in.polygon(case.data$lon, case.data$lat, cell$lon, cell$lat)
-  })
+  p.sel <- selectPump(pump.data, pump.select, vestry)
+
+  if (length(p.sel) > 1) {
+    cells <- latlongVoronoiVertices(pump.select = pump.select,
+      vestry = vestry)$cells
+    statistic.data <- lapply(cells, function(cell) {
+      sp::point.in.polygon(case.data$lon, case.data$lat, cell$lon, cell$lat)
+    })
+  } else if (length(p.sel) == 1) {
+    statistic.data <- list(rep(1, nrow(case.data)))
+    names(statistic.data) <- paste0("p", p.sel)
+  }
 
   out <- list(pump.select = pump.select,
               p.sel = p.sel,
               vestry = vestry,
-              cells = cells,
               pump.data = pump.data,
               case.set = case.set,
               location = location,
