@@ -77,18 +77,23 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
       case.data <- cholera::regular.cases
     }
 
-    sel <- pump.data$id %in% p.sel
-    cells <- voronoiPolygons(pump.data[sel, c("x", "y")], rw.data = mapRange())
-    names(cells) <- p.sel
+    if (length(p.sel) > 1) {
+      sel <- pump.data$id %in% p.sel
+      vars <- c("x", "y")
+      cells <- voronoiPolygons(pump.data[sel, vars], rw.data = mapRange())
+      names(cells) <- p.sel
 
-    cell.census <- lapply(names(cells), function(nm) {
-      cell <- cells[[nm]]
-      census <- sp::point.in.polygon(case.data$x, case.data$y, cell$x, cell$y)
-      census[census == 1] <- as.numeric(nm)
-      census
-    })
+      cell.census <- lapply(names(cells), function(nm) {
+        cell <- cells[[nm]]
+        census <- sp::point.in.polygon(case.data$x, case.data$y, cell$x, cell$y)
+        census[census == 1] <- as.numeric(nm)
+        census
+      })
 
-    nearest.pump <- rowSums(do.call(cbind, cell.census))
+      nearest.pump <- rowSums(do.call(cbind, cell.census))
+    } else if (length(p.sel) == 1) {
+      nearest.pump <- rep(p.sel, nrow(case.data))
+    }
   }
 
   out <- list(pump.data = pump.data,
@@ -111,7 +116,6 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for neighborhoodEuclidean().
 #'
 #' @param x An object of class "euclidean" created by \code{neighborhoodEuclidean()}.
-
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param add Logical. Add graphic to an existing plot.
 #' @param add.observed.points Logical. Add observed fatality "addresses".
