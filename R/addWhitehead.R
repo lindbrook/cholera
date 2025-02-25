@@ -112,9 +112,16 @@ addWhitehead <- function(pump = "Broad Street", radius = 210,
     lines(circumference.x, circumference.y, col = color, lty = line.type)
   }
 
+  title("Whitehead's Broad Street Pump Neighborhood")
+
   if (add.subtitle) {
-    est.time <- distanceTime(r, walking.speed = walking.speed,
+    circumference.time <- distanceTime(2 * pi * r,
+      walking.speed = walking.speed, time.unit = "minute")
+    radius.time <- distanceTime(r, walking.speed = walking.speed,
       time.unit = "minute")
-    title(sub = paste(round(est.time, 1), "mins."))
+    c.time <- round(circumference.time, 1)
+    r.time <- round(radius.time, 1)
+    title(sub = paste(paste0("circumference = ", c.time, " mins;"),
+                      paste0("radius = ", r.time, " mins.")))
   }
 }
