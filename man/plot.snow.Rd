@@ -17,7 +17,7 @@
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
-\item{polygon.type}{Character. "perimeter" or "solid".}
+\item{polygon.type}{Character. "border" or "solid".}
 
 \item{polygon.col}{Character.}
 

@@ -256,7 +256,7 @@ latlongEuclideanAreaPolygons <- function(x, alpha.level, polygon.type) {
 
   vars <- c("lon", "lat")
 
-  if (polygon.type == "perimeter") {
+  if (polygon.type == "border") {
     invisible(lapply(names(pearl.string), function(nm) {
       polygon(dat[pearl.string[[nm]], vars], border = x$snow.colors[nm])
     }))

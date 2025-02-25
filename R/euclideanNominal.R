@@ -237,7 +237,7 @@ euclideanAreaPolygons <- function(x, nearest.pump, alpha.level, polygon.type) {
   pearl.string <- lapply(periphery.cases, travelingSalesman)
   names(pearl.string) <- p.num
 
-  if (polygon.type == "perimeter") {
+  if (polygon.type == "border") {
     invisible(lapply(names(pearl.string), function(nm) {
       sel <- paste0("p", nm)
       polygon(cholera::regular.cases[pearl.string[[nm]], ],

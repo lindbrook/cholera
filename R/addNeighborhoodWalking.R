@@ -9,7 +9,7 @@
 #' @param tsp.method Character. Traveling salesperson problem algorithm.
 #' @param path.width Numeric. Set width of paths.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
-#' @param polygon.type Character. "perimeter" or "solid".
+#' @param polygon.type Character. "border" or "solid".
 #' @param polygon.col Character.
 #' @param polygon.lwd Numeric.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.

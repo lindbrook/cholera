@@ -48,7 +48,7 @@ neighborhoodSnow <- function(latlong = FALSE) {
 #' @param type Character. "roads", "area.points" or "area.polygons".
 #' @param non.snow.cases Logical. Plot anchor cases outside Snow neighborhood.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
-#' @param polygon.type Character. "perimeter" or "solid".
+#' @param polygon.type Character. "border" or "solid".
 #' @param polygon.col Character.
 #' @param polygon.lwd Numeric.
 #' @param add Logical. Add graphic to plot.
@@ -185,7 +185,7 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
       pearl.string <- travelingSalesman(periphery.cases,
         tsp.method = "repetitive_nn")
 
-      if (polygon.type == "perimeter") {
+      if (polygon.type == "border") {
         if (is.null(polygon.lwd)) polygon.lwd <- 3
         polygon(cholera::regular.cases[pearl.string, ], border = polygon.col,
           lwd = polygon.lwd)

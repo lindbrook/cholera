@@ -31,7 +31,7 @@ addNeighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
-\item{polygon.type}{Character. "perimeter" or "solid".}
+\item{polygon.type}{Character. "border" or "solid".}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 
