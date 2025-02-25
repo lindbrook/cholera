@@ -16,8 +16,8 @@
 #' }
 
 addNeighborhoodSnow <- function(latlong = FALSE, type = "area.points",
-  non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid", polygon.col = NULL,
-  polygon.lwd = NULL) {
+  non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid",
+  polygon.col = NULL, polygon.lwd = NULL) {
 
   if (!type %in% c("area.points", "area.polygons", "roads")) {
     stop('type must be area.points", "area.polygons", or "roads".',
