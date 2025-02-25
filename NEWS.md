@@ -1,3 +1,8 @@
+### cholera 0.8.0.9600
+
+- add/set addWhitehead(latlong = FALSE).
+
+
 ### cholera 0.8.0.9599
 
 - change polygon.type = "perimeter" to "border".
