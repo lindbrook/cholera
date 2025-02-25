@@ -8,6 +8,7 @@
 #' @param color Character. Color of circle.
 #' @param line.type Character. Circle line type.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps and locations from Vestry report. \code{FALSE} uses original 13 pumps.
+#' @param add.title Logical. Add title.
 #' @param add.subtitle Logical. Add subtitle with estimated "walking" time in seconds.
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @return Adds a circle (polygon) to a graphics plot.
@@ -19,7 +20,7 @@
 
 addWhitehead <- function(pump = "Broad Street", radius = 210,
   distance.unit = "yard", latlong = FALSE, color = "black", line.type = "solid",
-  vestry = FALSE, add.subtitle = FALSE, walking.speed = 5) {
+  vestry = FALSE, add.title = FALSE, add.subtitle = FALSE, walking.speed = 5) {
 
   r <- radius / unitMeter(1, distance.unit)
   r.meters <- radius / cholera::meter.to.yard
@@ -112,7 +113,7 @@ addWhitehead <- function(pump = "Broad Street", radius = 210,
     lines(circumference.x, circumference.y, col = color, lty = line.type)
   }
 
-  title("Whitehead's Broad Street Pump Neighborhood")
+  if (add.title) title("Whitehead's Broad Street Pump Neighborhood")
 
   if (add.subtitle) {
     circumference.time <- distanceTime(2 * pi * r,

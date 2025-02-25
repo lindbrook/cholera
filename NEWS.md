@@ -1,3 +1,8 @@
+### cholera 0.8.0.9602
+
+- add/set addWhitehead(add.title = FALSE).
+
+
 ### cholera 0.8.0.9601
 
 - add title and amend subtitle in addWhitehead().
