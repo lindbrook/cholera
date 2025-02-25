@@ -79,7 +79,7 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
 #' @export
 
 plot.euclideanLatlong <- function(x, type = "star", add = FALSE,
-  add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid", ...) {
+  add.observed.points = TRUE, alpha.level = 0.75, polygon.type = "solid", ...) {
 
   if (!type %in% c("area.points", "area.polygons", "star")) {
     stop('type must be "area.points", "area.polygons" or "star".',
@@ -256,7 +256,7 @@ latlongEuclideanAreaPolygons <- function(x, alpha.level, polygon.type) {
 
   vars <- c("lon", "lat")
 
-  if (polygon.type == "perimeter") {
+  if (polygon.type == "border") {
     invisible(lapply(names(pearl.string), function(nm) {
       polygon(dat[pearl.string[[nm]], vars], border = x$snow.colors[nm])
     }))

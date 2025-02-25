@@ -1,3 +1,8 @@
+### cholera 0.8.0.9599
+
+- change polygon.type = "perimeter" to "border".
+
+
 ### cholera 0.8.0.9598
 
 - add exception for single pump selection in neighborhoodEuclidean().

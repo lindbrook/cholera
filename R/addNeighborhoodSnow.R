@@ -4,7 +4,7 @@
 #' @param type Character. Type of annotation plot: ""area.points", "area.polygons", or "roads".
 #' @param non.snow.cases Logical. Plot anchor cases outside Snow neighborhood.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
-#' @param polygon.type Character. "perimeter" or "solid".
+#' @param polygon.type Character. "border" or "solid".
 #' @param polygon.col Character.
 #' @param polygon.lwd Numeric.
 #' @import graphics
@@ -16,8 +16,8 @@
 #' }
 
 addNeighborhoodSnow <- function(latlong = FALSE, type = "area.points",
-  non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid", polygon.col = NULL,
-  polygon.lwd = NULL) {
+  non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid",
+  polygon.col = NULL, polygon.lwd = NULL) {
 
   if (!type %in% c("area.points", "area.polygons", "roads")) {
     stop('type must be area.points", "area.polygons", or "roads".',

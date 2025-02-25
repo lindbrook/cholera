@@ -3,7 +3,7 @@
 #' @param x Object.
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
-#' @param polygon.type Character. "perimeter" or "solid".
+#' @param polygon.type Character. "border" or "solid".
 #' @noRd
 
 pumpTokens <- function(x, type, alpha.level, polygon.type) {
@@ -72,7 +72,7 @@ pumpTokens <- function(x, type, alpha.level, polygon.type) {
         if (polygon.type == "solid") {
           points(all.data, pch = 24, col = "white", bg = bg.col)
           text(all.data, pos = 1, cex = 0.9, col = "white", labels = all.labels)
-        } else if (polygon.type == "perimeter") {
+        } else if (polygon.type == "border") {
           points(all.data, pch = 24, col = "black", bg = bg.col)
           text(all.data, pos = 1, cex = 0.9, col = "black", labels = all.labels)
         }
@@ -111,7 +111,7 @@ pumpTokens <- function(x, type, alpha.level, polygon.type) {
           text(pos.data, pos = 1, cex = 0.9, col = "white", labels = pos.labels)
           points(neg.data, pch = 24, col = "black")
           text(neg.data, pos = 1, cex = 0.9, col = "black", labels = neg.labels)
-        } else if (polygon.type == "perimeter") {
+        } else if (polygon.type == "border") {
           points(pos.data, pch = 24, col = "black", bg = bg.col)
           text(pos.data, pos = 1, cex = 0.9, col = "black", labels = pos.labels)
           points(neg.data, pch = 24, col = "gray")

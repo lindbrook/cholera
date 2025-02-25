@@ -11,7 +11,7 @@
 #' @param type Character. "star", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
 #' @param add.observed.points Logical. Add observed fatality "addresses".
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
-#' @param polygon.type Character. "perimeter" or "solid".
+#' @param polygon.type Character. "border" or "solid".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @return R graphic elements.

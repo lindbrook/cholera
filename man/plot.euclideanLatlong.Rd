@@ -5,7 +5,7 @@
 \title{Plot method for euclideanLatlong()}
 \usage{
 \method{plot}{euclideanLatlong}(x, type = "star", add = FALSE,
-  add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid",
+  add.observed.points = TRUE, alpha.level = 0.75, polygon.type = "solid",
   ...)
 }
 \arguments{

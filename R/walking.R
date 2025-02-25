@@ -194,7 +194,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @param tsp.method Character. Traveling salesperson problem algorithm.
 #' @param path.width Numeric. Set width of paths.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
-#' @param polygon.type Character. "perimeter" or "solid".
+#' @param polygon.type Character. "border" or "solid".
 #' @param polygon.col Character.
 #' @param polygon.lwd Numeric.
 #' @param ... Additional plotting parameters.
@@ -319,7 +319,7 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
 
       if (!add) addRoads(col = "black", latlong = x$latlong)
 
-      if (polygon.type == "perimeter") {
+      if (polygon.type == "border") {
         invisible(lapply(names(pearl.string), function(nm) {
           polygon(reg.cases[pearl.string[[nm]], ],
             border = x$snow.colors[paste0("p", nm)], lwd = polygon.lwd)
