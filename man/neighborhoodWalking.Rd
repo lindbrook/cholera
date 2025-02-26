@@ -14,7 +14,7 @@ neighborhoodWalking(pump.select = NULL, vestry = FALSE, weighted = TRUE,
 
 \item{weighted}{Logical. \code{TRUE} computes shortest path weighted by road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 
-\item{case.set}{Character. "observed", "expected" or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.}
+\item{case.set}{Character. "observed" or "expected".}
 
 \item{latlong}{Logical.}
 
