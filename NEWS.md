@@ -1,3 +1,8 @@
+### cholera 0.8.0.9606
+
+- set plot.euclidean(alpha.level = 0.75).
+
+
 ### cholera 0.8.0.9605
 
 - add/amend warnings in plot.euclidean(), plot.euclideanLatlong() and 
