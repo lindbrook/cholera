@@ -92,12 +92,8 @@ plot.euclideanLatlong <- function(x, type = "star", add = FALSE,
     }
   }
 
-  if (x$location == "orthogonal") {
-    if (x$case.set != "observed") {
-      msgA <- 'location = "orthogonal" valid '
-      msgB <- 'only with case.set = "observed".'
-      stop(msgA, msgB, call. = FALSE)
-    }
+  if (!polygon.type %in% c("border", "solid")) {
+    stop('polygon.type must be "border" or "solid".', call. = FALSE)
   }
 
   p.sel <- x$p.sel

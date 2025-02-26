@@ -137,10 +137,19 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
 plot.euclidean <- function(x, type = "star", add = FALSE,
   add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid", ...) {
 
+  if (!type %in% c("area.points", "area.polygons", "star")) {
+    stop('type must be "area.points", "area.polygons" or "star".',
+      call. = FALSE)
+  }
+
   if (type %in% c("area.points", "area.polygons")) {
     if (x$case.set != "expected") {
       stop('area plots valid only when case.set = "expected".', call. = FALSE)
     }
+  }
+
+  if (!polygon.type %in% c("border", "solid")) {
+    stop('polygon.type must be "border" or "solid".', call. = FALSE)
   }
 
   if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
