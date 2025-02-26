@@ -5,7 +5,7 @@
 \title{Plot method for neighborhoodEuclidean().}
 \usage{
 \method{plot}{euclidean}(x, type = "star", add = FALSE,
-  add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid",
+  add.observed.points = TRUE, alpha.level = 0.75, polygon.type = "solid",
   ...)
 }
 \arguments{

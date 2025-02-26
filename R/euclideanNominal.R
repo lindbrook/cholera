@@ -135,7 +135,7 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
 #' }
 
 plot.euclidean <- function(x, type = "star", add = FALSE,
-  add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid", ...) {
+  add.observed.points = TRUE, alpha.level = 0.75, polygon.type = "solid", ...) {
 
   if (!type %in% c("area.points", "area.polygons", "star")) {
     stop('type must be "area.points", "area.polygons" or "star".',
