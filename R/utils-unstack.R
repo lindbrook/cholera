@@ -1,7 +1,4 @@
-#' Auxiliary functions for unstackFatalities().
-#' @noRd
-
-unstackAuxiliaryFunctions <- function() NULL
+# Unitily functions for unstack()
 
 orthoProj <- function(fatalities, case.id, cores, dev.mode) {
   ortho_proj <- function(case, fatalities) {

@@ -1,7 +1,6 @@
-#' Common auxiliary functions
-#' @noRd
-
-walkingAuxiliaryFunctions <- function() NULL
+index0 <- function(x) {
+  stats::setNames(data.frame(t(utils::combn(length(x), 2))), c("v1", "v2"))
+}
 
 quandrantCoordinates <- function(dat, h, theta) {
   delta <- dat[2, ] - dat[1, ]
@@ -48,8 +47,4 @@ quandrantCoordinates <- function(dat, h, theta) {
   }
 
   data.frame(x = post.x, y = post.y)
-}
-
-index0 <- function(x) {
-  stats::setNames(data.frame(t(utils::combn(length(x), 2))), c("v1", "v2"))
 }

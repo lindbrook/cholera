@@ -1,3 +1,8 @@
+### cholera 0.8.0.9603
+
+- rename "auxiliary" functions files to "utils".
+
+
 ### cholera 0.8.0.9602
 
 - add/set addWhitehead(add.title = FALSE).
