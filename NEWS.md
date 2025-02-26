@@ -1,3 +1,8 @@
+### cholera 0.8.0.9604
+
+- remove "snow" from case.set argument in neighborhoodWalking().
+
+
 ### cholera 0.8.0.9603
 
 - rename "auxiliary" functions files to "utils".
