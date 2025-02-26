@@ -206,6 +206,22 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
   tsp.method = "repetitive_nn", path.width = 2, alpha.level = 0.75,
   polygon.type = "solid", polygon.col = NULL, polygon.lwd = 2, ...) {
 
+  if (!type %in% c("area.points", "area.polygons", "roads")) {
+    stop('type must be "area.points", "area.polygons" or "roads".',
+      call. = FALSE)
+  }
+
+  if (type %in% c("area.points", "area.polygons", "roads")) {
+    if (x$case.set != "expected") {
+      stop('area and roads plots are only valid when case.set = "expected".',
+        call. = FALSE)
+    }
+  }
+
+  if (!polygon.type %in% c("border", "solid")) {
+    stop('polygon.type must be "border" or "solid".', call. = FALSE)
+  }
+
   if (x$latlong) {
     vars <- c("lon", "lat")
     seg.vars <- paste0(vars, c(rep(1, 2), rep(2, 2)))

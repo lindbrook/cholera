@@ -1,3 +1,9 @@
+### cholera 0.8.0.9605
+
+- add/amend warnings in plot.euclidean(), plot.euclideanLatlong() and 
+  plot.walking().
+
+
 ### cholera 0.8.0.9604
 
 - remove "snow" from case.set argument in neighborhoodWalking().
