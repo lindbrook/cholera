@@ -332,7 +332,7 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   points(dat[1, vars], pch = 0)
   points(dat[nrow(dat), vars], pch = 0)
 
-  drawPathB(dat, case.color, latlong)
+  drawPath(dat, case.color, latlong)
 
   d <- paste(round(path.length, 1), d.unit)
   t <- paste(round(x$data$time, 1), paste0(time.unit, "s"), "@", walking.speed,
@@ -346,7 +346,7 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     }
   }
 
-  milepost.data <- milePostsB(path.data, dat, destination, distance.unit, ds,
+  milepost.data <- milePosts(path.data, dat, destination, distance.unit, ds,
     latlong, milepost.unit, milepost.interval, time.unit, walking.speed)
 
   seg.data <- milepost.data$seg.data
@@ -433,7 +433,7 @@ print.walking_path <- function(x, ...) {
   print(x[c("path", "data")])
 }
 
-drawPathB <- function(dat, case.color, latlong) {
+drawPath <- function(dat, case.color, latlong) {
   n1 <- dat[1:(nrow(dat) - 1), ]
   n2 <- dat[2:nrow(dat), ]
   if (latlong) {
@@ -443,7 +443,7 @@ drawPathB <- function(dat, case.color, latlong) {
   }
 }
 
-milePostsB <- function(path.data, dat, destination, distance.unit, ds, latlong,
+milePosts <- function(path.data, dat, destination, distance.unit, ds, latlong,
   milepost.unit, milepost.interval, time.unit, walking.speed) {
 
   rev.data <- dat[order(dat$id, decreasing = TRUE), ]
@@ -517,25 +517,25 @@ milePostsB <- function(path.data, dat, destination, distance.unit, ds, latlong,
       origin <- data.frame(lon = min(cholera::roads[, ew]),
                            lat = min(cholera::roads[, ns]))
       if (any(segment.census > 1)) {
-        single.arrow.data <- arrowDataB(single.post.seg, census, distance.unit,
+        single.arrow.data <- arrowData(single.post.seg, census, distance.unit,
           latlong, milepost.unit, seg.data, origin)
-        multi.arrow.data <- arrowDataB(multi.post.seg, census,
+        multi.arrow.data <- arrowData(multi.post.seg, census,
           distance.unit, latlong, milepost.unit, seg.data, origin,
           multi.arrow.seg = TRUE)
         arrow.data <- rbind(single.arrow.data, multi.arrow.data)
       } else {
-        arrow.data <- arrowDataB(single.post.seg, census, distance.unit,
+        arrow.data <- arrowData(single.post.seg, census, distance.unit,
           latlong, milepost.unit, seg.data, origin)
       }
     } else {
       if (any(segment.census > 1)) {
-        single.arrow.data <- arrowDataB(single.post.seg, census, distance.unit,
+        single.arrow.data <- arrowData(single.post.seg, census, distance.unit,
           latlong, milepost.unit, seg.data)
-        multi.arrow.data <- arrowDataB(multi.post.seg, census, distance.unit,
+        multi.arrow.data <- arrowData(multi.post.seg, census, distance.unit,
           latlong, milepost.unit, seg.data, multi.arrow.seg = TRUE)
         arrow.data <- rbind(single.arrow.data, multi.arrow.data)
       } else {
-        arrow.data <- arrowDataB(single.post.seg, census, distance.unit,
+        arrow.data <- arrowData(single.post.seg, census, distance.unit,
           latlong, milepost.unit, seg.data)
       }
     }
@@ -564,7 +564,7 @@ milePostsB <- function(path.data, dat, destination, distance.unit, ds, latlong,
   out
 }
 
-arrowDataB <- function(segs, census, distance.unit, latlong, milepost.unit,
+arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
   seg.data, origin, multi.arrow.seg = FALSE) {
 
   if (latlong) vars <- c("lon", "lat")
