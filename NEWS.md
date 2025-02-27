@@ -1,3 +1,8 @@
+### cholera 0.8.0.9607
+
+- promote drawPathB(), milePostsB() and arrowDataB() for walkingPath().
+
+
 ### cholera 0.8.0.9606
 
 - set plot.euclidean(alpha.level = 0.75).
