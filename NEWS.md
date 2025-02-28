@@ -1,3 +1,8 @@
+### cholera 0.8.0.9608
+
+- promote unstackFatalitiesB() and related functions.
+
+
 ### cholera 0.8.0.9607
 
 - promote drawPathB(), milePostsB() and arrowDataB() for walkingPath().
