@@ -1,3 +1,8 @@
+### cholera 0.8.0.9609
+
+- amend documentation and warning for case.set = "expected" in plot.walking().
+
+
 ### cholera 0.8.0.9608
 
 - promote unstackFatalitiesB() and related functions.

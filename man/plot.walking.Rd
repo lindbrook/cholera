@@ -11,7 +11,7 @@
 \arguments{
 \item{x}{An object of class "walking" created by \code{neighborhoodWalking()}.}
 
-\item{type}{Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.}
+\item{type}{Character. Type of expected plot: "roads", "area.points" or "area.polygons". Valid only when \code{case.set = "expected"}.}
 
 \item{add}{Logical. Add graphic to plot.}
 
