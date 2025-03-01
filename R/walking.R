@@ -189,7 +189,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for neighborhoodWalking().
 #'
 #' @param x An object of class "walking" created by \code{neighborhoodWalking()}.
-#' @param type Character. "roads", "area.points" or "area.polygons". "area" flavors only valid when \code{case.set = "expected"}.
+#' @param type Character. Type of expected plot: "roads", "area.points" or "area.polygons". Valid only when \code{case.set = "expected"}.
 #' @param add Logical. Add graphic to plot.
 #' @param tsp.method Character. Traveling salesperson problem algorithm.
 #' @param path.width Numeric. Set width of paths.
@@ -206,14 +206,9 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
   tsp.method = "repetitive_nn", path.width = 2, alpha.level = 0.75,
   polygon.type = "solid", polygon.col = NULL, polygon.lwd = 2, ...) {
 
-  if (!type %in% c("area.points", "area.polygons", "roads")) {
-    stop('type must be "area.points", "area.polygons" or "roads".',
-      call. = FALSE)
-  }
-
-  if (type %in% c("area.points", "area.polygons", "roads")) {
-    if (x$case.set != "expected") {
-      stop('area and roads plots are only valid when case.set = "expected".',
+  if (x$case.set == "expected") {
+    if (!type %in% c("area.points", "area.polygons", "roads")) {
+      stop('type must be "area.points", "area.polygons" or "roads".',
         call. = FALSE)
     }
   }
