@@ -1,3 +1,8 @@
+### cholera 0.8.0.9610
+
+- set addNeighborhoodSnow(type = "area.polygons", non.snow.cases = FALSE).
+
+
 ### cholera 0.8.0.9609
 
 - amend documentation and warning for case.set = "expected" in plot.walking().

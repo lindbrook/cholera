@@ -4,8 +4,8 @@
 \alias{addNeighborhoodSnow}
 \title{Adds Snow's graphical annotation of the Broad Street pump walking neighborhood.}
 \usage{
-addNeighborhoodSnow(latlong = FALSE, type = "area.points",
-  non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid",
+addNeighborhoodSnow(latlong = FALSE, type = "area.polygons",
+  non.snow.cases = FALSE, alpha.level = 1/3, polygon.type = "solid",
   polygon.col = NULL, polygon.lwd = NULL)
 }
 \arguments{
