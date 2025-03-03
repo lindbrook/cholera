@@ -1,3 +1,8 @@
+### cholera 0.8.0.9611
+
+- make addFrame() an internal function.
+
+
 ### cholera 0.8.0.9610
 
 - set addNeighborhoodSnow(type = "area.polygons", non.snow.cases = FALSE).
