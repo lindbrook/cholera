@@ -58,7 +58,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
     addPump(vestry = vestry, col = "blue", pch = 2, latlong = latlong)
   }
   if (add.landmarks) addLandmarks(latlong = latlong)
-  if (add.frame) addFrame(latlong = latlong)
+  if (add.frame) cholera:::addFrame(latlong = latlong)
 }
 
 #' Add all streets and roads to plot.
@@ -80,7 +80,7 @@ addRoads <- function(latlong = FALSE, col = "gray") {
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @param col Character. Color
 #' @param ... Additional plotting parameters.
-#' @export
+#' @noRd
 
 addFrame <- function(latlong = FALSE, col = "black", ...) {
   if (latlong) vars <- c("lon", "lat")

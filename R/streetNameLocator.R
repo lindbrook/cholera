@@ -168,7 +168,7 @@ streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
 
   plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = NA,
     asp = asp)
-  addFrame(col = "gray", latlong = latlong)
+  cholera:::addFrame(col = "gray", latlong = latlong)
   addRoads(col = "gray", latlong = latlong)
 
   if (zoom == TRUE | is.numeric(zoom)) {
