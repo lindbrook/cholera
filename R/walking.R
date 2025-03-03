@@ -10,7 +10,7 @@
 #' @export
 
 neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
-  weighted = TRUE, case.set = "observed", latlong = FALSE, multi.core = TRUE) {
+  weighted = TRUE, case.set = "observed", latlong = FALSE, multi.core = FALSE) {
 
   if (!case.set %in% c("observed", "expected")) {
     stop('case.set must be "observed" or "expected.', call. = FALSE)

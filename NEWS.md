@@ -1,3 +1,8 @@
+### cholera 0.8.0.9612
+
+- set multi.core = FALSE as default.
+
+
 ### cholera 0.8.0.9611
 
 - make addFrame() an internal function.

@@ -5,7 +5,7 @@
 #' @noRd
 #' @note Uses road segments that enter square(s) as entry points.
 
-landmarkData <- function(multi.core = TRUE) {
+landmarkData <- function(multi.core = FALSE) {
   cores <- multiCore(multi.core)
 
   ## squares ##

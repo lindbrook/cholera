@@ -15,7 +15,7 @@
 #' }
 
 profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
-  drop.neg.subset = FALSE, multi.core = TRUE) {
+  drop.neg.subset = FALSE, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
 

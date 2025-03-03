@@ -6,7 +6,7 @@
 #' @note radius = 75 - appox. 1 hr; radius = 100 - appox. 1.5 hr
 #' @noRd
 
-latlongSimulateFatalities <- function(multi.core = TRUE, radius = 75,
+latlongSimulateFatalities <- function(multi.core = FALSE, radius = 75,
   simulated.obs = 20000L) {
 
   cores <- multiCore(multi.core)

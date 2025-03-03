@@ -4,7 +4,7 @@
 #' @importFrom geosphere distGeo
 #' @noRd
 
-latlongOrthoLandmarks <- function(multi.core = TRUE) {
+latlongOrthoLandmarks <- function(multi.core = FALSE) {
   cores <- multiCore(multi.core)
   lndmks <- cholera::landmarks
 

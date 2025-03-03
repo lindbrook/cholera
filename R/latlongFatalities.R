@@ -6,7 +6,7 @@
 #' @noRd
 #' @note This documents the computation of the latlong version of the fatalities data frame.
 
-latlongFatalities <- function(path, multi.core = TRUE) {
+latlongFatalities <- function(path, multi.core = FALSE) {
   # reset (delete) lon-lat for recomputation
   sel <- !names(cholera::fatalities) %in% c("lon", "lat")
   fatalities.original <- cholera::fatalities[, sel]

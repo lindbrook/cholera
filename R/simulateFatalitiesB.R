@@ -10,7 +10,7 @@
 #' @noRd
 
 simulateFatalitiesB <- function(recompute.regular.cases = FALSE,
-  simulated.obs = 20000L, radius = 3, multi.core = TRUE) {
+  simulated.obs = 20000L, radius = 3, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
 

@@ -12,7 +12,7 @@
 #' @export
 
 simulateFatalities <- function(recompute.regular.cases = FALSE,
-  simulated.obs = 20000L, multi.core = TRUE) {
+  simulated.obs = 20000L, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
 

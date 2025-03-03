@@ -8,7 +8,7 @@ addNeighborhoodWalking(pump.select = NULL, vestry = FALSE,
   weighted = TRUE, case.set = "expected", latlong = FALSE,
   type = "area.polygons", tsp.method = "repetitive_nn", path.width = 2,
   alpha.level = 0.5, polygon.type = "solid", polygon.col = NULL,
-  polygon.lwd = 2, multi.core = TRUE)
+  polygon.lwd = 2, multi.core = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps. Note that you can't just select the pump on Adam and Eve Court (#2) because it's technically an isolate.}

@@ -19,7 +19,7 @@
 
 euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
   case.set = "observed", location = "nominal", brute.force = FALSE,
-  multi.core = TRUE, dev.mode = FALSE) {
+  multi.core = FALSE, dev.mode = FALSE) {
 
   if (case.set %in% c("observed", "expected") == FALSE) {
     stop('case.set must be "observed" or "expected".', call. = FALSE)

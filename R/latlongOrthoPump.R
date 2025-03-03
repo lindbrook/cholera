@@ -5,7 +5,7 @@
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.
 #' @noRd
 
-latlongOrthoPump <- function(vestry = FALSE, multi.core = TRUE) {
+latlongOrthoPump <- function(vestry = FALSE, multi.core = FALSE) {
   cores <- multiCore(multi.core)
 
   if (vestry) {

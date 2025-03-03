@@ -8,7 +8,7 @@
 #' @noRd
 
 orthogonalProjectionFatalities <- function(case.type = "fatality", radius = 2,
-  multi.core = TRUE) {
+  multi.core = FALSE) {
 
   vars <- c("x", "y")
   cores <- multiCore(multi.core)
