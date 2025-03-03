@@ -17,7 +17,7 @@
 nearestPump <- function(pump.select = NULL, metric = "walking",
   vestry = FALSE, weighted = TRUE, case.set = "observed", location = "nominal",
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
-  latlong = FALSE, multi.core = TRUE) {
+  latlong = FALSE, multi.core = FALSE) {
 
   if (!metric %in% c("euclidean", "walking")) {
     stop('metric must be "euclidean" or "walking".', call. = FALSE)

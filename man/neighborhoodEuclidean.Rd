@@ -6,7 +6,7 @@
 \usage{
 neighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
   case.set = "observed", case.select = "address", latlong = FALSE,
-  location = "nominal", brute.force = FALSE, multi.core = TRUE,
+  location = "nominal", brute.force = FALSE, multi.core = FALSE,
   dev.mode = FALSE)
 }
 \arguments{

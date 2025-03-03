@@ -8,7 +8,7 @@ addNeighborhoodEuclidean(pump.select = NULL, vestry = FALSE,
   case.set = "observed", case.select = "address", latlong = FALSE,
   location = "nominal", brute.force = FALSE, type = "star",
   add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid",
-  multi.core = TRUE, dev.mode = FALSE)
+  multi.core = FALSE, dev.mode = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}

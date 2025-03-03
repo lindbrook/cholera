@@ -6,7 +6,7 @@
 #' @noRd
 #' @note This documents the computation of the lat-long version of the roads data frame.
 
-latlongRoads <- function(path, multi.core = TRUE) {
+latlongRoads <- function(path, multi.core = FALSE) {
   cores <- multiCore(multi.core)
 
   # match road IDs used to create the georeferenced TIFs

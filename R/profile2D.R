@@ -175,7 +175,7 @@ orthogonalCoordinates <- function(case, pump = 7, angle = 0, vestry = FALSE,
 #' @noRd
 
 profilePerspective <- function(output = "inside", pump = 7, angle = 0,
-  vestry = FALSE, multi.core = TRUE) {
+  vestry = FALSE, multi.core = FALSE) {
 
   walk <- nearestPump(vestry = vestry)
   neighborhood.select <- walk[walk$pump == pump, ]

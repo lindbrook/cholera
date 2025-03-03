@@ -5,7 +5,7 @@
 #' @return An R data frame.
 #' @noRd
 
-latlongFrame <- function(path, multi.core = TRUE) {
+latlongFrame <- function(path, multi.core = FALSE) {
   cores <- multiCore(multi.core)
 
   # match road IDs used to create the georeferenced TIFs

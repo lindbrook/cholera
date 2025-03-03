@@ -8,7 +8,7 @@
 #' @note This function documents the code that generates \code{\link{anchor.case}},  \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
 #' @export
 
-unstackFatalities <- function(multi.core = TRUE, dev.mode = FALSE) {
+unstackFatalities <- function(multi.core = FALSE, dev.mode = FALSE) {
   cores <- multiCore(multi.core)
   fixed.fatalities <- fixFatalities()
   ortho.proj <- orthogonalProjectionFatalities(fixed.fatalities, cores)

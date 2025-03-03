@@ -7,7 +7,7 @@
 #' @noRd
 
 latlongEmbed <- function(vestry = FALSE, case.set = "observed",
-  embed.addr = TRUE, multi.core = TRUE) {
+  embed.addr = TRUE, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
 

@@ -5,7 +5,7 @@
 \title{Project simulated fatalities onto road network}
 \usage{
 simulateFatalities(recompute.regular.cases = FALSE, simulated.obs = 20000L,
-  multi.core = TRUE)
+  multi.core = FALSE)
 }
 \arguments{
 \item{recompute.regular.cases}{Logical. \code{TRUE} re-computes regular data. \code{FALSE} uses pre-computed data. For replication of data used in the package.}

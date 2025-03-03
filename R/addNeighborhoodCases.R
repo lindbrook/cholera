@@ -42,7 +42,7 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   metric = "walking", case.set = "observed", location = "nominal",
   token = "point", text.size = 0.5, pch = 16, point.size = 0.5, vestry = FALSE,
   weighted = TRUE, color = NULL, alpha.level = 0.5, latlong = FALSE,
-  multi.core = TRUE) {
+  multi.core = FALSE) {
 
   if (metric %in% c("euclidean", "walking") == FALSE) {
     stop('metric must be "euclidean" or "walking".', call. = FALSE)

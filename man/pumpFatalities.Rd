@@ -5,7 +5,7 @@
 \title{Compute fatalities by pump.}
 \usage{
 pumpFatalities(pump.select = NULL, metric = "walking", vestry = FALSE,
-  latlong = FALSE, multi.core = TRUE)
+  latlong = FALSE, multi.core = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Pump candidates to consider. Default is \code{NULL}: all pumps are used. Otherwise, selection by a vector of numeric IDs: 1 to 13 for \code{pumps}; 1 to 14 for \code{pumps.vestry}. Negative selection allowed.}

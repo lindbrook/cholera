@@ -5,7 +5,7 @@
 #' @return An R data frame.
 #' @noRd
 
-latlongOrthoAddress <- function(multi.core = TRUE, radius = 60) {
+latlongOrthoAddress <- function(multi.core = FALSE, radius = 60) {
   cores <- multiCore(multi.core)
 
   geo.addr <- geoCartesian(dat = cholera::fatalities.address,

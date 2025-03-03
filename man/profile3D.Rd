@@ -5,7 +5,7 @@
 \title{3D Profile.}
 \usage{
 profile3D(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
-  drop.neg.subset = FALSE, multi.core = TRUE)
+  drop.neg.subset = FALSE, multi.core = FALSE)
 }
 \arguments{
 \item{pump.select}{Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.}

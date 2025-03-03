@@ -14,7 +14,7 @@
 #' }
 
 pumpFatalities <- function(pump.select = NULL, metric = "walking",
-  vestry = FALSE, latlong = FALSE, multi.core = TRUE) {
+  vestry = FALSE, latlong = FALSE, multi.core = FALSE) {
 
   if (!metric %in% c("euclidean", "walking")) {
     stop('metric must be "euclidean" or "walking".', call. = FALSE)
