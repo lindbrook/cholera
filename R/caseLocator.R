@@ -174,7 +174,7 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
       plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = 15,
         cex = 0.5, col = "gray", asp = asp)
       addRoads(latlong = latlong)
-      cholera:::addFrame(latlong = latlong)
+      addFrame(latlong = latlong)
 
       points(pmp[, vars], pch = 17, cex = 1, col = "blue")
       text(pmp[, vars], label = pmp$id, pos = 1)

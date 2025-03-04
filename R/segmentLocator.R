@@ -165,7 +165,7 @@ segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
 
   plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = NA,
     asp = asp)
-  cholera:::addFrame(col = "gray", latlong = latlong)
+  addFrame(col = "gray", latlong = latlong)
   addRoads(col = "gray", latlong = latlong)
 
   if (zoom == TRUE | is.numeric(zoom)) {

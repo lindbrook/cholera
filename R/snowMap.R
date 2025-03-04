@@ -58,7 +58,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
     addPump(vestry = vestry, col = "blue", pch = 2, latlong = latlong)
   }
   if (add.landmarks) addLandmarks(latlong = latlong)
-  if (add.frame) cholera:::addFrame(latlong = latlong)
+  if (add.frame) addFrame(latlong = latlong)
 }
 
 #' Add all streets and roads to plot.
