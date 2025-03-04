@@ -7,7 +7,7 @@
 #' @note This function is computationally intensive. See \code{vignette("Parallelization")} for details. This functions document the code that generates \code{\link{sim.walking.distance}}.
 #' @noRd
 
-simulateWalkingDistance <- function(pump.select = 7, multi.core = TRUE,
+simulateWalkingDistance <- function(pump.select = 7, multi.core = FALSE,
   dev.mode = FALSE, compute = FALSE) {
 
   if (compute == FALSE) {
