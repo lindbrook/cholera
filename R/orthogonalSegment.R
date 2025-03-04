@@ -10,6 +10,3 @@ orthogonalSegment <- function(case = 145, multi.core = FALSE) {
   out <- orthoProj(fixed.fatalities, case.id = case, cores, dev.mode = FALSE)
   data.frame(case = case, do.call(rbind, out))
 }
-
-
-
