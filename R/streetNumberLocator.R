@@ -159,7 +159,7 @@ streetNumberLocator <- function(street.number = 216, zoom = TRUE,
           sel <- rds$street %in% street.number
           xlim <- range(rds[sel, ew])
           ylim <- range(rds[sel, ns])
-          message("Note: zoom = ",  zoom, " too far! Use smaller.")
+          message("Note: zoom = ", zoom, " too far! Use smaller.")
         }
       }
     }

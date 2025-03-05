@@ -160,7 +160,7 @@ streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
           sel <- rds$name %in% street.name
           xlim <- range(rds[sel, ew])
           ylim <- range(rds[sel, ns])
-          message("Note: zoom = ",  zoom, " too far! Use smaller.")
+          message("Note: zoom = ", zoom, " too far! Use smaller.")
         }
       }
     }
