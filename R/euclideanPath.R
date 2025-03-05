@@ -203,7 +203,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     path.length <- (3600L * path.data$distance) / (1000L * walking.speed)
   }
 
-  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  rds <- cholera::roads
   frame <- cholera::roads[cholera::roads$name == "Map Frame", ]
 
   fatality <- cholera::fatalities
@@ -217,25 +217,67 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   sqB <- sqB[, names(cholera::landmarks)]
   land <- rbind(sqB, cholera::landmarks)
 
-  padding <- ifelse(latlong, 0.000125, 0.25)
+  if (isFALSE(zoom)) {
+    xlim <- range(rds[, ew])
+    ylim <- range(rds[, ns])
+  } else if (isTRUE(zoom) | is.numeric(zoom)) {
+    xlim <- range(dat[, ew])
+    ylim <- range(dat[, ns])
 
-  if (is.logical(zoom)) {
-    if (zoom) {
-      map.data <- mapDataRange(dat, land, path.data, vars, ew, ns)
-      xlim <- c(min(map.data[, ew]) - padding, max(map.data[, ew]) + padding)
-      ylim <- c(min(map.data[, ns]) - padding, max(map.data[, ns]) + padding)
-    } else {
-      map.data <- rbind(frame, rd)
-      xlim <- range(map.data[, ew])
-      ylim <- range(map.data[, ns])
+    if (zoom != 0) {
+      if (latlong) {
+        cartesian.data <- lapply(seq_len(nrow(dat)), function(i) {
+          geoCartesianCoord(dat[i, ])
+        })
+
+        cartesian.data <- do.call(rbind, cartesian.data)
+        cart.x.range <- range(cartesian.data$x)
+        cart.y.range <- range(cartesian.data$y)
+
+        pad <- c(zoom, -zoom)
+        xlim <- cart.x.range + pad
+        ylim <- cart.y.range + pad
+
+        xlim.delta <- xlim[2] - xlim[1]
+        ylim.delta <- ylim[2] - ylim[1]
+
+        if (xlim.delta <= 0 | ylim.delta <= 0) {
+          xlim <- cart.x.range
+          ylim <- cart.y.range
+          message("Note: zoom = ", zoom, " too far! Use smaller.")
+        }
+
+        range.data <- meterLatLong(data.frame(x = xlim, y = ylim))
+        xlim <- range.data$lon
+        ylim <- range.data$lat
+
+      } else {
+        ols <- stats::lm(y ~ x, data = data.frame(x = xlim, y = ylim))
+        slope <- stats::coef(ols)[2]
+        theta <- atan(slope)
+
+        pad <- abs(zoom) / unitMeter(1)
+        delta.x <- abs(pad * cos(theta))
+        delta.y <- abs(pad * sin(theta))
+
+        if (zoom < 0) {
+          xlim <- c(xlim[1] - delta.x, xlim[2] + delta.x)
+          ylim <- c(ylim[1] - delta.y, ylim[2] + delta.y)
+        } else if (zoom > 0) {
+          xlim <- c(xlim[1] + delta.x, xlim[2] - delta.x)
+          ylim <- c(ylim[1] + delta.y, ylim[2] - delta.y)
+        }
+
+        xlim.delta <- xlim[2] - xlim[1]
+        ylim.delta <- ylim[2] - ylim[1]
+
+        if (xlim.delta <= 0 | ylim.delta <= 0) {
+          xlim <- range(dat[, ew])
+          ylim <- range(dat[, ns])
+          message("Note: zoom = ", zoom, " too far! Use smaller.")
+        }
+      }
     }
-  } else if (is.numeric(zoom)) {
-    if (zoom >= 0) {
-      xlim <- c(min(dat[, ew]) - zoom * (padding),
-                max(dat[, ew]) + zoom * (padding))
-      ylim <- c(min(dat[, ns]) - zoom * (padding),
-                max(dat[, ns]) + zoom * (padding))
-    } else stop("If numeric, zoom must be >= 0.")
   }
 
   if (type == "case-pump") {
@@ -246,8 +288,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   if (!add) {
-    plot(rd[, vars], pch = NA, asp = asp, xlim = xlim, ylim = ylim)
-    roads.list <- split(rd[, vars], rd$street)
+    plot(rds[, vars], pch = NA, asp = asp, xlim = xlim, ylim = ylim)
+    roads.list <- split(rds[, vars], rds$street)
     frame.list <- split(frame[, vars], frame$street)
     invisible(lapply(roads.list, lines, col = "lightgray"))
     invisible(lapply(frame.list, lines))

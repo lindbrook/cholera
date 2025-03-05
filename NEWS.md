@@ -1,3 +1,8 @@
+### cholera 0.8.0.9616
+
+- enable negative zoom in plot.euclidean_path().
+
+
 ### cholera 0.8.0.9615
 
 - amend URLs in "Time Series" vignette.
