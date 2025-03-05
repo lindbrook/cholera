@@ -104,10 +104,10 @@ streetNumberLocator <- function(street.number = 216, zoom = TRUE,
         new.vars <- c("x", "y")
         ones <- stats::setNames(ones, c("id", paste0(new.vars, 1)))
         twos <- stats::setNames(twos, c("id", paste0(new.vars, 2)))
-        cartestian.rds <- merge(ones, twos, by = "id")
+        cartesian.rds <- merge(ones, twos, by = "id")
 
         st.seg <- rd.segs[rd.segs$street %in% street.number, "id"]
-        cart.rd <- cartestian.rds[cartestian.rds$id %in% st.seg, ]
+        cart.rd <- cartesian.rds[cartesian.rds$id %in% st.seg, ]
 
         cart.x.range <- range(cart.rd[, paste0("x", 1:2)])
         cart.y.range <- range(cart.rd[, paste0("y", 1:2)])
@@ -122,7 +122,7 @@ streetNumberLocator <- function(street.number = 216, zoom = TRUE,
         if (xlim.delta <= 0 | ylim.delta <= 0) {
           xlim <- cart.x.range
           ylim <- cart.y.range
-          message("Note: zoom = ",  zoom, " too far! Use smaller.")
+          message("Note: zoom = ", zoom, " too far! Use smaller.")
         }
 
         range.data <- meterLatLong(data.frame(x = xlim, y = ylim))

@@ -123,7 +123,7 @@ streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
         if (xlim.delta <= 0 | ylim.delta <= 0) {
           xlim <- cart.x.range
           ylim <- cart.y.range
-          message("Note: zoom = ",  zoom, " too far! Use smaller.")
+          message("Note: zoom = ", zoom, " too far! Use smaller.")
         }
 
         range.data <- meterLatLong(data.frame(x = xlim, y = ylim))
