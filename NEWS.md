@@ -1,6 +1,11 @@
+### cholera 0.8.0.9615
+
+- amend URLs in "Time Series" vignette.
+
+
 ### cholera 0.8.0.9614
 
-- set simulateWalkingDistance( multi.core = FALSE).
+- set simulateWalkingDistance(multi.core = FALSE).
 
 
 ### cholera 0.8.0.9613
