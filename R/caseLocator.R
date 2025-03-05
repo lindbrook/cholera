@@ -73,7 +73,7 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
       case.data <- cholera::fatalities[cholera::fatalities$case == case, vars]
     }
   } else {
-    case.seg <- sim.proj.data[sim.proj.data$case == case,"road.segment"]
+    case.seg <- sim.proj.data[sim.proj.data$case == case, "road.segment"]
     case.data <- reg.data[case, vars]
   }
 
