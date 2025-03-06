@@ -221,10 +221,12 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     xlim <- range(rds[, ew])
     ylim <- range(rds[, ns])
   } else if (isTRUE(zoom) | is.numeric(zoom)) {
-    xlim <- range(dat[, ew])
-    ylim <- range(dat[, ns])
+    if (is.logical(zoom) | zoom == 0) {
+      padding <- ifelse(latlong, 0.0000125, 0.05)
+      xlim <- c(min(dat[, ew]) - padding, max(dat[, ew]) + padding)
+      ylim <- c(min(dat[, ns]) - padding, max(dat[, ns]) + padding)
 
-    if (zoom != 0) {
+    } else if (zoom != 0) {
       if (latlong) {
         cartesian.data <- lapply(seq_len(nrow(dat)), function(i) {
           geoCartesianCoord(dat[i, ])
@@ -252,6 +254,9 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
         ylim <- range.data$lat
 
       } else {
+        xlim <- range(dat[, ew])
+        ylim <- range(dat[, ns])
+
         ols <- stats::lm(y ~ x, data = data.frame(x = xlim, y = ylim))
         slope <- stats::coef(ols)[2]
         theta <- atan(slope)
