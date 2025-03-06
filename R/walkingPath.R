@@ -200,26 +200,77 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   vars <- c(ew, ns)
-  padding <- ifelse(latlong, 0.000125, 0.25)
 
-  if (is.logical(zoom)) {
-    if (zoom) {
-      map.data <- mapDataRange(dat, land, path.data, vars, ew, ns)
+  if (isFALSE(zoom)) {
+    map.data <- rbind(frame, rd)
+    xlim <- range(map.data[, ew])
+    ylim <- range(map.data[, ns])
+  } else if (isTRUE(zoom) | is.numeric(zoom)) {
+    map.data <- mapDataRange(dat, land, path.data, vars, ew, ns)
+
+    if (is.logical(zoom) | zoom == 0) {
+      padding <- ifelse(latlong, 0.0000125, 0.05)
       xlim <- c(min(map.data[, ew]) - padding, max(map.data[, ew]) + padding)
       ylim <- c(min(map.data[, ns]) - padding, max(map.data[, ns]) + padding)
-    } else {
-      map.data <- rbind(frame, rd)
-      xlim <- range(map.data[, ew])
-      ylim <- range(map.data[, ns])
+
+    } else if (zoom != 0) {
+      if (latlong) {
+        cartesian.data <- lapply(seq_len(nrow(map.data)), function(i) {
+          geoCartesianCoord(map.data[i, ])
+        })
+
+        cartesian.data <- do.call(rbind, cartesian.data)
+        cart.x.range <- range(cartesian.data$x)
+        cart.y.range <- range(cartesian.data$y)
+
+        padding <- c(zoom, -zoom)
+        xlim <- cart.x.range + padding
+        ylim <- cart.y.range + padding
+
+        xlim.delta <- xlim[2] - xlim[1]
+        ylim.delta <- ylim[2] - ylim[1]
+
+        if (xlim.delta <= 0 | ylim.delta <= 0) {
+          xlim <- cart.x.range
+          ylim <- cart.y.range
+          message("Note: zoom = ", zoom, " too far! Use smaller.")
+        }
+
+        range.data <- meterLatLong(data.frame(x = xlim, y = ylim))
+        xlim <- range.data$lon
+        ylim <- range.data$lat
+
+      } else {
+        xlim <- range(map.data[, ew])
+        ylim <- range(map.data[, ns])
+
+        ols <- stats::lm(y ~ x, data = data.frame(x = xlim, y = ylim))
+        slope <- stats::coef(ols)[2]
+        theta <- atan(slope)
+
+        padding <- abs(zoom) / unitMeter(1)
+        delta.x <- abs(padding * cos(theta))
+        delta.y <- abs(padding * sin(theta))
+
+        if (zoom < 0) {
+          xlim <- c(xlim[1] - delta.x, xlim[2] + delta.x)
+          ylim <- c(ylim[1] - delta.y, ylim[2] + delta.y)
+        } else if (zoom > 0) {
+          xlim <- c(xlim[1] + delta.x, xlim[2] - delta.x)
+          ylim <- c(ylim[1] + delta.y, ylim[2] - delta.y)
+        }
+
+        xlim.delta <- xlim[2] - xlim[1]
+        ylim.delta <- ylim[2] - ylim[1]
+
+        if (xlim.delta <= 0 | ylim.delta <= 0) {
+          xlim <- range(dat[, ew])
+          ylim <- range(dat[, ns])
+          message("Note: zoom = ", zoom, " too far! Use smaller.")
+        }
+      }
     }
-  } else if (is.numeric(zoom)) {
-    if (zoom >= 0) {
-      xlim <- c(min(dat[, ew]) - zoom * (padding),
-                max(dat[, ew]) + zoom * (padding))
-      ylim <- c(min(dat[, ns]) - zoom * (padding),
-                max(dat[, ns]) + zoom * (padding))
-    } else stop("If numeric, zoom must be >= 0.")
-  } else stop("zoom must either be logical or numeric.")
+  }
 
   if (type == "case-pump") {
     p.sel <- paste0("p", path.data$destination)
