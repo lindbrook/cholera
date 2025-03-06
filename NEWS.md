@@ -1,3 +1,8 @@
+### cholera 0.8.0.9618
+
+- enable negative zoom in plot.walking_path().
+
+
 ### cholera 0.8.0.9617
 
 - amend zoom in plot.euclidean_path().
