@@ -1,3 +1,8 @@
+### cholera 0.8.0.9620
+
+- update "Parallelization" vignette.
+
+
 ### cholera 0.8.0.9619
 
 - add negative zoom, add/set latlong = FALSE, drop data arg in pumpLocator().
