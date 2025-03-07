@@ -4,13 +4,13 @@
 \alias{pumpLocator}
 \title{Locate water pump by numerical ID.}
 \usage{
-pumpLocator(id = 7, zoom = 1, vestry = FALSE, add.title = TRUE,
-  highlight.segment = TRUE, data = FALSE)
+pumpLocator(id = 7, zoom = FALSE, vestry = FALSE, add.title = TRUE,
+  highlight.segment = TRUE, latlong = FALSE)
 }
 \arguments{
 \item{id}{Numeric or Integer. With \code{vestry = TRUE}, a whole number between 1 and 14. With \code{vestry = FALSE}, a whole number between 1 and 13. See \code{cholera::pumps.vestry} and \code{cholera::pumps} for IDs and details about specific pumps.}
 
-\item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 1.}
+\item{zoom}{Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.}
 
 \item{vestry}{Logical. \code{TRUE} for the 14 pumps from Vestry Report. \code{FALSE} for the original 13 pumps.}
 
@@ -18,7 +18,7 @@ pumpLocator(id = 7, zoom = 1, vestry = FALSE, add.title = TRUE,
 
 \item{highlight.segment}{Logical. Highlight case's segment.}
 
-\item{data}{Logical. Output data.}
+\item{latlong}{Logical. Use longitude and latitude.}
 }
 \value{
 A base R graphics plot.
