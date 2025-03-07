@@ -2,7 +2,7 @@
 #'
 #' Highlight selected observed or simulated case and its home road segment.
 #' @param case Numeric or Integer. Whole number between 1 and 578.
-#' @param zoom Logical or Numeric.A numeric value >= 0 controls the degree of zoom. The default is 1.
+#' @param zoom Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.
 #' @param observed Logical. \code{TRUE} for observed. \code{FALSE} for simulated.
 #' @param latlong Logical. Longitude and latitude coordinates
 #' @param add.title Logical. Include title.

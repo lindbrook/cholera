@@ -140,7 +140,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' Plot the path of the Euclidean distance between cases and/or pumps.
 #'
 #' @param x An object of class "euclidean_path" created by euclideanPath().
-#' @param zoom Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.
+#' @param zoom Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.
 #' @param add Logical. Add graphic to plot.
 #' @param long.title Logical. Tile with names.
 #' @param mileposts Logical. Plot mile/time posts.

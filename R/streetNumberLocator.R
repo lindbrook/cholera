@@ -2,7 +2,7 @@
 #'
 #' Highlight selected road segment(s) and cases.
 #' @param street.number Character. A vector of segment IDs. See Note.
-#' @param zoom Logical or Numeric. Positive value zoom in. Negative values zoom out.
+#' @param zoom Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.
 #' @param latlong Logical. Longitude and latitude coordinates
 #' @param cases Character. Cases to plot: \code{NULL}, "address" or "fatality".
 #' @param token Character. Cases as "id" or "point".

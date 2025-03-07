@@ -13,7 +13,7 @@ streetNameLocator(street.name = "Broad Street", zoom = TRUE,
 \arguments{
 \item{street.name}{Character. A street name or vector of street names (e.g., "Broad Street", "Poland Street").}
 
-\item{zoom}{Logical or Numeric. Positive values zoom in. Negative values zoom out.}
+\item{zoom}{Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.}
 
 \item{latlong}{Logical. Longitude and latitude coordinates}
 

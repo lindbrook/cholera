@@ -11,7 +11,7 @@ caseLocator(case = 1, zoom = FALSE, observed = TRUE, latlong = FALSE,
 \arguments{
 \item{case}{Numeric or Integer. Whole number between 1 and 578.}
 
-\item{zoom}{Logical or Numeric.A numeric value >= 0 controls the degree of zoom. The default is 1.}
+\item{zoom}{Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.}
 
 \item{observed}{Logical. \code{TRUE} for observed. \code{FALSE} for simulated.}
 

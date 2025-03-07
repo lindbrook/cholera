@@ -11,7 +11,7 @@
 \arguments{
 \item{x}{An object of class "walking_path" created by walkingPath().}
 
-\item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. A value of 1 equals zoom = TRUE.}
+\item{zoom}{Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.}
 
 \item{add}{Logical. Add graphic to plot.}
 

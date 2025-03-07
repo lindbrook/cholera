@@ -11,7 +11,7 @@
 \arguments{
 \item{x}{An object of class "euclidean_path" created by euclideanPath().}
 
-\item{zoom}{Logical or Numeric. A numeric value >= 0 controls the degree of zoom. The default is 0.5.}
+\item{zoom}{Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.}
 
 \item{add}{Logical. Add graphic to plot.}
 

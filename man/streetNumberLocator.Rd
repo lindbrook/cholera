@@ -13,7 +13,7 @@ streetNumberLocator(street.number = 216, zoom = TRUE, latlong = FALSE,
 \arguments{
 \item{street.number}{Character. A vector of segment IDs. See Note.}
 
-\item{zoom}{Logical or Numeric. Positive value zoom in. Negative values zoom out.}
+\item{zoom}{Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.}
 
 \item{latlong}{Logical. Longitude and latitude coordinates}
 
