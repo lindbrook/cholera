@@ -1,3 +1,8 @@
+### cholera 0.8.0.9621
+
+- add stop() for less than 2 pumps with neighborhoodVoronoi().
+
+
 ### cholera 0.8.0.9620
 
 - update "Parallelization" vignette.
