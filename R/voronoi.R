@@ -40,6 +40,12 @@
 neighborhoodVoronoi <- function(pump.select = NULL, vestry = FALSE,
   latlong = FALSE, location = "nominal", polygon.vertices = FALSE) {
 
+  if (!is.null(pump.select)) {
+    if (length(pump.select) == 1)
+    stop("Use at least 2 pumps for 'pump.select' with Voronoi diagram.",
+      call. = FALSE)
+  }
+
   if (latlong) {
     args <- list(pump.select = pump.select, vestry = vestry,
       location = location, polygon.vertices = polygon.vertices)
