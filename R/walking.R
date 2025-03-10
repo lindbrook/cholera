@@ -12,6 +12,16 @@
 neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   weighted = TRUE, case.set = "observed", latlong = FALSE, multi.core = FALSE) {
 
+  if (!is.null(pump.select)) {
+    if (length(pump.select) == 1) {
+      if (pump.select == 2) {
+        msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
+        msg2 <- " It's an isolate, unreachable for observed and most expected fatalities."
+        stop(paste(msg1, msg2))
+      }
+    }
+  }
+
   if (!case.set %in% c("observed", "expected")) {
     stop('case.set must be "observed" or "expected.', call. = FALSE)
   }
