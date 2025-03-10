@@ -80,7 +80,7 @@ selectPump <- function(pump.data, pump.select = NULL, vestry = FALSE) {
 
     } else if (any(!destination.chk)) {
       message("Note invalid/misspelled pump(s): ",
-            paste(pump.select[!destination.chk], collapse = ", "))
+        paste(pump.select[!destination.chk], collapse = ", "))
 
       if (is.character(pump.select)) {
         audit <- lapply(pump.select, function(x) {
@@ -101,7 +101,7 @@ selectPump <- function(pump.data, pump.select = NULL, vestry = FALSE) {
         if (length(pump.num) > 0) {
           if (any(pump.num > 0) & any(pump.num < 0)) {
             stop('pump.select must either be strictly positive or negative.',
-                 call. = FALSE)
+              call. = FALSE)
           } else if (all(pump.num < 0)) {
             pump.num <- setdiff(pump.data$id, abs(pump.num))
           }
