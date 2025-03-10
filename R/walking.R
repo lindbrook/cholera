@@ -107,16 +107,33 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
                 cores = cores)
 
   } else if (case.set == "expected") {
-    ## Falconberg Court and Mews isolate
+    ## Isolates: Adam and Eve Court; Falconberg Court and Mews
+    adam.eve.ct <- "44-1"
     falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
-    sel <- !cholera::road.segments$id %in% falconberg.ct.mews
+    sel <- !cholera::road.segments$id %in% c(falconberg.ct.mews, adam.eve.ct)
+
+    ## Isolate: Adam and Eve Court pump (#2)
+    p.select.adam.eve <- p.select[p.select$pump == 2, ]
+    p.select <- p.select[p.select$pump != 2, ]
 
     if (latlong) {
-      rd.segs <- roadSegments(latlong = TRUE)[sel, ]
+      rd.segs <- roadSegments(latlong = TRUE)
+
+      adam.eve.seg <- rd.segs[rd.segs$id == adam.eve.ct, ]
+      adam.eve.seg$n1 <- paste0(adam.eve.seg$lon1, "_&_", adam.eve.seg$lat1)
+      adam.eve.seg$n2 <- paste0(adam.eve.seg$lon2, "_&_", adam.eve.seg$lat2)
+
+      rd.segs <- rd.segs[sel, ]
       rd.segs$n1 <- paste0(rd.segs$lon1, "_&_", rd.segs$lat1)
       rd.segs$n2 <- paste0(rd.segs$lon2, "_&_", rd.segs$lat2)
     } else {
-      rd.segs <- cholera::road.segments[sel, ]
+      rd.segs <- cholera::road.segments
+
+      adam.eve.seg <- rd.segs[rd.segs$id == adam.eve.ct, ]
+      adam.eve.seg$n1 <- paste0(adam.eve.seg$x1, "_&_", adam.eve.seg$y1)
+      adam.eve.seg$n2 <- paste0(adam.eve.seg$x2, "_&_", adam.eve.seg$y2)
+
+      rd.segs <- rd.segs[sel, ]
       rd.segs$n1 <- paste0(rd.segs$x1, "_&_", rd.segs$y1)
       rd.segs$n2 <- paste0(rd.segs$x2, "_&_", rd.segs$y2)
     }
@@ -148,6 +165,26 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     }
 
     endpt.data <- endpt.data[, vars]
+
+    if (2L %in% p.sel) {
+      ds.AE <- igraph::distances(
+        graph = g,
+        v = unlist(adam.eve.seg[, c("n1", "n2")]),
+        to = p.select.adam.eve$node,
+        weights = edges$d)
+
+      ds.AE <- as.data.frame(ds.AE)
+      names(ds.AE) <- "d"
+      ds.AE$node <- row.names(ds.AE)
+
+      adam.eve.seg <- merge(adam.eve.seg, ds.AE, by.x = "n1", by.y = "node")
+      adam.eve.seg <- merge(adam.eve.seg, ds.AE, by.x = "n2", by.y = "node")
+      names(adam.eve.seg)[grep("d.", names(adam.eve.seg))] <- paste0("d", 1:2)
+      adam.eve.seg[, c("pump1", "pump2")] <- 2L
+      adam.eve.seg <- adam.eve.seg[, vars]
+
+      endpt.data <- rbind(endpt.data, adam.eve.seg)
+    }
 
     same_pump.endpts <- endpt.data[endpt.data$pump1 == endpt.data$pump2, ]
 

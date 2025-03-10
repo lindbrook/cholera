@@ -1,3 +1,8 @@
+### cholera 0.8.0.9623
+
+- add Adam and Eve Court pump exception to neighborhoodWalking().
+
+
 ### cholera 0.8.0.9622
 
 - add exception for single pump for pump.select in neighborhoodWalking().
