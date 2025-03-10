@@ -156,30 +156,45 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
       })
     }
 
-    # road segments with endpoints with shortest path to _different_ pump
-    diff_pump.endpts <- endpt.data[endpt.data$pump1 != endpt.data$pump2, ]
+    if (any(endpt.data$pump1 != endpt.data$pump2)) {
+      # road segments with endpoints with shortest path to _different_ pump
+      diff_pump.endpts <- endpt.data[endpt.data$pump1 != endpt.data$pump2, ]
 
-    # find midpoint/cutpoint along segment that leads to different pumps
-    if (latlong) {
-      mid.point <- midpointLatlong(diff_pump.endpts, endpt.data,
-        same_pump.cases, cores)
+      # find midpoint/cutpoint along segment that leads to different pumps
+      if (latlong) {
+        mid.point <- midpointLatlong(diff_pump.endpts, endpt.data,
+          same_pump.cases, cores)
+      } else {
+        mid.point <- midpointNative(diff_pump.endpts, endpt.data,
+          same_pump.cases, cores)
+      }
 
+      out <- list(exp.pump.case = mid.point$exp.pump.case,
+                  same_pump.road_segs = same_pump.road_segs,
+                  diff_pump.road_segs = mid.point$diff_pump.road_segs,
+                  pump.data = pump.data,
+                  case.set = case.set,
+                  pump.select = pump.select,
+                  p.sel = p.sel,
+                  vestry = vestry,
+                  snow.colors = snowColors(vestry = vestry),
+                  latlong = latlong,
+                  cores = cores)
     } else {
-      mid.point <- midpointNative(diff_pump.endpts, endpt.data, same_pump.cases,
-        cores)
-    }
+      exp.pump.case <- stats::setNames(list(cholera::sim.ortho.proj$case),
+        paste(p.sel))
 
-    out <- list(exp.pump.case = mid.point$exp.pump.case,
-                same_pump.road_segs = same_pump.road_segs,
-                diff_pump.road_segs = mid.point$diff_pump.road_segs,
-                pump.data = pump.data,
-                case.set = case.set,
-                pump.select = pump.select,
-                p.sel = p.sel,
-                vestry = vestry,
-                snow.colors = snowColors(vestry = vestry),
-                latlong = latlong,
-                cores = cores)
+      out <- list(exp.pump.case = exp.pump.case,
+                  same_pump.road_segs = same_pump.road_segs,
+                  pump.data = pump.data,
+                  case.set = case.set,
+                  pump.select = pump.select,
+                  p.sel = p.sel,
+                  vestry = vestry,
+                  snow.colors = snowColors(vestry = vestry),
+                  latlong = latlong,
+                  cores = cores)
+    }
   }
 
   class(out) <- "walking"
