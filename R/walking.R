@@ -191,10 +191,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
                   latlong = latlong,
                   cores = cores)
     } else {
-      exp.pump.case <- stats::setNames(list(cholera::sim.ortho.proj$case),
-        paste(p.sel))
-
-      out <- list(exp.pump.case = exp.pump.case,
+      out <- list(exp.pump.case = same_pump.cases,
                   same_pump.road_segs = same_pump.road_segs,
                   pump.data = pump.data,
                   case.set = case.set,
