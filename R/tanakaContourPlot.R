@@ -1,7 +1,7 @@
 #' Tanaka contour plot.
 #'
 #' Soho elevation data.
-#' @param add Logical. Add to exisiting plot.
+#' @param add Logical. Add to existing plot.
 #' @importFrom curl has_internet
 #' @importFrom elevatr get_elev_raster
 #' @importFrom tanaka tanaka

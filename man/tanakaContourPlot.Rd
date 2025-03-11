@@ -7,7 +7,7 @@
 tanakaContourPlot(add = FALSE)
 }
 \arguments{
-\item{add}{Logical. Add to exisiting plot.}
+\item{add}{Logical. Add to existing plot.}
 }
 \description{
 Soho elevation data.

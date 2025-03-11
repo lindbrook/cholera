@@ -1103,7 +1103,7 @@
 
 ### cholera 0.8.0.9408
 
-- fix negtive selection and remove location argument in caseCaseEucl().
+- fix negative selection and remove location argument in caseCaseEucl().
 
 
 ### cholera 0.8.0.9407
@@ -2899,7 +2899,7 @@
 
 ### cholera 0.8.0.9067
 
-- use separate auxilliary plot functions in plot.euclidean().
+- use separate auxiliary plot functions in plot.euclidean().
 
 
 ### cholera 0.8.0.9066
@@ -3133,7 +3133,7 @@
 
 - enable latlongEuclideanPath(case.location).
 - amend eucl.data and format code.
-- make mileposts conditional on path distancce.
+- make mileposts conditional on path distance.
 
 
 ### cholera 0.8.0.9023
