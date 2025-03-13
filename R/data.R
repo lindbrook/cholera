@@ -99,7 +99,7 @@
 
 #' Landmark coordinates.
 #'
-#' @format A data frame of landmark coordinates with 20 observationas and 11 variables.
+#' @format A data frame of landmark coordinates with 20 observations and 11 variables.
 #'  \describe{
 #'     \item{\code{case}}{numeric case ID}
 #'     \item{\code{road.segment}}{"address" road segment}
