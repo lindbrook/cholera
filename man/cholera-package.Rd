@@ -18,8 +18,8 @@ Amend errors, augment data and aid analysis of John Snow's map of the 1854 Londo
 \item Appends actual street names to roads data.
 \item Includes the revised pump data used in the second version of Snow's map from the Vestry report, which includes the "correct" location of the Broad Street pump.
 \item Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
-\item Support for parallel computation on Linux, macOS and Windows.
-\item With 'cholera' version >= 0.8.0, preliminary and provisional support for georeferenced (longitude and latitude) versions of data and functions.
+\item Support for parallel computation on Linux and macOS; limited support for Windows.
+\item Version >= 0.9.0, offers provisional support for (georeferenced) longitude and latitude for practically all data and functions.
 }
 
 To learn more, see the vignettes:
