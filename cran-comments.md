@@ -1,25 +1,24 @@
 ### Test environments
 
-* local: macOS 13.2.1; R 4.2.2 (2022-10-31)
+* local: macOS 13.7.4; R 4.4.3 (2025-02-28)
 * win-builder: devel, oldrelease and release
 
 
 ### R CMD check results
 
-R 4.2.2 (2022-10-31), x86_64-apple-darwin20.6.0 (64-bit):
-* 0 errors | 0 warnings | 1 note
-- sub-directories of 1Mb or more
+R 4.4.3 (2025-02-28), x86_64-apple-darwin20:
+* 0 errors | 0 warnings | 0 note2
 
 
 ### R win-builder check results - x86_64-w64-mingw32 (64-bit)
 
-R-devel: R Under development (unstable) (2023-02-27 r83911 ucrt)
+R-devel: R Under development (2025-03-12 r87950 ucrt):
 * 0 errors | 0 warnings | 0 notes
 
-R-oldrelease: R 4.1.3 (2022-03-10):
+R-oldrelease: R 4.3.3 (2024-02-29):
 * 0 errors | 0 warnings | 0 notes
 
-R-release: R 4.2.2 (2022-10-31 ucrt):
+R-release: R 4.4.3 (2025-02-28 ucrt):
 * 0 errors | 0 warnings | 0 notes
 
 
