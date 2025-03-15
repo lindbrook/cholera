@@ -2,7 +2,8 @@
 
 #### Georeferenced Data and Functions
 
-Provisional support for (georeferenced) longitude and latitude for practically all data and functions (for functions, set latlong = TRUE).
+Provisional support for (georeferenced) longitude and latitude for practically 
+  all data and functions (for functions, set latlong = TRUE).
 
 #### Data Changes
 
