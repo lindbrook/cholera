@@ -744,9 +744,13 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
   ego.node <- c(nodes[nodes$case %in% orgn, ]$node,
                 nodes[nodes$land %in% orgn, ]$node)
 
-  if (any(dstn == 2L)) {
-    # message("Note: Pump 2 excluded because it's a technical isolate.")
+  if (2L %in% dstn) {
+    dstn.nm <- dstn.nm[dstn != 2L]
     dstn <- dstn[dstn != 2L]
+    if (length(dstn) == 0) {
+      msg <- "Invalid destination. Pump 2 is a technical isolate."
+      stop(msg, call. = FALSE)
+    } else message("Note: Pump 2 excluded because it's a technical isolate.")
   }
 
   alters <- nodes[nodes$pump %in% dstn, ]
@@ -975,19 +979,17 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
   if (2L %in% egos$pump) {
     egos <- egos[egos$pump != 2, ]
     if (nrow(egos) == 0) {
-      msg1 <- "No valid origins: "
-      msg2 <- "Pump 2 excluded because it's a technical isolate."
-      stop(msg1, msg2, call. = FALSE)
-    }
+      msg <- "Invalid origin. Pump 2 is a technical isolate."
+      stop(msg, call. = FALSE)
+    } else message("Note: Pump 2 excluded because it's a technical isolate.")
   }
 
   if (2L %in% alters$pump) {
     alters <- alters[alters$pump != 2, ]
     if (nrow(alters) == 0) {
-      msg1 <- "No valid destinations: "
-      msg2 <- "Pump 2 excluded because it's a technical isolate."
-      stop(msg1, msg2, call. = FALSE)
-    }
+      msg <- "Invalid destination. Pump 2 is a technical isolate."
+      stop(msg, call. = FALSE)
+    } else message("Note: Pump 2 excluded because it's a technical isolate.")
   }
 
   if (is.null(origin)) {

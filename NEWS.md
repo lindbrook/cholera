@@ -1,3 +1,8 @@
+### cholera 0.9.0.9000
+
+- fix/amend pump 2 (Adam and Eve) warnings in casePump() and pumpPump().
+
+
 ### cholera 0.9.0
 
 #### Georeferenced Data and Functions
