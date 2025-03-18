@@ -1,3 +1,8 @@
+### cholera 0.9.0.9002
+
+- add/use vectorized implementation of addRoads().
+
+
 ### cholera 0.9.0.9001
 
 - amend pump 2 (Adam and Eve) warnings in casePump() and pumpPump().
