@@ -68,11 +68,16 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
 #' @export
 
 addRoads <- function(latlong = FALSE, col = "gray") {
-  if (latlong) vars <- c("lon", "lat")
-  else vars <- c("x", "y")
-  rd <- cholera::roads[cholera::roads$name != "Map Frame", ]
-  roads.list <- split(rd[, vars], rd$street)
-  invisible(lapply(roads.list, lines, col = col))
+  postfix <- c(1, 1, 2, 2)
+  if (latlong) {
+    vars <- paste0(c("lon", "lat"), postfix)
+    rds <- roadSegments(latlong = TRUE)
+  } else {
+    vars <- paste0(c("x", "y"), postfix)
+    rds <- cholera::road.segments
+  }
+  segments(rds[, vars[1]], rds[, vars[2]], rds[, vars[3]], rds[, vars[4]],
+    col = col)
 }
 
 #' Add map border to plot.

@@ -281,10 +281,8 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
 
   if (!add) {
     plot(rd[, vars], pch = NA, asp = asp, xlim = xlim, ylim = ylim)
-    roads.list <- split(rd[, vars], rd$street)
-    frame.list <- split(frame[, vars], frame$street)
-    invisible(lapply(roads.list, lines, col = "lightgray"))
-    invisible(lapply(frame.list, lines))
+    addRoads(latlong = latlong, col = "lightgray")
+    addFrame(latlong = latlong)
     if (x$case.set == "observed") {
       points(fatality[, vars], col = "lightgray", pch = 16, cex = 0.5)
     }
