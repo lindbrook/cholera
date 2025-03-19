@@ -23,3 +23,11 @@ roadSegments <- function(latlong = FALSE) {
   })
   do.call(rbind, out)
 }
+
+# geo <- roadSegments(TRUE)
+# vars <- c("id", "lon1", "lat1", "lon2", "lat2")
+# road.segments <- merge(road.segments, geo[, vars], by = "id")
+# vars <- c("street", "id", "name", "x1", "y1", "x2", "y2", "lon1", "lat1",
+#   "lon2", "lat2")
+# road.segments <- road.segments[, vars]
+# usethis::use_data(road.segments, overwrite = TRUE)

@@ -1,3 +1,8 @@
+### cholera 0.9.0.9003
+
+- add frame.segments; amend road.segments with latlong data.
+
+
 ### cholera 0.9.0.9002
 
 - add/use vectorized implementation of addRoads().
