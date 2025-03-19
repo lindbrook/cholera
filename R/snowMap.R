@@ -71,13 +71,13 @@ addRoads <- function(latlong = FALSE, col = "gray") {
   postfix <- c(1, 1, 2, 2)
   if (latlong) {
     vars <- paste0(c("lon", "lat"), postfix)
-    rds <- roadSegments(latlong = TRUE)
   } else {
     vars <- paste0(c("x", "y"), postfix)
-    rds <- cholera::road.segments
   }
-  segments(rds[, vars[1]], rds[, vars[2]], rds[, vars[3]], rds[, vars[4]],
-    col = col)
+  segments(cholera::road.segments[, vars[1]],
+           cholera::road.segments[, vars[2]],
+           cholera::road.segments[, vars[3]],
+           cholera::road.segments[, vars[4]], col = col)
 }
 
 #' Add map border to plot.
