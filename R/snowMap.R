@@ -88,11 +88,16 @@ addRoads <- function(latlong = FALSE, col = "gray") {
 #' @noRd
 
 addFrame <- function(latlong = FALSE, col = "black", ...) {
-  if (latlong) vars <- c("lon", "lat")
-  else vars <- c("x", "y")
-  borders <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  border.list <- split(borders[, vars], borders$street)
-  invisible(lapply(border.list, lines, col = col, ...))
+  postfix <- c(1, 1, 2, 2)
+  if (latlong) {
+    vars <- paste0(c("lon", "lat"), postfix)
+  } else {
+    vars <- paste0(c("x", "y"), postfix)
+  }
+  segments(cholera::frame.segments[, vars[1]],
+           cholera::frame.segments[, vars[2]],
+           cholera::frame.segments[, vars[3]],
+           cholera::frame.segments[, vars[4]], col = col)
 }
 
 #' Compute xlim and ylim of Snow's map.
