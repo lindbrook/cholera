@@ -1,15 +1,14 @@
-#' Reshape 'roads' data frame into 'road.segments' data frame.
+#' Reshape "Map Frame" streets from 'roads' data frame into 'frame.segments' data frame.
 #'
-#' Used to integrate pumps and cases into road network when computing walking neighborhoods.
 #' @return An R data frame.
 #' @param latlong Logical. Use estimated longitude and latitude.
-#' @note This function documents the code that generates \code{\link[cholera]{road.segments}}.
-#' @export
+#' @note This function documents the code that generates the frame.segments data frame..
+#' @noRd
 
-roadSegments <- function(latlong = FALSE) {
+frameSegments <- function(latlong = FALSE) {
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
-  dat <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
+  dat <- cholera::roads[cholera::roads$street %in% cholera::border, ]
   out <- lapply(unique(dat$street), function(s) {
     st <- dat[dat$street == s, ]
     names(st)[names(st) %in% vars] <- paste0(vars, 1)
@@ -24,10 +23,12 @@ roadSegments <- function(latlong = FALSE) {
   do.call(rbind, out)
 }
 
-# geo <- roadSegments(TRUE)
+# frame.segments <- cholera:::frameSegments()
+# geo <- cholera:::frameSegments(latlong = TRUE)
 # vars <- c("id", "lon1", "lat1", "lon2", "lat2")
-# road.segments <- merge(road.segments, geo[, vars], by = "id")
+# frame.segments <- merge(frame.segments, geo[, vars], by = "id")
 # vars <- c("street", "id", "name", "x1", "y1", "x2", "y2", "lon1", "lat1",
 #   "lon2", "lat2")
-# road.segments <- road.segments[, vars]
-# usethis::use_data(road.segments, overwrite = TRUE)
+# frame.segments <- frame.segments[order(frame.segments$street), vars]
+# usethis::use_data(frame.segments)
+# usethis::use_data(frame.segments, overwrite = TRUE)

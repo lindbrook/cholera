@@ -300,15 +300,19 @@
 #'
 #' This data set transforms Dodson and Tobler's street data to give each straight line segment of a "road" a unique ID.
 #'
-#' @format A data frame with 658 observations and 7 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
+#' @format A data frame with 658 observations and 11 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
 #' \describe{
-#'   \item{\code{street}}{numeric street ID, which range between 1 and 528}
+#'   \item{\code{street}}{numeric street ID}
 #'   \item{\code{id}}{character segment ID}
 #'   \item{\code{name}}{road name}
 #'   \item{\code{x1}}{x-coordinate of first endpoint}
 #'   \item{\code{y1}}{y-coordinate of first endpoint}
 #'   \item{\code{x2}}{x-coordinate of second endpoint}
 #'   \item{\code{y2}}{y-coordinate of second endpoint}
+#'   \item{\code{lon1}}{longitude of first endpoint}
+#'   \item{\code{lat1}}{latitude of first endpoint}
+#'   \item{\code{lon2}}{longitude of second endpoint}
+#'   \item{\code{lat2}}{latitude of second endpoint}
 #' }
 #' @seealso \code{\link{roads}}
 #'
@@ -322,6 +326,28 @@
 #' @note \code{\link{roadSegments}} documents the code for these data.
 #' @docType data
 "road.segments"
+
+#' Dodson and Tobler's "Map Frame" street data transformed into road segments.
+#'
+#' This data set transforms Dodson and Tobler's street data to give each straight line segment of a "road" a unique ID.
+#'
+#' @format A data frame with 658 observations and 7 variables. The data describe the straight line segments used to recreate the roads on Snow's map.
+#' \describe{
+#'   \item{\code{street}}{numeric street ID}
+#'   \item{\code{id}}{character segment ID}
+#'   \item{\code{name}}{road name}
+#'   \item{\code{x1}}{x-coordinate of first endpoint}
+#'   \item{\code{y1}}{y-coordinate of first endpoint}
+#'   \item{\code{x2}}{x-coordinate of second endpoint}
+#'   \item{\code{y2}}{y-coordinate of second endpoint}
+#'   \item{\code{lon1}}{longitude of first endpoint}
+#'   \item{\code{lat1}}{latitude of first endpoint}
+#'   \item{\code{lon2}}{longitude of second endpoint}
+#'   \item{\code{lat2}}{latitude of second endpoint}
+#' }
+#' @note `frameSegments()` documents the code for these data.
+#' @docType data
+"frame.segments"
 
 #' Dodson and Tobler's street data with appended road names.
 #'
