@@ -53,16 +53,14 @@ pumpLocator <- function(id = 7, zoom = FALSE,  vestry = FALSE, add.title = TRUE,
     vars <- c("lon", "lat")
     ew <- vars[1]
     ns <- vars[2]
-    rd.segs <- cholera::roadSegments(latlong = TRUE)
   } else {
     asp  <- 1
     vars <- c("x", "y")
     ew <- vars[1]
     ns <- vars[2]
-    rd.segs <- cholera::road.segments
   }
 
-  roads.list <- split(cholera::roads[, vars], cholera::roads$street)
+  rd.segs <- cholera::road.segments
   p.seg <- ortho.data[ortho.data$pump.id == id, "road.segment"]
   seg.data <- rd.segs[rd.segs$id == p.seg, ]
 

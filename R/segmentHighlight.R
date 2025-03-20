@@ -29,10 +29,9 @@ segmentHighlight <- function(id, highlight = TRUE, col = "red",
     id <- id[id %in% cholera::road.segments$id]
   }
 
-  if (latlong) {
-    rd.segs <- roadSegments(latlong = latlong)
-    seg <- rd.segs[rd.segs$id == id, ]
+  seg <- cholera::road.segments[cholera::road.segments$id == id, ]
 
+  if (latlong) {
     if (highlight) {
       segments(seg$lon1, seg$lat1, seg$lon2, seg$lat2, col = col, lwd = 3)
     }
@@ -66,8 +65,6 @@ segmentHighlight <- function(id, highlight = TRUE, col = "red",
       text(mid.pt$lon, mid.pt$lat, labels = id, col = col)
     }
   } else {
-    seg <- cholera::road.segments[cholera::road.segments$id == id, ]
-
     if (highlight) segments(seg$x1, seg$y1, seg$x2, seg$y2, col = col, lwd = 3)
 
     seg.data <- data.frame(x = unlist(seg[, c("x1", "x2")]),

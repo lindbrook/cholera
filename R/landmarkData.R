@@ -124,14 +124,13 @@ squareCenter <- function(NS, EW, latlong = FALSE) {
 }
 
 squareExits <- function(nm = "Golden Square", latlong = FALSE) {
-  if (latlong) {
-    rd.seg <- roadSegments(latlong = TRUE)
-    dat <- rd.seg[rd.seg$name == nm, ]
-    vars <- c("lon", "lat")
-  } else {
-    dat <- cholera::road.segments[cholera::road.segments$name == nm, ]
-    vars <- c("x", "y")
-  }
+  postfix <- c(1, 1, 2, 2)
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
+  seg.vars <- paste0(vars, postfix)
+
+  rd.segs <- cholera::road.segments
+  dat <- rd.segs[rd.segs$name == nm, ]
 
   if (latlong) {
     left <- pasteCoordsB(dat, paste0(vars[1], 1), paste0(vars[2], 1))
@@ -147,19 +146,12 @@ squareExits <- function(nm = "Golden Square", latlong = FALSE) {
   else exit.nodes <- data.frame(x = mat[, 1], y = mat[, 2])
 
   do.call(rbind, lapply(seq_len(nrow(exit.nodes)), function(i) {
-    if (latlong) {
-      sel1 <- signif(rd.seg$lon1) == signif(exit.nodes[i, ]$lon) &
-              signif(rd.seg$lat1) == signif(exit.nodes[i, ]$lat)
-      sel2 <- signif(rd.seg$lon2) == signif(exit.nodes[i, ]$lon) &
-              signif(rd.seg$lat2) == signif(exit.nodes[i, ]$lat)
-      node.segs <- rd.seg[sel1 | sel2, ]
-    } else {
-      sel1 <- cholera::road.segments$x1 == exit.nodes[i, ]$x &
-              cholera::road.segments$y1 == exit.nodes[i, ]$y
-      sel2 <- cholera::road.segments$x2 == exit.nodes[i, ]$x &
-              cholera::road.segments$y2 == exit.nodes[i, ]$y
-      node.segs <- cholera::road.segments[sel1 | sel2, ]
-    }
+    sel1 <- signif(rd.segs[, seg.vars[1]]) == signif(exit.nodes[i, vars[1]]) &
+            signif(rd.segs[, seg.vars[2]]) == signif(exit.nodes[i, vars[2]])
+    sel2 <- signif(rd.segs[, seg.vars[3]]) == signif(exit.nodes[i, vars[1]]) &
+            signif(rd.segs[, seg.vars[4]]) == signif(exit.nodes[i, vars[2]])
+
+    node.segs <- rd.segs[sel1 | sel2, ]
 
     candidate <- node.segs[!grepl(nm, node.segs$name), ]
     square.segs <- node.segs[grepl(nm, node.segs$name), ]
@@ -191,11 +183,8 @@ squareExits <- function(nm = "Golden Square", latlong = FALSE) {
         }
     }, logical(1L))
 
-    if (latlong) {
-      sel <- !grepl("lon", names(dat)) & !grepl("lat", names(dat))
-    } else {
-      sel <- !grepl("x", names(dat)) & !grepl("y", names(dat))
-    }
+    sel <- !grepl("x", names(dat)) & !grepl("y", names(dat)) &
+           !grepl("lon", names(dat)) & !grepl("lat", names(dat))
 
     vars0 <- names(dat)[sel]
 
@@ -214,8 +203,7 @@ squareExits <- function(nm = "Golden Square", latlong = FALSE) {
 Squares <- function(nm = "Golden Square", label.coord = FALSE) {
   sq.nominal <- squareExits(nm)
   sq.latlong <- squareExits(nm, latlong = TRUE)
-  sq <- merge(sq.nominal, sq.latlong[, c("id", "lon", "lat")],
-    by = "id")
+  sq <- merge(sq.nominal, sq.latlong[, c("id", "lon", "lat")], by = "id")
 
   if (nm == "Golden Square") {
     exits <- c("N", "W", "E", "S")
@@ -370,7 +358,7 @@ cravenChapel <- function() {
 
   # latlong label coordinates #
 
-  rd.segs <- roadSegments(latlong = TRUE)
+  rd.segs <- cholera::road.segments
   vars <- c("lon", "lat")
   fouberts.pl <- rd.segs[rd.segs$id == seg.id, ]
 
@@ -497,7 +485,7 @@ magistratesCourt <- function() {
   ## latlong label ##
 
   vars <- c("lon", "lat")
-  rd.segs <- roadSegments(latlong = TRUE)
+  rd.segs <- cholera::road.segments
 
   seg <- rd.segs[rd.segs$id == "151-1", ]
   gt.marlb <- rbind(stats::setNames(seg[, paste0(vars, 1)], vars),
@@ -640,7 +628,7 @@ modelLodgingHouses <- function() {
   label.latlong <- meterLatLong(pt)[, vars]
 
   ## latlong address (proj) ##
-  rd.segs <- roadSegments(latlong = TRUE)
+  rd.segs <- cholera::road.segments
   hopkins <- rd.segs[rd.segs$id %in% c("245-1", "245-2"), ]
 
   sel <- hopkins$id == "245-1"
@@ -705,7 +693,7 @@ pantheonBazaar <- function() {
   proj.nominal <- cholera::road.segments[sel, paste0(vars, 2)]
   names(proj.nominal) <- vars
 
-  rd.segs <- roadSegments(latlong = TRUE)
+  rd.segs <- cholera::road.segments
   vars <- c("lon", "lat")
   proj.latlong <- rd.segs[rd.segs$name == st.nm, paste0(vars, 2)]
   names(proj.latlong) <- vars
@@ -921,28 +909,17 @@ projectLandmarkAddress <- function(dat, latlong = FALSE) {
 roadSegEndpt <- function(seg.id = "116-2", endpt.sel = 2L, latlong = FALSE) {
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
-
-  if (latlong) {
-    rd.segs <- roadSegments(latlong = TRUE)
-    seg.data <- rd.segs[rd.segs$id == seg.id, paste0(vars, endpt.sel)]
-  } else {
-    sel <- cholera::road.segments$id == seg.id
-    seg.data <- cholera::road.segments[sel, paste0(vars, endpt.sel)]
-  }
-
+  sel <- cholera::road.segments$id == seg.id
+  seg.data <- cholera::road.segments[sel, paste0(vars, endpt.sel)]
   out <- stats::setNames(seg.data, vars)
   row.names(out) <- NULL
   out
 }
 
 roadSegmentData <- function(seg.id = "116-2", latlong = FALSE) {
-  if (latlong) {
-    vars <- c("lon", "lat")
-    rd.segs <- roadSegments(latlong = TRUE)
-  } else {
-    vars <- c("x", "y")
-    rd.segs <- cholera::road.segments
-  }
+  if (latlong) vars <- c("lon", "lat")
+  else vars <- c("x", "y")
+  rd.segs <- cholera::road.segments
   seg.data <- rd.segs[rd.segs$id == seg.id, ]
   out <- rbind(stats::setNames(seg.data[, paste0(vars, 1)], vars),
                stats::setNames(seg.data[, paste0(vars, 2)], vars))
@@ -985,6 +962,7 @@ segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
   delta = "pos", latlong = FALSE) {
 
   vars <- c("x", "y")
+  seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
 
   if (latlong) {
     varsB <- c("lon", "lat")
@@ -992,13 +970,9 @@ segmentTrigonometryAddress <- function(seg.id = "174-1", factor = 2L,
     ns <- varsB[2]
     origin <- data.frame(lon = min(cholera::roads[, ew]),
                          lat = min(cholera::roads[, ns]))
-
-    rd.segs <- roadSegments(latlong = TRUE)
-    seg <- rd.segs[rd.segs$id == seg.id, ]
     alpha <- stats::setNames(seg[, paste0(varsB, 1)], varsB)
     omega <- stats::setNames(seg[, paste0(varsB, 2)], varsB)
   } else {
-    seg <- cholera::road.segments[cholera::road.segments$id == seg.id, ]
     alpha <- stats::setNames(seg[, paste0(vars, 1)], vars)
     omega <- stats::setNames(seg[, paste0(vars, 2)], vars)
   }

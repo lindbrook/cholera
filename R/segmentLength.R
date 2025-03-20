@@ -21,9 +21,9 @@ segmentLength <- function(id = "216-1", latlong = FALSE) {
     id <- id[id %in% cholera::road.segments$id]
   }
 
+  dat <- cholera::road.segments[cholera::road.segments$id %in% id, ]
+
   if (latlong) {
-    rd.segs <- roadSegments(latlong = latlong)
-    dat <- rd.segs[rd.segs$id %in% id, ]
     ds <- vapply(seq_along(dat$id), function(i) {
       p1 <- dat[i, c("lon1", "lat1")]
       p2 <- dat[i, c("lon2", "lat2")]
@@ -31,7 +31,6 @@ segmentLength <- function(id = "216-1", latlong = FALSE) {
     }, numeric(1L))
     names(ds) <- id
   } else {
-    dat <- cholera::road.segments[cholera::road.segments$id %in% id, ]
     ds <- vapply(dat$id, function(id) {
       stats::dist(rbind(as.matrix(dat[dat$id == id, c("x1", "y1")]),
                         as.matrix(dat[dat$id == id, c("x2", "y2")])))

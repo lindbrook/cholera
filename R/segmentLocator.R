@@ -37,15 +37,14 @@ segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
     ew <- "lon"
     ns <- "lat"
     proj.data <- cholera::latlong.ortho.addr
-    rd.segs <- roadSegments(latlong = latlong)
   } else {
     asp  <- 1
     ew <- "x"
     ns <- "y"
     proj.data <- cholera::ortho.proj
-    rd.segs <- cholera::road.segments
   }
 
+  rd.segs <- cholera::road.segments
   vars <- c(ew, ns)
 
   if (!is.null(segment.id)) {
@@ -247,7 +246,7 @@ segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
       segment.length <- segmentLength(id = segment.id, latlong = latlong)
 
       if (length(segment.id) > 1) segment.length <- sum(segment.length)
-      
+
       est.time <- distanceTime(segment.length, distance.unit = distance.unit,
         time.unit = time.unit, walking.speed = walking.speed)
       nominal.time <- nominalTime(est.time, time.unit)
