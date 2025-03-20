@@ -13,9 +13,11 @@ segmentLength <- function(id = "216-1", latlong = FALSE) {
     stop('id\'s type must be character.', call. = FALSE)
   }
   if (all(id %in% cholera::road.segments$id == FALSE)) {
-    stop("No valid segment ID(s).", call. = FALSE)
-  } else if (any(id %in% cholera::road.segments$id == FALSE)) {
-    message("Invalid segment ID(s) removed.")
+    stop("Invalid segment id(s).", call. = FALSE)
+  } else if (any(!id %in% cholera::road.segments$id)) {
+    id.dropped <- id[!id %in% cholera::road.segments$id]
+    message("Invalid segment id(s) removed: ",
+      paste(id.dropped, collapse = ", "))
     id <- id[id %in% cholera::road.segments$id]
   }
 

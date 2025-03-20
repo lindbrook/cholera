@@ -16,11 +16,17 @@
 segmentHighlight <- function(id, highlight = TRUE, col = "red",
   rotate.label = FALSE, latlong = FALSE) {
 
-  if (is.character(id) == FALSE) stop('id\'s type must be character.',
-    call. = FALSE)
+  if (!is.character(id)) {
+    stop('segment id must be character(s).', call. = FALSE)
+  }
 
-  if (id %in% cholera::road.segments$id == FALSE) {
-    stop("Invalid segment ID. See cholera::road.segments.", call. = FALSE)
+  if (all(!id %in% cholera::road.segments$id )) {
+    stop("Invalid segment id. See cholera::road.segments.", call. = FALSE)
+  } else if (any(!id %in% cholera::road.segments$id)) {
+    id.dropped <- id[!id %in% cholera::road.segments$id]
+    message("Invalid segment id(s) removed:",
+            paste(id.dropped, collapse = ", "))
+    id <- id[id %in% cholera::road.segments$id]
   }
 
   if (latlong) {
