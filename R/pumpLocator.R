@@ -153,7 +153,8 @@ pumpLocator <- function(id = 7, zoom = FALSE,  vestry = FALSE, add.title = TRUE,
 
   plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = 15,
     cex = 0.5, col = "lightgray", asp = asp)
-  invisible(lapply(roads.list, lines, col = "gray"))
+  addRoads(latlong = latlong)
+  addFrame(latlong = latlong)
   points(p.data[p.data$id != id, vars], pch = 2, cex = 1, col = "blue")
   points(p.data[p.data$id == id, vars], pch = 17, cex = 1, col = "red")
   text(p.data[p.data$id == id, vars], label = p.data$id[p.data$id == id],
