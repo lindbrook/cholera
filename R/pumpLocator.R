@@ -53,16 +53,14 @@ pumpLocator <- function(id = 7, zoom = FALSE,  vestry = FALSE, add.title = TRUE,
     vars <- c("lon", "lat")
     ew <- vars[1]
     ns <- vars[2]
-    rd.segs <- cholera::roadSegments(latlong = TRUE)
   } else {
     asp  <- 1
     vars <- c("x", "y")
     ew <- vars[1]
     ns <- vars[2]
-    rd.segs <- cholera::road.segments
   }
 
-  roads.list <- split(cholera::roads[, vars], cholera::roads$street)
+  rd.segs <- cholera::road.segments
   p.seg <- ortho.data[ortho.data$pump.id == id, "road.segment"]
   seg.data <- rd.segs[rd.segs$id == p.seg, ]
 
@@ -153,7 +151,8 @@ pumpLocator <- function(id = 7, zoom = FALSE,  vestry = FALSE, add.title = TRUE,
 
   plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = 15,
     cex = 0.5, col = "lightgray", asp = asp)
-  invisible(lapply(roads.list, lines, col = "gray"))
+  addRoads(latlong = latlong)
+  addFrame(latlong = latlong)
   points(p.data[p.data$id != id, vars], pch = 2, cex = 1, col = "blue")
   points(p.data[p.data$id == id, vars], pch = 17, cex = 1, col = "red")
   text(p.data[p.data$id == id, vars], label = p.data$id[p.data$id == id],

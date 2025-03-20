@@ -1,3 +1,8 @@
+### cholera 0.9.0.9005
+
+- use amended road.segments (w/ latlong) in various functions.
+
+
 ### cholera 0.9.0.9004
 
 - use amended road.segments in addRoads().

@@ -23,11 +23,7 @@ streetLength <- function(road = "Oxford Street", distance.unit = "meter",
       call. = FALSE)
   }
 
-  if (latlong) {
-    rd.segs <- roadSegments(latlong = latlong)
-  } else {
-    rd.segs <- cholera::road.segments
-  }
+  rd.segs <- cholera::road.segments
 
   if (is.character(road)) {
     real.road.names <- unique(cholera::roads$name)

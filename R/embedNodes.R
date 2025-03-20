@@ -12,7 +12,7 @@
 embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
   embed.landmarks = TRUE, embed.pumps = TRUE, latlong = FALSE) {
 
-  road.data <- roadSegments(latlong = latlong)
+  road.data <- cholera::road.segments
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 

@@ -13,15 +13,17 @@ segmentLength <- function(id = "216-1", latlong = FALSE) {
     stop('id\'s type must be character.', call. = FALSE)
   }
   if (all(id %in% cholera::road.segments$id == FALSE)) {
-    stop("No valid segment ID(s).", call. = FALSE)
-  } else if (any(id %in% cholera::road.segments$id == FALSE)) {
-    message("Invalid segment ID(s) removed.")
+    stop("Invalid segment id(s).", call. = FALSE)
+  } else if (any(!id %in% cholera::road.segments$id)) {
+    id.dropped <- id[!id %in% cholera::road.segments$id]
+    message("Invalid segment id(s) removed: ",
+      paste(id.dropped, collapse = ", "))
     id <- id[id %in% cholera::road.segments$id]
   }
 
+  dat <- cholera::road.segments[cholera::road.segments$id %in% id, ]
+
   if (latlong) {
-    rd.segs <- roadSegments(latlong = latlong)
-    dat <- rd.segs[rd.segs$id %in% id, ]
     ds <- vapply(seq_along(dat$id), function(i) {
       p1 <- dat[i, c("lon1", "lat1")]
       p2 <- dat[i, c("lon2", "lat2")]
@@ -29,7 +31,6 @@ segmentLength <- function(id = "216-1", latlong = FALSE) {
     }, numeric(1L))
     names(ds) <- id
   } else {
-    dat <- cholera::road.segments[cholera::road.segments$id %in% id, ]
     ds <- vapply(dat$id, function(id) {
       stats::dist(rbind(as.matrix(dat[dat$id == id, c("x1", "y1")]),
                         as.matrix(dat[dat$id == id, c("x2", "y2")])))

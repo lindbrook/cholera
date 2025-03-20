@@ -28,7 +28,6 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
     ew <- "lon"
     ns <- "lat"
     proj.data <- cholera::latlong.ortho.addr
-    rd.segs <- roadSegments(latlong = latlong)
     reg.data <- cholera::latlong.regular.cases
     sim.proj.data <- cholera::latlong.sim.ortho.proj
     if (isFALSE(case %in% proj.data$case)) {
@@ -40,7 +39,6 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
     ew <- "x"
     ns <- "y"
     proj.data <- cholera::ortho.proj
-    rd.segs <- cholera::road.segments
     reg.data <- cholera::regular.cases
     sim.proj.data <- cholera::sim.ortho.proj
   }
@@ -77,6 +75,7 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
     case.data <- reg.data[case, vars]
   }
 
+  rd.segs <- cholera::road.segments
   seg.data <- rd.segs[rd.segs$id == case.seg, ]
 
   if (add == TRUE) {

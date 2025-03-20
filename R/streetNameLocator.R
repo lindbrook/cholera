@@ -37,16 +37,15 @@ streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
     ew <- "lon"
     ns <- "lat"
     proj.data <- cholera::latlong.ortho.addr
-    rd.segs <- roadSegments(latlong = latlong)
   } else {
     asp  <- 1
     ew <- "x"
     ns <- "y"
     proj.data <- cholera::ortho.proj
-    rd.segs <- cholera::road.segments
   }
 
   rds <- cholera::roads
+  rd.segs <- cholera::road.segments
   vars <- c(ew, ns)
 
   if (!is.null(street.name)) {
