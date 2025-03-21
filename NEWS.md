@@ -1,3 +1,8 @@
+### cholera 0.9.0.9007
+
+- rename squareCenter() in addLandmarks() to squareCenterB().
+
+
 ### cholera 0.9.0.9006
 
 - use amended road.segments and vectorize segments() landmarkPerimeter().
