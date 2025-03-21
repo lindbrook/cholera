@@ -47,10 +47,10 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
     sel <- cholera::landmarks$name %in% c("Soho Square-E", "Soho Square-W")
     soho.EW <- cholera::landmarks[sel, vars]
 
-    golden <- squareCenter(golden.NS, golden.EW)
+    golden <- squareCenterB(golden.NS, golden.EW)
     text(golden, labels = "Golden\nSquare", cex = text.size, col = text.col)
 
-    soho <- squareCenter(soho.NS, soho.EW)
+    soho <- squareCenterB(soho.NS, soho.EW)
     text(soho, labels = "Soho\nSquare", cex = text.size, col = text.col)
 
     # Adam and Eve Court (isolate) #
@@ -231,7 +231,7 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
   }
 }
 
- squareCenter <- function(NS, EW) {
+ squareCenterB <- function(NS, EW) {
    line.NS <- stats::lm(lat ~ lon, data = NS)
    line.EW <- stats::lm(lat ~ lon, data = EW)
    lon.x <- stats::coef(line.NS)["lon"] -
