@@ -227,10 +227,7 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
                  lion.brewery.west)
     model <- c(model.housing.north, model.housing.south, model.housing.east,
                model.housing.west)
-
-    invisible(lapply(c(brewery, model), function(id) {
-      landmarkPerimeter(id, latlong = latlong)
-    }))
+    landmarkPerimeter(c(brewery, model), latlong = latlong)
   }
 }
 
@@ -273,19 +270,10 @@ addLandmarks <- function(text.size = 0.5, text.col = "black",
 
 landmarkPerimeter <- function(seg.id, col = "dodgerblue", latlong = FALSE,
   lwd = 2) {
-
-  if (latlong) {
-    rd.segs <- roadSegments(latlong = TRUE)
-    vars <- names(rd.segs)[-(1:3)]
-    lapply(seg.id, function(seg) {
-      dat <- rd.segs[rd.segs$id == seg, vars]
-      segments(dat$lon1, dat$lat1, dat$lon2, dat$lat2, col = col, lwd = lwd)
-    })
-  } else {
-    vars <- c("x1", "y1", "x2", "y2")
-    lapply(seg.id, function(seg) {
-      dat <- cholera::road.segments[cholera::road.segments$id == seg, vars]
-      segments(dat$x1, dat$y1, dat$x2, dat$y2, col = col, lwd = lwd)
-    })
-  }
+  postfix <- c(1, 1, 2, 2)
+  if (latlong) vars <- paste0(c("lon", "lat"), postfix)
+  else vars <- paste0(c("x", "y"), postfix)
+  lndmrk <- cholera::road.segments[cholera::road.segments$id %in% seg.id, vars]
+  segments(lndmrk[, vars[1]], lndmrk[, vars[2]], lndmrk[, vars[3]],
+    lndmrk[, vars[4]], col = col)
 }

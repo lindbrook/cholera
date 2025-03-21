@@ -1,3 +1,8 @@
+### cholera 0.9.0.9006
+
+- use amended road.segments and vectorize segments() landmarkPerimeter().
+
+
 ### cholera 0.9.0.9005
 
 - use amended road.segments (w/ latlong) in various functions.
