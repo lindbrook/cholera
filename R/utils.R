@@ -2,7 +2,7 @@ index0 <- function(x) {
   stats::setNames(data.frame(t(utils::combn(length(x), 2))), c("v1", "v2"))
 }
 
-quandrantCoordinates <- function(dat, h, theta) {
+quadrantCoordinates <- function(dat, h, theta) {
   delta <- dat[2, ] - dat[1, ]
 
   # Pseudo-Quadrant I

@@ -1,3 +1,8 @@
+### cholera 0.9.0.9008
+
+- fix typo in name of quadrantCoordinates().
+
+
 ### cholera 0.9.0.9007
 
 - rename squareCenter() in addLandmarks() to squareCenterB().
