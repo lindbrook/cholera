@@ -425,7 +425,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     if (latlong) {
       post.coords <- latlongEuclideanPosts(ego.xy, alter.xy, h, ew, ns)
     } else {
-      post.coords <- quandrantCoordinates(ptp[2:1, ], h, theta)
+      post.coords <- quadrantCoordinates(ptp[2:1, ], h, theta)
     }
 
     arrow.data <- data.frame(x = c(post.coords[, ew], ego.xy[, ew]),
@@ -889,7 +889,7 @@ latlongEuclideanPosts <- function(ego.xy, alter.xy, h, ew, ns) {
   path.slope <- stats::coef(ols)[2]
   theta <- ifelse(is.na(path.slope), pi / 2, atan(path.slope))
 
-  cartesian.posts <- quandrantCoordinates(meter.coords, h, theta)
+  cartesian.posts <- quadrantCoordinates(meter.coords, h, theta)
 
   conversion <- lapply(seq_len(nrow(cartesian.posts)), function(i) {
     coords.tmp <- cartesian.posts[i, c("x", "y")]

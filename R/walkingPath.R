@@ -652,7 +652,7 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
           } else if (milepost.unit == "time") {
             h <- tmp$cumulative.t - p
           }
-          arrow.point <- quandrantCoordinates(meter.coords, h, theta)
+          arrow.point <- quadrantCoordinates(meter.coords, h, theta)
           data.frame(x1 = meter.coords[2, "x"],
                      y1 = meter.coords[2, "y"],
                      x2 = arrow.point$x,
@@ -665,7 +665,7 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
           } else if (milepost.unit == "time") {
             h <- tmp$cumulative.t - p
           }
-          arrow.point <- quandrantCoordinates(data.tmp, h, theta)
+          arrow.point <- quadrantCoordinates(data.tmp, h, theta)
           data.frame(x1 = data.tmp[2, "x"],
                      y1 = data.tmp[2, "y"],
                      x2 = arrow.point$x,
@@ -682,7 +682,7 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
         } else if (milepost.unit == "time") {
           h <- tmp$cumulative.t - post
         }
-        arrow.point <- quandrantCoordinates(meter.coords, h, theta)
+        arrow.point <- quadrantCoordinates(meter.coords, h, theta)
         data.frame(x1 = meter.coords[2, "x"],
                    y1 = meter.coords[2, "y"],
                    x2 = arrow.point$x,
@@ -693,7 +693,7 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
         } else if (milepost.unit == "time") {
           h <- tmp$cumulative.t - post
         }
-        arrow.point <- quandrantCoordinates(data.tmp, h, theta)
+        arrow.point <- quadrantCoordinates(data.tmp, h, theta)
         data.frame(x1 = data.tmp[2, "x"],
                    y1 = data.tmp[2, "y"],
                    x2 = arrow.point$x,
