@@ -7,16 +7,17 @@
 #' @param embed.landmarks Logical. Embed landmarks into road network.
 #' @param embed.pumps Logical. Embed pumps into road network.
 #' @param latlong Logical. Use estimated longitude and latitude.
+#' @param drop.isolates Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
 neighborhoodData <- function(vestry = FALSE, case.set = "observed",
   embed.addr = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
-  latlong = FALSE) {
+  latlong = FALSE, drop.isolates = FALSE) {
 
   args <- list(embed.addr = embed.addr, embed.landmarks = embed.landmarks,
     embed.pumps = embed.pumps, vestry = vestry, case.set = case.set,
-    latlong = latlong)
+    latlong = latlong, drop.isolates = drop.isolates)
 
   node.data <- do.call("embedNodes", args)
   nodes <- node.data$nodes

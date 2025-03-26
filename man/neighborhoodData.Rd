@@ -6,7 +6,7 @@
 \usage{
 neighborhoodData(vestry = FALSE, case.set = "observed",
   embed.addr = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
-  latlong = FALSE)
+  latlong = FALSE, drop.isolates = FALSE)
 }
 \arguments{
 \item{vestry}{Logical. Use Vestry Report pump data.}
@@ -20,6 +20,8 @@ neighborhoodData(vestry = FALSE, case.set = "observed",
 \item{embed.pumps}{Logical. Embed pumps into road network.}
 
 \item{latlong}{Logical. Use estimated longitude and latitude.}
+
+\item{drop.isolates}{Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.}
 }
 \value{
 An R list of nodes, edges and an 'igraph' network graph.

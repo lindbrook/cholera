@@ -1,3 +1,8 @@
+### cholera 0.9.0.9011
+
+- add/set drop.isolates = FALSE in embedNodes() and neighborhoodData().
+
+
 ### cholera 0.9.0.9010
 
 - archive latlongEmbed().
