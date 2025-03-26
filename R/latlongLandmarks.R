@@ -6,6 +6,8 @@
 
 latlongLandmarks <- function(path) {
   lndmrks <- landmarkData()
+  variable.chk <- grepl("lon", names(lndmrks)) | grepl("lat", names(lndmrks))
+  if (any(variable.chk)) lndmrks <- lndmrks[, !variable.chk]
   dat <- lndmrks[-grep("Square", lndmrks$name), ]
   dat <- dat[dat$name != "The Pantheon", ]
   k <- nrow(dat)
@@ -168,6 +170,8 @@ landmarksPDF <- function(path, orthogonal = FALSE, pch = 15, cex = 0.2) {
   pre <- paste0(file.nm, ".")
   post <- "pdf"
   dat <- landmarkData()
+  variable.chk <- grepl("lon", names(dat)) | grepl("lat", names(dat))
+  if (any(variable.chk)) dat <- dat[, !variable.chk]
 
   # Exclude Squares from georeferencing
   dat <- dat[-grep("Square", dat$name), ]
