@@ -1,3 +1,8 @@
+### cholera 0.9.0.9010
+
+- archive latlongEmbed().
+
+
 ### cholera 0.9.0.9009
 
 - add variable check to latlongLandmarks() and landmarksPDF().
