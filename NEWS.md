@@ -1,3 +1,8 @@
+### cholera 0.9.0.9009
+
+- add variable check to latlongLandmarks() and landmarksPDF().
+
+
 ### cholera 0.9.0.9008
 
 - fix typo in name of quadrantCoordinates().
