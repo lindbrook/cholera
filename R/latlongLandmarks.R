@@ -86,10 +86,8 @@ latlongLandmarks <- function(path) {
   out.geo <- lapply(seq_len(nrow(sq)), function(i) {
     sel1 <- signif(rd.nom$x1) %in% signif(sq[i, ]$x) &
             signif(rd.nom$y1) %in% signif(sq[i, ]$y)
-
     sel2 <- signif(rd.nom$x2) %in% signif(sq[i, ]$x) &
             signif(rd.nom$y2) %in% signif(sq[i, ]$y)
-
     nodes.select <- rd.geo[sel1 | sel2, ]
 
     ones <- vapply(seq_len(nrow(nodes.select)), function(i) {
@@ -127,10 +125,8 @@ latlongLandmarks <- function(path) {
 
   sel1 <- signif(rd.nom$x1) %in% signif(pantheon$x) &
           signif(rd.nom$y1) %in% signif(pantheon$y)
-
   sel2 <- signif(rd.nom$x2) %in% signif(pantheon$x) &
           signif(rd.nom$y2) %in% signif(pantheon$y)
-
   nodes.select <- rd.geo[sel1 | sel2, ]
 
   if (sum(sel1) > sum(sel2)) sel <- one
