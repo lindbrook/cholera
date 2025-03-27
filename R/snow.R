@@ -5,9 +5,7 @@
 #' @export
 
 neighborhoodSnow <- function(latlong = FALSE) {
-  dat <- neighborhoodData(case.set = "observed", vestry = FALSE,
-    latlong = FALSE)
-
+  dat <- sohoGraph(case.set = "observed", vestry = FALSE, latlong = FALSE)
   g <- dat$g
   nodes <- dat$nodes
   edges <- dat$edges

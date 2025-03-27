@@ -11,7 +11,7 @@
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
-neighborhoodData <- function(vestry = FALSE, case.set = "observed",
+sohoGraph <- function(vestry = FALSE, case.set = "observed",
   embed.addr = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
   latlong = FALSE, drop.isolates = FALSE) {
 
@@ -19,25 +19,25 @@ neighborhoodData <- function(vestry = FALSE, case.set = "observed",
     embed.pumps = embed.pumps, vestry = vestry, case.set = case.set,
     latlong = latlong, drop.isolates = drop.isolates)
 
-  node.data <- do.call("embedNodes", args)
-  nodes <- node.data$nodes
-  edges <- node.data$edges
-  g <- node.data$g
+  network <- do.call("embedNodes", args)
+  nodes <- network$nodes
+  edges <- network$edges
+  g <- network$g
   nodes.pump <- nodes[nodes$pump != 0, ]
   nodes.pump <- nodes.pump[order(nodes.pump$pump), c("pump", "node")]
   out <- list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
-  class(out) <- "neighborhood_data"
+  class(out) <- "network_graph"
   out
 }
 
-#' Plot method for neighborhoodData().
+#' Plot method for sohoGraph().
 #'
 #' Visualize underlying road network (with or without cases and pumps).
-#' @param x An 'igraph' object of class "neighborhood_data" created by \code{neighborhoodData()}.
+#' @param x An 'igraph' object of class "neighborhood_data" created by \code{sohoGraph()}.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export
 
-plot.neighborhood_data <- function(x, ...) {
+plot.soho_graph <- function(x, ...) {
   plot(x$g, vertex.label = NA, vertex.size = 2, ...)
 }

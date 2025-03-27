@@ -62,8 +62,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     dstn.nm <- destination.chk$out.nm
   }
 
-  network.data <- neighborhoodData(vestry = vestry, case.set = case.set,
-    latlong = latlong)
+  network <- sohoGraph(vestry = vestry, case.set = case.set, latlong = latlong)
 
   if (type == "case-pump") {
     path.data <- casePump(orgn, orgn.nm, dstn, dstn.nm, destination, network,
