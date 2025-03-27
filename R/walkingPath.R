@@ -66,14 +66,14 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     latlong = latlong)
 
   if (type == "case-pump") {
-    path.data <- casePump(orgn, orgn.nm, dstn, dstn.nm, destination,
-      network.data, vestry, weighted)
+    path.data <- casePump(orgn, orgn.nm, dstn, dstn.nm, destination, network,
+      vestry, weighted)
   } else if (type == "cases") {
     path.data <- caseCase(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
-      network.data, vestry, weighted)
+      network, vestry, weighted)
   } else if (type == "pumps") {
     path.data <- pumpPump(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
-      network.data, vestry, weighted)
+      network, vestry, weighted)
   }
 
   p <- names(unlist(path.data$p))
@@ -88,7 +88,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     data.frame(ep1 = p[i], ep2 = p[i + 1])
   }))
 
-  edges <- network.data$edges
+  edges <- network$edges
 
   ds <- vapply(seq_len(nrow(endpts)), function(i) {
     tmp <- endpts[i, ]
@@ -704,12 +704,12 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
   do.call(rbind, out)
 }
 
-casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
+casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network,
   vestry, weighted) {
 
-  g <- network.data$g
-  edges <- network.data$edges
-  nodes <- network.data$nodes
+  g <- network$g
+  edges <- network$edges
+  nodes <- network$nodes
 
   if (any(orgn < 1000L)) {
     fatal <- orgn[orgn < 1000L]
@@ -814,12 +814,12 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network.data,
        dstn.nm = dstn.nm[dstn == nearest.dstn], p = p[[1]])
 }
 
-caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
-  network.data, vestry, weighted) {
+caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination, network,
+  vestry, weighted) {
 
-  g <- network.data$g
-  edges <- network.data$edges
-  nodes <- network.data$nodes
+  g <- network$g
+  edges <- network$edges
+  nodes <- network$nodes
 
   if (any(orgn < 1000L)) {
     fatal <- orgn[orgn < 1000L]
@@ -953,12 +953,12 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
        dstn.nm = dstn.nm[dstn == nearest.dstn], p = p[[1]])
 }
 
-pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
-  network.data, vestry, weighted) {
+pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination, network,
+  vestry, weighted) {
 
-  g <- network.data$g
-  edges <- network.data$edges
-  nodes <- network.data$nodes
+  g <- network$g
+  edges <- network$edges
+  nodes <- network$nodes
 
   if (length(intersect(orgn, dstn)) != 0) {
     if (!is.null(origin) & is.null(destination) | all(destination < 0)) {
