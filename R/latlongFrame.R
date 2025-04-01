@@ -39,17 +39,17 @@ latlongFrame <- function(path, multi.core = FALSE) {
 
   frm <- lapply(pts, function(x) dat[dat$id %in% x, ])
 
-  frm.rotate.scale <- parallel::mclapply(frm, function(x) {
+  frm.rotate.scale <- lapply(frm, function(x) {
     tmp <- lapply(x$id, function(y) rotatePoint(y, dataset = "roads"))
     tmp <- do.call(rbind, tmp)
     data.frame(point.id = x$point.id, scale(tmp))
-  }, mc.cores = cores)
+  })
 
   geo.coords.scale <- lapply(geo.coords, function(x) {
      data.frame(geo.id = x$geo.id, scale(x[, c("lon", "lat")]))
   })
 
-  match.points <- parallel::mclapply(seq_along(geo.coords.scale), function(i) {
+  match.points <- lapply(seq_along(geo.coords.scale), function(i) {
     rd <- frm.rotate.scale[[i]]
     alters <- geo.coords.scale[[i]]
     names(alters)[-1] <- c("x", "y")
@@ -62,7 +62,7 @@ latlongFrame <- function(path, multi.core = FALSE) {
     })
 
     do.call(rbind, out)
-  }, mc.cores = cores)
+  })
 
   match.points <- do.call(rbind, match.points)
   geo.coords <- do.call(rbind, geo.coords)
@@ -92,13 +92,15 @@ geoID <- function(k) {
 
 thresholdFrameGraph <- function(inter.point.dist = 0.15) {
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  dat$point.id <- paste0(dat$x, "-", dat$y)
+  dat$point.id <- paste0(dat$x, "_&_", dat$y)
   dat <- dat[!duplicated(dat$point.id), ]
   idx <- index0(dat$id)
   d <- stats::dist(dat[, c("x", "y")])
   frame.pt.dist <- data.frame(idx, d = c(d))
   frame.pt.dist <- frame.pt.dist[frame.pt.dist$d <= inter.point.dist, ]
-  edge.list <- frame.pt.dist[, c("v1", "v2")]
+  frame.pt.dist$id1 <- dat$id[frame.pt.dist$v1]
+  frame.pt.dist$id2 <- dat$id[frame.pt.dist$v2]
+  edge.list <- frame.pt.dist[, c("id1", "id2")]
   plot(igraph::graph_from_data_frame(edge.list, directed = FALSE),
     vertex.size = 0)
 }
@@ -111,7 +113,7 @@ thresholdFrameGraph <- function(inter.point.dist = 0.15) {
 
 partitionFrame <- function(inter.point.dist = 0.15) {
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  dat$point.id <- paste0(dat$x, "-", dat$y)
+  dat$point.id <- paste0(dat$x, "_&_", dat$y)
   dat <- dat[!duplicated(dat$point.id), ]
 
   idx <- index0(dat$id)
@@ -119,16 +121,20 @@ partitionFrame <- function(inter.point.dist = 0.15) {
   frame.pt.dist <- data.frame(idx, d = c(d))
   frame.pt.dist <- frame.pt.dist[frame.pt.dist$d <= inter.point.dist, ]
 
+  frame.pt.dist$id1 <- dat$id[frame.pt.dist$v1]
+  frame.pt.dist$id2 <- dat$id[frame.pt.dist$v2]
+
+  # cholera::roads$id (vertex/intersection/endpoints)
   closed.triad <- c(1154, 1158, 1159)
 
   triad.sel <- vapply(seq_along(frame.pt.dist$v1), function(i) {
-    any(closed.triad %in% frame.pt.dist[i,  c("v1", "v2")])
+    any(closed.triad %in% frame.pt.dist[i,  c("id1", "id2")])
   }, logical(1L))
 
-  tmp <- frame.pt.dist[!triad.sel, c("v1", "v2")]
-  tmp <- lapply(seq_along(tmp$v1), function(i) unlist(tmp[i, ]))
-  tmp <- do.call(c, tmp)
+  tmp <- frame.pt.dist[!triad.sel, c("id1", "id2")]
+  tmp <- unlist(lapply(seq_along(tmp$id1), function(i) unlist(tmp[i, ])))
 
+  # separate and distribute triad and pair members to different sets
   list(set1 = c(closed.triad[1], unname(tmp[seq_along(tmp) %% 3 == 1])),
        set2 = c(closed.triad[2], unname(tmp[seq_along(tmp) %% 3 == 2])),
        set3 = c(closed.triad[3], unname(tmp[seq_along(tmp) %% 3 == 0])),
@@ -139,8 +145,8 @@ partitionFrame <- function(inter.point.dist = 0.15) {
 #'
 #' For QGIS geo-referencing.
 #' @param path Character. e.g., "~/Documents/Data/"
-#' @param pch Integer. R pch.
-#' @param cex Numeric.
+#' @param pch Integer. R point type.
+#' @param cex Numeric. R point size.
 #' @noRd
 
 framePartitionPDF <- function(path, pch = 46, cex = 1) {
