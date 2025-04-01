@@ -98,7 +98,9 @@ thresholdFrameGraph <- function(inter.point.dist = 0.15) {
   d <- stats::dist(dat[, c("x", "y")])
   frame.pt.dist <- data.frame(idx, d = c(d))
   frame.pt.dist <- frame.pt.dist[frame.pt.dist$d <= inter.point.dist, ]
-  edge.list <- frame.pt.dist[, c("v1", "v2")]
+  frame.pt.dist$id1 <- dat$id[frame.pt.dist$v1]
+  frame.pt.dist$id2 <- dat$id[frame.pt.dist$v2]
+  edge.list <- frame.pt.dist[, c("id1", "id2")]
   plot(igraph::graph_from_data_frame(edge.list, directed = FALSE),
     vertex.size = 0)
 }
@@ -119,16 +121,18 @@ partitionFrame <- function(inter.point.dist = 0.15) {
   frame.pt.dist <- data.frame(idx, d = c(d))
   frame.pt.dist <- frame.pt.dist[frame.pt.dist$d <= inter.point.dist, ]
 
+  frame.pt.dist$id1 <- dat$id[frame.pt.dist$v1]
+  frame.pt.dist$id2 <- dat$id[frame.pt.dist$v2]
+
   # cholera::roads$id (vertex/intersection/endpoints)
   closed.triad <- c(1154, 1158, 1159)
 
   triad.sel <- vapply(seq_along(frame.pt.dist$v1), function(i) {
-    any(closed.triad %in% frame.pt.dist[i,  c("v1", "v2")])
+    any(closed.triad %in% frame.pt.dist[i,  c("id1", "id2")])
   }, logical(1L))
 
-  tmp <- frame.pt.dist[!triad.sel, c("v1", "v2")]
-  tmp <- lapply(seq_along(tmp$v1), function(i) unlist(tmp[i, ]))
-  tmp <- do.call(c, tmp)
+  tmp <- frame.pt.dist[!triad.sel, c("id1", "id2")]
+  tmp <- unlist(lapply(seq_along(tmp$id1), function(i) unlist(tmp[i, ])))
 
   # separate and distribute triad and pair members to different sets
   list(set1 = c(closed.triad[1], unname(tmp[seq_along(tmp) %% 3 == 1])),
