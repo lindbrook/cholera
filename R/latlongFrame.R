@@ -92,7 +92,7 @@ geoID <- function(k) {
 
 thresholdFrameGraph <- function(inter.point.dist = 0.15) {
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  dat$point.id <- paste0(dat$x, "-", dat$y)
+  dat$point.id <- paste0(dat$x, "_&_", dat$y)
   dat <- dat[!duplicated(dat$point.id), ]
   idx <- index0(dat$id)
   d <- stats::dist(dat[, c("x", "y")])
@@ -111,7 +111,7 @@ thresholdFrameGraph <- function(inter.point.dist = 0.15) {
 
 partitionFrame <- function(inter.point.dist = 0.15) {
   dat <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  dat$point.id <- paste0(dat$x, "-", dat$y)
+  dat$point.id <- paste0(dat$x, "_&_", dat$y)
   dat <- dat[!duplicated(dat$point.id), ]
 
   idx <- index0(dat$id)
