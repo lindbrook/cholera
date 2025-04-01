@@ -39,17 +39,17 @@ latlongFrame <- function(path, multi.core = FALSE) {
 
   frm <- lapply(pts, function(x) dat[dat$id %in% x, ])
 
-  frm.rotate.scale <- parallel::mclapply(frm, function(x) {
+  frm.rotate.scale <- lapply(frm, function(x) {
     tmp <- lapply(x$id, function(y) rotatePoint(y, dataset = "roads"))
     tmp <- do.call(rbind, tmp)
     data.frame(point.id = x$point.id, scale(tmp))
-  }, mc.cores = cores)
+  })
 
   geo.coords.scale <- lapply(geo.coords, function(x) {
      data.frame(geo.id = x$geo.id, scale(x[, c("lon", "lat")]))
   })
 
-  match.points <- parallel::mclapply(seq_along(geo.coords.scale), function(i) {
+  match.points <- lapply(seq_along(geo.coords.scale), function(i) {
     rd <- frm.rotate.scale[[i]]
     alters <- geo.coords.scale[[i]]
     names(alters)[-1] <- c("x", "y")
@@ -62,7 +62,7 @@ latlongFrame <- function(path, multi.core = FALSE) {
     })
 
     do.call(rbind, out)
-  }, mc.cores = cores)
+  })
 
   match.points <- do.call(rbind, match.points)
   geo.coords <- do.call(rbind, geo.coords)
