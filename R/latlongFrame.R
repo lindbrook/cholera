@@ -119,6 +119,7 @@ partitionFrame <- function(inter.point.dist = 0.15) {
   frame.pt.dist <- data.frame(idx, d = c(d))
   frame.pt.dist <- frame.pt.dist[frame.pt.dist$d <= inter.point.dist, ]
 
+  # cholera::roads$id (vertex/intersection/endpoints)
   closed.triad <- c(1154, 1158, 1159)
 
   triad.sel <- vapply(seq_along(frame.pt.dist$v1), function(i) {
@@ -129,6 +130,7 @@ partitionFrame <- function(inter.point.dist = 0.15) {
   tmp <- lapply(seq_along(tmp$v1), function(i) unlist(tmp[i, ]))
   tmp <- do.call(c, tmp)
 
+  # separate and distribute triad and pair members to different sets
   list(set1 = c(closed.triad[1], unname(tmp[seq_along(tmp) %% 3 == 1])),
        set2 = c(closed.triad[2], unname(tmp[seq_along(tmp) %% 3 == 2])),
        set3 = c(closed.triad[3], unname(tmp[seq_along(tmp) %% 3 == 0])),
@@ -139,8 +141,8 @@ partitionFrame <- function(inter.point.dist = 0.15) {
 #'
 #' For QGIS geo-referencing.
 #' @param path Character. e.g., "~/Documents/Data/"
-#' @param pch Integer. R pch.
-#' @param cex Numeric.
+#' @param pch Integer. R point type.
+#' @param cex Numeric. R point size.
 #' @noRd
 
 framePartitionPDF <- function(path, pch = 46, cex = 1) {
