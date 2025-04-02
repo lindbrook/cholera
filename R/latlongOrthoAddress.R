@@ -27,23 +27,24 @@ latlongOrthoAddress <- function(multi.core = FALSE, radius = 60) {
   geo.rd.segs <- do.call(rbind, geo.rd.segs)
   seg.endpts <- c("x1", "y1", "x2", "y2")
 
-  # classification errors due to bar orientation (Dodson and Tobler - nominal)
+  # classification errors due to bar orientation
   road.segment.fix <- caseRoadClassificationFix()
 
-  # check for segments with multiple cases
-  multi.audit <- vapply(road.segment.fix, function(x) {
-    sum(x %in% cholera::fatalities.address$anchor)
-  }, integer(1L))
+  anchors.in.fix <- vapply(road.segment.fix, function(x) {
+    any(x %in% cholera::fatalities.address$anchor)
+  }, logical(1L))
 
-  no.multi <- all(multi.audit %in% c(0, 1))
+  road.segment.fix <- road.segment.fix[anchors.in.fix]
 
-  if (no.multi) {
-    anchors.fix <- unlist(lapply(road.segment.fix, function(x) {
-      x[x %in% cholera::fatalities.address$anchor]
-    }))
-    manual.compute <- data.frame(addr = anchors.fix, seg = names(anchors.fix),
-      row.names = NULL)
-  } else stop()
+  # identify anchor case in road.segment.fix
+  manual.compute <- lapply(seq_along(road.segment.fix), function(i) {
+    tmp <- road.segment.fix[i]
+    x <- unlist(tmp)
+    data.frame(addr = x[x %in% cholera::fatalities.address$anchor],
+      seg = names(tmp), row.names = NULL)
+  })
+
+  manual.compute <- do.call(rbind, manual.compute)
 
   classfication.err <- geo.addr$id %in% manual.compute$addr
 
@@ -125,17 +126,7 @@ latlongOrthoAddress <- function(multi.core = FALSE, radius = 60) {
 
   coordsA <- do.call(rbind, orthogonal.projection)
 
-  ## One manual address fixes for coordsA (edge case) ##
-
-  addr <- 286
-  rd.seg  <- "160-3"
-  case <- geo.addr[geo.addr$id == addr, ]
-  x.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "x2"]
-  y.proj <- geo.rd.segs[geo.rd.segs$id == rd.seg, "y2"]
-  ortho.dist <- stats::dist(rbind(case[, c("x", "y")], c(x.proj, y.proj)))
-  vars <- c("x.proj", "y.proj", "ortho.dist")
-  coordsA[coordsA$case == addr, vars] <- c(x.proj, y.proj, ortho.dist)
-  coordsA[coordsA$case == addr, "road.segment"] <- rd.seg
+  ##
 
   orthogonal.projectionB <- lapply(seq_len(nrow(manual.compute)), function(i) {
     addr <- manual.compute[i, "addr"]
@@ -183,7 +174,6 @@ latlongOrthoAddress <- function(multi.core = FALSE, radius = 60) {
       data.frame(road.segment = seg, ortho.pts, ortho.dist)
     } else {
       # pick nearest segment endpoint
-
       dist.to.endpts <- vapply(seq_len(nrow(seg.df)), function(i) {
         stats::dist(rbind(case, seg.df[i, ]))
       }, numeric(1L))
@@ -198,18 +188,16 @@ latlongOrthoAddress <- function(multi.core = FALSE, radius = 60) {
   coordsB <- data.frame(do.call(rbind, orthogonal.projectionB),
     case = manual.compute$addr, row.names = NULL)
 
+  ##
+
   coords <- rbind(coordsA, coordsB)
   coords <- coords[order(coords$case), ]
   est.lonlat <- meterLatLong(coords)
-  est.lonlat <- est.lonlat[order(est.lonlat$case), ]
 
   # Portland Mews (case 286) and Portland Street (case 369 @ St James Workhouse)
   # floating point estimation rounding - 286
 
-  geo.seg <- roadSegments(TRUE)
-  nom.seg <- roadSegments(FALSE)
-
-  #
+  geo.seg <- roadSegments(latlong = TRUE)
 
   case.georef <- est.lonlat[est.lonlat$case == 286, ]
   seg.georef <- geo.seg[geo.seg$id == "160-3", ]
@@ -227,12 +215,10 @@ latlongOrthoAddress <- function(multi.core = FALSE, radius = 60) {
     est.lonlat[est.lonlat$case == 286, c("lon", "lat")] <- ep1
   } else if (sel == 2L) {
     est.lonlat[est.lonlat$case == 286, c("lon", "lat")] <- ep2
-  } else stop("err!")
+  } else stop("error!")
 
-  # identical(est.lonlat[est.lonlat$case == 286, ]$lat, seg.georef$lat2)
   # identical(est.lonlat[est.lonlat$case == 286, ]$lon, seg.georef$lon2)
-
-  #
+  # identical(est.lonlat[est.lonlat$case == 286, ]$lat, seg.georef$lat2)
 
   case.georef <- est.lonlat[est.lonlat$case == 369, ]
   seg.georef <- geo.seg[geo.seg$id == "194-1", ]
@@ -250,11 +236,13 @@ latlongOrthoAddress <- function(multi.core = FALSE, radius = 60) {
     est.lonlat[est.lonlat$case == 369, c("lon", "lat")] <- ep1
   } else if (sel == 2L) {
     est.lonlat[est.lonlat$case == 369, c("lon", "lat")] <- ep2
-  } else stop("err!")
+  } else stop("error!")
 
   # identical(est.lonlat[est.lonlat$case == 369, ]$lon, seg.georef$lon1)
   # identical(est.lonlat[est.lonlat$case == 369, ]$lat, seg.georef$lat1)
 
+  est.lonlat <- est.lonlat[order(est.lonlat$case), ]
+  row.names(est.lonlat) <- NULL
   est.lonlat
 }
 
