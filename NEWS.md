@@ -1,3 +1,8 @@
+### cholera 0.9.0.9014
+
+- amend/simplify latlongOrthoAddress().
+
+
 ### cholera 0.9.0.9013
 
 - use cholera::roads$id rather than indices to fix latlongFrame().
