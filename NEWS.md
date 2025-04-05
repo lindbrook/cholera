@@ -1,3 +1,8 @@
+### cholera 0.9.0.9016
+
+- rename isoLines() to isoPoints().
+
+
 ### cholera 0.9.0.9015
 
 - correct class for sohoGraph() output.

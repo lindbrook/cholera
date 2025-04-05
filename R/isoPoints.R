@@ -4,11 +4,12 @@
 #' @param post.type Character. "distance" or "time".
 #' @param palette Character.
 #' @param alpha.level Numeric. Alpha level transparency
+#' @param add Logical. Add to existing plot or separate plot.
 #' @importFrom viridisLite plasma
 #' @noRd
 
-isoLines <- function(post = 50, post.type = "distance", palette = "plasma",
-  alpha.level = 1/2) {
+isoPoints <- function(post = 50, post.type = "distance", palette = "plasma",
+  alpha.level = 1/2, add = FALSE) {
 
   if (post.type == "distance") isobands <- seq(0, 600, post)
   if (post.type == "time") isobands <- seq(0, 500, post)
@@ -20,7 +21,7 @@ isoLines <- function(post = 50, post.type = "distance", palette = "plasma",
       begin = 0, end = 1, direction = -1)
   }
 
-  snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
+  if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
 
   invisible(lapply(seq_along(isobands), function(i) {
     sel <- pump.dist$distance > isobands[i] &
@@ -30,6 +31,8 @@ isoLines <- function(post = 50, post.type = "distance", palette = "plasma",
       col = mypalette[i], cex = 1)
   }))
 
-  addRoads()
-  addPump()
+  if (!add) {
+    addRoads()
+    addPump()
+  }
 }
