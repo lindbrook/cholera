@@ -1,6 +1,11 @@
+### cholera 0.9.0.9017
+
+- export isoVertices(); add/set plot.iso_vertices(add = FALSE).
+
+
 ### cholera 0.9.0.9016
 
-- rename isoLines() to isoPoints().
+- rename isoLines() to isoPoints(); add/set isoPoints(add = FALSE).
 
 
 ### cholera 0.9.0.9015
