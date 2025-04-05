@@ -26,14 +26,14 @@ sohoGraph <- function(vestry = FALSE, case.set = "observed",
   nodes.pump <- nodes[nodes$pump != 0, ]
   nodes.pump <- nodes.pump[order(nodes.pump$pump), c("pump", "node")]
   out <- list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
-  class(out) <- "network_graph"
+  class(out) <- "soho_graph"
   out
 }
 
 #' Plot method for sohoGraph().
 #'
 #' Visualize underlying road network (with or without cases and pumps).
-#' @param x An 'igraph' object of class "neighborhood_data" created by \code{sohoGraph()}.
+#' @param x An 'igraph' object of class "soho_graph" created by \code{sohoGraph()}.
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
 #' @export

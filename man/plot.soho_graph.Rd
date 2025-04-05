@@ -7,7 +7,7 @@
 \method{plot}{soho_graph}(x, ...)
 }
 \arguments{
-\item{x}{An 'igraph' object of class "neighborhood_data" created by \code{sohoGraph()}.}
+\item{x}{An 'igraph' object of class "soho_graph" created by \code{sohoGraph()}.}
 
 \item{...}{Additional plotting parameters.}
 }
