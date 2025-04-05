@@ -4,7 +4,7 @@
 #' @param post.type Character. "distance or "time".
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores.
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
-#' @noRd
+#' @export
 
 isoVertices <- function(post = 50, post.type = "distance", multi.core = FALSE,
   dev.mode = FALSE) {
@@ -20,21 +20,21 @@ isoVertices <- function(post = 50, post.type = "distance", multi.core = FALSE,
     cl <- parallel::makeCluster(cores)
     parallel::clusterExport(cl = cl, envir = environment(),
       varlist = c("peripheryCases"))
-    iso.vertices <- parallel::parLapply(cl, band.id, iso_vertices, isobands,
+    iso.vertices <- parallel::parLapply(cl, band.id, computeVertices, isobands,
       pump.dist, ortho.dist, diag.dist)
     parallel::stopCluster(cl)
   } else {
-    iso.vertices <- parallel::mclapply(band.id, iso_vertices, mc.cores = cores,
-       isobands, pump.dist, ortho.dist, diag.dist)
+    iso.vertices <- parallel::mclapply(band.id, computeVertices, 
+      mc.cores = cores, isobands, pump.dist, ortho.dist, diag.dist)
   }
 
   names(iso.vertices) <- isobands[-1]
   output <- list(post = post, post.type = post.type, vertices = iso.vertices)
-  class(output) <- "iso"
+  class(output) <- "iso_vertices"
   output
 }
 
-iso_vertices <- function(i, isobands, pump.dist, ortho.dist, diag.dist) {
+computeVertices <- function(i, isobands, pump.dist, ortho.dist, diag.dist) {
   sel <- pump.dist$distance > isobands[i] &
          pump.dist$distance <= isobands[i + 1]
   neighborhood.points <- pump.dist[sel, "case"]
@@ -84,12 +84,13 @@ iso_vertices <- function(i, isobands, pump.dist, ortho.dist, diag.dist) {
 #' @param selected.post Character or Numeric. Select milepost polygon. "all" or number.
 #' @param palette Character.
 #' @param alpha.level Numeric. Alpha level transparency
+#' @param add Logical. Add to existing plot or separate plot.
 #' @param ... Additional arguments.
 #' @return A vector with observed counts.
-#' @noRd
+#' @export
 
-plot.iso <- function(x, selected.post = "all", palette = "plasma",
-  alpha.level = 1/2, ...) {
+plot.iso_vertices <- function(x, selected.post = "all", palette = "plasma",
+  alpha.level = 1/2, add = FALSE, ...) {
 
   pump.dist <- cholera::sim.walking.distance
   isobands <- seq(0, 600, x$post)
@@ -98,6 +99,8 @@ plot.iso <- function(x, selected.post = "all", palette = "plasma",
     mypalette <- viridisLite::plasma(length(isobands), alpha = alpha.level,
       begin = 0, end = 1, direction = -1)
   }
+
+  if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
 
   if (is.numeric(selected.post)) {
     if (selected.post %in% names(x$vertices) == FALSE) {
@@ -131,6 +134,11 @@ plot.iso <- function(x, selected.post = "all", palette = "plasma",
       }))
     }
   }
+
+  if (!add) {
+    addRoads()
+    addPump()
+  }
 }
 
 #' Print method for isoVertices().
@@ -138,8 +146,8 @@ plot.iso <- function(x, selected.post = "all", palette = "plasma",
 #' @param x An object of class "iso" created by \code{isoVertices()}.
 #' @param ... Additional arguments.
 #' @return A vector with observed counts.
-#' @noRd
+#' @export
 
-print.iso <- function(x, ...) {
+print.iso_vertices <- function(x, ...) {
   print(vapply(x$vertices, length, numeric(1L)))
 }
