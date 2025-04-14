@@ -1,8 +1,8 @@
-#' Embed anchors and pumps into road segments (prototype).
+#' Embed anchors, landmarks and/or pumps into road network (prototype).
 #'
 #' @param vestry Logical.
 #' @param case.set Character. "observed" or "expected".
-#' @param embed.addr Logical. Embed the 321 case addresses into graph network.
+#' @param embed.addr Logical. Embed the 321 anchor case addresses into graph network.
 #' @param embed.landmarks Logical. Embed landmarks into road network.
 #' @param embed.pumps Logical. Embed pumps into road network.
 #' @param latlong Logical. Use estimated longitude and latitude.
