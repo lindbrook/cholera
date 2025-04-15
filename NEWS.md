@@ -1,3 +1,8 @@
+### cholera 0.9.0.9019
+
+- use dontrun{} for addCase() examples.
+
+
 ### cholera 0.9.0.9018
 
 - add embedNodesB() prototype.

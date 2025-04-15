@@ -36,9 +36,11 @@ Add case(s), as "anchor", "fatality" or "orthogonal" as points or IDs, to a plot
 type, token, text.size, pch, cex, point.lwd and pos relevant only when case is numeric.
 }
 \examples{
+\dontrun{
 snowMap(add.cases = FALSE)
 addCase(1)
 
 snowMap(add.cases = FALSE)
 addCase(100)
+}
 }
