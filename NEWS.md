@@ -1,3 +1,8 @@
+### cholera 0.9.0.9018
+
+- add embedNodesB() prototype.
+
+
 ### cholera 0.9.0.9017
 
 - export isoVertices(); add/set plot.iso_vertices(add = FALSE).
