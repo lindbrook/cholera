@@ -14,11 +14,13 @@
 #' @note type, token, text.size, pch, cex, point.lwd and pos relevant only when case is numeric.
 #' @export
 #' @examples
+#' \dontrun{
 #' snowMap(add.cases = FALSE)
 #' addCase(1)
 #'
 #' snowMap(add.cases = FALSE)
 #' addCase(100)
+#' }
 
 addCase <- function(case = 1, latlong = FALSE, type = "observed",
   token = "both", text.size = 0.5, pch = 1, cex = 1, point.lwd = 2,
