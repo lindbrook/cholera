@@ -1,11 +1,10 @@
-#' Compute network graph of roads, cases and pumps (prototype).
+#' Compute network graph of roads and embed cases, landmarks and pumps (prototype).
 #'
-#' Assembles cases, pumps and road into a network graph.
 #' @param vestry Logical. Use Vestry Report pump data.
 #' @param case.set Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
-#' @param embed.addr Logical. Embed cases into road network.
-#' @param embed.landmarks Logical. Embed landmarks into road network.
-#' @param embed.pumps Logical. Embed pumps into road network.
+#' @param embed.addr Logical. Embed all 321 or selected anchor case addresses into graph network.
+#' @param embed.landmarks Logical or Numeric. Embed all or selected landmarks into road network.
+#' @param embed.pumps Logical or Numeric. Embed all or selected pumps into road network.
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @param drop.isolates Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.
 #' @export
@@ -19,7 +18,7 @@ sohoGraph <- function(vestry = FALSE, case.set = "observed",
     embed.pumps = embed.pumps, vestry = vestry, case.set = case.set,
     latlong = latlong, drop.isolates = drop.isolates)
 
-  network <- do.call("embedNodes", args)
+  network <- do.call("embedNodesB", args)
   nodes <- network$nodes
   edges <- network$edges
   g <- network$g

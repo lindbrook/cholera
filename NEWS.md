@@ -1,3 +1,8 @@
+### cholera 0.9.0.9020
+
+- use embedNodesB() in sohoGraph().
+
+
 ### cholera 0.9.0.9019
 
 - use dontrun{} for addCase() examples.

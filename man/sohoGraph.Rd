@@ -2,7 +2,7 @@
 % Please edit documentation in R/sohoGraph.R
 \name{sohoGraph}
 \alias{sohoGraph}
-\title{Compute network graph of roads, cases and pumps (prototype).}
+\title{Compute network graph of roads and embed cases, landmarks and pumps (prototype).}
 \usage{
 sohoGraph(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
   embed.landmarks = TRUE, embed.pumps = TRUE, latlong = FALSE,
@@ -13,11 +13,11 @@ sohoGraph(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
 
 \item{case.set}{Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.}
 
-\item{embed.addr}{Logical. Embed cases into road network.}
+\item{embed.addr}{Logical. Embed all 321 or selected anchor case addresses into graph network.}
 
-\item{embed.landmarks}{Logical. Embed landmarks into road network.}
+\item{embed.landmarks}{Logical or Numeric. Embed all or selected landmarks into road network.}
 
-\item{embed.pumps}{Logical. Embed pumps into road network.}
+\item{embed.pumps}{Logical or Numeric. Embed all or selected pumps into road network.}
 
 \item{latlong}{Logical. Use estimated longitude and latitude.}
 
@@ -27,5 +27,5 @@ sohoGraph(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
 An R list of nodes, edges and an 'igraph' network graph.
 }
 \description{
-Assembles cases, pumps and road into a network graph.
+Compute network graph of roads and embed cases, landmarks and pumps (prototype).
 }
