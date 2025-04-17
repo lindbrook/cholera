@@ -1,3 +1,8 @@
+### cholera 0.9.0.9021
+
+- promote embedNodesB() to embedNodes().
+
+
 ### cholera 0.9.0.9020
 
 - use embedNodesB() in sohoGraph().

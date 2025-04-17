@@ -18,7 +18,7 @@ sohoGraph <- function(vestry = FALSE, case.set = "observed",
     embed.pumps = embed.pumps, vestry = vestry, case.set = case.set,
     latlong = latlong, drop.isolates = drop.isolates)
 
-  network <- do.call("embedNodesB", args)
+  network <- do.call("embedNodes", args)
   nodes <- network$nodes
   edges <- network$edges
   g <- network$g
