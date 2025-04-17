@@ -2,17 +2,17 @@
 #'
 #' @param vestry Logical.
 #' @param case.set Character. "observed" or "expected".
-#' @param embed.addr Logical. Embed the 321 anchor case addresses into graph network.
-#' @param embed.landmarks Logical. Embed landmarks into road network.
-#' @param embed.pumps Logical. Embed pumps into road network.
-#' @param latlong Logical. Use estimated longitude and latitude.
+#' @param embed.addr Logical. Embed all 321 or selected anchor case addresses into graph network.
+#' @param embed.landmarks Logical or Numeric. Embed all or selected landmarks into road network.
+#' @param embed.pumps Logical or Numeric. Embed all or selected pumps into road network.
+#' @param latlong Logical or Numeric. Use estimated longitude and latitude.
 #' @param drop.isolates Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.
 #' @importFrom geosphere distGeo
 #' @noRd
 
-embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
-  embed.landmarks = TRUE, embed.pumps = TRUE, latlong = FALSE,
-  drop.isolates = FALSE) {
+embedNodes <- function(vestry = FALSE, case.set = "observed",
+  embed.addr = FALSE, embed.landmarks = FALSE, embed.pumps = FALSE,
+  latlong = FALSE, drop.isolates = TRUE) {
 
   road.data <- cholera::road.segments
 
@@ -26,45 +26,124 @@ embedNodes <- function(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
-  if (embed.addr & embed.landmarks & embed.pumps) {
-    ortho.addr <- orthoAddrC(case.set = case.set, latlong = latlong)
-    ortho.land <- orthoLandC(latlong = latlong)
-    ortho.pump <- orthoPumpsC(vestry = vestry, latlong = latlong,
+  if ((isTRUE(embed.addr) | is.numeric(embed.addr)) &
+      (isTRUE(embed.landmarks) | is.numeric(embed.landmarks)) &
+      (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
+
+    ortho.addr <- orthoAddr(case.set = case.set, latlong = latlong)
+    ortho.land <- orthoLand(latlong = latlong)
+    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong,
       drop.isolates = drop.isolates)
+
+    if (is.numeric(embed.addr)) {
+      ortho.addr <- ortho.addr[ortho.addr$case %in% embed.addr, ]
+    }
+
+    if (is.numeric(embed.landmarks)) {
+      ortho.land <- ortho.land[ortho.land$case %in% embed.landmarks, ]
+    }
+
+    if (is.numeric(embed.pumps)) {
+      ortho.pump <- ortho.pump[ortho.pump$id %in% embed.pumps, ]
+    }
+
     obs.segs <- unique(c(ortho.addr$road.segment, ortho.land$road.segment,
       ortho.pump$road.segment))
 
-  } else if (!embed.addr & embed.landmarks & embed.pumps) {
-    ortho.land <- orthoLandC(latlong = latlong)
-    ortho.pump <- orthoPumpsC(vestry = vestry, latlong = latlong,
+  } else if (isFALSE(embed.addr) &
+             (isTRUE(embed.landmarks) | is.numeric(embed.landmarks)) &
+             (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
+
+    ortho.land <- orthoLand(latlong = latlong)
+    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong,
       drop.isolates = drop.isolates)
+
+    if (is.numeric(embed.landmarks)) {
+      ortho.land <- ortho.land[ortho.land$case %in% embed.landmarks, ]
+    }
+
+    if (is.numeric(embed.pumps)) {
+      ortho.pump <- ortho.pump[ortho.pump$id %in% embed.pumps, ]
+    }
+
     obs.segs <- union(ortho.land$road.segment, ortho.pump$road.segment)
 
-  } else if (embed.addr & !embed.landmarks & embed.pumps) {
-    ortho.addr <- orthoAddrC(case.set = case.set, latlong = latlong)
-    ortho.pump <- orthoPumpsC(vestry = vestry, latlong = latlong,
+  } else if ((isTRUE(embed.addr) | is.numeric(embed.addr)) &
+             isFALSE(embed.landmarks) &
+             (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
+
+    ortho.addr <- orthoAddr(case.set = case.set, latlong = latlong)
+    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong,
       drop.isolates = drop.isolates)
+
+    if (is.numeric(embed.addr)) {
+      ortho.addr <- ortho.addr[ortho.addr$case %in% embed.addr, ]
+    }
+
+    if (is.numeric(embed.pumps)) {
+      ortho.pump <- ortho.pump[ortho.pump$id %in% embed.pumps, ]
+    }
+
     obs.segs <- union(ortho.addr$road.segment, ortho.pump$road.segment)
 
-  } else if (!embed.addr & !embed.landmarks & embed.pumps) {
-    ortho.pump <- orthoPumpsC(vestry = vestry, latlong = latlong,
+  } else if (isFALSE(embed.addr) &
+             isFALSE(embed.landmarks) &
+             (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
+
+    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong,
       drop.isolates = drop.isolates)
+
+    if (is.numeric(embed.pumps)) {
+      ortho.pump <- ortho.pump[ortho.pump$id %in% embed.pumps, ]
+    }
+
     obs.segs <- unique(ortho.pump$road.segment)
 
-  } else if (embed.addr & embed.landmarks & !embed.pumps) {
-    ortho.addr <- orthoAddrC(case.set = case.set, latlong = latlong)
-    ortho.land <- orthoLandC(latlong = latlong)
+  } else if ((isTRUE(embed.addr) | is.numeric(embed.addr)) &
+             (isTRUE(embed.landmarks) | is.numeric(embed.landmarks)) &
+             isFALSE(embed.pumps)) {
+
+    ortho.addr <- orthoAddr(case.set = case.set, latlong = latlong)
+    ortho.land <- orthoLand(latlong = latlong)
+
+    if (is.numeric(embed.addr)) {
+      ortho.addr <- ortho.addr[ortho.addr$case %in% embed.addr, ]
+    }
+
+    if (is.numeric(embed.landmarks)) {
+      ortho.land <- ortho.land[ortho.land$case %in% embed.landmarks, ]
+    }
+
     obs.segs <- union(ortho.addr$road.segment, ortho.land$road.segment)
 
-  } else if (!embed.addr & embed.landmarks & !embed.pumps) {
-    ortho.land <- orthoLandC(latlong = latlong)
+  } else if (isFALSE(embed.addr) &
+             (isTRUE(embed.landmarks) | is.numeric(embed.landmarks)) &
+             isFALSE(embed.pumps)) {
+
+    ortho.land <- orthoLand(latlong = latlong)
+
+    if (is.numeric(embed.landmarks)) {
+      ortho.land <- ortho.land[ortho.land$case %in% embed.landmarks, ]
+    }
+
     obs.segs <- unique(ortho.land$road.segment)
 
-  } else if (embed.addr & !embed.landmarks & !embed.pumps) {
-    ortho.addr <- orthoAddrC(case.set = case.set, latlong = latlong)
+  } else if ((isTRUE(embed.addr) | is.numeric(embed.addr)) &
+             isFALSE(embed.landmarks) &
+             isFALSE(embed.pumps)) {
+
+    ortho.addr <- orthoAddr(case.set = case.set, latlong = latlong)
+
+    if (is.numeric(embed.addr)) {
+      ortho.addr <- ortho.addr[ortho.addr$case %in% embed.addr, ]
+    }
+
     obs.segs <- unique(ortho.addr$road.segment)
 
-  } else if (!embed.addr & !embed.landmarks & !embed.pumps) {
+  } else if (isFALSE(embed.addr) &
+             isFALSE(embed.landmarks) &
+             isFALSE(embed.pumps)) {
+
     obs.segs <- NULL
   }
 
@@ -252,28 +331,7 @@ endPoints <- function(rd.tmp, vars, latlong = FALSE) {
   }
 }
 
-embedAddress <- function(addr.tmp, s, vars) {
-  out <- addr.tmp[addr.tmp$road.segment == s, c(vars, "case")]
-  out$land <- 0
-  out$pump <- 0
-  out
-}
-
-embedLandmark <- function(land.tmp, s, vars, vars2) {
-  out <- land.tmp[land.tmp$road.segment == s, c(vars, "land")]
-  out$case <- 0
-  out$pump <- 0
-  out[, vars2]
-}
-
-embedPump <- function(pump.tmp, s, vars, vars2) {
-  out <- pump.tmp[pump.tmp$road.segment == s, c(vars, "pump")]
-  out$case <- 0
-  out$land <- 0
-  out[, vars2]
-}
-
-orthoAddrC <- function(case.set = "observed", latlong = FALSE) {
+orthoAddr <- function(case.set = "observed", latlong = FALSE) {
   if (latlong) {
     if (case.set == "observed") {
       out <- cholera::latlong.ortho.addr
@@ -299,7 +357,7 @@ orthoAddrC <- function(case.set = "observed", latlong = FALSE) {
   out
 }
 
-orthoLandC <- function(latlong = FALSE) {
+orthoLand <- function(latlong = FALSE) {
   dat <- cholera::landmarks
   sel.xy <- grepl("x", names(dat)) | grepl("y", names(dat))
   sel.latlong <- grepl("lon", names(dat)) | grepl("lat", names(dat))
@@ -309,7 +367,7 @@ orthoLandC <- function(latlong = FALSE) {
   out
 }
 
-orthoPumpsC <- function(vestry = TRUE, latlong = FALSE, drop.isolates = FALSE) {
+orthoPump <- function(vestry = TRUE, latlong = FALSE, drop.isolates = FALSE) {
   if (latlong) {
     if (vestry) {
       out <- cholera::latlong.ortho.pump.vestry
@@ -328,4 +386,25 @@ orthoPumpsC <- function(vestry = TRUE, latlong = FALSE, drop.isolates = FALSE) {
   }
   if (drop.isolates) out <- out[out$pump != 2L, ]
   out
+}
+
+embedAddress <- function(addr.tmp, s, vars) {
+  out <- addr.tmp[addr.tmp$road.segment == s, c(vars, "case")]
+  out$land <- 0
+  out$pump <- 0
+  out
+}
+
+embedLandmark <- function(land.tmp, s, vars, vars2) {
+  out <- land.tmp[land.tmp$road.segment == s, c(vars, "land")]
+  out$case <- 0
+  out$pump <- 0
+  out[, vars2]
+}
+
+embedPump <- function(pump.tmp, s, vars, vars2) {
+  out <- pump.tmp[pump.tmp$road.segment == s, c(vars, "pump")]
+  out$case <- 0
+  out$land <- 0
+  out[, vars2]
 }
