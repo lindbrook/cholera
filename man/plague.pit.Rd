@@ -7,8 +7,11 @@
 \format{
 A data frame with 13 observations and 2 variables.
 \describe{
+  \item{\code{id}}{integers 1 through 13}
   \item{\code{x}}{x-coordinate}
   \item{\code{y}}{y-coordinate}
+  \item{\code{lon}}{longitude}
+  \item{\code{lat}}{latitude}
 }
 }
 \usage{
