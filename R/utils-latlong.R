@@ -203,7 +203,7 @@ radians <- function(points.data) {
 #' Rotate points (prototype).
 #'
 #' @param id Numeric. Road segment endpoint ID.
-#' @param dataset Character. "roads", "fatalities", "fatalities.address", "pumps", "pumps.vestry", "ortho.proj", "ortho.proj.pump", or "ortho.proj.pump.vestry".
+#' @param dataset Character. Selected data frame.
 #' @noRd
 
 rotatePoint <- function(id = 1, dataset = "roads") {
@@ -235,6 +235,9 @@ rotatePoint <- function(id = 1, dataset = "roads") {
   } else if (dataset == "landmarks") {
     sel <- which(cholera::landmarks$case == id)
     points.data <- rbind(center, cholera::landmarks[sel, newvars])
+  } else if (dataset == "plague.pit") {
+    sel <- which(cholera::plague.pit$id == id)
+    points.data <- rbind(center, cholera::plague.pit[sel, newvars])
   } else if (dataset == "ortho.proj") {
     sel <- which(cholera::ortho.proj$case == id)
     nm.sel <- names(cholera::ortho.proj) %in% oldvars
@@ -255,7 +258,7 @@ rotatePoint <- function(id = 1, dataset = "roads") {
     points.data <- rbind(center, ortho.projB[sel, newvars])
   } else {
     msg1 <- 'dataset must be "roads", "fatalities", "fatalities.address",'
-    msg2 <- '"pumps", "pumps.vestry", "landmarks", "ortho.proj",'
+    msg2 <- '"pumps", "pumps.vestry", "landmarks", "plague.pit", "ortho.proj",'
     msg3 <- '"ortho.proj.pump", "ortho.proj.pump.vestry". "voronoi.polygons",'
     msg4 <- 'or "voronoi.polygons.vestry".'
     stop(paste(msg1, msg2, msg3, msg4))
