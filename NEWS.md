@@ -1,3 +1,11 @@
+# cholera 0.9.0.9023
+
+* add latlongPlaguePit() and plaguePitPDF().
+* add longitude and latitude to plague.pit data frame.
+* add/set addPlaguePit(latlong = FALSE).
+* add rotatePoint(dataset = "plague.pit").
+
+
 # cholera 0.9.0.9022
 
 * restore NEWS.md to source file and amend markdown.

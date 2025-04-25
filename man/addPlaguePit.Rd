@@ -4,9 +4,11 @@
 \alias{addPlaguePit}
 \title{Add plague pit (Marshall Street).}
 \usage{
-addPlaguePit(color = "black", line.type = "solid")
+addPlaguePit(latlong = FALSE, color = "black", line.type = "solid")
 }
 \arguments{
+\item{latlong}{Logical. Use estimated longitude and latitude.}
+
 \item{color}{Character. Color of polygon.}
 
 \item{line.type}{Character. Polygon line type.}
