@@ -20,11 +20,13 @@
 #' @note See \code{cholera::roads}.
 #' @export
 #' @examples
+#' \dontrun{
 #' streetNumberLocator(216)
 #' streetNumberLocator(216, zoom = -10)
 #' streetNumberLocator(216, latlong = TRUE, zoom = -10)
 #' streetNumberLocator(216, distance.unit = "yard")
 #' streetNumberLocator(216, zoom = FALSE)
+#' }
 
 streetNumberLocator <- function(street.number = 216, zoom = TRUE,
   latlong = FALSE, cases = "address", token = "id", vestry = FALSE,

@@ -20,11 +20,13 @@
 #' @note See \code{streetNames()}.
 #' @export
 #' @examples
+#' \dontrun{
 #' streetNameLocator("broad street")
 #' streetNameLocator("Broad Street", zoom = -10)
 #' streetNameLocator("Broad Street", latlong = TRUE, zoom = -10)
 #' streetNameLocator("Broad Street", distance.unit = "yard")
 #' streetNameLocator("Broad Street", zoom = FALSE)
+#' }
 
 streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
   latlong = FALSE, cases = "address", token = "id", vestry = FALSE,

@@ -20,11 +20,13 @@
 #' @note With Dodson and Tobler's data, a street (e.g., Broad Street) is often comprised of multiple straight line segments. To identify each segment individually, an additional number is appended to form a text string ID (e.g., "116-2"). See \code{cholera::road.segments}.
 #' @export
 #' @examples
+#' \dontrun{
 #' segmentLocator("216-1")
 #' segmentLocator("216-1", zoom = -10)
 #' segmentLocator("216-1", latlong = TRUE, zoom = -10)
 #' segmentLocator("216-1", distance.unit = "yard")
 #' segmentLocator("216-1", zoom = FALSE)
+#' }
 
 segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
   cases = "address", token = "id", vestry = FALSE, add.pump = TRUE,
