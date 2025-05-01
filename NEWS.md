@@ -1,124 +1,45 @@
-# cholera 0.9.0.9023
+# cholera 0.9.1
 
-* add latlongPlaguePit() and plaguePitPDF().
-* add longitude and latitude to plague.pit data frame.
-* add/set addPlaguePit(latlong = FALSE).
-* add rotatePoint(dataset = "plague.pit").
+## Georeferenced Data and Functions
 
+* provisional support for (georeferenced) longitude and latitude for data and 
+  functions (for functions, set latlong = TRUE).
 
-# cholera 0.9.0.9022
+## Data Changes
 
-* restore NEWS.md to source file and amend markdown.
-
-
-# cholera 0.9.0.9021
-
-* promote embedNodesB() to embedNodes().
-
-
-# cholera 0.9.0.9020
-
-* use embedNodesB() in sohoGraph().
-
-
-# cholera 0.9.0.9019
-
-* use dontrun{} for addCase() examples.
-
-
-# cholera 0.9.0.9018
-
-* add embedNodesB() prototype.
-
-
-# cholera 0.9.0.9017
-
-* export isoVertices(); add/set plot.iso_vertices(add = FALSE).
-
-
-# cholera 0.9.0.9016
-
-* rename isoLines() to isoPoints(); add/set isoPoints(add = FALSE).
-
-
-# cholera 0.9.0.9015
-
-* correct class for sohoGraph() output.
-
-
-# cholera 0.9.0.9014
-
-* amend/simplify latlongOrthoAddress().
-
-
-# cholera 0.9.0.9013
-
-* use cholera::roads$id rather than indices to fix latlongFrame().
-
-
-# cholera 0.9.0.9012
-
-* rename neighborhoodData() to sohoGraph().
-
-
-# cholera 0.9.0.9011
-
-* add/set drop.isolates = FALSE in embedNodes() and neighborhoodData().
-
-
-# cholera 0.9.0.9010
-
-* archive latlongEmbed().
-
-
-# cholera 0.9.0.9009
-
-* add variable check to latlongLandmarks() and landmarksPDF().
-
-
-# cholera 0.9.0.9008
-
-* fix typo in name of quadrantCoordinates().
-
-
-# cholera 0.9.0.9007
-
-* rename squareCenter() in addLandmarks() to squareCenterB().
-
-
-# cholera 0.9.0.9006
-
-* use amended road.segments and vectorize segments() landmarkPerimeter().
-
-
-# cholera 0.9.0.9005
-
+* add longitude and latitude to plague.pit data.
+* add frame.segments
+* amend road.segments with latlong data.
 * use amended road.segments (w/ latlong) in various functions.
 
+## Documentation Changes
 
-# cholera 0.9.0.9004
+* restore .jpg and .png to README.
+* restore NEWS.md to source file and amend markdown.
 
-* use amended road.segments in addRoads().
-* add vectorized implementation of addFrame().
+## Function Changes 
 
-
-# cholera 0.9.0.9003
-
-* add frame.segments; amend road.segments with latlong data.
-
-
-# cholera 0.9.0.9002
-
-* add/use vectorized implementation of addRoads().
-
-
-# cholera 0.9.0.9001
-
+* rename neighborhoodData() to sohoGraph().
+* add/set drop.isolates = FALSE in embedNodes() and neighborhoodData().
+* add latlongPlaguePit() and plaguePitPDF().
+* add/set addPlaguePit(latlong = FALSE).
+* add rotatePoint(dataset = "plague.pit").
+* vectorize addFrame(), addRoads() and landmarkPerimeter().
+* add/set embedNodes(drop.isolates = TRUE).
+* export isoVertices().
+* add/set plot.iso_vertices(add = FALSE).
+* rename isoLines() to isoPoints() and add/set isoPoints(add = FALSE).
+* amend/simplify latlongOrthoAddress().
+* archive latlongEmbed().
+* rename squareCenter() in addLandmarks() to squareCenterB().
 * amend pump 2 (Adam and Eve) warnings in casePump() and pumpPump().
 
+## Function Fixes
 
-# cholera 0.9.0.9000
-
+* correct class for sohoGraph() output.
+* use cholera::roads$id rather than indices to fix latlongFrame().
+* add variable check to latlongLandmarks() and landmarksPDF().
+* fix typo in name of quadrantCoordinates().
 * fix/amend pump 2 (Adam and Eve) warnings in casePump() and pumpPump().
 
 
