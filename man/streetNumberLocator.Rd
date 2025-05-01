@@ -49,9 +49,11 @@ Highlight selected road segment(s) and cases.
 See \code{cholera::roads}.
 }
 \examples{
+\dontrun{
 streetNumberLocator(216)
 streetNumberLocator(216, zoom = -10)
 streetNumberLocator(216, latlong = TRUE, zoom = -10)
 streetNumberLocator(216, distance.unit = "yard")
 streetNumberLocator(216, zoom = FALSE)
+}
 }

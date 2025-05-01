@@ -49,9 +49,11 @@ Highlight selected road(s) and cases.
 See \code{streetNames()}.
 }
 \examples{
+\dontrun{
 streetNameLocator("broad street")
 streetNameLocator("Broad Street", zoom = -10)
 streetNameLocator("Broad Street", latlong = TRUE, zoom = -10)
 streetNameLocator("Broad Street", distance.unit = "yard")
 streetNameLocator("Broad Street", zoom = FALSE)
+}
 }
