@@ -30,9 +30,8 @@
   Vestry report.
 - Support for parallel computation on Linux and macOS; limited support
   for Windows.
-- Version \>= 0.9.0, offers provisional support for (georeferenced)
-  longitude and latitude for practically all data and functions.
-  [Details below](#longitude-and-latitude).
+- Version \>= 0.9.1, offers provisional support for (georeferenced)
+  longitude and latitude for data and functions. [Details below](#longitude-and-latitude).
 
 #### getting started
 

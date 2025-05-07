@@ -12,7 +12,7 @@
 #' \item Includes the revised pump data used in the second version of Snow's map from the Vestry report, which includes the "correct" location of the Broad Street pump.
 #' \item Adds two different aggregate time series fatalities data sets, taken from the Vestry report.
 #' \item Support for parallel computation on Linux and macOS; limited support for Windows.
-#' \item Version >= 0.9.0, offers provisional support for (georeferenced) longitude and latitude for practically all data and functions.
+#' \item Version >= 0.9.1, offers provisional support for (georeferenced) longitude and latitude for data and functions.
 #' }
 #'
 #' To learn more, see the vignettes:
