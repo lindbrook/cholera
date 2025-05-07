@@ -1,3 +1,8 @@
+# cholera 0.9.1.9000
+
+* edit README and cholera-package.R.
+
+
 # cholera 0.9.1
 
 ## Georeferenced Data and Functions
