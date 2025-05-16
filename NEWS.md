@@ -1,3 +1,8 @@
+# cholera 0.9.1.9001
+
+* add print.snow() and summary.snow().
+
+
 # cholera 0.9.1.9000
 
 * edit README and cholera-package.R.
