@@ -204,3 +204,40 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
   }
   if (!add) title("Snow's Graphical Annotation Neighborhood")
 }
+
+#' Print method for neighborhoodSnow().
+#'
+#' Parameter values for neighborhoodSnow().
+#' @param x An object of class "snow" created by \code{neighborhoodSnow()}.
+#' @param ... Additional parameters.
+#' @return A list of argument values.
+#' @export
+#' @examples
+#' \dontrun{
+#' neighborhoodSnow()
+#' print(neighborhoodSnow())
+#' }
+
+print.snow <- function(x, ...) {
+  dat <- unlist(summary(x))
+  out <- list(x[["latlong"]], dat)
+  names(out) <- c("latlong", "anchor.data")
+  print(out)
+}
+
+#' Summary method for neighborhoodSnow().
+#'
+#' Return computed counts for Snow neighborhood.
+#' @param object Object. An object of class "snow" created by \code{neighborhoodSnow()}.
+#' @param ... Additional parameters.
+#' @return A data frame of counts inside and outside of Snow's neighborhood.
+#' @export
+#' @examples
+#' \dontrun{
+#' summary(neighborhoodSnow())
+#' }
+
+summary.snow <- function(object, ...) {
+  tbl <- table(cholera::fatalities.address$anchor %in% object$snow.anchors)
+  data.frame(inside = tbl["TRUE"], outside = tbl["FALSE"], row.names = NULL)
+}
