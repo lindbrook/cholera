@@ -1,3 +1,8 @@
+# cholera 0.9.1.9002
+
+- enable streetNameLocator(token = "id").
+
+
 # cholera 0.9.1.9001
 
 * add print.snow() and summary.snow().
