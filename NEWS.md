@@ -1,3 +1,8 @@
+# cholera 0.9.1.9003
+
+- enable streetNumberLocator(token = "id").
+
+
 # cholera 0.9.1.9002
 
 - enable streetNameLocator(token = "id").
