@@ -167,8 +167,14 @@ streetNumberLocator <- function(street.number = 216, zoom = TRUE,
     }
   }
 
-  plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = NA,
-    asp = asp)
+  if (token == "id") {
+    plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = NA,
+      asp = asp)
+  } else if (token == "point") {
+    plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = 16,
+      cex = 0.5, asp = asp)
+  }
+
   addFrame(col = "gray", latlong = latlong)
   addRoads(col = "gray", latlong = latlong)
 
@@ -192,32 +198,34 @@ streetNumberLocator <- function(street.number = 216, zoom = TRUE,
       select.cases <- cholera::fatalities$case %in% seg.cases
       select.anchors <- cholera::fatalities.address$anchor %in% seg.anchors
 
-      if (cases == "fatality") {
-        text(cholera::fatalities[!select.cases, vars],
-          labels = cholera::fatalities$case[!select.cases], cex = cex.text)
-        if (any(select.cases)) {
-          if (highlight) {
-            text(cholera::fatalities[select.cases, vars],
-              labels = cholera::fatalities$case[select.cases], cex = cex.text,
-              col = "red")
-          } else {
-            text(cholera::fatalities[select.cases, vars],
-              labels = cholera::fatalities$case[select.cases], cex = cex.text)
+      if (token == "id") {
+        if (cases == "fatality") {
+          text(cholera::fatalities[!select.cases, vars],
+            labels = cholera::fatalities$case[!select.cases], cex = cex.text)
+          if (any(select.cases)) {
+            if (highlight) {
+              text(cholera::fatalities[select.cases, vars],
+                labels = cholera::fatalities$case[select.cases], cex = cex.text,
+                col = "red")
+            } else {
+              text(cholera::fatalities[select.cases, vars],
+                labels = cholera::fatalities$case[select.cases], cex = cex.text)
+            }
           }
-        }
-      } else if (cases == "address") {
-        text(cholera::fatalities.address[!select.anchors, vars],
-          labels = cholera::fatalities.address$anchor[!select.anchors],
-          cex = cex.text)
-        if (any(select.anchors)) {
-          if (highlight) {
-            text(cholera::fatalities.address[select.anchors, vars],
-              labels = cholera::fatalities.address$anchor[select.anchors],
-              cex = cex.text, col = "red")
-          } else {
-            text(cholera::fatalities.address[select.anchors, vars],
-              labels = cholera::fatalities.address$anchor[select.anchors],
-              cex = cex.text)
+        } else if (cases == "address") {
+          text(cholera::fatalities.address[!select.anchors, vars],
+            labels = cholera::fatalities.address$anchor[!select.anchors],
+            cex = cex.text)
+          if (any(select.anchors)) {
+            if (highlight) {
+              text(cholera::fatalities.address[select.anchors, vars],
+                labels = cholera::fatalities.address$anchor[select.anchors],
+                cex = cex.text, col = "red")
+            } else {
+              text(cholera::fatalities.address[select.anchors, vars],
+                labels = cholera::fatalities.address$anchor[select.anchors],
+                cex = cex.text)
+            }
           }
         }
       }
