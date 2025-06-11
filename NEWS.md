@@ -1,3 +1,8 @@
+# cholera 0.9.1.9004
+
+- add thresholdAddressData() and amend thresholdAddressGraph().
+
+
 # cholera 0.9.1.9003
 
 - enable streetNumberLocator(token = "id").
