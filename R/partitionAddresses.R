@@ -94,12 +94,27 @@ partitionAddresses <- function(inter.point.dist = 0.15) {
 #' @noRd
 
 thresholdAddressGraph <- function(inter.point.dist = 0.15) {
+  dat <- thresholdAddressData(inter.point.dist = inter.point.dist)
+  igraph::graph_from_data_frame(dat$edge.list, directed = FALSE)
+}
+
+#' Addresses/Vertices.
+#'
+#' Edge list of "overlapping" and vector of isolate (non-overlapping) vertices.
+#' @param inter.point.dist Numeric. Ceiling for overlapping points.
+#' @return An R list.
+#' @noRd
+
+thresholdAddressData <- function(inter.point.dist = 0.15) {
   idx <- index0(cholera::fatalities.address$anchor)
   d <- stats::dist(cholera::fatalities.address[, c("x", "y")])
   addr.dist <- data.frame(idx, d = c(d))
   overlap <- addr.dist[addr.dist$d <= inter.point.dist, ]
-  edge.list <- overlap[, c("v1", "v2")]
-  igraph::graph_from_data_frame(edge.list, directed = FALSE)
+  overlap$anchor1 <- cholera::fatalities.address$anchor[overlap$v1]
+  overlap$anchor2 <- cholera::fatalities.address$anchor[overlap$v2]
+  anchors.overlap <- sort(unique(unlist(overlap[, c("anchor1", "anchor2")])))
+  list(edge.list = overlap[, c("anchor1", "anchor2")], 
+       isolates = setdiff(cholera::fatalities.address$anchor, anchors.overlap))
 }
 
 #' Rotate, stack and partition open triads.
