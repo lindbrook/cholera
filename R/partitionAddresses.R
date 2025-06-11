@@ -7,23 +7,34 @@
 
 partitionAddresses <- function(inter.point.dist = 0.15) {
   g <- thresholdAddressGraph(inter.point.dist = inter.point.dist)
+  # plot(g, vertex.label = NA, vertex.size = 2)
   subgraphs <- igraph::decompose(g)
   names(subgraphs) <- seq_along(subgraphs)
   census <- igraph::groups(igraph::components(g))
   census.ct <- vapply(census, length, integer(1L))
 
   ## dyads ##
-
+  
+  # twos <- names(census.ct[census.ct == 2])
+  # cholera:::plotNtuple(twos, subgraphs)
+  
   dyads <- do.call(rbind, lapply(census[census.ct == 2], as.numeric))
   dyads <- data.frame(group = as.numeric(row.names(dyads)), v1 = dyads[, 1],
     v2 = dyads[, 2], row.names = NULL)
 
   ## triads ##
-
+  
+  # threes <- names(census.ct[census.ct == 3])
+  # cholera:::plotNtuple(threes, subgraphs)
+  
   triads <- openTriadAddresses(subgraphs, census, census.ct)
 
   ## tetrads ##
 
+  # fours <- names(census.ct[census.ct == 4])
+  # cholera:::plotNtuple(fours, subgraphs)
+  
+  # string.four: four-in-a-row
   string.four <- c("5", "10", "12", "20")
   tetrad.string <- partitionEvenString(subgraphs[string.four])
   tetrad.string <- do.call(rbind, tetrad.string)
@@ -38,11 +49,17 @@ partitionAddresses <- function(inter.point.dist = 0.15) {
   complete.four <- stats::setNames(data.frame(complete.four), paste0("v", 1:4))
 
   ## pentads: five-in-a-row string ##
+  
+  # fives <- names(census.ct[census.ct == 5])
+  # cholera:::plotNtuple(fives, subgraphs)
 
   string.five <- subgraphs[names(census[census.ct == 5])]
   pentads <- partitionOddString(string.five)
 
   ## sextad: 6-in-a-row strings ##
+  
+  # sixes <- names(census.ct[census.ct == 6])
+  # cholera:::plotNtuple(sixes, subgraphs)
 
   string.six <- subgraphs[names(census[census.ct == 6])]
   sextads <- partitionEvenString(string.six)
@@ -51,16 +68,26 @@ partitionAddresses <- function(inter.point.dist = 0.15) {
 
   ## Group 1: 7 vertices (triadic) ##
 
+  # sevens <- names(census.ct[census.ct == 7])
+  # cholera:::plotNtuple(sevens, subgraphs)
+  # sort(igraph::V(subgraphs$`1`))
+  
   septad <- list(v1 = c("507", "553", "348"),
                  v2 = c("38", "1"),
                  v3 = c("552", "393"))
 
   ## Group 15: 10 vertices ##
+  
+  # tens <- names(census.ct[census.ct == 10])
+  # cholera:::plotNtuple(tens, subgraphs)
+  # sort(igraph::V(subgraphs$`15`))
 
   decad <- list(v1 = c("224", "481", "213", "68"),
                 v2 = c("49", "325", "428", "296"),
                 v3 = c("449", "45"))
-
+  
+  ## Assembly
+  
   symmetric <- rbind(dyads[, -1], triads, tetrad.string, tetrad.stars, pentads,
     sextads)
 
