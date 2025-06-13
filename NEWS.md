@@ -1,3 +1,8 @@
+# cholera 0.9.1.9006
+
+- add/set embedNodes(ellipsoid = "WGS").
+
+
 # cholera 0.9.1.9005
 
 - add diagnostic plot code to partitionAddresses().

@@ -7,12 +7,13 @@
 #' @param embed.pumps Logical or Numeric. Embed all or selected pumps into road network.
 #' @param latlong Logical or Numeric. Use estimated longitude and latitude.
 #' @param drop.isolates Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.
+#' @param ellipsoid Character. "WGS" for WGS-84 or "BNG" for British National Gride (i.e., Airy 1830).
 #' @importFrom geosphere distGeo
 #' @noRd
 
 embedNodes <- function(vestry = FALSE, case.set = "observed",
   embed.addr = FALSE, embed.landmarks = FALSE, embed.pumps = FALSE,
-  latlong = FALSE, drop.isolates = TRUE) {
+  latlong = FALSE, drop.isolates = TRUE, ellipsoid = "WGS") {
 
   road.data <- cholera::road.segments
 
@@ -25,6 +26,16 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
+
+  if (ellipsoid == "WGS") {
+    a <- 6378137
+    f <- 1 / 298.257223563
+  } else if (ellipsoid == "BNG") {
+    a <- 6377563.396
+    f <- 1 / 299.3249646
+  } else {
+    stop('ellipsoid must be "WGS" or "BNG".', call. = FALSE)
+  }
 
   if ((isTRUE(embed.addr) | is.numeric(embed.addr)) &
       (isTRUE(embed.landmarks) | is.numeric(embed.landmarks)) &
@@ -249,7 +260,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
       edges$d <- vapply(seq_len(nrow(edges)), function(i) {
         p1 <- edges[i, c("lon1", "lat1")]
         p2 <- edges[i, c("lon2", "lat2")]
-        geosphere::distGeo(p1, p2)
+        geosphere::distGeo(p1, p2, a = a, f = f)
       }, numeric(1L))
     } else {
       edges$node1 <- paste0(edges$x1, "_&_", edges$y1)
@@ -283,7 +294,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
       edges$d <- vapply(seq_len(nrow(edges)), function(i) {
         p1 <- edges[i, paste0(vars, 1)]
         p2 <- edges[i, paste0(vars, 2)]
-        geosphere::distGeo(p1, p2)
+        geosphere::distGeo(p1, p2, a = a, f = f)
       }, numeric(1L))
     } else {
       edges$node1 <- paste0(edges$x1, "_&_", edges$y1)
