@@ -1,3 +1,7 @@
+# cholera 0.9.1.9007
+
+- add/set snowMap(road.col = "gray").
+
 # cholera 0.9.1.9006
 
 - add/set embedNodes(ellipsoid = "WGS").

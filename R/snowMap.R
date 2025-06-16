@@ -11,6 +11,7 @@
 #' @param main Character. Title of graph.
 #' @param case.col Character. Color of fatalities.
 #' @param case.pch Character. Color of fatalities.
+#' @param road.col Character. Color of roads/streets
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @param ... Additional plotting parameters.
 #' @note Uses amended version of Dodson and Tobler's data included in this package.
@@ -22,8 +23,8 @@
 
 snowMap <- function(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
   add.cases = TRUE, add.landmarks = FALSE, add.pumps = TRUE, add.roads = TRUE,
-  add.frame = TRUE, main = NA, case.col = "gray",
-  case.pch = 15, latlong = FALSE, ...) {
+  add.frame = TRUE, main = NA, case.col = "gray", case.pch = 15, 
+  road.col = "gray", latlong = FALSE, ...) {
 
   if (latlong) {
     vars <- c("lon", "lat")
@@ -50,7 +51,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
       ...)
   }
 
-  if (add.roads) addRoads(latlong = latlong)
+  if (add.roads) addRoads(latlong = latlong, col = road.col)
   if (add.cases) {
     points(cases[, vars], pch = case.pch, col = case.col, cex = 0.5)
   }
