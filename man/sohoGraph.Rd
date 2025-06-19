@@ -6,7 +6,7 @@
 \usage{
 sohoGraph(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
   embed.landmarks = TRUE, embed.pumps = TRUE, latlong = FALSE,
-  drop.isolates = FALSE)
+  drop.isolates = FALSE, ellipsoid = "WGS")
 }
 \arguments{
 \item{vestry}{Logical. Use Vestry Report pump data.}
@@ -22,6 +22,8 @@ sohoGraph(vestry = FALSE, case.set = "observed", embed.addr = TRUE,
 \item{latlong}{Logical. Use estimated longitude and latitude.}
 
 \item{drop.isolates}{Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.}
+
+\item{ellipsoid}{Character. "WGS" for WGS-84 or "BNG" for British National Gride (i.e., Airy 1830).}
 }
 \value{
 An R list of nodes, edges and an 'igraph' network graph.

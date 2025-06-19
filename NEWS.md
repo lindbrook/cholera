@@ -1,6 +1,12 @@
+# cholera 0.9.1.9008
+
+- add/set sohoGraph(ellipsoid = "WGS") placeholder.
+
+
 # cholera 0.9.1.9007
 
 - add/set snowMap(road.col = "gray").
+
 
 # cholera 0.9.1.9006
 
