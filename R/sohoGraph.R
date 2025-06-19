@@ -7,16 +7,17 @@
 #' @param embed.pumps Logical or Numeric. Embed all or selected pumps into road network.
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @param drop.isolates Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.
+#' @param ellipsoid Character. "WGS" for WGS-84 or "BNG" for British National Gride (i.e., Airy 1830).
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
 sohoGraph <- function(vestry = FALSE, case.set = "observed",
   embed.addr = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
-  latlong = FALSE, drop.isolates = FALSE) {
+  latlong = FALSE, drop.isolates = FALSE, ellipsoid = "WGS") {
 
   args <- list(embed.addr = embed.addr, embed.landmarks = embed.landmarks,
     embed.pumps = embed.pumps, vestry = vestry, case.set = case.set,
-    latlong = latlong, drop.isolates = drop.isolates)
+    latlong = latlong, drop.isolates = drop.isolates, ellipsoid = ellipsoid)
 
   network <- do.call("embedNodes", args)
   nodes <- network$nodes
