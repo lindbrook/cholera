@@ -1,3 +1,8 @@
+# cholera 0.9.1.9009
+
+- add diagnostic plot code and amend code in latlongCoordinates().
+
+
 # cholera 0.9.1.9008
 
 - add/set sohoGraph(ellipsoid = "WGS") placeholder.
