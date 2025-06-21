@@ -11,22 +11,39 @@ latlongCoordinates <- function(tif, k, path) {
   u.data <- pointsFromGeoTIFF(tif)
   names(u.data)[3] <- "modified"
 
-  map.data <- u.data[u.data$modified != 255, c("x", "y")]
+  map.data <- u.data[u.data$modified == 0, c("x", "y")]
 
-  # use rectangular polygon filter
+  # use rectangular polygon to filter map frame shoadow.
   rectangle.filter <- cholera::rectangle.filter
-
+  
   filter.sel <- sp::point.in.polygon(map.data$x, map.data$y,
     rectangle.filter$x, rectangle.filter$y)
 
-  f.data <- map.data[filter.sel != 0, ]
+  # plot(map.data, asp = 1.6)
+  # polygon(rectangle.filter, border = "red")
+  # # format(sum(filter.sel == 0), big.mark = ",")
+  
+  f.data <- map.data[filter.sel == 1, ]
 
   distances <- stats::dist(f.data)
-  tree <- stats::hclust(distances)
-  clusters <- stats::cutree(tree, k = k)
+  tree <- stats::hclust(distances)          # plot(tree, labels = FALSE)
+  clusters <- stats::cutree(tree, k = k)    # cut tree into k groups
   cluster.id <- unique(clusters)
   pts <- lapply(cluster.id, function(grp) names(clusters[clusters == grp]))
-
+  
+  # table(vapply(pts, length, integer(1L)))
+  
+  # pointPlot <- function(v = 8) {
+  #   id <- which(vapply(pts, length, integer(1)) == v)
+  #   invisible(lapply(id, function(x)  {
+  #     plot(f.data[pts[[x]], ], asp = 1.6, main = x)
+  #   }))
+  # }
+  
+  # pointIDPlot <- function(id = 1) {
+  #   plot(f.data[pts[[id]], ], asp = 1.6, main = id)
+  # }
+  
   coords <- lapply(seq_along(pts), function(i) {
     rect.data <- f.data[pts[[i]], ]
     tbl <- t(table(rect.data))
