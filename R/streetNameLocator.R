@@ -167,27 +167,12 @@ streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
     }
   }
 
-  if (is.null(cases)) {
-    plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = NA, 
+  if (token == "id") {
+    plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = NA,
       asp = asp)
-  } else {
-    if (cases == "fatality") {
-      if (token == "id") {
-        plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = NA,
-          asp = asp)
-      } else if (token == "point") {
-        plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = 16,
-          cex = 0.5, asp = asp)
-      }
-    } else if (cases == "address") {
-      if (token == "id") {
-        plot(cholera::fatalities.address[, vars], xlim = xlim, ylim = ylim, 
-          pch = NA, asp = asp)
-      } else if (token == "point") {
-        plot(cholera::fatalities.address[, vars], xlim = xlim, ylim = ylim, 
-          pch = 16, cex = 0.5, asp = asp)
-      }
-    }
+  } else if (token == "point") {
+    plot(cholera::fatalities[, vars], xlim = xlim, ylim = ylim, pch = 16,
+      cex = 0.5, asp = asp)
   }
   
   addFrame(col = "gray", latlong = latlong)

@@ -1,6 +1,11 @@
+# cholera 0.9.1.9011
+
+- restore streetNameLocator(cases = NULL) code.
+
+
 # cholera 0.9.1.9010
 
-- fix streetNameLocator(cases = NULL)..
+- fix streetNameLocator(cases = NULL).
 
 
 # cholera 0.9.1.9009
