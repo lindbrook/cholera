@@ -1,3 +1,8 @@
+# cholera 0.9.1.9014
+
+- amend file.nm in pumpsGPKG(vestry = TRUE) for QGIS bug.
+
+
 # cholera 0.9.1.9013
 
 - use drop = FALSE in fatalitiesGPKG().
