@@ -1,3 +1,9 @@
+# cholera 0.9.1.9013
+
+- use drop = FALSE in fatalitiesGPKG().
+- remove append argument from *GPKG()'s.
+
+
 # cholera 0.9.1.9012
 
 - add *GPKG() prototypes.
