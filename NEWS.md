@@ -1,3 +1,8 @@
+# cholera 0.9.1.9012
+
+- add *GPKG() prototypes.
+
+
 # cholera 0.9.1.9011
 
 - restore streetNameLocator(cases = NULL) code.
