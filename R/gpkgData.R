@@ -25,7 +25,7 @@ fatalitiesGPKG <- function(path, append = FALSE) {
   vars <- c("x", "y")
   dat <- cholera::fatalities[, vars]
   fatality_geom <- sf::st_as_sf(dat, coords = vars)
-  fatality_attr <- cholera::fatalities$case
+  fatality_attr <- cholera::fatalities[, "case", drop = FALSE]
   fatality_sf <- sf::st_sf(fatality_attr, 
     geometry = sf::st_as_sfc(fatality_geom))
   sf::write_sf(fatality_sf, paste0(path, "fatality.gpkg"), append = append)
