@@ -55,7 +55,7 @@ pumpsGPKG <- function(path, vestry = FALSE) {
 #' @noRd
 #' @note For georeferencing.
 
-roadsPKG <- function(path) {
+roadsGPKG <- function(path) {
   vars <- c("x1", "y1", "x2", "y2")
   seg.data <- lapply(seq_along(cholera::road.segments$id), function(i) {
     matrix(unlist(cholera::road.segments[i, vars]), ncol = 2, byrow = TRUE)
