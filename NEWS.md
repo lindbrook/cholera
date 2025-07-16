@@ -1,3 +1,8 @@
+# cholera 0.9.1.9015
+
+- add mapFrameGPKG().
+
+
 # cholera 0.9.1.9014
 
 - amend file.nm in pumpsGPKG(vestry = TRUE) for QGIS bug.

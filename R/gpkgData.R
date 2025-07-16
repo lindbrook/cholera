@@ -66,4 +66,22 @@ roadsGPKG <- function(path) {
   sf::st_write(rds_sf, paste0(path, "roads.gpkg"), append = FALSE)
 }
 
+#' Create and write GeoPackage (GPKG) of map frame (prototype).
+#'
+#' @param path Character. e.g., "~/Documents/Data/"
+#' @noRd
+
+mapFrameGPKG <- function(path) {
+  vars <- c("x", "y")
+  frm <- cholera::roads[cholera::roads$name == "Map Frame", ]
+  frame.data <- lapply(frm$street, function(s) {
+    matrix(unlist(frm[frm$street == s, vars]), ncol = 2, byrow = FALSE)
+  })
+  frame_geom <- lapply(frame.data, sf::st_linestring)
+  vars2 <-  c("id", "street", "n")
+  frame_attr <- cholera::roads[cholera::roads$name == "Map Frame", vars2]
+  frame_sf <- sf::st_sf(frame_attr, geometry = sf::st_sfc(frame_geom))
+  sf::st_write(frame_sf, paste0(path, "frame.gpkg"), append = FALSE)
+}
+
 #' @importFrom sf st_as_sf st_as_sfc st_sf write_sf
