@@ -1,3 +1,8 @@
+# cholera 0.9.1.9016
+
+- use cholera::roads in addRoads() and addFrame().
+
+
 # cholera 0.9.1.9015
 
 - add mapFrameGPKG().
