@@ -1,3 +1,8 @@
+# cholera 0.9.1.9017
+
+- add snowMap.latlong() prototype.
+
+
 # cholera 0.9.1.9016
 
 - use cholera::roads in addRoads() and addFrame().
