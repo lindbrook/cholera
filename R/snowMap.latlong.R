@@ -29,12 +29,12 @@ snowMap.latlong <- function(path, vestry = FALSE, stacked = TRUE,
   if (stacked) {
     dat <- paste0(path, "fatality_modified.gpkg")
     coords <- sf::st_coordinates(sf::st_read(dat, quiet = TRUE))
-    coords <- stats::setNames(data.frame(coords), c("lon", "lat"))
+    coords <- stats::setNames(data.frame(coords), vars)
     cases <- data.frame(id = cholera::fatalities$case, coords)
   } else {
     dat <- paste0(path, "anchor_modified.gpkg")
     coords <- sf::st_coordinates(sf::st_read(dat, quiet = TRUE))
-    coords <- stats::setNames(data.frame(coords), c("lon", "lat"))
+    coords <- stats::setNames(data.frame(coords), vars)
     cases <- data.frame(id = cholera::fatalities.address$anchor, coords)
   }
 
