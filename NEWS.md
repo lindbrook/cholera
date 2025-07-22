@@ -1,3 +1,8 @@
+# cholera 0.9.1.9018
+
+- add unstackedGPKG().
+
+
 # cholera 0.9.1.9017
 
 - add snowMap.latlong() prototype.

@@ -27,6 +27,20 @@ fatalitiesGPKG <- function(path) {
   sf::write_sf(fatality_sf, paste0(path, "fatality.gpkg"), append = FALSE)
 }
 
+#' Create and write GeoPackage (GPKG) of fatalities.unstacked (prototype).
+#'
+#' @param path Character. e.g., "~/Documents/Data/"
+#' @noRd
+
+unstackedGPKG <- function(path) {
+  vars <- c("x", "y")
+  dat <- cholera::fatalities.unstacked[, vars]
+  unstack_geom <- sf::st_as_sf(dat, coords = vars)
+  unstack_attr <- cholera::fatalities.unstacked[, "case", drop = FALSE]
+  unstack_sf <- sf::st_sf(unstack_attr, geometry = sf::st_as_sfc(unstack_geom))
+  sf::write_sf(unstack_sf, paste0(path, "unstack.gpkg"), append = FALSE)
+}
+
 #' Create and write GeoPackage (GPKG) of pump data (prototype).
 #'
 #' @param path Character. e.g., "~/Documents/Data/"
