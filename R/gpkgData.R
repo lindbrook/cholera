@@ -52,7 +52,7 @@ pumpsGPKG <- function(path, vestry = FALSE) {
   if (vestry) {
     dat <- cholera::pumps.vestry[, vars]
     pump_attr <- cholera::pumps.vestry[, c("id", "street")]
-    file.nm <- "pumpvestry.gpkg"
+    file.nm <- "pumpVestry.gpkg"
   } else {
     dat <- cholera::pumps[, vars]
     pump_attr <- cholera::pumps[, c("id", "street")]
