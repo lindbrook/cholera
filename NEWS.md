@@ -1,3 +1,8 @@
+# cholera 0.9.1.9020
+
+- add latlongCoordinatesGPKG().
+
+
 # cholera 0.9.1.9019
 
 - rename roadGPKG() to roadSegmentGPKG and add new roadGPKG().
