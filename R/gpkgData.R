@@ -1,6 +1,6 @@
 #' Create and write GeoPackage (GPKG) of anchor fatalities (prototype).
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path Character. File path e.g., "~/Documents/Data/".
 #' @noRd
 
 anchorsGPKG <- function(path) {
@@ -14,7 +14,7 @@ anchorsGPKG <- function(path) {
 
 #' Create and write GeoPackage (GPKG) of fatalities (prototype).
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path Character. File path e.g., "~/Documents/Data/".
 #' @noRd
 
 fatalitiesGPKG <- function(path) {
@@ -43,7 +43,7 @@ unstackedGPKG <- function(path) {
 
 #' Create and write GeoPackage (GPKG) of pump data (prototype).
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path Character. File path e.g., "~/Documents/Data/".
 #' @param vestry Logical.
 #' @noRd
 
@@ -65,7 +65,7 @@ pumpsGPKG <- function(path, vestry = FALSE) {
 
 #' Create and write GeoPackage (GPKG) of road line segment network (prototype).
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path Character. File path e.g., "~/Documents/Data/".
 #' @noRd
 #' @note For georeferencing.
 
@@ -82,7 +82,7 @@ roadsGPKG <- function(path) {
 
 #' Create and write GeoPackage (GPKG) of map frame (prototype).
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path Character. File path e.g., "~/Documents/Data/".
 #' @noRd
 
 mapFrameGPKG <- function(path) {
