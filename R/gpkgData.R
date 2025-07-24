@@ -98,4 +98,4 @@ mapFrameGPKG <- function(path) {
   sf::st_write(frame_sf, paste0(path, "frame.gpkg"), append = FALSE)
 }
 
-#' @importFrom sf st_as_sf st_as_sfc st_sf write_sf
+#' @importFrom sf st_as_sf st_as_sfc st_coordinates st_read st_sf write_sf
