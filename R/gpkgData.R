@@ -112,4 +112,63 @@ mapFrameGPKG <- function(path) {
   sf::st_write(frame_sf, paste0(path, "frame.gpkg"), append = FALSE)
 }
 
+#' Extract Longitude and Latitude from Georeferenced GeoPackage.
+#'
+#' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param dataset Character. Name of 'cholera' dataset.
+#' @noRd
+
+latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
+  if (dataset == "fatalities") {
+    dat <- "fatality_modified.gpkg"
+    nom.data <- cholera::fatalities
+  } else if (dataset == "fatalities.address") {
+    dat <- "anchor_modified.gpkg"
+    nom.data <- cholera::fatalities.address
+  } else if (dataset == "fatalities.unstacked") {
+    dat <- "unstack_modified.gpkg"
+    nom.data <- cholera::fatalities.unstacked
+  } else if (dataset == "pumps") {
+    dat <- "pump_modified.gpkg"
+    nom.data <- cholera::pumps
+  } else if (dataset == "pumps.vestry") {
+    dat <- "pumpVestry_modified.gpkg"
+    nom.data <- cholera::pumps.vestry
+  } else if (dataset == "roads") {
+    dat <- "road_modified.gpkg"
+    nom.data <- cholera::roads
+  } else if (dataset == "frame.data") {
+    dat <- "frame_modified.gpkg"
+    nom.data <- cholera::frame.data
+  } else if (dataset == "road.segments") {
+    dat <- "roadSegment_modified.gpkg"
+    nom.data <- cholera::road.segments
+  } else {
+    stop('Invalid dataset. Check spelling.', call. = FALSE)
+  }
+
+  geo.data <- sf::st_read(paste0(path, dat), quiet = TRUE)
+  
+  if (!dataset %in% c("frame.data", "road.segments")) {
+    vars <- c("lon", "lat")
+    if (all(vars %in% names(nom.data))) {
+      nom.data <- nom.data[, !names(nom.data) %in% vars]
+    }
+    geo.data <- stats::setNames(data.frame(sf::st_coordinates(geo.data)), vars)
+  } else {
+    vars <- c("lon1", "lat1", "lon2", "lat2")
+    if (all(vars %in% names(nom.data))) {
+      nom.data <- nom.data[, !names(nom.data) %in% vars]
+    }
+    st <- data.frame(sf::st_coordinates(geo.data))
+    geo.data <- do.call(rbind, lapply(unique(st$L1), function(id) {
+      tmp <- st[st$L1 == id, ]
+      tmp <- cbind(tmp[1, c("X", "Y")], tmp[2, c("X", "Y")])
+      names(tmp) <- vars
+      tmp
+    }))
+  }
+  cbind(nom.data, geo.data)
+}
+
 #' @importFrom sf st_as_sf st_as_sfc st_coordinates st_read st_sf write_sf
