@@ -63,21 +63,35 @@ pumpsGPKG <- function(path, vestry = FALSE) {
   sf::write_sf(pump_sf, paste0(path, file.nm), append = FALSE)
 }
 
+#' Create and write GeoPackage (GPKG) of roads data (prototype).
+#'
+#' @param path Character. File path e.g., "~/Documents/Data/".
+#' @noRd
+
+roadGPKG <- function(path) {
+  vars <- c("x", "y")
+  dat <- cholera::roads[, vars]
+  road_geom <- sf::st_as_sf(dat, coords = vars)
+  road_attr <- cholera::roads[, c("id", "street", "n", "name")] 
+  road_sf <- sf::st_sf(road_attr, geometry = sf::st_as_sfc(road_geom))
+  sf::write_sf(road_sf, paste0(path, "road.gpkg"), append = FALSE)
+}
+
 #' Create and write GeoPackage (GPKG) of road line segment network (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
 #' @noRd
 #' @note For georeferencing.
 
-roadsGPKG <- function(path) {
+roadSegmentGPKG <- function(path) {
   vars <- c("x1", "y1", "x2", "y2")
   seg.data <- lapply(seq_along(cholera::road.segments$id), function(i) {
     matrix(unlist(cholera::road.segments[i, vars]), ncol = 2, byrow = TRUE)
   })
-  rds_geom <- lapply(seg.data, sf::st_linestring)
-  rds_attr <- cholera::road.segments[, c("street", "id", "name")]
-  rds_sf <- sf::st_sf(rds_attr, geometry = sf::st_sfc(rds_geom))
-  sf::st_write(rds_sf, paste0(path, "roads.gpkg"), append = FALSE)
+  rd.segs_geom <- lapply(seg.data, sf::st_linestring)
+  rd.segs_attr <- cholera::road.segments[, c("street", "id", "name")]
+  rd.segs_sf <- sf::st_sf(rd.segs_attr, geometry = sf::st_sfc(rd.segs_geom))
+  sf::st_write(rd.segs_sf, paste0(path, "roadSegment.gpkg"), append = FALSE)
 }
 
 #' Create and write GeoPackage (GPKG) of map frame (prototype).
