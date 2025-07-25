@@ -29,7 +29,7 @@ fatalitiesGPKG <- function(path) {
 
 #' Create and write GeoPackage (GPKG) of fatalities.unstacked (prototype).
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path File path e.g., "~/Documents/Data/".
 #' @noRd
 
 unstackedGPKG <- function(path) {
@@ -47,7 +47,7 @@ unstackedGPKG <- function(path) {
 #' @param vestry Logical.
 #' @noRd
 
-pumpsGPKG <- function(path, vestry = FALSE) {
+pumpGPKG <- function(path, vestry = FALSE) {
   vars <- c("x", "y")
   if (vestry) {
     dat <- cholera::pumps.vestry[, vars]
@@ -77,6 +77,20 @@ roadGPKG <- function(path) {
   sf::write_sf(road_sf, paste0(path, "road.gpkg"), append = FALSE)
 }
 
+#' Create and write GeoPackage (GPKG) of roads data (prototype).
+#'
+#' @param path Character. File path e.g., "~/Documents/Data/".
+#' @noRd
+
+frameGPKG <- function(path) {
+  vars <- c("x", "y")
+  dat <- cholera::frame.data[, vars]
+  frame_geom <- sf::st_as_sf(dat, coords = vars)
+  frame_attr <- cholera::frame.data[, c("id", "street", "n", "name")] 
+  frame_sf <- sf::st_sf(frame_attr, geometry = sf::st_as_sfc(frame_geom))
+  sf::write_sf(frame_sf, paste0(path, "frame.gpkg"), append = FALSE)
+}
+
 #' Create and write GeoPackage (GPKG) of road line segment network (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
@@ -94,22 +108,20 @@ roadSegmentGPKG <- function(path) {
   sf::st_write(rd.segs_sf, paste0(path, "roadSegment.gpkg"), append = FALSE)
 }
 
-#' Create and write GeoPackage (GPKG) of map frame (prototype).
+#' Create and write GeoPackage (GPKG) of map frame line segments (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
 #' @noRd
 
-mapFrameGPKG <- function(path) {
-  vars <- c("x", "y")
-  frm <- cholera::roads[cholera::roads$name == "Map Frame", ]
-  frame.data <- lapply(frm$street, function(s) {
-    matrix(unlist(frm[frm$street == s, vars]), ncol = 2, byrow = FALSE)
+mapFrameSegmentGPKG <- function(path) {
+  vars <- c("x1", "y1", "x2", "y2")
+  seg.data <- lapply(seq_along(cholera::frame.segments$id), function(i) {
+    matrix(unlist(cholera::frame.segments[i, vars]), ncol = 2, byrow = TRUE)
   })
-  frame_geom <- lapply(frame.data, sf::st_linestring)
-  vars2 <-  c("id", "street", "n")
-  frame_attr <- cholera::roads[cholera::roads$name == "Map Frame", vars2]
-  frame_sf <- sf::st_sf(frame_attr, geometry = sf::st_sfc(frame_geom))
-  sf::st_write(frame_sf, paste0(path, "frame.gpkg"), append = FALSE)
+  fr.segs_geom <- lapply(seg.data, sf::st_linestring)
+  fr.segs_attr <- cholera::frame.segments[, c("street", "id", "name")]
+  fr.segs_sf <- sf::st_sf(fr.segs_attr, geometry = sf::st_sfc(fr.segs_geom))
+  sf::st_write(fr.segs_sf, paste0(path, "frameSegment.gpkg"), append = FALSE)
 }
 
 #' Extract Longitude and Latitude from Georeferenced GeoPackage.
@@ -140,6 +152,9 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
   } else if (dataset == "frame.data") {
     dat <- "frame_modified.gpkg"
     nom.data <- cholera::frame.data
+  } else if (dataset == "frame.segments") {
+    dat <- "frameSegment_modified.gpkg"
+    nom.data <- cholera::frame.segments
   } else if (dataset == "road.segments") {
     dat <- "roadSegment_modified.gpkg"
     nom.data <- cholera::road.segments
@@ -149,7 +164,7 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
 
   geo.data <- sf::st_read(paste0(path, dat), quiet = TRUE)
   
-  if (!dataset %in% c("frame.data", "road.segments")) {
+  if (!dataset %in% c("frame.segments", "road.segments")) {
     vars <- c("lon", "lat")
     if (all(vars %in% names(nom.data))) {
       nom.data <- nom.data[, !names(nom.data) %in% vars]
