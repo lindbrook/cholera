@@ -29,7 +29,7 @@ fatalitiesGPKG <- function(path) {
 
 #' Create and write GeoPackage (GPKG) of fatalities.unstacked (prototype).
 #'
-#' @param path Character. e.g., "~/Documents/Data/"
+#' @param path File path e.g., "~/Documents/Data/".
 #' @noRd
 
 unstackedGPKG <- function(path) {
@@ -47,7 +47,7 @@ unstackedGPKG <- function(path) {
 #' @param vestry Logical.
 #' @noRd
 
-pumpsGPKG <- function(path, vestry = FALSE) {
+pumpGPKG <- function(path, vestry = FALSE) {
   vars <- c("x", "y")
   if (vestry) {
     dat <- cholera::pumps.vestry[, vars]
@@ -94,7 +94,7 @@ roadSegmentGPKG <- function(path) {
   sf::st_write(rd.segs_sf, paste0(path, "roadSegment.gpkg"), append = FALSE)
 }
 
-#' Create and write GeoPackage (GPKG) of map frame (prototype).
+#' Create and write GeoPackage (GPKG) of map frame line segments (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
 #' @noRd
