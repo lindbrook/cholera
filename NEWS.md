@@ -1,3 +1,8 @@
+# cholera 0.9.1.9022
+
+- use cholera::fatalities.anchor and updated GPKGs in snowMap.latlong().
+
+
 # cholera 0.9.1.9021
 
 - rename frameGPKG() to mapFrameSegmentGPKG() and add new frameGPKG().
