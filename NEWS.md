@@ -1,3 +1,8 @@
+# cholera 0.9.1.9023
+
+- rename fatalities.address to fatalities.anchor.
+
+
 # cholera 0.9.1.9022
 
 - use cholera::fatalities.anchor and updated GPKGs in snowMap.latlong().

@@ -50,9 +50,9 @@
 #' @docType data
 "fatalities"
 
-#' "Unstacked" amended cholera data with address as unit of observation.
+#' "Unstacked" fatalities data with "anchor" case as the unit of observation.
 #'
-#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and makes the number of fatalities an attribute of the "address".
+#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (idividual bars) to the "anchor", the case at the base of a stack. The number of fatalities in a stack becomes an attribute of the"anchor".
 #'
 #' @format A data frame with 4 variables for 321 addresses
 #'  \describe{
@@ -72,7 +72,7 @@
 #'
 #' @note \code{\link{unstackFatalities}} documents the code for these data. For details, see \code{vignette}("unstacking.fatalities").
 #' @docType data
-"fatalities.address"
+"fatalities.anchor"
 
 #' "Unstacked" amended cholera fatalities data with fatality as unit of observation.
 #'
