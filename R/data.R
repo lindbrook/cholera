@@ -74,9 +74,9 @@
 #' @docType data
 "fatalities.anchor"
 
-#' "Unstacked" amended cholera fatalities data with fatality as unit of observation.
+#' Amended fatalities data with all cases in a stack sharing the coordinates of the "anchor" case.
 #'
-#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and assigns the base case's coordinates to all cases in the stack.
+#' The "anchor" case is the case at the base of a stack.
 #'
 #' @format A data frame with 3 variable that records the position of the 578 bars on Snow's map.
 #'
