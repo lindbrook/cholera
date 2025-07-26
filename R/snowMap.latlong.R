@@ -35,10 +35,10 @@ snowMap.latlong <- function(path, vestry = FALSE, stacked = TRUE,
     dat <- paste0(path, "anchor_modified.gpkg")
     coords <- sf::st_coordinates(sf::st_read(dat, quiet = TRUE))
     coords <- stats::setNames(data.frame(coords), vars)
-    cases <- data.frame(id = cholera::fatalities.address$anchor, coords)
+    cases <- data.frame(id = cholera::fatalities.anchor$anchor, coords)
   }
 
-  rd.gpkg <- sf::st_read(paste0(path, "roads_modified.gpkg"), quiet = TRUE)
+  rd.gpkg <- sf::st_read(paste0(path, "roadSegment_modified.gpkg"), quiet = TRUE)
   rds <- data.frame(sf::st_coordinates(rd.gpkg))
   rng <- data.frame(x = range(rds$X), y = range(rds$Y))
 
@@ -52,7 +52,7 @@ snowMap.latlong <- function(path, vestry = FALSE, stacked = TRUE,
   }
 
   if (add.roads) {
-    rd.gpkg <- sf::st_read(paste0(path, "roads_modified.gpkg"), quiet = TRUE)
+    rd.gpkg <- sf::st_read(paste0(path, "roadSegment_modified.gpkg"), quiet = TRUE)
     coords <- data.frame(sf::st_coordinates(rd.gpkg))
     invisible(lapply(unique(coords$L1), function(id) {
      lines(coords[coords$L1 == id, c("X", "Y")], col = road.col)
@@ -80,7 +80,7 @@ snowMap.latlong <- function(path, vestry = FALSE, stacked = TRUE,
   }
 
   if (add.frame)
-    dat <- paste0(path, "frame_modified.gpkg")
+    dat <- paste0(path, "frameSegment_modified.gpkg")
     frame.gpkg <- sf::st_read(dat, quiet = TRUE)
     coords <- data.frame(sf::st_coordinates(frame.gpkg))
     invisible(lapply(unique(coords$L1), function(id) {
