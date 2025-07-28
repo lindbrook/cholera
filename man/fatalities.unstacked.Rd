@@ -3,7 +3,7 @@
 \docType{data}
 \name{fatalities.unstacked}
 \alias{fatalities.unstacked}
-\title{"Unstacked" amended cholera fatalities data with fatality as unit of observation.}
+\title{Amended fatalities data with all cases in a stack sharing the coordinates of the "anchor" case.}
 \format{
 A data frame with 3 variable that records the position of the 578 bars on Snow's map.
 
@@ -19,7 +19,7 @@ A data frame with 3 variable that records the position of the 578 bars on Snow's
 fatalities.unstacked
 }
 \description{
-An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (bar) to the "address", the x-y coordinates of the case at the base of a stack, and assigns the base case's coordinates to all cases in the stack.
+The "anchor" case is the case at the base of a stack.
 }
 \note{
 \code{\link{unstackFatalities}} documents the code for these data. For details, see \code{vignette}("unstacking.fatalities").
