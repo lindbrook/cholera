@@ -1,3 +1,8 @@
+# cholera 0.9.1.9024
+
+- archive old orthogonalProjectionFatalities().
+
+
 # cholera 0.9.1.9023
 
 - rename fatalities.address to fatalities.anchor.
