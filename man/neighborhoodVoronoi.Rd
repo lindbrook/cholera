@@ -14,7 +14,7 @@ neighborhoodVoronoi(pump.select = NULL, vestry = FALSE, latlong = FALSE,
 
 \item{latlong}{Logical. Longitude and latitude coordinates}
 
-\item{location}{Character. "nominal" or "orthogonal". "nominal" uses the x-y coordinates of \code{fatalities.address}. "orthogonal"uses the x-y coordinates of \code{ortho.proj}.}
+\item{location}{Character. "nominal" or "orthogonal". "nominal" uses the x-y coordinates of \code{fatalities.anchor}. "orthogonal"uses the x-y coordinates of \code{ortho.proj}.}
 
 \item{polygon.vertices}{Logical. \code{TRUE} returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for \code{sp::point.in.polygon()} as used in \code{print.voronoi()} method.}
 }

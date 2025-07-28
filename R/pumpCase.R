@@ -1,7 +1,7 @@
 #'  Extract numeric case IDs by pump neighborhood.
 #'
 #' @param x An object created by \code{neighborhoodEuclidean()}, \code{neighborhoodVoronoi()} or \code{neighborhoodWalking()}.
-#' @param case Character. "address" or "fatality"
+#' @param case Character. "anchor" or "fatality"
 #' @return An R list of numeric ID of cases by pump neighborhoods.
 #' @export
 #' @examples
@@ -24,7 +24,7 @@ pumpCase.euclidean <- function(x, case = "anchor") {
   })
   if (case == "anchor") {
     out <- lapply(out, function(x) {
-      x[x %in% cholera::fatalities.address$anchor]
+      x[x %in% cholera::fatalities.anchor$anchor]
     })
   } else if (case != "fatality") stop('case must be "anchor" or "fatality".')
   stats::setNames(out, paste0("p", pumps))
@@ -35,7 +35,7 @@ pumpCase.euclidean_latlong <- function(x, case = "anchor") {
   census <- lapply(x$statistic.data, function(x) which(x == 1))
   if (case == "anchor") {
     census <- lapply(census, function(x) {
-      x[x %in% cholera::fatalities.address$anchor]
+      x[x %in% cholera::fatalities.anchor$anchor]
     })
   } else if (case != "fatality") stop('case must be "anchor" or "fatality".')
   census
@@ -47,7 +47,7 @@ pumpCase.voronoi <- function(x, case = "anchor") {
   if (case == "orthogonal") {
     lapply(output, function(x) cholera::ortho.proj$case[x == 1])
   } else if (case == "anchor") {
-    lapply(output, function(x) cholera::fatalities.address$anchor[x == 1])
+    lapply(output, function(x) cholera::fatalities.anchor$anchor[x == 1])
   } else if (case == "fatality") {
     case.pump <- lapply(output, function(x) cholera::fatalities$case[x == 1])
     lapply(case.pump, function(vec) {

@@ -138,8 +138,8 @@ orthogonalCoordinates <- function(case, pump = 7, angle = 0, vestry = FALSE,
   axis.focus <- p.data[p.data$id == pump, ]
 
   if (observed) {
-    obs <- cholera::fatalities.address[cholera::fatalities.address$anchor ==
-      case, c("x", "y")]
+    sel <- cholera::fatalities.anchor$anchor == case
+    obs <- cholera::fatalities.anchor[sel, c("x", "y")]
   } else {
     obs <- cholera::regular.cases[case, ]
   }
@@ -194,8 +194,8 @@ profilePerspective <- function(output = "inside", pump = 7, angle = 0,
   coords <- lapply(cases, function(x) orthogonalCoordinates(x, angle = angle))
   coords <- stats::setNames(do.call(rbind, coords), vars)
 
-  sel <- cholera::fatalities.address$anchor %in% cases
-  dat <- cholera::fatalities.address[sel, ]
+  sel <- cholera::fatalities.anchor$anchor %in% cases
+  dat <- cholera::fatalities.anchor[sel, ]
   dat <- dat[, setdiff(names(dat), c("lon", "lat"))]
 
   dat <- cbind(dat, coords)

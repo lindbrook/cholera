@@ -5,7 +5,7 @@
 \title{Plot/Locate road segment by ID.}
 \usage{
 segmentLocator(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
-  cases = "address", token = "id", vestry = FALSE, add.pump = TRUE,
+  cases = "anchor", token = "id", vestry = FALSE, add.pump = TRUE,
   add.title = TRUE, add.subtitle = TRUE, highlight = TRUE,
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
   cex.text = 0.67)
@@ -17,7 +17,7 @@ segmentLocator(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
 
 \item{latlong}{Logical. Longitude and latitude coordinates}
 
-\item{cases}{Character. Cases to plot: \code{NULL}, "address" or "fatality".}
+\item{cases}{Character. Cases to plot: \code{NULL}, "anchor" or "fatality".}
 
 \item{token}{Character. Cases as "id" or "point".}
 

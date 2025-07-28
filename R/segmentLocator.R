@@ -4,7 +4,7 @@
 #' @param segment.id Character. A vector of segment IDs. See Note.
 #' @param zoom Logical or Numeric. Positive value zoom in. Negative values zoom out.
 #' @param latlong Logical. Longitude and latitude coordinates
-#' @param cases Character. Cases to plot: \code{NULL}, "address" or "fatality".
+#' @param cases Character. Cases to plot: \code{NULL}, "anchor" or "fatality".
 #' @param token Character. Cases as "id" or "point".
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param add.pump Logical. Include pumps.
@@ -29,7 +29,7 @@
 #' }
 
 segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
-  cases = "address", token = "id", vestry = FALSE, add.pump = TRUE,
+  cases = "anchor", token = "id", vestry = FALSE, add.pump = TRUE,
   add.title = TRUE, add.subtitle = TRUE, highlight = TRUE,
   distance.unit = "meter", time.unit = "second", walking.speed = 5,
   cex.text = 0.67) {
@@ -64,8 +64,8 @@ segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
   }
 
   if (!is.null(cases)) {
-    if (cases %in% c("address", "fatality") == FALSE) {
-      stop('If specified, cases must either be "address" or "fatality".',
+    if (cases %in% c("anchor", "fatality") == FALSE) {
+      stop('If specified, cases must either be "anchor" or "fatality".',
         call. = FALSE)
     }
   }
@@ -186,7 +186,7 @@ segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
       }
 
       select.cases <- cholera::fatalities$case %in% seg.cases
-      select.anchors <- cholera::fatalities.address$anchor %in% seg.anchors
+      select.anchors <- cholera::fatalities.anchor$anchor %in% seg.anchors
 
       if (cases == "fatality") {
         text(cholera::fatalities[!select.cases, vars],
@@ -201,18 +201,18 @@ segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
               labels = cholera::fatalities$case[select.cases], cex = cex.text)
           }
         }
-      } else if (cases == "address") {
-        text(cholera::fatalities.address[!select.anchors, vars],
-          labels = cholera::fatalities.address$anchor[!select.anchors],
+      } else if (cases == "anchor") {
+        text(cholera::fatalities.anchor[!select.anchors, vars],
+          labels = cholera::fatalities.anchor$anchor[!select.anchors],
           cex = cex.text)
         if (any(select.anchors)) {
           if (highlight) {
-            text(cholera::fatalities.address[select.anchors, vars],
-              labels = cholera::fatalities.address$anchor[select.anchors],
+            text(cholera::fatalities.anchor[select.anchors, vars],
+              labels = cholera::fatalities.anchor$anchor[select.anchors],
               cex = cex.text, col = "red")
           } else {
-            text(cholera::fatalities.address[select.anchors, vars],
-              labels = cholera::fatalities.address$anchor[select.anchors],
+            text(cholera::fatalities.anchor[select.anchors, vars],
+              labels = cholera::fatalities.anchor$anchor[select.anchors],
               cex = cex.text)
           }
         }

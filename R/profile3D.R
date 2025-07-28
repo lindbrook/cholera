@@ -28,9 +28,9 @@ profile3D <- function(pump.select = NULL, pump.subset = NULL, vestry = FALSE,
   pump.id <- selectPump(pump.data, pump.select = NULL, vestry = FALSE)
   nearest.pump <- nearestPump(pump.id)
 
-  x <- cholera::fatalities.address$x
-  y <- cholera::fatalities.address$y
-  z <- cholera::fatalities.address$case.count
+  x <- cholera::fatalities.anchor$x
+  y <- cholera::fatalities.anchor$y
+  z <- cholera::fatalities.anchor$case.count
 
   snow.colors <- snowColors()[paste0("p", nearest.pump$pump)]
 

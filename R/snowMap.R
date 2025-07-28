@@ -37,7 +37,7 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
   if (stacked) {
     cases <- cholera::fatalities
   } else {
-    cases <- cholera::fatalities.address
+    cases <- cholera::fatalities.anchor
   }
 
   rng <- mapRange(latlong = latlong)

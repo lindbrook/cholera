@@ -12,7 +12,7 @@ neighborhoodSnow <- function(latlong = FALSE) {
 
   p.select <- nodes[nodes$pump == 7L, ]
 
-  sel <- cholera::snow.neighborhood %in% cholera::fatalities.address$anchor
+  sel <- cholera::snow.neighborhood %in% cholera::fatalities.anchor$anchor
   snow.anchors <- cholera::snow.neighborhood[sel]
 
   path.id2 <- lapply(snow.anchors, function(cs) {
@@ -73,11 +73,11 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
     segments(snow.edge$x1, snow.edge$y1, snow.edge$x2, snow.edge$y2,
       col = p7.col, lwd = 2)
     if (!add) pumpTokens(z, type = "obseved")
-    sel <- cholera::fatalities.address$anchor %in% x$snow.anchors
-    points(cholera::fatalities.address[sel, vars], pch = 16, col = p7.col,
+    sel <- cholera::fatalities.anchor$anchor %in% x$snow.anchors
+    points(cholera::fatalities.anchor[sel, vars], pch = 16, col = p7.col,
       cex = 0.5)
     if (non.snow.cases) {
-      points(cholera::fatalities.address[!sel, vars],  pch = 16, col = "red",
+      points(cholera::fatalities.anchor[!sel, vars],  pch = 16, col = "red",
         cex = 0.5)
     }
   } else if (type %in% c("area.points", "area.polygons")) {
@@ -132,7 +132,7 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
 
     sim.partial.case <- lapply(names(transversed.subsegs), function(nm) {
       sel <- cholera::ortho.proj$road.segment == nm &
-        cholera::ortho.proj$case %in% cholera::fatalities.address$anchor &
+        cholera::ortho.proj$case %in% cholera::fatalities.anchor$anchor &
         cholera::ortho.proj$case %in% cholera::snow.neighborhood
 
       obs.case <- cholera::ortho.proj[sel, ]
@@ -197,8 +197,8 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
     }
 
     if (non.snow.cases) {
-      sel <- !cholera::fatalities.address$anchor %in% x$snow.anchors
-      points(cholera::fatalities.address[sel, vars],  pch = 16, col = "red",
+      sel <- !cholera::fatalities.anchor$anchor %in% x$snow.anchors
+      points(cholera::fatalities.anchor[sel, vars],  pch = 16, col = "red",
         cex = 0.5)
     }
   }
@@ -238,6 +238,6 @@ print.snow <- function(x, ...) {
 #' }
 
 summary.snow <- function(object, ...) {
-  tbl <- table(cholera::fatalities.address$anchor %in% object$snow.anchors)
+  tbl <- table(cholera::fatalities.anchor$anchor %in% object$snow.anchors)
   data.frame(inside = tbl["TRUE"], outside = tbl["FALSE"], row.names = NULL)
 }

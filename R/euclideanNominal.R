@@ -43,7 +43,7 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
 
   if (case.set == "observed") {
     if (location %in% c("anchor", "orthogonal")) {
-      case.num <- cholera::fatalities.address$anchor
+      case.num <- cholera::fatalities.anchor$anchor
     } else if (location == "nominal") {
       case.num <- cholera::fatalities$case
     }

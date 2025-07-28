@@ -5,7 +5,7 @@
 #' @param dev.mode Logical. Development mode uses parallel::parLapply().
 #' @seealso \code{vignette("unstacking.fatalities")}
 #' @return An R list.
-#' @note This function documents the code that generates \code{\link{anchor.case}},  \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
+#' @note This function documents the code that generates \code{\link{anchor.case}}, \code{\link{fatalities.anchor}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
 #' @export
 
 unstackFatalities <- function(multi.core = FALSE, dev.mode = FALSE) {

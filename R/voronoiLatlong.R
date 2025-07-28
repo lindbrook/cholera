@@ -3,7 +3,7 @@
 #' Group cases into neighborhoods using Voronoi tessellation.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude of \code{fatalities.address}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
+#' @param location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude of \code{fatalities.anchor}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
 #' @param polygon.vertices Logical. \code{TRUE} returns a list of lon-lat coordinates of the vertices of Voronoi cells.
 #' @importFrom sp point.in.polygon
 #' @noRd
@@ -36,8 +36,8 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
     })
   } else if (location == "nominal") {
     statistic.data <- lapply(cells.triangles$cells, function(c) {
-      sp::point.in.polygon(cholera::fatalities.address$lon,
-        cholera::fatalities.address$lat, c$lon, c$lat)
+      sp::point.in.polygon(cholera::fatalities.anchor$lon,
+        cholera::fatalities.anchor$lat, c$lon, c$lat)
     })
   }
 
@@ -104,7 +104,7 @@ plot.voronoi_latlong <- function(x, add.pumps = TRUE,
   }
 
   case.partition <- lapply(x$statistic.data, function(dat) {
-    cholera::fatalities.address$anchor[dat == 1]
+    cholera::fatalities.anchor$anchor[dat == 1]
   })
 
   if (delaunay.voronoi == "voronoi") {
@@ -137,7 +137,7 @@ plot.voronoi_latlong <- function(x, add.pumps = TRUE,
 #' @importFrom geosphere distGeo
 
 plotLatlongEuclideanPaths <- function(x, pump.id, vars) {
-  cases <- cholera::fatalities.address
+  cases <- cholera::fatalities.anchor
 
   if (is.null(pump.id)) p.id <- x$pump.data$id
   else p.id <- pump.id
@@ -166,11 +166,11 @@ plotLatlongEuclideanPaths <- function(x, pump.id, vars) {
 plotLatlongVoronoiCases <- function(x, vars) {
   if (x$location == "nominal") {
     case.partition <- lapply(x$statistic.data, function(dat) {
-      cholera::fatalities.address$anchor[dat == 1]
+      cholera::fatalities.anchor$anchor[dat == 1]
     })
     invisible(lapply(names(case.partition), function(nm) {
-      sel <- cholera::fatalities.address$anchor %in% case.partition[[nm]]
-      points(cholera::fatalities.address[sel, vars], col = x$snow.colors[nm],
+      sel <- cholera::fatalities.anchor$anchor %in% case.partition[[nm]]
+      points(cholera::fatalities.anchor[sel, vars], col = x$snow.colors[nm],
         pch = 20, cex = 0.75)
     }))
   } else if (x$location == "orthogonal") {

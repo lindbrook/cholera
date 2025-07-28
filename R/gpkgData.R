@@ -5,9 +5,9 @@
 
 anchorsGPKG <- function(path) {
   vars <- c("x", "y")
-  dat <- cholera::fatalities.address[, vars]
+  dat <- cholera::fatalities.anchor[, vars]
   anchor_geom <- sf::st_as_sf(dat, coords = vars)
-  anchor_attr <- cholera::fatalities.address[, c("anchor", "case.count")]
+  anchor_attr <- cholera::fatalities.anchor[, c("anchor", "case.count")]
   anchor_sf <- sf::st_sf(anchor_attr, geometry = sf::st_as_sfc(anchor_geom))
   sf::write_sf(anchor_sf, paste0(path, "anchor.gpkg"), append = FALSE)
 }
@@ -134,9 +134,9 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
   if (dataset == "fatalities") {
     dat <- "fatality_modified.gpkg"
     nom.data <- cholera::fatalities
-  } else if (dataset == "fatalities.address") {
+  } else if (dataset == "fatalities.anchor") {
     dat <- "anchor_modified.gpkg"
-    nom.data <- cholera::fatalities.address
+    nom.data <- cholera::fatalities.anchor
   } else if (dataset == "fatalities.unstacked") {
     dat <- "unstack_modified.gpkg"
     nom.data <- cholera::fatalities.unstacked

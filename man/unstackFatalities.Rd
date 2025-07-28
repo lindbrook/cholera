@@ -18,7 +18,7 @@ An R list.
 Unstacks fatalities data by 1) assigning the coordinates of the base case to all cases in a stack and 2) setting the base case as an "address" and making the number of fatalities an attribute.
 }
 \note{
-This function documents the code that generates \code{\link{anchor.case}},  \code{\link{fatalities.address}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
+This function documents the code that generates \code{\link{anchor.case}}, \code{\link{fatalities.anchor}}, \code{\link{fatalities.unstacked}} and \code{\link{ortho.proj}}.
 }
 \seealso{
 \code{vignette("unstacking.fatalities")}
