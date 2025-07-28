@@ -354,7 +354,7 @@ orthoAddr <- function(case.set = "observed", latlong = FALSE) {
     }
   } else {
     if (case.set == "observed") {
-      sel <- cholera::ortho.proj$case %in% cholera::fatalities.address$anchor
+      sel <- cholera::ortho.proj$case %in% cholera::fatalities.anchor$anchor
       out <- cholera::ortho.proj[sel, ]
     } else if (case.set == "expected") {
       out <- cholera::sim.ortho.proj

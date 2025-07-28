@@ -3,7 +3,7 @@
 #' Group cases into neighborhoods using Voronoi tessellation.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param location Character. "nominal" or "orthogonal". "nominal" uses the x-y coordinates of \code{fatalities.address}. "orthogonal"uses the x-y coordinates of \code{ortho.proj}.
+#' @param location Character. "nominal" or "orthogonal". "nominal" uses the x-y coordinates of \code{fatalities.anchor}. "orthogonal"uses the x-y coordinates of \code{ortho.proj}.
 #' @param polygon.vertices Logical. \code{TRUE} returns a list of x-y coordinates of the vertices of Voronoi cells. Useful for \code{sp::point.in.polygon()} as used in \code{print.voronoi()} method.
 #' @importFrom deldir deldir
 #' @importFrom sp point.in.polygon
@@ -96,8 +96,8 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
     })
   } else if (location == "nominal") {
     statistic.data <- lapply(coordinates, function(cell) {
-      sp::point.in.polygon(cholera::fatalities.address$x,
-        cholera::fatalities.address$y, cell$x, cell$y)
+      sp::point.in.polygon(cholera::fatalities.anchor$x,
+        cholera::fatalities.anchor$y, cell$x, cell$y)
     })
   }
 
@@ -185,7 +185,7 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
   if (x$location == "orthogonal") {
     names(voronoi.colors) <- cholera::ortho.proj$case
   } else if (x$location == "nominal") {
-    names(voronoi.colors) <- cholera::fatalities.address$anchor
+    names(voronoi.colors) <- cholera::fatalities.anchor$anchor
   }
 
   for (nm in names(voronoi.case.id)) {
@@ -199,12 +199,12 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
     invisible(lapply(names(voronoi.case.id), function(nm) {
       p.data <- pump.data[paste0("p", pump.data$id) == nm, ]
       if (x$location == "orthogonal") {
-        sel <- voronoi.case.id[[nm]] %in% cholera::fatalities.address$anchor
+        sel <- voronoi.case.id[[nm]] %in% cholera::fatalities.anchor$anchor
         n.anchor <- voronoi.case.id[[nm]][sel]
         n.data <- cholera::ortho.proj[cholera::ortho.proj$case %in% n.anchor, ]
       } else if (x$location == "nominal") {
-        sel <- cholera::fatalities.address$anchor %in% voronoi.case.id[[nm]]
-        n.data <- cholera::fatalities.address[sel, ]
+        sel <- cholera::fatalities.anchor$anchor %in% voronoi.case.id[[nm]]
+        n.data <- cholera::fatalities.anchor[sel, ]
         names(n.data)[names(n.data) == "nominal"] <- "case"
       }
 
@@ -221,7 +221,7 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
       points(cholera::ortho.proj[, c("x.proj", "y.proj")], col = voronoi.colors,
         pch = 20, cex = 0.75)
     } else if (x$location == "nominal") {
-      points(cholera::fatalities.address[, c("x", "y")], col = voronoi.colors,
+      points(cholera::fatalities.anchor[, c("x", "y")], col = voronoi.colors,
         pch = 20, cex = 0.75)
     }
   }

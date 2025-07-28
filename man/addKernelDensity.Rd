@@ -16,7 +16,7 @@ addKernelDensity(pump.subset = "pooled", pump.select = NULL,
 
 \item{neighborhood.type}{Character. "voronoi" or "walking"}
 
-\item{data}{Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.}
+\item{data}{Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "anchor" uses \code{fatalities.anchor}; "fatality" uses \code{fatalities}.}
 
 \item{bandwidth}{Numeric. Bandwidth for kernel density estimation.}
 

@@ -9,7 +9,7 @@ pumpCase(x, case)
 \arguments{
 \item{x}{An object created by \code{neighborhoodEuclidean()}, \code{neighborhoodVoronoi()} or \code{neighborhoodWalking()}.}
 
-\item{case}{Character. "address" or "fatality"}
+\item{case}{Character. "anchor" or "fatality"}
 }
 \value{
 An R list of numeric ID of cases by pump neighborhoods.

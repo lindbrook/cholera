@@ -292,8 +292,8 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
     }))
 
     invisible(lapply(names(x$case.pump), function(nm) {
-      sel <- cholera::fatalities.address$anchor %in% x$case.pump[[nm]]
-      points(cholera::fatalities.address[sel, vars], pch = 20, cex = 0.75,
+      sel <- cholera::fatalities.anchor$anchor %in% x$case.pump[[nm]]
+      points(cholera::fatalities.anchor[sel, vars], pch = 20, cex = 0.75,
         col = x$snow.colors[nm])
     }))
 

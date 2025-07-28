@@ -76,8 +76,6 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
     names(nearest.pump)[sel] <- c("case", "case.nm")
     sel <- grep("destination", names(nearest.pump))
     names(nearest.pump)[sel] <- c("pump", "pump.nm")
-  } else if (metric == "walking") {
-    nearest.pump <- nearest.pump$distance
   }
 
   snow.colors <- snowColors(vestry)
@@ -121,7 +119,7 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
   if (location == "nominal") {
     case.data <- cholera::fatalities
   } else if (location == "anchor") {
-    sel <- cholera::fatalities.address$anchor
+    sel <- cholera::fatalities.anchor$anchor
     case.data <-  cholera::fatalities[cholera::fatalities$case %in% sel, ]
   } else if (location == "orthogonal") {
     if (latlong) {

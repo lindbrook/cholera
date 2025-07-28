@@ -59,7 +59,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
   }
 
   if (case.set == "observed") {
-    case.data <- cholera::fatalities.address
+    case.data <- cholera::fatalities.anchor
   } else if (case.set == "expected") {
     case.data <- cholera::regular.cases
   }

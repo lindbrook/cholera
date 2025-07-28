@@ -7,7 +7,7 @@
 #' @param bandwidth Numeric. Bandwidth for kernel density estimation.
 #' @param color Character. Color of contour lines.
 #' @param line.type Character. Line type for contour lines.
-#' @param data Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "address" uses \code{fatalities.address}; "fatality" uses \code{fatalities}.
+#' @param data Character. Unit of observation: "unstacked" uses \code{fatalities.unstacked}; "anchor" uses \code{fatalities.anchor}; "fatality" uses \code{fatalities}.
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param latlong Logical.
 #' @return Add contours to a graphics plot.
@@ -32,8 +32,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
   neighborhood.type = "walking", data = "unstacked", bandwidth = 0.5,
   color = "black", line.type = "solid", multi.core = FALSE, latlong = FALSE) {
 
-  if (!is.null(data) & !all(data %in% c("unstacked", "address", "fatality"))) {
-    stop('data must be "unstacked", "address" or "fatality".')
+  if (!is.null(data) & !all(data %in% c("unstacked", "anchor", "fatality"))) {
+    stop('data must be "unstacked", "anchor" or "fatality".')
   }
 
   if (!all(neighborhood.type %in% c("voronoi", "walking"))) {
@@ -63,8 +63,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
       if (pump.subset == "pooled") {
         if (data == "unstacked") {
           dat <- cholera::fatalities.unstacked[, vars]
-        } else if (data == "address") {
-          dat <- cholera::fatalities.address[, vars]
+        } else if (data == "anchor") {
+          dat <- cholera::fatalities.anchor[, vars]
         } else if (data == "fatality") {
           dat <- cholera::fatalities[, vars]
         }
@@ -100,8 +100,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
         }
 
         kde <- lapply(cases, function(id) {
-          sel <- cholera::fatalities.address$anchor %in% id
-          dat <- cholera::fatalities.address[sel, vars]
+          sel <- cholera::fatalities.anchor$anchor %in% id
+          dat <- cholera::fatalities.anchor[sel, vars]
           if (latlong) {
             origin <- data.frame(lon = min(cholera::roads$lon),
                                  lat = min(cholera::roads$lat))
@@ -164,8 +164,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
       }
 
       kde <- lapply(cases, function(id) {
-        sel <- cholera::fatalities.address$anchor %in% id
-        dat <- cholera::fatalities.address[sel, vars]
+        sel <- cholera::fatalities.anchor$anchor %in% id
+        dat <- cholera::fatalities.anchor[sel, vars]
         if (latlong) {
           origin <- data.frame(lon = min(cholera::roads$lon),
                                lat = min(cholera::roads$lat))
@@ -197,8 +197,8 @@ addKernelDensity <- function(pump.subset = "pooled", pump.select = NULL,
     cases <- pumpCase(n.data)
 
     kde <- lapply(cases, function(id) {
-      sel <- cholera::fatalities.address$anchor %in% id
-      dat <- cholera::fatalities.address[sel, vars]
+      sel <- cholera::fatalities.anchor$anchor %in% id
+      dat <- cholera::fatalities.anchor[sel, vars]
       if (latlong) {
         origin <- data.frame(lon = min(cholera::roads$lon),
                              lat = min(cholera::roads$lat))

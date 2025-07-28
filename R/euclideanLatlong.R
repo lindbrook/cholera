@@ -29,7 +29,7 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
     if (location == "nominal") {
       case.data <- cholera::fatalities
     } else if (location == "anchor") {
-      case.data <- cholera::fatalities.address
+      case.data <- cholera::fatalities.anchor
     } else if (location == "orthogonal") {
       case.data <- cholera::latlong.ortho.addr
     }
@@ -160,7 +160,7 @@ latlongEuclideanCases <- function(x, vars, add.observed.points) {
     if (x$location == "nominal") {
       dat <- cholera::fatalities
     } else if (x$location == "anchor") {
-      dat <- cholera::fatalities.address
+      dat <- cholera::fatalities.anchor
       names(dat)[names(dat) == "anchor"] <- "case"
     } else if (x$location == "orthogonal") {
       dat <- cholera::latlong.ortho.addr
@@ -191,7 +191,7 @@ latlongEuclideanStar <- function(x, vars) {
     if (x$location == "nominal") {
       cases <- cholera::fatalities
     } else if (x$location == "anchor") {
-      cases <- cholera::fatalities.address
+      cases <- cholera::fatalities.anchor
       names(cases)[names(cases) == "anchor"] <- "case"
     } else if (x$location == "orthogonal") {
       cases <- cholera::latlong.ortho.addr
