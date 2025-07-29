@@ -186,4 +186,17 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
   cbind(nom.data, geo.data)
 }
 
+#' Extract Longitude and Latitude from all Georeferenced GeoPackages.
+#'
+#' @param path Character. File path e.g., "~/Documents/Data/".
+#' @noRd
+
+latlongGPKG  <- function(path) {
+  data.sets <- c("fatalities", "fatalities.anchor", "fatalities.unstacked", 
+    "pumps", "pumps.vestry", "roads", "frame.data", "frame.segments")
+  out <- lapply(data.sets, latlongCoordinatesGPKG, path = path)
+  names(out) <- data.sets
+  out
+}
+
 #' @importFrom sf st_as_sf st_as_sfc st_coordinates st_read st_sf write_sf
