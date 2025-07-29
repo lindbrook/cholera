@@ -1,3 +1,8 @@
+# cholera 0.9.1.9025
+
+- add latlongGPKG().
+
+
 # cholera 0.9.1.9024
 
 - archive old orthogonalProjectionFatalities().
