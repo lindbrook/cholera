@@ -1,3 +1,8 @@
+# cholera 0.9.1.9028
+
+- archive latlong PDF functions.
+
+
 # cholera 0.9.1.9027
 
 - use cholera::fatalities.anchor in geoCartesian().
