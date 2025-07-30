@@ -1,3 +1,8 @@
+# cholera 0.9.1.9027
+
+- use cholera::fatalities.anchor in geoCartesian().
+
+
 # cholera 0.9.1.9026
 
 - use cholera::fatalities.anchor in addCase().
