@@ -10,15 +10,15 @@ caseNumber <- function(x) as.numeric(names(x))
 #' Compute geo-cartesian distance from origin to pump and translate into
 #` horizontal (East-West) and vertical (North-South) components.
 #' @param dat Object. Data.
-#' @param case.address Logical. Use fatalities.address$anchor
+#' @param anchor.case Logical. Use fatalities.anchor$anchor
 #' @importFrom geosphere distGeo
 #' @noRd
 
-geoCartesian <- function(dat = cholera::pumps, case.address = FALSE) {
+geoCartesian <- function(dat = cholera::pumps, anchor.case = FALSE) {
   origin <- data.frame(lon = min(cholera::roads$lon),
                        lat = min(cholera::roads$lat))
-  if (case.address) {
-    dat <- cholera::fatalities.address
+  if (anchor.case) {
+    dat <- cholera::fatalities.anchor
     names(dat)[names(dat) == "anchor"] <- "id"
   }
   do.call(rbind, lapply(dat$id, function(x) {
