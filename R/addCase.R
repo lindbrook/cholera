@@ -50,14 +50,14 @@ addCase <- function(case = 1, latlong = FALSE, type = "observed",
         call. = FALSE)
     } else {
       if (case == "anchor") {
-        points(cholera::fatalities.address[, vars], pch = 16, cex = 0.5,
+        points(cholera::fatalities.anchor[, vars], pch = 16, cex = 0.5,
           col = col)
       } else if (case == "fatality") {
         points(cholera::fatalities[, vars], pch = 16, cex = 0.5,
           col = col)
       } else if (case %in% c("orthogonal")) {
         if (latlong) {
-          sel <- proj.data$case %in% cholera::fatalities.address$anchor
+          sel <- proj.data$case %in% cholera::fatalities.anchor$anchor
           points(proj.data[sel, vars.proj], pch = 16, cex = 0.5, col = col)
         } else {
           points(proj.data[, vars.proj], pch = 16, cex = 0.5, col = col)
