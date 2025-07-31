@@ -1,3 +1,8 @@
+# cholera 0.9.1.9030
+
+- add plagueGPKG() and plagueSegmentGPKG(); amend latlongCoordinatesGPKG().
+
+
 # cholera 0.9.1.9029
 
 - add plaguePitSegments() and plague.pit.segments.
