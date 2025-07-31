@@ -124,6 +124,44 @@ mapFrameSegmentGPKG <- function(path) {
   sf::st_write(fr.segs_sf, paste0(path, "frameSegment.gpkg"), append = FALSE)
 }
 
+#' Create and write GeoPackage (GPKG) of plague pit data (prototype).
+#'
+#' @param path Character. File path e.g., "~/Documents/Data/".
+#' @noRd
+
+plagueGPKG <- function(path) {
+  vars <- c("x", "y")
+  dat <- cholera::plague.pit[, vars]
+  plague_geom <- sf::st_as_sf(dat, coords = vars)
+  plague_attr <- cholera::plague.pit[, "id", drop = FALSE]
+  plague_sf <- sf::st_sf(plague_attr, geometry = sf::st_as_sfc(plague_geom))
+  sf::write_sf(plague_sf, paste0(path, "plague.gpkg"), append = FALSE)
+}
+
+#' Create and write GeoPackage (GPKG) of plague pit segment data (prototype).
+#'
+#' @param path Character. File path e.g., "~/Documents/Data/".
+#' @noRd
+
+plagueSegmentGPKG <- function(path) {
+  vars <- c("x", "y")
+  newvars <- c(paste0(vars, 1), paste0(vars, 2))
+  pit <- cholera::plague.pit
+  
+  seg.data <- do.call(rbind, lapply(seq_len(nrow(pit) - 1), function(i) {
+    stats::setNames(cbind(pit[i, vars], pit[i + 1, vars]), newvars) 
+  }))
+  
+  seg.data <- lapply(seq_along(seg.data$x1), function(i) {
+    matrix(unlist(seg.data[i, newvars]), ncol = 2, byrow = TRUE)
+  })
+  
+  pit.segs_geom <- lapply(seg.data, sf::st_linestring)
+  pit.segs_attr <- data.frame(id = seq_along(seg.data))
+  pit.segs_sf <- sf::st_sf(pit.segs_attr, geometry = sf::st_sfc(pit.segs_geom))
+  sf::write_sf(pit.segs_sf, paste0(path, "plagueSegment.gpkg"), append = FALSE)
+}
+
 #' Extract Longitude and Latitude from Georeferenced GeoPackage.
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
@@ -158,6 +196,12 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
   } else if (dataset == "road.segments") {
     dat <- "roadSegment_modified.gpkg"
     nom.data <- cholera::road.segments
+  } else if (dataset == "plague.pit") {
+    dat <- "plague_modified.gpkg"
+    nom.data <- cholera::plague.pit
+  } else if (dataset == "plague.pit.segments") {
+    dat <- "plagueSegment_modified.gpkg"
+    nom.data <- cholera::plague.pit.segments
   } else {
     stop('Invalid dataset. Check spelling.', call. = FALSE)
   }
