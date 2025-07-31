@@ -1,3 +1,8 @@
+# cholera 0.9.1.9031
+
+- add landmarkGPKG() and landmarkSquareGPKG().
+
+
 # cholera 0.9.1.9030
 
 - add plagueGPKG() and plagueSegmentGPKG(); amend latlongCoordinatesGPKG().
