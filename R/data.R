@@ -258,8 +258,8 @@
 #'   \item{\code{id}}{integers 1 through 12}
 #'   \item{\code{x1}}{x-coordinate}
 #'   \item{\code{y1}}{y-coordinate}
-#'   \item{\code{x1}}{x-coordinate}
-#'   \item{\code{y1}}{y-coordinate}
+#'   \item{\code{x2}}{x-coordinate}
+#'   \item{\code{y2}}{y-coordinate}
 #' }
 #' @docType data
 "plague.pit.segments"
