@@ -162,6 +162,44 @@ plagueSegmentGPKG <- function(path) {
   sf::write_sf(pit.segs_sf, paste0(path, "plagueSegment.gpkg"), append = FALSE)
 }
 
+#' Create and write GeoPackage (GPKG) of landmark data (prototype).
+#'
+#' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param label.coords Logical. Compute label coordinates.
+#' @noRd
+
+landmarkGPKG <- function(path, label.coords = FALSE) {
+  if (label.coords) vars <- c("x.lab", "y.lab")
+  else vars <- c("x", "y")
+  dat <- cholera::landmarks[, vars]
+  landmark_geom <- sf::st_as_sf(dat, coords = vars)
+  landmark_attr <- cholera::landmarks[, c("case", "road.segment", "name")]
+  landmark_sf <- sf::st_sf(landmark_attr, 
+    geometry = sf::st_as_sfc(landmark_geom))
+  if (label.coords) {
+    sf::write_sf(landmark_sf, paste0(path, "landmark.gpkg"), append = FALSE)
+  } else {
+    sf::write_sf(landmark_sf, paste0(path, "landmarkLabel.gpkg"), 
+      append = FALSE)
+  }
+}
+
+#' Create and write GeoPackage (GPKG) of landmark squares data (prototype).
+#'
+#' @param path Character. File path e.g., "~/Documents/Data/".
+#' @noRd
+
+landmarkSquareGPKG <- function(path) {
+  vars <- c("x", "y")
+  dat <- cholera::landmark.squares[, vars]
+  landmarkSquare_geom <- sf::st_as_sf(dat, coords = vars)
+  landmarkSquare_attr <- cholera::landmark.squares[, c("case", "name")]
+  landmarkSquare_sf <- sf::st_sf(landmarkSquare_attr, 
+    geometry = sf::st_as_sfc(landmarkSquare_geom))
+  sf::write_sf(landmarkSquare_sf, paste0(path, "landmarkSquare.gpkg"), 
+    append = FALSE)
+}
+
 #' Extract Longitude and Latitude from Georeferenced GeoPackage.
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
