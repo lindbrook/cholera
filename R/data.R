@@ -250,6 +250,20 @@
 #' @docType data
 "plague.pit"
 
+#' Plague pit coordinates.
+#'
+#' Coordinates for GeoPackage data. In progress.
+#' @format A data frame with 12 observations and 5 variables.
+#' \describe{
+#'   \item{\code{id}}{integers 1 through 12}
+#'   \item{\code{x1}}{x-coordinate}
+#'   \item{\code{y1}}{y-coordinate}
+#'   \item{\code{x1}}{x-coordinate}
+#'   \item{\code{y1}}{y-coordinate}
+#' }
+#' @docType data
+"plague.pit.segments"
+
 #' Dodson and Tobler's pump data with street name.
 #'
 #' Adds and amends road locations for water pumps from John Snow's map to Dodson and Tobler's street data. The latter are available at Michael Friendly's HistData::Snow.streets.

@@ -1,3 +1,8 @@
+# cholera 0.9.1.9029
+
+- add plaguePitSegments() and plague.pit.segments.
+
+
 # cholera 0.9.1.9028
 
 - archive latlong PDF functions.
