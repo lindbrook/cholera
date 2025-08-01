@@ -240,19 +240,38 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
   } else if (dataset == "plague.pit.segments") {
     dat <- "plagueSegment_modified.gpkg"
     nom.data <- cholera::plague.pit.segments
+  } else if (dataset == "landmarks") {
+    dat <- "landmark_modified.gpkg"
+    label.dat <- "landmarkLabel_modified.gpkg"
+    geo.label.data <- sf::st_read(paste0(path, label.dat), quiet = TRUE)
+    nom.data <- cholera::landmarks
+  } else if (dataset == "landmark.squares") {
+    dat <- "landmarkSquare_modified.gpkg"
+    nom.data <- cholera::landmark.squares
   } else {
     stop('Invalid dataset. Check spelling.', call. = FALSE)
   }
 
   geo.data <- sf::st_read(paste0(path, dat), quiet = TRUE)
   
-  if (!dataset %in% c("frame.segments", "road.segments")) {
+  if (dataset == "landmarks") {
+    vars <- c("lon", "lat")
+    varsB <- c(vars, paste0(vars, ".lab"))
+    if (all(varsB %in% names(nom.data))) {
+      nom.data <- nom.data[, !names(nom.data) %in% varsB]
+    }
+    coords <- data.frame(sf::st_coordinates(geo.data))
+    labs <- data.frame(sf::st_coordinates(geo.label.data))
+    names(coords) <- vars
+    names(labs) <-  varsB[3:4]
+    geo.data <- cbind(coords, labs)
+  } else if (!dataset %in% c("frame.segments", "road.segments")) {
     vars <- c("lon", "lat")
     if (all(vars %in% names(nom.data))) {
       nom.data <- nom.data[, !names(nom.data) %in% vars]
     }
     geo.data <- stats::setNames(data.frame(sf::st_coordinates(geo.data)), vars)
-  } else {
+  } else if (dataset %in% c("frame.segments", "road.segments")) {
     vars <- c("lon1", "lat1", "lon2", "lat2")
     if (all(vars %in% names(nom.data))) {
       nom.data <- nom.data[, !names(nom.data) %in% vars]
@@ -265,7 +284,15 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
       tmp
     }))
   }
-  cbind(nom.data, geo.data)
+  
+  if (!dataset %in% c("landmarks", "landmark.squares")) {
+    out <- cbind(nom.data, geo.data)
+  } else {
+    out <- cbind(nom.data[, names(nom.data) != "name"], 
+                 geo.data,  
+                 name = nom.data[, names(nom.data) == "name"])
+  }
+  out
 }
 
 #' Extract Longitude and Latitude from all Georeferenced GeoPackages.

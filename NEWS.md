@@ -1,3 +1,8 @@
+# cholera 0.9.1.9033
+
+- update latlongCoordinatesGPKG().
+
+
 # cholera 0.9.1.9032
 
 - fix landmarkGPKG() output.
