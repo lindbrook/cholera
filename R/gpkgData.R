@@ -177,10 +177,10 @@ landmarkGPKG <- function(path, label.coords = FALSE) {
   landmark_sf <- sf::st_sf(landmark_attr, 
     geometry = sf::st_as_sfc(landmark_geom))
   if (label.coords) {
-    sf::write_sf(landmark_sf, paste0(path, "landmark.gpkg"), append = FALSE)
-  } else {
-    sf::write_sf(landmark_sf, paste0(path, "landmarkLabel.gpkg"), 
+    sf::write_sf(landmark_sf, paste0(path, "landmarkLabel.gpkg"),
       append = FALSE)
+  } else {
+    sf::write_sf(landmark_sf, paste0(path, "landmark.gpkg"), append = FALSE)
   }
 }
 
