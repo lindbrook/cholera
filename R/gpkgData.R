@@ -364,7 +364,9 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
 
 latlongGPKG  <- function(path) {
   data.sets <- c("fatalities", "fatalities.anchor", "fatalities.unstacked", 
-    "pumps", "pumps.vestry", "roads", "frame.data", "frame.segments")
+    "pumps", "pumps.vestry", "roads", "frame.data", "frame.segments", 
+    "road.segments", "frame.segments", "plague.pit", "plague.pit.segments",
+    "landmarks", "landmark.squares")
   out <- lapply(data.sets, latlongCoordinatesGPKG, path = path)
   names(out) <- data.sets
   out
