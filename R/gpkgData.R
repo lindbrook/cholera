@@ -1,53 +1,69 @@
 #' Create and write GeoPackage (GPKG) of anchor fatalities (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-anchorsGPKG <- function(path) {
+anchorsGPKG <- function(path, write.gpkg = TRUE) {
   vars <- c("x", "y")
   dat <- cholera::fatalities.anchor[, vars]
   anchor_geom <- sf::st_as_sf(dat, coords = vars)
   anchor_attr <- cholera::fatalities.anchor[, c("anchor", "case.count")]
   anchor_sf <- sf::st_sf(anchor_attr, geometry = sf::st_as_sfc(anchor_geom))
-  sf::write_sf(anchor_sf, paste0(path, "anchor.gpkg"), append = FALSE)
+  if (write.gpkg) {
+    sf::write_sf(anchor_sf, paste0(path, "anchor.gpkg"), append = FALSE)
+  } else {
+    anchor_sf
+  }
 }
 
 #' Create and write GeoPackage (GPKG) of fatalities (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-fatalitiesGPKG <- function(path) {
+fatalitiesGPKG <- function(path, write.gpkg = TRUE) {
   vars <- c("x", "y")
   dat <- cholera::fatalities[, vars]
   fatality_geom <- sf::st_as_sf(dat, coords = vars)
   fatality_attr <- cholera::fatalities[, "case", drop = FALSE]
   fatality_sf <- sf::st_sf(fatality_attr, 
     geometry = sf::st_as_sfc(fatality_geom))
-  sf::write_sf(fatality_sf, paste0(path, "fatality.gpkg"), append = FALSE)
+  if (write.gpkg) {
+    sf::write_sf(fatality_sf, paste0(path, "fatality.gpkg"), append = FALSE)  
+  } else {
+    fatality_sf
+  }
 }
 
 #' Create and write GeoPackage (GPKG) of fatalities.unstacked (prototype).
 #'
 #' @param path File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-unstackedGPKG <- function(path) {
+unstackedGPKG <- function(path, write.gpkg = TRUE) {
   vars <- c("x", "y")
   dat <- cholera::fatalities.unstacked[, vars]
   unstack_geom <- sf::st_as_sf(dat, coords = vars)
   unstack_attr <- cholera::fatalities.unstacked[, "case", drop = FALSE]
   unstack_sf <- sf::st_sf(unstack_attr, geometry = sf::st_as_sfc(unstack_geom))
-  sf::write_sf(unstack_sf, paste0(path, "unstack.gpkg"), append = FALSE)
+  if (write.gpkg) {
+    sf::write_sf(unstack_sf, paste0(path, "unstack.gpkg"), append = FALSE)
+  } else {
+    unstack_sf
+  }
 }
 
 #' Create and write GeoPackage (GPKG) of pump data (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
 #' @param vestry Logical.
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-pumpGPKG <- function(path, vestry = FALSE) {
+pumpGPKG <- function(path, vestry = FALSE, write.gpkg = TRUE) {
   vars <- c("x", "y")
   if (vestry) {
     dat <- cholera::pumps.vestry[, vars]
@@ -60,44 +76,59 @@ pumpGPKG <- function(path, vestry = FALSE) {
   }
   pump_geom <- sf::st_as_sf(dat, coords = vars)
   pump_sf <- sf::st_sf(pump_attr, geometry = sf::st_as_sfc(pump_geom))
-  sf::write_sf(pump_sf, paste0(path, file.nm), append = FALSE)
+  if (write.gpkg) {
+    sf::write_sf(pump_sf, paste0(path, file.nm), append = FALSE)
+  } else {
+    pump_sf
+  }
 }
 
 #' Create and write GeoPackage (GPKG) of roads data (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-roadGPKG <- function(path) {
+roadGPKG <- function(path, write.gpkg = TRUE) {
   vars <- c("x", "y")
   dat <- cholera::roads[, vars]
   road_geom <- sf::st_as_sf(dat, coords = vars)
   road_attr <- cholera::roads[, c("id", "street", "n", "name")] 
   road_sf <- sf::st_sf(road_attr, geometry = sf::st_as_sfc(road_geom))
-  sf::write_sf(road_sf, paste0(path, "road.gpkg"), append = FALSE)
+  if (write.gpkg) {
+    sf::write_sf(road_sf, paste0(path, "road.gpkg"), append = FALSE)
+  } else {
+    road_sf
+  }
 }
 
 #' Create and write GeoPackage (GPKG) of roads data (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-frameGPKG <- function(path) {
+frameGPKG <- function(path, write.gpkg = TRUE) {
   vars <- c("x", "y")
   dat <- cholera::frame.data[, vars]
   frame_geom <- sf::st_as_sf(dat, coords = vars)
   frame_attr <- cholera::frame.data[, c("id", "street", "n", "name")] 
   frame_sf <- sf::st_sf(frame_attr, geometry = sf::st_as_sfc(frame_geom))
-  sf::write_sf(frame_sf, paste0(path, "frame.gpkg"), append = FALSE)
+  if (write.gpkg) {
+    sf::write_sf(frame_sf, paste0(path, "frame.gpkg"), append = FALSE)
+  } else {
+    frame_sf
+  }
 }
 
 #' Create and write GeoPackage (GPKG) of road line segment network (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 #' @note For georeferencing.
 
-roadSegmentGPKG <- function(path) {
+roadSegmentGPKG <- function(path, write.gpkg = TRUE) {
   vars <- c("x1", "y1", "x2", "y2")
   seg.data <- lapply(seq_along(cholera::road.segments$id), function(i) {
     matrix(unlist(cholera::road.segments[i, vars]), ncol = 2, byrow = TRUE)
@@ -105,15 +136,20 @@ roadSegmentGPKG <- function(path) {
   rd.segs_geom <- lapply(seg.data, sf::st_linestring)
   rd.segs_attr <- cholera::road.segments[, c("street", "id", "name")]
   rd.segs_sf <- sf::st_sf(rd.segs_attr, geometry = sf::st_sfc(rd.segs_geom))
-  sf::st_write(rd.segs_sf, paste0(path, "roadSegment.gpkg"), append = FALSE)
+  if (write.gpkg) {
+    sf::st_write(rd.segs_sf, paste0(path, "roadSegment.gpkg"), append = FALSE)
+  } else {
+    rd.segs_sf
+  }
 }
 
 #' Create and write GeoPackage (GPKG) of map frame line segments (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-mapFrameSegmentGPKG <- function(path) {
+mapFrameSegmentGPKG <- function(path, write.gpkg = TRUE) {
   vars <- c("x1", "y1", "x2", "y2")
   seg.data <- lapply(seq_along(cholera::frame.segments$id), function(i) {
     matrix(unlist(cholera::frame.segments[i, vars]), ncol = 2, byrow = TRUE)
@@ -121,29 +157,39 @@ mapFrameSegmentGPKG <- function(path) {
   fr.segs_geom <- lapply(seg.data, sf::st_linestring)
   fr.segs_attr <- cholera::frame.segments[, c("street", "id", "name")]
   fr.segs_sf <- sf::st_sf(fr.segs_attr, geometry = sf::st_sfc(fr.segs_geom))
-  sf::st_write(fr.segs_sf, paste0(path, "frameSegment.gpkg"), append = FALSE)
+  if (write.gpkg) {
+    sf::st_write(fr.segs_sf, paste0(path, "frameSegment.gpkg"), append = FALSE)
+  } else {
+    fr.segs_sf
+  }
 }
 
 #' Create and write GeoPackage (GPKG) of plague pit data (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-plagueGPKG <- function(path) {
+plagueGPKG <- function(path, write.gpkg = TRUE) {
   vars <- c("x", "y")
   dat <- cholera::plague.pit[, vars]
   plague_geom <- sf::st_as_sf(dat, coords = vars)
   plague_attr <- cholera::plague.pit[, "id", drop = FALSE]
   plague_sf <- sf::st_sf(plague_attr, geometry = sf::st_as_sfc(plague_geom))
-  sf::write_sf(plague_sf, paste0(path, "plague.gpkg"), append = FALSE)
+  if (write.gpkg) {
+    sf::write_sf(plague_sf, paste0(path, "plague.gpkg"), append = FALSE)
+  } else {
+    plague_sf
+  }
 }
 
 #' Create and write GeoPackage (GPKG) of plague pit segment data (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-plagueSegmentGPKG <- function(path) {
+plagueSegmentGPKG <- function(path, write.gpkg = TRUE) {
   vars <- c("x", "y")
   newvars <- c(paste0(vars, 1), paste0(vars, 2))
   pit <- cholera::plague.pit
@@ -159,16 +205,22 @@ plagueSegmentGPKG <- function(path) {
   pit.segs_geom <- lapply(seg.data, sf::st_linestring)
   pit.segs_attr <- data.frame(id = seq_along(seg.data))
   pit.segs_sf <- sf::st_sf(pit.segs_attr, geometry = sf::st_sfc(pit.segs_geom))
-  sf::write_sf(pit.segs_sf, paste0(path, "plagueSegment.gpkg"), append = FALSE)
+  if (write.gpkg) {
+    sf::write_sf(pit.segs_sf, paste0(path, "plagueSegment.gpkg"), 
+      append = FALSE)
+  } else {
+    pit.segs_sf
+  }
 }
 
 #' Create and write GeoPackage (GPKG) of landmark data (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
 #' @param label.coords Logical. Compute label coordinates.
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-landmarkGPKG <- function(path, label.coords = FALSE) {
+landmarkGPKG <- function(path, label.coords = FALSE, write.gpkg = TRUE) {
   if (label.coords) vars <- c("x.lab", "y.lab")
   else vars <- c("x", "y")
   dat <- cholera::landmarks[, vars]
@@ -176,28 +228,38 @@ landmarkGPKG <- function(path, label.coords = FALSE) {
   landmark_attr <- cholera::landmarks[, c("case", "road.segment", "name")]
   landmark_sf <- sf::st_sf(landmark_attr, 
     geometry = sf::st_as_sfc(landmark_geom))
-  if (label.coords) {
-    sf::write_sf(landmark_sf, paste0(path, "landmarkLabel.gpkg"),
-      append = FALSE)
+  
+  if (write.gpkg) {
+    if (label.coords) {
+      sf::write_sf(landmark_sf, paste0(path, "landmarkLabel.gpkg"),
+        append = FALSE)
+    } else {
+      sf::write_sf(landmark_sf, paste0(path, "landmark.gpkg"), append = FALSE)
+    }
   } else {
-    sf::write_sf(landmark_sf, paste0(path, "landmark.gpkg"), append = FALSE)
+    landmark_sf
   }
 }
 
 #' Create and write GeoPackage (GPKG) of landmark squares data (prototype).
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE saves GeoPackage to disk. FALSE returns simple features object.
 #' @noRd
 
-landmarkSquareGPKG <- function(path) {
+landmarkSquareGPKG <- function(path, write.gpkg = TRUE) {
   vars <- c("x", "y")
   dat <- cholera::landmark.squares[, vars]
   landmarkSquare_geom <- sf::st_as_sf(dat, coords = vars)
   landmarkSquare_attr <- cholera::landmark.squares[, c("case", "name")]
   landmarkSquare_sf <- sf::st_sf(landmarkSquare_attr, 
     geometry = sf::st_as_sfc(landmarkSquare_geom))
-  sf::write_sf(landmarkSquare_sf, paste0(path, "landmarkSquare.gpkg"), 
-    append = FALSE)
+  if (write.gpkg) {
+    sf::write_sf(landmarkSquare_sf, paste0(path, "landmarkSquare.gpkg"), 
+      append = FALSE)
+  } else {
+    landmarkSquare_sf
+  }
 }
 
 #' Extract Longitude and Latitude from Georeferenced GeoPackage.
