@@ -372,4 +372,29 @@ latlongGPKG  <- function(path) {
   out
 }
 
+#' Create and Write GeoPackage Versions of All Nominal cholera Data.
+#'
+#` Runs all *GPKG() data translator functtions.
+#' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param write.gpkg Logical. TRUE writes GeoPackage to disk. FALSE returns simple features object.
+#' @noRd
+
+writeGPKG  <- function(path, write.gpkg = TRUE) {
+  list(fatalities.anchor = anchorsGPKG(write.gpkg = write.gpkg), 
+       fatalities = fatalitiesGPKG(write.gpkg = write.gpkg),
+       fatalities.unstacked = unstackedGPKG(write.gpkg = write.gpkg),
+       pumps = pumpGPKG(write.gpkg = write.gpkg),
+       pumps.vestry = pumpGPKG(vestry = TRUE, write.gpkg = write.gpkg),
+       roads = roadGPKG(write.gpkg = write.gpkg),
+       frame.data = frameGPKG(write.gpkg = write.gpkg),
+       road.segments = roadSegmentGPKG(write.gpkg = write.gpkg),
+       frame.segments = mapFrameSegmentGPKG(write.gpkg = write.gpkg),
+       plague.pit = plagueGPKG(write.gpkg = write.gpkg),
+       plague.pit.segments = plagueSegmentGPKG(write.gpkg = write.gpkg),
+       landmarks = landmarkGPKG(write.gpkg = write.gpkg),
+       landmark.labels = landmarkGPKG(label.coords = TRUE, 
+          write.gpkg = write.gpkg),
+       landmark.squares = landmarkSquareGPKG(write.gpkg = write.gpkg))
+}
+
 #' @importFrom sf st_as_sf st_as_sfc st_coordinates st_read st_sf write_sf

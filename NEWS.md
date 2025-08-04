@@ -1,3 +1,8 @@
+# cholera 0.9.1.9036
+
+- add writeGPKG().
+
+
 # cholera 0.9.1.9035
 
 - amend data.sets in latlongGPKG().
