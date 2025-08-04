@@ -1,3 +1,8 @@
+# cholera 0.9.1.9034
+
+- add/set *GPKG(write.gpkg = TRUE) - translator functions.
+
+
 # cholera 0.9.1.9033
 
 - update latlongCoordinatesGPKG().
