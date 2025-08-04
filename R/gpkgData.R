@@ -262,7 +262,7 @@ landmarkSquareGPKG <- function(path, write.gpkg = TRUE) {
   }
 }
 
-#' Extract Longitude and Latitude from Georeferenced GeoPackage.
+#' Extract Longitude and Latitude from Selected Georeferenced GeoPackage Object.
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
 #' @param dataset Character. Name of 'cholera' dataset.
@@ -357,7 +357,7 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
   out
 }
 
-#' Extract Longitude and Latitude from all Georeferenced GeoPackages.
+#' Extract Longitude and Latitude from All Georeferenced GeoPackage Objects.
 #'
 #' @param path Character. File path e.g., "~/Documents/Data/".
 #' @noRd
