@@ -1,3 +1,8 @@
+# cholera 0.9.1.9037
+
+- add "plague.pit.segments" to linestring.segs in  latlongCoordinatesGPKG().
+
+
 # cholera 0.9.1.9036
 
 - add writeGPKG().
