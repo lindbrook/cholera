@@ -315,6 +315,8 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
   }
 
   geo.data <- sf::st_read(paste0(path, dat), quiet = TRUE)
+
+  linestring.segs <- c("frame.segments", "plague.pit.segments", "road.segments")
   
   if (dataset == "landmarks") {
     vars <- c("lon", "lat")
@@ -327,13 +329,13 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
     names(coords) <- vars
     names(labs) <-  varsB[3:4]
     geo.data <- cbind(coords, labs)
-  } else if (!dataset %in% c("frame.segments", "road.segments")) {
+  } else if (!dataset %in% linestring.segs) {
     vars <- c("lon", "lat")
     if (all(vars %in% names(nom.data))) {
       nom.data <- nom.data[, !names(nom.data) %in% vars]
     }
     geo.data <- stats::setNames(data.frame(sf::st_coordinates(geo.data)), vars)
-  } else if (dataset %in% c("frame.segments", "road.segments")) {
+  } else if (dataset %in% linestring.segs) {
     vars <- c("lon1", "lat1", "lon2", "lat2")
     if (all(vars %in% names(nom.data))) {
       nom.data <- nom.data[, !names(nom.data) %in% vars]
