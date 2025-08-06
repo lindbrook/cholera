@@ -399,4 +399,10 @@ latlongGPKG  <- function(path) {
   out
 }
 
+# datasets <- cholera:::latlongGPKG(path)
+# invisible(lapply(names(datasets), function(nm) {
+#   assign(nm, datasets[[nm]])
+#   do.call(usethis::use_data, list(as.name(nm), overwrite = TRUE))
+# }))
+
 #' @importFrom sf st_as_sf st_as_sfc st_coordinates st_read st_sf write_sf
