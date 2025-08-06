@@ -54,7 +54,7 @@ streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
     street.name <- vapply(street.name, caseAndSpace, character(1L))
     st.obs <- street.name %in% rds$name
     if (all(st.obs == FALSE)) {
-      error.msg <- "Invalid street name."
+      error.msg <- "Invalid street name. See streetNames()."
       stop(error.msg, call. = FALSE)
     } else if (any(st.obs == FALSE)) {
       no.err <- street.name[!st.obs]

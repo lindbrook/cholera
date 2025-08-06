@@ -1,3 +1,8 @@
+# cholera 0.9.1.9040
+
+- add streetNames() to error message in streetNameLocator().
+
+
 # cholera 0.9.1.9039
 
 - use prototype GPKG longitude and latitude in Dodson & Tobler data.
