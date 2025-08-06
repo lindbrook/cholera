@@ -260,6 +260,10 @@
 #'   \item{\code{y1}}{y-coordinate}
 #'   \item{\code{x2}}{x-coordinate}
 #'   \item{\code{y2}}{y-coordinate}
+#'   \item{\code{lon1}}{longitude}
+#'   \item{\code{lat1}}{latitude}
+#'   \item{\code{lon2}}{longitude}
+#'   \item{\code{lat2}}{latitude}
 #' }
 #' @docType data
 "plague.pit.segments"
