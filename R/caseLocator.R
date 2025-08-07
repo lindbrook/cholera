@@ -27,7 +27,7 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
     asp  <- 1.6
     ew <- "lon"
     ns <- "lat"
-    proj.data <- cholera::latlong.ortho.addr
+    proj.data <- cholera::latlong.ortho.anchor
     reg.data <- cholera::latlong.regular.cases
     sim.proj.data <- cholera::latlong.sim.ortho.proj
     if (isFALSE(case %in% proj.data$case)) {

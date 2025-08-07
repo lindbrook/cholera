@@ -35,7 +35,7 @@ addCase <- function(case = 1, latlong = FALSE, type = "observed",
   if (latlong) {
     vars <- c("lon", "lat")
     vars.proj <- vars # !
-    proj.data <- cholera::latlong.ortho.addr
+    proj.data <- cholera::latlong.ortho.anchor
     regular.data <- cholera::latlong.regular.cases
   } else {
     vars <- c("x", "y")

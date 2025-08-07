@@ -180,7 +180,7 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
 
   if (x$case.set == "observed") {
     fatality <- cholera::fatalities
-    fatality.ortho <- cholera::latlong.ortho.addr
+    fatality.ortho <- cholera::latlong.ortho.anchor
   } else if (x$case.set == "expected") {
     fatality <- cholera::regular.cases
     fatality.ortho <- cholera::sim.ortho.proj

@@ -3,7 +3,7 @@
 #' Group cases into neighborhoods using Voronoi tessellation.
 #' @param pump.select Numeric. Vector of numeric pump IDs to define pump neighborhoods (i.e., the "population"). Negative selection possible. \code{NULL} selects all pumps.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude of \code{fatalities.anchor}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.address}.
+#' @param location Character. "nominal" or "orthogonal". "nominal" uses the longitude and latitude of \code{fatalities.anchor}. "orthogonal" uses the longitude and latitude of \code{latlong.ortho.anchor}.
 #' @param polygon.vertices Logical. \code{TRUE} returns a list of lon-lat coordinates of the vertices of Voronoi cells.
 #' @importFrom sp point.in.polygon
 #' @noRd
@@ -31,8 +31,8 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
 
   if (location == "orthogonal") {
     statistic.data <- lapply(cells.triangles$cells, function(c) {
-      sp::point.in.polygon(cholera::latlong.ortho.addr$lon,
-        cholera::latlong.ortho.addr$lat, c$lon, c$lat)
+      sp::point.in.polygon(cholera::latlong.ortho.anchor$lon,
+        cholera::latlong.ortho.anchor$lat, c$lon, c$lat)
     })
   } else if (location == "nominal") {
     statistic.data <- lapply(cells.triangles$cells, function(c) {
@@ -175,11 +175,11 @@ plotLatlongVoronoiCases <- function(x, vars) {
     }))
   } else if (x$location == "orthogonal") {
     case.partition <- lapply(x$statistic.data, function(dat) {
-      cholera::latlong.ortho.addr$case[dat == 1]
+      cholera::latlong.ortho.anchor$case[dat == 1]
     })
     invisible(lapply(names(case.partition), function(nm) {
-      sel <- cholera::latlong.ortho.addr$case %in% case.partition[[nm]]
-      points(cholera::latlong.ortho.addr[sel, vars], col = x$snow.colors[nm],
+      sel <- cholera::latlong.ortho.anchor$case %in% case.partition[[nm]]
+      points(cholera::latlong.ortho.anchor[sel, vars], col = x$snow.colors[nm],
         pch = 20, cex = 0.75)
     }))
   }

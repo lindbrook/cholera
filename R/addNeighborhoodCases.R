@@ -123,7 +123,7 @@ addNeighborhoodCases <- function(pump.subset = NULL, pump.select = NULL,
     case.data <-  cholera::fatalities[cholera::fatalities$case %in% sel, ]
   } else if (location == "orthogonal") {
     if (latlong) {
-      case.data <- cholera::latlong.ortho.addr
+      case.data <- cholera::latlong.ortho.anchor
     } else {
       case.data <- cholera::ortho.proj
     }

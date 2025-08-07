@@ -38,7 +38,7 @@ streetNumberLocator <- function(street.number = 216, zoom = TRUE,
     asp  <- 1.6
     ew <- "lon"
     ns <- "lat"
-    proj.data <- cholera::latlong.ortho.addr
+    proj.data <- cholera::latlong.ortho.anchor
     rd.segs <- roadSegments(latlong = latlong)
   } else {
     asp  <- 1

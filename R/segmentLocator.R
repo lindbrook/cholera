@@ -38,7 +38,7 @@ segmentLocator <- function(segment.id = "216-1", zoom = TRUE, latlong = FALSE,
     asp  <- 1.6
     ew <- "lon"
     ns <- "lat"
-    proj.data <- cholera::latlong.ortho.addr
+    proj.data <- cholera::latlong.ortho.anchor
   } else {
     asp  <- 1
     ew <- "x"
