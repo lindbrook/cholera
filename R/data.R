@@ -475,7 +475,7 @@
 #'  }
 #' @note \code{\link{unstackFatalities}} documents the code for these data.
 #' @docType data
-"latlong.ortho.addr"
+"latlong.ortho.anchor"
 
 #' Orthogonal projection of 13 original pumps (latlong).
 #'

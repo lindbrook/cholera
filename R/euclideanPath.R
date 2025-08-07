@@ -514,7 +514,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
       }
     } else if (location == "orthogonal") {
       if (latlong) {
-        ortho <- cholera::latlong.ortho.addr
+        ortho <- cholera::latlong.ortho.anchor
 
         sel <- cholera::anchor.case$case %in% orgn
         orgn <- cholera::anchor.case[sel, "anchor"]
@@ -731,7 +731,7 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
 
   if (location == "orthogonal") {
     if (latlong) {
-      ftlt <- cholera::latlong.ortho.addr
+      ftlt <- cholera::latlong.ortho.anchor
     } else {
       ftlt <- cholera::ortho.proj
     }

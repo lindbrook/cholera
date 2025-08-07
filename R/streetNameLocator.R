@@ -38,7 +38,7 @@ streetNameLocator <- function(street.name = "Broad Street", zoom = TRUE,
     asp  <- 1.6
     ew <- "lon"
     ns <- "lat"
-    proj.data <- cholera::latlong.ortho.addr
+    proj.data <- cholera::latlong.ortho.anchor
   } else {
     asp  <- 1
     ew <- "x"
