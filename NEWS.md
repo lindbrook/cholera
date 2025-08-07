@@ -1,3 +1,8 @@
+# cholera 0.9.1.9042
+
+- replace "addr" with "anchor".
+
+
 # cholera 0.9.1.9041
 
 - rename latlong.ortho.addr to latlong.ortho.anchor and use GPKG coordinates.

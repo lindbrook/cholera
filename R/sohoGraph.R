@@ -2,7 +2,7 @@
 #'
 #' @param vestry Logical. Use Vestry Report pump data.
 #' @param case.set Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.
-#' @param embed.addr Logical. Embed all 321 or selected anchor case addresses into graph network.
+#' @param embed.anchor Logical. Embed all 321 or selected anchor cases into graph network.
 #' @param embed.landmarks Logical or Numeric. Embed all or selected landmarks into road network.
 #' @param embed.pumps Logical or Numeric. Embed all or selected pumps into road network.
 #' @param latlong Logical. Use estimated longitude and latitude.
@@ -12,10 +12,10 @@
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 
 sohoGraph <- function(vestry = FALSE, case.set = "observed",
-  embed.addr = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
+  embed.anchor = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
   latlong = FALSE, drop.isolates = FALSE, ellipsoid = "WGS") {
 
-  args <- list(embed.addr = embed.addr, embed.landmarks = embed.landmarks,
+  args <- list(embed.anchor = embed.anchor, embed.landmarks = embed.landmarks,
     embed.pumps = embed.pumps, vestry = vestry, case.set = case.set,
     latlong = latlong, drop.isolates = drop.isolates, ellipsoid = ellipsoid)
 
