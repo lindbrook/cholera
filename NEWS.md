@@ -1,3 +1,8 @@
+# cholera 0.9.1.9043
+
+- add latlongOrthoAnchor().
+
+
 # cholera 0.9.1.9042
 
 - replace "addr" with "anchor".
