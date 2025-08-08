@@ -27,7 +27,8 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
     else pump.data <- cholera::pumps
   }
 
-  cells.triangles <- latlongVoronoiVertices(pump.select = pump.select, vestry = vestry)
+  cells.triangles <- latlongVoronoiVertices(pump.select = pump.select, 
+    vestry = vestry)
 
   if (location == "orthogonal") {
     statistic.data <- lapply(cells.triangles$cells, function(c) {

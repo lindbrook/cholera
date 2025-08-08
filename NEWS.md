@@ -1,6 +1,11 @@
+# cholera 0.9.1.9045
+
+- fix latlongVoronoiVertices() for 2 selected pumps.
+
+
 # cholera 0.9.1.9044
 
-- add warnings to voronoiPolygons().
+- add stop() warnings to voronoiPolygons().
 
 
 # cholera 0.9.1.9043

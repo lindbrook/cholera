@@ -137,17 +137,21 @@ latlongVoronoiVertices <- function(pump.select = NULL, vestry = FALSE) {
   cells <- split(est.lonlat, est.lonlat$cell)
   names(cells) <- paste0("p", pump.id)
 
-  triangles <- voronoiPolygons(pump.meters[, c("x", "y")], rw = bounding.box,
-    type = "triangles")
-  triangles.df <- do.call(rbind, triangles)
-  triangles.lat <- sort(unique(triangles.df$y), decreasing = TRUE)
-  triangles.df$id <- rep(seq_along(triangles), each = 3)
-  triangles.df$vertex <- rep(1:3, length(triangles))
-  est.lonlat <- meterLatLong(triangles.df)
-  est.lonlat <- est.lonlat[order(est.lonlat$id, est.lonlat$vertex), ]
-  triangles <- split(est.lonlat, est.lonlat$id)
-
-  list(cells = cells, triangles = triangles)
+  if (nrow(pump.meters) >= 3) {
+    triangles <- voronoiPolygons(pump.meters[, c("x", "y")], latlong = FALSE, 
+      rw = bounding.box, type = "triangles")
+    triangles.df <- do.call(rbind, triangles)
+    triangles.lat <- sort(unique(triangles.df$y), decreasing = TRUE)
+    triangles.df$id <- rep(seq_along(triangles), each = 3)
+    triangles.df$vertex <- rep(1:3, length(triangles))
+    est.lonlat <- meterLatLong(triangles.df)
+    est.lonlat <- est.lonlat[order(est.lonlat$id, est.lonlat$vertex), ]
+    triangles <- split(est.lonlat, est.lonlat$id)
+    out <- list(cells = cells, triangles = triangles)
+  } else {
+    out <- list(cells = cells, triangles = NULL)
+  }
+  out
 }
 
 # voronoi.polygons <- cholera:::latlongVoronoiVertices()
