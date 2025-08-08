@@ -15,6 +15,19 @@
 
 addDelaunay <- function(pump.select = NULL, vestry = FALSE, color = "black",
   line.type = "solid", line.width = 1, latlong = FALSE) {
+ 
+  if (!is.null(pump.select)) {
+    if (!is.numeric(pump.select)) {
+      stop("pump.select must be numeric.", call. = FALSE)
+    }
+    if (length(pump.select) < 3) {
+      stop('With Delaunay triangles, use at least 3 pumps.', call. = FALSE)
+    }
+    if (any(abs(pump.select) %in% p.ID == FALSE)) {
+      stop('With vestry = ', vestry, ", 1 >= |pump.select| <= ", p.count, ".",
+        call. = FALSE)
+    }
+  }
 
   if (latlong) {
     tri <- latlongVoronoiVertices(pump.select = pump.select,
@@ -36,10 +49,6 @@ addDelaunay <- function(pump.select = NULL, vestry = FALSE, color = "black",
     if (is.null(pump.select)) {
       pump.data <- p.data[, c("x", "y")]
     } else {
-      if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
-      if (any(abs(pump.select) %in% p.ID == FALSE)) {
-        stop('With vestry = ', vestry, ", 1 >= |pump.select| <= ", p.count, ".")
-      }
       pump.data <- cholera::pumps[pump.select, c("x", "y")]
     }
 
