@@ -36,6 +36,16 @@ voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles",
   if (type %in% c("tiles", "triangles") == FALSE) {
     stop('type must be "tiles" or "triangles".', call. = FALSE)
   }
+  
+  if (type == "tiles") {
+    if (nrow(sites) < 2) {
+      stop('With "tiles", use at least 2 sites.', call. = FALSE)
+    }
+  } else if (type == "triangles") {
+    if (nrow(sites) < 3) {
+      stop('With "triagles", use at least 3 sites.', call. = FALSE)  
+    }
+  }
 
   xvar <- ifelse(latlong, "lon", "x")
   yvar <- ifelse(latlong, "lat", "y")
