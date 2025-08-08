@@ -1,3 +1,8 @@
+# cholera 0.9.1.9046
+
+- add/amend stop() warnings in addDelaunay().
+
+
 # cholera 0.9.1.9045
 
 - fix latlongVoronoiVertices() for 2 selected pumps.
