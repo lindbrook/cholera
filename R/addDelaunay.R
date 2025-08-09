@@ -20,13 +20,9 @@ addDelaunay <- function(pump.select = NULL, vestry = FALSE, color = "black",
     if (!is.numeric(pump.select)) {
       stop("pump.select must be numeric.", call. = FALSE)
     }
-    if (length(pump.select) < 3) {
+    if (length(pump.select) < 3 & all(pump.select > 0)) {
       stop('With Delaunay triangles, use at least 3 pumps.', call. = FALSE)
-    }
-    if (any(abs(pump.select) %in% p.ID == FALSE)) {
-      stop('With vestry = ', vestry, ", 1 >= |pump.select| <= ", p.count, ".",
-        call. = FALSE)
-    }
+    } 
   }
 
   if (latlong) {
@@ -43,13 +39,15 @@ addDelaunay <- function(pump.select = NULL, vestry = FALSE, color = "black",
       p.data <- cholera::pumps
     }
 
-    p.count <- nrow(p.data)
-    p.ID <- seq_len(p.count)
-
     if (is.null(pump.select)) {
       pump.data <- p.data[, c("x", "y")]
     } else {
-      pump.data <- cholera::pumps[pump.select, c("x", "y")]
+      if (any(abs(pump.select) %in% p.data$id == FALSE)) {
+        stop('With vestry = ', vestry, ", 1 >= |pump.select| <= ", nrow(p.data),
+          ".", call. = FALSE)
+      } else {
+        pump.data <- cholera::pumps[pump.select, c("x", "y")]  
+      }
     }
 
     dat <- deldir::deldir(pump.data, rw = c(range(cholera::roads$x),
