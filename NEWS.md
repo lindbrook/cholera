@@ -1,3 +1,8 @@
+# cholera 0.9.1.9047
+
+- amend stop() warnings and clean code in addDelaunay().
+
+
 # cholera 0.9.1.9046
 
 - add/amend stop() warnings in addDelaunay().
