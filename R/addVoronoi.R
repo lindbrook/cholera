@@ -18,6 +18,16 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE,
   case.location = "nominal", color = "black", line.type = "solid",
   line.width = 1, latlong = FALSE) {
 
+  if (!is.null(pump.select)) {
+    if (!is.numeric(pump.select)) {
+      stop("pump.select must be numeric.", call. = FALSE)
+    }
+    if (length(pump.select) < 2 & all(pump.select > 0)) {
+      stop("With Voronoi diagram, use at least 2 pumps for pump.select.",
+        call. = FALSE)
+    }
+  }
+
   if (latlong) {
     cells <- latlongVoronoiVertices(pump.select = pump.select,
       vestry = vestry)$cells
@@ -27,10 +37,12 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE,
     }))
   } else {
     rng <- mapRange(latlong = latlong)
-
+    
     if (case.location %in% c("address", "nominal") == FALSE) {
-      stop('case.location must be "address" or "nominal".')
+      stop('case.location must be "address" or "nominal".', call. = FALSE)
     }
+
+    vars <- c("x", "y")
 
     if (case.location == "address") {
       if (vestry) {
@@ -49,18 +61,13 @@ addVoronoi <- function(pump.select = NULL, vestry = FALSE,
       }
     }
 
-    p.count <- nrow(p.data)
-    p.ID <- seq_len(p.count)
-    vars <- c("x", "y")
-
     if (is.null(pump.select)) {
       pump.data <- p.data[, vars]
     } else {
-      if (is.numeric(pump.select) == FALSE) stop("pump.select must be numeric.")
-      if (any(abs(pump.select) %in% p.ID == FALSE)) {
-        stop('With vestry = ', vestry, ", 1 >= |pump.select| <= ", p.count, ".")
-      }
-      pump.data <- cholera::pumps[pump.select, vars]
+      if (any(abs(pump.select) %in% p.data$id == FALSE)) {
+        stop('With vestry = ', vestry, ", 1 >= |pump.select| <= ", nrow(p.data),
+          ".", call. = FALSE)
+      } else pump.data <- cholera::pumps[pump.select, vars]
     }
 
     dat <- deldir::deldir(pump.data, rw = unlist(rng), suppressMsge = TRUE)
