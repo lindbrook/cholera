@@ -48,3 +48,48 @@ quadrantCoordinates <- function(dat, h, theta) {
 
   data.frame(x = post.x, y = post.y)
 }
+
+#' Abbreviate street name postfix.
+#'
+#' Court -> Ct, Street -> St, Place -> Pl. For pumps.
+#' @noRd
+
+shortPostfix <- function(pump.select) {
+  ct.id <- grep("Court", pump.select)
+  st.id <- grep("Street", pump.select)
+  pl.id <- grep("Place", pump.select)
+
+  if (length(ct.id != 0)) {
+    lst <- strsplit(pump.select[ct.id], " ")
+    for (i in seq_along(lst)) {
+      omega <- length(unlist(lst[[i]]))
+      lst[[i]][omega] <- "Ct"
+    }
+    pump.select[ct.id] <- vapply(lst, function(x) {
+      paste(unlist(x), collapse = " ")
+    }, character(1L))
+  } 
+  
+  if (length(st.id != 0)) {
+    lst <- strsplit(pump.select[st.id], " ")
+    for (i in seq_along(lst)) {
+      omega <- length(lst[[i]])
+      lst[[i]][omega] <- "St"
+    }
+    pump.select[st.id] <- vapply(lst, function(x) {
+      paste(unlist(x), collapse = " ")
+    }, character(1L))
+  }  
+  
+  if (length(pl.id != 0)) {
+    lst <- strsplit(pump.select[pl.id], " ")
+    for (i in seq_along(lst)) {
+      omega <- length(lst[[i]])
+      lst[[i]][omega] <- "Pl"
+    }
+    pump.select[pl.id] <- vapply(lst, function(x) {
+      paste(unlist(x), collapse = " ")
+    }, character(1L))
+  }
+  pump.select
+}
