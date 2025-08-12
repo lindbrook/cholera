@@ -154,9 +154,9 @@ plot.euclidean <- function(x, type = "star", add = FALSE,
 
   if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
   pump.data <- x$pump.data
-  p.sel <- x$p.sel
+  # p.sel <- x$p.sel
   case.num <- x$case.num
-  pump.select <- x$pump.select
+  # pump.select <- x$pump.select
   nearest.pump <- x$nearest.pump
 
   if (type == "star") {

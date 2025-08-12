@@ -44,8 +44,7 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
   p.sel <- selectPump(pump.data, pump.select, vestry)
 
   if (length(p.sel) > 1) {
-    cells <- latlongVoronoiVertices(pump.select = pump.select,
-      vestry = vestry)$cells
+    cells <- latlongVoronoiVertices(pump.select = p.sel, vestry = vestry)$cells
     statistic.data <- lapply(cells, function(cell) {
       sp::point.in.polygon(case.data$lon, case.data$lat, cell$lon, cell$lat)
     })
@@ -96,7 +95,6 @@ plot.euclideanLatlong <- function(x, type = "star", add = FALSE,
     stop('polygon.type must be "border" or "solid".', call. = FALSE)
   }
 
-  p.sel <- x$p.sel
   vars <- c("lon", "lat")
 
   if (x$case.set == "observed") {
