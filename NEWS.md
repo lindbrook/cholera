@@ -1,3 +1,8 @@
+# cholera 0.9.1.9050
+
+- use legend() with named pumps in plot.euclidean() and plot.euclideanLatlong().
+
+
 # cholera 0.9.1.9049
 
 - add shortPostfix().

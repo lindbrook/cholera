@@ -96,6 +96,9 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
     }
   }
 
+  # amend and title case 'pump.select'
+  pump.select <- pump.data[pump.data$id %in% p.sel, ]$street
+
   out <- list(pump.data = pump.data,
               pump.select = pump.select,
               vestry = vestry,
@@ -154,9 +157,9 @@ plot.euclidean <- function(x, type = "star", add = FALSE,
 
   if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
   pump.data <- x$pump.data
-  p.sel <- x$p.sel
+  # p.sel <- x$p.sel
   case.num <- x$case.num
-  pump.select <- x$pump.select
+  # pump.select <- x$pump.select
   nearest.pump <- x$nearest.pump
 
   if (type == "star") {
@@ -181,10 +184,34 @@ plot.euclidean <- function(x, type = "star", add = FALSE,
 
   if (!add){
     if (is.null(x$pump.select)) {
-      title(main = "Pump Neighborhoods: Euclidean")
-    } else {
-      title(main = paste0("Pump Neighborhoods: Euclidean", "\n", "Pumps ",
-        paste(sort(x$pump.select), collapse = ", ")))
+      if (x$location == "nominal") {
+        title(main = "Pump Neighborhoods: Euclidean (nominal)")
+      } else if (x$location == "orthogonal") {
+        title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
+      }
+    
+    } else if (is.numeric(x$pump.select)){
+      if (x$location == "nominal") {
+        title(main = paste0("Pump Neighborhoods: Euclidean (nominal)", "\n", 
+          "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+      } else if (x$location == "orthogonal") {
+        title(main = paste0("Pump Neighborhoods: Euclidean (orthogonal)", "\n",
+          "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+      }
+    } else if (is.character(x$pump.select)) {
+      if (x$location == "nominal") {
+        title(main = "Pump Neighborhoods: Euclidean (nominal)")
+      } else if (x$location == "orthogonal") {
+        title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
+      }
+      legend(x = "topleft",
+        legend = shortPostfix(x$pump.select),
+        col = x$snow.colors[x$p.sel],
+        pch = 2,
+        bg = "white",
+        lty = NULL,
+        cex = 2/3,
+        title = NULL)
     }
   }
 }

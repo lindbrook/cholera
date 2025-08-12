@@ -44,8 +44,7 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
   p.sel <- selectPump(pump.data, pump.select, vestry)
 
   if (length(p.sel) > 1) {
-    cells <- latlongVoronoiVertices(pump.select = pump.select,
-      vestry = vestry)$cells
+    cells <- latlongVoronoiVertices(pump.select = p.sel, vestry = vestry)$cells
     statistic.data <- lapply(cells, function(cell) {
       sp::point.in.polygon(case.data$lon, case.data$lat, cell$lon, cell$lat)
     })
@@ -53,6 +52,9 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
     statistic.data <- list(rep(1, nrow(case.data)))
     names(statistic.data) <- paste0("p", p.sel)
   }
+
+  # amend and title case 'pump.select'
+  pump.select <- pump.data[pump.data$id %in% p.sel, ]$street  
 
   out <- list(pump.select = pump.select,
               p.sel = p.sel,
@@ -96,7 +98,6 @@ plot.euclideanLatlong <- function(x, type = "star", add = FALSE,
     stop('polygon.type must be "border" or "solid".', call. = FALSE)
   }
 
-  p.sel <- x$p.sel
   vars <- c("lon", "lat")
 
   if (x$case.set == "observed") {
@@ -137,19 +138,29 @@ plot.euclideanLatlong <- function(x, type = "star", add = FALSE,
   }
 
   if (!add) {
-    if (!is.null(p.sel)) {
-      if (x$location == "nominal") {
-        title(main = paste0("Pump Neighborhoods: Euclidean (nominal)", "\n",
-          "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
-      } else if (x$location == "orthogonal") {
-        title(main = paste0("Pump Neighborhoods: Euclidean (orthogonal)", "\n",
-          "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
-      }
-    } else {
-      if (x$location == "nominal") {
-        title(main = "Pump Neighborhoods: Euclidean (nominal)")
-      } else if (x$location == "orthogonal") {
-        title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
+    if (!is.null(x$p.sel)) {
+      if (is.numeric(x$pump.select)) {
+        if (x$location == "nominal") {
+          title(main = paste0("Pump Neighborhoods: Euclidean (nominal)", "\n",
+            "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+        } else if (x$location == "orthogonal") {
+          title(main = paste0("Pump Neighborhoods: Euclidean (orthogonal)",
+            "\n", "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+        }  
+      } else if (is.character(x$pump.select)) {
+        if (x$location == "nominal") {
+          title(main = "Pump Neighborhoods: Euclidean (nominal)")
+        } else if (x$location == "orthogonal") {
+          title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
+        }
+        legend(x = "topleft",
+         legend = shortPostfix(x$pump.select),
+         col = x$snow.colors[x$p.sel],
+         pch = 2,
+         bg = "white",
+         lty = NULL,
+         cex = 2/3,
+         title = NULL)
       }
     }
   }
