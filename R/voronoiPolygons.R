@@ -39,11 +39,11 @@ voronoiPolygons <- function(sites, rw.data = NULL, rw = NULL, type = "tiles",
   
   if (type == "tiles") {
     if (nrow(sites) < 2) {
-      stop('With "tiles", use at least 2 sites.', call. = FALSE)
+      stop('With output = "tiles", use at least 2 sites.', call. = FALSE)
     }
   } else if (type == "triangles") {
     if (nrow(sites) < 3) {
-      stop('With "triagles", use at least 3 sites.', call. = FALSE)  
+      stop('With output = "triangles", use at least 3 sites.', call. = FALSE)  
     }
   }
 
