@@ -291,3 +291,52 @@ print.euclideanLatlong <- function(x, ...) {
   print(x[c("p.sel", "case.set", "location", "vestry", "latlong")])
 }
 
+#' Summary method for neighborhoodEuclidean(latlong = TRUE).
+#'
+#' Return computed counts for Euclidean neighborhoods.
+#' @param object Object. An object of class "euclidean" created by \code{neighborhoodEuclidean(latlong = TRUE)}.
+#' @param ... Additional parameters.
+#' @return A vector of counts by neighborhood.
+#' @export
+#' @examples
+#' \dontrun{
+#' summary(neighborhoodEuclidean(latlong = TRUE))
+#' }
+
+summary.euclideanLatlong <- function(object, ...) {
+  if (object$case.set == "observed") {
+    if (object$location == "nominal") {
+      cases <- cholera::fatalities
+    } else if (object$location == "anchor") {
+      cases <- cholera::fatalities.anchor
+      names(cases)[names(cases) == "anchor"] <- "case"
+    } else if (object$location == "orthogonal") {
+      cases <- cholera::latlong.ortho.anchor
+    }
+  } else if (object$case.set == "expected") {
+    if (object$location %in% c("nominal", "anchor")) {
+      cases <- cholera::latlong.regular.cases
+      cases$case <- seq_len(nrow(cases))
+    } else if (object$location == "orthogonal") {
+      cases <- cholera::latlong.sim.ortho.proj
+    }
+  }
+
+  p.sel <- object$p.sel
+  vars <- c("lon", "lat")
+
+  nearest.pump <- do.call(rbind, lapply(cases$case, function(cs) {
+    p1 <- cases[cases$case == cs, vars]
+    d <- vapply(p.sel, function(p) {
+      p2 <- object$pump.data[object$pump.data$id == p, vars]
+      geosphere::distGeo(p1, p2)
+    }, numeric(1L))
+    near.id <- which.min(d)
+    if (is.null(p.sel)) p.nr <- object$pump.data$id[near.id]
+    else p.nr <- p.sel[near.id]
+    data.frame(case = cs, pump = p.nr, meters = d[near.id])
+  }))
+
+  xtab <- table(nearest.pump$pump)
+  stats::setNames(xtab, paste0("p", names(xtab)))
+}
