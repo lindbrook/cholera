@@ -53,6 +53,9 @@ euclideanLatlong <- function(pump.select = NULL, vestry = FALSE,
     names(statistic.data) <- paste0("p", p.sel)
   }
 
+  # amend and title case 'pump.select'
+  pump.select <- pump.data[pump.data$id %in% p.sel, ]$street  
+
   out <- list(pump.select = pump.select,
               p.sel = p.sel,
               vestry = vestry,
@@ -135,19 +138,29 @@ plot.euclideanLatlong <- function(x, type = "star", add = FALSE,
   }
 
   if (!add) {
-    if (!is.null(p.sel)) {
-      if (x$location == "nominal") {
-        title(main = paste0("Pump Neighborhoods: Euclidean (nominal)", "\n",
-          "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
-      } else if (x$location == "orthogonal") {
-        title(main = paste0("Pump Neighborhoods: Euclidean (orthogonal)", "\n",
-          "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
-      }
-    } else {
-      if (x$location == "nominal") {
-        title(main = "Pump Neighborhoods: Euclidean (nominal)")
-      } else if (x$location == "orthogonal") {
-        title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
+    if (!is.null(x$p.sel)) {
+      if (is.numeric(x$pump.select)) {
+        if (x$location == "nominal") {
+          title(main = paste0("Pump Neighborhoods: Euclidean (nominal)", "\n",
+            "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+        } else if (x$location == "orthogonal") {
+          title(main = paste0("Pump Neighborhoods: Euclidean (orthogonal)",
+            "\n", "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
+        }  
+      } else if (is.character(x$pump.select)) {
+        if (x$location == "nominal") {
+          title(main = "Pump Neighborhoods: Euclidean (nominal)")
+        } else if (x$location == "orthogonal") {
+          title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
+        }
+        legend(x = "topleft",
+         legend = shortPostfix(x$pump.select),
+         col = x$snow.colors[x$p.sel],
+         pch = 2,
+         bg = "white",
+         lty = NULL,
+         cex = 2/3,
+         title = NULL)
       }
     }
   }
