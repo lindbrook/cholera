@@ -69,25 +69,29 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
   }
 
   voronoi.order <- as.numeric(rownames(voronoi$summary))
-  pump.sel <- pump.data$id
-
+  
   if (is.null(pump.select)) {
-    pump.number <- pump.sel[voronoi.order]
-  } else {
-    pump.number <- pump.sel[pump.select][voronoi.order]
+    pump.sel <- pump.data$id
+  } else if (is.numeric(pump.select)) {
+    pump.sel <- pump.data$id[pump.select]
+  } else if (is.character(pump.select)) {
+    sel <- pump.data$street %in% tools::toTitleCase(pump.select)
+    pump.sel <- pump.data[sel, "id"]
   }
+    
+  p.sel <- pump.sel[voronoi.order]
 
-  expected.data <- data.frame(pump = pump.number,
+  expected.data <- data.frame(pump = p.sel,
                               area = voronoi$summary$dir.area,
                               pct = voronoi$summary$dir.wts)
 
   if (is.null(pump.select)) {
     coordinates <- voronoiPolygons(pump.data, cholera::roads)
   } else {
-    coordinates <- voronoiPolygons(pump.data[pump.select,], cholera::roads)
+    coordinates <- voronoiPolygons(pump.data[pump.sel, ], cholera::roads)
   }
 
-  names(coordinates) <- paste0("p", pump.number)
+  names(coordinates) <- paste0("p", p.sel)
 
   if (location == "orthogonal") {
     statistic.data <- lapply(coordinates, function(cell) {
@@ -101,11 +105,15 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
     })
   }
 
-  names(statistic.data) <- paste0("p", pump.number)
+  # amend and title case 'pump.select'
+  if (is.character(pump.select)) {
+    pump.select <- pump.data[pump.data$id %in% p.sel, ]$street
+  }
 
   out <- list(pump.id = pump.id,
               voronoi = voronoi,
               location = location,
+              latlong = FALSE,
               snow.colors = snow.colors,
               x.rng = x.rng,
               y.rng = y.rng,
@@ -147,13 +155,13 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
 
   snowMap(add.cases = FALSE, add.pumps = FALSE)
 
-  if (is.null(x$pump.select)) {
+  if (is.null(x$pump.select) | is.character(x$pump.select)) {
     if (x$location == "orthogonal") {
       title(main = "Pump Neighborhoods: Voronoi (orthogonal)")
     } else if (x$location == "nominal") {
       title(main = "Pump Neighborhoods: Voronoi (nominal)")
     }
-  } else {
+  } else if (is.numeric(x$pump.select)) {
     if (x$location == "orthogonal") {
       title(main = paste0("Pump Neighborhoods: Voronoi (orthogonal)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
@@ -161,6 +169,17 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
       title(main = paste0("Pump Neighborhoods: Voronoi (nominal)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
     }
+  }
+
+  if (is.character(x$pump.select)) {
+    legend(x = "topleft",
+         legend = shortPostfix(x$pump.select),
+         col = x$snow.colors[x$pump.id],
+         pch = 2,
+         bg = "white",
+         lty = NULL,
+         cex = 2/3,
+         title = NULL)
   }
 
   pumpTokens(x, NULL)

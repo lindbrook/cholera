@@ -27,7 +27,16 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
     else pump.data <- cholera::pumps
   }
 
-  cells.triangles <- latlongVoronoiVertices(pump.select = pump.select, 
+  if (is.null(pump.select)) {
+    pump.sel <- pump.data$id
+  } else if (is.numeric(pump.select)) {
+    pump.sel <- pump.data$id[pump.select]
+  } else if (is.character(pump.select)) {
+    sel <- pump.data$street %in% tools::toTitleCase(pump.select)
+    pump.sel <- pump.data[sel, "id"]
+  }
+
+  cells.triangles <- latlongVoronoiVertices(pump.select = pump.sel,
     vestry = vestry)
 
   if (location == "orthogonal") {
@@ -44,9 +53,14 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
 
   pump.id <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
+  # amend and title case 'pump.select'
+  if (is.character(pump.select)) {
+    pump.select <- pump.data[pump.data$id %in% pump.id, ]$street
+  }
+
   out <- list(pump.select = pump.select, pump.id = pump.id, vestry = vestry,
     cells.triangles = cells.triangles, pump.data = pump.data,
-    statistic.data = statistic.data, location = location,
+    statistic.data = statistic.data, location = location, latlong = TRUE,
     snow.colors = snow.colors)
 
   class(out) <- c("voronoi", "voronoi_latlong")
@@ -88,7 +102,13 @@ plot.voronoi_latlong <- function(x, add.pumps = TRUE,
 
   if (add.pumps) pumpTokens(x, type = NULL)
 
-  if (!is.null(x$pump.id)) {
+  if (is.null(x$pump.select) | is.character(x$pump.select)) {
+    if (x$location == "nominal") {
+      title(main = "Pump Neighborhoods: Voronoi (nominal)")
+    } else if (x$location == "orthogonal") {
+      title(main = "Pump Neighborhoods: Voronoi (orthogonal)")
+    }
+  } else if (is.numeric(x$pump.select) ) {
     if (x$location == "nominal") {
       title(main = paste0("Pump Neighborhoods: Voronoi (nominal)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
@@ -96,12 +116,17 @@ plot.voronoi_latlong <- function(x, add.pumps = TRUE,
       title(main = paste0("Pump Neighborhoods: Voronoi (orthogonal)", "\n",
         "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
     }
-  } else {
-    if (x$location == "nominal") {
-      title(main = "Pump Neighborhoods: Voronoi (nominal)")
-    } else if (x$location == "orthogonal") {
-      title(main = "Pump Neighborhoods: Voronoi (orthogonal)")
-    }
+  }
+
+  if (is.character(x$pump.select)) {
+    legend(x = "topleft",
+         legend = shortPostfix(x$pump.select),
+         col = x$snow.colors[x$pump.id],
+         pch = 2,
+         bg = "white",
+         lty = NULL,
+         cex = 2/3,
+         title = NULL)
   }
 
   case.partition <- lapply(x$statistic.data, function(dat) {

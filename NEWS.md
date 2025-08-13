@@ -1,3 +1,9 @@
+# cholera 0.9.1.9053
+
+- use legend() with named pumps in plot.voronoi_nominal() and 
+  plot.voronoi_latlong().
+
+
 # cholera 0.9.1.9052
 
 - use exception for pump.select with pump names in euclideanLatlong() and 
