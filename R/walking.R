@@ -49,6 +49,11 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   p.select <- nodes[nodes$pump != 0 & nodes$pump %in% p.sel, ]
   p.select <- p.select[order(p.select$pump), ]
 
+  # amend and title case 'pump.select'
+  if (is.character(pump.select)) {
+    pump.select <- pump.data[pump.data$id %in% p.sel, ]$street  
+  }
+
   if (case.set == "observed") {
     case.data <- nodes[nodes$case != 0, ]
     case.data <- case.data[order(case.data$case), ]
@@ -402,9 +407,9 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
   }
 
   if (!add) {
-    if (is.null(x$pump.select)) {
+    if (is.null(x$pump.select) | is.character(x$pump.select)) {
       title(main = "Pump Neighborhoods: Walking")
-    } else {
+    } else if (is.numeric(x$pump.select)) {
       if (length(x$pump.select) > 1) {
         pmp <- "Pumps "
       } else if (length(x$pump.select) == 1) {
@@ -413,6 +418,17 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
 
       title(main = paste0("Pump Neighborhoods: Walking", "\n", pmp,
         paste(sort(x$pump.select), collapse = ", ")))
+    }
+    
+    if (is.character(x$pump.select)) {
+      legend(x = "topleft",
+        legend = shortPostfix(x$pump.select),
+        col = x$snow.colors[x$p.sel],
+        pch = 2,
+        bg = "white",
+        lty = NULL,
+        cex = 2/3,
+        title = NULL)
     }
   }
 }
