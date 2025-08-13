@@ -97,7 +97,9 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
   }
 
   # amend and title case 'pump.select'
-  pump.select <- pump.data[pump.data$id %in% p.sel, ]$street
+  if (is.character(pump.select)) {
+    pump.select <- pump.data[pump.data$id %in% p.sel, ]$street
+  }
 
   out <- list(pump.data = pump.data,
               pump.select = pump.select,
@@ -157,9 +159,7 @@ plot.euclidean <- function(x, type = "star", add = FALSE,
 
   if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
   pump.data <- x$pump.data
-  # p.sel <- x$p.sel
   case.num <- x$case.num
-  # pump.select <- x$pump.select
   nearest.pump <- x$nearest.pump
 
   if (type == "star") {
@@ -183,14 +183,13 @@ plot.euclidean <- function(x, type = "star", add = FALSE,
   if (!add) pumpTokens(x, type, alpha.level, polygon.type)
 
   if (!add){
-    if (is.null(x$pump.select)) {
+    if (is.null(x$pump.select) | is.character(x$pump.select)) {
       if (x$location == "nominal") {
         title(main = "Pump Neighborhoods: Euclidean (nominal)")
       } else if (x$location == "orthogonal") {
         title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
       }
-    
-    } else if (is.numeric(x$pump.select)){
+    } else if (is.numeric(x$pump.select)) {
       if (x$location == "nominal") {
         title(main = paste0("Pump Neighborhoods: Euclidean (nominal)", "\n", 
           "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
@@ -198,12 +197,9 @@ plot.euclidean <- function(x, type = "star", add = FALSE,
         title(main = paste0("Pump Neighborhoods: Euclidean (orthogonal)", "\n",
           "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
       }
-    } else if (is.character(x$pump.select)) {
-      if (x$location == "nominal") {
-        title(main = "Pump Neighborhoods: Euclidean (nominal)")
-      } else if (x$location == "orthogonal") {
-        title(main = "Pump Neighborhoods: Euclidean (orthogonal)")
-      }
+    } 
+
+    if (is.character(x$pump.select)) {
       legend(x = "topleft",
         legend = shortPostfix(x$pump.select),
         col = x$snow.colors[x$p.sel],
