@@ -1,3 +1,9 @@
+# cholera 0.9.1.9052
+
+- use exception for pump.select with pump names in euclideanLatlong() and 
+  euclideanNominal().
+  
+
 # cholera 0.9.1.9051
 
 - add summary.euclideanLatlong().

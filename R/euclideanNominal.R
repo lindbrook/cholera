@@ -97,7 +97,9 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
   }
 
   # amend and title case 'pump.select'
-  pump.select <- pump.data[pump.data$id %in% p.sel, ]$street
+  if (is.character(pump.select)) {
+    pump.select <- pump.data[pump.data$id %in% p.sel, ]$street
+  }
 
   out <- list(pump.data = pump.data,
               pump.select = pump.select,
