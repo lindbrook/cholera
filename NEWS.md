@@ -1,3 +1,9 @@
+# cholera 0.9.1.9056
+
+- amend geoCartesian() coordinates in latlong.ortho.pump and 
+  latlong.ortho.pump.vestry  
+
+
 # cholera 0.9.1.9055
 
 - add/restore latlongOrthoPump().
