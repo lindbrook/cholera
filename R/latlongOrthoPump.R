@@ -32,7 +32,6 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = FALSE) {
   geo.rd.segs <- do.call(rbind, geo.rd.segs)
   seg.endpts <- c("x1", "y1", "x2", "y2")
 
-
   # test <- rbind(case, stats::setNames(geo.rd.segs[geo.rd.segs$id == "19-1", 
   #   c("x1", "y1")], c("x", "y")))
 
