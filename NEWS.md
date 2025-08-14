@@ -1,3 +1,8 @@
+# cholera 0.9.1.9055
+
+- add/restore latlongOrthoPump().
+
+
 # cholera 0.9.1.9054
 
 - use legend() with named pumps in plot.walking().
