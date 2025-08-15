@@ -1,3 +1,9 @@
+# cholera 0.9.1.9057
+
+- amend geoCartesian() coordinates in latlong.regular.cases and 
+  latlong.sim.ortho.proj.
+
+
 # cholera 0.9.1.9056
 
 - amend geoCartesian() coordinates in latlong.ortho.pump and 
