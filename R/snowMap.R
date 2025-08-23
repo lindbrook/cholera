@@ -71,8 +71,9 @@ snowMap <- function(vestry = FALSE, stacked = TRUE, add.axes_box = TRUE,
 addRoads <- function(latlong = FALSE, col = "gray") {
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
-  invisible(lapply(cholera::roads$street, function(s) {
-    lines(cholera::roads[cholera::roads$street == s, vars], col = col)
+  rds <- cholera::roads[cholera::roads$name != "Map Frame", ]
+  invisible(lapply(rds$street, function(s) {
+    lines(rds[rds$street == s, vars], col = col)
   }))
 }
 
