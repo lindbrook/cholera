@@ -46,7 +46,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   nodes <- dat$nodes
   edges <- dat$edges
 
-  p.select <- nodes[nodes$pump != 0 & nodes$pump %in% p.sel, ]
+  p.select <- nodes[nodes$pump %in% p.sel, ]
   p.select <- p.select[order(p.select$pump), ]
 
   # amend and title case 'pump.select'
@@ -323,7 +323,7 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
       latlong = x$latlong)
 
     if (x$latlong) {
-      reg.cases <- cholera::latlong.regular.cases[, c("lon", "lat")]
+      reg.cases <- cholera::latlong.regular.cases[, vars]
     } else {
       reg.cases <- cholera::regular.cases
     }
