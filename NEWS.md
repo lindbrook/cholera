@@ -1,3 +1,8 @@
+# cholera 0.9.1.9058
+
+- exclude "Map Frame" from addRoads().
+
+
 # cholera 0.9.1.9057
 
 - amend geoCartesian() coordinates in latlong.regular.cases and 
