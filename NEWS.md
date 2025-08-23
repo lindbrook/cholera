@@ -1,3 +1,8 @@
+# cholera 0.9.1.9059
+
+- archive snowMap.latlong().
+
+
 # cholera 0.9.1.9058
 
 - exclude "Map Frame" from addRoads().
