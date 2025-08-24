@@ -2,10 +2,11 @@
 #'
 #' Computational approximation.
 #' @param latlong Logical. Use estimated longitude and latitude.
+#' @param vestry Logical. Moves Broad Street pump slightly.
 #' @export
 
-neighborhoodSnow <- function(latlong = FALSE) {
-  dat <- sohoGraph(case.set = "observed", vestry = FALSE, latlong = FALSE)
+neighborhoodSnow <- function(latlong = FALSE, vestry = FALSE) {
+  dat <- sohoGraph(case.set = "observed", vestry = vestry, latlong = latlong)
   g <- dat$g
   nodes <- dat$nodes
   edges <- dat$edges
@@ -35,7 +36,7 @@ neighborhoodSnow <- function(latlong = FALSE) {
   names(path.id2) <- snow.anchors
 
   out <- list(edges = edges, path.id2 = path.id2, snow.anchors = snow.anchors,
-    latlong = latlong)
+    latlong = latlong, vestry = vestry)
   class(out) <- "snow"
   out
 }
@@ -63,24 +64,35 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
   edges <- x$edges
   id2 <- unique(unlist(x$path.id2))
 
-  z <- neighborhoodWalking(pump.select = 7)
-
-  if (!add) snowMap(add.cases = FALSE, add.pumps = FALSE)
+  if (!add) {
+    snowMap(add.cases = FALSE, add.frame = TRUE, add.pumps = FALSE, 
+      latlong = x$latlong)
+  }
 
   if (type == "roads") {
     p7.col <- cholera::snowColors()["p7"]
     snow.edge <- edges[edges$id2 %in% id2, ]
-    segments(snow.edge$x1, snow.edge$y1, snow.edge$x2, snow.edge$y2,
-      col = p7.col, lwd = 2)
-    if (!add) pumpTokens(z, type = "obseved")
+    
+    if (x$latlong) {
+      segments(snow.edge$lon1, snow.edge$lat1, snow.edge$lon2, snow.edge$lat2,
+        col = p7.col, lwd = 2)
+    } else {
+      segments(snow.edge$x1, snow.edge$y1, snow.edge$x2, snow.edge$y2,
+        col = p7.col, lwd = 2)  
+    }
+    
     sel <- cholera::fatalities.anchor$anchor %in% x$snow.anchors
     points(cholera::fatalities.anchor[sel, vars], pch = 16, col = p7.col,
       cex = 0.5)
     if (non.snow.cases) {
-      points(cholera::fatalities.anchor[!sel, vars],  pch = 16, col = "red",
+      points(cholera::fatalities.anchor[!sel, vars], pch = 16, col = "red",
         cex = 0.5)
     }
+  
   } else if (type %in% c("area.points", "area.polygons")) {
+    
+    # road segments and sub-segments #
+
     seg.data <- data.frame(do.call(rbind, strsplit(id2, "-")))
     names(seg.data) <- c("street", "subseg")
     seg.data$street <- as.numeric(seg.data$street)
@@ -88,6 +100,8 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
     seg.data$subseg <- NULL
     seg.data <- cbind(seg.data, id2)
     seg.data <- seg.data[order(seg.data$street, seg.data$id2), ]
+
+    # all sub-segments observed in Snow neighborhood #
 
     seg.audit <- vapply(unique(seg.data$id), function(x) {
       seg.ID2 <- edges[edges$id %in% x, "id2"]
@@ -105,104 +119,153 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
       "Maidenhead Court", "Hopkins Street")
     sel <- cholera::road.segments$name %in% whole.segment.manual
     whole.segment.manual.id <- cholera::road.segments[sel, "id"]
-    whole <- c(whole, setdiff(whole.segment.manual.id, whole))
-
-    # partially transversed segments
+    whole <- union(whole, whole.segment.manual.id)
+    
+    # partially traversed segments #
 
     partial <- unique(seg.data$id)[!seg.audit]
     partial <- setdiff(partial, whole)
 
-    transversed.subsegs <- lapply(unique(partial), function(x) {
-      seg.ID2 <- edges[edges$id %in% x, "id2"]
+    traversed.subsegs <- lapply(partial, function(x) {
+      seg.ID2 <- edges[edges$id == x, "id2"]
       snow.ID2 <- seg.data[seg.data$id == x, "id2"]
       intersect(seg.ID2, snow.ID2)
     })
 
-    names(transversed.subsegs) <- partial
+    names(traversed.subsegs) <- partial
 
-    sel <- cholera::road.segments$id %in% whole
-    whole.data <- rbind(
-      stats::setNames(cholera::road.segments[sel, paste0(vars, 1)], vars),
-      stats::setNames(cholera::road.segments[sel, paste0(vars, 2)], vars))
+    # simulated cases on whole segments
+    
+    if (x$latlong) {
+      sel <- cholera::latlong.sim.ortho.proj$road.segment %in% whole
+      whole.case <- cholera::latlong.sim.ortho.proj[sel, "case"]
+      sim.whole <- cholera::latlong.regular.cases[whole.case, ]
+    } else {
+      sel <- cholera::sim.ortho.proj$road.segment %in% whole
+      whole.case <- cholera::sim.ortho.proj[sel, "case"]
+      sim.whole <- cholera::regular.cases[whole.case - 2000L, ]
+    }
+    
+    # simulated cases on sub-segments (partially traversed segments)
 
-    sel <- cholera::sim.ortho.proj$road.segment %in% whole
-    whole.case <- cholera::sim.ortho.proj[sel, "case"]
-
-    sim.whole <- cholera::regular.cases[whole.case - 2000L, ]
-
-    sim.partial.case <- lapply(names(transversed.subsegs), function(nm) {
-      sel <- cholera::ortho.proj$road.segment == nm &
-        cholera::ortho.proj$case %in% cholera::fatalities.anchor$anchor &
-        cholera::ortho.proj$case %in% cholera::snow.neighborhood
-
-      obs.case <- cholera::ortho.proj[sel, ]
-
+    sim.partial.case <- lapply(names(traversed.subsegs), function(nm) {
+      if (x$latlong) {
+        sel <- cholera::latlong.ortho.anchor$road.segment == nm &
+          cholera::latlong.ortho.anchor$case %in% cholera::snow.neighborhood
+        obs.case <- cholera::latlong.ortho.anchor[sel, ]
+      } else {
+        sel <- cholera::ortho.proj$road.segment == nm &
+          cholera::ortho.proj$case %in% cholera::fatalities.anchor$anchor &
+          cholera::ortho.proj$case %in% cholera::snow.neighborhood
+        obs.case <- cholera::ortho.proj[sel, ]  
+      }
+      
       if (nrow(obs.case) > 1) obs.case <- obs.case[order(obs.case$x.proj), ]
 
       if (any(obs.case$type == "eucl")) {
         euclidean <- which(obs.case$type == "eucl")
-        ts <- c(transversed.subsegs[[nm]][euclidean], transversed.subsegs[[nm]])
+        ts <- c(traversed.subsegs[[nm]][euclidean], traversed.subsegs[[nm]])
         seg.case <- data.frame(obs.case, id2 = ts)
       } else {
-        seg.case <- data.frame(obs.case, id2 = transversed.subsegs[[nm]])
+        seg.case <- data.frame(obs.case, id2 = traversed.subsegs[[nm]])
       }
 
-      if (any(grepl("a", seg.case$id2))) {
-        first.seg <- seg.case[which.max(seg.case$x), "id2"]
-        exit <- 2L
+      if (x$latlong) {
+        if (any(grepl("a", seg.case$id2))) {
+          first.seg <- seg.case[which.max(seg.case$lon), "id2"]
+          exit <- 2L
+        } else {
+          first.seg <- seg.case[which.min(seg.case$lon), "id2"]
+          exit <- 1L
+        }
       } else {
-        first.seg <- seg.case[which.min(seg.case$x), "id2"]
-        exit <- 1L
+        if (any(grepl("a", seg.case$id2))) {
+          first.seg <- seg.case[which.max(seg.case$x), "id2"]
+          exit <- 2L
+        } else {
+          first.seg <- seg.case[which.min(seg.case$x), "id2"]
+          exit <- 1L
+        }
       }
 
       obs.case <- seg.case[seg.case$id2 == first.seg, ]
 
-      sel <- cholera::sim.ortho.proj$road.segment == nm
-      sim.segment <- cholera::sim.ortho.proj[sel, ]
-
+      if (x$latlong) {
+        sel <- cholera::latlong.sim.ortho.proj$road.segment == nm
+        sim.segment <- cholera::latlong.sim.ortho.proj[sel, ]
+        out.var <- "lon"
+      } else {
+        sel <- cholera::sim.ortho.proj$road.segment == nm
+        sim.segment <- cholera::sim.ortho.proj[sel, ]
+        out.var <- "x.proj"
+      }
+     
       if (exit == 1) {
-        sim.segment[sim.segment$x.proj >= obs.case$x.proj, "case"]
+        sim.segment[sim.segment[, out.var] >= obs.case[, out.var], "case"]
       } else if (exit == 2) {
-        sim.segment[sim.segment$x.proj <= obs.case$x.proj, "case"]
+        sim.segment[sim.segment[, out.var] <= obs.case[, out.var], "case"]
       }
     })
 
-    sim.partial <- cholera::regular.cases[unlist(sim.partial.case) - 2000L, ]
-
+    if (x$latlong) {
+      sim.partial <- cholera::latlong.regular.cases[unlist(sim.partial.case), ]
+    } else {
+      sim.partial <- cholera::regular.cases[unlist(sim.partial.case) - 2000L, ]  
+    }
+    
     sim.data <- rbind(sim.whole, sim.partial)
     p7.col <- grDevices::adjustcolor(snowColors()["p7"], alpha.f = alpha.level)
 
     if (type == "area.points") {
-      points(sim.data, col = p7.col, pch = 16, cex = 0.25)
-      if (!add) pumpTokens(z, type = "obseved")
-
+      points(sim.data[, vars], col = p7.col, pch = 16, cex = 0.25)
     } else if (type == "area.polygons") {
       if (is.null(polygon.col)) polygon.col <- p7.col
+      
+      periphery.cases <- peripheryCases(row.names(sim.data),
+        latlong = x$latlong)
+      
+      pearl.string <- travelingSalesman(periphery.cases, latlong = x$latlong)
 
-      periphery.cases <- peripheryCases(row.names(sim.data))
-      pearl.string <- travelingSalesman(periphery.cases,
-        tsp.method = "repetitive_nn")
-
-      if (polygon.type == "border") {
-        if (is.null(polygon.lwd)) polygon.lwd <- 3
-        polygon(cholera::regular.cases[pearl.string, ], border = polygon.col,
-          lwd = polygon.lwd)
-      } else if (polygon.type == "solid") {
-        if (is.null(polygon.lwd)) polygon.lwd <- 1
-        polygon(cholera::regular.cases[pearl.string, ], col = polygon.col,
-          lwd = polygon.lwd)
+      if (x$latlong) {
+        if (polygon.type == "border") {
+          if (is.null(polygon.lwd)) polygon.lwd <- 3
+          polygon(cholera::latlong.regular.cases[pearl.string, vars],
+            border = polygon.col, lwd = polygon.lwd)
+        } else if (polygon.type == "solid") {
+          if (is.null(polygon.lwd)) polygon.lwd <- 1
+          polygon(cholera::latlong.regular.cases[pearl.string, vars], 
+            col = polygon.col, lwd = polygon.lwd)
+        }
+      } else {
+        if (polygon.type == "border") {
+          if (is.null(polygon.lwd)) polygon.lwd <- 3
+          polygon(cholera::regular.cases[pearl.string, ], border = polygon.col,
+            lwd = polygon.lwd)
+        } else if (polygon.type == "solid") {
+          if (is.null(polygon.lwd)) polygon.lwd <- 1
+          polygon(cholera::regular.cases[pearl.string, ], col = polygon.col,
+            lwd = polygon.lwd)
+        }
       }
-
-      if (!add) pumpTokens(z, type = "obseved")
     }
 
     if (non.snow.cases) {
       sel <- !cholera::fatalities.anchor$anchor %in% x$snow.anchors
-      points(cholera::fatalities.anchor[sel, vars],  pch = 16, col = "red",
+      points(cholera::fatalities.anchor[sel, vars], pch = 16, col = "red",
         cex = 0.5)
     }
   }
-  if (!add) title("Snow's Graphical Annotation Neighborhood")
+  
+  if (!add) {  
+    if (x$vestry) {
+      p.data <- cholera::pumps.vestry[cholera::pumps.vestry$id == 7L, vars]
+    } else {
+      p.data <- cholera::pumps[cholera::pumps$id == 7L, vars]
+    }
+    points(p.data, pch = 2)
+    text(p.data, cex = 0.9, labels = "p7", pos = 1)
+    title("Snow's Graphical Annotation Neighborhood")
+  }
 }
 
 #' Print method for neighborhoodSnow().

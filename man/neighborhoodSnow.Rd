@@ -4,10 +4,12 @@
 \alias{neighborhoodSnow}
 \title{Compute Snow's graphical annotation of Broad Street pump neighborhood.}
 \usage{
-neighborhoodSnow(latlong = FALSE)
+neighborhoodSnow(latlong = FALSE, vestry = FALSE)
 }
 \arguments{
 \item{latlong}{Logical. Use estimated longitude and latitude.}
+
+\item{vestry}{Logical. Moves Broad Street pump slightly.}
 }
 \description{
 Computational approximation.
