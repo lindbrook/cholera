@@ -63,7 +63,6 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
   edges <- x$edges
   id2 <- unique(unlist(x$path.id2))
 
-  z <- neighborhoodWalking(pump.select = 7)
 
   if (!add) snowMap(add.cases = FALSE, add.pumps = FALSE)
 
@@ -77,7 +76,7 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
     points(cholera::fatalities.anchor[sel, vars], pch = 16, col = p7.col,
       cex = 0.5)
     if (non.snow.cases) {
-      points(cholera::fatalities.anchor[!sel, vars],  pch = 16, col = "red",
+      points(cholera::fatalities.anchor[!sel, vars], pch = 16, col = "red",
         cex = 0.5)
     }
   } else if (type %in% c("area.points", "area.polygons")) {
@@ -105,20 +104,20 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
       "Maidenhead Court", "Hopkins Street")
     sel <- cholera::road.segments$name %in% whole.segment.manual
     whole.segment.manual.id <- cholera::road.segments[sel, "id"]
-    whole <- c(whole, setdiff(whole.segment.manual.id, whole))
-
-    # partially transversed segments
+    whole <- union(whole, whole.segment.manual.id)
+    
+    # partially traversed segments #
 
     partial <- unique(seg.data$id)[!seg.audit]
     partial <- setdiff(partial, whole)
 
-    transversed.subsegs <- lapply(unique(partial), function(x) {
-      seg.ID2 <- edges[edges$id %in% x, "id2"]
+    traversed.subsegs <- lapply(partial, function(x) {
+      seg.ID2 <- edges[edges$id == x, "id2"]
       snow.ID2 <- seg.data[seg.data$id == x, "id2"]
       intersect(seg.ID2, snow.ID2)
     })
 
-    names(transversed.subsegs) <- partial
+    names(traversed.subsegs) <- partial
 
     sel <- cholera::road.segments$id %in% whole
     whole.data <- rbind(
@@ -141,10 +140,10 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
 
       if (any(obs.case$type == "eucl")) {
         euclidean <- which(obs.case$type == "eucl")
-        ts <- c(transversed.subsegs[[nm]][euclidean], transversed.subsegs[[nm]])
+        ts <- c(traversed.subsegs[[nm]][euclidean], traversed.subsegs[[nm]])
         seg.case <- data.frame(obs.case, id2 = ts)
       } else {
-        seg.case <- data.frame(obs.case, id2 = transversed.subsegs[[nm]])
+        seg.case <- data.frame(obs.case, id2 = traversed.subsegs[[nm]])
       }
 
       if (any(grepl("a", seg.case$id2))) {
@@ -174,7 +173,6 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
 
     if (type == "area.points") {
       points(sim.data, col = p7.col, pch = 16, cex = 0.25)
-      if (!add) pumpTokens(z, type = "obseved")
 
     } else if (type == "area.polygons") {
       if (is.null(polygon.col)) polygon.col <- p7.col
@@ -192,13 +190,11 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
         polygon(cholera::regular.cases[pearl.string, ], col = polygon.col,
           lwd = polygon.lwd)
       }
-
-      if (!add) pumpTokens(z, type = "obseved")
     }
 
     if (non.snow.cases) {
       sel <- !cholera::fatalities.anchor$anchor %in% x$snow.anchors
-      points(cholera::fatalities.anchor[sel, vars],  pch = 16, col = "red",
+      points(cholera::fatalities.anchor[sel, vars], pch = 16, col = "red",
         cex = 0.5)
     }
   }
