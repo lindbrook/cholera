@@ -2,10 +2,11 @@
 #'
 #' Computational approximation.
 #' @param latlong Logical. Use estimated longitude and latitude.
+#' @param vestry Logical. Moves Broad Street pump slightly.
 #' @export
 
-neighborhoodSnow <- function(latlong = FALSE) {
-  dat <- sohoGraph(case.set = "observed", vestry = FALSE, latlong = FALSE)
+neighborhoodSnow <- function(latlong = FALSE, vestry = FALSE) {
+  dat <- sohoGraph(case.set = "observed", vestry = vestry, latlong = latlong)
   g <- dat$g
   nodes <- dat$nodes
   edges <- dat$edges
@@ -35,7 +36,7 @@ neighborhoodSnow <- function(latlong = FALSE) {
   names(path.id2) <- snow.anchors
 
   out <- list(edges = edges, path.id2 = path.id2, snow.anchors = snow.anchors,
-    latlong = latlong)
+    latlong = latlong, vestry = vestry)
   class(out) <- "snow"
   out
 }
@@ -198,7 +199,17 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
         cex = 0.5)
     }
   }
-  if (!add) title("Snow's Graphical Annotation Neighborhood")
+  
+  if (!add) {  
+    if (x$vestry) {
+      p.data <- cholera::pumps.vestry[cholera::pumps.vestry$id == 7L, vars]
+    } else {
+      p.data <- cholera::pumps[cholera::pumps$id == 7L, vars]
+    }
+    points(p.data, pch = 2)
+    text(p.data, cex = 0.9, labels = "p7", pos = 1)
+    title("Snow's Graphical Annotation Neighborhood")
+  }
 }
 
 #' Print method for neighborhoodSnow().
