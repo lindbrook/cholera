@@ -325,21 +325,14 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
 }
 
 endPoints <- function(rd.tmp, vars, latlong = FALSE) {
-  if (latlong) {
-    data.frame(lon = unlist(rd.tmp[, paste0(vars[1], 1:2)]),
-               lat = unlist(rd.tmp[, paste0(vars[2], 1:2)]),
-               case = 0,
-               land = 0,
-               pump = 0,
-               row.names = NULL)
-  } else {
-    data.frame(x = unlist(rd.tmp[, paste0(vars[1], 1:2)]),
-               y = unlist(rd.tmp[, paste0(vars[2], 1:2)]),
-               case = 0,
-               land = 0,
-               pump = 0,
-               row.names = NULL)
-  }
+  out <- data.frame(x = unlist(rd.tmp[, paste0(vars[1], 1:2)]),
+                    y = unlist(rd.tmp[, paste0(vars[2], 1:2)]),
+                    case = 0,
+                    land = 0,
+                    pump = 0,
+                    row.names = NULL)
+  if (latlong) names(out)[1:2] <- vars
+  out
 }
 
 orthoAnchor <- function(case.set = "observed", latlong = FALSE) {
