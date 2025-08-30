@@ -61,7 +61,7 @@ midpointNative <- function(diff_pump.endpts, endpt.data, same_pump.cases,
     mid.pt <- midpoint[midpoint$id == seg, vars]
     ep.data <- endpt.data[endpt.data$id == seg, ]
 
-    case.data <- stats::setNames(seg.data[, c("x.proj", "y.proj")], vars)
+    case.data <- stats::setNames(seg.data[, paste0(vars, ".proj")], vars)
 
     tmp <- lapply(seq_along(case.data$x), function(i) case.data[i, ] - mid.pt)
     mid.pt.delta <- sign(do.call(rbind, tmp))
