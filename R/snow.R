@@ -45,18 +45,21 @@ neighborhoodSnow <- function(latlong = FALSE, vestry = FALSE) {
 #'
 #' @param x An object of class "neighborhood_snow" created by \code{neighborhoodSnow()}.
 #' @param type Character. "roads", "area.points" or "area.polygons".
-#' @param non.snow.cases Logical. Plot anchor cases outside Snow neighborhood.
+#' @param snow.cases Logical. Plot anchor cases inside the Snow neighborhood.
+#' @param non.snow.cases Logical. Plot anchor cases outside the Snow neighborhood.
 #' @param alpha.level Numeric. Alpha level transparency for area plot: a value in [0, 1].
 #' @param polygon.type Character. "border" or "solid".
 #' @param polygon.col Character.
 #' @param polygon.lwd Numeric.
+#' @param data.summary Logical. Show tabulation subtitle.
 #' @param add Logical. Add graphic to plot.
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
-  alpha.level = 1/3, polygon.type = "solid", polygon.col = NULL,
-  polygon.lwd = NULL, add = FALSE, ...) {
+plot.snow <- function(x, type = "area.polygons", snow.cases = FALSE, 
+  non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid", 
+  polygon.col = NULL, polygon.lwd = NULL, data.summary = FALSE,
+  add = FALSE, ...) {
 
   if (x$latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
@@ -249,6 +252,12 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
       }
     }
 
+    if (snow.cases) {
+      sel <- cholera::fatalities.anchor$anchor %in% x$snow.anchors
+      points(cholera::fatalities.anchor[sel, vars], pch = 16, col = p7.col,
+        cex = 0.5)
+    }
+
     if (non.snow.cases) {
       sel <- !cholera::fatalities.anchor$anchor %in% x$snow.anchors
       points(cholera::fatalities.anchor[sel, vars], pch = 16, col = "red",
@@ -265,6 +274,14 @@ plot.snow <- function(x, type = "area.polygons", non.snow.cases = TRUE,
     points(p.data, pch = 2)
     text(p.data, cex = 0.9, labels = "p7", pos = 1)
     title("Snow's Graphical Annotation Neighborhood")
+    
+    if (data.summary) {
+      tabulation <- summary(x)
+      string <- paste0("anchors: ",
+                       names(tabulation)[1], " = ", tabulation[1], ", ",
+                       names(tabulation)[2], " = ", tabulation[2])
+      title(sub = string)
+    }
   }
 }
 

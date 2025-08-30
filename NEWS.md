@@ -1,3 +1,8 @@
+# cholera 0.9.1.9061
+
+- add/set plot.snow(snow.cases = FALSE, data.summary = TRUE).
+
+
 # cholera 0.9.1.9060
 
 - fix plot.snow() for latlong = TRUE; add/set neighborhoodSnow(vestry = FALSE).
