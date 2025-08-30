@@ -4,16 +4,19 @@
 \alias{plot.snow}
 \title{Plot method for neighborhoodSnow().}
 \usage{
-\method{plot}{snow}(x, type = "area.polygons", non.snow.cases = TRUE,
-  alpha.level = 1/3, polygon.type = "solid", polygon.col = NULL,
-  polygon.lwd = NULL, add = FALSE, ...)
+\method{plot}{snow}(x, type = "area.polygons", snow.cases = FALSE,
+  non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid",
+  polygon.col = NULL, polygon.lwd = NULL, data.summary = FALSE,
+  add = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "neighborhood_snow" created by \code{neighborhoodSnow()}.}
 
 \item{type}{Character. "roads", "area.points" or "area.polygons".}
 
-\item{non.snow.cases}{Logical. Plot anchor cases outside Snow neighborhood.}
+\item{snow.cases}{Logical. Plot anchor cases inside the Snow neighborhood.}
+
+\item{non.snow.cases}{Logical. Plot anchor cases outside the Snow neighborhood.}
 
 \item{alpha.level}{Numeric. Alpha level transparency for area plot: a value in [0, 1].}
 
@@ -22,6 +25,8 @@
 \item{polygon.col}{Character.}
 
 \item{polygon.lwd}{Numeric.}
+
+\item{data.summary}{Logical. Show tabulation subtitle.}
 
 \item{add}{Logical. Add graphic to plot.}
 
