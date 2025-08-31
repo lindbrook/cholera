@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{snow}(x, type = "area.polygons", snow.cases = FALSE,
   non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid",
-  polygon.col = NULL, polygon.lwd = NULL, data.summary = FALSE,
+  polygon.col = NULL, polygon.lwd = NULL, data.summary = TRUE,
   add = FALSE, ...)
 }
 \arguments{

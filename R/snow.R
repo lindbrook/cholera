@@ -58,7 +58,7 @@ neighborhoodSnow <- function(latlong = FALSE, vestry = FALSE) {
 
 plot.snow <- function(x, type = "area.polygons", snow.cases = FALSE, 
   non.snow.cases = TRUE, alpha.level = 1/3, polygon.type = "solid", 
-  polygon.col = NULL, polygon.lwd = NULL, data.summary = FALSE,
+  polygon.col = NULL, polygon.lwd = NULL, data.summary = TRUE,
   add = FALSE, ...) {
 
   if (x$latlong) vars <- c("lon", "lat")
