@@ -1,3 +1,8 @@
+# cholera 0.9.1.9063
+
+- amend GeoPackage latlong coordinates.
+
+
 # cholera 0.9.1.9062
 
 - fix title in plot.euclideanLatlong().
