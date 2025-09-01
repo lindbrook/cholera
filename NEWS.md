@@ -1,3 +1,8 @@
+# cholera 0.9.1.9064
+
+- use invisible() in writeGPKG().
+
+
 # cholera 0.9.1.9063
 
 - amend GeoPackage latlong coordinates.

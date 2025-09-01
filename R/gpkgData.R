@@ -367,21 +367,23 @@ latlongCoordinatesGPKG <- function(path, dataset = "fatalities") {
 #' @noRd
 
 writeGPKG  <- function(path, write.gpkg = TRUE) {
-  list(fatalities.anchor = anchorsGPKG(path, write.gpkg = write.gpkg), 
-       fatalities = fatalitiesGPKG(path, write.gpkg = write.gpkg),
-       fatalities.unstacked = unstackedGPKG(path, write.gpkg = write.gpkg),
-       pumps = pumpGPKG(path, write.gpkg = write.gpkg),
-       pumps.vestry = pumpGPKG(path, vestry = TRUE, write.gpkg = write.gpkg),
-       roads = roadGPKG(path, write.gpkg = write.gpkg),
-       frame.data = frameGPKG(path, write.gpkg = write.gpkg),
-       road.segments = roadSegmentGPKG(path, write.gpkg = write.gpkg),
-       frame.segments = mapFrameSegmentGPKG(path, write.gpkg = write.gpkg),
-       plague.pit = plagueGPKG(path, write.gpkg = write.gpkg),
-       plague.pit.segments = plagueSegmentGPKG(path, write.gpkg = write.gpkg),
-       landmarks = landmarkGPKG(path, write.gpkg = write.gpkg),
-       landmark.labels = landmarkGPKG(path, label.coords = TRUE, 
-          write.gpkg = write.gpkg),
-       landmark.squares = landmarkSquareGPKG(path, write.gpkg = write.gpkg))
+  invisible(list(
+    fatalities.anchor = anchorsGPKG(path, write.gpkg = write.gpkg), 
+    fatalities = fatalitiesGPKG(path, write.gpkg = write.gpkg),
+    fatalities.unstacked = unstackedGPKG(path, write.gpkg = write.gpkg),
+    pumps = pumpGPKG(path, write.gpkg = write.gpkg),
+    pumps.vestry = pumpGPKG(path, vestry = TRUE, write.gpkg = write.gpkg),
+    roads = roadGPKG(path, write.gpkg = write.gpkg),
+    frame.data = frameGPKG(path, write.gpkg = write.gpkg),
+    road.segments = roadSegmentGPKG(path, write.gpkg = write.gpkg),
+    frame.segments = mapFrameSegmentGPKG(path, write.gpkg = write.gpkg),
+    plague.pit = plagueGPKG(path, write.gpkg = write.gpkg),
+    plague.pit.segments = plagueSegmentGPKG(path, write.gpkg = write.gpkg),
+    landmarks = landmarkGPKG(path, write.gpkg = write.gpkg),
+    landmark.labels = landmarkGPKG(path, label.coords = TRUE,
+      write.gpkg = write.gpkg),
+    landmark.squares = landmarkSquareGPKG(path, write.gpkg = write.gpkg)
+  ))
 }
 
 #' Extract Longitude and Latitude from All Georeferenced GeoPackage Objects.
