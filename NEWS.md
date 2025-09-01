@@ -1,3 +1,8 @@
+# cholera 0.9.1.9062
+
+- fix title in plot.euclideanLatlong().
+
+
 # cholera 0.9.1.9061
 
 - add/set plot.snow(snow.cases = FALSE, data.summary = TRUE).

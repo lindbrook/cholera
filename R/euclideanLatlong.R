@@ -131,7 +131,7 @@ plot.euclideanLatlong <- function(x, type = "star", add = FALSE,
   }
 
   if (!add) {
-    if (!is.null(x$pump.select) | is.character(x$pump.select)) {
+    if (is.null(x$pump.select) | is.character(x$pump.select)) {
       if (x$location == "nominal") {
         title(main = "Pump Neighborhoods: Euclidean (nominal)")
       } else if (x$location == "orthogonal") {
