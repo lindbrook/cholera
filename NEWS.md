@@ -1,3 +1,8 @@
+# cholera 0.9.1.9065
+
+- set col = "black" with addFrame().
+
+
 # cholera 0.9.1.9064
 
 - use invisible() in writeGPKG().

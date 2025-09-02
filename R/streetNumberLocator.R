@@ -175,7 +175,7 @@ streetNumberLocator <- function(street.number = 216, zoom = TRUE,
       cex = 0.5, asp = asp)
   }
 
-  addFrame(col = "gray", latlong = latlong)
+  addFrame(latlong = latlong)
   addRoads(col = "gray", latlong = latlong)
 
   if (zoom == TRUE | is.numeric(zoom)) {
