@@ -1,3 +1,8 @@
+# cholera 0.9.1.9067
+
+- amend latlong.ortho.anchor for amended caseRoadClassificationFix().
+
+
 # cholera 0.9.1.9066
 
 - add anchor 237 to segment "141-1" to caseRoadClassificationFix() for latlong.
