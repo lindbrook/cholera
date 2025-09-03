@@ -1,3 +1,8 @@
+# cholera 0.9.1.9066
+
+- add anchor 237 to segment "141-1" to caseRoadClassificationFix() for latlong.
+
+
 # cholera 0.9.1.9065
 
 - set col = "black" with addFrame().
