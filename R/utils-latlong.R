@@ -273,3 +273,45 @@ std <- function(dat, center, spread) (dat - center) / spread
 #' @noRd
 
 unstd <- function(x, center, spread) x * spread + center
+
+#' Compare Nominal and Fitted Geographic Data (latlong).
+#'
+#' QGIS Georeferencer Outlier Detection, by Segment ID.
+#' @param path Character. File path e.g., "~/Documents/Data/".
+#' @param m.threshold Numeric. Threshold for outliers in meters.
+#' @param pct.threshold Numeric. Threshold for outliers in percentage.
+#' @noRd
+
+geoAudit <- function(path, m.threshold = 10, pct.threshold = 50) {
+  road.segments <- latlongCoordinatesGPKG(path, dataset = "road.segments")
+
+  vars <- c("x", "y")
+  a <- stats::setNames(road.segments[, paste0(vars, 1)], vars)
+  b <- stats::setNames(road.segments[, paste0(vars, 2)], vars)
+
+  nom <- vapply(seq_len(nrow(a)), function(i) {
+    unitMeter(stats::dist(rbind(a[i, ], b[i, ])))
+  }, numeric(1L))
+
+  vars <- c("lon", "lat")
+  a <- stats::setNames(road.segments[, paste0(vars, 1)], vars)
+  b <- stats::setNames(road.segments[, paste0(vars, 2)], vars)
+
+  geo <- vapply(seq_len(nrow(a)), function(i) {
+    geosphere::distGeo(a[i, ], b[i, ])
+  }, numeric(1L))
+
+  road.segments$nom.d <- nom
+  road.segments$geo.d <- geo
+  road.segments$delta <- road.segments$geo.d - road.segments$nom.d
+  road.segments$pct <- 100 * (road.segments$geo.d - road.segments$nom.d) / 
+    road.segments$nom.d
+
+  m.audit <- road.segments[abs(road.segments$delta) > m.threshold, ]
+  p.audit <- road.segments[abs(road.segments$pct) > pct.threshold, ]
+  vars <- -c(grep(1, names(road.segments)), grep(2, names(road.segments)))  
+
+  list(meter.audit = m.audit[order(m.audit$delta, decreasing = TRUE), vars], 
+       pct.audit = p.audit[order(p.audit$pct, decreasing = TRUE), vars])
+}
+
