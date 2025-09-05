@@ -1,3 +1,8 @@
+# cholera 0.9.1.9068
+
+- add geoAudit().
+
+
 # cholera 0.9.1.9067
 
 - amend latlong.ortho.anchor for amended caseRoadClassificationFix().
