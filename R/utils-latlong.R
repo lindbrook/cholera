@@ -278,7 +278,7 @@ unstd <- function(x, center, spread) x * spread + center
 #'
 #' QGIS Georeferencer Outlier Detection, by Segment ID.
 #' @param path Character. File path e.g., "~/Documents/Data/".
-#' @param filtered Logiccal. Return outlier.
+#' @param filtered Logical. Return outlier data.
 #' @param m.threshold Numeric. Threshold for outliers in meters.
 #' @param pct.threshold Numeric. Threshold for outliers in percentage.
 #' @noRd
