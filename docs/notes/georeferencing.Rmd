@@ -1,0 +1,51 @@
+---
+title: "Georeferencing"
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(cholera)
+```
+
+The 'cholera' package includes estimates of longitude and latitude for two reasons. First, doing so provides a way to assess or "validate" the accuracy of Snow's map. Second, geographic coordinates are a standard format for spatial data that many prefer, if not expect. To estimate these geographic coordinates, I use georeferencing.  
+
+Georeferencing the process of matching just a subset of points on your map (e.g., Snow's or Dodson and Tobler's) with the corresponding ones on an authoritative map (e.g., Google Maps, OpenStreetMap) and then applying an algorithm that transforms your map so that it "fits" and overlays the authoritative map. By doing so, your map's nominal scale is also translated into longitude and latitude (or whatever the scale of the authoritative map be).[^1]
+
+I use [QGIS](https://qgis.org/) to do the georeferencing: specifically, its  _Georeferencer_ application and its integration of [OpenStreetMap](https://www.openstreetmap.org). This leaves two tasks to the user.
+
+The first is to choose a transformation algorithm. Here the choice is guided by the amount of distortion in your map. If it's more _globally_ nonlinear, you might try something like a polynomial transformation. If it's more _locally_ nonlinear, you might try something like thin plate spline transformation, which is often referred to as "rubbersheeting". The key consequence of the choice of algorithm is that it affects the number of matching points, or ground control points (GCPs), that you'll need to set. As you might expect, global approaches require fewer points while local approaches require more. For this version of the data, I use the following configuration:
+
+Transformation type -- Thin Plate Spline  
+Target CRS -- EPSG:4326 - WGS 84  
+Resampling method -- nearest neighbor
+
+The second task is locating and positioning GCPs. Here, I rely primarily on road intersections the nodes of the Soho road network)for GCPs. This makes the task of finding corresponding points easier. To facilitate this, I use a network graph representation of the Dodson and Tobler's Soho road network to locate and position GCPs:
+
+![](r_network.graph.png)
+
+I import this graphic into the QGIS Georeferencer application.[^2] Then, I select a point (road intersection) with the crosshair cursor. Once I do that, I'm prompted to switch to reference map via the highlighted "From Map Canvas" button. There, you drop a pin at the corresponding location. Here's what you see in Georeferencer with the four corners of Golden Square selected:
+
+![](qgis_georeferencer_golden.png)
+
+Each time you add a point or set of points, you can georeference by pressing _File:Start Geoferencing_ item. Doing so will add a "fitted" version of the road network graphic as a new layer on top of the OpenStreetMap map. Here's the fit in QGIS using the four ground contol points for Golden Square:
+
+![](qgis_app_golden.png)
+
+You repeat this process until the visual fit looks "good". Pan and zoom as needed. 
+
+## Outliers
+
+As a final step, I look for outliers in R by doing a numerical analysis that compares the length of line segments (in meters) using geoAudit(), which has starting points of differences of 10 meters or 50%. I use this to make fine grained adjustments.
+
+Once you're happy with the fit, you save the GCPs to serve as a master set to use to georeference the main datasets (e.g., fatalities, pumps, etc.). Here's my final working fit in Georeferencer:
+
+![](qgis_georeferencer.png)
+
+And my final working fit with OpenStreetMap:
+
+![](qgis_app.png)
+
+
+[^1]: Generally speaking, georeferencing typically does not involves a simple transformation of the map (e.g., a shift, rotation, and/or simple rescaling). If it were, R, Python, or image software may be sufficient.
+[^2]: I use GeoPackage files, a QGIS vector format, as the conduit between R and QGIS. Previous version used a PDF, a QGIS raster format.
