@@ -1,3 +1,8 @@
+# cholera 0.9.1.9070
+
+- draft georeferencing vignette.
+
+
 # cholera 0.9.1.9069
 
 - add/set geoAudit(filtered = TRUE).
