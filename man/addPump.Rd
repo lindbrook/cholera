@@ -22,7 +22,7 @@ addPump(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
 
 \item{cex}{Numeric. point cex.}
 
-\item{latlong}{Logical. Use c("lon". "lat") or c("x", "y").}
+\item{latlong}{Logical. Use c("lon", "lat") or c("x", "y").}
 }
 \description{
 Add selected pump(s) to plot.

@@ -7,7 +7,7 @@
 #' @param label Logical. TRUE adds text label.
 #' @param pos Numeric. Position of label.
 #' @param cex Numeric. point cex.
-#' @param latlong Logical. Use c("lon". "lat") or c("x", "y").
+#' @param latlong Logical. Use c("lon", "lat") or c("x", "y").
 #' @export
 
 addPump <- function(pump.select = NULL, vestry = FALSE, col = NULL, pch = 24,
