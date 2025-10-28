@@ -1,3 +1,8 @@
+# cholera 0.9.1.9071
+
+- copyedit georeferencing vignette.
+
+
 # cholera 0.9.1.9070
 
 - draft georeferencing vignette.
