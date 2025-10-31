@@ -236,14 +236,6 @@ georeferenced (longitude and latitude) versions of *nearly* all data and
 functions. For functions, this works by setting `latlong = TRUE` where
 available.
 
-Georeferencing was done using [QGIS](https://qgis.org/); specifically
-the Georeferencer tool and its interface to
-[OpenStreetMap](https://www.openstreetmap.org). The target coordinate
-reference system (CRS) of these data is EPSG:4326. Note that the
-georeferenced results are still provisional: the choice of ground
-control points, transformation type (e.g., thin plate spine), and
-resampling method (e.g., nearest neighbor) may change in the future.
-
 Here's one example:
 
 ``` r
@@ -252,6 +244,8 @@ plot(walkingPath())  # Dodson and Tobler native scale for comparison
 ```
 
 <img src="man/figures/README-latlong_walking_path-1.png" width="50%" /><img src="man/figures/README-latlong_walking_path-2.png" width="50%" />
+
+Georeferencing was done using [QGIS](https://qgis.org/) and [OpenStreetMap](https://www.openstreetmap.org). An online overview is available [here](https://github.com/lindbrook/cholera/blob/master/docs/notes/georeferencing.md)
 
 #### vignettes
 
