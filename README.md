@@ -245,7 +245,7 @@ plot(walkingPath())  # Dodson and Tobler native scale for comparison
 
 <img src="man/figures/README-latlong_walking_path-1.png" width="50%" /><img src="man/figures/README-latlong_walking_path-2.png" width="50%" />
 
-Georeferencing was done using [QGIS](https://qgis.org/) and [OpenStreetMap](https://www.openstreetmap.org). An online overview is available [here](https://github.com/lindbrook/cholera/blob/master/docs/notes/georeferencing.md)
+Georeferencing was done using [QGIS](https://qgis.org/) and [OpenStreetMap](https://www.openstreetmap.org). An online overview is available [here](https://github.com/lindbrook/cholera/blob/master/docs/notes/georeferencing.md).
 
 #### vignettes
 
