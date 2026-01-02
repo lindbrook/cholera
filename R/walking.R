@@ -16,7 +16,8 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     if (length(pump.select) == 1) {
       if (pump.select == 2) {
         msg1 <- "You can't just select the pump on Adam and Eve Court (#2).\n"
-        msg2 <- " It's an isolate, unreachable for observed and most expected fatalities."
+        msg2 <- " It's an isolate, unreachable for observed and most expected"
+        msg3 <- "fatalities."
         stop(paste(msg1, msg2))
       }
     }
