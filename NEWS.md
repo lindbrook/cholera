@@ -1,3 +1,8 @@
+# cholera 0.9.1.9072
+
+- add cardinalDistances().
+
+
 # cholera 0.9.1.9071
 
 - copyedit georeferencing vignette.
