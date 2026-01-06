@@ -1,3 +1,8 @@
+# cholera 0.9.1.9073
+
+- add/use vonNeumannFilter() prototype.
+
+
 # cholera 0.9.1.9072
 
 - add cardinalDistances().
