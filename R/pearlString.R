@@ -114,23 +114,10 @@ polygonAudit <- function(x, i = 1) {
     col = grDevices::adjustcolor(snowColors()[i], alpha.f = 2/3))
 }
 
-#' Filter out expected cases with single von Neumann neighbor.
 #'
-#' @param neighborhood.cases List. List of expected neighbors by pump.
-#' @param x Object. Object created by neighborhoodWalking(case.set = "expected").
 #' @noRd
 
-vonNeumannFilter <- function(neighborhood.cases, x) {
-  radius <- pearlStringRadius(latlong = x$latlong)
-  lapply(neighborhood.cases, function(n.cases) {
-    if (x$latlong) {
-      n.area <- data.frame(case = n.cases, 
-        cholera::latlong.regular.cases[n.cases, c("x", "y")])
     } else {
-      n.area <- data.frame(case = n.cases, cholera::regular.cases[n.cases, ])
-    }
-    neighborhood <- parallel::mclapply(n.area$case, function(case) {
-      case.point <- n.area[n.area$case == case, c("x", "y")]
       N <- signif(case.point$x) == signif(n.area$x) &
            signif(case.point$y + radius) == signif(n.area$y)
       E <- signif(case.point$x + radius) == signif(n.area$x) &
@@ -140,9 +127,5 @@ vonNeumannFilter <- function(neighborhood.cases, x) {
       W <- signif(case.point$x - radius) == signif(n.area$x) &
            signif(case.point$y) == signif(n.area$y)
       data.frame(case = case, neighbors = sum(c(N, E, S, W)))
-    }, mc.cores = x$cores)
-    neighborhood <- do.call(rbind, neighborhood)
-    drop <- neighborhood[neighborhood$neighbors == 1, ]$case
-    n.cases[!n.cases %in% drop]
   })
 }
