@@ -114,23 +114,48 @@ polygonAudit <- function(x, i = 1) {
     col = grDevices::adjustcolor(snowColors()[i], alpha.f = 2/3))
 }
 
-#' Filter out expected cases with single von Neumann neighbor.
+#' Identify and visualize von Neumann neighbor outliers.
 #'
-#' @param neighborhood.cases List. List of expected neighbors by pump.
-#' @param x Object. Object created by neighborhoodWalking(case.set = "expected").
+#' @param plot Logical. TRUE plots data; FALSE returns case IDs.
+#' @param pump.select Integer. Pump IDs to consider.
+#' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @noRd
 
-vonNeumannFilter <- function(neighborhood.cases, x) {
-  radius <- pearlStringRadius(latlong = x$latlong)
-  lapply(neighborhood.cases, function(n.cases) {
-    if (x$latlong) {
-      n.area <- data.frame(case = n.cases, 
-        cholera::latlong.regular.cases[n.cases, c("x", "y")])
+polygonVertexOutliers <- function(plot = TRUE, pump.select = NULL, 
+  vestry = FALSE, multi.core = FALSE) {
+
+  if (.Platform$OS.type == "windows") {
+    cores <- 1L
+  } else {
+    cores <- multiCore(multi.core)
+  }
+  
+  if (is.null(pump.select)) {
+    x <- neighborhoodWalking(case.set = "expected", vestry = vestry, 
+      multi.core = TRUE)
+    if (vestry) {
+      pmp <- 1:14
     } else {
-      n.area <- data.frame(case = n.cases, cholera::regular.cases[n.cases, ])
-    }
-    neighborhood <- parallel::mclapply(n.area$case, function(case) {
-      case.point <- n.area[n.area$case == case, c("x", "y")]
+      pmp <- 1:13
+    }   
+  } else {
+    x <- neighborhoodWalking(pump.select = pump.select, case.set = "expected", 
+      vestry = vestry, multi.core = TRUE)
+    pmp <- as.character(x$pump.select)
+  }
+  
+  neighborhood.cases <- lapply(x$exp.pump.case, function(x) x - 2000L)
+
+  vars <- c("x", "y")
+  radius <- pearlStringRadius()
+
+  neighborhood.data <-lapply(pmp, function(p) {
+    n.sel <- neighborhood.cases[[p]]
+    n.area <- data.frame(case = n.sel, cholera::regular.cases[n.sel, ])
+    
+    vonNeumann.neighborhood <- parallel::mclapply(n.area$case, function(case) {
+      case.point <- n.area[n.area$case == case, vars]
       N <- signif(case.point$x) == signif(n.area$x) &
            signif(case.point$y + radius) == signif(n.area$y)
       E <- signif(case.point$x + radius) == signif(n.area$x) &
@@ -140,9 +165,29 @@ vonNeumannFilter <- function(neighborhood.cases, x) {
       W <- signif(case.point$x - radius) == signif(n.area$x) &
            signif(case.point$y) == signif(n.area$y)
       data.frame(case = case, neighbors = sum(c(N, E, S, W)))
-    }, mc.cores = x$cores)
-    neighborhood <- do.call(rbind, neighborhood)
-    drop <- neighborhood[neighborhood$neighbors == 1, ]$case
-    n.cases[!n.cases %in% drop]
+    }, mc.cores = cores)
+    
+    vonNeumann.neighborhood <- do.call(rbind, vonNeumann.neighborhood)
+    id <- vonNeumann.neighborhood$neighbors == 1
+    list(n.area = n.area, id = id)
   })
+  
+  names(neighborhood.data) <- pmp
+
+  if (plot) {
+    invisible(lapply(pmp, function(nm) {
+      n.area <- neighborhood.data[[nm]]$n.area
+      id <- neighborhood.data[[nm]]$id
+      plot(n.area[, vars], asp = 1, main = nm)
+      points(n.area[id, vars], pch = 16, col = "red")    
+    }))
+  } else {
+    out <- lapply(pmp, function(nm) {
+      n.area <- neighborhood.data[[nm]]$n.area
+      id <- neighborhood.data[[nm]]$id
+      n.area[id, "case"]
+    })
+    names(out) <- pmp
+    out
+  }
 }
