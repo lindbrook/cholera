@@ -375,7 +375,19 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
 
     } else if (type == "area.polygons") {
       neighborhood.cases <- lapply(x$exp.pump.case, function(x) x - case.fix)
-      neighborhood.cases <- vonNeumannFilter(neighborhood.cases, x)
+
+      # p8 fix with pump.select = 6:9 | pump.select = 3:9
+      # p13 fix with pump.select = -13
+      polygon.err <- identical(x$p.sel, 6:9) | identical(x$p.sel, 3:9) | 
+        identical(x$pump.select, -13)
+      
+      if (polygon.err) {
+        outliers <- c(206, 4022, 7131, 7277)
+        neighborhood.cases <- lapply(neighborhood.cases, function(x) {
+          if (any(outliers %in% x)) x <- x[!x %in% outliers]
+          else x
+        })
+      }
 
       periphery.cases <- parallel::mclapply(neighborhood.cases,
         peripheryCases, latlong = x$latlong, mc.cores = x$cores)

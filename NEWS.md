@@ -1,3 +1,10 @@
+# cholera 0.9.1.9074
+
+- use manual outliers rather than vonNeumannFilter() in plot.walking().
+- add polygonVertexOutliers().
+- archive cardinalDistances() and vonNeumannFilter().
+
+
 # cholera 0.9.1.9073
 
 - add/use vonNeumannFilter() prototype.
