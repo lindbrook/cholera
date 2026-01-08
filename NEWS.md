@@ -1,3 +1,8 @@
+# cholera 0.9.1.9076
+
+- amend code for polygon.err outliers in in plot.walking().
+
+
 # cholera 0.9.1.9075
 
 - set 'pump' to numeric for neighborhoodWalking(vestry = FALSE).

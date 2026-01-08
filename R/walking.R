@@ -378,8 +378,9 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
 
       # p8 fix with pump.select = 6:9 | pump.select = 3:9
       # p13 fix with pump.select = -13
-      polygon.err <- identical(x$p.sel, 6:9) | identical(x$p.sel, 3:9) | 
-        identical(x$pump.select, -13)
+      polygon.err <- identical(x$p.sel, c(6, 7, 8, 9)) |
+                     identical(x$p.sel, c(3, 4, 5, 6, 7, 8, 9)) |
+                     (identical(x$pump.select, -13) & isFALSE(x$vestry))
       
       if (polygon.err) {
         outliers <- c(206, 4022, 7131, 7277)
