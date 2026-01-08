@@ -1,3 +1,8 @@
+# cholera 0.9.1.9075
+
+- set 'pump' to numeric for neighborhoodWalking(vestry = FALSE).
+
+
 # cholera 0.9.1.9074
 
 - use manual outliers rather than vonNeumannFilter() in plot.walking().
