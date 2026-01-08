@@ -65,7 +65,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 
     id <- vapply(seq_len(nrow(ds)), function(i) which.min(ds[i, ]), numeric(1L))
     d <- vapply(seq_along(id), function(i) ds[i, ][id[i]], numeric(1L))
-    pump <- vapply(seq_along(id), function(i) p.sel[id[i]], integer(1L))
+    pump <- vapply(seq_along(id), function(i) p.sel[id[i]], numeric(1L))
     nr.pump <- data.frame(case = case, pump = pump, distance = d)
 
     obs.pump <- sort(unique(pump))
