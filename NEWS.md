@@ -1,3 +1,8 @@
+# cholera 0.9.1.9079
+
+- amend/restore ":" for polygon.err outliers in in plot.walking().
+
+
 # cholera 0.9.1.9078
 
 - set pump ID to integer in latlong.ortho.pump.vestry, ortho.proj.pump.vestry 
