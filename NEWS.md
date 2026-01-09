@@ -1,3 +1,8 @@
+# cholera 0.9.1.9077
+
+- allow NAs in midpointLatlong() for neighborhoodWalking(case.set = "expected").
+
+
 # cholera 0.9.1.9076
 
 - amend code for polygon.err outliers in in plot.walking().
