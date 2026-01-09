@@ -94,7 +94,7 @@ midpointLatlong <- function(diff_pump.endpts, endpt.data, same_pump.cases,
         ep.data[, paste0("pump", 1)]
       } else if (all(mid.pt.delta[i, ] == two)) {
         ep.data[, paste0("pump", 2)]
-      }
+      } else NA # "281-3" Old Compton Street, etc.
     }, numeric(1L))
 
     data.frame(case = seg.data$case, pump = pmp)
