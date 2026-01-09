@@ -1,3 +1,9 @@
+# cholera 0.9.1.9078
+
+- set pump ID to integer in latlong.ortho.pump.vestry, ortho.proj.pump.vestry 
+  and pumps.vestry.
+
+
 # cholera 0.9.1.9077
 
 - allow NAs in midpointLatlong() for neighborhoodWalking(case.set = "expected").
