@@ -82,7 +82,7 @@ addRoads <- function(latlong = FALSE, col = "gray") {
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @param col Character. Color
 #' @param ... Additional plotting parameters.
-#' @noRd
+#' @export
 
 addFrame <- function(latlong = FALSE, col = "black", ...) {
   frame.rds <- cholera::roads[cholera::roads$name == "Map Frame", ]

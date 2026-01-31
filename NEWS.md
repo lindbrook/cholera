@@ -1,3 +1,8 @@
+# cholera 0.9.1.9080
+
+- export addFrame().
+
+
 # cholera 0.9.1.9079
 
 - amend/restore ":" for polygon.err outliers in in plot.walking().
@@ -217,7 +222,7 @@
 
 # cholera 0.9.1.9037
 
-- add "plague.pit.segments" to linestring.segs in  latlongCoordinatesGPKG().
+- add "plague.pit.segments" to linestring.segs in latlongCoordinatesGPKG().
 
 
 # cholera 0.9.1.9036
