@@ -413,22 +413,24 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
       cutpoint <- ifelse(latlong, -13L, -6L)
       zero.length.ew <- log(abs(arrow.tail[, ew] - arrow.head[, ew])) < cutpoint
       zero.length.ns <- log(abs(arrow.tail[, ns] - arrow.head[, ns])) < cutpoint
-
+      
+      # zero-length arrow fix
+    
       if (any(zero.length.ew | zero.length.ns)) {
-        zero.id <- unique(row.names(arrow.head[zero.length.ew, ]),
-                          row.names(arrow.head[zero.length.ns, ]))
-
+        zero.id <- as.numeric(unique(row.names(arrow.head[zero.length.ew, ]),
+          row.names(arrow.head[zero.length.ns, ])))
+        
         angle <- vapply(zero.id, function(id) {
           zero.arrow <- rbind(arrow.tail[id, vars], arrow.head[id, vars])
           if (latlong) ols <- stats::lm(lat ~ lon, data = zero.arrow)
           else ols <- stats::lm(y ~ x, data = zero.arrow)
           slope <- stats::coef(ols)[2]
-          theta <- atan(slope)
+          theta <- ifelse(is.na(slope), pi / 2, atan(slope))
           theta * 180L / pi
         }, numeric(1L))
 
         invisible(lapply(seq_along(zero.id), function(i) {
-          text(arrow.head[zero.id[i], vars], labels = "<", srt = angle[i],
+          text(arrow.head[zero.id[i], vars], labels = "|", srt = angle[i],
                col = case.color, cex = 1.25)
         }))
 

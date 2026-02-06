@@ -1,3 +1,12 @@
+# cholera 0.9.1.9081
+
+- use more accurate data.summary and path.data object names.
+- amend drawPath() syntax.
+- amend milePosts().
+- update zero-length arrow diagnostics.
+- amend zero-length arrow fix (use "|" in place of "<").
+
+
 # cholera 0.9.1.9080
 
 - export addFrame().
