@@ -403,11 +403,12 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
       arrow.tail <- milepost.data$arrow.tail
     }
 
-    # intermediate arrows (mileposts)
     if (path.length >= milepost.interval) {
       # diagnostic #
-      # dotchart(log(abs(arrow.tail$lon - arrow.head$lon)))
-      # dotchart(log(abs(arrow.tail$lat - arrow.head$lat)))
+      # dotchart(log(abs(arrow.tail$lon - arrow.head$lon)), main = "lon")
+      # dotchart(log(abs(arrow.tail$lat - arrow.head$lat)), main = "lat")
+      # dotchart(log(abs(arrow.tail$x - arrow.head$x)), main = "x")
+      # dotchart(log(abs(arrow.tail$y - arrow.head$y)), main = "y")
 
       cutpoint <- ifelse(latlong, -13L, -6L)
       zero.length.ew <- log(abs(arrow.tail[, ew] - arrow.head[, ew])) < cutpoint
