@@ -112,7 +112,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
                              type = type)
 
   output <- list(path = path,
-                 data = data.summary,
+                 data.summary = data.summary,
                  origin = origin,
                  destination = destination,
                  vestry = vestry,
@@ -148,13 +148,13 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
   alpha.level = 1, ...) {
 
-  path.data <- x$data
-  type <- x$data$type
-  orig <- path.data$origin
-  dest <- path.data$destination
+  path.data <- x$path
+  data.summary <- x$data.summary
+  type <- x$data.summary$type
+  orig <- x$data.summary$origin
+  dest <- x$data.summary$destination
   destination <- x$destination
   colors <- snowColors(x$vestry)
-  dat <- x$path
   ds <- x$ds
   distance.unit <- x$distance.unit
   latlong <- x$latlong
@@ -205,7 +205,7 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     xlim <- range(map.data[, ew])
     ylim <- range(map.data[, ns])
   } else if (isTRUE(zoom) | is.numeric(zoom)) {
-    map.data <- mapDataRange(dat, land, path.data, vars, ew, ns)
+    map.data <- mapDataRange(path.data, land, data.summary, vars, ew, ns)
 
     if (is.logical(zoom) | zoom == 0) {
       padding <- ifelse(latlong, 0.0000125, 0.05)
@@ -263,8 +263,8 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
         ylim.delta <- ylim[2] - ylim[1]
 
         if (xlim.delta <= 0 | ylim.delta <= 0) {
-          xlim <- range(dat[, ew])
-          ylim <- range(dat[, ns])
+          xlim <- range(path.data[, ew])
+          ylim <- range(path.data[, ns])
           message("Note: zoom = ", zoom, " too far! Use smaller.")
         }
       }
@@ -272,7 +272,7 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   if (type == "case-pump") {
-    p.sel <- paste0("p", path.data$destination)
+    p.sel <- paste0("p", dest)
     case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
   } else {
     case.color <- "blue"
@@ -377,14 +377,14 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     }
   }
 
-  points(dat[1, vars], pch = 0)
-  points(dat[nrow(dat), vars], pch = 0)
+  points(path.data[1, vars], pch = 0)
+  points(path.data[nrow(path.data), vars], pch = 0)
 
-  drawPath(dat, case.color, latlong)
+  drawPath(path.data, case.color, latlong)
 
   d <- paste(round(path.length, 1), d.unit)
-  t <- paste(round(x$data$time, 1), paste0(time.unit, "s"), "@", walking.speed,
-             "km/hr")
+  t <- paste(round(data.summary$time, 1), paste0(time.unit, "s"), "@",
+    walking.speed, "km/hr")
 
   if (is.null(milepost.interval)) {
     if (milepost.unit == "distance") {
@@ -463,7 +463,7 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     if (!add) title(sub = paste(d, t, sep = "; "))
   }
 
-  if (!add) longTitle(long.title, type, pmp, path.data, orig, land, x)
+  if (!add) longTitle(long.title, type, pmp, data.summary, orig, land, x)
 }
 
 #' Print method for walkingPath().
@@ -478,7 +478,7 @@ print.walking_path <- function(x, ...) {
   if (!inherits(x, "walking_path")) {
     stop('"x"\'s class must be "walking_path".')
   }
-  print(x[c("path", "data")])
+  print(x[c("path", "data.summary")])
 }
 
 drawPath <- function(dat, case.color, latlong) {
@@ -491,10 +491,10 @@ drawPath <- function(dat, case.color, latlong) {
   }
 }
 
-milePosts <- function(path.data, dat, destination, distance.unit, ds, latlong,
-  milepost.unit, milepost.interval, time.unit, walking.speed) {
+milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
+  milepost.interval, time.unit, walking.speed) {
 
-  rev.data <- dat[order(dat$id, decreasing = TRUE), ]
+  rev.path <- x$path[order(x$path$id, decreasing = TRUE), ]
 
   if (latlong) {
     ew <- "lon"

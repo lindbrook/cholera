@@ -1,61 +1,62 @@
-longTitle <- function(long.title, type, pmp, path.data, orig, land, x) {
+longTitle <- function(long.title, type, pmp, data.summary, orig, land, x) {
   if (long.title) {
     if (type == "case-pump") {
-      p.nm <- pmp[pmp$id == path.data$destination, ]$street
+      p.nm <- pmp[pmp$id == data.summary$destination, ]$street
       if (orig < 1000L | orig > max(land$case)) {
         if (x$location == "nominal") {
           alpha <- paste("Case", orig)
         } else if (x$location %in% c("anchor", "orthogonal")) {
           alpha <- paste0("Anchor ", orig, " (Case ", x$orig, ")")
         }
-        omega <- paste(p.nm, "Pump", paste0("(#", path.data$destination, ")"))
+        omega <- paste(p.nm, "Pump", paste0("(#", data.summary$destination, ")"))
       } else if (orig >= 1000L & orig <= max(land$case)) {
         c.nm <- land[land$case == orig, ]$name
         alpha <- paste(c.nm, paste0("(#", orig, ")"))
-        omega <- paste(p.nm, "Pump", paste0("(#", path.data$destination, ")"))
+        omega <- paste(p.nm, "Pump",
+          paste0("(#", data.summary$destination, ")"))
       }
     } else if (type == "cases") {
-      if (orig >= 1000L & path.data$destination >= 1000L) {
+      if (orig >= 1000L & data.summary$destination >= 1000L) {
         c.orig.nm <- land[land$case == orig, ]$name
-        c.dest.nm <- land[land$case == path.data$destination, ]$name
+        c.dest.nm <- land[land$case == data.summary$destination, ]$name
         alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
-        omega <- paste(c.dest.nm, paste0("(#", path.data$destination, ")"))
-      } else if (orig < 1000L & path.data$destination >= 1000L) {
-        c.dest.nm <- land[land$case == path.data$destination, ]$name
+        omega <- paste(c.dest.nm, paste0("(#", data.summary$destination, ")"))
+      } else if (orig < 1000L & data.summary$destination >= 1000L) {
+        c.dest.nm <- land[land$case == data.summary$destination, ]$name
         alpha <- paste("Case", orig)
-        omega <- paste(c.dest.nm, paste0("(#", path.data$destination, ")"))
-      } else if (orig >= 1000L & path.data$destination < 1000L) {
+        omega <- paste(c.dest.nm, paste0("(#", data.summary$destination, ")"))
+      } else if (orig >= 1000L & data.summary$destination < 1000L) {
         c.orig.nm <- land[land$case == orig, ]$name
         alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
-        omega <- paste("to Case", path.data$destination)
+        omega <- paste("to Case", data.summary$destination)
       } else {
         alpha <- paste("Case", orig)
-        omega <- paste("Case", path.data$destination)
+        omega <- paste("Case", data.summary$destination)
       }
     } else if (type == "pumps") {
-      orig.nm <- pmp[pmp$id == path.data$origin, ]$street
-      dest.nm <- pmp[pmp$id == path.data$destination, ]$street
-      alpha <- paste(orig.nm, paste0("(p", path.data$origin, ")"))
-      omega <- paste(dest.nm, paste0("(p", path.data$destination, ")"))
+      orig.nm <- pmp[pmp$id == data.summary$origin, ]$street
+      dest.nm <- pmp[pmp$id == data.summary$destination, ]$street
+      alpha <- paste(orig.nm, paste0("(p", data.summary$origin, ")"))
+      omega <- paste(dest.nm, paste0("(p", data.summary$destination, ")"))
     }
     title(main = paste(alpha, "to", omega))
   } else {
     if (type == "case-pump") {
-      title(main = paste("Case", orig, "to Pump", path.data$destination))
+      title(main = paste("Case", orig, "to Pump", data.summary$destination))
     } else if (type == "cases") {
-      title(main = paste("Case", orig, "to Case", path.data$destination))
+      title(main = paste("Case", orig, "to Case", data.summary$destination))
     } else if (type == "pumps") {
-      title(main = paste("Pump", orig, "to Pump", path.data$destination))
+      title(main = paste("Pump", orig, "to Pump", data.summary$destination))
     }
   }
 }
 
-mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
-  if (any(path.data$origin >= 1000L &
-          path.data$origin <= max(land$case))) {
-    land.orig <- land[land$case %in% path.data$origin, ]
+mapDataRange <- function(path.data, land, data.summary, vars, ew, ns) {
+  if (any(data.summary$origin >= 1000L &
+          data.summary$origin <= max(land$case))) {
+    land.orig <- land[land$case %in% data.summary$origin, ]
     if (grepl("Square", land.orig$name)) {
-      sq.nm <- unlist(strsplit(path.data$origin.nm, "-"))[1]
+      sq.nm <- unlist(strsplit(data.summary$origin.nm, "-"))[1]
       sel <- grepl(sq.nm, cholera::landmarks$name)
       label.orig <- cholera::landmarks[sel, vars]
     } else {
@@ -64,11 +65,11 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
     }
   }
 
-  if (any(path.data$destination >= 1000L &
-          path.data$origin <= max(land$case))) {
-    land.dest <- land[land$case %in% path.data$destination, ]
+  if (any(data.summary$destination >= 1000L &
+          data.summary$origin <= max(land$case))) {
+    land.dest <- land[land$case %in% data.summary$destination, ]
     if (grepl("Square", land.dest$name)) {
-      sq.nm <- unlist(strsplit(path.data$destination.nm, "-"))[1]
+      sq.nm <- unlist(strsplit(data.summary$destination.nm, "-"))[1]
       sel <- grepl(sq.nm, cholera::landmarks$name)
       label.dest <- cholera::landmarks[sel, vars]
     } else {
@@ -78,13 +79,13 @@ mapDataRange <- function(dat, land, path.data, vars, ew, ns) {
   }
 
   if (exists("label.orig") & exists("label.dest")) {
-    rbind(dat[, vars], label.orig, label.dest)
+    rbind(path.data[, vars], label.orig, label.dest)
   } else if (exists("label.orig") & !exists("label.dest")) {
-    rbind(dat[, vars], label.orig)
+    rbind(path.data[, vars], label.orig)
   } else if (!exists("label.orig") & exists("label.dest")) {
-    rbind(dat[, vars], label.dest)
+    rbind(path.data[, vars], label.dest)
   } else {
-    dat[, vars]
+    path.data[, vars]
   }
 }
 
