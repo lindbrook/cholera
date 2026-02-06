@@ -125,6 +125,15 @@ latlongSimulateFatalities <- function(multi.core = FALSE, radius = 75,
 # usethis::use_data(latlong.regular.cases)
 # usethis::use_data(latlong.regular.cases, overwrite = TRUE)
 
+# aarch64
+# > system.time(latlong.reg.sim <- cholera:::latlongSimulateFatalities(TRUE))
+#     user   system  elapsed 
+# 3004.801   22.190  312.731
+# latlong.regular.cases <- latlong.reg.sim$reg
+# latlong.sim.ortho.proj <- latlong.reg.sim$sim
+# usethis::use_data(latlong.sim.ortho.proj, overwrite = TRUE)
+# usethis::use_data(latlong.regular.cases, overwrite = TRUE)
+
 #' Compute Cartesian latitude and longitude for simulated regular cases.
 #'
 #' @param simulated.obs Numeric. Number of simulated cases.
