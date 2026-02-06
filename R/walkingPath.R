@@ -481,9 +481,9 @@ print.walking_path <- function(x, ...) {
   print(x[c("path", "data.summary")])
 }
 
-drawPath <- function(dat, case.color, latlong) {
-  n1 <- dat[1:(nrow(dat) - 1), ]
-  n2 <- dat[2:nrow(dat), ]
+drawPath <- function(x, case.color, latlong) {
+  n1 <- x[1:(nrow(x) - 1), ]
+  n2 <- x[2:nrow(x), ]
   if (latlong) {
     segments(n1$lon, n1$lat, n2$lon, n2$lat, lwd = 3, col = case.color)
   } else {
