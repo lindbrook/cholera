@@ -394,15 +394,8 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     }
   }
 
-  milepost.data <- milePosts(path.data, dat, destination, distance.unit, ds,
-    latlong, milepost.unit, milepost.interval, time.unit, walking.speed)
-
-  seg.data <- milepost.data$seg.data
-
-  # last/final arrow ("last mile")
-  arrows(seg.data[1, paste0(ew, 2)], seg.data[1, paste0(ns, 2)],
-         seg.data[1, paste0(ew, 1)], seg.data[1, paste0(ns, 1)],
-         length = 0.0875, lwd = 3, col = case.color)
+  milepost.data <- milePosts(x, distance.unit, ds, latlong, milepost.unit,
+    milepost.interval, time.unit, walking.speed)
 
   if (mileposts) {
     if (path.length > milepost.interval) {
@@ -507,8 +500,8 @@ milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
   vars <- c(ew, ns)
   seg.vars <- c(paste0(vars, 1), paste0(vars, 2))
 
-  seg.data <- do.call(rbind, lapply(seq_len(nrow(rev.data) - 1), function(i) {
-    endpts <- cbind(rev.data[i, vars], rev.data[i + 1, vars])
+  seg.data <- do.call(rbind, lapply(seq_len(nrow(rev.path) - 1), function(i) {
+    endpts <- cbind(rev.path[i, vars], rev.path[i + 1, vars])
     names(endpts) <- seg.vars
     data.frame(id = i, endpts)
   }))
@@ -520,7 +513,7 @@ milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
     path.length <- sum(ds)
     cumulative <- seg.data$cumulative.d
   } else if (milepost.unit == "time") {
-    path.length <- path.data$time
+    path.length <- x$path$time
     seg.data$t <- (3600L * seg.data$d) / (1000L * walking.speed)
     seg.data$cumulative.t <- cumsum(seg.data$t)
     cumulative <- seg.data$cumulative.t
@@ -538,28 +531,17 @@ milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
     }, logical(1L)))
   }, integer(1L))
 
-  if (all(seg.select == 1) & length(seg.select) > 1) {
-    milepost.seg.id <- unique(seg.select)
-  } else {
-    if (sum(seg.select == 1) > 1) {
-      milepost.seg.id <- c(1, seg.select[seg.select != 1L])
-    } else {
-      milepost.seg.id <- seg.select[seg.select != 1L]
-    }
-  }
-
-  segment.census <- table(milepost.seg.id)
+  segment.census <- table(seg.select)
 
   if (any(segment.census > 1)) {
     single.post.seg <- as.numeric(names(segment.census[segment.census == 1]))
     multi.post.seg <- as.numeric(names(segment.census[segment.census > 1]))
   } else {
-    single.post.seg <- milepost.seg.id
+    single.post.seg <- seg.select
   }
 
-  if (path.length > milepost.interval) {
-    milepost.values <- seq_along(milepost.seg.id) * milepost.interval
-    census <- data.frame(seg = milepost.seg.id, post = milepost.values)
+  if (path.length > milepost.interval) {  
+    census <- data.frame(seg = seg.select, post = posts)
 
     if (latlong) {
       origin <- data.frame(lon = min(cholera::roads[, ew]),
@@ -595,13 +577,13 @@ milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
       arrow.tail <- meterLatLong(arrow.tail)
       arrow.head <- meterLatLong(arrow.head)
     } else {
-      arrow.tail <- stats::setNames(arrow.data[, paste0(c("x", "y"), 1)], vars)
-      arrow.head <- stats::setNames(arrow.data[, paste0(c("x", "y"), 2)], vars)
+      arrow.tail <- stats::setNames(arrow.data[, paste0(vars, 1)], vars)
+      arrow.head <- stats::setNames(arrow.data[, paste0(vars, 2)], vars)
     }
 
     if (nrow(arrow.tail) > 1) {
-      arrow.tail <- arrow.tail[order(row.names(arrow.tail)), ]
-      arrow.head <- arrow.head[order(row.names(arrow.head)), ]
+      arrow.tail <- arrow.tail[order(as.numeric(row.names(arrow.tail))), ]
+      arrow.head <- arrow.head[order(as.numeric(row.names(arrow.head))), ]
     }
 
     out <- list(seg.data = seg.data, arrow.head = arrow.head,
