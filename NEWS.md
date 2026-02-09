@@ -1,3 +1,11 @@
+# cholera 0.9.1.9081
+
+- use more accurate data.summary and path.data object names.
+- amend drawPath() syntax.
+- amend milePosts().
+- use shape::Arrowhead() for mileposts (zero-length arrow fix).
+
+
 # cholera 0.9.1.9080
 
 - export addFrame().

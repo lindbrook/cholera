@@ -112,7 +112,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
                              type = type)
 
   output <- list(path = path,
-                 data = data.summary,
+                 data.summary = data.summary,
                  origin = origin,
                  destination = destination,
                  vestry = vestry,
@@ -142,19 +142,20 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
+#' @importFrom shape Arrowhead
 #' @export
 
 plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
   alpha.level = 1, ...) {
 
-  path.data <- x$data
-  type <- x$data$type
-  orig <- path.data$origin
-  dest <- path.data$destination
+  path.data <- x$path
+  data.summary <- x$data.summary
+  type <- x$data.summary$type
+  orig <- x$data.summary$origin
+  dest <- x$data.summary$destination
   destination <- x$destination
   colors <- snowColors(x$vestry)
-  dat <- x$path
   ds <- x$ds
   distance.unit <- x$distance.unit
   latlong <- x$latlong
@@ -205,7 +206,7 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     xlim <- range(map.data[, ew])
     ylim <- range(map.data[, ns])
   } else if (isTRUE(zoom) | is.numeric(zoom)) {
-    map.data <- mapDataRange(dat, land, path.data, vars, ew, ns)
+    map.data <- mapDataRange(path.data, land, data.summary, vars, ew, ns)
 
     if (is.logical(zoom) | zoom == 0) {
       padding <- ifelse(latlong, 0.0000125, 0.05)
@@ -263,8 +264,8 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
         ylim.delta <- ylim[2] - ylim[1]
 
         if (xlim.delta <= 0 | ylim.delta <= 0) {
-          xlim <- range(dat[, ew])
-          ylim <- range(dat[, ns])
+          xlim <- range(path.data[, ew])
+          ylim <- range(path.data[, ns])
           message("Note: zoom = ", zoom, " too far! Use smaller.")
         }
       }
@@ -272,7 +273,7 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   if (type == "case-pump") {
-    p.sel <- paste0("p", path.data$destination)
+    p.sel <- paste0("p", dest)
     case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
   } else {
     case.color <- "blue"
@@ -325,7 +326,7 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
             land.label <- paste0(label.parse[1], "\n", label.parse[2])
           } else if (length(label.parse) == 3) {
             land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
-                                 label.parse[3])
+              label.parse[3])
           }
         }
         text(label.dat, labels = land.label, col = "red", cex = 0.8)
@@ -354,14 +355,14 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
           if (grepl("St", land.tmp$name)) {
             label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
             land.label <- paste0(paste(label.parse[1], label.parse[2]), "\n",
-                                       label.parse[3])
+              label.parse[3])
           } else {
             label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
             if (length(label.parse) == 2) {
               land.label <- paste0(label.parse[1], "\n", label.parse[2])
             } else if (length(label.parse) == 3) {
               land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
-                                   label.parse[3])
+                label.parse[3])
             }
           }
           text(label.dat, labels = land.label, col = "red", cex = 0.8)
@@ -377,14 +378,13 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     }
   }
 
-  points(dat[1, vars], pch = 0)
-  points(dat[nrow(dat), vars], pch = 0)
-
-  drawPath(dat, case.color, latlong)
+  points(path.data[1, vars], pch = 0)
+  points(path.data[nrow(path.data), vars], pch = 0)
+  drawPath(path.data, case.color, latlong)
 
   d <- paste(round(path.length, 1), d.unit)
-  t <- paste(round(x$data$time, 1), paste0(time.unit, "s"), "@", walking.speed,
-             "km/hr")
+  t <- paste(round(data.summary$time, 1), paste0(time.unit, "s"), "@",
+    walking.speed, "km/hr")
 
   if (is.null(milepost.interval)) {
     if (milepost.unit == "distance") {
@@ -394,57 +394,15 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     }
   }
 
-  milepost.data <- milePosts(path.data, dat, destination, distance.unit, ds,
-    latlong, milepost.unit, milepost.interval, time.unit, walking.speed)
-
-  seg.data <- milepost.data$seg.data
-
-  # last/final arrow ("last mile")
-  arrows(seg.data[1, paste0(ew, 2)], seg.data[1, paste0(ns, 2)],
-         seg.data[1, paste0(ew, 1)], seg.data[1, paste0(ns, 1)],
-         length = 0.0875, lwd = 3, col = case.color)
+  milepost.data <- milePosts(x, distance.unit, ds, latlong, milepost.unit,
+    milepost.interval, time.unit, vars, walking.speed)
 
   if (mileposts) {
     if (path.length > milepost.interval) {
-      arrow.head <- milepost.data$arrow.head
-      arrow.tail <- milepost.data$arrow.tail
-    }
-
-    # intermediate arrows (mileposts)
-    if (path.length >= milepost.interval) {
-      # diagnostic #
-      # dotchart(log(abs(arrow.tail$lon - arrow.head$lon)))
-      # dotchart(log(abs(arrow.tail$lat - arrow.head$lat)))
-
-      cutpoint <- ifelse(latlong, -13L, -6L)
-      zero.length.ew <- log(abs(arrow.tail[, ew] - arrow.head[, ew])) < cutpoint
-      zero.length.ns <- log(abs(arrow.tail[, ns] - arrow.head[, ns])) < cutpoint
-
-      if (any(zero.length.ew | zero.length.ns)) {
-        zero.id <- unique(row.names(arrow.head[zero.length.ew, ]),
-                          row.names(arrow.head[zero.length.ns, ]))
-
-        angle <- vapply(zero.id, function(id) {
-          zero.arrow <- rbind(arrow.tail[id, vars], arrow.head[id, vars])
-          if (latlong) ols <- stats::lm(lat ~ lon, data = zero.arrow)
-          else ols <- stats::lm(y ~ x, data = zero.arrow)
-          slope <- stats::coef(ols)[2]
-          theta <- atan(slope)
-          theta * 180L / pi
-        }, numeric(1L))
-
-        invisible(lapply(seq_along(zero.id), function(i) {
-          text(arrow.head[zero.id[i], vars], labels = "<", srt = angle[i],
-               col = case.color, cex = 1.25)
-        }))
-
-        arrow.head <- arrow.head[!row.names(arrow.head) %in% zero.id, ]
-        arrow.tail <- arrow.tail[!row.names(arrow.tail) %in% zero.id, ]
-      }
-
-      arrows(arrow.tail[, ew], arrow.tail[, ns],
-             arrow.head[, ew], arrow.head[, ns],
-             length = 0.0875, lwd = 3, col = case.color)
+      arrow.head <- milepost.data$arrow.head    
+      shape::Arrowhead(arrow.head[, ew], arrow.head[, ns], 
+        angle = arrow.head$angle, arr.adj = -1, arr.col = case.color,
+        arr.length = 0.25, lcol = case.color)
     }
 
     if (milepost.unit == "distance") {
@@ -456,14 +414,15 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     } else if (milepost.unit == "time") {
       post.info <- paste("posts at", milepost.interval, "sec intervals")
     } else {
-      stop('"milepost.unit" muster either be "distance" or "time".')
+      stop('"milepost.unit" muster either be "distance" or "time".',
+        call. = FALSE)
     }
     if (!add) title(sub = paste(d, t, post.info, sep = "; "))
   } else {
     if (!add) title(sub = paste(d, t, sep = "; "))
   }
 
-  if (!add) longTitle(long.title, type, pmp, path.data, orig, land, x)
+  if (!add) longTitle(long.title, type, pmp, data.summary, orig, land, x)
 }
 
 #' Print method for walkingPath().
@@ -478,37 +437,27 @@ print.walking_path <- function(x, ...) {
   if (!inherits(x, "walking_path")) {
     stop('"x"\'s class must be "walking_path".')
   }
-  print(x[c("path", "data")])
+  print(x[c("path", "data.summary")])
 }
 
-drawPath <- function(dat, case.color, latlong) {
-  n1 <- dat[1:(nrow(dat) - 1), ]
-  n2 <- dat[2:nrow(dat), ]
+drawPath <- function(x, case.color, latlong) {
+  n1 <- x[1:(nrow(x) - 1), ]
+  n2 <- x[2:nrow(x), ]
   if (latlong) {
-    segments(n1$lon, n1$lat, n2$lon, n2$lat, lwd = 3, col = case.color)
+    segments(n1$lon, n1$lat, n2$lon, n2$lat, lwd = 2, col = case.color)
   } else {
-    segments(n1$x, n1$y, n2$x, n2$y, lwd = 3, col = case.color)
+    segments(n1$x, n1$y, n2$x, n2$y, lwd = 2, col = case.color)
   }
 }
 
-milePosts <- function(path.data, dat, destination, distance.unit, ds, latlong,
-  milepost.unit, milepost.interval, time.unit, walking.speed) {
+milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
+  milepost.interval, time.unit, vars, walking.speed) {
 
-  rev.data <- dat[order(dat$id, decreasing = TRUE), ]
-
-  if (latlong) {
-    ew <- "lon"
-    ns <- "lat"
-  } else {
-    ew <- "x"
-    ns <- "y"
-  }
-
-  vars <- c(ew, ns)
+  rev.path <- x$path[order(x$path$id, decreasing = TRUE), ]
   seg.vars <- c(paste0(vars, 1), paste0(vars, 2))
 
-  seg.data <- do.call(rbind, lapply(seq_len(nrow(rev.data) - 1), function(i) {
-    endpts <- cbind(rev.data[i, vars], rev.data[i + 1, vars])
+  seg.data <- do.call(rbind, lapply(seq_len(nrow(rev.path) - 1), function(i) {
+    endpts <- cbind(rev.path[i, vars], rev.path[i + 1, vars])
     names(endpts) <- seg.vars
     data.frame(id = i, endpts)
   }))
@@ -520,7 +469,7 @@ milePosts <- function(path.data, dat, destination, distance.unit, ds, latlong,
     path.length <- sum(ds)
     cumulative <- seg.data$cumulative.d
   } else if (milepost.unit == "time") {
-    path.length <- path.data$time
+    path.length <- x$path$time
     seg.data$t <- (3600L * seg.data$d) / (1000L * walking.speed)
     seg.data$cumulative.t <- cumsum(seg.data$t)
     cumulative <- seg.data$cumulative.t
@@ -538,74 +487,45 @@ milePosts <- function(path.data, dat, destination, distance.unit, ds, latlong,
     }, logical(1L)))
   }, integer(1L))
 
-  if (all(seg.select == 1) & length(seg.select) > 1) {
-    milepost.seg.id <- unique(seg.select)
-  } else {
-    if (sum(seg.select == 1) > 1) {
-      milepost.seg.id <- c(1, seg.select[seg.select != 1L])
-    } else {
-      milepost.seg.id <- seg.select[seg.select != 1L]
-    }
-  }
-
-  segment.census <- table(milepost.seg.id)
+  segment.census <- table(seg.select)
 
   if (any(segment.census > 1)) {
     single.post.seg <- as.numeric(names(segment.census[segment.census == 1]))
     multi.post.seg <- as.numeric(names(segment.census[segment.census > 1]))
   } else {
-    single.post.seg <- milepost.seg.id
+    single.post.seg <- seg.select
   }
 
-  if (path.length > milepost.interval) {
-    milepost.values <- seq_along(milepost.seg.id) * milepost.interval
-    census <- data.frame(seg = milepost.seg.id, post = milepost.values)
+  if (path.length > milepost.interval) {  
+    census <- data.frame(seg = seg.select, post = posts)
 
     if (latlong) {
-      origin <- data.frame(lon = min(cholera::roads[, ew]),
-                           lat = min(cholera::roads[, ns]))
+      origin <- data.frame(lon = min(cholera::roads$lon),
+                           lat = min(cholera::roads$lat))
       if (any(segment.census > 1)) {
         single.arrow.data <- arrowData(single.post.seg, census, distance.unit,
-          latlong, milepost.unit, seg.data, origin)
+          latlong, milepost.unit, seg.data, vars, origin)
         multi.arrow.data <- arrowData(multi.post.seg, census,
-          distance.unit, latlong, milepost.unit, seg.data, origin,
+          distance.unit, latlong, milepost.unit, seg.data, vars, origin,
           multi.arrow.seg = TRUE)
         arrow.data <- rbind(single.arrow.data, multi.arrow.data)
       } else {
         arrow.data <- arrowData(single.post.seg, census, distance.unit,
-          latlong, milepost.unit, seg.data, origin)
+          latlong, milepost.unit, seg.data, vars, origin)
       }
     } else {
       if (any(segment.census > 1)) {
         single.arrow.data <- arrowData(single.post.seg, census, distance.unit,
-          latlong, milepost.unit, seg.data)
+          latlong, milepost.unit, seg.data, vars)
         multi.arrow.data <- arrowData(multi.post.seg, census, distance.unit,
-          latlong, milepost.unit, seg.data, multi.arrow.seg = TRUE)
+          latlong, milepost.unit, seg.data, vars, multi.arrow.seg = TRUE)
         arrow.data <- rbind(single.arrow.data, multi.arrow.data)
       } else {
         arrow.data <- arrowData(single.post.seg, census, distance.unit,
-          latlong, milepost.unit, seg.data)
+          latlong, milepost.unit, seg.data, vars)
       }
     }
-
-    arrow.tail <- arrow.data[, paste0(c("x", "y"), 1)]
-    arrow.head <- arrow.data[, paste0(c("x", "y"), 2)]
-
-    if (latlong) {
-      arrow.tail <- meterLatLong(arrow.tail)
-      arrow.head <- meterLatLong(arrow.head)
-    } else {
-      arrow.tail <- stats::setNames(arrow.data[, paste0(c("x", "y"), 1)], vars)
-      arrow.head <- stats::setNames(arrow.data[, paste0(c("x", "y"), 2)], vars)
-    }
-
-    if (nrow(arrow.tail) > 1) {
-      arrow.tail <- arrow.tail[order(row.names(arrow.tail)), ]
-      arrow.head <- arrow.head[order(row.names(arrow.head)), ]
-    }
-
-    out <- list(seg.data = seg.data, arrow.head = arrow.head,
-                arrow.tail = arrow.tail)
+    out <- list(seg.data = seg.data, arrow.head = arrow.data)
   } else {
     out <- list(seg.data = seg.data)
   }
@@ -613,16 +533,16 @@ milePosts <- function(path.data, dat, destination, distance.unit, ds, latlong,
 }
 
 arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
-  seg.data, origin, multi.arrow.seg = FALSE) {
-
-  if (latlong) vars <- c("lon", "lat")
-  else vars <- c("x", "y")
-
+  seg.data, vars, origin, multi.arrow.seg = FALSE) {
+  
   out <- lapply(segs, function(s) {
     tmp <- seg.data[seg.data$id == s, ]
     endpt1 <- stats::setNames(tmp[, grep("1", names(tmp))], vars)
     endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], vars)
     data.tmp <- rbind(endpt1, endpt2)
+
+    second.quadrant <- all(sign(endpt1 - endpt2) == data.frame(-1,  1))
+    fourth.quadrant <- all(sign(endpt1 - endpt2) == data.frame(-1, -1))
 
     if (latlong) {
       idx <- seq_along(data.tmp$lon)
@@ -640,22 +560,24 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
     }
 
     seg.slope <- stats::coef(ols)[2]
-    theta <- atan(seg.slope)
+    theta <- ifelse(is.na(seg.slope), pi / 2, atan(seg.slope))
+    angle <- theta * 180L / pi
+
+    if (second.quadrant) angle <- angle + 180L
+    if (fourth.quadrant) angle <- angle - 180L
 
     if (multi.arrow.seg) {
       posts <- census[census$seg %in% s, "post"]
       if (latlong) {
-         multi.out <- lapply(posts, function(p) {
-          if (milepost.unit == "distance") {
-            h <- tmp$cumulative.d - p
-          } else if (milepost.unit == "time") {
-            h <- tmp$cumulative.t - p
-          }
-          arrow.point <- quadrantCoordinates(meter.coords, h, theta)
-          data.frame(x1 = meter.coords[2, "x"],
-                     y1 = meter.coords[2, "y"],
-                     x2 = arrow.point$x,
-                     y2 = arrow.point$y)
+        multi.out <- lapply(posts, function(p) {
+        if (milepost.unit == "distance") {
+          h <- tmp$cumulative.d - p
+        } else if (milepost.unit == "time") {
+          h <- tmp$cumulative.t - p
+        }
+        arrow.point <- quadrantCoordinates(meter.coords, h, theta)
+        arrow.point <- meterLatLong(arrow.point)
+        data.frame(lon = arrow.point$lon, lat = arrow.point$lat, angle = angle)
         })
       } else {
         multi.out <- lapply(posts, function(p) {
@@ -665,16 +587,12 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
             h <- tmp$cumulative.t - p
           }
           arrow.point <- quadrantCoordinates(data.tmp, h, theta)
-          data.frame(x1 = data.tmp[2, "x"],
-                     y1 = data.tmp[2, "y"],
-                     x2 = arrow.point$x,
-                     y2 = arrow.point$y)
+          data.frame(x = arrow.point$x, y = arrow.point$y, angle = angle)
         })
       }
       do.call(rbind, multi.out)
     } else {
       post <- census[census$seg == s, "post"]
-
       if (latlong) {
         if (milepost.unit == "distance") {
           h <- tmp$cumulative.d - post
@@ -682,10 +600,8 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
           h <- tmp$cumulative.t - post
         }
         arrow.point <- quadrantCoordinates(meter.coords, h, theta)
-        data.frame(x1 = meter.coords[2, "x"],
-                   y1 = meter.coords[2, "y"],
-                   x2 = arrow.point$x,
-                   y2 = arrow.point$y)
+        arrow.point <- meterLatLong(arrow.point)
+        data.frame(lon = arrow.point$lon, lat = arrow.point$lat, angle = angle)
       } else {
         if (milepost.unit == "distance") {
           h <- (tmp$cumulative.d - post) / unitMeter(1, distance.unit)
@@ -693,14 +609,11 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
           h <- tmp$cumulative.t - post
         }
         arrow.point <- quadrantCoordinates(data.tmp, h, theta)
-        data.frame(x1 = data.tmp[2, "x"],
-                   y1 = data.tmp[2, "y"],
-                   x2 = arrow.point$x,
-                   y2 = arrow.point$y)
+        data.frame(x = arrow.point$x, y = arrow.point$y, angle = angle)
       }
     }
   })
-  do.call(rbind, out)
+  data.frame(do.call(rbind, out), row.names = NULL)
 }
 
 casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network,
