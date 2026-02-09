@@ -149,6 +149,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
+#' @importFrom shape Arrowhead
 #' @export
 
 plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
@@ -395,6 +396,9 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   t <- paste(round(data.summary$time, 1), paste0(time.unit, "s"), "@",
     walking.speed, "km/hr")
 
+  segments(alter.xy[, ew], alter.xy[, ns], ego.xy[, ew], ego.xy[, ns], lwd = 2, 
+    col = case.color)
+
   if (mileposts) {
     if (is.null(milepost.interval)) {
       if (milepost.unit == "distance") {
@@ -421,26 +425,25 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
 
     edge.slope <- stats::coef(ols)[2]
     theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
+    angle <- theta * 180L / pi
 
-    if (latlong) {
-      post.coords <- latlongEuclideanPosts(ego.xy, alter.xy, h, ew, ns)
-    } else {
-      post.coords <- quadrantCoordinates(ptp[2:1, ], h, theta)
-    }
+    second.quadrant <- all(sign(alter.xy - ego.xy) == data.frame(-1,  1))
+    fourth.quadrant <- all(sign(alter.xy - ego.xy) == data.frame(-1, -1))
 
-    arrow.data <- data.frame(x = c(post.coords[, ew], ego.xy[, ew]),
-                             y = c(post.coords[, ns], ego.xy[, ns]))
+    if (second.quadrant) angle <- angle + 180L
+    if (fourth.quadrant) angle <- angle - 180L
 
-    arrow.list <- lapply(seq_len(nrow(arrow.data) - 1), function(i) {
-      a.data <- cbind(arrow.data[i, ], arrow.data[i + 1, ])
-      stats::setNames(a.data, c(paste0(c(ew, ns), 1), paste0(c(ew, ns), 2)))
-    })
+    if (mileposts) {
+      if (latlong) {
+        arrow.head <- latlongEuclideanPosts(ego.xy, alter.xy, h, ew, ns)
+      } else {
+        arrow.head <- quadrantCoordinates(ptp[2:1, ], h, theta)
+      }
 
-    invisible(lapply(arrow.list, function(seg) {
-      arrows(seg[, paste0(ew, 1)], seg[, paste0(ns, 1)],
-             seg[, paste0(ew, 2)], seg[, paste0(ns, 2)],
-             length = 0.075, col = case.color, lwd = 3, code = 1)
-    }))
+      shape::Arrowhead(arrow.head[, ew], arrow.head[, ns], angle = angle, 
+        arr.adj = -1, arr.col = case.color, arr.length = 0.25,
+        lcol = case.color)
+  }
 
     if (milepost.unit == "distance") {
       if (distance.unit == "meter") {
@@ -455,8 +458,6 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     }
     if (!add) title(sub = paste(d, t, post.info, sep = "; "))
   } else {
-    arrows(ego.xy[, ew], ego.xy[, ns], alter.xy[, ew], alter.xy[, ns],
-      col = case.color, lwd = 3, length = 0.075)
     if (!add) title(sub = paste(d, t, sep = "; "))
   }
 

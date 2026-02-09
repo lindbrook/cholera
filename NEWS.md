@@ -1,9 +1,15 @@
+# cholera 0.9.1.9082
+
+- use more accurate data.summary and path.data object names.
+- use shape::Arrowhead() for mileposts in euclideanPath().
+
+
 # cholera 0.9.1.9081
 
 - use more accurate data.summary and path.data object names.
 - amend drawPath() syntax.
 - amend milePosts().
-- use shape::Arrowhead() for mileposts (zero-length arrow fix).
+- use shape::Arrowhead() for mileposts in walkingPath() (zero-length arrow fix).
 
 
 # cholera 0.9.1.9080
