@@ -325,7 +325,7 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
             land.label <- paste0(label.parse[1], "\n", label.parse[2])
           } else if (length(label.parse) == 3) {
             land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
-                                 label.parse[3])
+              label.parse[3])
           }
         }
         text(label.dat, labels = land.label, col = "red", cex = 0.8)
@@ -354,14 +354,14 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
           if (grepl("St", land.tmp$name)) {
             label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
             land.label <- paste0(paste(label.parse[1], label.parse[2]), "\n",
-                                       label.parse[3])
+              label.parse[3])
           } else {
             label.parse <- unlist(strsplit(land.tmp$name, "[ ]"))
             if (length(label.parse) == 2) {
               land.label <- paste0(label.parse[1], "\n", label.parse[2])
             } else if (length(label.parse) == 3) {
               land.label <- paste0(label.parse[1], "\n", label.parse[2], "\n",
-                                   label.parse[3])
+                label.parse[3])
             }
           }
           text(label.dat, labels = land.label, col = "red", cex = 0.8)
@@ -379,7 +379,6 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
 
   points(path.data[1, vars], pch = 0)
   points(path.data[nrow(path.data), vars], pch = 0)
-
   drawPath(path.data, case.color, latlong)
 
   d <- paste(round(path.length, 1), d.unit)
@@ -659,7 +658,6 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
       do.call(rbind, multi.out)
     } else {
       post <- census[census$seg == s, "post"]
-
       if (latlong) {
         if (milepost.unit == "distance") {
           h <- tmp$cumulative.d - post
