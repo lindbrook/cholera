@@ -451,7 +451,8 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     } else if (milepost.unit == "time") {
       post.info <- paste("posts at", milepost.interval, "sec intervals")
     } else {
-      stop('"milepost.unit" muster either be "distance" or "time".')
+      stop('"milepost.unit" muster either be "distance" or "time".',
+        call. = FALSE)
     }
     if (!add) title(sub = paste(d, t, post.info, sep = "; "))
   } else {
