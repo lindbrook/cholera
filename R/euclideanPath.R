@@ -121,7 +121,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   output <- list(ego = path.data$ego,
                  alter = path.data$alter,
-                 data = data.summary,
+                 data.summary = data.summary,
                  origin = origin,
                  destination = destination,
                  vestry = vestry,
@@ -155,7 +155,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
   alpha.level = 1, ...) {
 
-  path.data <- x$data
+  data.summary <- x$data.summary
   type <- x$data$type
   ego.xy <- x$ego
   alter.xy <- x$alter
@@ -184,8 +184,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   pmp <- x$pmp
-  orig <- path.data$origin
-  dest <- path.data$destination
+  orig <- data.summary$origin
+  dest <- data.summary$destination
   colors <- snowColors(x$vestry)
   distance.unit <- x$distance.unit
   time.unit <- x$time.unit
@@ -198,9 +198,9 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   if (milepost.unit == "distance") {
-    path.length <- path.data$distance
+    path.length <- data.summary$distance
   } else if (milepost.unit == "time") {
-    path.length <- (3600L * path.data$distance) / (1000L * walking.speed)
+    path.length <- (3600L * data.summary$distance) / (1000L * walking.speed)
   }
 
   rds <- cholera::roads
@@ -286,7 +286,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   if (type == "case-pump") {
-    p.sel <- paste0("p", path.data$destination)
+    p.sel <- paste0("p", data.summary$destination)
     case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
   } else {
     case.color <- "blue"
@@ -354,7 +354,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
         points(land[land$case == dest, vars], col = "red")
         land.tmp <- land[land$case == dest, ]
         if (grepl("Square", land.tmp$name)) {
-          sel <- cholera::landmark.squares$name == path.data$destination.nm
+          sel <- cholera::landmark.squares$name == data.summary$destination.nm
           label.dat <- cholera::landmark.squares[sel, ]
           label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
@@ -391,8 +391,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
 
   if (x$location == "orthogonal") points(ego.xy[, vars], pch = 0)
 
-  d <- paste(round(path.data$distance, 1), d.unit)
-  t <- paste(round(path.data$time, 1), paste0(time.unit, "s"), "@",
+  d <- paste(round(data.summary$distance, 1), d.unit)
+  t <- paste(round(data.summary$time, 1), paste0(time.unit, "s"), "@",
     walking.speed, "km/hr")
 
   if (mileposts) {
@@ -405,10 +405,10 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     }
 
     if (milepost.unit == "distance") {
-      h <- seq(0, path.data$distance, milepost.interval)
+      h <- seq(0, data.summary$distance, milepost.interval)
       if (isFALSE(latlong)) h <- h / unitMeter(1)
     } else if (milepost.unit == "time") {
-      h <- seq(0, path.data$time, milepost.interval)
+      h <- seq(0, data.summary$time, milepost.interval)
       if (isFALSE(latlong)) {
         h <- h * 1000 * x$walking.speed / 60^2 / unitMeter(1)
       }
@@ -460,7 +460,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     if (!add) title(sub = paste(d, t, sep = "; "))
   }
 
-  if (!add) longTitle(long.title, type, pmp, path.data, orig, land, x)
+  if (!add) longTitle(long.title, type, pmp, data.summary, orig, land, x)
 }
 
 #' Print method for euclideanPath().
@@ -475,7 +475,7 @@ print.euclidean_path <- function(x, ...) {
   if (!inherits(x, "euclidean_path")) {
     stop('"x"\'s class must be "euclidean_path".')
   }
-  print(x[c("ego", "alter", "data")])
+  print(x[c("ego", "alter", "data.summary")])
 }
 
 casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
