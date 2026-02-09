@@ -121,7 +121,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
   output <- list(ego = path.data$ego,
                  alter = path.data$alter,
-                 data = data.summary,
+                 data.summary = data.summary,
                  origin = origin,
                  destination = destination,
                  vestry = vestry,
@@ -149,13 +149,14 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
 #' @param alpha.level Numeric. Alpha level transparency for path: a value in [0, 1].
 #' @param ... Additional plotting parameters.
 #' @return A base R plot.
+#' @importFrom shape Arrowhead
 #' @export
 
 plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
   alpha.level = 1, ...) {
 
-  path.data <- x$data
+  data.summary <- x$data.summary
   type <- x$data$type
   ego.xy <- x$ego
   alter.xy <- x$alter
@@ -184,8 +185,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   pmp <- x$pmp
-  orig <- path.data$origin
-  dest <- path.data$destination
+  orig <- data.summary$origin
+  dest <- data.summary$destination
   colors <- snowColors(x$vestry)
   distance.unit <- x$distance.unit
   time.unit <- x$time.unit
@@ -198,9 +199,9 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   if (milepost.unit == "distance") {
-    path.length <- path.data$distance
+    path.length <- data.summary$distance
   } else if (milepost.unit == "time") {
-    path.length <- (3600L * path.data$distance) / (1000L * walking.speed)
+    path.length <- (3600L * data.summary$distance) / (1000L * walking.speed)
   }
 
   rds <- cholera::roads
@@ -286,7 +287,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   if (type == "case-pump") {
-    p.sel <- paste0("p", path.data$destination)
+    p.sel <- paste0("p", data.summary$destination)
     case.color <- grDevices::adjustcolor(colors[p.sel], alpha.f = alpha.level)
   } else {
     case.color <- "blue"
@@ -354,7 +355,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
         points(land[land$case == dest, vars], col = "red")
         land.tmp <- land[land$case == dest, ]
         if (grepl("Square", land.tmp$name)) {
-          sel <- cholera::landmark.squares$name == path.data$destination.nm
+          sel <- cholera::landmark.squares$name == data.summary$destination.nm
           label.dat <- cholera::landmark.squares[sel, ]
           label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
@@ -391,9 +392,12 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
 
   if (x$location == "orthogonal") points(ego.xy[, vars], pch = 0)
 
-  d <- paste(round(path.data$distance, 1), d.unit)
-  t <- paste(round(path.data$time, 1), paste0(time.unit, "s"), "@",
+  d <- paste(round(data.summary$distance, 1), d.unit)
+  t <- paste(round(data.summary$time, 1), paste0(time.unit, "s"), "@",
     walking.speed, "km/hr")
+
+  segments(alter.xy[, ew], alter.xy[, ns], ego.xy[, ew], ego.xy[, ns], lwd = 2, 
+    col = case.color)
 
   if (mileposts) {
     if (is.null(milepost.interval)) {
@@ -405,10 +409,10 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     }
 
     if (milepost.unit == "distance") {
-      h <- seq(0, path.data$distance, milepost.interval)
+      h <- seq(0, data.summary$distance, milepost.interval)
       if (isFALSE(latlong)) h <- h / unitMeter(1)
     } else if (milepost.unit == "time") {
-      h <- seq(0, path.data$time, milepost.interval)
+      h <- seq(0, data.summary$time, milepost.interval)
       if (isFALSE(latlong)) {
         h <- h * 1000 * x$walking.speed / 60^2 / unitMeter(1)
       }
@@ -421,26 +425,25 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
 
     edge.slope <- stats::coef(ols)[2]
     theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
+    angle <- theta * 180L / pi
 
-    if (latlong) {
-      post.coords <- latlongEuclideanPosts(ego.xy, alter.xy, h, ew, ns)
-    } else {
-      post.coords <- quadrantCoordinates(ptp[2:1, ], h, theta)
-    }
+    second.quadrant <- all(sign(alter.xy - ego.xy) == data.frame(-1,  1))
+    fourth.quadrant <- all(sign(alter.xy - ego.xy) == data.frame(-1, -1))
 
-    arrow.data <- data.frame(x = c(post.coords[, ew], ego.xy[, ew]),
-                             y = c(post.coords[, ns], ego.xy[, ns]))
+    if (second.quadrant) angle <- angle + 180L
+    if (fourth.quadrant) angle <- angle - 180L
 
-    arrow.list <- lapply(seq_len(nrow(arrow.data) - 1), function(i) {
-      a.data <- cbind(arrow.data[i, ], arrow.data[i + 1, ])
-      stats::setNames(a.data, c(paste0(c(ew, ns), 1), paste0(c(ew, ns), 2)))
-    })
+    if (mileposts) {
+      if (latlong) {
+        arrow.head <- latlongEuclideanPosts(ego.xy, alter.xy, h, ew, ns)
+      } else {
+        arrow.head <- quadrantCoordinates(ptp[2:1, ], h, theta)
+      }
 
-    invisible(lapply(arrow.list, function(seg) {
-      arrows(seg[, paste0(ew, 1)], seg[, paste0(ns, 1)],
-             seg[, paste0(ew, 2)], seg[, paste0(ns, 2)],
-             length = 0.075, col = case.color, lwd = 3, code = 1)
-    }))
+      shape::Arrowhead(arrow.head[, ew], arrow.head[, ns], angle = angle, 
+        arr.adj = -1, arr.col = case.color, arr.length = 0.25,
+        lcol = case.color)
+  }
 
     if (milepost.unit == "distance") {
       if (distance.unit == "meter") {
@@ -455,12 +458,10 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     }
     if (!add) title(sub = paste(d, t, post.info, sep = "; "))
   } else {
-    arrows(ego.xy[, ew], ego.xy[, ns], alter.xy[, ew], alter.xy[, ns],
-      col = case.color, lwd = 3, length = 0.075)
     if (!add) title(sub = paste(d, t, sep = "; "))
   }
 
-  if (!add) longTitle(long.title, type, pmp, path.data, orig, land, x)
+  if (!add) longTitle(long.title, type, pmp, data.summary, orig, land, x)
 }
 
 #' Print method for euclideanPath().
@@ -475,7 +476,7 @@ print.euclidean_path <- function(x, ...) {
   if (!inherits(x, "euclidean_path")) {
     stop('"x"\'s class must be "euclidean_path".')
   }
-  print(x[c("ego", "alter", "data")])
+  print(x[c("ego", "alter", "data.summary")])
 }
 
 casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
