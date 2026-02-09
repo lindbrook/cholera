@@ -480,9 +480,9 @@ drawPath <- function(x, case.color, latlong) {
   n1 <- x[1:(nrow(x) - 1), ]
   n2 <- x[2:nrow(x), ]
   if (latlong) {
-    segments(n1$lon, n1$lat, n2$lon, n2$lat, lwd = 3, col = case.color)
+    segments(n1$lon, n1$lat, n2$lon, n2$lat, lwd = 2, col = case.color)
   } else {
-    segments(n1$x, n1$y, n2$x, n2$y, lwd = 3, col = case.color)
+    segments(n1$x, n1$y, n2$x, n2$y, lwd = 2, col = case.color)
   }
 }
 
