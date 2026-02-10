@@ -1,3 +1,8 @@
+# cholera 0.9.1.9083
+
+- amend argument values in shape::Arrowhead().
+
+
 # cholera 0.9.1.9082
 
 - use more accurate data.summary and path.data object names.
