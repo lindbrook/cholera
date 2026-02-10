@@ -441,8 +441,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
       }
 
       shape::Arrowhead(arrow.head[, ew], arrow.head[, ns], angle = angle, 
-        arr.adj = -1, arr.col = case.color, arr.length = 0.25,
-        lcol = case.color)
+        arr.adj = -1, arr.col = case.color, arr.length = 0.1, 
+        arr.type = "triangle", arr.width = 0.125, lcol = case.color)
   }
 
     if (milepost.unit == "distance") {
