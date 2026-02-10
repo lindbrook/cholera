@@ -423,8 +423,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     if (latlong) ols <- stats::lm(lat ~ lon, data = ptp)
     else ols <- stats::lm(y ~ x, data = ptp)
 
-    edge.slope <- stats::coef(ols)[2]
-    theta <- ifelse(is.na(edge.slope), pi / 2, atan(edge.slope))
+    seg.slope <- stats::coef(ols)[2]
+    theta <- ifelse(is.na(seg.slope), pi / 2, atan(seg.slope))
     angle <- theta * 180L / pi
 
     second.quadrant <- all(sign(alter.xy - ego.xy) == data.frame(-1,  1))

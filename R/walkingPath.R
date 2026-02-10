@@ -540,10 +540,7 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
     endpt1 <- stats::setNames(tmp[, grep("1", names(tmp))], vars)
     endpt2 <- stats::setNames(tmp[, grep("2", names(tmp))], vars)
     data.tmp <- rbind(endpt1, endpt2)
-
-    second.quadrant <- all(sign(endpt1 - endpt2) == data.frame(-1,  1))
-    fourth.quadrant <- all(sign(endpt1 - endpt2) == data.frame(-1, -1))
-
+    
     if (latlong) {
       idx <- seq_along(data.tmp$lon)
       meter.coords <- do.call(rbind, lapply(idx, function(i) {
@@ -558,10 +555,13 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
     } else {
       ols <- stats::lm(y ~ x, data = data.tmp)
     }
-
+    
     seg.slope <- stats::coef(ols)[2]
     theta <- ifelse(is.na(seg.slope), pi / 2, atan(seg.slope))
     angle <- theta * 180L / pi
+
+    second.quadrant <- all(sign(endpt1 - endpt2) == data.frame(-1,  1))
+    fourth.quadrant <- all(sign(endpt1 - endpt2) == data.frame(-1, -1))
 
     if (second.quadrant) angle <- angle + 180L
     if (fourth.quadrant) angle <- angle - 180L
