@@ -22,6 +22,6 @@ Compute length of selected street.
 }
 \examples{
 streetLength("Oxford Street")
-streetLength("oxford street")
+streetLength("oxford street", latlong = TRUE)
 streetLength("oxford street", distance.unit = "yard")
 }

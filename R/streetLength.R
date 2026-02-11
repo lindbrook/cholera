@@ -8,7 +8,7 @@
 #' @export
 #' @examples
 #' streetLength("Oxford Street")
-#' streetLength("oxford street")
+#' streetLength("oxford street", latlong = TRUE)
 #' streetLength("oxford street", distance.unit = "yard")
 
 streetLength <- function(road = "Oxford Street", distance.unit = "meter",
@@ -46,8 +46,12 @@ streetLength <- function(road = "Oxford Street", distance.unit = "meter",
   }
 
   if (latlong) {
-    p1 <- dat[, grep(1, names(dat))]
-    p2 <- dat[, grep(2, names(dat))]
+    v1 <- c(grep(paste0("lon", 1), names(dat)), 
+            grep(paste0("lat", 1), names(dat)))
+    v2 <- c(grep(paste0("lon", 2), names(dat)), 
+            grep(paste0("lat", 2), names(dat)))
+    p1 <- dat[, v1]
+    p2 <- dat[, v2]
     distances <- geosphere::distGeo(p1, p2)
     if (distance.unit == "meter") {
       sum(distances)

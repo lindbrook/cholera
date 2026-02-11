@@ -1,3 +1,8 @@
+# cholera 0.9.1.9084
+
+- amend/fix streetLength(latlong = TRUE).
+
+
 # cholera 0.9.1.9083
 
 - amend argument values in shape::Arrowhead().
