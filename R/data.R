@@ -145,6 +145,26 @@
 #' @docType data
 "ortho.proj"
 
+#' Oxford monthly weather data, January 1853 - December 2019.
+#'
+#' Extract from UK Met Office (https://www.metoffice.gov.uk/pub/data/weather/uk/climate/stationdata/oxforddata.txt): Lat 51.761 Lon -1.262, 63 metres amsl. Approximate 90 km (55 miles) northwest of Soho.
+#'
+#' @format A data frame with 9 variables and 2054 observations.
+#'  \describe{
+#'     \item{\code{year}}{Year (yyyy)}
+#'     \item{\code{month}}{Month (mm)}
+#'     \item{\code{tmax}}{Maximum temperature degrees (C)}
+#'     \item{\code{tmin}}{Minimum temperature degrees (C)}
+#'     \item{\code{af}}{Days of air frost}
+#'     \item{\code{rain}}{Total rainfall (mm)}
+#'     \item{\code{sun}}{Total sunshine duration hours}
+#'     \item{\code{prov}}{Provisional data}
+#'     \item{\code{date}}{Date}
+#'  }
+#' @note December 1860 excluded due to missing tmin observation.
+#' @docType data
+"oxford.weather"
+
 #' Sample of road intersections (segment endpoints).
 #'
 #' @format A list with 2 variables that list randomly re-arranges unique road intersections (segment endpoints).
