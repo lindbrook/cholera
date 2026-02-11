@@ -1,3 +1,8 @@
+# cholera 0.9.1.9085
+
+- restore oxfordWeather() and oxford.weather data.
+
+
 # cholera 0.9.1.9084
 
 - amend/fix streetLength(latlong = TRUE).
