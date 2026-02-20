@@ -2,32 +2,10 @@
 % Please edit documentation in R/timeSeries.R
 \name{timeSeries}
 \alias{timeSeries}
-\title{Aggregate time series fatality data from the Vestry report.}
+\title{John Snow and Committee data from vestry report.}
 \usage{
-timeSeries(vestry = FALSE)
-}
-\arguments{
-\item{vestry}{Logical. \code{TRUE} returns the data from the Vestry committee (Appendix B, p. 175). \code{FALSE} returns John Snow's contribution to the report (p.117).}
-}
-\value{
-A R list with two objects: "data" and "source" ("snow" or "vestry").
-\itemize{
-  \item{\code{date}: Calendar date.}
-  \item{\code{day}: Day of the week.}
-  \item{\code{deaths}: Measure of fatality.}
-  \item{\code{fatal.attacks}: Measure of fatality.}
-}
+timeSeries()
 }
 \description{
-Aggregate time series fatality data from the Vestry report.
-}
-\note{
-The "snow" data appears on p. 117 of the report; the "vestry" data appear in Appendix B on p.175.
-}
-\examples{
-timeSeries(vestry = TRUE)
-plot(timeSeries())
-}
-\seealso{
-\code{\link{plot.time_series}}, \code{\link{print.time_series}}, \code{vignette("time.series")}
+Long, ggplot2-style layout.
 }

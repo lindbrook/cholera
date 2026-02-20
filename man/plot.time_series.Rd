@@ -4,20 +4,32 @@
 \alias{plot.time_series}
 \title{Plot aggregate time series data from Vestry report.}
 \usage{
-\method{plot}{time_series}(x, statistic = "fatal.attacks",
-  pump.handle = TRUE, main = "Removal of the Broad Street Pump Handle",
-  type = "o", xlab = "Date", ylab = "Fatalities", ...)
+\method{plot}{time_series}(x, all.data = FALSE,
+  statistic = "fatal.attacks", vestry = FALSE, graphics = "base",
+  multi.plot = FALSE, main = "Removal of the Broad Street Pump Handle",
+  points = TRUE, pump.handle = TRUE, weekend = FALSE, xlab = "Date",
+  ylab = NULL, ...)
 }
 \arguments{
-\item{x}{An object of class "time_series" from timeSeries().}
+\item{x}{Data frame of four fatality datasets.}
 
-\item{statistic}{Character. Fatality measure: either "fatal.attacks" or "deaths".}
+\item{all.data}{Logical. Use all 4 datasets.}
 
-\item{pump.handle}{Logical. Indicate date of removal of Broad Street pump handle.}
+\item{statistic}{Character. Fatality measure:  "fatal.attacks" or "deaths".}
+
+\item{vestry}{Logical. TRUE = Vestry Report; FALSE = John Snow.}
+
+\item{graphics}{Character. "auto", "base" or "ggplot2".}
+
+\item{multi.plot}{Logical. Multiple data sets in single plot.}
 
 \item{main}{Character. Title of graph.}
 
-\item{type}{Character. R plot type.}
+\item{points}{Logical. Plot points.}
+
+\item{pump.handle}{Logical. Plot date of removal of Broad Street pump handle.}
+
+\item{weekend}{Logical. Highlight weekend.}
 
 \item{xlab}{Character. x-axis label.}
 
@@ -27,11 +39,6 @@
 }
 \description{
 Plot aggregate fatality data and indicates the date of the removal of the handle of the Broad Street pump.
-}
-\examples{
-plot(timeSeries())
-plot(timeSeries(), statistic = "deaths")
-plot(timeSeries(), bty = "n", type = "h", lwd = 4)
 }
 \seealso{
 \code{\link{timeSeries}}
