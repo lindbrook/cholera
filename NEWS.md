@@ -1,3 +1,8 @@
+# cholera 0.9.1.9086
+
+- add new timeSeries() and plot.time_series() prototypes.
+
+
 # cholera 0.9.1.9085
 
 - restore oxfordWeather() and oxford.weather data.
