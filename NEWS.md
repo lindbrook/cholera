@@ -1,3 +1,8 @@
+# cholera 0.9.1.9087
+
+- remove 'ggplot2' code from timeSeries() - minimize package dependencies.
+
+
 # cholera 0.9.1.9086
 
 - add new timeSeries() and plot.time_series() prototypes.

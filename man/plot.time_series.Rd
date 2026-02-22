@@ -5,10 +5,9 @@
 \title{Plot aggregate time series data from Vestry report.}
 \usage{
 \method{plot}{time_series}(x, all.data = FALSE,
-  statistic = "fatal.attacks", vestry = FALSE, graphics = "base",
-  multi.plot = FALSE, main = "Removal of the Broad Street Pump Handle",
-  points = TRUE, pump.handle = TRUE, weekend = FALSE, xlab = "Date",
-  ylab = NULL, ...)
+  statistic = "fatal.attacks", vestry = FALSE, multi.plot = FALSE,
+  main = "Removal of the Broad Street Pump Handle", points = TRUE,
+  pump.handle = TRUE, weekend = FALSE, xlab = "Date", ylab = NULL, ...)
 }
 \arguments{
 \item{x}{Data frame of four fatality datasets.}
@@ -19,9 +18,7 @@
 
 \item{vestry}{Logical. TRUE = Vestry Report; FALSE = John Snow.}
 
-\item{graphics}{Character. "auto", "base" or "ggplot2".}
-
-\item{multi.plot}{Logical. Multiple data sets in single plot.}
+\item{multi.plot}{Logical. Multiple data sets in single plot. Meaningful only when `all.data = TRUE`.}
 
 \item{main}{Character. Title of graph.}
 
@@ -39,7 +36,4 @@
 }
 \description{
 Plot aggregate fatality data and indicates the date of the removal of the handle of the Broad Street pump.
-}
-\seealso{
-\code{\link{timeSeries}}
 }

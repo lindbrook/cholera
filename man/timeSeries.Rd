@@ -2,10 +2,10 @@
 % Please edit documentation in R/timeSeries.R
 \name{timeSeries}
 \alias{timeSeries}
-\title{John Snow and Committee data from vestry report.}
+\title{John Snow and Committee data from Vestry report.}
 \usage{
 timeSeries()
 }
 \description{
-Long, ggplot2-style layout.
+Long, ggplot2-style data layout.
 }
