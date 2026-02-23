@@ -1,3 +1,8 @@
+# cholera 0.9.1.9088
+
+- amend plot.time_series() and pumpHandle().
+
+
 # cholera 0.9.1.9087
 
 - remove 'ggplot2' code from timeSeries() - minimize package dependencies.

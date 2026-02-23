@@ -61,27 +61,37 @@ plot.time_series <- function(x, all.data = FALSE, statistic = "fatal.attacks",
       plot(dat$date, dat$count, pch = NA, xlab = "Date", ylab = "Count",
         xlim = xlim, ylim = ylim)
       data.nm <- unique(dat$data)
-      data.col <- c("#1B9E77", "#D95F02", "#E7298A", "#1F78B4")
+      data.col <- c("black", "#1B9E77", "#E7298A", "#1F78B4")
       names(data.col) <- data.nm
 
       invisible(lapply(data.nm, function(d) {
         sel <- dat$data == d
         lines(dat[sel, vars], col = data.col[d])
-        
-        if (points) {
-          if (weekend) {
-            wknd <- dat$day %in% c("Saturday", "Sunday")
-            points(dat[sel & !wknd, vars], col = data.col[d])
-            points(dat[sel & wknd, vars], pch = 16, col = "red")
-            legend(x = "topright",
-                   legend = "Weekend",
-                   col = "red",
-                   pch = 16,
-                   bg = "white",
-                   cex = 2/3,
-                   bty = "n",
-                   title = NULL)
-          } else points(dat[sel, vars], col = data.col[d])
+        wknd <- dat$day %in% c("Saturday", "Sunday")
+
+        if (points & weekend) {
+          points(dat[sel & !wknd, vars], col = data.col[d])
+          points(dat[sel & wknd, vars], pch = 16, col = "red")
+          legend(x = "topright",
+               legend = "Weekend",
+               col = "red",
+               pch = 16,
+               bg = "white",
+               cex = 3/4,
+               bty = "n",
+               title = NULL)
+        } else if (!points & weekend) {
+          points(dat[sel & wknd, vars], pch = 16, col = "red")
+          legend(x = "topright",
+             legend = "Weekend",
+             col = "red",
+             pch = 16,
+             bg = "white",
+             cex = 3/4,
+             bty = "n",
+             title = NULL)
+        } else if (points & !weekend) {
+          points(dat[sel, vars], col = data.col[d])
         }
       }))
       
@@ -90,12 +100,12 @@ plot.time_series <- function(x, all.data = FALSE, statistic = "fatal.attacks",
              col = data.col,
              lty = "solid",
              bg = "white",
-             cex = 2/3,
+             cex = 3/4,
              bty = "n",
              title = NULL)
       
       title(main = main)
-      if (pump.handle) pumpHandle(col = "blue")
+      if (pump.handle) pumpHandle()
 
     } else {
       grDevices::devAskNewPage(ask = TRUE)
@@ -107,18 +117,16 @@ plot.time_series <- function(x, all.data = FALSE, statistic = "fatal.attacks",
         if (weekend) {
           plot(dat[sel, "date"], dat[sel, "count"], pch = NA, type = "l", 
             xlab = "Date", ylab = ylab, xlim = xlim, ylim = ylim)
-          if (points) {
-            wknd <- dat$day %in% c("Saturday", "Sunday")
-            points(dat[sel & !wknd, vars])
-            points(dat[sel & wknd, vars], pch = 15, col = "red")
-          }
-          
+          wknd <- dat$day %in% c("Saturday", "Sunday")
+          points(dat[sel & wknd, vars], pch = 16, col = "red")
+          if (points) points(dat[sel & !wknd, vars])
+
           legend(x = "topleft",
                  legend = "Weekend",
                  col = "red",
-                 pch = 15,
+                 pch = 16,
                  bg = "white",
-                 cex = 2/3,
+                 cex = 3/4,
                  bty = "n",
                  title = NULL)
         } else {
@@ -149,17 +157,15 @@ plot.time_series <- function(x, all.data = FALSE, statistic = "fatal.attacks",
       wknd <- dat$day %in% c("Saturday", "Sunday")
       plot(dat[sel, "date"], dat[sel, "count"], pch = NA, type = "l", 
         ylab = ylab)
-      if (points) {
-        points(dat[sel & !wknd, vars])
-        points(dat[sel & wknd, vars], pch = 15, col = "red")
-      }
+      points(dat[sel & wknd, vars], pch = 16, col = "red")
+      if (points) points(dat[sel & !wknd, vars])
       
       legend(x = "topleft",
                  legend = "Weekend",
                  col = "red",
-                 pch = 15,
+                 pch = 16,
                  bg = "white",
-                 cex = 2/3,
+                 cex = 3/4,
                  bty = "n",
                  title = NULL)
     } else {
@@ -229,8 +235,8 @@ snowTimeSeries <- function() {
     fatal.attacks, source = "snow")
 }
 
-pumpHandle <- function(col = "red") {
-  abline(v = as.Date("1854-09-08"), col = col, lty = "dotted")
+pumpHandle <- function(col = "black") {
+  abline(v = as.Date("1854-09-08"), col = col)
   axis(3, at = as.Date("1854-09-08"), labels = "Sep 08", cex.axis = 0.8,
     line = -0.5, col.axis = col, col.ticks = col)
 }
