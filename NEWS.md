@@ -1,3 +1,9 @@
+# cholera 0.9.1.9089
+
+- add/set dataset = NULL and move 'statistic' and 'vestry' to timeSeries().
+- amend plot.time_series().
+
+
 # cholera 0.9.1.9088
 
 - amend plot.time_series() and pumpHandle().

@@ -1,24 +1,65 @@
 #' John Snow and Committee data from Vestry report.
 #'
-#' Long, ggplot2-style data layout.
+#' @param statistic Character. Fatality measure:  "fatal.attacks" or "deaths".
+#' @param vestry Logical. TRUE = Vestry Report; FALSE = John Snow.
+#' @param dataset Character. "all" or valid dataset.
 #' @export
 
-timeSeries <- function() {
-  snow <- snowTimeSeries()
-  vestry <- vestryTimeSeries()
-  
-  stat <- c(rep("deaths", nrow(snow)), rep("fatal.attacks", nrow(snow)))
-  s2 <- data.frame(snow[, c("date", "day", "source")], statistic = stat,
-    count = c(snow$deaths, snow$fatal.attacks))
+timeSeries <- function(statistic = "fatal.attacks", vestry = FALSE,
+  dataset = NULL) {
 
-  stat <- c(rep("deaths", nrow(vestry)),
-            rep("fatal.attacks", nrow(vestry)))
-  v2 <- data.frame(vestry[, c("date", "day", "source")], statistic = stat,
-    count = c(vestry$deaths, vestry$fatal.attacks))
+  dataset.nm <- c("snow-deaths", "snow-fatal.attacks", "vestry-deaths",
+    "vestry-fatal.attacks")
+  dataset.col <- c("black", "#1B9E77", "#E7298A", "#1F78B4")
+  names(dataset.col) <- dataset.nm
   
-  dat <- rbind(s2, v2)
-  dat$data <- paste0(dat$source, "-", dat$statistic)
-  output <- list(data = dat)
+  s1 <- snowTimeSeries()
+  v1 <- vestryTimeSeries()
+  
+  stat <- c(rep("deaths", nrow(s1)), rep("fatal.attacks", nrow(s1)))
+  s2 <- data.frame(s1[, c("date", "day", "source")], statistic = stat,
+    count = c(s1$deaths, s1$fatal.attacks))
+
+  stat <- c(rep("deaths", nrow(v1)), rep("fatal.attacks", nrow(v1)))
+  v2 <- data.frame(v1[, c("date", "day", "source")], statistic = stat,
+    count = c(v1$deaths, v1$fatal.attacks))
+  
+  if (is.null(dataset)) {
+    if (vestry) dat <- v2
+    else dat <- s2
+
+    if (!statistic %in% c("deaths", "fatal.attacks")) {
+      stop('statistic must be "deaths" or "fatal.attacks".', call. = FALSE)
+    } else {
+      dat <- dat[dat$statistic == statistic, ]
+    }
+  } else {
+    valid.datasets <- c("all", dataset.nm)
+    txt <- '"snow-deaths", "snow-fatal.attacks", "vestry-deaths" '
+    
+    if (any(!dataset %in% valid.datasets)) {
+      a <- c('Valid datasets: ', txt)
+      b <- '"vestry-fatal.attacks" or "all".'
+      message(a, b)
+      dataset <- dataset[dataset %in% valid.datasets]
+    } else if (all(!dataset %in% valid.datasets)) {
+      a <- c('dataset must be ', txt)
+      b <- '"vestry-fatal.attacks" or "all".'
+      stop(a, b, call. = FALSE)
+    }
+
+    dat <- rbind(s2, v2)
+    dat$dataset <- paste0(dat$source, "-", dat$statistic)
+
+    if (all(dataset != "all")) {
+      dat <- dat[dat$dataset %in% dataset, ]
+      statistic <- unique(dat$statistic)
+      vestry <- ifelse(unique(dat$source) == "vestry", TRUE, FALSE)
+    }
+  }
+  
+  output <- list(data = dat, dataset = dataset, statistic = statistic,
+    vestry = vestry, color = dataset.col)
   class(output) <- "time_series"
   output
 }
