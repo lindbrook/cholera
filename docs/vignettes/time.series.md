@@ -1,7 +1,7 @@
 Time Series
 ================
 lindbrook
-2025-03-12
+2026-02-27
 
 ## Overview
 
@@ -17,12 +17,33 @@ by the time the pump was removed on Friday, 08 September 1854, “the
 epidemic had evidently subsided” (Snow 1855b, 153).
 
 As part of the Vestry Report, both he and the committee included
-separate tables that appear to reflect separate data on the number of
-deaths and fatalities. I have included both as separate data sets coded
-in `timeSeries()`, which can be visualized using its plot method.
+separate tables for the number of deaths and fatalities. I have included
+the four sets data in `timeSeries()`. They can be visualized using the
+function’s generic plot method.
 
 ``` r
 plot(timeSeries())
 ```
 
-<img src="time.series_files/figure-gfm/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
+<img src="time.series_files/figure-gfm/unnamed-chunk-2-1.png" alt="" style="display: block; margin: auto;" />
+
+The overall data approximate one another. The same statistics from the
+different sources are very close.
+
+``` r
+plot(timeSeries(dataset = "all"), multi.plot = TRUE, points = FALSE)
+```
+
+<img src="time.series_files/figure-gfm/unnamed-chunk-3-1.png" alt="" style="display: block; margin: auto;" />
+
+``` r
+plot(timeSeries(dataset = c("snow-deaths", "vestry-deaths")), multi.plot = TRUE, points = FALSE)
+```
+
+<img src="time.series_files/figure-gfm/unnamed-chunk-4-1.png" alt="" style="display: block; margin: auto;" />
+
+``` r
+plot(timeSeries(dataset = c("snow-fatal.attacks", "vestry-fatal.attacks")), multi.plot = TRUE, points = FALSE)
+```
+
+<img src="time.series_files/figure-gfm/unnamed-chunk-5-1.png" alt="" style="display: block; margin: auto;" />
