@@ -1,3 +1,8 @@
+# cholera 0.9.1.9090
+
+- amend Time Series vignette.
+
+
 # cholera 0.9.1.9089
 
 - add/set dataset = NULL and move 'statistic' and 'vestry' to timeSeries().

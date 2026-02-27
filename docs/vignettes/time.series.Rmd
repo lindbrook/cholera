@@ -16,9 +16,22 @@ The standard "textbook" story is that John Snow helped stem the tide of the chol
 
 While Snow likely believed that this action would have mitigated the outbreak, he was skeptical of its actual effect. In fact, he writes that by the time the pump was removed on Friday, 08 September 1854, "the epidemic had evidently subsided" (Snow 1855b, 153).
 
-As part of the Vestry Report, both he and the committee included separate tables that appear to reflect separate data on the number of deaths and fatalities. I have included both as separate data sets coded in `timeSeries()`, which can be visualized using its plot method.
+As part of the Vestry Report, both he and the committee included separate tables for the number of deaths and fatalities. I have included the four sets data in `timeSeries()`. They can be visualized using the function's generic plot method.
 
 ```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
 plot(timeSeries())
 ```
 
+The overall data approximate one another. The same statistics from the different sources are very close.
+
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+plot(timeSeries(dataset = "all"), multi.plot = TRUE, points = FALSE)
+```
+
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+plot(timeSeries(dataset = c("snow-deaths", "vestry-deaths")), multi.plot = TRUE, points = FALSE)
+```
+
+```{r, fig.width = 5, fig.height = 5, fig.align = "center", echo = TRUE}
+plot(timeSeries(dataset = c("snow-fatal.attacks", "vestry-fatal.attacks")), multi.plot = TRUE, points = FALSE)
+```
