@@ -97,19 +97,9 @@ plot.time_series <- function(x, multi.plot = FALSE,
         lines(dat[sel, vars], col = x$color[d])
         
         wknd <- dat$day %in% c("Saturday", "Sunday")
-
-        if (points & weekend) {
+        
+        if (weekend) {
           points(dat[sel & !wknd, vars], col = x$color[d])
-          points(dat[sel & wknd, vars], pch = 16, col = "red")
-          legend(x = "topright",
-                 legend = "Weekend",
-                 col = "red",
-                 pch = 16,
-                 bg = "white",
-                 cex = 3/4,
-                 bty = "n",
-                 title = NULL)
-        } else if (!points & weekend) {
           points(dat[sel & wknd, vars], pch = 16, col = "red")
           legend(x = "topright",
                  legend = "Weekend",
