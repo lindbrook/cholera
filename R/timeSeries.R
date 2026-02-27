@@ -1,36 +1,73 @@
 #' John Snow and Committee data from Vestry report.
 #'
-#' Long, ggplot2-style data layout.
+#' @param statistic Character. Fatality measure:  "fatal.attacks" or "deaths".
+#' @param vestry Logical. TRUE = Vestry Report; FALSE = John Snow.
+#' @param dataset Character. "all" or valid dataset.
 #' @export
 
-timeSeries <- function() {
-  snow <- snowTimeSeries()
-  vestry <- vestryTimeSeries()
-  
-  stat <- c(rep("deaths", nrow(snow)), rep("fatal.attacks", nrow(snow)))
-  s2 <- data.frame(snow[, c("date", "day", "source")], statistic = stat,
-    count = c(snow$deaths, snow$fatal.attacks))
+timeSeries <- function(statistic = "fatal.attacks", vestry = FALSE,
+  dataset = NULL) {
 
-  stat <- c(rep("deaths", nrow(vestry)),
-            rep("fatal.attacks", nrow(vestry)))
-  v2 <- data.frame(vestry[, c("date", "day", "source")], statistic = stat,
-    count = c(vestry$deaths, vestry$fatal.attacks))
+  dataset.nm <- c("snow-deaths", "snow-fatal.attacks", "vestry-deaths",
+    "vestry-fatal.attacks")
+  dataset.col <- c("black", "#1B9E77", "#E7298A", "#1F78B4")
+  names(dataset.col) <- dataset.nm
   
-  dat <- rbind(s2, v2)
-  dat$data <- paste0(dat$source, "-", dat$statistic)
-  output <- list(data = dat)
+  s1 <- snowTimeSeries()
+  v1 <- vestryTimeSeries()
+  
+  stat <- c(rep("deaths", nrow(s1)), rep("fatal.attacks", nrow(s1)))
+  s2 <- data.frame(s1[, c("date", "day", "source")], statistic = stat,
+    count = c(s1$deaths, s1$fatal.attacks))
+
+  stat <- c(rep("deaths", nrow(v1)), rep("fatal.attacks", nrow(v1)))
+  v2 <- data.frame(v1[, c("date", "day", "source")], statistic = stat,
+    count = c(v1$deaths, v1$fatal.attacks))
+  
+  if (is.null(dataset)) {
+    if (vestry) dat <- v2
+    else dat <- s2
+
+    if (!statistic %in% c("deaths", "fatal.attacks")) {
+      stop('statistic must be "deaths" or "fatal.attacks".', call. = FALSE)
+    } else {
+      dat <- dat[dat$statistic == statistic, ]
+    }
+  } else {
+    valid.datasets <- c("all", dataset.nm)
+    txt <- '"snow-deaths", "snow-fatal.attacks", "vestry-deaths" '
+    
+    if (any(!dataset %in% valid.datasets)) {
+      a <- c('Valid datasets: ', txt)
+      b <- '"vestry-fatal.attacks" or "all".'
+      message(a, b)
+      dataset <- dataset[dataset %in% valid.datasets]
+    } else if (all(!dataset %in% valid.datasets)) {
+      a <- c('dataset must be ', txt)
+      b <- '"vestry-fatal.attacks" or "all".'
+      stop(a, b, call. = FALSE)
+    }
+
+    dat <- rbind(s2, v2)
+    dat$dataset <- paste0(dat$source, "-", dat$statistic)
+
+    if (all(dataset != "all")) {
+      dat <- dat[dat$dataset %in% dataset, ]
+      statistic <- unique(dat$statistic)
+      vestry <- ifelse(unique(dat$source) == "vestry", TRUE, FALSE)
+    }
+  }
+  
+  output <- list(data = dat, dataset = dataset, statistic = statistic,
+    vestry = vestry, color = dataset.col)
   class(output) <- "time_series"
   output
 }
 
-#' Plot aggregate time series data from Vestry report.
+#' Plot time series data, with date of removal of pump handle (Vestry report).
 #'
-#' Plot aggregate fatality data and indicates the date of the removal of the handle of the Broad Street pump.
-#' @param x Data frame of four fatality datasets.
-#' @param all.data Logical. Use all 4 datasets.
-#' @param statistic Character. Fatality measure:  "fatal.attacks" or "deaths".
-#' @param vestry Logical. TRUE = Vestry Report; FALSE = John Snow.
-#' @param multi.plot Logical. Multiple data sets in single plot. Meaningful only when `all.data = TRUE`.
+#' @param x Object. class "time_series".
+#' @param multi.plot Logical. Multiple data sets in single plot.
 #' @param main Character. Title of graph.
 #' @param points Logical. Plot points.
 #' @param pump.handle Logical. Plot date of removal of Broad Street pump handle.
@@ -40,87 +77,85 @@ timeSeries <- function() {
 #' @param ... Additional plotting parameters.
 #' @export
 
-plot.time_series <- function(x, all.data = FALSE, statistic = "fatal.attacks", 
-  vestry = FALSE, multi.plot = FALSE, 
+plot.time_series <- function(x, multi.plot = FALSE,
   main = "Removal of the Broad Street Pump Handle", points = TRUE,
   pump.handle = TRUE, weekend = FALSE, xlab = "Date", ylab = NULL, ...) {
   
   dat <- x$data
   vars <- c("date", "count")
-  
-  if (all.data) {
+
+  if ("all" %in% x$dataset | length(x$dataset) > 1) {
     xlim <- range(dat$date)
     ylim <- range(dat$count)
 
-    if (multi.plot == TRUE) {
-      if (is.null(ylab)) {
-        if (statistic == "deaths") ylab <- "Deaths"
-        else if (statistic == "fatal.attacks") ylab  <- "Fatal Attacks"
-      }
-      
+    if (multi.plot == TRUE) {    
       plot(dat$date, dat$count, pch = NA, xlab = "Date", ylab = "Count",
         xlim = xlim, ylim = ylim)
-      data.nm <- unique(dat$data)
-      data.col <- c("black", "#1B9E77", "#E7298A", "#1F78B4")
-      names(data.col) <- data.nm
-
-      invisible(lapply(data.nm, function(d) {
-        sel <- dat$data == d
-        lines(dat[sel, vars], col = data.col[d])
+     
+      invisible(lapply(unique(dat$dataset), function(d) {
+        sel <- dat$dataset == d
+        lines(dat[sel, vars], col = x$color[d])
+        
         wknd <- dat$day %in% c("Saturday", "Sunday")
-
-        if (points & weekend) {
-          points(dat[sel & !wknd, vars], col = data.col[d])
+        
+        if (weekend) {
+          points(dat[sel & !wknd, vars], col = x$color[d])
           points(dat[sel & wknd, vars], pch = 16, col = "red")
           legend(x = "topright",
-               legend = "Weekend",
-               col = "red",
-               pch = 16,
+                 legend = "Weekend",
+                 col = "red",
+                 pch = 16,
+                 bg = "white",
+                 cex = 3/4,
+                 bty = "n",
+                 title = NULL)
+        } else if (points & !weekend) {
+          points(dat[sel, vars], col = x$color[d])
+        }
+      }))
+      
+      if ("all" %in% x$dataset) {
+        legend(x = "topleft",
+               legend = names(x$color),
+               col = x$color,
+               lty = "solid",
                bg = "white",
                cex = 3/4,
                bty = "n",
                title = NULL)
-        } else if (!points & weekend) {
-          points(dat[sel & wknd, vars], pch = 16, col = "red")
-          legend(x = "topright",
-             legend = "Weekend",
-             col = "red",
-             pch = 16,
-             bg = "white",
-             cex = 3/4,
-             bty = "n",
-             title = NULL)
-        } else if (points & !weekend) {
-          points(dat[sel, vars], col = data.col[d])
-        }
-      }))
-      
-      legend(x = "topleft",
-             legend = data.nm,
-             col = data.col,
-             lty = "solid",
-             bg = "white",
-             cex = 3/4,
-             bty = "n",
-             title = NULL)
+      } else if (length(x$dataset) > 1) {
+        legend(x = "topleft",
+               legend = names(x$color)[names(x$color) %in% x$dataset],
+               col = x$color[x$dataset],
+               lty = "solid",
+               bg = "white",
+               cex = 3/4,
+               bty = "n",
+               title = NULL)
+      }
       
       title(main = main)
       if (pump.handle) pumpHandle()
 
-    } else {
+    } else {  
       grDevices::devAskNewPage(ask = TRUE)
-    
-      invisible(lapply(unique(dat$data), function(d) {
-        sel <- dat$data == d
-        ylab <- unique(dat[sel, "statistic"])
+      
+      invisible(lapply(unique(dat$dataset), function(d) {
+        sel <- dat$dataset == d
+        y.label <- unique(dat[sel, "statistic"])
+        
+        if (y.label == "fatal.attacks") {
+          ylab <- "Fatal Attacks"
+        } else if (y.label == "deaths") {
+          ylab <- "Deaths"
+        }
         
         if (weekend) {
           plot(dat[sel, "date"], dat[sel, "count"], pch = NA, type = "l", 
-            xlab = "Date", ylab = ylab, xlim = xlim, ylim = ylim)
+            xlab = "Date", ylab = "Count", xlim = xlim, ylim = ylim)
           wknd <- dat$day %in% c("Saturday", "Sunday")
           points(dat[sel & wknd, vars], pch = 16, col = "red")
           if (points) points(dat[sel & !wknd, vars])
-
           legend(x = "topleft",
                  legend = "Weekend",
                  col = "red",
@@ -135,45 +170,43 @@ plot.time_series <- function(x, all.data = FALSE, statistic = "fatal.attacks",
           if (points) points(dat[sel, vars])
         }
 
-        source <- tools::toTitleCase(unlist(strsplit(d, "-"))[1])
-        title(main = paste0(main, ": ", source))
+        src <- unique(dat[sel, "source"])
+        title(main = paste0(main, ": ", tools::toTitleCase(src)))
         if (pump.handle) pumpHandle()
       }))
       
       grDevices::devAskNewPage(ask = FALSE)
     }
+
+  } else if (is.null(x$dataset) | length(x$dataset) == 1) {
+    src <- unique(dat[, "source"])
+    y.label <- unique(dat[, "statistic"])
     
-  } else if (all.data == FALSE) {
-    prefix <- ifelse(vestry, "vestry", "snow")
-    sel <- dat$data == paste0(prefix, "-", statistic)
-    
-    if (statistic == "fatal.attacks") {
+    if (y.label == "fatal.attacks") {
       ylab <- "Fatal Attacks"
-    } else if (statistic == "deaths") {
+    } else if (y.label == "deaths") {
       ylab <- "Deaths"
     }
 
     if (weekend) {
       wknd <- dat$day %in% c("Saturday", "Sunday")
-      plot(dat[sel, "date"], dat[sel, "count"], pch = NA, type = "l", 
-        ylab = ylab)
-      points(dat[sel & wknd, vars], pch = 16, col = "red")
-      if (points) points(dat[sel & !wknd, vars])
-      
+      plot(dat$date, dat$count, pch = NA, type = "l", ylab = "Count")
+      points(dat[wknd, vars], pch = 16, col = "red")
+      if (points) points(dat[!wknd, vars])
       legend(x = "topleft",
-                 legend = "Weekend",
-                 col = "red",
-                 pch = 16,
-                 bg = "white",
-                 cex = 3/4,
-                 bty = "n",
-                 title = NULL)
+             legend = "Weekend",
+             col = "red",
+             pch = 16,
+             bg = "white",
+             cex = 3/4,
+             bty = "n",
+             title = NULL)
     } else {
-      plot(dat[sel, "date"], dat[sel, "count"], type = "l", xlab = xlab,
-        ylab = ylab)
-      if (points) points(dat[sel, vars])
+      plot(dat$date, dat$count, type = "l", xlab = xlab, ylab = ylab)
+      if (points) points(dat[, vars])
     }
-    title(main = paste0(main, ": ", tools::toTitleCase(prefix)))
+
+    title(main = paste0(main, ": ", tools::toTitleCase(src)))
     if (pump.handle) pumpHandle()
   }
 }

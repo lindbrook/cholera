@@ -4,8 +4,15 @@
 \alias{timeSeries}
 \title{John Snow and Committee data from Vestry report.}
 \usage{
-timeSeries()
+timeSeries(statistic = "fatal.attacks", vestry = FALSE, dataset = NULL)
+}
+\arguments{
+\item{statistic}{Character. Fatality measure:  "fatal.attacks" or "deaths".}
+
+\item{vestry}{Logical. TRUE = Vestry Report; FALSE = John Snow.}
+
+\item{dataset}{Character. "all" or valid dataset.}
 }
 \description{
-Long, ggplot2-style data layout.
+John Snow and Committee data from Vestry report.
 }

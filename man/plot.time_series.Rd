@@ -2,23 +2,16 @@
 % Please edit documentation in R/timeSeries.R
 \name{plot.time_series}
 \alias{plot.time_series}
-\title{Plot aggregate time series data from Vestry report.}
+\title{Plot time series data, with date of removal of pump handle (Vestry report).}
 \usage{
-\method{plot}{time_series}(x, all.data = FALSE,
-  statistic = "fatal.attacks", vestry = FALSE, multi.plot = FALSE,
+\method{plot}{time_series}(x, multi.plot = FALSE,
   main = "Removal of the Broad Street Pump Handle", points = TRUE,
   pump.handle = TRUE, weekend = FALSE, xlab = "Date", ylab = NULL, ...)
 }
 \arguments{
-\item{x}{Data frame of four fatality datasets.}
+\item{x}{Object. class "time_series".}
 
-\item{all.data}{Logical. Use all 4 datasets.}
-
-\item{statistic}{Character. Fatality measure:  "fatal.attacks" or "deaths".}
-
-\item{vestry}{Logical. TRUE = Vestry Report; FALSE = John Snow.}
-
-\item{multi.plot}{Logical. Multiple data sets in single plot. Meaningful only when `all.data = TRUE`.}
+\item{multi.plot}{Logical. Multiple data sets in single plot.}
 
 \item{main}{Character. Title of graph.}
 
@@ -35,5 +28,5 @@
 \item{...}{Additional plotting parameters.}
 }
 \description{
-Plot aggregate fatality data and indicates the date of the removal of the handle of the Broad Street pump.
+Plot time series data, with date of removal of pump handle (Vestry report).
 }
