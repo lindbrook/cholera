@@ -1,3 +1,8 @@
+# cholera 0.9.1.9091
+
+- amend georeferenced data prototypes.
+
+
 # cholera 0.9.1.9090
 
 - amend Time Series vignette.
