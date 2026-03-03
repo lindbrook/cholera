@@ -803,7 +803,7 @@
 * addSnow(type = "perimeter", line.width = 2)
 * neighborhoodData(embed = TRUE, embed.landmarks = TRUE)
 * neighborhoodEuclidean(case.set = "expected")
-* plot.voronoi(voronoi.cells = TRUE, delauny.triangles = FALSE)
+* plot.voronoi(voronoi.cells = TRUE, delaunay.triangles = FALSE)
 * snowMap(...)
 * streetNameLocator(add.subtitle = TRUE, token = id)
 * streetNumberLocator(add.subtitle = TRUE, token = id)

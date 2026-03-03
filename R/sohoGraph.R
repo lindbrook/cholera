@@ -7,7 +7,7 @@
 #' @param embed.pumps Logical or Numeric. Embed all or selected pumps into road network.
 #' @param latlong Logical. Use estimated longitude and latitude.
 #' @param drop.isolates Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.
-#' @param ellipsoid Character. "WGS" for WGS-84 or "BNG" for British National Gride (i.e., Airy 1830).
+#' @param ellipsoid Character. "WGS" for WGS-84 or "BNG" for British National Grid (i.e., Airy 1830).
 #' @export
 #' @return An R list of nodes, edges and an 'igraph' network graph.
 

@@ -52,7 +52,7 @@
 
 #' "Unstacked" fatalities data with "anchor" case as the unit of observation.
 #'
-#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (idividual bars) to the "anchor", the case at the base of a stack. The number of fatalities in a stack becomes an attribute of the"anchor".
+#' An "unstacked" version of the \code{fatalities} dataset. It changes the unit of observation from the case (individual bars) to the "anchor", the case at the base of a stack. The number of fatalities in a stack becomes an attribute of the"anchor".
 #'
 #' @format A data frame with 4 variables for 321 addresses
 #'  \describe{

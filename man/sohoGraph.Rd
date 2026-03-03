@@ -23,7 +23,7 @@ sohoGraph(vestry = FALSE, case.set = "observed", embed.anchor = TRUE,
 
 \item{drop.isolates}{Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.}
 
-\item{ellipsoid}{Character. "WGS" for WGS-84 or "BNG" for British National Gride (i.e., Airy 1830).}
+\item{ellipsoid}{Character. "WGS" for WGS-84 or "BNG" for British National Grid (i.e., Airy 1830).}
 }
 \value{
 An R list of nodes, edges and an 'igraph' network graph.
