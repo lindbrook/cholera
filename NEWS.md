@@ -1,3 +1,8 @@
+# cholera 0.9.1.9092
+
+- export classifierAudit() and its generic methods.
+
+
 # cholera 0.9.1.9091
 
 - amend georeferenced data prototypes.
