@@ -7,7 +7,7 @@
 #' @param coordinates Logical. Orthogonal projection coordinates.
 #' @note This function is a diagnostic. It is not a guarantee of correct classification.
 #' @return Logical \code{TRUE} or \code{FALSE}
-#' @noRd
+#' @export
 #' @examples
 #' classifierAudit(case = 483, segment = "326-2")
 #' plot(classifierAudit(case = 483, segment = "326-2"))
@@ -79,7 +79,7 @@ classifierAudit <- function(case = 483, segment = "326-2", observed = TRUE,
 #' @param x An object of class "classifier_audit" created by \code{classifierAudit()}.
 #' @param ... Additional parameters.
 #' @return An R data frame.
-#' @noRd
+#' @export
 #' @examples
 #' classifierAudit(case = 483, segment = "326-2")
 #' print(classifierAudit(case = 483, segment = "326-2"))
@@ -100,13 +100,13 @@ print.classifier_audit <- function(x, ...) {
 #' @param unit Character. Unit of distance: "meter" (the default), "yard" or "native". "native" returns the map's native scale. "unit" is meaningful only when "weighted" is \code{TRUE}. See \code{vignette("roads")} for information on unit distances.
 #' @param ... Additional parameters.
 #' @return A base R graphic.
-#' @noRd
+#' @export
 #' @examples
 #' plot(classifierAudit(case = 483, segment = "326-2"))
 
 plot.classifier_audit <- function(x, zoom = 0.5, unit = "meter", ...) {
   if (unit %in% c("meter", "yard", "native") == FALSE) {
-    stop('unit must be "meter", "yard" or "native".')
+    stop('unit must be "meter", "yard" or "native".', call. = FALSE)
   }
 
   obs <- x$obs
