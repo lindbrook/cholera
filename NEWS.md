@@ -1,3 +1,8 @@
+# cholera 0.9.1.9093
+
+- amend euclideanNominal(brute.force = TRUE).
+
+
 # cholera 0.9.1.9092
 
 - export classifierAudit() and its generic methods.
