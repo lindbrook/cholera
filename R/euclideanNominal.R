@@ -58,13 +58,13 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
         varlist = c("p.sel", "vestry", "case.set", "location"))
       nearest.pump <- parallel::parLapply(cl, case.num, function(x) {
         cholera::euclideanPath(x, destination = p.sel, vestry = vestry,
-          case.set = case.set, location = location)$data$pump
+          case.set = case.set, location = location)$data.summary$destination
       })
       parallel::stopCluster(cl)
     } else {
       nearest.pump <- parallel::mclapply(case.num, function(x) {
         euclideanPath(x, destination = p.sel, vestry = vestry,
-          case.set = case.set, location = location)$data$pump
+          case.set = case.set, location = location)$data.summary$destination
       }, mc.cores = cores)
     }
 
