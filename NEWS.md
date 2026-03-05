@@ -1,3 +1,8 @@
+# cholera 0.9.1.9094
+
+- (temporarily) amend case IDs in latlong.sim.ortho.proj.
+
+
 # cholera 0.9.1.9093
 
 - amend euclideanNominal(brute.force = TRUE).

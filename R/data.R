@@ -531,7 +531,7 @@
 
 #' Road "address" of simulated (i.e., "expected") cases (latlong).
 #'
-#' @format A data frame with 8 variables that records the "address" of 19,993 regularly spaced simulated Cartesian/geodesic cases regularly spaced across map.
+#' @format A data frame with 8 variables that records the "address" of 20,005 regularly spaced simulated Cartesian/geodesic cases regularly spaced across map.
 #' \describe{
 #'     \item{\code{case}}{numeric case ID}
 #'     \item{\code{road.segment}}{"address" road segment}
@@ -549,7 +549,7 @@
 #'
 #' The result of using sp::spsample() and sp::Polygon() to generate 19,993 regularly spaced simulated Cartesian/geodesic cases within the map's borders.
 #'
-#' @format A data frame with 4 variables that records the position of 19,993 "expected" cases fitted by sp::spsample().
+#' @format A data frame with 4 variables that records the position of 20,005 "expected" cases fitted by sp::spsample().
 #'  \describe{
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
