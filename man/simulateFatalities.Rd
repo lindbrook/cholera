@@ -2,15 +2,17 @@
 % Please edit documentation in R/simulateFatalities.R
 \name{simulateFatalities}
 \alias{simulateFatalities}
-\title{Project simulated fatalities onto road network}
+\title{Project simulated fatalities onto road network.}
 \usage{
 simulateFatalities(recompute.regular.cases = FALSE, simulated.obs = 20000L,
-  multi.core = FALSE)
+  radius = 3, multi.core = FALSE)
 }
 \arguments{
 \item{recompute.regular.cases}{Logical. \code{TRUE} re-computes regular data. \code{FALSE} uses pre-computed data. For replication of data used in the package.}
 
 \item{simulated.obs}{Numeric. Number of regular cases. For use with \code{recompute.regular.cases = TRUE}.}
+
+\item{radius}{Numeric. Radius to check for nearby road segments. Nominal Dodson and Tobler units.}
 
 \item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.}
 }
