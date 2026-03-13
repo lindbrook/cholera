@@ -1,3 +1,8 @@
+# cholera 0.9.1.9096
+
+- archive simulateFatalitiesB().
+
+
 # cholera 0.9.1.9095
 
 - add new simulateFatalities() prototype.
