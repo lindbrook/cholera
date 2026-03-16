@@ -1,3 +1,8 @@
+# cholera 0.9.1.9097
+
+- add/set latlongSimulateFatalities(recompute.regular.cases = FALSE).
+
+
 # cholera 0.9.1.9096
 
 - archive simulateFatalitiesB().

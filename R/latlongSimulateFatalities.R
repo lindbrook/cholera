@@ -1,16 +1,22 @@
 #' Compute latitude and longitude for simulated regular cases.
 #'
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
+#' @param recompute.regular.cases Logical. \code{TRUE} re-computes regular data. \code{FALSE} uses pre-computed data. For replication of data used in the package.
 #' @param radius Numeric. Radius for \code{withinRadius()} to find road segment endpoints.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.
 #' @param simulated.obs Numeric. Number of simulated cases.
 #' @note radius = 75 - appox. 1 hr; radius = 100 - appox. 1.5 hr
 #' @noRd
 
-latlongSimulateFatalities <- function(multi.core = FALSE, radius = 75,
-  simulated.obs = 20000L) {
+latlongSimulateFatalities <- function(recompute.regular.cases = FALSE,
+  radius = 75, simulated.obs = 20000L, multi.core = FALSE) {
 
   cores <- multiCore(multi.core)
-  reg.cases <- latlongRegularCartesianCases(simulated.obs)
+  
+  if (recompute.regular.cases) {
+    reg.cases <- latlongRegularCartesianCases(simulated.obs)  
+  } else {
+    reg.cases <- cholera::latlong.regular.cases
+  }
 
   rd <- cholera::roads[!cholera::roads$street %in% cholera::border, ]
   cart.rd <- data.frame(street = rd$street, geoCartesian(rd))
