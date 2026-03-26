@@ -29,7 +29,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   }
 
   if (!case.set %in% c("observed", "expected")) {
-    stop('case.set must be "case-observed" or "expected".', call. = FALSE)
+    stop('case.set must be "observed" or "expected".', call. = FALSE)
   }
 
   if (!location %in% c("nominal", "anchor", "orthogonal")) {
