@@ -310,7 +310,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   }
 
   if (type %in% c("case-pump", "cases")) {
-    if (orig < 1000L) {
+    if (orig < 1000L | orig > 2000L) {
       points(ego.xy, col = "red")
       text(ego.xy, pos = 1, labels = orig, col = "red")
       if (x$location %in% c("anchor", "orthogonal")) {
@@ -319,7 +319,7 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
           text(orgn.xy, pos = 1, labels = x$origin)
         }
       }
-    } else if (orig >= 1000L) {
+    } else if (orig >= 1000L & orig < 2000L) {
       points(land[land$case == orig, vars], col = "red")
       land.tmp <- land[land$case == orig, ]
 
@@ -352,10 +352,10 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     }
 
     if (type == "cases") {
-      if (dest < 1000L) {
+      if (dest < 1000L | dest > 2000L) {
         points(alter.xy, col = "red")
         text(alter.xy, pos = 1, labels = dest, col = "red")
-      } else if (dest >= 1000L) {
+      } else if (dest >= 1000L & dest < 2000L) {
         points(land[land$case == dest, vars], col = "red")
         land.tmp <- land[land$case == dest, ]
         if (grepl("Square", land.tmp$name)) {
