@@ -1,3 +1,10 @@
+# cholera 0.9.1.9098
+
+- amend plot.euclidean_path() for case.set = "expected".
+- amend caseCaseEucl().
+- amend validateCase(case.set = "expected").
+
+
 # cholera 0.9.1.9097
 
 - add/set latlongSimulateFatalities(recompute.regular.cases = FALSE).
