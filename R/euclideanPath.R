@@ -63,6 +63,10 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       names(pmp)[names(pmp) %in% c("x.proj", "y.proj", "pump.id")] <- newvars
     }
   }
+  
+  if (origin < 1000L & case.set == "expected" & type != "pumps") {
+    origin <- origin + 2000L
+  }
 
   if (type == "case-pump") {
     origin.chk <- validateCase(origin, case.set, include.landmarks)
