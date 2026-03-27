@@ -1,3 +1,8 @@
+# cholera 0.9.1.9099
+
+- amend euclideanStar() for case.set = "expected".
+
+
 # cholera 0.9.1.9098
 
 - amend plot.euclidean_path() for case.set = "expected".
