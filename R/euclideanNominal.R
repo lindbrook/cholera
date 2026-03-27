@@ -215,11 +215,10 @@ plot.euclidean <- function(x, type = "star", add = FALSE,
 euclideanStar <- function(x, case.num, nearest.pump, pump.data,
   add.observed.points = add.observed.points) {
 
-  invisible(lapply(seq_along(case.num), function(i) {
-    p.data <- pump.data[pump.data$id == nearest.pump[i], ]
-    n.color <- x$snow.colors[paste0("p", nearest.pump[i])]
-
-    if (x$case.set == "observed") {
+  if (x$case.set == "observed") {
+    invisible(lapply(seq_along(case.num), function(i) {
+      p.data <- pump.data[pump.data$id == nearest.pump[i], ]
+      n.color <- x$snow.colors[paste0("p", nearest.pump[i])]
       if (x$location %in% c("nominal", "anchor")) {
         sel <- cholera::fatalities$case %in% case.num[i]
         n.data <- cholera::fatalities[sel, ]
@@ -230,22 +229,23 @@ euclideanStar <- function(x, case.num, nearest.pump, pump.data,
         names(n.data)[names(n.data) %in% vars] <- c("x", "y", "anchor")
       }
       segments(n.data$x, n.data$y, p.data$x, p.data$y, col = n.color, lwd = 0.5)
-    } else {
-      n.data <- cholera::regular.cases[case.num[i], ]
-      lapply(seq_len(nrow(n.data)), function(case) {
-        c.data <- n.data[case, ]
-        segments(c.data$x, c.data$y, p.data$x, p.data$y, col = n.color,
-          lwd = 0.5)
-      })
-    }
-  }))
+    }))
 
-  if (add.observed.points) {
-    if (x$case.set == "observed") {
-      addNeighborhoodCases(pump.select = x$pump.select, vestry = x$vestry,
-        metric = "euclidean", case.set = x$case.set, location = x$location,
-        multi.core = x$cores)
+    if (add.observed.points) {
+      if (x$case.set == "observed") {
+        addNeighborhoodCases(pump.select = x$pump.select, vestry = x$vestry,
+          metric = "euclidean", case.set = x$case.set, location = x$location,
+          multi.core = x$cores)
+      }
     }
+  
+  } else if (x$case.set == "expected") {
+    invisible(lapply(unique(x$nearest.pump), function(neighborhood) {
+      p.data <- x$pump.data[x$pump.data$id == neighborhood, ]
+      n.color <- x$snow.colors[paste0("p", neighborhood)]
+      n.data <- cholera::regular.cases[which(x$nearest.pump == neighborhood), ]
+      segments(n.data$x, n.data$y, p.data$x, p.data$y, col = n.color, lwd = 0.5)
+    }))
   }
 }
 
