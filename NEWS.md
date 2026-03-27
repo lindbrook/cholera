@@ -1,3 +1,8 @@
+# cholera 0.9.1.9100
+
+- amend euclideanAreaPoints() for case.set = "expected".
+
+
 # cholera 0.9.1.9099
 
 - amend euclideanStar() for case.set = "expected".

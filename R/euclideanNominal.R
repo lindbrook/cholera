@@ -250,13 +250,10 @@ euclideanStar <- function(x, case.num, nearest.pump, pump.data,
 }
 
 euclideanAreaPoints <- function(x, case.num, nearest.pump) {
-  invisible(lapply(seq_along(case.num), function(i) {
-    n.color <- x$snow.colors[paste0("p", nearest.pump[[i]])]
-    n.data <- cholera::regular.cases[case.num[i], ]
-    lapply(seq_len(nrow(n.data)), function(case) {
-      c.data <- n.data[case, ]
-      points(c.data$x, c.data$y, col = n.color, pch = 16, cex = 1.25)
-    })
+  invisible(lapply(unique(x$nearest.pump), function(neighborhood) {
+    n.color <- x$snow.colors[paste0("p", neighborhood)]
+    n.data <- cholera::regular.cases[which(x$nearest.pump == neighborhood), ]
+    points(n.data$x, n.data$y, col = n.color, pch = 16, cex = 1.25)
   }))
 }
 
