@@ -202,9 +202,7 @@ validateCase <- function(x, case.set, include.landmarks) {
   } else if (case.set == "expected") {
     case.id <- cholera::sim.ortho.proj$case # equiv. to latlong.sim.ortho.proj
     case.nm <- paste(case.id)
-    case.msg <- paste0("Expected case IDs range from ", min(case.id), " to ", 
-      max(case.id), ".")
-
+    
     if (include.landmarks) {
       vars.lndmrk <- c("case", "name")
       lndmrk.sq <- cholera::landmark.squares[, vars.lndmrk]
@@ -219,29 +217,101 @@ validateCase <- function(x, case.set, include.landmarks) {
       case.nm <- c(case.nm, lndmrk$name)
     }
 
-    if (is.null(x)) {
-      out <- case.id
-      out.nm <- case.nm
-    } else {
-      x <- ifelse(!is.numeric(x), as.numeric(x), x)
+    case.msg <- paste0("Expected case IDs range from ", min(case.id), " to ", 
+      max(case.id), ".")
 
-      if (all(!x %in% case.id)) {
-        if (any(!x %in% case.id)) {
-          if (!include.landmarks) {
-            stop('For case.set = "expected", ', case.msg, call. = FALSE)
-          } else {
-            stop('For case.set = "expected" and include.landmarks = TRUE, ',
-              case.msg, "\n", lndmrk.msg, call. = FALSE)
-          }
+    if (is.null(x)) {
+        out <- case.id
+        out.nm <- case.nm
+    } else if (is.numeric(x)) {
+      if (any(!x %in% case.id)) {
+        if (!include.landmarks) {
+          stop('For case.set = "expected", ', case.msg, call. = FALSE)
+        } else {
+          stop('For case.set = "expected" and include.landmarks = TRUE, ',
+            case.msg, "\n", lndmrk.msg, call. = FALSE)
         }
-      } else if (any(!x %in% case.id)) {
-        dropped <- paste(x[!x %in% case.id], collapse = ", ")
-        message("Note: ", case.msg, " Invalid IDs (", dropped, ") dropped.")
-        out <- x[x %in% case.id]
-      } else {
-        out <- x
       }
-      out.nm <- paste(out)
+      if (all(abs(x) %in% case.id)) {
+        if (all(x > 0)) {
+          sel <- case.id %in% x
+        } else if (all(x < 0)) {
+          sel <- !case.id %in% abs(x)
+        } else {
+          stop("destination should be strictly positive or negative.",
+            call. = FALSE)
+        }
+
+        out <- case.id[sel]
+        out.nm <- case.nm[sel]
+
+      } else if (any(!abs(x) %in% case.id)) {
+        dropped <- paste(x[!x %in% case.id], collapse = ", ")
+
+        if (exists("lndmrk.msg")) {
+          message("Note: ", case.msg, " Invalid IDs (", dropped, ") dropped. ",
+            lndmrk.msg)
+        } else {
+          message("Note: ", case.msg, " Invalid IDs (", dropped, ") dropped.")
+        }
+
+        if (all(x > 0)) {
+          sel <- case.id %in% x
+        } else if (all(x < 0)) {
+          sel <- !case.id %in% abs(x)
+        } else {
+          stop("destination should be strictly positive or negative.",
+            call. = FALSE)
+        }
+
+        out <- case.id[sel]
+        out.nm <- case.nm[sel]
+
+      } else if (all(!abs(x) %in% case.id)) stop(case.msg, .call = FALSE)
+
+    } else if (is.character(x)) {
+      x <- vapply(x, caseAndSpace, character(1L))
+
+      # Square exits
+      if (any(grepl("-", x))) {
+        nm.string <- unlist(strsplit(x, "-"))
+        ptB <- toupper(nm.string[2])
+        x <- paste0(nm.string[1], "-", ptB)
+      }
+
+      if (all(!x %in% case.nm)) {
+        ptA <- paste0("Case names are 1:", max(cholera::fatalities$case), ". ")
+        ptB <- "Landmarks names in landmark.squaresB or landmarksB. "
+        ptC <- 'Or type = "cases"?'
+        stop(ptA, ptB, ptC, call. = FALSE)
+      } else if (any(!x %in% case.nm)) {
+        x0 <- x
+        x.ok <- x[x %in% case.nm]
+
+        sq.candidate <- x[!x %in% case.nm]
+        dash.chk <- vapply(sq.candidate, function(x) grepl("-", x), logical(1L))
+        sq.candidate <- sq.candidate[dash.chk]
+        sq.candidate <- vapply(sq.candidate, squarePostfix, character(1L))
+        sq.candidate <- sq.candidate[sq.candidate %in% case.nm]
+
+        if (length(x.ok) != 0 & length(sq.candidate) != 0) {
+          x <- c(x.ok, sq.candidate)
+        } else if (length(x.ok) == 0 & length(sq.candidate) != 0) {
+          x <- sq.candidate
+        } else if (length(x.ok) != 0 & length(sq.candidate) == 0) {
+          x <- x.ok
+        }
+
+        dropped <- paste(setdiff(x0, x), collapse = ", ")
+        message("Invalid IDs (", dropped, ") dropped.")
+        sel <- case.nm %in% x
+        out <- case.id[sel]
+        out.nm <- case.nm[sel]
+      } else if (all(x %in% case.nm)) {
+        sel <- case.nm %in% x
+        out <- case.id[sel]
+        out.nm <- case.nm[sel]
+      }
     }
   }
   list(out = out, out.nm = out.nm)
