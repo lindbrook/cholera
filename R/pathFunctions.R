@@ -166,7 +166,7 @@ validateCase <- function(x, case.set, include.landmarks) {
 
       if (all(!x %in% case.nm)) {
         ptA <- paste0("Case names are 1:", max(cholera::fatalities$case), ". ")
-        ptB <- "Landmarks names in landmark.squaresB or landmarksB. "
+        ptB <- "Landmarks names in landmark.squares or landmarks. "
         ptC <- 'Or type = "cases"?'
         stop(ptA, ptB, ptC, call. = FALSE)
       } else if (any(!x %in% case.nm)) {
@@ -281,7 +281,7 @@ validateCase <- function(x, case.set, include.landmarks) {
 
       if (all(!x %in% case.nm)) {
         ptA <- paste0("Case names are 1:", max(cholera::fatalities$case), ". ")
-        ptB <- "Landmarks names in landmark.squaresB or landmarksB. "
+        ptB <- "Landmarks names in landmark.squares or landmarks. "
         ptC <- 'Or type = "cases"?'
         stop(ptA, ptB, ptC, call. = FALSE)
       } else if (any(!x %in% case.nm)) {
