@@ -1,3 +1,8 @@
+# cholera 0.9.1.9101
+
+- amend stop() message in validateCase().
+
+
 # cholera 0.9.1.9100
 
 - amend euclideanAreaPoints() for case.set = "expected".
