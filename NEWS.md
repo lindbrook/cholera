@@ -1,6 +1,6 @@
 # cholera 0.9.1.9102
 
-- add/set sohoGraph(multi.core = FALSE) for embedNodes() when 
+- add/set sohoGraph(multi.core = FALSE) for embedNodes() - for 
   case.set = "expected".
 
 
