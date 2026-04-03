@@ -1,3 +1,9 @@
+# cholera 0.9.1.9102
+
+- add/set sohoGraph(multi.core = FALSE) for embedNodes() - for 
+  case.set = "expected".
+
+
 # cholera 0.9.1.9101
 
 - amend stop() message in validateCase().

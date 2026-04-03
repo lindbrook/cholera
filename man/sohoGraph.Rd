@@ -6,7 +6,7 @@
 \usage{
 sohoGraph(vestry = FALSE, case.set = "observed", embed.anchor = TRUE,
   embed.landmarks = TRUE, embed.pumps = TRUE, latlong = FALSE,
-  drop.isolates = FALSE, ellipsoid = "WGS")
+  drop.isolates = FALSE, ellipsoid = "WGS", multi.core = FALSE)
 }
 \arguments{
 \item{vestry}{Logical. Use Vestry Report pump data.}
@@ -24,6 +24,8 @@ sohoGraph(vestry = FALSE, case.set = "observed", embed.anchor = TRUE,
 \item{drop.isolates}{Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.}
 
 \item{ellipsoid}{Character. "WGS" for WGS-84 or "BNG" for British National Grid (i.e., Airy 1830).}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
 }
 \value{
 An R list of nodes, edges and an 'igraph' network graph.
