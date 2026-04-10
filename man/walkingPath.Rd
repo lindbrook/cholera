@@ -7,7 +7,8 @@
 walkingPath(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed",
   location = "nominal", weighted = TRUE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5, include.landmarks = TRUE)
+  time.unit = "second", walking.speed = 5, include.landmarks = TRUE,
+  multi.core = FALSE)
 }
 \arguments{
 \item{origin}{Numeric. Vector of origin(s) (numeric or case/landmark name).}
@@ -33,6 +34,8 @@ walkingPath(origin = 1, destination = NULL, type = "case-pump",
 \item{walking.speed}{Numeric. Walking speed in km/hr.}
 
 \item{include.landmarks}{Logical. Include landmarks as cases.}
+
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details. Useful with `case.set = "expected"`.}
 }
 \description{
 Compute walking path from case/landmark to nearest or selected pump.

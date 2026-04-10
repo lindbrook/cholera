@@ -12,13 +12,14 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param include.landmarks Logical. Include landmarks as cases.
+#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details. Useful with `case.set = "expected"`.
 #' @importFrom geosphere distGeo
 #' @export
 
 walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed", location = "nominal",
   weighted = TRUE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5, include.landmarks = TRUE) {
+  walking.speed = 5, include.landmarks = TRUE, multi.core = FALSE) {
 
   if (is.null(origin) & is.null(destination)) {
     stop("You must provide at least one origin or destination.", call. = FALSE)
@@ -62,7 +63,14 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     dstn.nm <- destination.chk$out.nm
   }
 
-  network <- sohoGraph(vestry = vestry, case.set = case.set, latlong = latlong)
+  if (.Platform$OS.type == "windows") {
+    cores <- 1L
+  } else {
+    cores <- multiCore(multi.core)
+  }
+
+  network <- sohoGraph(vestry = vestry, case.set = case.set, latlong = latlong, 
+    multi.core = cores)
 
   if (type == "case-pump") {
     path.data <- casePump(orgn, orgn.nm, dstn, dstn.nm, destination, network,
