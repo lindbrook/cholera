@@ -25,7 +25,7 @@ sohoGraph(vestry = FALSE, case.set = "observed", embed.anchor = TRUE,
 
 \item{ellipsoid}{Character. "WGS" for WGS-84 or "BNG" for British National Grid (i.e., Airy 1830).}
 
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details.}
+\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details. Useful with `case.set = "expected"`.}
 }
 \value{
 An R list of nodes, edges and an 'igraph' network graph.
