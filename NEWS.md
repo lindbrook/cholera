@@ -1,3 +1,8 @@
+# cholera 0.9.1.9103
+
+- add/set walkingPath(multi.core = FALSE).
+
+
 # cholera 0.9.1.9102
 
 - add/set sohoGraph(multi.core = FALSE) for embedNodes() - for 
