@@ -258,28 +258,36 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
     if (latlong) {
       edges$node1 <- paste0(edges$lon1, "_&_", edges$lat1)
       edges$node2 <- paste0(edges$lon2, "_&_", edges$lat2)
-      # edges$d <- vapply(seq_len(nrow(edges)), function(i) {
-      #   p1 <- edges[i, c("lon1", "lat1")]
-      #   p2 <- edges[i, c("lon2", "lat2")]
-      #   geosphere::distGeo(p1, p2, a = a, f = f)
-      # }, numeric(1L))
-      edges$d <- unlist(parallel::mclapply(seq_len(nrow(edges)), function(i) {
-        p1 <- edges[i, c("lon1", "lat1")]
-        p2 <- edges[i, c("lon2", "lat2")]
-        geosphere::distGeo(p1, p2, a = a, f = f)
-      }, mc.cores = cores))
 
+      if (cores == 1L) {
+        edges$d <- vapply(seq_len(nrow(edges)), function(i) {
+          p1 <- edges[i, c("lon1", "lat1")]
+          p2 <- edges[i, c("lon2", "lat2")]
+          geosphere::distGeo(p1, p2, a = a, f = f)
+        }, numeric(1L))
+      } else if (cores > 1L) {
+        edges$d <- unlist(parallel::mclapply(seq_len(nrow(edges)), function(i) {
+          p1 <- edges[i, c("lon1", "lat1")]
+          p2 <- edges[i, c("lon2", "lat2")]
+          geosphere::distGeo(p1, p2, a = a, f = f)
+        }, mc.cores = cores))
+      }
+      
     } else {
       edges$node1 <- paste0(edges$x1, "_&_", edges$y1)
       edges$node2 <- paste0(edges$x2, "_&_", edges$y2)
-      # edges$d <- vapply(seq_len(nrow(edges)), function(i) {
-      #   stats::dist(rbind(stats::setNames(edges[i, paste0(vars, 1)], vars),
-      #                     stats::setNames(edges[i, paste0(vars, 2)], vars)))
-      # }, numeric(1L))
-      edges$d <- unlist(parallel::mclapply(seq_len(nrow(edges)), function(i) {
-        stats::dist(rbind(stats::setNames(edges[i, paste0(vars, 1)], vars),
-                          stats::setNames(edges[i, paste0(vars, 2)], vars)))
-      }, mc.cores = cores))
+
+      if (cores == 1L) {
+        edges$d <- vapply(seq_len(nrow(edges)), function(i) {
+          stats::dist(rbind(stats::setNames(edges[i, paste0(vars, 1)], vars),
+                            stats::setNames(edges[i, paste0(vars, 2)], vars)))
+        }, numeric(1L))
+      } else if (cores > 1L) {
+        edges$d <- unlist(parallel::mclapply(seq_len(nrow(edges)), function(i) {
+          stats::dist(rbind(stats::setNames(edges[i, paste0(vars, 1)], vars),
+                            stats::setNames(edges[i, paste0(vars, 2)], vars)))
+        }, mc.cores = cores))
+      }
     }
 
     edge.list <- edges[, c("node1", "node2")]
