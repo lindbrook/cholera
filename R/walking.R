@@ -42,7 +42,8 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   # pumps to consider or target
   p.sel <- selectPump(pump.data, pump.select = pump.select, vestry = vestry)
 
-  dat <- sohoGraph(case.set = case.set, vestry = vestry, latlong = latlong)
+  dat <- sohoGraph(case.set = case.set, vestry = vestry, latlong = latlong,
+    multi.core = cores)
   g <- dat$g
   nodes <- dat$nodes
   edges <- dat$edges

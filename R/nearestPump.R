@@ -51,7 +51,8 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
   pump.data <- pump.data[pump.data$id %in% p.sel, ]
 
   if (metric == "walking" | (latlong == TRUE & metric == "euclidean")) {
-    dat <- sohoGraph(vestry = vestry, case.set = case.set, latlong = latlong)
+    dat <- sohoGraph(vestry = vestry, case.set = case.set, latlong = latlong,
+      multi.core = cores)
     g <- dat$g
     edges <- dat$edges
     nodes <- dat$nodes

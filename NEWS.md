@@ -1,3 +1,8 @@
+# cholera 0.9.1.9104
+
+- enable multiple cores for distances in embedNodes().
+
+
 # cholera 0.9.1.9103
 
 - add/set walkingPath(multi.core = FALSE).
