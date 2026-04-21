@@ -32,9 +32,15 @@ sohoGraph <- function(vestry = FALSE, case.set = "observed",
   nodes <- network$nodes
   edges <- network$edges
   g <- network$g
-  nodes.pump <- nodes[nodes$pump != 0, ]
-  nodes.pump <- nodes.pump[order(nodes.pump$pump), c("pump", "node")]
-  out <- list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
+  
+  if (embed.pumps) {
+    nodes.pump <- nodes[nodes$pump != 0, ]
+    nodes.pump <- nodes.pump[order(nodes.pump$pump), c("pump", "node")]
+    out <- list(g = g, nodes = nodes, edges = edges, nodes.pump = nodes.pump)
+  } else {
+    out <- list(g = g, nodes = nodes, edges = edges)
+  }
+  
   class(out) <- "soho_graph"
   out
 }
