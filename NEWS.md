@@ -1,3 +1,8 @@
+# cholera 0.9.1.9105
+
+- add exception for sohoGraph(embed.pumps = TRUE) output.
+
+
 # cholera 0.9.1.9104
 
 - enable multiple cores for distances in embedNodes().
