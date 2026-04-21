@@ -25,18 +25,66 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
     road.data <- road.data[!road.data$id %in% isolates, ]
   }
 
-  if (latlong) vars <- c("lon", "lat")
-  else vars <- c("x", "y")
-
-  if (ellipsoid == "WGS") {
-    a <- 6378137
-    f <- 1 / 298.257223563
-  } else if (ellipsoid == "BNG") {
-    a <- 6377563.396
-    f <- 1 / 299.3249646
+  if (latlong) {
+    if (ellipsoid == "WGS") {
+      a <- 6378137
+      f <- 1 / 298.257223563
+    } else if (ellipsoid == "BNG") {
+      a <- 6377563.396
+      f <- 1 / 299.3249646
+    } else {
+      stop('ellipsoid must be "WGS" or "BNG".', call. = FALSE)
+    }
+    vars <- c("lon", "lat")
   } else {
-    stop('ellipsoid must be "WGS" or "BNG".', call. = FALSE)
+    vars <- c("x", "y")
   }
+  
+  geo.vars <- c("lon", "lat")
+  nom.vars <- c("x", "y")
+
+  # Soho road network w/o cases, landmarks, or pumps
+  
+  road.edges <- road.data
+
+  if (latlong) {
+    col.sel <- c(paste0(nom.vars, 1), paste0(nom.vars, 2))
+    road.edges <- road.edges[, !names(road.edges) %in% col.sel]
+    
+    road.edges$node1 <- paste0(road.edges$lon1, "_&_", road.edges$lat1)
+    road.edges$node2 <- paste0(road.edges$lon2, "_&_", road.edges$lat2)
+
+    road.edges$d <- vapply(seq_len(nrow(road.edges)), function(i) {
+      p1 <- road.edges[i, paste0(vars, 1)]
+      p2 <- road.edges[i, paste0(vars, 2)]
+      geosphere::distGeo(p1, p2, a = a, f = f)
+    }, numeric(1L))
+  
+  } else {
+    col.sel <- c(paste0(geo.vars, 1), paste0(geo.vars, 2))
+    road.edges <- road.edges[, !names(road.edges) %in% col.sel]
+    
+    road.edges$node1 <- paste0(road.edges$x1, "_&_", road.edges$y1)
+    road.edges$node2 <- paste0(road.edges$x2, "_&_", road.edges$y2)
+
+    road.edges$d <- vapply(seq_len(nrow(road.edges)), function(i) {
+      stats::dist(rbind(stats::setNames(road.edges[i, paste0(vars, 1)], vars),
+                        stats::setNames(road.edges[i, paste0(vars, 2)], vars)))
+    }, numeric(1L))
+  }
+
+  edge.list <- road.edges[, c("node1", "node2")]
+  road.graph <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
+  # plot(road.graph, vertex.label = NA, vertex.size = 2)
+
+  vertices <- igraph::V(road.graph)
+  road.nodes <- data.frame(id = seq_along(vertices), node = names(vertices), 
+    row.names = NULL)
+  coords <- do.call(rbind, lapply(strsplit(road.nodes$node, "_&_"), as.numeric))
+  coords <- stats::setNames(as.data.frame(coords), c("x", "y"))
+  road.nodes <- data.frame(road.nodes, coords)
+
+  # identify/specify nodes to be embedded/inserted: case, landmark, or pump
 
   if ((isTRUE(embed.anchor) | is.numeric(embed.anchor)) &
       (isTRUE(embed.landmarks) | is.numeric(embed.landmarks)) &
@@ -160,7 +208,6 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
   }
 
   if (!is.null(obs.segs)) {
-    no_embeds <- road.data[!road.data$id %in% obs.segs, ]
     vars2 <- c(vars, "case", "land", "pump")
     null.df <- stats::setNames(data.frame(matrix(nrow = 0, ncol = 5)), vars2)
 
@@ -233,8 +280,13 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
       if (latlong) nodes <- embed.data[order(embed.data$lon, embed.data$lat), ]
       else nodes <- embed.data[order(embed.data$x, embed.data$y), ]
 
-      tmp <- unique(nodes[, vars])
-      tmp <- cbind(tmp[-nrow(tmp), ], tmp[-1, ])
+      ## remove duplicate nodes: e.g., coincident case and landmark
+      # tmp <- unique(nodes[, vars])
+      # tmp <- cbind(tmp[-nrow(tmp), ], tmp[-1, ])
+      
+      ## allows duplicate nodes: e.g., coincident case and landmark
+      tmp <- cbind(nodes[-nrow(nodes), vars], nodes[-1, vars])
+
       coord.nms <- paste0(names(tmp), c(rep(1, 2), rep(2, 2)))
       names(tmp) <- coord.nms
       tmp <- cbind(tmp, rd.tmp[, c("street", "id", "name")])
@@ -249,11 +301,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
       list(edges = edges, nodes = nodes)
     })
 
-    no_embeds$id2 <- paste0(no_embeds$id, "a")
-
     edges <- do.call(rbind, lapply(embeds, function(x) x$edges))
-    edges <- rbind(edges, no_embeds[, names(edges)])
-    edges <- edges[order(edges$street), ]
 
     if (latlong) {
       edges$node1 <- paste0(edges$lon1, "_&_", edges$lat1)
@@ -290,57 +338,63 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
       }
     }
 
+    edges <- edges[order(edges$street), ]
+    
+    no.embeds <- road.edges[!road.edges$id %in% edges$id, ]
+    no.embeds$id2 <- paste0(no.embeds$id, "a")
+    
+    edges <- rbind(edges, no.embeds)
+    edges <- edges[order(edges$street, edges$id2), ]
+    
     edge.list <- edges[, c("node1", "node2")]
     g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
+    # plot(g, vertex.label = NA, vertex.size = 2)
 
+    # add/embed/insert nodes: case, landmark, or pump
+    
     nodes <- do.call(rbind, lapply(embeds, function(x) x$nodes))
-    n1 <- stats::setNames(no_embeds[, paste0(vars, 1)], vars)
-    n2 <- stats::setNames(no_embeds[, paste0(vars, 2)], vars)
-    nodes.no_embeds <- rbind(n1, n2)
-    nodes.no_embeds$case <- 0
-    nodes.no_embeds$land <- 0
-    nodes.no_embeds$pump <- 0
-    nodes <- rbind(nodes, nodes.no_embeds)
+    sel <- nodes$case == 0 & nodes$land == 0 & nodes$pump == 0
+    nodes <- nodes[!sel, ]
+    nodes$case <- as.integer(nodes$case)
+    nodes$land <- as.integer(nodes$land)
+    nodes$pump <- as.integer(nodes$pump)
 
+    case.tmp <- nodes[nodes$case != 0, ]
+    land.tmp <- nodes[nodes$land != 0, ]
+    pump.tmp <- nodes[nodes$pump != 0, ]
+
+    case.tmp$name <- paste(case.tmp$case)
+
+    land.tmp <- merge(land.tmp, cholera::landmarks[, c("case", "name")],
+      by.x = "land", by.y = "case", all.x = TRUE)
+
+    pump.tmp <- merge(pump.tmp, cholera::pumps[, c("id", "street")],
+      by.x = "pump", by.y = "id", all.x = TRUE)
+
+    names(pump.tmp)[names(pump.tmp) == "street"] <- "name"
+
+    nodes <- rbind(case.tmp, land.tmp, pump.tmp)
+    nodes <- nodes[order(nodes$pump, nodes$land, nodes$case), ]
+    
     if (latlong) nodes$node <- paste0(nodes$lon, "_&_", nodes$lat)
     else nodes$node <- paste0(nodes$x, "_&_", nodes$y)
 
+    # road.nodes$node %in% nodes$node
+    
+    null.df <- data.frame(matrix(0, nrow = nrow(road.nodes), ncol = 3))
+    names(null.df) <- c("case", "land", "pump")
+    road.nodes <- cbind(road.nodes[, c("node", "x", "y")], null.df)
+    road.nodes$name <- "intersection"
+    
+    nodes <- rbind(road.nodes, nodes)
+    nodes <- nodes[order(nodes$pump, nodes$land, nodes$case), ]
+    
+    row.names(edges) <- NULL
+    row.names(nodes) <- NULL
+    list(g = g, edges = edges, nodes = nodes)
   } else {
-    edges <- road.data
-    if (latlong) {
-      edges$node1 <- paste0(edges$lon1, "_&_", edges$lat1)
-      edges$node2 <- paste0(edges$lon2, "_&_", edges$lat2)
-      edges$d <- vapply(seq_len(nrow(edges)), function(i) {
-        p1 <- edges[i, paste0(vars, 1)]
-        p2 <- edges[i, paste0(vars, 2)]
-        geosphere::distGeo(p1, p2, a = a, f = f)
-      }, numeric(1L))
-    } else {
-      edges$node1 <- paste0(edges$x1, "_&_", edges$y1)
-      edges$node2 <- paste0(edges$x2, "_&_", edges$y2)
-      edges$d <- vapply(seq_len(nrow(edges)), function(i) {
-        stats::dist(rbind(stats::setNames(edges[i, paste0(vars, 1)], vars),
-                          stats::setNames(edges[i, paste0(vars, 2)], vars)))
-      }, numeric(1L))
-    }
-
-    edge.list <- edges[, c("node1", "node2")]
-    g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
-
-    node.nms <- c(vars, "node")
-    n1 <- stats::setNames(edges[, paste0(node.nms, 1)], node.nms)
-    n2 <- stats::setNames(edges[, paste0(node.nms, 2)], node.nms)
-    nodes <- rbind(n1, n2)
-    nodes$case <- 0
-    nodes$land <- 0
-    nodes$pump <- 0
-    nodes <- nodes[, c(vars, "case", "land", "pump", "node")]
+    list(g = road.graph, edges = road.edges, nodes = road.nodes)
   }
-
-  row.names(edges) <- NULL
-  row.names(nodes) <- NULL
-
-  list(g = g, edges = edges, nodes = nodes)
 }
 
 endPoints <- function(rd.tmp, vars, latlong = FALSE) {
