@@ -1,3 +1,8 @@
+# cholera 0.9.1.9106
+
+- allow coincident nodes in nodes data frame.
+
+
 # cholera 0.9.1.9105
 
 - add exception for sohoGraph(embed.pumps = TRUE) output.
