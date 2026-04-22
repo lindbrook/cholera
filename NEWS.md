@@ -1,3 +1,8 @@
+# cholera 0.9.1.9107
+
+- fix computation of paths for walkingPath(weighted = FALSE).
+
+
 # cholera 0.9.1.9106
 
 - allow coincident nodes in nodes data frame.
