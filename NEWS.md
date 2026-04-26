@@ -1,3 +1,8 @@
+# cholera 0.9.1.9111
+
+- amend caseCase() and add case.set argument.
+
+
 # cholera 0.9.1.9110
 
 - format pumpPump().
