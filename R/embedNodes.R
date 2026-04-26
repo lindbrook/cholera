@@ -281,11 +281,11 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
       else nodes <- embed.data[order(embed.data$x, embed.data$y), ]
 
       ## remove duplicate nodes: e.g., coincident case and landmark
-      # tmp <- unique(nodes[, vars])
-      # tmp <- cbind(tmp[-nrow(tmp), ], tmp[-1, ])
+      tmp <- unique(nodes[, vars])
+      tmp <- cbind(tmp[-nrow(tmp), ], tmp[-1, ])
       
       ## allows duplicate nodes: e.g., coincident case and landmark
-      tmp <- cbind(nodes[-nrow(nodes), vars], nodes[-1, vars])
+      # tmp <- cbind(nodes[-nrow(nodes), vars], nodes[-1, vars])
 
       coord.nms <- paste0(names(tmp), c(rep(1, 2), rep(2, 2)))
       names(tmp) <- coord.nms

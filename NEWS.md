@@ -1,3 +1,8 @@
+# cholera 0.9.1.9108
+
+- remove coincident nodes from edges data frame.
+
+
 # cholera 0.9.1.9107
 
 - fix computation of paths for walkingPath(weighted = FALSE).
