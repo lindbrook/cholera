@@ -951,7 +951,8 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination, network,
       p <- igraph::shortest_paths(graph = g, from = ego.node, to = nearest.node,
         weights = edges$d)$vpath
     } else {
-      p <- igraph::shortest_paths(graph = g, from = ego.node, to = nearest.node)$vpath
+      p <- igraph::shortest_paths(graph = g, from = ego.node,
+        to = nearest.node)$vpath
     }
 
   } else if (length(ego.node) > 1) {
