@@ -1,3 +1,8 @@
+# cholera 0.9.1.9109
+
+- include landmarks in casePump().
+
+
 # cholera 0.9.1.9108
 
 - remove coincident nodes from edges data frame.

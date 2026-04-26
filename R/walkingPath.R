@@ -632,7 +632,7 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network,
   edges <- network$edges
   nodes <- network$nodes
 
-  if (any(orgn < 1000L)) {
+  if (any(orgn < 2000L)) {
     fatal <- orgn[orgn < 1000L]
     land <- orgn[orgn >= 1000L]
     land.nm <- orgn.nm[orgn >= 1000L]
