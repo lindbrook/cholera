@@ -1,3 +1,8 @@
+# cholera 0.9.1.9112
+
+- fix "last-mile" arrow in plot.walking_path() and milePosts().
+
+
 # cholera 0.9.1.9111
 
 - amend caseCase() and add case.set argument.
