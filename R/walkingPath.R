@@ -406,13 +406,11 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     milepost.interval, time.unit, vars, walking.speed)
 
   if (mileposts) {
-    if (path.length > milepost.interval) {
-      arrow.head <- milepost.data$arrow.head    
-      shape::Arrowhead(arrow.head[, ew], arrow.head[, ns], 
-        angle = arrow.head$angle, arr.adj = -1, arr.col = case.color,
-        arr.length = 0.1, arr.type = "triangle", arr.width = 0.125, 
-        lcol = case.color)
-    }
+    arrow.head <- milepost.data$arrow.head
+    shape::Arrowhead(arrow.head[, ew], arrow.head[, ns], 
+      angle = arrow.head$angle, arr.adj = -1, arr.col = case.color,
+      arr.length = 0.1, arr.type = "triangle", arr.width = 0.125, 
+      lcol = case.color)
 
     if (milepost.unit == "distance") {
       if (distance.unit == "meter") {
@@ -505,9 +503,9 @@ milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
     single.post.seg <- seg.select
   }
 
-  if (path.length > milepost.interval) {  
-    census <- data.frame(seg = seg.select, post = posts)
+  census <- data.frame(seg = seg.select, post = posts)
 
+  if (path.length > milepost.interval) {
     if (latlong) {
       origin <- data.frame(lon = min(cholera::roads$lon),
                            lat = min(cholera::roads$lat))
@@ -534,11 +532,12 @@ milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
           latlong, milepost.unit, seg.data, vars)
       }
     }
-    out <- list(seg.data = seg.data, arrow.head = arrow.data)
   } else {
-    out <- list(seg.data = seg.data)
+    arrow.data <- arrowData(single.post.seg, census, distance.unit, latlong, 
+      milepost.unit, seg.data, vars)
   }
-  out
+  
+  list(seg.data = seg.data, arrow.head = arrow.data)
 }
 
 arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
