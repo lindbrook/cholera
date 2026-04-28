@@ -117,8 +117,8 @@ validateCase <- function(x, case.set, include.landmarks) {
         if (!include.landmarks) {
           stop('For case.set = "observed", ', case.msg, call. = FALSE)
         } else {
-          stop('For case.set = "observed" and include.landmarks = TRUE, ',
-            case.msg, "\n", lndmrk.msg, call. = FALSE)
+          stop('For case.set = "observed" and include.landmarks = TRUE:',
+            "\n", case.msg, "\n", lndmrk.msg, call. = FALSE)
         }
       }
       if (all(abs(x) %in% case.id)) {
@@ -202,6 +202,8 @@ validateCase <- function(x, case.set, include.landmarks) {
   } else if (case.set == "expected") {
     case.id <- cholera::sim.ortho.proj$case # equiv. to latlong.sim.ortho.proj
     case.nm <- paste(case.id)
+    case.msg <- paste0("Expected case IDs range from ", min(case.id), " to ", 
+      max(case.id), ".")
     
     if (include.landmarks) {
       vars.lndmrk <- c("case", "name")
@@ -217,9 +219,6 @@ validateCase <- function(x, case.set, include.landmarks) {
       case.nm <- c(case.nm, lndmrk$name)
     }
 
-    case.msg <- paste0("Expected case IDs range from ", min(case.id), " to ", 
-      max(case.id), ".")
-
     if (is.null(x)) {
         out <- case.id
         out.nm <- case.nm
@@ -228,7 +227,7 @@ validateCase <- function(x, case.set, include.landmarks) {
         if (!include.landmarks) {
           stop('For case.set = "expected", ', case.msg, call. = FALSE)
         } else {
-          stop('For case.set = "expected" and include.landmarks = TRUE, ',
+          stop('For case.set = "expected" and include.landmarks = TRUE:', "\n",
             case.msg, "\n", lndmrk.msg, call. = FALSE)
         }
       }
