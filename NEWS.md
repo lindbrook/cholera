@@ -1,3 +1,8 @@
+# cholera 0.9.1.9113
+
+- amend and reformat stop()'s in validateCase().
+
+
 # cholera 0.9.1.9112
 
 - fix "last-mile" arrow in plot.walking_path() and milePosts().
