@@ -1,3 +1,8 @@
+# cholera 0.9.1.9114
+
+- fix coincident case 369 and landmark 1019 (St James Workhouse) in caseCase().
+
+
 # cholera 0.9.1.9113
 
 - amend and reformat stop()'s in validateCase().
