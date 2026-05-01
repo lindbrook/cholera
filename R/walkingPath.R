@@ -855,6 +855,24 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     }
   }
   
+  ## St James Workhouse: identical single origin and destination
+
+  st.james.msg <- c("Identical origin and destination:", "\n",
+    "St James Workhouse is both a landmark and a case site.")
+
+  if (length(orgn) == 1 & length(dstn) == 1) {
+    test1 <- as.numeric(orgn) == 369 & as.numeric(dstn) == 369
+    test2 <- as.numeric(orgn) == 1019 & as.numeric(dstn) == 1019     
+    test3 <- as.numeric(orgn) == 369 & as.numeric(dstn) == 1019
+    test4 <- as.numeric(orgn) == 1019 & as.numeric(dstn) == 369
+    test5 <- as.numeric(orgn) == 369 & dstn == "St James Workhouse"
+    test6 <- orgn == "St James Workhouse" & as.numeric(dstn) == 369
+    test7 <- as.numeric(orgn) == 1019 & dstn == "St James Workhouse"
+    test8 <- orgn == "St James Workhouse" & as.numeric(dstn) == 1019
+    st.james <- c(test1, test2, test3, test4, test5, test6, test7, test8)
+    if (any(st.james)) stop(st.james.msg, call. = FALSE)
+  }
+
   if (length(intersect(orgn, dstn)) != 0) {
     if (!is.null(origin) & is.null(destination) | all(destination < 0)) {
       dstn <- setdiff(dstn, orgn)
@@ -864,17 +882,24 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
       orgn.nm <- setdiff(orgn.nm, dstn.nm)
     }
   }
-
-  if (369 %in% orgn) nodes <- nodes[nodes$land != 1019, ]
-  if (1019 %in% orgn) nodes <- nodes[nodes$case != 369, ]
-  dstn <- dstn[!dstn %in% c(369, 1019)]
-  dstn.nm <- dstn.nm[!dstn.nm %in% c("369", "St James Workhouse")]
   
+  if (any(c(369, 1019) %in% orgn)) {
+    if (369 %in% orgn & 1019 %in% dstn) {
+      dstn <- dstn[dstn != 1019]
+      dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
+    }
+    
+    if (1019 %in% orgn & 369 %in% dstn) {
+      dstn <- dstn[dstn != 369]
+      dstn.nm <- dstn.nm[dstn.nm != "369"]
+    }
+  }
+ 
   sel <- nodes$case %in% orgn | nodes$land %in% orgn
-  ego.node <- nodes[nodes$case %in% orgn | nodes$land %in% orgn, ]$node
+  ego.node <- nodes[sel, ]$node
 
   sel <- nodes$case %in% dstn | nodes$land %in% dstn
-  alter.node <- nodes[nodes$case %in% dstn | nodes$land %in% dstn, ]$node
+  alter.node <- nodes[sel, ]$node
 
   if (length(ego.node) == 1) {
     if (weighted) {
@@ -891,6 +916,15 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     }
 
     sel <- (nodes$case != 0 | nodes$land != 0) & nodes$node == nearest.node
+    
+    if (length(dstn) == 1) {
+      if (dstn == 369) {
+        sel <- sel & nodes$case == 369
+      } else if (dstn == 1019) {
+        sel <- sel & nodes$land == 1019
+      }
+    }
+
     dstn <- nodes[sel, ]$case + nodes[sel, ]$land
     dstn.nm <- nodes[sel, ]$name
 
