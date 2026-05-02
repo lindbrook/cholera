@@ -30,11 +30,5 @@ fixFatalities() documents the code for these data. For details, see \code{vignet
 \code{\link{streetNameLocator}}
 
 \code{\link{streetNumberLocator}}
-
-\code{\link{caseLocator}}
-
-\code{\link{streetNameLocator}}
-
-\code{\link{streetNumberLocator}}
 }
 \keyword{datasets}
