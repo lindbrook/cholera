@@ -872,6 +872,28 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     st.james <- c(test1, test2, test3, test4, test5, test6, test7, test8)
     if (any(st.james)) stop(st.james.msg, call. = FALSE)
   }
+  
+  if (is.null(destination)) {
+    if (1019 %in% orgn) {
+      dstn <- dstn[dstn != 369]
+      dstn.nm <- dstn.nm[dstn.nm != "369"]
+    } else { # default to case 369 and drop landmark 1019
+      dstn <- dstn[dstn != 1019]
+      dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
+    }
+  } else {
+    if (any(c(369, 1019) %in% orgn)) {
+      if (369 %in% orgn & 1019 %in% dstn) {
+        dstn <- dstn[dstn != 1019]
+        dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
+      }
+      
+      if (1019 %in% orgn & 369 %in% dstn) {
+        dstn <- dstn[dstn != 369]
+        dstn.nm <- dstn.nm[dstn.nm != "369"]
+      }
+    }
+  }
 
   if (length(intersect(orgn, dstn)) != 0) {
     if (!is.null(origin) & is.null(destination) | all(destination < 0)) {
@@ -883,18 +905,6 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     }
   }
   
-  if (any(c(369, 1019) %in% orgn)) {
-    if (369 %in% orgn & 1019 %in% dstn) {
-      dstn <- dstn[dstn != 1019]
-      dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
-    }
-    
-    if (1019 %in% orgn & 369 %in% dstn) {
-      dstn <- dstn[dstn != 369]
-      dstn.nm <- dstn.nm[dstn.nm != "369"]
-    }
-  }
- 
   sel <- nodes$case %in% orgn | nodes$land %in% orgn
   ego.node <- nodes[sel, ]$node
 

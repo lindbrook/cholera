@@ -1,3 +1,8 @@
+# cholera 0.9.1.9116
+
+- fix caseCase() for walkingPath(destination = NULL).
+
+
 # cholera 0.9.1.9115
 
 - update roxygen2 version to "8.0.0".
