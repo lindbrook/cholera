@@ -51,4 +51,9 @@ Useful links:
 \author{
 \strong{Maintainer}: lindbrook \email{lindbrook@gmail.com}
 
+Authors:
+\itemize{
+  \item lindbrook \email{lindbrook@gmail.com}
+}
+
 }

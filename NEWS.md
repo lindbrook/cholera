@@ -1,3 +1,8 @@
+# cholera 0.9.1.9115
+
+- update roxygen2 version to "8.0.0".
+
+
 # cholera 0.9.1.9114
 
 - fix coincident case 369 and landmark 1019 (St James Workhouse) in caseCase().
