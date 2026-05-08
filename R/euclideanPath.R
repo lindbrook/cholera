@@ -358,9 +358,16 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
       } else if (dest >= 1000L & dest < 2000L) {
         points(land[land$case == dest, vars], col = "red")
         land.tmp <- land[land$case == dest, ]
-        if (grepl("Square", land.tmp$name)) {
+        if (grepl("Square", land.tmp$name) & !grepl("Square-", land.tmp$name)) {
           sel <- cholera::landmark.squares$name == data.summary$destination.nm
           label.dat <- cholera::landmark.squares[sel, ]
+          label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
+          sq.label <- paste0(label.parse[1], "\n", label.parse[2])
+          text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",
+            cex = 0.8)
+        } else if (grepl("Square-", land.tmp$name)) {
+          sel <- land$case == data.summary$destination
+          label.dat <- land[sel, ]
           label.parse <- unlist(strsplit(label.dat$name, "[ ]"))
           sq.label <- paste0(label.parse[1], "\n", label.parse[2])
           text(label.dat[, c(ew, ns)], labels = sq.label, col = "red",
