@@ -101,7 +101,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       latlong, pmp, vestry, case.set, location)
   } else if (type == "cases") {
     path.data <- caseCaseEucl(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
-      include.landmarks, latlong, vestry, case.set, location)
+      latlong, vestry, case.set, location)
   } else if (type == "pumps") {
     path.data <- pumpPumpEucl(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
       latlong, pmp, vestry, location)
@@ -656,63 +656,37 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 }
 
 caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
-  include.landmarks, latlong, vestry, case.set, location) {
+  latlong, vestry, case.set, location) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
-
-  if (include.landmarks) {
-    orgn.lndmrk <- orgn >= 1000L & orgn < 2000L
-
-    if (any(orgn.lndmrk)) {
-      orgn.land <- orgn[orgn.lndmrk]
-      orgn.land.nm <- orgn.nm[orgn.lndmrk]
-    }
-
-    if (!is.null(destination)) {
-      dstn.lndmrk <- dstn >= 1000L & dstn < 2000L
-
-      if (any(orgn.lndmrk)) {
-        dstn.land <- dstn[dstn.lndmrk]
-        dstn.land.nm <- dstn.nm[dstn.lndmrk]
-      }
-    }
-  }
 
   # Origin (egos) #
   # If applicable, filter cases to anchors (observed) #
 
   if (case.set == "observed") {
-    non.anchor <- orgn < 1000L & any(!orgn %in% cholera::anchor.case$anchor)
+    if (all(orgn < 2000L)) {
+      fatal <- orgn[orgn < 1000L]
+      land <- orgn[orgn >= 1000L]
+      land.nm <- orgn.nm[orgn >= 1000L]
 
-    if (any(non.anchor)) {
-      sel <- cholera::anchor.case$case %in% orgn[orgn < 1000L]
-      fatality.anchor <- unique(cholera::anchor.case[sel, "anchor"])
-
-      if (include.landmarks) {
-        orgn <- c(fatality.anchor, orgn.land)
-        orgn.nm <- c(fatality.anchor, orgn.land.nm)
-      } else {
-        orgn <- fatality.anchor
-        orgn.nm <- fatality.anchor
+      if (any(!fatal %in% cholera::anchor.case$anchor)) {
+        sel <- cholera::anchor.case$case %in% fatal
+        orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
+        orgn.nm <- c(paste(orgn), land.nm)
       }
     }
 
-    if (!is.null(destination)) {
-      non.anchor <- dstn < 1000L & any(!dstn %in% cholera::anchor.case$anchor)
+    if (all(dstn < 2000L)) {
+      fatal <- dstn[dstn < 1000L]
+      land <- dstn[dstn >= 1000L]
+      land.nm <- dstn.nm[dstn >= 1000L]
 
-      if (any(non.anchor)) {
-        sel <- cholera::anchor.case$case %in% dstn[dstn < 1000L]
-        fatality.anchor <- unique(cholera::anchor.case[sel, "anchor"])
-
-        if (include.landmarks) {
-          dstn <- c(fatality.anchor, dstn.land)
-          dstn.nm <- c(fatality.anchor, dstn.land.nm)
-        } else {
-          dstn <- fatality.anchor
-          dstn.nm <- fatality.anchor
-        }
-      }
+      if (any(!fatal %in% cholera::anchor.case$anchor)) {
+        sel <- cholera::anchor.case$case %in% fatal
+        dstn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
+        dstn.nm <- c(paste(dstn), land.nm)
+      }  
     }
   }
 
