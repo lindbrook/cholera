@@ -63,10 +63,6 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       names(pmp)[names(pmp) %in% c("x.proj", "y.proj", "pump.id")] <- newvars
     }
   }
-  
-  if (origin < 1000L & case.set == "expected" & type != "pumps") {
-    origin <- origin + 2000L
-  }
 
   if (type == "case-pump") {
     origin.chk <- validateCase(origin, case.set, include.landmarks)
@@ -85,6 +81,10 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     destination.chk <- validateCase(destination, case.set, include.landmarks)
     dstn <- destination.chk$out
     dstn.nm <- destination.chk$out.nm
+    
+    if (length(orgn) == 1 & length(dstn) == 1 & identical(orgn, dstn)) {
+      stop("Identical origin and destination!", call. = FALSE)
+    }
 
   } else if (type == "pumps") {
     origin.chk <- validatePump(origin, pmp, vestry)
