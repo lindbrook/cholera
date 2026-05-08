@@ -1,3 +1,10 @@
+# cholera 0.9.1.9119
+
+- remove 'include.landmarks' argument from caseCaseEucl().
+- add/amend St James Workhouse code.
+- exclude landmarks when euclideanPath(destination = NULL).
+
+
 # cholera 0.9.1.9118
 
 - amend landmark "Square"(s) in plot.euclidean_path().
