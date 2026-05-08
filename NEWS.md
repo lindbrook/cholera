@@ -1,3 +1,8 @@
+# cholera 0.9.1.9118
+
+- amend landmark "Square"(s) in plot.euclidean_path().
+
+
 # cholera 0.9.1.9117
 
 - add identical origin and destination stop() in euclideanPath().
