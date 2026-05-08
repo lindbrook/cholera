@@ -101,7 +101,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       latlong, pmp, vestry, case.set, location)
   } else if (type == "cases") {
     path.data <- caseCaseEucl(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
-      include.landmarks, latlong, vestry, case.set, location)
+      latlong, vestry, case.set, location)
   } else if (type == "pumps") {
     path.data <- pumpPumpEucl(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
       latlong, pmp, vestry, location)
@@ -656,100 +656,76 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 }
 
 caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
-  include.landmarks, latlong, vestry, case.set, location) {
+  latlong, vestry, case.set, location) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
-
-  if (include.landmarks) {
-    orgn.lndmrk <- orgn >= 1000L & orgn < 2000L
-
-    if (any(orgn.lndmrk)) {
-      orgn.land <- orgn[orgn.lndmrk]
-      orgn.land.nm <- orgn.nm[orgn.lndmrk]
-    }
-
-    if (!is.null(destination)) {
-      dstn.lndmrk <- dstn >= 1000L & dstn < 2000L
-
-      if (any(orgn.lndmrk)) {
-        dstn.land <- dstn[dstn.lndmrk]
-        dstn.land.nm <- dstn.nm[dstn.lndmrk]
-      }
-    }
-  }
 
   # Origin (egos) #
   # If applicable, filter cases to anchors (observed) #
 
   if (case.set == "observed") {
-    non.anchor <- orgn < 1000L & any(!orgn %in% cholera::anchor.case$anchor)
+    if (all(orgn < 2000L)) {
+      fatal <- orgn[orgn < 1000L]
+      land <- orgn[orgn >= 1000L]
+      land.nm <- orgn.nm[orgn >= 1000L]
 
-    if (any(non.anchor)) {
-      sel <- cholera::anchor.case$case %in% orgn[orgn < 1000L]
-      fatality.anchor <- unique(cholera::anchor.case[sel, "anchor"])
-
-      if (include.landmarks) {
-        orgn <- c(fatality.anchor, orgn.land)
-        orgn.nm <- c(fatality.anchor, orgn.land.nm)
-      } else {
-        orgn <- fatality.anchor
-        orgn.nm <- fatality.anchor
+      if (any(!fatal %in% cholera::anchor.case$anchor)) {
+        sel <- cholera::anchor.case$case %in% fatal
+        orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
+        orgn.nm <- c(paste(orgn), land.nm)
       }
     }
 
-    if (!is.null(destination)) {
-      non.anchor <- dstn < 1000L & any(!dstn %in% cholera::anchor.case$anchor)
+    if (all(dstn < 2000L)) {
+      fatal <- dstn[dstn < 1000L]
+      land <- dstn[dstn >= 1000L]
+      land.nm <- dstn.nm[dstn >= 1000L]
 
-      if (any(non.anchor)) {
-        sel <- cholera::anchor.case$case %in% dstn[dstn < 1000L]
-        fatality.anchor <- unique(cholera::anchor.case[sel, "anchor"])
-
-        if (include.landmarks) {
-          dstn <- c(fatality.anchor, dstn.land)
-          dstn.nm <- c(fatality.anchor, dstn.land.nm)
-        } else {
-          dstn <- fatality.anchor
-          dstn.nm <- fatality.anchor
-        }
-      }
+      if (any(!fatal %in% cholera::anchor.case$anchor)) {
+        sel <- cholera::anchor.case$case %in% fatal
+        dstn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
+        dstn.nm <- c(paste(dstn), land.nm)
+      }  
     }
   }
 
-  ## Filter out other Square "cases" when origin/destination = NULL ##
+  ## St James Workhouse: identical single origin and destination
 
+  st.james.msg <- c("Identical origin and destination:", "\n",
+    "St James Workhouse is both a landmark and a case site.")
+
+  if (length(orgn) == 1 & length(dstn) == 1) {
+    test1 <- as.numeric(orgn) == 369 & as.numeric(dstn) == 369
+    test2 <- as.numeric(orgn) == 1019 & as.numeric(dstn) == 1019     
+    test3 <- as.numeric(orgn) == 369 & as.numeric(dstn) == 1019
+    test4 <- as.numeric(orgn) == 1019 & as.numeric(dstn) == 369
+    test5 <- as.numeric(orgn) == 369 & dstn == "St James Workhouse"
+    test6 <- orgn == "St James Workhouse" & as.numeric(dstn) == 369
+    test7 <- as.numeric(orgn) == 1019 & dstn == "St James Workhouse"
+    test8 <- orgn == "St James Workhouse" & as.numeric(dstn) == 1019
+    st.james <- c(test1, test2, test3, test4, test5, test6, test7, test8)
+    if (any(st.james)) stop(st.james.msg, call. = FALSE)
+  }
+  
   if (is.null(destination)) {
-    if (any(grepl("Square", orgn.nm))) {
-      sel <- cholera::landmark.squares$name %in% orgn.nm
-      obs.sq <- cholera::landmark.squares$name[sel]
-
-      if (all(cholera::landmark.squares$case %in% orgn)) {
-        sel <- unlist(lapply(obs.sq, function(nm) grep(nm, dstn.nm)))
-        dstn <- dstn[-sel]
-        dstn.nm <- dstn.nm[-sel]
-      } else if (any(!cholera::landmark.squares$case %in% orgn)) {
-        sel <- grep(obs.sq, cholera::landmarks$name)
-        excl <- cholera::landmarks$case[sel]
-        excl.nm <- cholera::landmarks$name[sel]
-        dstn <- dstn[!dstn %in% excl]
-        dstn.nm <- dstn.nm[!dstn.nm %in% excl.nm]
-      }
+    if (1019 %in% orgn) {
+      dstn <- dstn[dstn != 369]
+      dstn.nm <- dstn.nm[dstn.nm != "369"]
+    } else { # default to case 369 and drop landmark 1019
+      dstn <- dstn[dstn != 1019]
+      dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
     }
-  } else if (is.null(origin)) {
-    if (any(grepl("Square", dstn.nm))) {
-      sel <- cholera::landmark.squares$name %in% dstn.nm
-      obs.sq <- cholera::landmark.squares$name[sel]
-
-      if (all(cholera::landmark.squares$case %in% dstn)) {
-        sel <- unlist(lapply(obs.sq, function(nm) grep(nm, orgn.nm)))
-        orgn <- orgn[-sel]
-        orgn.nm <- orgn.nm[-sel]
-      } else if (any(!cholera::landmark.squares$case %in% dstn)) {
-        sel <- grep(obs.sq, cholera::landmarks$name)
-        excl <- cholera::landmarks$case[sel]
-        excl.nm <- cholera::landmarks$name[sel]
-        orgn <- orgn[!orgn %in% excl]
-        orgn.nm <- orgn.nm[!orgn.nm %in% excl.nm]
+  } else {
+    if (any(c(369, 1019) %in% orgn)) {
+      if (369 %in% orgn & 1019 %in% dstn) {
+        dstn <- dstn[dstn != 1019]
+        dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
+      }
+      
+      if (1019 %in% orgn & 369 %in% dstn) {
+        dstn <- dstn[dstn != 369]
+        dstn.nm <- dstn.nm[dstn.nm != "369"]
       }
     }
   }
@@ -810,6 +786,8 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
   }
 
   # Destination (alters) #
+
+  if (is.null(destination)) dstn <- dstn[dstn < 1000L]  
 
   fatal <- fatality$case %in% dstn
   land <- lndmrk$case %in% dstn
