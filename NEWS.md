@@ -1,3 +1,9 @@
+# cholera 0.9.1.9117
+
+- add identical origin and destination stop() in euclideanPath().
+- remove case.set = "expected" convenience fix.
+
+
 # cholera 0.9.1.9116
 
 - fix caseCase() for walkingPath(destination = NULL).

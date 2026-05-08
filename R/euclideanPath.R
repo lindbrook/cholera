@@ -81,6 +81,10 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     destination.chk <- validateCase(destination, case.set, include.landmarks)
     dstn <- destination.chk$out
     dstn.nm <- destination.chk$out.nm
+    
+    if (length(orgn) == 1 & length(dstn) == 1 & identical(orgn, dstn)) {
+      stop("Identical origin and destination!", call. = FALSE)
+    }
 
   } else if (type == "pumps") {
     origin.chk <- validatePump(origin, pmp, vestry)
