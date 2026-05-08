@@ -690,40 +690,42 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
     }
   }
 
-  ## Filter out other Square "cases" when origin/destination = NULL ##
+  ## St James Workhouse: identical single origin and destination
 
+  st.james.msg <- c("Identical origin and destination:", "\n",
+    "St James Workhouse is both a landmark and a case site.")
+
+  if (length(orgn) == 1 & length(dstn) == 1) {
+    test1 <- as.numeric(orgn) == 369 & as.numeric(dstn) == 369
+    test2 <- as.numeric(orgn) == 1019 & as.numeric(dstn) == 1019     
+    test3 <- as.numeric(orgn) == 369 & as.numeric(dstn) == 1019
+    test4 <- as.numeric(orgn) == 1019 & as.numeric(dstn) == 369
+    test5 <- as.numeric(orgn) == 369 & dstn == "St James Workhouse"
+    test6 <- orgn == "St James Workhouse" & as.numeric(dstn) == 369
+    test7 <- as.numeric(orgn) == 1019 & dstn == "St James Workhouse"
+    test8 <- orgn == "St James Workhouse" & as.numeric(dstn) == 1019
+    st.james <- c(test1, test2, test3, test4, test5, test6, test7, test8)
+    if (any(st.james)) stop(st.james.msg, call. = FALSE)
+  }
+  
   if (is.null(destination)) {
-    if (any(grepl("Square", orgn.nm))) {
-      sel <- cholera::landmark.squares$name %in% orgn.nm
-      obs.sq <- cholera::landmark.squares$name[sel]
-
-      if (all(cholera::landmark.squares$case %in% orgn)) {
-        sel <- unlist(lapply(obs.sq, function(nm) grep(nm, dstn.nm)))
-        dstn <- dstn[-sel]
-        dstn.nm <- dstn.nm[-sel]
-      } else if (any(!cholera::landmark.squares$case %in% orgn)) {
-        sel <- grep(obs.sq, cholera::landmarks$name)
-        excl <- cholera::landmarks$case[sel]
-        excl.nm <- cholera::landmarks$name[sel]
-        dstn <- dstn[!dstn %in% excl]
-        dstn.nm <- dstn.nm[!dstn.nm %in% excl.nm]
-      }
+    if (1019 %in% orgn) {
+      dstn <- dstn[dstn != 369]
+      dstn.nm <- dstn.nm[dstn.nm != "369"]
+    } else { # default to case 369 and drop landmark 1019
+      dstn <- dstn[dstn != 1019]
+      dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
     }
-  } else if (is.null(origin)) {
-    if (any(grepl("Square", dstn.nm))) {
-      sel <- cholera::landmark.squares$name %in% dstn.nm
-      obs.sq <- cholera::landmark.squares$name[sel]
-
-      if (all(cholera::landmark.squares$case %in% dstn)) {
-        sel <- unlist(lapply(obs.sq, function(nm) grep(nm, orgn.nm)))
-        orgn <- orgn[-sel]
-        orgn.nm <- orgn.nm[-sel]
-      } else if (any(!cholera::landmark.squares$case %in% dstn)) {
-        sel <- grep(obs.sq, cholera::landmarks$name)
-        excl <- cholera::landmarks$case[sel]
-        excl.nm <- cholera::landmarks$name[sel]
-        orgn <- orgn[!orgn %in% excl]
-        orgn.nm <- orgn.nm[!orgn.nm %in% excl.nm]
+  } else {
+    if (any(c(369, 1019) %in% orgn)) {
+      if (369 %in% orgn & 1019 %in% dstn) {
+        dstn <- dstn[dstn != 1019]
+        dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
+      }
+      
+      if (1019 %in% orgn & 369 %in% dstn) {
+        dstn <- dstn[dstn != 369]
+        dstn.nm <- dstn.nm[dstn.nm != "369"]
       }
     }
   }
