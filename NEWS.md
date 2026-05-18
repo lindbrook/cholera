@@ -1,3 +1,8 @@
+# cholera 0.9.1.9120
+
+- amend validateCase() and drop 'include.landmarks' argument.
+
+
 # cholera 0.9.1.9119
 
 - remove 'include.landmarks' argument from caseCaseEucl().
