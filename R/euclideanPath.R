@@ -787,8 +787,6 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
 
   # Destination (alters) #
 
-  if (is.null(destination)) dstn <- dstn[dstn < 1000L]  
-
   fatal <- fatality$case %in% dstn
   land <- lndmrk$case %in% dstn
 
