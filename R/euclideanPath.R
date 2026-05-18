@@ -65,7 +65,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   }
 
   if (type == "case-pump") {
-    origin.chk <- validateCase(origin, case.set, include.landmarks)
+    origin.chk <- validateCase(origin, case.set)
     orgn <- origin.chk$out
     orgn.nm <- origin.chk$out.nm
 
@@ -74,11 +74,11 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     dstn.nm <- destination.chk$out.nm
 
   } else if (type == "cases") {
-    origin.chk <- validateCase(origin, case.set, include.landmarks)
+    origin.chk <- validateCase(origin, case.set)
     orgn <- origin.chk$out
     orgn.nm <- origin.chk$out.nm
 
-    destination.chk <- validateCase(destination, case.set, include.landmarks)
+    destination.chk <- validateCase(destination, case.set)
     dstn <- destination.chk$out
     dstn.nm <- destination.chk$out.nm
     
@@ -786,8 +786,6 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
   }
 
   # Destination (alters) #
-
-  if (is.null(destination)) dstn <- dstn[dstn < 1000L]  
 
   fatal <- fatality$case %in% dstn
   land <- lndmrk$case %in% dstn
