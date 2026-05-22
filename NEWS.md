@@ -1,3 +1,8 @@
+# cholera 0.9.1.9120
+
+- set validateCase(case.set = "observed") and amend named landmarks code.
+
+
 # cholera 0.9.1.9119
 
 - remove 'include.landmarks' argument from caseCaseEucl().
