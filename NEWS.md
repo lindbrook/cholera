@@ -1,6 +1,6 @@
 # cholera 0.9.1.9120
 
-- amend validateCase() and drop 'include.landmarks' argument.
+- set validateCase(case.set = "observed") and amend named landmarks code.
 
 
 # cholera 0.9.1.9119

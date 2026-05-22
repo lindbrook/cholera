@@ -89,7 +89,7 @@ mapDataRange <- function(path.data, land, data.summary, vars, ew, ns) {
   }
 }
 
-validateCase <- function(x, case.set) {
+validateCase <- function(x, case.set = "observed") {
   obs.case.id <- cholera::fatalities$case
   obs.case.nm <- paste(obs.case.id)
   
@@ -168,59 +168,66 @@ validateCase <- function(x, case.set) {
     }
 
   } else if (is.character(x)) {
-    if (length(x) == 1) {
-      if (all(nchar(x) > 5)) {
-        x <- caseAndSpace(x)
-      }
-    } else if (length(x) > 1) {
-      if (all(vapply(x, nchar, integer(1L)) > 5)) {
-        x <- vapply(x, caseAndSpace, character(1L))  
-      }
-    }
 
-    # Golden/Soho Square exits
-    if (any(grepl("-", x))) {
-      nm.string <- unlist(strsplit(x, "-"))
-      ptB <- toupper(nm.string[2])
-      x <- paste0(nm.string[1], "-", ptB)
-    }
+    # identify numeric cases represented as characters
+    lndmrk.nm <- is.na(suppressWarnings(as.numeric(x)))
 
+    # word case for named landmarks
+    if (any(lndmrk.nm)) {
+      x[lndmrk.nm] <- vapply(x[lndmrk.nm], caseAndSpace, character(1L))
+    }
+    
+    if (any(grepl("-",  x[lndmrk.nm]))) {
+      st.exit <- grepl("-",  x[lndmrk.nm])
+      nm.string <- unlist(strsplit(x[lndmrk.nm][st.exit], "-"))
+      sel <- !seq_along(nm.string) %% 2
+      postfix <- toupper(nm.string[sel])
+      x[lndmrk.nm][st.exit] <- paste0(nm.string[!sel], "-", postfix)
+    }
+    
     if (all(!x %in% case.nm)) {
       land.ptB <- "Landmarks names in 'landmark.squares' or 'landmarks'."
       stop('Character IDs (e.g., "1")', "\n", obs.case.msg.chr, "\n",
         lndmrk.msg.chr, "\n", land.ptB, "\n", exp.case.msg.chr, call. = FALSE)
     
     } else if (any(!x %in% case.nm)) {
-      x0 <- x
-      x.ok <- x[x %in% case.nm]
-
-      sq.candidate <- x[!x %in% case.nm]
-      dash.chk <- vapply(sq.candidate, function(x) grepl("-", x), logical(1L))
-      sq.candidate <- sq.candidate[dash.chk]
-      sq.candidate <- vapply(sq.candidate, squarePostfix, character(1L))
-      sq.candidate <- sq.candidate[sq.candidate %in% case.nm]
-
-      if (length(x.ok) != 0 & length(sq.candidate) != 0) {
-        x <- c(x.ok, sq.candidate)
-      } else if (length(x.ok) == 0 & length(sq.candidate) != 0) {
-        x <- sq.candidate
-      } else if (length(x.ok) != 0 & length(sq.candidate) == 0) {
-        x <- x.ok
-      }
-
-      dropped <- paste(setdiff(x0, x), collapse = ", ")
+      sel <- x %in% case.nm
+      dropped <- paste(x[!sel], collapse = ", ")
       message("Invalid IDs (", dropped, ") dropped.")
-      out <- case.id[case.nm %in% x]
-      out.nm <- case.nm[case.nm %in% paste(x)]
+      
+      out <- vector(mode = "logical", length = length(x[sel]))
+      num.nm <- is.na(suppressWarnings(as.numeric(x[sel])))
+      out[num.nm] <- lndmrk[lndmrk$name %in% x[sel], "case"]
+      out[!num.nm] <- x[sel][!num.nm]
+
+      out.nm <- vector(mode = "logical", length = length(x[sel]))
+      num.nm <- is.na(suppressWarnings(as.numeric(x[sel])))
+      out.nm[num.nm] <- x[sel][num.nm]
+      out.nm[!num.nm] <- x[sel][!num.nm]
     
     } else if (all(x %in% case.nm)) {
-      # default to numeric ID rather than full character name
-      if (x %in% lndmrk$name) {
-        out <- lndmrk[lndmrk$name %in% x, "case"]
-      } else {
-        out <- case.id[case.id %in% as.numeric(x)]  
-      }   
-      out.nm <- case.nm[case.nm %in% x]
+      if (all(x %in% lndmrk$name)) {
+        sel <- lndmrk$name %in% x[x %in% lndmrk$name]
+        out <- lndmrk[sel, "case"]
+        out.nm <- lndmrk[sel, "name"]
+      } else if (any(x %in% lndmrk$name)) {
+        lnd.test <- x %in% lndmrk$name
+        
+        num.id <- as.integer(x[!lnd.test])
+        names(num.id) <- x[!lnd.test]
+        
+        lnd.id <- lndmrk[lndmrk$name %in% x[lnd.test], "case"]
+        names(lnd.id) <- lndmrk[lndmrk$name %in% x[lnd.test], "name"]
+        
+        out <- c(num.id, lnd.id)[x]
+        out.nm <- x
+        names(out) <- NULL
+        names(out.nm) <- NULL
+        
+      } else if (all(!x %in% lndmrk$name)) {
+        out <- case.id[case.id %in% as.numeric(x)]
+        out.nm <- case.nm[case.nm %in% x]
+      }
     }
   }
   list(out = out, out.nm = out.nm)
