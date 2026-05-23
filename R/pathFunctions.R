@@ -103,11 +103,9 @@ validateCase <- function(x, case.set = "observed") {
   exp.case.nm <- paste(exp.case.id)
   
   exp.case.msg <- paste0("Expected case IDs range from ", min(exp.case.id),
-    " to ", max(exp.case.id), ".")
-  
-  exp.case.msg.chr <- c(paste0("Expected case IDs range from ",
-    paste0('\"', min(exp.case.id)), '\"'), " to ", paste0('\"',
-      max(exp.case.id), '\"'), ".")
+    " to ", max(exp.case.id), ".")  
+  exp.case.msg.chr <- paste0("Expected case IDs range from ", '\"',
+    min(exp.case.id), '\"', " to ", '\"', max(exp.case.id), '\"', ".")
 
   vars.lndmrk <- c("case", "name")
   lndmrk.sq <- cholera::landmark.squares[, vars.lndmrk]
@@ -118,8 +116,8 @@ validateCase <- function(x, case.set = "observed") {
   lndmrk.msg2 <- paste0(min(lndmrk$case), " to ", max(lndmrk$case), ".")
   lndmrk.msg <- paste0(lndmrk.msg1, lndmrk.msg2)
 
-  lndmrk.msg2.chr <- paste0(paste(min(lndmrk$case)), " to ",
-    paste(max(lndmrk$case)), ".")
+  lndmrk.msg2.chr <- paste0('\"', min(lndmrk$case), '\"', " to ",
+    '\"', max(lndmrk$case), '\"', ".")
   lndmrk.msg.chr <- paste0(lndmrk.msg1, lndmrk.msg2.chr)
   
   if (case.set == "observed") {
@@ -187,7 +185,7 @@ validateCase <- function(x, case.set = "observed") {
     
     if (all(!x %in% case.nm)) {
       land.ptB <- "Landmarks names in 'landmark.squares' or 'landmarks'."
-      stop('Character IDs (e.g., "1")', "\n", obs.case.msg.chr, "\n",
+      stop('For character IDs (e.g., "1")', "\n", obs.case.msg.chr, "\n",
         lndmrk.msg.chr, "\n", land.ptB, "\n", exp.case.msg.chr, call. = FALSE)
     
     } else if (any(!x %in% case.nm)) {
