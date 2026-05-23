@@ -1,3 +1,8 @@
+# cholera 0.9.1.9121
+
+- amend stop() and code for character IDs in validateCase().
+
+
 # cholera 0.9.1.9120
 
 - set validateCase(case.set = "observed") and amend named landmarks code.
