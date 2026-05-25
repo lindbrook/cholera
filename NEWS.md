@@ -1,3 +1,8 @@
+# cholera 0.9.1.9122
+
+- amend stop()'s in validateCase().
+
+
 # cholera 0.9.1.9121
 
 - amend stop() and code for character IDs in validateCase().
