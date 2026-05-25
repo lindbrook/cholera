@@ -134,8 +134,8 @@ validateCase <- function(x, case.set = "observed") {
   
   } else if (is.numeric(x)) {
     if (all(!abs(x) %in% case.id)) {
-      stop("Invalid ID or name.", "\n", obs.case.msg, "\n", lndmrk.msg, "\n",
-        exp.case.msg, call. = FALSE)
+      stop("For numeric IDs (e.g., 1 or 5:9):", "\n", obs.case.msg, "\n",
+        lndmrk.msg, "\n", exp.case.msg, call. = FALSE)
     } else if (all(abs(x) %in% case.id)) {
       if (all(x > 0)) {
         sel <- case.id %in% x
@@ -185,7 +185,7 @@ validateCase <- function(x, case.set = "observed") {
     
     if (all(!x %in% case.nm)) {
       land.ptB <- "Landmarks names in 'landmark.squares' or 'landmarks'."
-      stop('For character IDs (e.g., "1")', "\n", obs.case.msg.chr, "\n",
+      stop('For character IDs (e.g., "1"):', "\n", obs.case.msg.chr, "\n",
         lndmrk.msg.chr, "\n", land.ptB, "\n", exp.case.msg.chr, call. = FALSE)
     
     } else if (any(!x %in% case.nm)) {
