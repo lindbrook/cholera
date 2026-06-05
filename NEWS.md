@@ -1,3 +1,8 @@
+# cholera 0.9.1.9123
+
+- add/use orgnDstn().
+
+
 # cholera 0.9.1.9122
 
 - amend stop()'s in validateCase().
