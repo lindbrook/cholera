@@ -53,6 +53,13 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     dstn <- destination.chk$out
     dstn.nm <- destination.chk$out.nm
 
+    if (length(orgn) == 1 & length(dstn) == 1 & identical(orgn, dstn)) {
+      stop("Identical origin and destination!", call. = FALSE)
+    }
+
+    orgn.dstn <- list(orgn = orgnDstn(orgn, case.set = case.set),
+                      dstn = orgnDstn(dstn, case.set = case.set))
+
   } else if (type == "pumps") {
     origin.chk <- validatePump(origin, pmp, vestry)
     orgn <- origin.chk$out
@@ -1096,4 +1103,30 @@ pumpPump <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination, network,
 
   list(orgn = orgn, orgn.nm = orgn.nm, dstn = nearest.dstn,
        dstn.nm = dstn.nm[dstn == nearest.dstn], p = p[[1]])
+}
+
+orgnDstn <- function(dat, case.set = "observed") {
+  if (case.set == "observed") {
+    fatal.sel <- dat < 1000L
+  } else if (case.set == "expected") {
+    fatal.sel <- dat > 2000L
+  }
+  
+  fatal <- dat[fatal.sel]
+  land <- dat[dat >= 1000L & dat < 2000L]
+  
+  out <- data.frame(id = c(land, fatal), 
+    id.nm = as.character(c(land, fatal)),
+    name = NA)
+  
+  vars <- !grepl(".lab", names(cholera::landmarks)) & 
+          names(cholera::landmarks) != "road.segment"
+  lndmrks <- rbind(cholera::landmark.squares, cholera::landmarks[, vars])
+  
+  sel <- out$id %in% cholera::landmark.squares$case |
+         out$id %in% cholera::landmarks$case
+  out[sel, "name"] <- lndmrks[lndmrks$case %in% land, "name"]
+  
+  if (nrow(out) > 1) out <- out[order(out$id), ]
+  out
 }
