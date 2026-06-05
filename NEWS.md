@@ -1,3 +1,8 @@
+# cholera 0.9.1.9124
+
+- add new caseCase() prototype.
+
+
 # cholera 0.9.1.9123
 
 - add/use orgnDstn().
