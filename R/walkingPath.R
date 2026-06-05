@@ -83,8 +83,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     path.data <- casePump(orgn, orgn.nm, dstn, dstn.nm, destination, network,
       vestry, weighted)
   } else if (type == "cases") {
-    path.data <- caseCase(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
-      case.set, network, vestry, weighted)
+    path.data <- caseCase(origin, destination, network, orgn.dstn, weighted)
   } else if (type == "pumps") {
     path.data <- pumpPump(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
       network, vestry, weighted)
@@ -741,181 +740,117 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network,
        dstn.nm = dstn.nm[dstn == nearest.dstn], p = p[[1]])
 }
 
-caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
-  case.set, network, vestry, weighted) {
-
+caseCase <- function(origin, destination, network, orgn.dstn, weighted) {
   g <- network$g
   edges <- network$edges
   nodes <- network$nodes
-
-  if (case.set == "observed") {
-    if (any(orgn < 2000L)) {
-      fatal <- orgn[orgn < 1000L]
-      land <- orgn[orgn >= 1000L]
-      land.nm <- orgn.nm[orgn >= 1000L]
-
-      if (any(!fatal %in% cholera::anchor.case$anchor)) {
-        sel <- cholera::anchor.case$case %in% fatal
-        orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
-        orgn.nm <- c(paste(orgn), land.nm)
-      }
-    }
-
-    if (any(grepl("Square", orgn.nm))) {
-      if (length(orgn) > 1) {
-        if (any(cholera::landmark.squares$case %in% orgn)) {
-          orgn <- orgn[!orgn %in% cholera::landmark.squares$case]
-          orgn.nm <- orgn.nm[!orgn.nm %in% cholera::landmark.squares$name]
-        }
-      } else if (length(orgn) == 1) {
-        if (orgn.nm %in% cholera::landmark.squares$name) {
-          sel <- grepl(orgn.nm, cholera::landmarks$name)
-          sq.tmp <- cholera::landmarks[sel, ]
-          orgn <- sq.tmp$case
-          orgn.nm <- sq.tmp$name
-        }
-      }
-    }
-
-    if (any(dstn < 2000L)) {
-      fatal <- dstn[dstn < 1000L]
-      land <- dstn[dstn >= 1000L]
-      land.nm <- dstn.nm[dstn >= 1000L]
-
-      if (any(!fatal %in% cholera::anchor.case$anchor)) {
-        sel <- cholera::anchor.case$case %in% fatal
-        dstn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
-        dstn.nm <- c(paste(dstn), land.nm)
-      }  
-    }
-
-    if (any(grepl("Square", dstn.nm))) {
-      if (length(dstn) > 1) {
-        if (any(cholera::landmark.squares$case %in% dstn)) {
-          dstn <- dstn[!dstn %in% cholera::landmark.squares$case]
-          dstn.nm <- dstn.nm[!dstn.nm %in% cholera::landmark.squares$name]
-        }
-      } else if (length(dstn) == 1) {
-        if (dstn.nm %in% cholera::landmark.squares$name) {
-          sel <- grepl(dstn.nm, cholera::landmarks$name)
-          sq.tmp <- cholera::landmarks[sel, ]
-          dstn <- sq.tmp$case
-          dstn.nm <- sq.tmp$name
-        }
-      }
-    }
-    
-  } else if (case.set == "expected") {
-    if (any(orgn >= 1000L)) {
-      fatal <- orgn[orgn > 2000L]
-      
-      if (any(orgn < 2000L)) {
-        sel <- orgn >= 1000L & orgn < 2000L
-        land <- orgn[sel]
-        land.nm <- orgn.nm[sel]
-        orgn <- c(orgn, land)
-        orgn.nm <- c(paste(orgn), land.nm)
-      }
-    }
-
-    if (any(grepl("Square", orgn.nm))) {
-      if (length(orgn) > 1) {
-        if (any(cholera::landmark.squares$case %in% orgn)) {
-          orgn <- orgn[!orgn %in% cholera::landmark.squares$case]
-          orgn.nm <- orgn.nm[!orgn.nm %in% cholera::landmark.squares$name]
-        }
-      } else if (length(orgn) == 1) {
-        if (orgn.nm %in% cholera::landmark.squares$name) {
-          sel <- grepl(orgn.nm, cholera::landmarks$name)
-          sq.tmp <- cholera::landmarks[sel, ]
-          orgn <- sq.tmp$case
-          orgn.nm <- sq.tmp$name
-        }
-      }
-    }
-
-    if (any(dstn > 2000L)) {
-      fatal <- dstn[dstn > 2000L]
-      
-      if (any(dstn < 2000L)) {
-        land <- dstn[dstn >= 1000L]
-        land.nm <- dstn.nm[dstn >= 1000L]
-        dstn <- c(dstn, land)
-        dstn.nm <- c(paste(dstn), land.nm)
-      }
-    }
-
-    if (any(grepl("Square", dstn.nm))) {
-      if (length(dstn) > 1) {
-        if (any(cholera::landmark.squares$case %in% dstn)) {
-          dstn <- dstn[!dstn %in% cholera::landmark.squares$case]
-          dstn.nm <- dstn.nm[!dstn.nm %in% cholera::landmark.squares$name]
-        }
-      } else if (length(dstn) == 1) {
-        if (dstn.nm %in% cholera::landmark.squares$name) {
-          sel <- grepl(dstn.nm, cholera::landmarks$name)
-          sq.tmp <- cholera::landmarks[sel, ]
-          dstn <- sq.tmp$case
-          dstn.nm <- sq.tmp$name
-        }
-      }
-    }
-  }
   
-  ## St James Workhouse: identical single origin and destination
+  orgn <- orgn.dstn$orgn
+  dstn <- orgn.dstn$dstn
+
+  ## St James Workhouse: identical single origin and destination stop()
 
   st.james.msg <- c("Identical origin and destination:", "\n",
     "St James Workhouse is both a landmark and a case site.")
 
-  if (length(orgn) == 1 & length(dstn) == 1) {
-    test1 <- as.numeric(orgn) == 369 & as.numeric(dstn) == 369
-    test2 <- as.numeric(orgn) == 1019 & as.numeric(dstn) == 1019     
-    test3 <- as.numeric(orgn) == 369 & as.numeric(dstn) == 1019
-    test4 <- as.numeric(orgn) == 1019 & as.numeric(dstn) == 369
-    test5 <- as.numeric(orgn) == 369 & dstn == "St James Workhouse"
-    test6 <- orgn == "St James Workhouse" & as.numeric(dstn) == 369
-    test7 <- as.numeric(orgn) == 1019 & dstn == "St James Workhouse"
-    test8 <- orgn == "St James Workhouse" & as.numeric(dstn) == 1019
-    st.james <- c(test1, test2, test3, test4, test5, test6, test7, test8)
+  if (length(orgn$id) == 1 & length(dstn$id) == 1) {
+    test1 <- orgn$id == 369  & dstn$id == 369
+    test2 <- orgn$id == 1019 & dstn$id == 1019     
+    test3 <- orgn$id == 369  & dstn$id == 1019
+    test4 <- orgn$id == 1019 & dstn$id == 369
+    st.james <- c(test1, test2, test3, test4)
     if (any(st.james)) stop(st.james.msg, call. = FALSE)
   }
+
+  # exclude landmarks with NULL origin or destination
+
+  if (is.null(origin) & !is.null(destination)) {
+    sel <- orgn$id %in% cholera::landmark.squares$case |
+           orgn$id %in% cholera::landmarks$case
+    if (369 %in% dstn$id | 1019 %in% dstn$id) sel <- orgn$id == 369 | sel
+    orgn <- orgn[!sel, ]
+  } else if (!is.null(origin) & is.null(destination)) {
+    sel <- dstn$id %in% cholera::landmark.squares$case |
+           dstn$id %in% cholera::landmarks$case
+    if (369 %in% orgn$id | 1019 %in% orgn$id) sel <- dstn$id == 369 | sel
+    dstn <- dstn[!sel, ]
+  }
   
-  if (is.null(destination)) {
-    if (1019 %in% orgn) {
-      dstn <- dstn[dstn != 369]
-      dstn.nm <- dstn.nm[dstn.nm != "369"]
-    } else { # default to case 369 and drop landmark 1019
-      dstn <- dstn[dstn != 1019]
-      dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
-    }
-  } else {
-    if (any(c(369, 1019) %in% orgn)) {
-      if (369 %in% orgn & 1019 %in% dstn) {
-        dstn <- dstn[dstn != 1019]
-        dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
+  # translate Square(s) to exits
+  
+  if (any(grepl("Square", orgn$name))) {
+    if (any(cholera::landmark.squares$case %in% orgn$id)) {
+      sq.sel <- cholera::landmark.squares$case %in% orgn$id
+      sq <- cholera::landmark.squares[sq.sel, "name"]
+      
+      if (length(sq) > 1) {
+        sel <- unlist(lapply(sq, function(x) {
+          grep(x, cholera::landmarks$name)
+        }))
+      } else {
+        sel <- grep(sq, cholera::landmarks$name)
       }
       
-      if (1019 %in% orgn & 369 %in% dstn) {
-        dstn <- dstn[dstn != 369]
-        dstn.nm <- dstn.nm[dstn.nm != "369"]
-      }
+      sq.exit <- cholera::landmarks[sel, c("case", "name")]
+      names(sq.exit)[1] <- "id"
+      sq.exit$id.nm <- as.character(sq.exit$id)
+      sq.exit <- sq.exit[, c("id", "id.nm", "name")]
     }
-  }
-
-  if (length(intersect(orgn, dstn)) != 0) {
-    if (!is.null(origin) & is.null(destination) | all(destination < 0)) {
-      dstn <- setdiff(dstn, orgn)
-      dstn.nm <- setdiff(dstn.nm, orgn.nm)
-    } else if (is.null(origin) & !is.null(destination)) {
-      orgn <- setdiff(orgn, dstn)
-      orgn.nm <- setdiff(orgn.nm, dstn.nm)
+    
+    orgn <- orgn[!grepl("Square", orgn$name), ]
+    
+    if (all(!sq.exit$case %in% orgn$case)) {
+      orgn <- rbind(orgn, sq.exit)  
+    } else if (any(!sq.exit$case %in% orgn$case)) {
+      orgn <- rbind(orgn, sq.exit[!sq.exit$case %in% orgn$case, ])
     }
   }
   
-  sel <- nodes$case %in% orgn | nodes$land %in% orgn
+  if (any(grepl("Square", dstn$name))) {
+    if (any(cholera::landmark.squares$case %in% dstn$id)) {
+      sq.sel <- cholera::landmark.squares$case %in% dstn$id
+      sq <- cholera::landmark.squares[sq.sel, "name"]
+      
+      if (length(sq) > 1) {
+        sel <- unlist(lapply(sq, function(x) grep(x, cholera::landmarks$name)))
+      } else {
+        sel <- grep(sq, cholera::landmarks$name)
+      }
+      
+      sq.exit <- cholera::landmarks[sel, c("case", "name")]
+      names(sq.exit)[1] <- "id"
+      sq.exit$id.nm <- as.character(sq.exit$id)
+      sq.exit <- sq.exit[, c("id", "id.nm", "name")]
+    }
+    
+    dstn <- dstn[!grepl("Square", dstn$name), ]
+    
+    if (all(!sq.exit$case %in% dstn$case)) {
+      dstn <- rbind(dstn, sq.exit)  
+    } else if (any(!sq.exit$case %in% dstn$case)) {
+      dstn <- rbind(dstn, sq.exit[!sq.exit$case %in% dstn$case, ])
+    }
+  }
+
+  # default St James Workhouse to case ID
+
+  if (all(c(369, 1019) %in% orgn$id)) orgn <- orgn[orgn$id != 1019, ]
+  if (all(c(369, 1019) %in% dstn$id)) dstn <- dstn[dstn$id != 1019, ]
+
+  ## filter out origin-destination intersection/overlap ##
+
+  if (length(intersect(orgn$id, dstn$id)) != 0) {
+    if (!is.null(origin) & is.null(destination) | all(destination < 0)) {
+      dstn <- dstn[dstn$id %in% setdiff(dstn$id, orgn$id), ]
+    } else if (is.null(origin) & !is.null(destination)) {
+      orgn <- orgn[orgn$id %in% setdiff(orgn$id, dstn$id), ]
+    }
+  }
+
+  sel <- nodes$case %in% orgn$id | nodes$land %in% orgn$id
   ego.node <- nodes[sel, ]$node
 
-  sel <- nodes$case %in% dstn | nodes$land %in% dstn
+  sel <- nodes$case %in% dstn$id | nodes$land %in% dstn$id
   alter.node <- nodes[sel, ]$node
 
   if (length(ego.node) == 1) {
@@ -933,17 +868,11 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     }
 
     sel <- (nodes$case != 0 | nodes$land != 0) & nodes$node == nearest.node
-    
-    if (length(dstn) == 1) {
-      if (dstn == 369) {
-        sel <- sel & nodes$case == 369
-      } else if (dstn == 1019) {
-        sel <- sel & nodes$land == 1019
-      }
-    }
+    alter <- dstn[dstn$id == (nodes[sel, ]$case + nodes[sel, ]$land), ]
+    alter.nm <- ifelse(!is.na(alter$name), alter$name, alter$id.nm)
 
-    dstn <- nodes[sel, ]$case + nodes[sel, ]$land
-    dstn.nm <- nodes[sel, ]$name
+    ego <- orgn
+    ego.nm <- ifelse(!is.na(ego$name), ego$name, ego$id.nm)
 
     if (weighted) {
       p <- igraph::shortest_paths(graph = g, from = ego.node, to = nearest.node,
@@ -962,21 +891,21 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     })
 
     ego.dist <- vapply(d.multi.ego, min, numeric(1L))
-    ego.id <- which.min(ego.dist)
     d <- min(ego.dist)
-
+    ego.id <- which.min(ego.dist)
+    
     ego.alter <- d.multi.ego[[ego.id]]
     alter.id <- which.min(ego.alter)
     
     nr.ego.node <- dimnames(ego.alter)[[1]]
     nr.alter.node <- dimnames(ego.alter)[[2]][alter.id]
     
-    orgn <- orgn[ego.id]
-    orgn.nm <- orgn.nm[ego.id]
-
-    dstn <- dstn[alter.id]
-    dstn.nm <- dstn.nm[alter.id]
-      
+    ego <- orgn[ego.id, ]
+    ego.nm <- ifelse(!is.na(ego$name), ego$name, ego$id.nm)
+     
+    alter <- dstn[alter.id, ]
+    alter.nm <- ifelse(!is.na(alter$name), alter$name, alter$id.nm)
+     
     if (weighted) {
       p <- igraph::shortest_paths(graph = g, from = nr.ego.node,
         to = nr.alter.node, weights = edges$d)$vpath
@@ -986,7 +915,7 @@ caseCase <- function(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
     }
   }
 
-  list(orgn = orgn, orgn.nm = orgn.nm, dstn = dstn, dstn.nm = dstn.nm,
+  list(orgn = ego$id, orgn.nm = ego.nm, dstn = alter$id, dstn.nm = alter.nm,
     p = p[[1]])
 }
 
