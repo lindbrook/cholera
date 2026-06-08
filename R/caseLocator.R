@@ -181,14 +181,12 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
       if (observed) {
         points(case.data, col = col, lwd = 2)
 
-        if (isTRUE(zoom) | is.numeric(zoom)) {
-          if (highlight.segment) {
-            segments(seg.data[, paste0(ew, 1)], seg.data[, paste0(ns, 1)],
-                     seg.data[, paste0(ew, 2)], seg.data[, paste0(ns, 2)],
-                     col = "red", lwd = 2)
-          }
+        if (highlight.segment) {
+          segments(seg.data[, paste0(ew, 1)], seg.data[, paste0(ns, 1)],
+                   seg.data[, paste0(ew, 2)], seg.data[, paste0(ns, 2)],
+                   col = "red", lwd = 2)
         }
-
+        
         if (add.title) {
           if (exists("case0")) {
             title(main = paste0("Obs Case ", case0, "; ", seg.data$name, " ",
@@ -201,14 +199,12 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
       } else {
         points(reg.data[case, vars], col = col, lwd = 2)
 
-        if (isTRUE(zoom) | is.numeric(zoom)) {
-          if (highlight.segment) {
-            segments(seg.data[, paste0(ew, 1)], seg.data[, paste0(ns, 1)],
-                     seg.data[, paste0(ew, 2)], seg.data[, paste0(ns, 2)],
-                     col = "red", lwd = 2)
-          }
+        if (highlight.segment) {
+          segments(seg.data[, paste0(ew, 1)], seg.data[, paste0(ns, 1)],
+                   seg.data[, paste0(ew, 2)], seg.data[, paste0(ns, 2)],
+                   col = "red", lwd = 2)
         }
-
+        
         if (add.title) {
           title(main = paste0("Sim Case ", case, "; ", seg.data$name, " ",
                               seg.data$id))

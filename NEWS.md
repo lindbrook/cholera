@@ -1,3 +1,8 @@
+# cholera 0.9.1.9125
+
+- make 'highlight.segment' in caseLocator() generally available.
+
+
 # cholera 0.9.1.9124
 
 - add new caseCase() prototype.
