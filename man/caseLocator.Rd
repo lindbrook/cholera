@@ -4,16 +4,16 @@
 \alias{caseLocator}
 \title{Locate case by numerical ID.}
 \usage{
-caseLocator(case = 1, zoom = FALSE, observed = TRUE, latlong = FALSE,
-  add.title = TRUE, highlight.segment = TRUE, data = FALSE,
-  add = FALSE, col = "red", vestry = FALSE)
+caseLocator(case = 1, zoom = FALSE, case.set = "observed",
+  latlong = FALSE, add.title = TRUE, highlight.segment = TRUE,
+  data = FALSE, add = FALSE, col = "red", vestry = FALSE)
 }
 \arguments{
 \item{case}{Numeric or Integer. Whole number between 1 and 578.}
 
 \item{zoom}{Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.}
 
-\item{observed}{Logical. \code{TRUE} for observed. \code{FALSE} for simulated.}
+\item{case.set}{Character. \code{observed} or \code{expected} (simulated).}
 
 \item{latlong}{Logical. Longitude and latitude coordinates}
 
@@ -33,11 +33,11 @@ caseLocator(case = 1, zoom = FALSE, observed = TRUE, latlong = FALSE,
 A base R graphics plot.
 }
 \description{
-Highlight selected observed or simulated case and its home road segment.
+Highlight selected observed or expected (simulated) case and its home road segment.
 }
 \examples{
 caseLocator(290)
 caseLocator(290, zoom = TRUE)
-caseLocator(290, observed = FALSE)
+caseLocator(2900, case.set = "expected")
 caseLocator(290, latlong = TRUE, zoom = TRUE)
 }
