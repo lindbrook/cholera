@@ -1,9 +1,9 @@
 #' Locate case by numerical ID.
 #'
-#' Highlight selected observed or simulated case and its home road segment.
+#' Highlight selected observed or expected (simulated) case and its home road segment.
 #' @param case Numeric or Integer. Whole number between 1 and 578.
 #' @param zoom Logical or Numeric. Positive numbers zoom in; negative numbers zoom out.
-#' @param observed Logical. \code{TRUE} for observed. \code{FALSE} for simulated.
+#' @param case.set Character. \code{observed} or \code{expected} (simulated).
 #' @param latlong Logical. Longitude and latitude coordinates
 #' @param add.title Logical. Include title.
 #' @param highlight.segment Logical. Highlight case's segment.
@@ -16,10 +16,10 @@
 #' @examples
 #' caseLocator(290)
 #' caseLocator(290, zoom = TRUE)
-#' caseLocator(290, observed = FALSE)
+#' caseLocator(2900, case.set = "expected")
 #' caseLocator(290, latlong = TRUE, zoom = TRUE)
 
-caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
+caseLocator <- function(case = 1, zoom = FALSE, case.set = "observed",
   latlong = FALSE, add.title = TRUE, highlight.segment = TRUE, data = FALSE,
   add = FALSE, col = "red", vestry = FALSE) {
 
@@ -50,29 +50,30 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
 
   if (!is.numeric(case)) stop("case must be numeric.", call. = FALSE)
 
-  if (observed) {
+  if (case.set == "observed") {
     if (case %in% unique(cholera::fatalities$case) == FALSE) {
       stop("Observed case must be a whole number between 1 and 578.",
         call. = FALSE)
     }
-  } else {
-    if (case %in% seq_len(nrow(reg.data)) == FALSE) {
-      reg.obs.ct <- format(nrow(reg.data), big.mark = ",")
-      stop("Simulated case must be a whole number between 1 and ", reg.obs.ct,
-        ".", call. = FALSE)
+  } else if (case.set == "expected") {
+    if (case %in% sim.proj.data$case == FALSE) {
+      min.sim <- format(min(sim.proj.data$case), big.mark = ",")
+      max.sim <- format(max(sim.proj.data$case), big.mark = ",")
+      stop("Expected (simulated) case must be a whole number between ",
+        min.sim, " and ", max.sim, ".", call. = FALSE)
     }
-  }
+  } else stop('case.set must be "observed" or "expected".', call. = FALSE)
 
-  if (observed) {
+  if (case.set == "observed") {
     case.seg <- proj.data[proj.data$case == case, "road.segment"]
     if (exists("case0")) {
       case.data <- cholera::fatalities[cholera::fatalities$case == case0, vars]
     } else {
       case.data <- cholera::fatalities[cholera::fatalities$case == case, vars]
     }
-  } else {
+  } else if (case.set == "expected") {
     case.seg <- sim.proj.data[sim.proj.data$case == case, "road.segment"]
-    case.data <- reg.data[case, vars]
+    case.data <- reg.data[case - 2000L, vars]
   }
 
   rd.segs <- cholera::road.segments
@@ -178,7 +179,7 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
       points(pmp[, vars], pch = 17, cex = 1, col = "blue")
       text(pmp[, vars], label = pmp$id, pos = 1)
 
-      if (observed) {
+      if (case.set == "observed") {
         points(case.data, col = col, lwd = 2)
 
         if (highlight.segment) {
@@ -196,8 +197,8 @@ caseLocator <- function(case = 1, zoom = FALSE, observed = TRUE,
                                 seg.data$id))
           }
         }
-      } else {
-        points(reg.data[case, vars], col = col, lwd = 2)
+      } else if (case.set == "expected") {
+        points(reg.data[case - 2000L, vars], col = col, lwd = 2)
 
         if (highlight.segment) {
           segments(seg.data[, paste0(ew, 1)], seg.data[, paste0(ns, 1)],

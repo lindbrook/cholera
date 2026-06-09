@@ -1,3 +1,8 @@
+# cholera 0.9.1.9126
+
+- replace observed = TRUE with case.set = "observed" in caseLocator().
+
+
 # cholera 0.9.1.9125
 
 - make 'highlight.segment' in caseLocator() generally available.
