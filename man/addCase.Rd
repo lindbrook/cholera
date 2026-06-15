@@ -4,16 +4,16 @@
 \alias{addCase}
 \title{Add observed case(s) to plot.}
 \usage{
-addCase(case = 1, latlong = FALSE, type = "observed", token = "both",
-  text.size = 0.5, pch = 1, cex = 1, point.lwd = 2, col = "black",
-  pos = 1)
+addCase(case = 1, latlong = FALSE, case.set = "observed",
+  token = "both", text.size = 0.5, pch = 1, cex = 1, point.lwd = 2,
+  col = "black", pos = 1)
 }
 \arguments{
 \item{case}{Numeric or Character. Vector of case ID(s). "anchor" plots anchor cases; "fatality" plots all cases; "orthogonal" plot projected addresses.}
 
 \item{latlong}{Logical.}
 
-\item{type}{Character. Type of case: "observed" or "expected".}
+\item{case.set}{Character. Type of case: "observed" or "expected".}
 
 \item{token}{Character. Type of token to plot: "point", "id" or "both".}
 
@@ -33,7 +33,7 @@ addCase(case = 1, latlong = FALSE, type = "observed", token = "both",
 Add case(s), as "anchor", "fatality" or "orthogonal" as points or IDs, to a plot.
 }
 \note{
-type, token, text.size, pch, cex, point.lwd and pos relevant only when case is numeric.
+case.set, token, text.size, pch, cex, point.lwd and pos relevant only when case is numeric.
 }
 \examples{
 \dontrun{

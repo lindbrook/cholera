@@ -1,6 +1,13 @@
+# cholera 0.9.1.9127
+
+- replace 'type' argument with 'case.set' in addCase().
+- fix expected cases in addCase().
+
+
 # cholera 0.9.1.9126
 
 - replace observed = TRUE with case.set = "observed" in caseLocator().
+- fix expected cases in caseLocator().
 
 
 # cholera 0.9.1.9125
