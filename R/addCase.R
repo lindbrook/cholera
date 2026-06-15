@@ -58,7 +58,6 @@ addCase <- function(case = 1, latlong = FALSE, case.set = "observed",
       }  
     }
   } else if (case.set == "expected") {
-    # case <- case - 2000L
     dat <- regular.data
     sim.case <- cholera::sim.ortho.proj$case
     min.sim <- format(min(sim.case), big.mark = ",")
