@@ -8,7 +8,8 @@ longTitle <- function(long.title, type, pmp, data.summary, orig, land, x) {
         } else if (x$location %in% c("anchor", "orthogonal")) {
           alpha <- paste0("Anchor ", orig, " (Case ", x$orig, ")")
         }
-        omega <- paste(p.nm, "Pump", paste0("(#", data.summary$destination, ")"))
+        omega <- paste(p.nm, "Pump", paste0("(#", data.summary$destination,
+          ")"))
       } else if (orig >= 1000L & orig <= max(land$case)) {
         c.nm <- land[land$case == orig, ]$name
         alpha <- paste(c.nm, paste0("(#", orig, ")"))
@@ -66,7 +67,7 @@ mapDataRange <- function(path.data, land, data.summary, vars, ew, ns) {
   }
 
   if (any(data.summary$destination >= 1000L &
-          data.summary$origin <= max(land$case))) {
+          data.summary$destination <= max(land$case))) {
     land.dest <- land[land$case %in% data.summary$destination, ]
     if (grepl("Square", land.dest$name)) {
       sq.nm <- unlist(strsplit(data.summary$destination.nm, "-"))[1]
