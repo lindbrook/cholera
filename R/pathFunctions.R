@@ -8,7 +8,8 @@ longTitle <- function(long.title, type, pmp, data.summary, orig, land, x) {
         } else if (x$location %in% c("anchor", "orthogonal")) {
           alpha <- paste0("Anchor ", orig, " (Case ", x$orig, ")")
         }
-        omega <- paste(p.nm, "Pump", paste0("(#", data.summary$destination, ")"))
+        omega <- paste(p.nm, "Pump", paste0("(#", data.summary$destination,
+          ")"))
       } else if (orig >= 1000L & orig <= max(land$case)) {
         c.nm <- land[land$case == orig, ]$name
         alpha <- paste(c.nm, paste0("(#", orig, ")"))
