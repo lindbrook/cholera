@@ -1,3 +1,8 @@
+# cholera 0.9.1.9128
+
+- fix data.summary error in mapDataRange().
+
+
 # cholera 0.9.1.9127
 
 - replace 'type' argument with 'case.set' in addCase().
