@@ -1,3 +1,8 @@
+# cholera 0.9.1.9129
+
+- add new longTitle() prototype.
+
+
 # cholera 0.9.1.9128
 
 - fix data.summary error in mapDataRange().

@@ -1,53 +1,86 @@
-longTitle <- function(long.title, type, pmp, data.summary, orig, land, x) {
+longTitle <- function(long.title, type, pmp, orig, dest, land, x, path.data) {
   if (long.title) {
     if (type == "case-pump") {
-      p.nm <- pmp[pmp$id == data.summary$destination, ]$street
+      p.nm <- pmp[pmp$id == dest, ]$street
       if (orig < 1000L | orig > max(land$case)) {
         if (x$location == "nominal") {
           alpha <- paste("Case", orig)
         } else if (x$location %in% c("anchor", "orthogonal")) {
           alpha <- paste0("Anchor ", orig, " (Case ", x$orig, ")")
         }
-        omega <- paste(p.nm, "Pump", paste0("(#", data.summary$destination,
+        omega <- paste(p.nm, "Pump", paste0("(#", dest,
           ")"))
       } else if (orig >= 1000L & orig <= max(land$case)) {
         c.nm <- land[land$case == orig, ]$name
         alpha <- paste(c.nm, paste0("(#", orig, ")"))
         omega <- paste(p.nm, "Pump",
-          paste0("(#", data.summary$destination, ")"))
+          paste0("(#", dest, ")"))
       }
     } else if (type == "cases") {
-      if (orig >= 1000L & data.summary$destination >= 1000L) {
-        c.orig.nm <- land[land$case == orig, ]$name
-        c.dest.nm <- land[land$case == data.summary$destination, ]$name
-        alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
-        omega <- paste(c.dest.nm, paste0("(#", data.summary$destination, ")"))
-      } else if (orig < 1000L & data.summary$destination >= 1000L) {
-        c.dest.nm <- land[land$case == data.summary$destination, ]$name
-        alpha <- paste("Case", orig)
-        omega <- paste(c.dest.nm, paste0("(#", data.summary$destination, ")"))
-      } else if (orig >= 1000L & data.summary$destination < 1000L) {
-        c.orig.nm <- land[land$case == orig, ]$name
-        alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
-        omega <- paste("to Case", data.summary$destination)
-      } else {
-        alpha <- paste("Case", orig)
-        omega <- paste("Case", data.summary$destination)
+      if (nrow(x$data.summary) == 1) {
+        if (orig < 1000L & dest < 1000L) {
+          alpha <- paste("Case", orig)
+          omega <- paste("Case", dest)
+        } else if (orig < 1000L & (dest >= 1000L & dest < 2000L)) {
+          c.dest.nm <- land[land$case == dest, ]$name
+          alpha <- paste("Case", orig)
+          omega <- paste(c.dest.nm, paste0("(#", dest, ")"))
+        } else if ((orig >= 1000L & orig < 2000L) & dest < 1000L) {
+          c.orig.nm <- land[land$case == orig, ]$name
+          alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
+          omega <- paste("to Case", dest)
+        } else if ((orig >= 1000L & orig < 2000L) &
+                   (dest >= 1000L & dest < 2000L)) {
+          c.orig.nm <- land[land$case == orig, ]$name
+          c.dest.nm <- land[land$case == dest, ]$name
+          alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
+          omega <- paste(c.dest.nm, paste0("(#", dest, ")"))
+        } else if (orig > 2000L & dest > 2000L){
+          alpha <- paste("Case", orig)
+          omega <- paste("Case", dest)
+        } else if (orig > 2000L & dest >= 1000L) {
+          c.dest.nm <- land[land$case == dest, ]$name
+          alpha <- paste("Case", orig)
+          omega <- paste(c.dest.nm, paste0("(#", dest, ")"))
+        } else if (orig >= 1000L & dest > 2000L) {
+          c.orig.nm <- land[land$case == orig, ]$name
+          alpha <- paste(c.orig.nm, paste0("(#", orig, ")"))
+          omega <- paste("to Case", dest)
+        }
       }
     } else if (type == "pumps") {
-      orig.nm <- pmp[pmp$id == data.summary$origin, ]$street
-      dest.nm <- pmp[pmp$id == data.summary$destination, ]$street
-      alpha <- paste(orig.nm, paste0("(p", data.summary$origin, ")"))
-      omega <- paste(dest.nm, paste0("(p", data.summary$destination, ")"))
+      orig.nm <- pmp[pmp$id == orig, ]$street
+      dest.nm <- pmp[pmp$id == dest, ]$street
+      alpha <- paste(orig.nm, paste0("(p", orig, ")"))
+      omega <- paste(dest.nm, paste0("(p", dest, ")"))
     }
-    title(main = paste(alpha, "to", omega))
+
+    if (nrow(x$data.summary) == 1) {
+      title(main = paste(alpha, "to", omega))
+    } else if (nrow(x$data.summary) > 1) {
+      if (length(orig) == 1 & length(dest) > 1) {
+        dest.data <- path.data[nrow(path.data), names(path.data) != "id"]
+        dest.node <- paste0(dest.data$x, "_&_", dest.data$y)
+        title(main = paste("Case", orig, "to Node", dest.node))
+      } else if (length(orig) > 1 & length(dest) == 1) {
+        orig.data <- path.data[1, names(path.data) != "id"]
+        orig.node <- paste0(orig.data$x, "_&_", orig.data$y)
+        title(main = paste("Node", orig.node, "to Case", dest))
+      } else if (length(orig) > 1 & length(dest) > 1) {
+        orig.data <- path.data[1, names(path.data) != "id"]
+        orig.node <- paste0(orig.data$x, "_&_", orig.data$y)
+        dest.data <- path.data[nrow(path.data), names(path.data) != "id"]
+        dest.node <- paste0(dest.data$x, "_&_", dest.data$y)
+        title(main = paste("Node", orig.node, "to Node", dest.node))
+      }
+    }
   } else {
     if (type == "case-pump") {
-      title(main = paste("Case", orig, "to Pump", data.summary$destination))
+      title(main = paste("Case", orig, "to Pump", dest))
     } else if (type == "cases") {
-      title(main = paste("Case", orig, "to Case", data.summary$destination))
+      title(main = paste("Case", orig, "to Case", dest))
     } else if (type == "pumps") {
-      title(main = paste("Pump", orig, "to Pump", data.summary$destination))
+      title(main = paste("Pump", orig, "to Pump", dest))
     }
   }
 }
