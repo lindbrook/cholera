@@ -86,11 +86,15 @@ longTitle <- function(long.title, type, pmp, orig, dest, land, x, path.data) {
 }
 
 mapDataRange <- function(path.data, land, data.summary, vars, ew, ns) {
-  if (any(data.summary$origin >= 1000L &
-          data.summary$origin <= max(land$case))) {
-    land.orig <- land[land$case %in% data.summary$origin, ]
+  orig <- data.summary$origin
+  orig.nm <- data.summary$origin.nm
+  dest <- data.summary$destination
+  dest.nm <- data.summary$destination.nm
+  
+  if (any(orig >= 1000L & orig < 2000L)) {
+    land.orig <- land[land$case %in% orig, ]
     if (grepl("Square", land.orig$name)) {
-      sq.nm <- unlist(strsplit(data.summary$origin.nm, "-"))[1]
+      sq.nm <- unlist(strsplit(orig.nm, "-"))[1]
       sel <- grepl(sq.nm, cholera::landmarks$name)
       label.orig <- cholera::landmarks[sel, vars]
     } else {
@@ -99,11 +103,10 @@ mapDataRange <- function(path.data, land, data.summary, vars, ew, ns) {
     }
   }
 
-  if (any(data.summary$destination >= 1000L &
-          data.summary$destination <= max(land$case))) {
-    land.dest <- land[land$case %in% data.summary$destination, ]
+  if (any(dest >= 1000L & dest < 2000L)) {
+    land.dest <- land[land$case %in% dest, ]
     if (grepl("Square", land.dest$name)) {
-      sq.nm <- unlist(strsplit(data.summary$destination.nm, "-"))[1]
+      sq.nm <- unlist(strsplit(dest.nm, "-"))[1]
       sel <- grepl(sq.nm, cholera::landmarks$name)
       label.dest <- cholera::landmarks[sel, vars]
     } else {
@@ -113,14 +116,35 @@ mapDataRange <- function(path.data, land, data.summary, vars, ew, ns) {
   }
 
   if (exists("label.orig") & exists("label.dest")) {
-    rbind(path.data[, vars], label.orig, label.dest)
+    map.range <- rbind(path.data[, vars], label.orig, label.dest)
   } else if (exists("label.orig") & !exists("label.dest")) {
-    rbind(path.data[, vars], label.orig)
+    map.range <- rbind(path.data[, vars], label.orig)
   } else if (!exists("label.orig") & exists("label.dest")) {
-    rbind(path.data[, vars], label.dest)
+    map.range <- rbind(path.data[, vars], label.dest)
   } else {
-    path.data[, vars]
+    map.range <- path.data[, vars]
   }
+  
+  if (any(orig > 2000L | dest > 2000L)) {
+    if (any(orig > 2000L)) {
+      exp.data.orig <- cholera::regular.cases[orig[orig > 2000L] - 2000L, ]
+    }
+
+    if (any(dest > 2000L)) {
+      exp.data.dest <- cholera::regular.cases[dest[dest > 2000L] - 2000L, ]
+    }
+
+    if (exists("exp.data.orig") & exists("exp.data.dest")) {
+      exp.data <- rbind(exp.data.orig, exp.data.dest)
+    } else if (exists("exp.data.orig") & !exists("exp.data.dest")) {
+      exp.data <- exp.data.orig
+    } else if (!exists("exp.data.orig") & exists("exp.data.dest")) {
+      exp.data <- exp.data.dest
+    }
+
+    map.range <- rbind(path.data[, vars], exp.data)
+  }
+  map.range
 }
 
 validateCase <- function(x, case.set = "observed") {
