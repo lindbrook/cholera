@@ -1,3 +1,8 @@
+# cholera 0.9.1.9130
+
+- add new mapDataRange() prototype.
+
+
 # cholera 0.9.1.9129
 
 - add new longTitle() prototype.
