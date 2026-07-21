@@ -141,7 +141,7 @@ mapDataRange <- function(path.data, land, data.summary, vars, ew, ns) {
       exp.data <- exp.data.dest
     }
 
-    map.range <- rbind(path.data[, vars], exp.data)
+    map.range <- rbind(map.range, exp.data)
   }
   map.range
 }
