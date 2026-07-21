@@ -129,11 +129,10 @@ mapDataRange <- function(path.data, land, data.summary, vars, ew, ns) {
     if (any(orig > 2000L)) {
       exp.data.orig <- cholera::regular.cases[orig[orig > 2000L] - 2000L, ]
     }
-
     if (any(dest > 2000L)) {
       exp.data.dest <- cholera::regular.cases[dest[dest > 2000L] - 2000L, ]
     }
-
+    
     if (exists("exp.data.orig") & exists("exp.data.dest")) {
       exp.data <- rbind(exp.data.orig, exp.data.dest)
     } else if (exists("exp.data.orig") & !exists("exp.data.dest")) {
@@ -142,7 +141,7 @@ mapDataRange <- function(path.data, land, data.summary, vars, ew, ns) {
       exp.data <- exp.data.dest
     }
 
-    map.range <- rbind(path.data[, vars], exp.data)
+    map.range <- rbind(map.range, exp.data)
   }
   map.range
 }

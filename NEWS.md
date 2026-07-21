@@ -1,3 +1,8 @@
+# cholera 0.9.1.9131
+
+- fix mapDataRange() computation.
+
+
 # cholera 0.9.1.9130
 
 - add new mapDataRange() prototype.
