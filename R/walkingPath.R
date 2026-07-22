@@ -1057,5 +1057,6 @@ orgnDstn <- function(dat, case.set = "observed") {
   out[sel, "name"] <- lndmrks[lndmrks$case %in% land, "name"]
   
   if (nrow(out) > 1) out <- out[order(out$id), ]
+  row.names(out) <- NULL
   out
 }
