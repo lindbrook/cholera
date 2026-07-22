@@ -740,13 +740,55 @@ casePump <- function(orgn, orgn.nm, dstn, dstn.nm, destination, network,
        dstn.nm = dstn.nm[dstn == nearest.dstn], p = p[[1]])
 }
 
-caseCase <- function(origin, destination, network, orgn.dstn, weighted) {
+caseCase <- function(origin, destination, case.set, network, orgn.dstn,
+  weighted, cores) {
+  
   g <- network$g
   edges <- network$edges
   nodes <- network$nodes
-  
+
   orgn <- orgn.dstn$orgn
   dstn <- orgn.dstn$dstn
+
+  if (case.set == "observed") {
+    if (!all(orgn$id %in% unique(cholera::anchor.case$anchor))) {
+      if (all(is.na(orgn$name))) {
+        if (any(!orgn$id %in% unique(cholera::anchor.case$anchor))) {
+          sel <- cholera::anchor.case$case %in% orgn$id
+          anchr <- cholera::anchor.case[sel, "anchor"]
+          orgn$id <- anchr
+          orgn$id.nm <- as.character(anchr)
+        } else if (all(orgn$id %in% unique(cholera::anchor.case$anchor))) {
+          case.sel <- orgn$id %in% unique(cholera::anchor.case$case)
+          orgn <- orgn[case.sel, ]  
+        }
+      } else {
+        orgn.land <- orgn[!is.na(orgn$name), ]
+        orgn.tmp <- orgn[is.na(orgn$name), ]
+        anchr.sel <- orgn.tmp$id %in% unique(cholera::anchor.case$anchor)
+        orgn <- rbind(orgn.tmp[anchr.sel, ], orgn.land, make.row.names = FALSE)
+      }
+    }
+    
+    if (!all(dstn$id %in% unique(cholera::anchor.case$anchor))) {
+      if (all(is.na(dstn$name))) {
+        if (any(!dstn$id %in% unique(cholera::anchor.case$anchor))) {
+          sel <- cholera::anchor.case$case %in% dstn$id
+          anchr <- cholera::anchor.case[sel, "anchor"]
+          dstn$id <- anchr
+          dstn$id.nm <- as.character(anchr)
+        } else if (all(dstn$id %in% unique(cholera::anchor.case$anchor))) {
+          case.sel <- dstn$id %in% unique(cholera::anchor.case$case)
+          dstn <- dstn[case.sel, ]  
+        }
+      } else {
+        dstn.land <- dstn[!is.na(dstn$name), ]
+        dstn.tmp <- dstn[is.na(dstn$name), ]
+        anchr.sel <- dstn.tmp$id %in% unique(cholera::anchor.case$anchor)
+        dstn <- rbind(dstn.tmp[anchr.sel, ], dstn.land, make.row.names = FALSE)
+      }
+    }
+  }
 
   ## St James Workhouse: identical single origin and destination stop()
 
@@ -832,11 +874,6 @@ caseCase <- function(origin, destination, network, orgn.dstn, weighted) {
     }
   }
 
-  # default St James Workhouse to case ID
-
-  if (all(c(369, 1019) %in% orgn$id)) orgn <- orgn[orgn$id != 1019, ]
-  if (all(c(369, 1019) %in% dstn$id)) dstn <- dstn[dstn$id != 1019, ]
-
   ## filter out origin-destination intersection/overlap ##
 
   if (length(intersect(orgn$id, dstn$id)) != 0) {
@@ -846,13 +883,75 @@ caseCase <- function(origin, destination, network, orgn.dstn, weighted) {
       orgn <- orgn[orgn$id %in% setdiff(orgn$id, dstn$id), ]
     }
   }
+  
+  ## change orientation to node ##
+  
+  ego.nd <- nodes[nodes$case %in% orgn$id | nodes$land %in% orgn$id, "node"]
+  sel <- nodes$node %in% ego.nd & (nodes$case != 0 | nodes$land != 0)
+  ego.data <- nodes[sel, ]
+  
+  if (369 %in% ego.data$case & 1019 %in% ego.data$land) {
+    if (orgn$id == 369) ego.data <- ego.data[ego.data$case == orgn$id, ]
+    else if (orgn$id == 1019) ego.data <- ego.data[ego.data$land == orgn$id, ]
+  }
+  
+  if (case.set == "observed") {
+    ego.node <- ego.data$node
+  } else if (case.set == "expected") {
+    if (nrow(ego.data) > 1) {
+      ego.node.data <- multipleCaseNode(ego.data)
 
-  sel <- nodes$case %in% orgn$id | nodes$land %in% orgn$id
-  ego.node <- nodes[sel, ]$node
+      ego.node.data <- lapply(unique(ego.data$node), function(n) {
+        ego.data[ego.data$node %in% n, "case"] +
+        ego.data[ego.data$node %in% n, "land"]
+      })
 
-  sel <- nodes$case %in% dstn$id | nodes$land %in% dstn$id
-  alter.node <- nodes[sel, ]$node
+      names(ego.node.data) <- unique(ego.data$node)
+      ego.node <- names(ego.node.data)
 
+      sel <- !ego.data$case %in% orgn$id & ego.data$case != 0
+      ego.node.other.case <- ego.data[sel, "case"]
+
+      sel <- !ego.data$land %in% orgn$id & ego.data$land != 0
+      ego.node.other.land <- ego.data[sel, "land"]
+
+    } else {
+      ego.node <- ego.data$node
+    }
+  }
+  
+  ego.node <- ego.data$node
+  
+  alter.nd <- nodes[nodes$case %in% dstn$id | nodes$land %in% dstn$id, "node"]
+  
+  if (is.null(destination)) {
+    sel <- nodes$node %in% alter.nd & nodes$case != 0
+  } else {
+    sel <- nodes$node %in% alter.nd & (nodes$case != 0 | nodes$land != 0)
+  }
+  
+  alter.data <- nodes[sel, ]
+  
+  if (369 %in% alter.data$case & 1019 %in% alter.data$land) {
+    if (dstn$id == 369) {
+      alter.data <- alter.data[alter.data$case == dstn$id, ]
+    } else if (dstn$id == 1019) {
+      alter.data <- alter.data[alter.data$land == dstn$id, ]
+    }
+  }
+
+  if (case.set == "observed") {
+    alter.node <- alter.data$node
+  } else if (case.set == "expected") {
+    alter.node.data <- parallel::mclapply(unique(alter.data$node), function(n) {
+      alter.data[alter.data$node %in% n, "case"] + 
+      alter.data[alter.data$node %in% n, "land"]
+    }, mc.cores = cores)
+    
+    names(alter.node.data) <- unique(alter.data$node)
+    alter.node <- names(alter.node.data)
+  }
+  
   if (length(ego.node) == 1) {
     if (weighted) {
       d <- igraph::distances(graph = g, v = ego.node, to = alter.node,
@@ -866,9 +965,11 @@ caseCase <- function(origin, destination, network, orgn.dstn, weighted) {
     } else if (length(d) > 1) {
       nearest.node <- dimnames(d)[[2]][which.min(d)]
     }
-
-    sel <- (nodes$case != 0 | nodes$land != 0) & nodes$node == nearest.node
-    alter <- dstn[dstn$id == (nodes[sel, ]$case + nodes[sel, ]$land), ]
+    
+    sel <- nodes$node == nearest.node &
+           (nodes$case %in% dstn$id | nodes$land %in% dstn$id)
+    alter <- dstn[dstn$id %in% (nodes[sel, ]$case + nodes[sel, ]$land), ]
+    
     alter.nm <- ifelse(!is.na(alter$name), alter$name, alter$id.nm)
 
     ego <- orgn
@@ -894,18 +995,24 @@ caseCase <- function(origin, destination, network, orgn.dstn, weighted) {
     d <- min(ego.dist)
     ego.id <- which.min(ego.dist)
     
-    ego.alter <- d.multi.ego[[ego.id]]
-    alter.id <- which.min(ego.alter)
+    ego.alters <- d.multi.ego[[ego.id]]
+    alter.id <- which.min(ego.alters)
     
-    nr.ego.node <- dimnames(ego.alter)[[1]]
-    nr.alter.node <- dimnames(ego.alter)[[2]][alter.id]
+    nr.ego.node <- dimnames(ego.alters)[[1]]
+    nr.alter.node <- dimnames(ego.alters)[[2]][alter.id]
     
     ego <- orgn[ego.id, ]
     ego.nm <- ifelse(!is.na(ego$name), ego$name, ego$id.nm)
      
-    alter <- dstn[alter.id, ]
+    if (case.set == "observed") {
+      alter <- dstn[alter.id, ]
+    } else if (case.set == "expected") {
+      sel.case <- alter.data[alter.data$node == nr.alter.node, "case"]
+      alter <- dstn[dstn$id %in% sel.case, ]
+    }
+    
     alter.nm <- ifelse(!is.na(alter$name), alter$name, alter$id.nm)
-     
+    
     if (weighted) {
       p <- igraph::shortest_paths(graph = g, from = nr.ego.node,
         to = nr.alter.node, weights = edges$d)$vpath
@@ -1057,5 +1164,18 @@ orgnDstn <- function(dat, case.set = "observed") {
   out[sel, "name"] <- lndmrks[lndmrks$case %in% land, "name"]
   
   if (nrow(out) > 1) out <- out[order(out$id), ]
+  row.names(out) <- NULL
   out
+}
+
+multipleCaseNode <- function(x) {
+  if (nrow(x) > 1) {
+    duplicate.node <- unique(x$node[duplicated(x$node)])
+    duplicate.node.cases <- lapply(duplicate.node, function(n) {
+      x[x$node %in% n, "case"] + x[x$node %in% n, "land"]
+    })
+    stats::setNames(duplicate.node.cases, duplicate.node)  
+  } else {
+    stats::setNames(list(x$case), x$node)
+  }  
 }

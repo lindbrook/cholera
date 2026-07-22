@@ -1,3 +1,8 @@
+# cholera 0.9.1.9132
+
+- add new caseCase() prototype.
+
+
 # cholera 0.9.1.9131
 
 - fix mapDataRange() computation.
