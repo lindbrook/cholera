@@ -63,6 +63,12 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
 
     orgn.dstn <- list(orgn = orgnDstn(orgn, case.set = case.set),
                       dstn = orgnDstn(dstn, case.set = case.set))
+    
+    landmarks.test <- case.set == "expected" &
+                      all(orgn >= 1000L & orgn < 2000L) &
+                      all(dstn >= 1000L & dstn < 2000L)
+    
+    if (landmarks.test) case.set <- "observed"
 
   } else if (type == "pumps") {
     origin.chk <- validatePump(origin, pmp, vestry)
@@ -87,7 +93,8 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     path.data <- casePump(orgn, orgn.nm, dstn, dstn.nm, destination, network,
       vestry, weighted)
   } else if (type == "cases") {
-    path.data <- caseCase(origin, destination, network, orgn.dstn, weighted)
+    path.data <- caseCase(origin, destination, case.set, network, orgn.dstn,
+      weighted, cores)
   } else if (type == "pumps") {
     path.data <- pumpPump(orgn, orgn.nm, origin, dstn, dstn.nm, destination,
       network, vestry, weighted)

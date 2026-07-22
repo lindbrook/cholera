@@ -1,3 +1,8 @@
+# cholera 0.9.1.9134
+
+- amend walkingPath() for caseCase() prototype.
+
+
 # cholera 0.9.1.9133
 
 - amend plot.walking_path() for caseCase() prototype.
