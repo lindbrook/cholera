@@ -29,6 +29,10 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('type must be "case-pump", "cases" or "pumps".', call. = FALSE)
   }
 
+  if (!case.set %in% c("observed", "expected")) {
+    stop('case.set must be "observed" or "expected".', call. = FALSE)
+  }
+
   if (vestry) {
     pmp <- cholera::pumps.vestry
   } else {
