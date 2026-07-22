@@ -1060,3 +1060,15 @@ orgnDstn <- function(dat, case.set = "observed") {
   row.names(out) <- NULL
   out
 }
+
+multipleCaseNode <- function(x) {
+  if (nrow(x) > 1) {
+    duplicate.node <- unique(x$node[duplicated(x$node)])
+    duplicate.node.cases <- lapply(duplicate.node, function(n) {
+      x[x$node %in% n, "case"] + x[x$node %in% n, "land"]
+    })
+    stats::setNames(duplicate.node.cases, duplicate.node)  
+  } else {
+    stats::setNames(list(x$case), x$node)
+  }  
+}
