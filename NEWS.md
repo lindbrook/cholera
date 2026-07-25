@@ -1,3 +1,9 @@
+# cholera 0.9.1.9136
+
+- amend caseCase() for case.set = "expected".
+- archive multipleCaseNode().
+
+
 # cholera 0.9.1.9135
 
 - fix origin/destination points/labels for case.set = "expected" in 

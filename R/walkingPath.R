@@ -912,39 +912,11 @@ caseCase <- function(origin, destination, case.set, network, orgn.dstn,
   ## change orientation to node ##
   
   ego.nd <- nodes[nodes$case %in% orgn$id | nodes$land %in% orgn$id, "node"]
-  sel <- nodes$node %in% ego.nd & (nodes$case != 0 | nodes$land != 0)
-  ego.data <- nodes[sel, ]
+  ego.data <- nodes[nodes$node %in% ego.nd, ]
   
-  if (369 %in% ego.data$case & 1019 %in% ego.data$land) {
-    if (orgn$id == 369) ego.data <- ego.data[ego.data$case == orgn$id, ]
-    else if (orgn$id == 1019) ego.data <- ego.data[ego.data$land == orgn$id, ]
-  }
-  
-  if (case.set == "observed") {
-    ego.node <- ego.data$node
-  } else if (case.set == "expected") {
-    if (nrow(ego.data) > 1) {
-      ego.node.data <- multipleCaseNode(ego.data)
-
-      ego.node.data <- lapply(unique(ego.data$node), function(n) {
-        ego.data[ego.data$node %in% n, "case"] +
-        ego.data[ego.data$node %in% n, "land"]
-      })
-
-      names(ego.node.data) <- unique(ego.data$node)
-      ego.node <- names(ego.node.data)
-
-      sel <- !ego.data$case %in% orgn$id & ego.data$case != 0
-      ego.node.other.case <- ego.data[sel, "case"]
-
-      sel <- !ego.data$land %in% orgn$id & ego.data$land != 0
-      ego.node.other.land <- ego.data[sel, "land"]
-
-    } else {
-      ego.node <- ego.data$node
-    }
-  }
-  
+  sel <- ego.data$case %in% orgn$id | ego.data$land %in% orgn$id
+  same_node.no_ego.data <- ego.data[!sel, ]
+  ego.data <- ego.data[sel, ]
   ego.node <- ego.data$node
   
   alter.nd <- nodes[nodes$case %in% dstn$id | nodes$land %in% dstn$id, "node"]
@@ -957,22 +929,26 @@ caseCase <- function(origin, destination, case.set, network, orgn.dstn,
   
   alter.data <- nodes[sel, ]
   
+  # St James Workhouse fix #
   if (369 %in% alter.data$case & 1019 %in% alter.data$land) {
-    if (dstn$id == 369) {
-      alter.data <- alter.data[alter.data$case == dstn$id, ]
-    } else if (dstn$id == 1019) {
-      alter.data <- alter.data[alter.data$land == dstn$id, ]
+    if (dstn$id %in% 369) {
+      alter.data <- alter.data[alter.data$land != 1019, ]
+    } else if (dstn$id %in% 1019) {
+      alter.data <- alter.data[alter.data$case != 369, ]
     }
   }
-
+  
+  # remove alter cases with same node as origin cases #
+  alter.data <- alter.data[!alter.data$node %in% ego.data$node, ]
+  
   if (case.set == "observed") {
     alter.node <- alter.data$node
   } else if (case.set == "expected") {
     alter.node.data <- parallel::mclapply(unique(alter.data$node), function(n) {
-      alter.data[alter.data$node %in% n, "case"] + 
+      alter.data[alter.data$node %in% n, "case"] +
       alter.data[alter.data$node %in% n, "land"]
     }, mc.cores = cores)
-    
+
     names(alter.node.data) <- unique(alter.data$node)
     alter.node <- names(alter.node.data)
   }
@@ -1191,16 +1167,4 @@ orgnDstn <- function(dat, case.set = "observed") {
   if (nrow(out) > 1) out <- out[order(out$id), ]
   row.names(out) <- NULL
   out
-}
-
-multipleCaseNode <- function(x) {
-  if (nrow(x) > 1) {
-    duplicate.node <- unique(x$node[duplicated(x$node)])
-    duplicate.node.cases <- lapply(duplicate.node, function(n) {
-      x[x$node %in% n, "case"] + x[x$node %in% n, "land"]
-    })
-    stats::setNames(duplicate.node.cases, duplicate.node)  
-  } else {
-    stats::setNames(list(x$case), x$node)
-  }  
 }
