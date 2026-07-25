@@ -318,14 +318,9 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
 
   if (type %in% c("case-pump", "cases")) {
     if (orig < 1000L) {
-      if (x$case.set == "observed") {
-        sel <- fatality$case == orig
-      } else if (x$case == "expected") {
-        sel <- fatality.ortho$case == orig
-      }
+      sel <- fatality$case == orig
       points(fatality[sel, vars], col = "red")
       text(fatality[sel, vars], pos = 1, labels = orig, col = "red")
-
     } else if (orig >= 1000L & orig < 2000L) {
       points(land[land$case == orig, vars], col = "red")
       land.tmp <- land[land$case == orig, ]
@@ -357,10 +352,9 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
         text(label.dat, labels = land.label, col = "red", cex = 0.8)
       }
     } else if (all(orig > 2000L)) {
-      orig.case <- path.data[1, "id"]
-      points(cholera::regular.cases[orig.case, vars], col = "red")
-      text(cholera::regular.cases[orig.case, vars], labels = orig, pos = 1,
-        col = "red", cex = 3/4)
+      points(fatality[orig - 2000L, vars], col = "red")
+      text(fatality[orig - 2000L, vars], cex = 0.8, col = "red", labels = orig, 
+        pos = 1)
     }
 
     if (type == "cases") {
@@ -405,12 +399,9 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
             cex = 0.8)
         }
       } else if (all(dest > 2000L)) {
-        if (length(dest) > 1) {
-          dest.data <- path.data[nrow(path.data), ]
-          node <- paste0(dest.data$x, "_&_", dest.data$y)
-          text(dest.data[, vars], labels = node, pos = 1, col = "red", 
-            cex = 3/4)
-        }
+        points(fatality[dest - 2000L, vars], col = "red")
+        text(fatality[dest - 2000L, vars], cex = 0.8, col = "red",
+          labels = dest, pos = 1)
       }
     }
   }
