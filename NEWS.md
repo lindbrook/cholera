@@ -1,3 +1,9 @@
+# cholera 0.9.1.9135
+
+- fix origin/destination points/labels for case.set = "expected" in 
+  plot.walking_path().
+
+
 # cholera 0.9.1.9134
 
 - amend walkingPath() for caseCase() prototype.
