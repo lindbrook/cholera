@@ -7,18 +7,18 @@
 #' @param latlong Logical.
 #' @param case.set Character. "observed" or "expected".
 #' @param location Character. For cases and pumps. "nominal", "anchor" or "orthogonal".
-#' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param include.landmarks Logical. Include landmarks as cases.
+#' @param unstacked Logical. Use anchor cases.
 #' @importFrom geosphere distGeo
 #' @export
 
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed", location = "nominal",
-  weighted = TRUE, distance.unit = "meter", time.unit = "second",
-  walking.speed = 5, include.landmarks = TRUE) {
+  distance.unit = "meter", time.unit = "second", walking.speed = 5, 
+  include.landmarks = TRUE, unstacked = TRUE) {
 
   if (is.null(origin) & is.null(destination)) {
     stop("You must provide at least one origin or destination.", call. = FALSE)
