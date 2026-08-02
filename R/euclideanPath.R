@@ -110,7 +110,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       latlong, pmp, vestry, case.set, location)
   } else if (type == "cases") {
     path.data <- caseCaseEucl(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
-      latlong, vestry, case.set, location)
+      latlong, vestry, case.set, orgn.dstn, location, unstacked)
   } else if (type == "pumps") {
     path.data <- pumpPumpEucl(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
       latlong, pmp, vestry, location)
@@ -666,37 +666,56 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 }
 
 caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
-  latlong, vestry, case.set, location) {
+  latlong, vestry, case.set, orgn.dstn, location, unstacked) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
 
-  # Origin (egos) #
-  # If applicable, filter cases to anchors (observed) #
+  orgn <- orgn.dstn$orgn
+  dstn <- orgn.dstn$dstn
 
   if (case.set == "observed") {
-    if (all(orgn < 2000L)) {
-      fatal <- orgn[orgn < 1000L]
-      land <- orgn[orgn >= 1000L]
-      land.nm <- orgn.nm[orgn >= 1000L]
-
-      if (any(!fatal %in% cholera::anchor.case$anchor)) {
-        sel <- cholera::anchor.case$case %in% fatal
-        orgn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
-        orgn.nm <- c(paste(orgn), land.nm)
+    # use only anchor cases and exclude stack cases #
+    anchr <- unique(cholera::anchor.case$anchor)
+    
+    if (isTRUE(unstacked)) {
+      if (!all(orgn$id %in% anchr)) {
+         stack.case.id <- orgn[!orgn$id %in% anchr & is.na(orgn$name), "id"]
+         orgn <- orgn[!orgn$id %in% stack.case.id, ]
+      }
+  
+      if (!all(dstn$id %in% anchr)) {
+         stack.case.id <- dstn[!dstn$id %in% anchr & is.na(dstn$name), "id"]
+         dstn <- dstn[!dstn$id %in% stack.case.id, ]
       }
     }
 
-    if (all(dstn < 2000L)) {
-      fatal <- dstn[dstn < 1000L]
-      land <- dstn[dstn >= 1000L]
-      land.nm <- dstn.nm[dstn >= 1000L]
+    # exclude Square exits #
 
-      if (any(!fatal %in% cholera::anchor.case$anchor)) {
-        sel <- cholera::anchor.case$case %in% fatal
-        dstn <- c(unique(cholera::anchor.case[sel, "anchor"]), land)
-        dstn.nm <- c(paste(dstn), land.nm)
-      }  
+    if (all(orgn$id < 2000L)) {
+      fatal <- orgn$id[orgn$id < 1000L]
+
+      if (is.null(destination)) {
+        sel <- orgn$id >= 1000L & orgn$id < 1002L | orgn$id > 1011L
+      } else {
+        sel <- orgn$id >= 1000L
+      }
+      
+      land <- orgn$id[sel]
+      orgn <- orgn[orgn$id %in% c(fatal, land), ]
+    }
+
+    if (all(dstn$id < 2000L)) {
+      fatal <- dstn$id[dstn$id < 1000L]
+      
+      if (is.null(destination)) {
+        sel <- dstn$id >= 1000L & dstn$id < 1002L | dstn$id > 1011L
+      } else {
+        sel <- dstn$id >= 1000L
+      }
+
+      land <- dstn$id[sel]
+      dstn <- dstn[dstn$id %in% c(fatal, land), ]
     }
   }
 
@@ -705,56 +724,43 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
   st.james.msg <- c("Identical origin and destination:", "\n",
     "St James Workhouse is both a landmark and a case site.")
 
-  if (length(orgn) == 1 & length(dstn) == 1) {
-    test1 <- as.numeric(orgn) == 369 & as.numeric(dstn) == 369
-    test2 <- as.numeric(orgn) == 1019 & as.numeric(dstn) == 1019     
-    test3 <- as.numeric(orgn) == 369 & as.numeric(dstn) == 1019
-    test4 <- as.numeric(orgn) == 1019 & as.numeric(dstn) == 369
-    test5 <- as.numeric(orgn) == 369 & dstn == "St James Workhouse"
-    test6 <- orgn == "St James Workhouse" & as.numeric(dstn) == 369
-    test7 <- as.numeric(orgn) == 1019 & dstn == "St James Workhouse"
-    test8 <- orgn == "St James Workhouse" & as.numeric(dstn) == 1019
-    st.james <- c(test1, test2, test3, test4, test5, test6, test7, test8)
+  if (length(orgn$id) == 1 & length(dstn$id) == 1) {
+    test1 <- orgn$id == 369  & dstn$id == 369
+    test2 <- orgn$id == 1019 & dstn$id == 1019     
+    test3 <- orgn$id == 369  & dstn$id == 1019
+    test4 <- orgn$id == 1019 & dstn$id == 369
+    st.james <- c(test1, test2, test3, test4)
     if (any(st.james)) stop(st.james.msg, call. = FALSE)
   }
   
-  if (is.null(destination)) {
-    if (1019 %in% orgn) {
-      dstn <- dstn[dstn != 369]
-      dstn.nm <- dstn.nm[dstn.nm != "369"]
-    } else { # default to case 369 and drop landmark 1019
-      dstn <- dstn[dstn != 1019]
-      dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
-    }
-  } else {
-    if (any(c(369, 1019) %in% orgn)) {
-      if (369 %in% orgn & 1019 %in% dstn) {
-        dstn <- dstn[dstn != 1019]
-        dstn.nm <- dstn.nm[dstn.nm != "1019" & dstn.nm != "St James Workhouse"]
-      }
-      
-      if (1019 %in% orgn & 369 %in% dstn) {
-        dstn <- dstn[dstn != 369]
-        dstn.nm <- dstn.nm[dstn.nm != "369"]
-      }
+  ## St James Workhouse fix w/ observed cases ##
+
+  if (case.set == "observed") {  
+    stack.cases <- lapply(anchr, function(x) {
+      sel <- cholera::anchor.case$anchor == x
+      cases <- cholera::anchor.case[sel, "case"]
+      cases[cases != x]
+    })
+    
+    names(stack.cases) <- anchr
+
+    workhouse <- c(369L, 1019L)
+
+    if (any(workhouse %in% orgn$id)) {
+      dstn <- dstn[!dstn$id %in% c(workhouse, stack.cases[["369"]]), ]
+      if (all(workhouse %in% orgn$id)) orgn <- orgn[orgn$id != 1019L, ]
     }
   }
-
+  
   ## Filter out origin-destination intersection/overlap ##
 
-  if (length(intersect(orgn, dstn)) != 0) {
+  if (length(intersect(orgn$id, dstn$id)) != 0) {
     if (!is.null(origin) & is.null(destination) | all(destination < 0)) {
-      dstn <- setdiff(dstn, orgn)
-      dstn.nm <- setdiff(dstn.nm, orgn.nm)
+      dstn <- dstn[dstn$id %in% setdiff(dstn$id, orgn$id), ]
     } else if (is.null(origin) & !is.null(destination)) {
-      orgn <- setdiff(orgn, dstn)
-      orgn.nm <- setdiff(orgn.nm, dstn.nm)
+      orgn <- orgn[orgn$id %in% setdiff(orgn$id, dstn$id), ]
     }
   }
-
-  vars.lndmrk <- c("case", vars, "name")
-  lndmrk <- rbind(cholera::landmark.squares[, vars.lndmrk],
-                  cholera::landmarks[, vars.lndmrk])
 
   if (case.set == "observed") {
     if (location == "orthogonal") {
@@ -782,34 +788,59 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
     }
   }
   
-  fatal <- fatality$case %in% orgn
-  land <- lndmrk$case %in% orgn
+  vars.lndmrk <- c("case", vars, "name")
+  lndmrk <- rbind(cholera::landmark.squares[, vars.lndmrk],
+                  cholera::landmarks[, vars.lndmrk])
 
-  if (any(fatal) & any(land)) {
-    a <- fatality[fatal, vars]
-    b <- lndmrk[land, vars]
-    ego.coords <- rbind(a, b)
-  } else if (all(!fatal) & any(land)) {
-    ego.coords <- lndmrk[land, vars]
-  } else if (any(fatal) & all(!land)) {
-    ego.coords <- fatality[fatal, vars]
+  if (!is.null(origin) & !is.null(destination)) {
+    # Origin (egos) #
+    fatal.sel <- fatality$case %in% orgn$id
+    land.sel <- lndmrk$case %in% orgn$id
+
+    if (any(fatal.sel) & any(land.sel)) {
+      a <- fatality[fatal.sel, vars]
+      b <- lndmrk[land.sel, vars]
+      ego.coords <- rbind(a, b)
+    } else if (all(!fatal.sel) & any(land.sel)) {
+      ego.coords <- lndmrk[land.sel, vars]
+    } else if (any(fatal.sel) & all(!land.sel)) {
+      ego.coords <- fatality[fatal.sel, vars]
+    }
+    
+    # Destination (alters) #
+    fatal.sel <- fatality$case %in% dstn$id
+    land.sel <- lndmrk$case %in% dstn$id
+
+    if (any(fatal.sel) & any(land.sel)) {
+      a <- fatality[fatal.sel, vars]
+      b <- lndmrk[land.sel, vars]
+      alter.coords <- rbind(a, b)
+    } else if (all(!fatal.sel) & any(land.sel)) {
+      alter.coords <- lndmrk[land.sel, vars]
+    } else if (any(fatal.sel) & all(!land.sel)) {
+      alter.coords <- fatality[fatal.sel, vars]
+    }
+
+  } else if (is.null(origin) & !is.null(destination)) {
+    sel <- orgn$id %in% cholera::landmark.squares$case |
+           orgn$id %in% cholera::landmarks$case
+    orgn <- orgn[!sel, ]
+    ego.coords <- fatality[fatality$case %in% orgn$id, vars]
+    
+    alter.coords <- rbind(fatality[fatality$case %in% dstn$id, vars],
+                          lndmrk[lndmrk$case %in% dstn$id, vars])
+
+  
+  } else if (!is.null(origin) & is.null(destination)) {
+    ego.coords <- rbind(fatality[fatality$case %in% orgn$id, vars],
+                        lndmrk[lndmrk$case %in% orgn$id, vars])
+
+    sel <- dstn$id %in% cholera::landmark.squares$case |
+           dstn$id %in% cholera::landmarks$case
+    dstn <- dstn[!sel, ]
+    alter.coords <- fatality[fatality$case %in% dstn$id, vars]
   }
-
-  # Destination (alters) #
-
-  fatal <- fatality$case %in% dstn
-  land <- lndmrk$case %in% dstn
-
-  if (any(fatal) & any(land)) {
-    a <- fatality[fatal, vars]
-    b <- lndmrk[land, vars]
-    alter.coords <- rbind(a, b)
-  } else if (all(!fatal) & any(land)) {
-    alter.coords <- lndmrk[land, vars]
-  } else if (any(fatal) & all(!land)) {
-    alter.coords <- fatality[fatal, vars]
-  }
-
+  
   if (latlong) {
     if (nrow(ego.coords) == 1) {
       d <- geosphere::distGeo(ego.coords, alter.coords) / unitMeter(1)
@@ -838,7 +869,7 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
     }
   }
 
-  nearest.dest <- dstn[which.min(d)]
+  nearest.dest <- dstn[which.min(d), "id"]
   nearest.d <- min(d)
 
   if (nrow(ego.coords) == 1) {
@@ -849,10 +880,11 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
 
   alter <- alter.coords[which.min(d), ]
 
-  data.summary <- data.frame(orgn = orgn, orgn.nm = orgn.nm,
+  data.summary <- data.frame(orgn = orgn$id,
+    orgn.nm = ifelse(is.na(orgn$name), orgn$id.nm, orgn$name),
     dstn = nearest.dest, dstn.nm = dstn.nm[which.min(d)], d = nearest.d)
 
-  list(ego = ego, alter = alter, data = data.summary)
+  list(ego = ego, alter = alter, data.summary = data.summary)
 }
 
 pumpPumpEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
