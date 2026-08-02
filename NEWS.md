@@ -1,3 +1,8 @@
+# cholera 0.9.1.9137
+
+- remove 'weighted' and add 'unstacked' argument in euclideanPath().
+
+
 # cholera 0.9.1.9136
 
 - amend caseCase() for case.set = "expected".
