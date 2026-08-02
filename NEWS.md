@@ -1,3 +1,8 @@
+# cholera 0.9.1.9140
+
+- amend caseCaseEucl() prototype.
+
+
 # cholera 0.9.1.9139
 
 - amend longTitle() arguments in plot.euclidean_path().
