@@ -1,3 +1,8 @@
+# cholera 0.9.1.9138
+
+- use orgnDstn() and add landmarks.test in euclideanPath().
+
+
 # cholera 0.9.1.9137
 
 - remove 'weighted' and add 'unstacked' argument in euclideanPath().
