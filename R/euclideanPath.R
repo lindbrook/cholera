@@ -86,6 +86,15 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       stop("Identical origin and destination!", call. = FALSE)
     }
 
+    orgn.dstn <- list(orgn = orgnDstn(orgn, case.set = case.set),
+                      dstn = orgnDstn(dstn, case.set = case.set))
+    
+    landmarks.test <- case.set == "expected" &
+                      all(orgn >= 1000L & orgn < 2000L) &
+                      all(dstn >= 1000L & dstn < 2000L)
+
+    if (landmarks.test) case.set <- "observed"
+
   } else if (type == "pumps") {
     origin.chk <- validatePump(origin, pmp, vestry)
     orgn <- origin.chk$out
