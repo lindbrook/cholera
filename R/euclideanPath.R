@@ -481,7 +481,8 @@ plot.euclidean_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
     if (!add) title(sub = paste(d, t, sep = "; "))
   }
 
-  if (!add) longTitle(long.title, type, pmp, data.summary, orig, land, x)
+  if (!add) longTitle(long.title, type, pmp, orig, dest, land, x,
+    rbind(ego.xy, alter.xy))
 }
 
 #' Print method for euclideanPath().

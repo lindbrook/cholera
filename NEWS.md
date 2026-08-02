@@ -1,3 +1,8 @@
+# cholera 0.9.1.9139
+
+- amend longTitle() arguments in plot.euclidean_path().
+
+
 # cholera 0.9.1.9138
 
 - use orgnDstn() and add landmarks.test in euclideanPath().
