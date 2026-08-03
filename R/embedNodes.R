@@ -383,7 +383,14 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
     
     null.df <- data.frame(matrix(0, nrow = nrow(road.nodes), ncol = 3))
     names(null.df) <- c("case", "land", "pump")
-    road.nodes <- cbind(road.nodes[, c("node", "x", "y")], null.df)
+    
+    if (latlong) {
+      rd.coords <- stats::setNames(road.nodes[, c("x", "y")], vars)
+      road.nodes <- data.frame(rd.coords, null.df, node = road.nodes$node)
+    } else {
+      road.nodes <- cbind(road.nodes[, c("node", "x", "y")], null.df)
+    }
+    
     road.nodes$name <- "intersection"
     
     nodes <- rbind(road.nodes, nodes)

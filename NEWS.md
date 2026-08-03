@@ -1,3 +1,8 @@
+# cholera 0.9.1.9141
+
+- amend embedNodes(latlong = TRUE).
+
+
 # cholera 0.9.1.9140
 
 - amend caseCaseEucl() prototype.
