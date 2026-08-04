@@ -564,8 +564,13 @@ milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
       }
     }
   } else {
-    arrow.data <- arrowData(single.post.seg, census, distance.unit, latlong, 
-      milepost.unit, seg.data, vars)
+    if (latlong) {
+      arrow.data <- arrowData(single.post.seg, census, distance.unit, latlong, 
+        milepost.unit, seg.data, vars, origin)
+    } else {
+      arrow.data <- arrowData(single.post.seg, census, distance.unit, latlong,
+        milepost.unit, seg.data, vars)  
+    }
   }
   
   list(seg.data = seg.data, arrow.head = arrow.data)
