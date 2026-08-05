@@ -1,3 +1,8 @@
+# cholera 0.9.1.9143
+
+- amend mapDataRange().
+
+
 # cholera 0.9.1.9142
 
 - amend milePosts(latlong = TRUE).
