@@ -1,3 +1,8 @@
+# cholera 0.9.1.9145
+
+- fix origin data in arrowData(latlong = TRUE) in milePosts().
+
+
 # cholera 0.9.1.9144
 
 - amend 'fatality' and 'fatality.ortho' for case.set == "expected" in 
