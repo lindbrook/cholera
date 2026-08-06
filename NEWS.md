@@ -1,3 +1,9 @@
+# cholera 0.9.1.9144
+
+- amend 'fatality' and 'fatality.ortho' for case.set == "expected" in 
+  plot.walking_path().
+  
+
 # cholera 0.9.1.9143
 
 - amend mapDataRange().
