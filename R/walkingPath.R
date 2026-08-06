@@ -571,7 +571,7 @@ milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
   } else {
     if (latlong) {
       arrow.data <- arrowData(single.post.seg, census, distance.unit, latlong, 
-        milepost.unit, seg.data, vars, origin)
+        milepost.unit, seg.data, vars, x$path[1, ])
     } else {
       arrow.data <- arrowData(single.post.seg, census, distance.unit, latlong,
         milepost.unit, seg.data, vars)  
