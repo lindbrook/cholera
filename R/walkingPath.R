@@ -619,14 +619,15 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
       posts <- census[census$seg %in% s, "post"]
       if (latlong) {
         multi.out <- lapply(posts, function(p) {
-        if (milepost.unit == "distance") {
-          h <- tmp$cumulative.d - p
-        } else if (milepost.unit == "time") {
-          h <- tmp$cumulative.t - p
-        }
-        arrow.point <- quadrantCoordinates(meter.coords, h, theta)
-        arrow.point <- meterLatLong(arrow.point)
-        data.frame(lon = arrow.point$lon, lat = arrow.point$lat, angle = angle)
+          if (milepost.unit == "distance") {
+            h <- tmp$cumulative.d - p
+          } else if (milepost.unit == "time") {
+            h <- tmp$cumulative.t - p
+          }
+          arrow.point <- quadrantCoordinates(meter.coords, h, theta)
+          arrow.point <- meterLatLong(arrow.point)
+          data.frame(lon = arrow.point$lon, lat = arrow.point$lat,
+            angle = angle)
         })
       } else {
         multi.out <- lapply(posts, function(p) {
@@ -795,7 +796,7 @@ caseCase <- function(origin, destination, case.set, network, orgn.dstn,
           orgn$id.nm <- as.character(anchr)
         } else if (all(orgn$id %in% unique(cholera::anchor.case$anchor))) {
           case.sel <- orgn$id %in% unique(cholera::anchor.case$case)
-          orgn <- orgn[case.sel, ]  
+          orgn <- orgn[case.sel, ]
         }
       } else {
         orgn.land <- orgn[!is.na(orgn$name), ]
