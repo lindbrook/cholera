@@ -543,18 +543,18 @@ milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
 
   if (path.length > milepost.interval) {
     if (latlong) {
-      origin <- data.frame(lon = min(cholera::roads$lon),
-                           lat = min(cholera::roads$lat))
+      origin.data <- data.frame(lon = min(cholera::roads$lon),
+                                lat = min(cholera::roads$lat))
       if (any(segment.census > 1)) {
         single.arrow.data <- arrowData(single.post.seg, census, distance.unit,
-          latlong, milepost.unit, seg.data, vars, origin)
+          latlong, milepost.unit, seg.data, vars, origin.data)
         multi.arrow.data <- arrowData(multi.post.seg, census,
-          distance.unit, latlong, milepost.unit, seg.data, vars, origin,
+          distance.unit, latlong, milepost.unit, seg.data, vars, origin.data,
           multi.arrow.seg = TRUE)
         arrow.data <- rbind(single.arrow.data, multi.arrow.data)
       } else {
         arrow.data <- arrowData(single.post.seg, census, distance.unit,
-          latlong, milepost.unit, seg.data, vars, origin)
+          latlong, milepost.unit, seg.data, vars, origin.data)
       }
     } else {
       if (any(segment.census > 1)) {
@@ -582,7 +582,7 @@ milePosts <- function(x, distance.unit, ds, latlong, milepost.unit,
 }
 
 arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
-  seg.data, vars, origin, multi.arrow.seg = FALSE) {
+  seg.data, vars, origin.data, multi.arrow.seg = FALSE) {
   
   out <- lapply(segs, function(s) {
     tmp <- seg.data[seg.data$id == s, ]
@@ -594,8 +594,8 @@ arrowData <- function(segs, census, distance.unit, latlong, milepost.unit,
       idx <- seq_along(data.tmp$lon)
       meter.coords <- do.call(rbind, lapply(idx, function(i) {
         tmp <- data.tmp[i, vars]
-        x.proj <- c(tmp$lon, origin$lat)
-        y.proj <- c(origin$lon, tmp$lat)
+        x.proj <- c(tmp$lon, origin.data$lat)
+        y.proj <- c(origin.data$lon, tmp$lat)
         m.lon <- geosphere::distGeo(y.proj, tmp)
         m.lat <- geosphere::distGeo(x.proj, tmp)
         data.frame(x = m.lon, y = m.lat)

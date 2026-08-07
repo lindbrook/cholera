@@ -1,3 +1,8 @@
+# cholera 0.9.1.9146
+
+- change origin to origin.data in arrowData().
+
+
 # cholera 0.9.1.9145
 
 - fix origin data in arrowData(latlong = TRUE) in milePosts().
