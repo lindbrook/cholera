@@ -1,3 +1,7 @@
+# cholera 0.9.1.9147
+
+- amend longTitle() for case.set = "expected" & latlong = TRUE.
+
 # cholera 0.9.1.9146
 
 - change origin to origin.data in arrowData().
