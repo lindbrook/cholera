@@ -416,19 +416,31 @@ plot.walking_path <- function(x, zoom = TRUE, add = FALSE, long.title = TRUE,
   drawPath(path.data, case.color, latlong)
   
   if (nrow(data.summary) > 1) {
-    node.case <- data.summary$destination - 2000L
-    points(cholera::regular.cases[node.case, ])
-    invisible(lapply(node.case, function(case) {
-      segments(cholera::regular.cases[case, "x"],
-               cholera::regular.cases[case, "y"],
-               path.data[nrow(path.data), "x"],
-               path.data[nrow(path.data), "y"])
-    }))
+    if (latlong) {
+      node.case <- data.summary$destination - 2000L
+      points(cholera::latlong.regular.cases[node.case, ])
+      invisible(lapply(node.case, function(case) {
+        segments(cholera::latlong.regular.cases[case, "lon"],
+                 cholera::latlong.regular.cases[case, "lat"],
+                 path.data[nrow(path.data), "lon"],
+                 path.data[nrow(path.data), "lat"])
+      }))
+    } else {
+      node.case <- data.summary$destination - 2000L
+      points(cholera::regular.cases[node.case, ])
+      invisible(lapply(node.case, function(case) {
+        segments(cholera::regular.cases[case, "x"],
+                 cholera::regular.cases[case, "y"],
+                 path.data[nrow(path.data), "x"],
+                 path.data[nrow(path.data), "y"])
+      }))
+    }
+    
   }
 
   d <- paste(round(path.length, 1), d.unit)
-  t <- paste(round(data.summary$time, 1), paste0(time.unit, "s"), "@",
-    walking.speed, "km/hr")
+  t <- unique(paste(round(data.summary$time, 1), paste0(time.unit, "s"), "@",
+    walking.speed, "km/hr"))
 
   if (is.null(milepost.interval)) {
     if (milepost.unit == "distance") {
