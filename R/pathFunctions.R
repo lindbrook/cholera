@@ -60,17 +60,34 @@ longTitle <- function(long.title, type, pmp, orig, dest, land, x, path.data) {
     } else if (nrow(x$data.summary) > 1) {
       if (length(orig) == 1 & length(dest) > 1) {
         dest.data <- path.data[nrow(path.data), names(path.data) != "id"]
-        dest.node <- paste0(dest.data$x, "_&_", dest.data$y)
+        if (x$latlong) {
+          dest.node <- paste0(dest.data$lon, "_&_", dest.data$lat)
+        } else {
+          dest.node <- paste0(dest.data$x, "_&_", dest.data$y)
+        }
         title(main = paste("Case", orig, "to Node", dest.node))
       } else if (length(orig) > 1 & length(dest) == 1) {
         orig.data <- path.data[1, names(path.data) != "id"]
-        orig.node <- paste0(orig.data$x, "_&_", orig.data$y)
+        if (x$latlong) {
+          orig.node <- paste0(orig.data$lon, "_&_", orig.data$lat)
+        } else {
+          orig.node <- paste0(orig.data$x, "_&_", orig.data$y)
+        }
         title(main = paste("Node", orig.node, "to Case", dest))
       } else if (length(orig) > 1 & length(dest) > 1) {
         orig.data <- path.data[1, names(path.data) != "id"]
-        orig.node <- paste0(orig.data$x, "_&_", orig.data$y)
+        if (x$latlong) {
+          orig.node <- paste0(orig.data$lon, "_&_", orig.data$lat)
+        } else {
+          orig.node <- paste0(orig.data$x, "_&_", orig.data$y)
+        }
         dest.data <- path.data[nrow(path.data), names(path.data) != "id"]
         dest.node <- paste0(dest.data$x, "_&_", dest.data$y)
+        if (x$latlong) {
+          dest.node <- paste0(dest.data$lon, "_&_", dest.data$lat)
+        } else {
+          dest.node <- paste0(dest.data$x, "_&_", dest.data$y)
+        }
         title(main = paste("Node", orig.node, "to Node", dest.node))
       }
     }
