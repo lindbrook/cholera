@@ -1,6 +1,13 @@
+# cholera 0.9.1.9148
+
+- amend plot.walking_path() for multi-case nodes with case.set = "expected" & 
+  latlong = TRUE.
+
+
 # cholera 0.9.1.9147
 
 - amend longTitle() for case.set = "expected" & latlong = TRUE.
+
 
 # cholera 0.9.1.9146
 
