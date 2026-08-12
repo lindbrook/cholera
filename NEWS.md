@@ -1,3 +1,8 @@
+# cholera 0.9.1.9149
+
+- use roxygen2 v.8.1.0.
+
+
 # cholera 0.9.1.9148
 
 - amend plot.walking_path() for multi-case nodes with case.set = "expected" & 

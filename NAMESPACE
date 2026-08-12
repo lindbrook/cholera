@@ -92,23 +92,31 @@ export(voronoiPolygons)
 export(walkingPath)
 import(graphics)
 importFrom(RColorBrewer,brewer.pal)
-importFrom(TSP,TSP)
-importFrom(TSP,solve_TSP)
+importFrom(TSP,
+  TSP,
+  solve_TSP
+)
 importFrom(curl,has_internet)
-importFrom(deldir,deldir)
-importFrom(deldir,tile.list)
-importFrom(deldir,triang.list)
+importFrom(deldir,
+  deldir,
+  tile.list,
+  triang.list
+)
 importFrom(elevatr,get_elev_raster)
 importFrom(geosphere,distGeo)
 importFrom(pracma,cart2pol)
 importFrom(rlang,.data)
 importFrom(shape,Arrowhead)
-importFrom(sp,Polygon)
-importFrom(sp,point.in.polygon)
-importFrom(sp,spsample)
+importFrom(sp,
+  Polygon,
+  point.in.polygon,
+  spsample
+)
 importFrom(tanaka,tanaka)
-importFrom(terra,as.data.frame)
-importFrom(terra,rast)
+importFrom(terra,
+  as.data.frame,
+  rast
+)
 importFrom(threejs,scatterplot3js)
 importFrom(tools,toTitleCase)
 importFrom(viridisLite,plasma)
