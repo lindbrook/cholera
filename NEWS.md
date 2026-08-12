@@ -1,3 +1,8 @@
+# cholera 0.9.1.9150
+
+- rename argument from 'unstacked' to 'anchors.only' in euclideanPath().
+
+
 # cholera 0.9.1.9149
 
 - use roxygen2 v.8.1.0.

@@ -11,14 +11,14 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param include.landmarks Logical. Include landmarks as cases.
-#' @param unstacked Logical. Use anchor cases.
+#' @param anchors.only Logical. Use anchor cases.
 #' @importFrom geosphere distGeo
 #' @export
 
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed", location = "nominal",
   distance.unit = "meter", time.unit = "second", walking.speed = 5, 
-  include.landmarks = TRUE, unstacked = TRUE) {
+  include.landmarks = TRUE, anchors.only = TRUE) {
 
   if (is.null(origin) & is.null(destination)) {
     stop("You must provide at least one origin or destination.", call. = FALSE)
@@ -110,7 +110,7 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
       latlong, pmp, vestry, case.set, location)
   } else if (type == "cases") {
     path.data <- caseCaseEucl(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
-      latlong, vestry, case.set, orgn.dstn, location, unstacked)
+      latlong, vestry, case.set, orgn.dstn, location, anchors.only)
   } else if (type == "pumps") {
     path.data <- pumpPumpEucl(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
       latlong, pmp, vestry, location)
@@ -666,7 +666,7 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
 }
 
 caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
-  latlong, vestry, case.set, orgn.dstn, location, unstacked) {
+  latlong, vestry, case.set, orgn.dstn, location, anchors.only) {
 
   if (latlong) vars <- c("lon", "lat")
   else vars <- c("x", "y")
