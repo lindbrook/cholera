@@ -7,7 +7,7 @@
 euclideanPath(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed",
   location = "nominal", distance.unit = "meter", time.unit = "second",
-  walking.speed = 5, include.landmarks = TRUE, unstacked = TRUE)
+  walking.speed = 5, include.landmarks = TRUE, anchors.only = TRUE)
 }
 \arguments{
 \item{origin}{Numeric. Vector of origin(s) (numeric ID or character name landmark/pump ).}
@@ -32,7 +32,7 @@ euclideanPath(origin = 1, destination = NULL, type = "case-pump",
 
 \item{include.landmarks}{Logical. Include landmarks as cases.}
 
-\item{unstacked}{Logical. Use anchor cases.}
+\item{anchors.only}{Logical. Use anchor cases.}
 }
 \description{
 Compute Euclidean path coordinates from observed case/landmark to nearest/selected pump.
