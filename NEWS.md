@@ -1,3 +1,8 @@
+# cholera 0.9.1.9151
+
+- amend caseCaseEucl() prototype for only anchor cases.
+
+
 # cholera 0.9.1.9150
 
 - rename argument from 'unstacked' to 'anchors.only' in euclideanPath().

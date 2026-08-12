@@ -675,18 +675,37 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
   dstn <- orgn.dstn$dstn
 
   if (case.set == "observed") {
-    # use only anchor cases and exclude stack cases #
     anchr <- unique(cholera::anchor.case$anchor)
     
-    if (isTRUE(unstacked)) {
+    if (isTRUE(anchors.only)) {
       if (!all(orgn$id %in% anchr)) {
-         stack.case.id <- orgn[!orgn$id %in% anchr & is.na(orgn$name), "id"]
-         orgn <- orgn[!orgn$id %in% stack.case.id, ]
+        lnd <- orgn[orgn$id >= 1000L & orgn$id < 2000L, ]
+        orgn <- orgn[!orgn$id %in% lnd$id, ]
+        if (any(orgn$id %in% anchr)) {
+          orgn <- orgn[orgn$id %in% anchr, ]
+        } else if (all(!orgn$id %in% anchr)) {
+          sel <- cholera::anchor.case$case %in% orgn$id
+          obs.anchr <- cholera::anchor.case[sel, "anchor"]
+          orgn$id <- obs.anchr
+          orgn$id.nm <- as.character(obs.anchr)
+          orgn <- unique(orgn)
+        }
+        if (exists("lnd")) orgn <- rbind(orgn, lnd)
       }
-  
+
       if (!all(dstn$id %in% anchr)) {
-         stack.case.id <- dstn[!dstn$id %in% anchr & is.na(dstn$name), "id"]
-         dstn <- dstn[!dstn$id %in% stack.case.id, ]
+        lnd <- dstn[dstn$id >= 1000L & dstn$id < 2000L, ]
+        dstn <- dstn[!dstn$id %in% lnd$id, ]
+        if (any(dstn$id %in% anchr)) {
+          dstn <- dstn[dstn$id %in% anchr, ]
+        } else if (all(!dstn$id %in% anchr)) {
+          sel <- cholera::anchor.case$case %in% dstn$id
+          obs.anchr <- cholera::anchor.case[sel, "anchor"]
+          dstn$id <- obs.anchr
+          dstn$id.nm <- as.character(obs.anchr)
+          dstn <- unique(dstn)
+        }
+        if (exists("lnd")) dstn <- rbind(dstn, lnd)
       }
     }
 
