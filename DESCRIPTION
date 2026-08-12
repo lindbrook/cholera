@@ -1,8 +1,8 @@
 Package: cholera
 Type: Package
 Title: Amend, Augment and Aid Analysis of John Snow's Cholera Map
-Version: 0.9.1.9148
-Date: 2026-08-10
+Version: 0.9.1.9149
+Date: 2026-08-12
 Authors@R: person("lindbrook", email = "lindbrook@gmail.com",
   role = c("aut", "cre"))
 Description: Amends errors, augments data and aids analysis of John Snow's map
@@ -37,4 +37,4 @@ VignetteBuilder: knitr
 Roxygen: list(old_usage = TRUE)
 Encoding: UTF-8
 Language: en-US
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
