@@ -901,7 +901,7 @@ caseCaseEucl <- function(orgn, orgn.nm, dstn, dstn.nm, origin, destination,
 
   data.summary <- data.frame(orgn = orgn$id,
     orgn.nm = ifelse(is.na(orgn$name), orgn$id.nm, orgn$name),
-    dstn = nearest.dest, dstn.nm = dstn.nm[which.min(d)], d = nearest.d)
+    dstn = nearest.dest, dstn.nm = dstn[which.min(d), "id.nm"], d = nearest.d)
 
   list(ego = ego, alter = alter, data.summary = data.summary)
 }
