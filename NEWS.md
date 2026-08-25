@@ -1,3 +1,8 @@
+# cholera 0.9.1.9153
+
+- rename anchors.only argument to anchor.anchor in euclideanPath()
+
+
 # cholera 0.9.1.9152
 
 - fix data.summary in caseCaseEucl().

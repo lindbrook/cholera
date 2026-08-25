@@ -11,14 +11,14 @@
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
 #' @param include.landmarks Logical. Include landmarks as cases.
-#' @param anchors.only Logical. Use anchor cases.
+#' @param anchor.anchor Logical. Use anchor cases.
 #' @importFrom geosphere distGeo
 #' @export
 
 euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed", location = "nominal",
   distance.unit = "meter", time.unit = "second", walking.speed = 5, 
-  include.landmarks = TRUE, anchors.only = TRUE) {
+  include.landmarks = TRUE, anchor.anchor = TRUE) {
 
   if (is.null(origin) & is.null(destination)) {
     stop("You must provide at least one origin or destination.", call. = FALSE)
