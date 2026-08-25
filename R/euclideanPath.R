@@ -36,31 +36,33 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     stop('type must be "anchor", "nominal" or "orthogonal".', call. = FALSE)
   }
 
-  if (location %in% c("nominal", "anchor")) {
-    if (vestry) {
-      pmp <- cholera::pumps.vestry
-    } else {
-      pmp <- cholera::pumps
-    }
-  } else if (location == "orthogonal") {
-    if (latlong) {
+  if (type %in% c("case-pump", "pumps")) {
+    if (location %in% c("nominal", "anchor")) {
       if (vestry) {
-        pmp <- cholera::latlong.ortho.pump.vestry
-        pmp$street <- cholera::pumps.vestry$street
+        pmp <- cholera::pumps.vestry
       } else {
-        pmp <- cholera::latlong.ortho.pump
-        pmp$street <- cholera::pumps$street
+        pmp <- cholera::pumps
       }
-    } else {
-      if (vestry) {
-        pmp <- cholera::ortho.proj.pump.vestry
-        pmp$street <- cholera::pumps.vestry$street
+    } else if (location == "orthogonal") {
+      if (latlong) {
+        if (vestry) {
+          pmp <- cholera::latlong.ortho.pump.vestry
+          pmp$street <- cholera::pumps.vestry$street
+        } else {
+          pmp <- cholera::latlong.ortho.pump
+          pmp$street <- cholera::pumps$street
+        }
       } else {
-        pmp <- cholera::ortho.proj.pump
-        pmp$street <- cholera::pumps$street
+        if (vestry) {
+          pmp <- cholera::ortho.proj.pump.vestry
+          pmp$street <- cholera::pumps.vestry$street
+        } else {
+          pmp <- cholera::ortho.proj.pump
+          pmp$street <- cholera::pumps$street
+        }
+        newvars <- c("x", "y", "id")
+        names(pmp)[names(pmp) %in% c("x.proj", "y.proj", "pump.id")] <- newvars
       }
-      newvars <- c("x", "y", "id")
-      names(pmp)[names(pmp) %in% c("x.proj", "y.proj", "pump.id")] <- newvars
     }
   }
 
