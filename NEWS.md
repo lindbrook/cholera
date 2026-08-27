@@ -1,3 +1,8 @@
+# cholera 0.9.1.9155
+
+- amend caseCaseEucl() prototype for euclideanPath(case.set = "observed").
+
+
 # cholera 0.9.1.9154
 
 - compute pumps in euclideanPath() only if type %in% c(c("case-pump", "pumps")).
