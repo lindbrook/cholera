@@ -1,6 +1,6 @@
 # cholera 0.9.1.9157
 
-- amend caseCaseEucl(case.set = "expected").
+- amend caseCaseEucl() for case.set = "expected".
 
 
 # cholera 0.9.1.9156
