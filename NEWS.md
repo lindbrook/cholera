@@ -1,3 +1,8 @@
+# cholera 0.9.1.9157
+
+- amend caseCaseEucl(case.set = "expected").
+
+
 # cholera 0.9.1.9156
 
 - fix typos in landmarks.test in euclideanPath().
