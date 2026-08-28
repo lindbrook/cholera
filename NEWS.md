@@ -1,3 +1,8 @@
+# cholera 0.9.1.9156
+
+- fix typos in landmarks.test in euclideanPath().
+
+
 # cholera 0.9.1.9155
 
 - amend caseCaseEucl() prototype for euclideanPath(case.set = "observed").

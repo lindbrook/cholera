@@ -86,8 +86,8 @@ euclideanPath <- function(origin = 1, destination = NULL, type = "case-pump",
     dstn.all <- OD$dstn
     
     landmarks.test <- case.set == "expected" &
-                      all(OD$orgn$id >= 1000L & OD$orgnid < 2000L) &
-                      all(OD$dstnid >= 1000L & OD$dstnid < 2000L)
+                      all(OD$orgn$id >= 1000L & OD$orgn$id < 2000L) &
+                      all(OD$dstn$id >= 1000L & OD$dstn$id < 2000L)
     
     if (landmarks.test) case.set <- "observed"
 
