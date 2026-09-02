@@ -907,7 +907,6 @@ caseCaseEucl <- function(origin, destination, latlong, vestry, case.set, OD,
     alter.coords <- fatality[fatality$case %in% dstn$id, vars]
   }
 
-
   if (latlong) {
     if (nrow(ego.coords) == 1) {
       d <- geosphere::distGeo(ego.coords, alter.coords) / unitMeter(1)
@@ -947,9 +946,11 @@ caseCaseEucl <- function(origin, destination, latlong, vestry, case.set, OD,
 
   alter <- alter.coords[which.min(d), ]
 
+  dstn.var <- ifelse(is.null(dstn$name), "id.nm", "name")
+
   data.summary <- data.frame(orgn = orgn$id,
     orgn.nm = ifelse(is.na(orgn$name), orgn$id.nm, orgn$name),
-    dstn = nearest.dest, dstn.nm = dstn[which.min(d), "id.nm"], d = nearest.d,
+    dstn = nearest.dest, dstn.nm = dstn[which.min(d), dstn.var], d = nearest.d,
     ego.case = orgn$id, alter.case = nearest.dest)
   
   list(ego = ego, alter = alter, data.summary = data.summary)

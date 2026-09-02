@@ -1,6 +1,11 @@
+# cholera 0.9.1.9159
+
+- amend destination name in caseCaseEucl() for landmarks.
+
+
 # cholera 0.9.1.9158
 
--  restore pump computation in euclideanPath(type = "cases").
+- restore pump computation in euclideanPath(type = "cases").
 
 
 # cholera 0.9.1.9157
