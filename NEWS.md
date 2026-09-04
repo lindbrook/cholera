@@ -1,3 +1,8 @@
+# cholera 0.9.1.9160
+
+- replace is.null() with is.na() for destination name in caseCaseEucl().
+
+
 # cholera 0.9.1.9159
 
 - amend destination name in caseCaseEucl() for landmarks.
