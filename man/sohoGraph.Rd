@@ -4,7 +4,7 @@
 \alias{sohoGraph}
 \title{Compute network graph of roads and embed cases, landmarks and pumps (prototype).}
 \usage{
-sohoGraph(vestry = FALSE, case.set = "observed", embed.anchor = TRUE,
+sohoGraph(vestry = FALSE, case.set = "observed", embed.anchors = TRUE,
   embed.landmarks = TRUE, embed.pumps = TRUE, latlong = FALSE,
   drop.isolates = FALSE, ellipsoid = "WGS", multi.core = FALSE)
 }
@@ -13,7 +13,7 @@ sohoGraph(vestry = FALSE, case.set = "observed", embed.anchor = TRUE,
 
 \item{case.set}{Character. "observed", "expected", or "snow". "snow" captures John Snow's annotation of the Broad Street pump neighborhood printed in the Vestry report version of the map.}
 
-\item{embed.anchor}{Logical. Embed all 321 or selected anchor cases into graph network.}
+\item{embed.anchors}{Logical. Embed all 321 or selected anchor cases into graph network.}
 
 \item{embed.landmarks}{Logical or Numeric. Embed all or selected landmarks into road network.}
 

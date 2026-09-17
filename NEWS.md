@@ -1,3 +1,8 @@
+# cholera 0.9.1.9161
+
+- change 'embed.anchor' argument to 'embed.anchors' in sohoGraph().
+
+
 # cholera 0.9.1.9160
 
 - replace is.null() with is.na() for destination name in caseCaseEucl().
