@@ -3,13 +3,12 @@
 #' Returns either the set of x-y coordinates for the pumps themselves or for their orthogonally projected "addresses" on the network of roads.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
 #' @param orthogonal Logical. \code{TRUE} returns pump "addresses": the coordinates of the orthogonal projection from a pump's location onto the network of roads. \code{FALSE} returns pump location coordinates.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.
 #' @seealso\code{\link{pumpLocator}}
 #' @return An R data frame.
 #' @note Note: The location of the fourteenth pump, at Hanover Square, and the "correct" location of the Broad Street pump are approximate. This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
 #' @export
 
-pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
+pumpData <- function(vestry = FALSE, orthogonal = FALSE) {
   pumps <- HistData::Snow.pumps
   pumps$label <- c("Market Place", "Adam and Eve Court", "Berners Street",
     "Newman Street", "Marlborough Mews", "Little Marlborough Street",
@@ -38,26 +37,25 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
   if (orthogonal == FALSE) {
     pumps
   } else {
-    cores <- multiCore(multi.core)
     rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
     map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
     roads.list <- split(rd[, c("x", "y")], rd$street)
     border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
-    road.segments <- parallel::mclapply(unique(rd$street), function(i) {
-      dat <- rd[rd$street == i, ]
+    road.segments <- lapply(unique(rd$street), function(st) {
+      dat <- rd[rd$street == st, ]
       names(dat)[names(dat) %in% c("x", "y")] <- c("x1", "y1")
       seg.data <- dat[-1, c("x1", "y1")]
       names(seg.data) <- c("x2", "y2")
       dat <- cbind(dat[-nrow(dat), ], seg.data)
       dat$id <- paste0(dat$street, "-", seq_len(nrow(dat)))
       dat
-    }, mc.cores = cores)
+    })
 
     road.segments <- do.call(rbind, road.segments)
 
-    orthogonal.projection <- parallel::mclapply(pumps$id, function(pump) {
       case <- pumps[pumps$id == pump, c("x", "y")]
+    orthogonal.projection <- lapply(pumps$id, function(p) {
 
       within.radius <- lapply(road.segments$id, function(x) {
         seg.data <- cholera::road.segments[cholera::road.segments$id == x, ]
@@ -113,7 +111,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE) {
       out$pump.id <- pump
       row.names(out) <- NULL
       out
-    }, mc.cores = cores)
+    })
 
   do.call(rbind, orthogonal.projection)
   }
