@@ -1,3 +1,8 @@
+# cholera 0.9.1.9162
+
+- use nominal pump locations in pumpData() and set pump 14 on "George Street".
+
+
 # cholera 0.9.1.9161
 
 - change 'embed.anchor' argument to 'embed.anchors' in sohoGraph().

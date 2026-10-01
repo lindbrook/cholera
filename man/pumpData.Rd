@@ -4,14 +4,12 @@
 \alias{pumpData}
 \title{Compute pump coordinates.}
 \usage{
-pumpData(vestry = FALSE, orthogonal = FALSE, multi.core = FALSE)
+pumpData(vestry = FALSE, orthogonal = FALSE)
 }
 \arguments{
 \item{vestry}{Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.}
 
 \item{orthogonal}{Logical. \code{TRUE} returns pump "addresses": the coordinates of the orthogonal projection from a pump's location onto the network of roads. \code{FALSE} returns pump location coordinates.}
-
-\item{multi.core}{Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.}
 }
 \value{
 An R data frame.
@@ -20,7 +18,7 @@ An R data frame.
 Returns either the set of x-y coordinates for the pumps themselves or for their orthogonally projected "addresses" on the network of roads.
 }
 \note{
-Note: The location of the fourteenth pump, at Hanover Square, and the "correct" location of the Broad Street pump are approximate. This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
+Note: The location of the fourteenth pump (from Snow's map in the Vestry report), at Hanover Square, and the "correct" location of the Broad Street pump are approximate. This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
 }
 \seealso{
 \code{\link{pumpLocator}}
