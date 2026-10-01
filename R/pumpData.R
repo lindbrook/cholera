@@ -18,9 +18,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE) {
   names(pumps)[names(pumps) == "label"] <- "street"
   names(pumps)[names(pumps) == "pump"] <- "id"
 
-  if (vestry == FALSE) {
-    pumps
-  } else {
+  if (vestry) {
     # approximate location of 14th pump
     p14 <- data.frame(id = 14,
                       street = "George Street",
@@ -31,16 +29,12 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE) {
 
     # approximate "corrected" location of Broad Street pump
     pumps[pumps$id == 7, c("x", "y")] <- c(12.47044, 11.67793)
-    pumps
   }
 
   if (orthogonal == FALSE) {
     pumps
   } else {
     rd <- cholera::roads[cholera::roads$street %in% cholera::border == FALSE, ]
-    map.frame <- cholera::roads[cholera::roads$street %in% cholera::border, ]
-    roads.list <- split(rd[, c("x", "y")], rd$street)
-    border.list <- split(map.frame[, c("x", "y")], map.frame$street)
 
     road.segments <- lapply(unique(rd$street), function(st) {
       dat <- rd[rd$street == st, ]
@@ -54,7 +48,6 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE) {
 
     road.segments <- do.call(rbind, road.segments)
 
-      case <- pumps[pumps$id == pump, c("x", "y")]
     orthogonal.projection <- lapply(pumps$id, function(p) {
       p.data <- pumps[pumps$id == p, ]
       coords <- p.data[c("x", "y")]
@@ -69,14 +62,14 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE) {
 
       within.radius <- unlist(within.radius)
 
-      ortho.proj.test <- lapply(within.radius, function(seg.id) {
-        ortho.data <- orthogonalProjection(pump, seg.id, use.pump = TRUE,
+      ortho.proj.test <- lapply(within.radius, function(id) {
+        ortho.data <- orthogonalProjection(p, id, use.pump = TRUE,
           vestry = vestry)
         x.proj <- ortho.data$x.proj
         y.proj <- ortho.data$y.proj
 
-        seg.data <- cholera::road.segments[cholera::road.segments$id == seg.id,
-          c("x1", "y1", "x2", "y2")]
+        sel <- cholera::road.segments$id == id
+        seg.data <- cholera::road.segments[sel, c("x1", "y1", "x2", "y2")]
 
         seg.df <- data.frame(x = c(seg.data$x1, seg.data$x2),
                              y = c(seg.data$y1, seg.data$y2))
@@ -88,11 +81,9 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE) {
         bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
 
         if (bisect.test) {
-          ortho.dist <- c(stats::dist(rbind(c(case$x, case$y),
-            c(x.proj, y.proj))))
+          ortho.dist <- c(stats::dist(rbind(coords, c(x.proj, y.proj))))
           ortho.pts <- data.frame(x.proj, y.proj)
-          data.frame(road.segment = seg.id, ortho.pts, ortho.dist,
-            stringsAsFactors = FALSE)
+          data.frame(road.segment = id, ortho.pts, ortho.dist)
         } else {
           null.out <- data.frame(matrix(NA, ncol = 4))
           names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
@@ -111,7 +102,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE) {
       }
 
       out$node <- paste0(out$x.proj, "_&_", out$y.proj)
-      out$pump.id <- pump
+      out$pump.id <- p
       row.names(out) <- NULL
       out
     })
@@ -124,4 +115,3 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE) {
 # ortho.proj.pump.vestry <- pumpData(orthogonal = TRUE, vestry = TRUE)
 # usethis::use_data(ortho.proj.pump, overwrite = TRUE)
 # usethis::use_data(ortho.proj.pump.vestry, overwrite = TRUE)
-
