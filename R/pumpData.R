@@ -5,7 +5,7 @@
 #' @param orthogonal Logical. \code{TRUE} returns pump "addresses": the coordinates of the orthogonal projection from a pump's location onto the network of roads. \code{FALSE} returns pump location coordinates.
 #' @seealso\code{\link{pumpLocator}}
 #' @return An R data frame.
-#' @note Note: The location of the fourteenth pump, at Hanover Square, and the "correct" location of the Broad Street pump are approximate. This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
+#' @note Note: The location of the fourteenth pump (from Snow's map in the Vestry report), at Hanover Square, and the "correct" location of the Broad Street pump are approximate. This function documents the code that generates \code{\link{pumps}}, \code{\link{pumps.vestry}}, \code{\link{ortho.proj.pump}} and \code{\link{ortho.proj.pump.vestry}}.
 #' @export
 
 pumpData <- function(vestry = FALSE, orthogonal = FALSE) {
@@ -23,7 +23,7 @@ pumpData <- function(vestry = FALSE, orthogonal = FALSE) {
   } else {
     # approximate location of 14th pump
     p14 <- data.frame(id = 14,
-                      street = "Hanover Street",
+                      street = "George Street",
                       x = 3.707649,
                       y = 12.12859)
 
