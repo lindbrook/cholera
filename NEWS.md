@@ -1,3 +1,8 @@
+# cholera 0.9.1.9164
+
+- add new latlongOrthoPump() prototype.
+
+
 # cholera 0.9.1.9163
 
 - set pump 14 location to "George Street" in pumps.vestry.

@@ -2,12 +2,9 @@
 #'
 #' Computes the "addresses" or latlong coordinates of orthogonal projections onto the network of roads.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.
 #' @noRd
 
-latlongOrthoPump <- function(vestry = FALSE, multi.core = FALSE) {
-  cores <- multiCore(multi.core)
-
+latlongOrthoPump <- function(vestry = FALSE) {
   if (vestry) {
     pmp <- cholera::pumps.vestry
   } else {
@@ -32,20 +29,15 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = FALSE) {
   geo.rd.segs <- do.call(rbind, geo.rd.segs)
   seg.endpts <- c("x1", "y1", "x2", "y2")
 
-  # test <- rbind(case, stats::setNames(geo.rd.segs[geo.rd.segs$id == "19-1", 
-  #   c("x1", "y1")], c("x", "y")))
-
-  orthogonal.projection <- parallel::mclapply(geo.pmp$id, function(p) {
+  orthogonal.projection <- lapply(geo.pmp$id, function(p) {
     case <- geo.pmp[geo.pmp$id == p, c("x", "y")]
+    pump.st <- pmp[pmp$id == p, "street"]
+    
+    sel <- cholera::road.segments$name == pump.st
+    pump.segs <- cholera::road.segments[sel, "id"]
 
-    within.radius <- lapply(geo.rd.segs$id, function(x) {
-      seg.data <- geo.rd.segs[geo.rd.segs$id == x, ]
-
-      # dist(rbind(case, stats::setNames(seg.data[, c("x1", "y1")], 
-      #   c("x", "y"))))
-      # dist(rbind(case, stats::setNames(seg.data[, c("x2", "y2")],
-      #   c("x", "y"))))
-
+    within.radius <- lapply(pump.segs, function(s) {
+      seg.data <- geo.rd.segs[geo.rd.segs$id == s, ]
       test1 <- withinRadius(case, seg.data[, c("x1", "y1")], 35)
       test2 <- withinRadius(case, seg.data[, c("x2", "y2")], 35)
       if (any(test1, test2)) unique(seg.data$id)
@@ -54,16 +46,28 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = FALSE) {
     within.radius <- unlist(within.radius)
 
     ortho.proj.test <- lapply(within.radius, function(seg.id) {
-      sel <- geo.rd.segs$id == seg.id
-      segment.data <- geo.rd.segs[sel, seg.endpts]
+      segment.data <- geo.rd.segs[geo.rd.segs$id == seg.id, seg.endpts]
       road.segment <- data.frame(x = c(segment.data$x1, segment.data$x2),
                                  y = c(segment.data$y1, segment.data$y2))
 
       # tmp <- rbind(road.segment, case)
-      # plot(road.segment, xlim = range(tmp$x), ylim = range(tmp$y), asp = 1)
-      # segments(segment.data$x1, segment.data$y1, segment.data$x2, segment.data$y2)
+      # plot(road.segment, xlim = range(tmp$x), ylim = range(tmp$y), asp = 1, 
+      #   pch = NA)
       # points(case, pch = 2, col = "red")
-      # title(main = paste0("p", p))
+      # # points(x.proj, y.proj, pch = 4, col = "red")
+
+      # if (bisect.test) {
+      #   arrows(case$x, case$y, x.proj, y.proj, col = "red", length = 1/10)
+      # } else {
+      #   arrows(case$x, case$y, x.proj, y.proj, col = "gray", length = 1/10)
+      # }
+
+      # # abline(a = ortho.intercept, b = ortho.slope, col = "red", lty = "dotted)
+      # abline(ols, lty = "dotted", col = "gray")
+      # segments(segment.data$x1, segment.data$y1, segment.data$x2, segment.data$y2)
+      # title(main = paste0(seg.id, " -- ", paste0("p", p)))
+      # # title(sub = paste0("p", p))
+      # title(sub = bisect.test)
 
       ols <- stats::lm(y ~ x, data = road.segment)
       road.intercept <- stats::coef(ols)[1]
@@ -84,39 +88,35 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = FALSE) {
       bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
 
       if (bisect.test) {
-        ortho.dist <- c(stats::dist(rbind(c(case$x, case$y),
-          c(x.proj, y.proj))))
-        ortho.pts <- data.frame(x.proj, y.proj)
-        data.frame(road.segment = seg.id, ortho.pts, ortho.dist)
+        ortho.dist <- c(stats::dist(rbind(case, c(x.proj, y.proj))))
+        coords <- data.frame(x.proj, y.proj)
+        data.frame(road.segment = seg.id, coords, d = ortho.dist,
+          type = "ortho")
       } else {
-        null.out <- data.frame(matrix(NA, ncol = 4))
-        names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
-        null.out
+        # nearest road segment endpoint
+        d1 <- stats::dist(rbind(seg.df[1, ], case)) 
+        d2 <- stats::dist(rbind(seg.df[2, ], case))
+        prox.dist <- min(d1, d2)
+        coords <- seg.df[which.min(c(d1, d2)), ]
+        data.frame(road.segment = seg.id, x.proj = coords$x, y.proj = coords$y,
+          d = prox.dist, type = "prox")
       }
     })
 
     out <- do.call(rbind, ortho.proj.test)
-
-    if (all(is.na(out)) == FALSE) {
-      sel <- which.min(out$ortho.dist)
-      out <- out[sel, ]
-    } else {
-      # all candidate roads are NA so arbitrarily choose the first obs.
-      out <- out[1, ]
-    }
-
+    out <- out[which.min(out$d), ]
     out$id <- p
     row.names(out) <- NULL
     out
-  }, mc.cores = cores)
+  })
 
   coords <- do.call(rbind, orthogonal.projection)
   est.lonlat <- meterLatLong(coords)
   est.lonlat[order(est.lonlat$id), ]
 }
 
-# latlong.ortho.pump <- cholera:::latlongOrthoPump(vestry = FALSE, multi.core = TRUE)
-# latlong.ortho.pump.vestry <- cholera:::latlongOrthoPump(vestry = TRUE, multi.core = TRUE)
+# latlong.ortho.pump <- cholera:::latlongOrthoPump(vestry = FALSE)
+# latlong.ortho.pump.vestry <- cholera:::latlongOrthoPump(vestry = TRUE)
 
 # usethis::use_data(latlong.ortho.pump, overwrite = TRUE)
 # usethis::use_data(latlong.ortho.pump.vestry, overwrite = TRUE)
