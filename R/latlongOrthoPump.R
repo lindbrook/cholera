@@ -31,6 +31,10 @@ latlongOrthoPump <- function(vestry = FALSE) {
 
   orthogonal.projection <- lapply(geo.pmp$id, function(p) {
     case <- geo.pmp[geo.pmp$id == p, c("x", "y")]
+    pump.st <- pmp[pmp$id == p, "street"]
+    
+    sel <- cholera::road.segments$name == pump.st
+    pump.segs <- cholera::road.segments[sel, "id"]
 
     within.radius <- lapply(pump.segs, function(s) {
       seg.data <- geo.rd.segs[geo.rd.segs$id == s, ]
