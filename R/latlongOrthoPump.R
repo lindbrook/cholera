@@ -2,12 +2,9 @@
 #'
 #' Computes the "addresses" or latlong coordinates of orthogonal projections onto the network of roads.
 #' @param vestry Logical. \code{TRUE} uses the 14 pumps from the Vestry report. \code{FALSE} uses the 13 in the original map.
-#' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. With Numeric, you specify the number logical cores (rounds with \code{as.integer()}). See \code{vignette("Parallelization")} for details.
 #' @noRd
 
-latlongOrthoPump <- function(vestry = FALSE, multi.core = FALSE) {
-  cores <- multiCore(multi.core)
-
+latlongOrthoPump <- function(vestry = FALSE) {
   if (vestry) {
     pmp <- cholera::pumps.vestry
   } else {
@@ -35,7 +32,7 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = FALSE) {
   # test <- rbind(case, stats::setNames(geo.rd.segs[geo.rd.segs$id == "19-1", 
   #   c("x1", "y1")], c("x", "y")))
 
-  orthogonal.projection <- parallel::mclapply(geo.pmp$id, function(p) {
+  orthogonal.projection <- lapply(geo.pmp$id, function(p) {
     case <- geo.pmp[geo.pmp$id == p, c("x", "y")]
 
     within.radius <- lapply(geo.rd.segs$id, function(x) {
@@ -108,15 +105,15 @@ latlongOrthoPump <- function(vestry = FALSE, multi.core = FALSE) {
     out$id <- p
     row.names(out) <- NULL
     out
-  }, mc.cores = cores)
+  })
 
   coords <- do.call(rbind, orthogonal.projection)
   est.lonlat <- meterLatLong(coords)
   est.lonlat[order(est.lonlat$id), ]
 }
 
-# latlong.ortho.pump <- cholera:::latlongOrthoPump(vestry = FALSE, multi.core = TRUE)
-# latlong.ortho.pump.vestry <- cholera:::latlongOrthoPump(vestry = TRUE, multi.core = TRUE)
+# latlong.ortho.pump <- cholera:::latlongOrthoPump(vestry = FALSE)
+# latlong.ortho.pump.vestry <- cholera:::latlongOrthoPump(vestry = TRUE)
 
 # usethis::use_data(latlong.ortho.pump, overwrite = TRUE)
 # usethis::use_data(latlong.ortho.pump.vestry, overwrite = TRUE)
