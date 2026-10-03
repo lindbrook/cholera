@@ -48,10 +48,23 @@ latlongOrthoPump <- function(vestry = FALSE) {
                                  y = c(segment.data$y1, segment.data$y2))
 
       # tmp <- rbind(road.segment, case)
-      # plot(road.segment, xlim = range(tmp$x), ylim = range(tmp$y), asp = 1)
-      # segments(segment.data$x1, segment.data$y1, segment.data$x2, segment.data$y2)
+      # plot(road.segment, xlim = range(tmp$x), ylim = range(tmp$y), asp = 1, 
+      #   pch = NA)
       # points(case, pch = 2, col = "red")
-      # title(main = paste0("p", p))
+      # # points(x.proj, y.proj, pch = 4, col = "red")
+
+      # if (bisect.test) {
+      #   arrows(case$x, case$y, x.proj, y.proj, col = "red", length = 1/10)
+      # } else {
+      #   arrows(case$x, case$y, x.proj, y.proj, col = "gray", length = 1/10)
+      # }
+
+      # # abline(a = ortho.intercept, b = ortho.slope, col = "red", lty = "dotted)
+      # abline(ols, lty = "dotted", col = "gray")
+      # segments(segment.data$x1, segment.data$y1, segment.data$x2, segment.data$y2)
+      # title(main = paste0(seg.id, " -- ", paste0("p", p)))
+      # # title(sub = paste0("p", p))
+      # title(sub = bisect.test)
 
       ols <- stats::lm(y ~ x, data = road.segment)
       road.intercept <- stats::coef(ols)[1]
