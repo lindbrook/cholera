@@ -29,20 +29,11 @@ latlongOrthoPump <- function(vestry = FALSE) {
   geo.rd.segs <- do.call(rbind, geo.rd.segs)
   seg.endpts <- c("x1", "y1", "x2", "y2")
 
-  # test <- rbind(case, stats::setNames(geo.rd.segs[geo.rd.segs$id == "19-1", 
-  #   c("x1", "y1")], c("x", "y")))
-
   orthogonal.projection <- lapply(geo.pmp$id, function(p) {
     case <- geo.pmp[geo.pmp$id == p, c("x", "y")]
 
-    within.radius <- lapply(geo.rd.segs$id, function(x) {
-      seg.data <- geo.rd.segs[geo.rd.segs$id == x, ]
-
-      # dist(rbind(case, stats::setNames(seg.data[, c("x1", "y1")], 
-      #   c("x", "y"))))
-      # dist(rbind(case, stats::setNames(seg.data[, c("x2", "y2")],
-      #   c("x", "y"))))
-
+    within.radius <- lapply(pump.segs, function(s) {
+      seg.data <- geo.rd.segs[geo.rd.segs$id == s, ]
       test1 <- withinRadius(case, seg.data[, c("x1", "y1")], 35)
       test2 <- withinRadius(case, seg.data[, c("x2", "y2")], 35)
       if (any(test1, test2)) unique(seg.data$id)
