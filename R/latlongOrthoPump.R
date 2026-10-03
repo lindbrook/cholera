@@ -46,8 +46,7 @@ latlongOrthoPump <- function(vestry = FALSE) {
     within.radius <- unlist(within.radius)
 
     ortho.proj.test <- lapply(within.radius, function(seg.id) {
-      sel <- geo.rd.segs$id == seg.id
-      segment.data <- geo.rd.segs[sel, seg.endpts]
+      segment.data <- geo.rd.segs[geo.rd.segs$id == seg.id, seg.endpts]
       road.segment <- data.frame(x = c(segment.data$x1, segment.data$x2),
                                  y = c(segment.data$y1, segment.data$y2))
 
