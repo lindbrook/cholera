@@ -89,27 +89,23 @@ latlongOrthoPump <- function(vestry = FALSE) {
       bisect.test <- signif(stats::dist(seg.df)) == signif(distB)
 
       if (bisect.test) {
-        ortho.dist <- c(stats::dist(rbind(c(case$x, case$y),
-          c(x.proj, y.proj))))
-        ortho.pts <- data.frame(x.proj, y.proj)
-        data.frame(road.segment = seg.id, ortho.pts, ortho.dist)
+        ortho.dist <- c(stats::dist(rbind(case, c(x.proj, y.proj))))
+        coords <- data.frame(x.proj, y.proj)
+        data.frame(road.segment = seg.id, coords, d = ortho.dist,
+          type = "ortho")
       } else {
-        null.out <- data.frame(matrix(NA, ncol = 4))
-        names(null.out) <- c("road.segment", "x.proj", "y.proj", "ortho.dist")
-        null.out
+        # nearest road segment endpoint
+        d1 <- stats::dist(rbind(seg.df[1, ], case)) 
+        d2 <- stats::dist(rbind(seg.df[2, ], case))
+        prox.dist <- min(d1, d2)
+        coords <- seg.df[which.min(c(d1, d2)), ]
+        data.frame(road.segment = seg.id, x.proj = coords$x, y.proj = coords$y,
+          d = prox.dist, type = "prox")
       }
     })
 
     out <- do.call(rbind, ortho.proj.test)
-
-    if (all(is.na(out)) == FALSE) {
-      sel <- which.min(out$ortho.dist)
-      out <- out[sel, ]
-    } else {
-      # all candidate roads are NA so arbitrarily choose the first obs.
-      out <- out[1, ]
-    }
-
+    out <- out[which.min(out$d), ]
     out$id <- p
     row.names(out) <- NULL
     out
