@@ -49,7 +49,6 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   edges <- dat$edges
 
   p.select <- nodes[nodes$pump %in% p.sel, ]
-  p.select <- p.select[order(p.select$pump), ]
 
   # amend and title case 'pump.select'
   if (is.character(pump.select)) {
@@ -281,12 +280,12 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
 
   if (x$latlong) {
     vars <- c("lon", "lat")
-    seg.vars <- paste0(vars, c(rep(1, 2), rep(2, 2)))
   } else {
     vars <- c("x", "y")
-    seg.vars <- paste0(vars, c(rep(1, 2), rep(2, 2)))
   }
 
+  seg.vars <- paste0(vars, c(rep(1, 2), rep(2, 2)))
+  
   if (x$case.set == "observed") {
     edges <- x$edges
     neigh.edges <- x$neigh.edges
