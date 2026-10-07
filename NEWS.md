@@ -1,3 +1,8 @@
+# cholera 0.9.1.9168
+
+- amend variable names for latlong.regular.cases in latlongSimulateFatalities().
+
+
 # cholera 0.9.1.9167
 
 - amend latlong.sim.ortho.proj.
