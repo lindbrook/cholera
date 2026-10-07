@@ -121,6 +121,9 @@ latlongSimulateFatalities <- function(recompute.regular.cases = FALSE,
   list(reg = do.call(rbind, reg), sim = do.call(rbind, proj))
 }
 
+  reg <- do.call(rbind, reg)
+  names(reg)[1:2] <- c("cart.x", "cart.y")
+  reg <- data.frame(case = sim$case, reg)
 
 
 # aarch64
