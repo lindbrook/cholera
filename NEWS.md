@@ -1,3 +1,8 @@
+# cholera 0.9.1.9165
+
+- amend latlong.ortho.pump,latlong and .ortho.pump.vestry.
+
+
 # cholera 0.9.1.9164
 
 - add new latlongOrthoPump() prototype.
