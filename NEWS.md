@@ -1,3 +1,8 @@
+# cholera 0.9.1.9167
+
+- amend latlong.sim.ortho.proj.
+
+
 # cholera 0.9.1.9166
 
 - amend latlong.regular.cases.
