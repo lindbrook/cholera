@@ -10,7 +10,8 @@ A data frame with 7 variables that records the position of the orthogonal projec
     \item{\code{road.segment}}{"address" road segment}
     \item{\code{x.proj}}{x-coordinate}
     \item{\code{y.proj}}{y-coordinate}
-    \item{\code{ortho.dist}}{orthogonal distance to home road segment}
+    \item{\code{d}}{distance to home road segment}
+    \item{\code{type}}{orthogonal or proximate (Euclidean) distance}
     \item{\code{id}}{numeric ID}
     \item{\code{lon}}{longitude}
     \item{\code{lat}}{latitude}
