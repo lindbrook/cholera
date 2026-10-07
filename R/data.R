@@ -553,8 +553,9 @@
 #'
 #' @format A data frame with 4 variables that records the position of 20,005 "expected" cases fitted by sp::spsample().
 #'  \describe{
-#'     \item{\code{x}}{x-coordinate}
-#'     \item{\code{y}}{y-coordinate}
+#'     \item{\code{case}}{numeric case ID}
+#'     \item{\code{cart.x}}{Cartestian x-coordinate}
+#'     \item{\code{cart.y}}{Cartestiany-coordinate}
 #'     \item{\code{lon}}{longitude}
 #'     \item{\code{lat}}{latitude}
 #'  }
