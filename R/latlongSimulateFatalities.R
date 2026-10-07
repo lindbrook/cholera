@@ -121,20 +121,12 @@ latlongSimulateFatalities <- function(recompute.regular.cases = FALSE,
   list(reg = do.call(rbind, reg), sim = do.call(rbind, proj))
 }
 
-# > system.time(latlong.reg.sim <- cholera:::latlongSimulateFatalities())
-#      user    system   elapsed
-# 12083.022    59.472  3421.048
 
-# latlong.reg.sim <- cholera:::latlongSimulateFatalities()
-# usethis::use_data(latlong.sim.ortho.proj)
-# usethis::use_data(latlong.sim.ortho.proj, overwrite = TRUE)
-# usethis::use_data(latlong.regular.cases)
-# usethis::use_data(latlong.regular.cases, overwrite = TRUE)
 
 # aarch64
-# > system.time(latlong.reg.sim <- cholera:::latlongSimulateFatalities(TRUE))
-#     user   system  elapsed 
-# 3004.801   22.190  312.731
+# system.time(latlong.reg.sim <- cholera:::latlongSimulateFatalities(recompute.regular.cases = TRUE, multi.core = TRUE))
+#     user   system  elapsed
+# 3029.204    8.324  318.625
 # latlong.regular.cases <- latlong.reg.sim$reg
 # latlong.sim.ortho.proj <- latlong.reg.sim$sim
 # usethis::use_data(latlong.sim.ortho.proj, overwrite = TRUE)
