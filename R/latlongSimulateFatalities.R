@@ -114,17 +114,18 @@ latlongSimulateFatalities <- function(recompute.regular.cases = FALSE,
     meterLatLong(coords[i, ])
   }, mc.cores = cores)
 
+  sim <- do.call(rbind, proj)
+
   reg <- parallel::mclapply(seq_len(nrow(reg.cases)), function(i) {
     meterLatLong(reg.cases[i, ])
   }, mc.cores = cores)
-
-  list(reg = do.call(rbind, reg), sim = do.call(rbind, proj))
-}
 
   reg <- do.call(rbind, reg)
   names(reg)[1:2] <- c("cart.x", "cart.y")
   reg <- data.frame(case = sim$case, reg)
 
+  list(reg = reg, sim = sim)
+}
 
 # aarch64
 # system.time(latlong.reg.sim <- cholera:::latlongSimulateFatalities(recompute.regular.cases = TRUE, multi.core = TRUE))
