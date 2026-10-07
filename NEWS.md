@@ -1,3 +1,8 @@
+# cholera 0.9.1.9169
+
+- fix identification of nearest pump in neighborhoodWalking().
+
+
 # cholera 0.9.1.9168
 
 - amend variable names for latlong.regular.cases in latlongSimulateFatalities().
