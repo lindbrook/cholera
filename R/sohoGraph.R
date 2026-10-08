@@ -6,7 +6,6 @@
 #' @param embed.landmarks Logical or Numeric. Embed all or selected landmarks into road network.
 #' @param embed.pumps Logical or Numeric. Embed all or selected pumps into road network.
 #' @param latlong Logical. Use estimated longitude and latitude.
-#' @param drop.isolates Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.
 #' @param ellipsoid Character. "WGS" for WGS-84 or "BNG" for British National Grid (i.e., Airy 1830).
 #' @param multi.core Logical or Numeric. \code{TRUE} uses \code{parallel::detectCores()}. \code{FALSE} uses one, single core. You can also specify the number logical cores. See \code{vignette("Parallelization")} for details. Useful with `case.set = "expected"`.
 #' @export
@@ -14,8 +13,7 @@
 
 sohoGraph <- function(vestry = FALSE, case.set = "observed",
   embed.anchors = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
-  latlong = FALSE, drop.isolates = FALSE, ellipsoid = "WGS",
-  multi.core = FALSE) {
+  latlong = FALSE, ellipsoid = "WGS", multi.core = FALSE) {
 
   if (.Platform$OS.type == "windows") {
     cores <- 1L
@@ -25,8 +23,7 @@ sohoGraph <- function(vestry = FALSE, case.set = "observed",
 
   args <- list(embed.anchors = embed.anchors, embed.landmarks = embed.landmarks,
     embed.pumps = embed.pumps, vestry = vestry, case.set = case.set,
-    latlong = latlong, drop.isolates = drop.isolates, ellipsoid = ellipsoid,
-    cores = cores)
+    latlong = latlong, ellipsoid = ellipsoid, cores = cores)
 
   network <- do.call("embedNodes", args)
   nodes <- network$nodes

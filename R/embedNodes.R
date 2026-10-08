@@ -6,24 +6,16 @@
 #' @param embed.landmarks Logical or Numeric. Embed all or selected landmarks into road network.
 #' @param embed.pumps Logical or Numeric. Embed all or selected pumps into road network.
 #' @param latlong Logical or Numeric. Use estimated longitude and latitude.
-#' @param drop.isolates Logical. Exclude Adam and Eve Court (and Pump #2) and Falconberg Court and Mews.
 #' @param ellipsoid Character. "WGS" for WGS-84 or "BNG" for British National Gride (i.e., Airy 1830).
 #' @param cores. Integer or Numeric. Number of cores.
 #' @importFrom geosphere distGeo
 #' @noRd
 
 embedNodes <- function(vestry = FALSE, case.set = "observed",
-  embed.anchor = FALSE, embed.landmarks = FALSE, embed.pumps = FALSE,
-  latlong = FALSE, drop.isolates = TRUE, ellipsoid = "WGS", cores = 1L) {
+  embed.anchors = FALSE, embed.landmarks = FALSE, embed.pumps = FALSE,
+  latlong = FALSE, ellipsoid = "WGS", cores = 1L) {
 
-  road.data <- cholera::road.segments
-
-  if (drop.isolates) {
-    adam.eve.ct <- "44-1"
-    falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
-    isolates <- c(adam.eve.ct, falconberg.ct.mews)
-    road.data <- road.data[!road.data$id %in% isolates, ]
-  }
+  road.edges <- cholera::road.segments
 
   if (latlong) {
     if (ellipsoid == "WGS") {
@@ -92,8 +84,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
 
     ortho.anchor <- orthoAnchor(case.set = case.set, latlong = latlong)
     ortho.land <- orthoLand(latlong = latlong)
-    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong,
-      drop.isolates = drop.isolates)
+    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong)
 
     if (is.numeric(embed.anchor)) {
       ortho.anchor <- ortho.anchor[ortho.anchor$case %in% embed.anchor, ]
@@ -115,8 +106,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
              (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
 
     ortho.land <- orthoLand(latlong = latlong)
-    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong,
-      drop.isolates = drop.isolates)
+    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong)
 
     if (is.numeric(embed.landmarks)) {
       ortho.land <- ortho.land[ortho.land$case %in% embed.landmarks, ]
@@ -133,8 +123,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
              (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
 
     ortho.anchor <- orthoAnchor(case.set = case.set, latlong = latlong)
-    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong,
-      drop.isolates = drop.isolates)
+    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong)
 
     if (is.numeric(embed.anchor)) {
       ortho.anchor <- ortho.anchor[ortho.anchor$case %in% embed.anchor, ]
@@ -150,8 +139,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
              isFALSE(embed.landmarks) &
              (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
 
-    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong,
-      drop.isolates = drop.isolates)
+    ortho.pump <- orthoPump(vestry = vestry, latlong = latlong)
 
     if (is.numeric(embed.pumps)) {
       ortho.pump <- ortho.pump[ortho.pump$id %in% embed.pumps, ]
@@ -451,7 +439,7 @@ orthoLand <- function(latlong = FALSE) {
   out
 }
 
-orthoPump <- function(vestry = TRUE, latlong = FALSE, drop.isolates = FALSE) {
+orthoPump <- function(vestry = TRUE, latlong = FALSE) {
   if (latlong) {
     if (vestry) {
       out <- cholera::latlong.ortho.pump.vestry
@@ -468,7 +456,6 @@ orthoPump <- function(vestry = TRUE, latlong = FALSE, drop.isolates = FALSE) {
     sel <- c("x.proj", "y.proj", "pump.id")
     names(out)[names(out) %in% sel] <- c("x", "y", "pump")
   }
-  if (drop.isolates) out <- out[out$pump != 2L, ]
   out
 }
 
