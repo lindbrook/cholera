@@ -2,7 +2,7 @@
 #'
 #' @param vestry Logical.
 #' @param case.set Character. "observed" or "expected".
-#' @param embed.anchor Logical. Embed all 321 or selected anchor cases into graph network.
+#' @param embed.anchors Logical. Embed all 321 or selected anchor cases into graph network.
 #' @param embed.landmarks Logical or Numeric. Embed all or selected landmarks into road network.
 #' @param embed.pumps Logical or Numeric. Embed all or selected pumps into road network.
 #' @param latlong Logical or Numeric. Use estimated longitude and latitude.
@@ -35,10 +35,8 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
   geo.vars <- c("lon", "lat")
   nom.vars <- c("x", "y")
 
-  # Soho road network w/o cases, landmarks, or pumps
-  
-  road.edges <- road.data
-
+  ## construct Soho road network (nodes = intersections, edges = road segments)
+    
   if (latlong) {
     col.sel <- c(paste0(nom.vars, 1), paste0(nom.vars, 2))
     road.edges <- road.edges[, !names(road.edges) %in% col.sel]
@@ -73,12 +71,12 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
   road.nodes <- data.frame(id = seq_along(vertices), node = names(vertices), 
     row.names = NULL)
   coords <- do.call(rbind, lapply(strsplit(road.nodes$node, "_&_"), as.numeric))
-  coords <- stats::setNames(as.data.frame(coords), c("x", "y"))
+  coords <- stats::setNames(as.data.frame(coords), vars)
   road.nodes <- data.frame(road.nodes, coords)
 
-  # identify/specify nodes to be embedded/inserted: case, landmark, or pump
+  ## select data (cases, landmarks, or pumps) to insert into road network
 
-  if ((isTRUE(embed.anchor) | is.numeric(embed.anchor)) &
+  if ((isTRUE(embed.anchors) | is.numeric(embed.anchors)) &
       (isTRUE(embed.landmarks) | is.numeric(embed.landmarks)) &
       (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
 
@@ -86,8 +84,8 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
     ortho.land <- orthoLand(latlong = latlong)
     ortho.pump <- orthoPump(vestry = vestry, latlong = latlong)
 
-    if (is.numeric(embed.anchor)) {
-      ortho.anchor <- ortho.anchor[ortho.anchor$case %in% embed.anchor, ]
+    if (is.numeric(embed.anchors)) {
+      ortho.anchor <- ortho.anchor[ortho.anchor$case %in% embed.anchors, ]
     }
 
     if (is.numeric(embed.landmarks)) {
@@ -101,7 +99,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
     obs.segs <- unique(c(ortho.anchor$road.segment, ortho.land$road.segment,
       ortho.pump$road.segment))
 
-  } else if (isFALSE(embed.anchor) &
+  } else if (isFALSE(embed.anchors) &
              (isTRUE(embed.landmarks) | is.numeric(embed.landmarks)) &
              (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
 
@@ -118,15 +116,15 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
 
     obs.segs <- union(ortho.land$road.segment, ortho.pump$road.segment)
 
-  } else if ((isTRUE(embed.anchor) | is.numeric(embed.anchor)) &
+  } else if ((isTRUE(embed.anchors) | is.numeric(embed.anchors)) &
              isFALSE(embed.landmarks) &
              (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
 
     ortho.anchor <- orthoAnchor(case.set = case.set, latlong = latlong)
     ortho.pump <- orthoPump(vestry = vestry, latlong = latlong)
 
-    if (is.numeric(embed.anchor)) {
-      ortho.anchor <- ortho.anchor[ortho.anchor$case %in% embed.anchor, ]
+    if (is.numeric(embed.anchors)) {
+      ortho.anchor <- ortho.anchor[ortho.anchor$case %in% embed.anchors, ]
     }
 
     if (is.numeric(embed.pumps)) {
@@ -135,7 +133,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
 
     obs.segs <- union(ortho.anchor$road.segment, ortho.pump$road.segment)
 
-  } else if (isFALSE(embed.anchor) &
+  } else if (isFALSE(embed.anchors) &
              isFALSE(embed.landmarks) &
              (isTRUE(embed.pumps) | is.numeric(embed.pumps))) {
 
@@ -147,15 +145,15 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
 
     obs.segs <- unique(ortho.pump$road.segment)
 
-  } else if ((isTRUE(embed.anchor) | is.numeric(embed.anchor)) &
+  } else if ((isTRUE(embed.anchors) | is.numeric(embed.anchors)) &
              (isTRUE(embed.landmarks) | is.numeric(embed.landmarks)) &
              isFALSE(embed.pumps)) {
 
     ortho.anchor <- orthoAnchor(case.set = case.set, latlong = latlong)
     ortho.land <- orthoLand(latlong = latlong)
 
-    if (is.numeric(embed.anchor)) {
-      ortho.anchor <- ortho.anchor[ortho.anchor$case %in% embed.anchor, ]
+    if (is.numeric(embed.anchors)) {
+      ortho.anchor <- ortho.anchor[ortho.anchor$case %in% embed.anchors, ]
     }
 
     if (is.numeric(embed.landmarks)) {
@@ -164,7 +162,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
 
     obs.segs <- union(ortho.anchor$road.segment, ortho.land$road.segment)
 
-  } else if (isFALSE(embed.anchor) &
+  } else if (isFALSE(embed.anchors) &
              (isTRUE(embed.landmarks) | is.numeric(embed.landmarks)) &
              isFALSE(embed.pumps)) {
 
@@ -176,31 +174,33 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
 
     obs.segs <- unique(ortho.land$road.segment)
 
-  } else if ((isTRUE(embed.anchor) | is.numeric(embed.anchor)) &
+  } else if ((isTRUE(embed.anchors) | is.numeric(embed.anchors)) &
              isFALSE(embed.landmarks) &
              isFALSE(embed.pumps)) {
 
     ortho.anchor <- orthoAnchor(case.set = case.set, latlong = latlong)
 
-    if (is.numeric(embed.anchor)) {
-      ortho.anchor <- ortho.anchor[ortho.anchor$case %in% embed.anchor, ]
+    if (is.numeric(embed.anchors)) {
+      ortho.anchor <- ortho.anchor[ortho.anchor$case %in% embed.anchors, ]
     }
 
     obs.segs <- unique(ortho.anchor$road.segment)
 
-  } else if (isFALSE(embed.anchor) &
+  } else if (isFALSE(embed.anchors) &
              isFALSE(embed.landmarks) &
              isFALSE(embed.pumps)) {
 
     obs.segs <- NULL
   }
 
+  ## identify observed edges (road segments w/ case, landmark or pump)
+
   if (!is.null(obs.segs)) {
     vars2 <- c(vars, "case", "land", "pump")
     null.df <- stats::setNames(data.frame(matrix(nrow = 0, ncol = 5)), vars2)
 
     embeds <- lapply(obs.segs, function(s) {
-      rd.tmp <- road.data[road.data$id == s, ]
+      rd.tmp <- road.edges[road.edges$id == s, ]
       endpts <- endPoints(rd.tmp, vars, latlong = latlong)
 
       if (exists("ortho.anchor")) {
@@ -272,8 +272,7 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
       tmp <- unique(nodes[, vars])
       tmp <- cbind(tmp[-nrow(tmp), ], tmp[-1, ])
       
-      ## allows duplicate nodes: e.g., coincident case and landmark
-      # tmp <- cbind(nodes[-nrow(nodes), vars], nodes[-1, vars])
+      ## allow duplicate nodes: e.g., coincident case and landmark
 
       coord.nms <- paste0(names(tmp), c(rep(1, 2), rep(2, 2)))
       names(tmp) <- coord.nms
@@ -290,6 +289,8 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
     })
 
     edges <- do.call(rbind, lapply(embeds, function(x) x$edges))
+
+    # compute embedded segment lengths
 
     if (latlong) {
       edges$node1 <- paste0(edges$lon1, "_&_", edges$lat1)
@@ -326,26 +327,22 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
       }
     }
 
-    edges <- edges[order(edges$street), ]
+    ## compute "embedded" road network (cases, landmarks, and/or pumps)
     
-    no.embeds <- road.edges[!road.edges$id %in% edges$id, ]
+    no.embeds <- road.edges[!road.edges$id %in% obs.segs, ]
     no.embeds$id2 <- paste0(no.embeds$id, "a")
     
-    edges <- rbind(edges, no.embeds)
-    edges <- edges[order(edges$street, edges$id2), ]
-    
+    edges <- rbind(edges, no.embeds)  
     edge.list <- edges[, c("node1", "node2")]
     g <- igraph::graph_from_data_frame(edge.list, directed = FALSE)
     # plot(g, vertex.label = NA, vertex.size = 2)
-
-    # add/embed/insert nodes: case, landmark, or pump
     
+    ## extract "embedded" nodes of road network
+
     nodes <- do.call(rbind, lapply(embeds, function(x) x$nodes))
     sel <- nodes$case == 0 & nodes$land == 0 & nodes$pump == 0
+    nodes.intersections <- nodes[sel, ]
     nodes <- nodes[!sel, ]
-    nodes$case <- as.integer(nodes$case)
-    nodes$land <- as.integer(nodes$land)
-    nodes$pump <- as.integer(nodes$pump)
 
     case.tmp <- nodes[nodes$case != 0, ]
     land.tmp <- nodes[nodes$land != 0, ]
@@ -360,23 +357,24 @@ embedNodes <- function(vestry = FALSE, case.set = "observed",
       by.x = "pump", by.y = "id", all.x = TRUE)
 
     names(pump.tmp)[names(pump.tmp) == "street"] <- "name"
-
-    nodes <- rbind(case.tmp, land.tmp, pump.tmp)
+    
+    node.vars <- names(case.tmp)
+    nodes <- rbind(case.tmp, land.tmp[node.vars], pump.tmp[node.vars])
     nodes <- nodes[order(nodes$pump, nodes$land, nodes$case), ]
     
     if (latlong) nodes$node <- paste0(nodes$lon, "_&_", nodes$lat)
     else nodes$node <- paste0(nodes$x, "_&_", nodes$y)
-
+    
     # road.nodes$node %in% nodes$node
     
     null.df <- data.frame(matrix(0, nrow = nrow(road.nodes), ncol = 3))
     names(null.df) <- c("case", "land", "pump")
     
     if (latlong) {
-      rd.coords <- stats::setNames(road.nodes[, c("x", "y")], vars)
-      road.nodes <- data.frame(rd.coords, null.df, node = road.nodes$node)
+      road.nodes <- data.frame(road.nodes[geo.vars], null.df,
+        node = road.nodes$node)
     } else {
-      road.nodes <- cbind(road.nodes[, c("node", "x", "y")], null.df)
+      road.nodes <- cbind(road.nodes[, c("node", vars)], null.df)
     }
     
     road.nodes$name <- "intersection"
