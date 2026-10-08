@@ -1,3 +1,8 @@
+# cholera 0.9.1.9171
+
+- clean code and change 'embed.anchor' to embed.anchors' in embedNodes().
+
+
 # cholera 0.9.1.9170
 
 - remove 'drop.isolates' argument in sohoGraph() and embedNodes().
