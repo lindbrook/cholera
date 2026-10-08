@@ -1,3 +1,8 @@
+# cholera 0.9.1.9170
+
+- remove 'drop.isolates' argument in sohoGraph() and embedNodes().
+
+
 # cholera 0.9.1.9169
 
 - fix identification of nearest pump in neighborhoodWalking().
