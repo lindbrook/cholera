@@ -37,4 +37,4 @@ VignetteBuilder: knitr
 Roxygen: list(old_usage = TRUE)
 Encoding: UTF-8
 Language: en-US
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1
