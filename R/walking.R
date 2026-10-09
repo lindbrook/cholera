@@ -172,7 +172,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 
     endpt.data <- endpt.data[, vars]
 
-    if (2L %in% p.sel) {
+    if (2L %in% p.sel | is.null(pump.select)) {
       ds.AE <- igraph::distances(
         graph = g,
         v = unlist(adam.eve.seg[, c("n1", "n2")]),

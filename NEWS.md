@@ -1,3 +1,8 @@
+# cholera 0.9.1.9173
+
+- amend Adam and Eve Court (p2) exception in neighborhoodWalking().
+
+
 # cholera 0.9.1.9172
 
 - update variables for peripheryCases(latlong = TRUE).
