@@ -1,3 +1,8 @@
+# cholera 0.9.1.9172
+
+- update variables for peripheryCases(latlong = TRUE).
+
+
 # cholera 0.9.1.9171
 
 - clean code and change 'embed.anchor' to embed.anchors' in embedNodes().
