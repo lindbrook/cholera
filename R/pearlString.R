@@ -5,7 +5,7 @@
 
 pearlStringRadius <- function(latlong = FALSE) {
   if (latlong) {
-    dat <- cholera::latlong.regular.cases[, c("x", "y")]
+    dat <- cholera::latlong.regular.cases[, c("cart.x", "cart.y")]
   } else {
     dat <- cholera::regular.cases
   }
@@ -60,7 +60,7 @@ travelingSalesman <- function(vertices, latlong = FALSE,
   }
 
   if (latlong) {
-    dat <- cholera::latlong.regular.cases[, c("x", "y")]
+    dat <- cholera::latlong.regular.cases[, c("cart.x", "cart.y")]
   } else {
     dat <- cholera::regular.cases
   }
