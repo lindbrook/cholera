@@ -17,6 +17,7 @@ peripheryCases <- function(n.points, latlong = FALSE) {
 
   if (latlong) {
     n.area <- cholera::latlong.regular.cases[n.points, c("cart.x", "cart.y")]
+    names(n.area) <- c("x", "y")
   } else {
     n.area <- cholera::regular.cases[n.points, ]
   }
