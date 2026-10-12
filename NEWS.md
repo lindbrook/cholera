@@ -1,3 +1,8 @@
+# cholera 0.9.1.9177
+
+- restrict "area.polygons" fix to latlong = FALSE in plot.walking().
+
+
 # cholera 0.9.1.9176
 
 - fix URL for urlchecker::url_check().
