@@ -1,3 +1,8 @@
+# cholera 0.9.1.9178
+
+- set plot.walking(type = "area.polygons").
+
+
 # cholera 0.9.1.9177
 
 - restrict "area.polygons" fix to latlong = FALSE in plot.walking().
