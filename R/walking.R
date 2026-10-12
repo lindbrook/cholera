@@ -267,7 +267,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 #' @note When plotting area graphs with simulated data (i.e., \code{case.set = "expected"}), there may be discrepancies between observed cases and expected neighborhoods, particularly between neighborhoods. type = "roads" inspired by Shiode et. al. (2015).
 #' @export
 
-plot.walking <- function(x, type = "area.points", add = FALSE,
+plot.walking <- function(x, type = "area.polygons", add = FALSE,
   tsp.method = "repetitive_nn", path.width = 2, alpha.level = 0.75,
   polygon.type = "solid", polygon.col = NULL, polygon.lwd = 2, ...) {
 
