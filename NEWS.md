@@ -1,3 +1,8 @@
+# cholera 0.9.1.9175
+
+- amend names for periphery.test in peripheryCases().
+
+
 # cholera 0.9.1.9174
 
 - update variables for pearlStringRadius() and travelingSalesman().
