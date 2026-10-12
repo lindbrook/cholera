@@ -1,3 +1,8 @@
+# cholera 0.9.1.9176
+
+- fix URL for urlchecker::url_check().
+
+
 # cholera 0.9.1.9175
 
 - amend names for periphery.test in peripheryCases().

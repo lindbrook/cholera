@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.1.9175-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.1.9176-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -227,7 +227,7 @@ discourage against using parallelization within a GUI or embedded
 environment. See `vignette("parallelization")` for details. That said,
 I’ve had few, if any, problems with using the package in parallel on
 macOS with either the [R application](https://www.r-project.org/) or the
-[RStudio IDE](https://posit.co/products/open-source/rstudio/).
+[RStudio IDE](https://posit.co/products/open-source/rstudio).
 
 #### longitude and latitude
 
