@@ -1,3 +1,8 @@
+# cholera 0.9.1.9179
+
+- add/use latlongEuclideanAreaPoints() and amend cex.
+
+
 # cholera 0.9.1.9178
 
 - set plot.walking(type = "area.polygons").
