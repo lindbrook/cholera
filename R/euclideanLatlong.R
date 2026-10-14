@@ -116,7 +116,7 @@ plot.euclideanLatlong <- function(x, type = "star", add = FALSE,
     if (type == "star") {
       latlongEuclideanStar(x, vars)
     } else if (type == "area.points") {
-      latlongEuclideanCases(x, vars, add.observed.points)
+      latlongEuclideanAreaPoints(x)
     } else if (type == "area.polygons") {
       latlongEuclideanAreaPolygons(x, alpha.level, polygon.type)
     } else {
@@ -230,6 +230,26 @@ latlongEuclideanStar <- function(x, vars) {
     alter <- x$pump.data[x$pump.data$id == p, vars]
     segments(ego$lon, ego$lat, alter$lon, alter$lat,
              col = x$snow.colors[paste0("p", p)], lwd = 0.5)
+  }))
+}
+
+latlongEuclideanAreaPoints <- function(x) {
+  if (x$case.set == "expected") {
+    if (x$location %in% c("nominal", "anchor")) {
+      dat <- cholera::latlong.regular.cases
+    } else if (x$location == "orthogonal") {
+      dat <- cholera::latlong.sim.ortho.proj
+    }
+  }
+
+  neighborhood.cases <- lapply(x$statistic.data, function(neighbor) {
+    dat$case[neighbor == 1]
+  })
+
+  invisible(lapply(names(neighborhood.cases), function(n) {
+    n.color <- x$snow.colors[n]
+    n.data <- dat[dat$case %in% neighborhood.cases[[n]], ]
+    points(n.data$lon, n.data$lat, col = n.color, pch = 16, cex = 1.25)
   }))
 }
 
