@@ -34,12 +34,8 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
   if (!time.unit %in% c("hour", "minute", "second")) {
     stop('distance.unit must be "hour", "minute" or "second".', call. = FALSE)
   }
-
-  if (.Platform$OS.type == "windows") {
-    cores <- 1L
-  } else {
-    cores <- multiCore(multi.core)
-  }
+  
+  cores <- multiCore(multi.core)
 
   if (vestry) {
     pump.data <- cholera::pumps.vestry

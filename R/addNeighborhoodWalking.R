@@ -26,8 +26,7 @@ addNeighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
   alpha.level = 0.5, polygon.type = "solid", polygon.col = NULL,
   polygon.lwd = 2, multi.core = FALSE) {
 
-  if (.Platform$OS.type == "windows") cores <- 1L
-  else cores <- multiCore(multi.core)
+  cores <- multiCore(multi.core)
 
   x <- neighborhoodWalking(pump.select = pump.select, vestry = vestry,
     weighted = weighted, case.set = case.set, latlong = latlong,

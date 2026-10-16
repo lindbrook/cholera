@@ -27,11 +27,7 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     stop('case.set must be "observed" or "expected.', call. = FALSE)
   }
 
-  if (.Platform$OS.type == "windows") {
-    cores <- 1L
-  } else {
-    cores <- multiCore(multi.core)
-  }
+  cores <- multiCore(multi.core)
 
   if (vestry) {
     pump.data <- cholera::pumps.vestry

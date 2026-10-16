@@ -126,11 +126,7 @@ polygonAudit <- function(x, i = 1) {
 polygonVertexOutliers <- function(plot = TRUE, pump.select = NULL, 
   vestry = FALSE, multi.core = FALSE) {
 
-  if (.Platform$OS.type == "windows") {
-    cores <- 1L
-  } else {
-    cores <- multiCore(multi.core)
-  }
+  cores <- multiCore(multi.core)
   
   if (is.null(pump.select)) {
     x <- neighborhoodWalking(case.set = "expected", vestry = vestry, 

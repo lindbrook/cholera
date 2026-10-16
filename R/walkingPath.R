@@ -80,11 +80,7 @@ walkingPath <- function(origin = 1, destination = NULL, type = "case-pump",
     dstn.nm <- destination.chk$out.nm
   }
 
-  if (.Platform$OS.type == "windows") {
-    cores <- 1L
-  } else {
-    cores <- multiCore(multi.core)
-  }
+  cores <- multiCore(multi.core)
 
   network <- sohoGraph(vestry = vestry, case.set = case.set, latlong = latlong, 
     multi.core = cores)
