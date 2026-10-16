@@ -15,11 +15,7 @@ sohoGraph <- function(vestry = FALSE, case.set = "observed",
   embed.anchors = TRUE, embed.landmarks = TRUE, embed.pumps = TRUE,
   latlong = FALSE, ellipsoid = "WGS", multi.core = FALSE) {
 
-  if (.Platform$OS.type == "windows") {
-    cores <- 1L
-  } else {
-    cores <- multiCore(multi.core)
-  }
+  cores <- multiCore(multi.core)
 
   args <- list(embed.anchors = embed.anchors, embed.landmarks = embed.landmarks,
     embed.pumps = embed.pumps, vestry = vestry, case.set = case.set,

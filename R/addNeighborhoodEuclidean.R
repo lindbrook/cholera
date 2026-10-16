@@ -32,8 +32,7 @@ addNeighborhoodEuclidean <- function(pump.select = NULL, vestry = FALSE,
   add.observed.points = TRUE, alpha.level = 0.25, polygon.type = "solid",
   multi.core = FALSE, dev.mode = FALSE) {
 
-  if (.Platform$OS.type == "windows") cores <- 1L
-  else cores <- multiCore(multi.core)
+  cores <- multiCore(multi.core)
 
   x <- neighborhoodEuclidean(pump.select = pump.select, vestry = vestry,
     case.set = case.set, case.select = case.select, latlong = latlong,
