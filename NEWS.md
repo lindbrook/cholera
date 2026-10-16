@@ -1,3 +1,8 @@
+# cholera 0.9.1.9180
+
+- add Positron and move Windows client tests into multiCore().
+
+
 # cholera 0.9.1.9179
 
 - add/use latlongEuclideanAreaPoints() and amend cex.
