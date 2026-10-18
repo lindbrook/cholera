@@ -1,3 +1,8 @@
+# cholera 0.9.1.9181
+
+- add case IDs to regular.cases.
+
+
 # cholera 0.9.1.9180
 
 - add Positron and move Windows client tests into multiCore().

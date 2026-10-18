@@ -328,8 +328,9 @@
 #'
 #' The result of using sp::spsample() and sp::Polygon() to generate 19,993 regularly spaced simulated cases within the map's borders.
 #'
-#' @format A data frame with 2 variable that records the position of 19,993 "expected" cases fitted by sp::spsample().
+#' @format A data frame with 3 variable that records the position of 19,993 "expected" cases fitted by sp::spsample().
 #'  \describe{
+#'     \item{\code{case}}{case ID}
 #'     \item{\code{x}}{x-coordinate}
 #'     \item{\code{y}}{y-coordinate}
 #'  }
