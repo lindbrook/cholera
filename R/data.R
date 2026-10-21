@@ -571,3 +571,15 @@
 #'  }
 #' @docType data
 "meter.to.yard"
+
+#' Approximate matches for nominal and latlong regular cases case IDs.
+#'
+#' @format A data frame with three variables.
+#'  \describe{
+#'     \item{\code{nom.case}}{numeric case ID for regular.cases}
+#'     \item{\code{geo.case}}{numeric case ID for latlong.regular.cases}
+#'     \item{\code{d}}{nearest distance for normmalized Cartesian coordinates.}
+#'  }
+#' @note Multiple matches possible: all (unique) nom.case, duplicate geo.case.
+#' @docType data
+"nominal.latlong"

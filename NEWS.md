@@ -1,3 +1,8 @@
+# cholera 0.9.1.9182
+
+- add nominal.latlong prototype.
+
+
 # cholera 0.9.1.9181
 
 - add case IDs to regular.cases.
