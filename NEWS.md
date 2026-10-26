@@ -1,3 +1,10 @@
+# cholera 0.9.1.9183
+
+- specify regular.cases variables in pearlStringRadius().
+- use case IDs from regular.cases and export case IDs in peripheryCases().
+- use row.names for latlong and case IDs for nominal in travelingSalesman().
+
+
 # cholera 0.9.1.9182
 
 - add nominal.latlong prototype.
