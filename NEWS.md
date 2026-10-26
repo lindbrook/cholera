@@ -1,3 +1,8 @@
+# cholera 0.9.1.9186
+
+- amend/use case IDs in simulateFatalities().
+
+
 # cholera 0.9.1.9185
 
 - amend code for "area.points" and "area.polygons" types in plot.walking().

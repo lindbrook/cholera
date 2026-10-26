@@ -20,12 +20,12 @@ simulateFatalities <- function(recompute.regular.cases = FALSE,
     reg.cases <- cholera::regular.cases
   }
 
-  idx <- seq_len(nrow(reg.cases))
+  reg.cases <- data.frame(case = seq_len(nrow(reg.cases)) + 2000L, reg.cases)
   vars <- c("x", "y")
   rd.segs <- cholera::road.segments
 
-  orthogonal.proj <- parallel::mclapply(idx, function(i) {
-    case <- reg.cases[i, ]
+  orthogonal.proj <- parallel::mclapply(reg.cases$case, function(x) {
+    case <- reg.cases[reg.cases$case == x, ]
     ones <- rbind(case[, vars],
                   stats::setNames(rd.segs[, paste0(vars, 1)], vars))
     twos <- rbind(case[, vars],
@@ -35,7 +35,7 @@ simulateFatalities <- function(recompute.regular.cases = FALSE,
     within.radius <- rd.segs$id[d1 <= radius & d2 <= radius]
 
     ortho.proj.test <- lapply(within.radius, function(seg.id) {
-      ortho.data <- orthogonalProjection(case = i, segment.id = seg.id,
+      ortho.data <- orthogonalProjection(case = x, segment.id = seg.id,
         observed = FALSE, case.data = case)
       x.proj <- ortho.data$x.proj
       y.proj <- ortho.data$y.proj
@@ -104,10 +104,9 @@ simulateFatalities <- function(recompute.regular.cases = FALSE,
     }
   }, mc.cores = cores)
 
-  sim.ortho.proj <- data.frame(case = idx + 2000L, 
-    do.call(rbind, orthogonal.proj))
-  row.names(sim.ortho.proj) <- NULL
-
+  sim.ortho.proj <- data.frame(case = reg.cases$case, 
+    do.call(rbind, orthogonal.proj), row.names = NULL)
+  
   list(regular.cases = reg.cases, sim.ortho.proj = sim.ortho.proj)
 }
 
