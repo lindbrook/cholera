@@ -67,7 +67,12 @@ travelingSalesman <- function(vertices, latlong = FALSE,
     dat <- cholera::regular.cases
   }
 
-  d <- stats::dist(dat[vertices, ])
+  if (latlong) {
+    d <- stats::dist(dat[vertices, ])
+  } else {
+    d <- stats::dist(dat[dat$case %in% vertices, c("x", "y")])  
+  }
+  
   tsp <- TSP::TSP(d, labels = vertices)
   soln <- TSP::solve_TSP(tsp, method = tsp.method)
   names(soln)
