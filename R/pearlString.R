@@ -19,7 +19,8 @@ peripheryCases <- function(n.points, latlong = FALSE) {
     n.area <- cholera::latlong.regular.cases[n.points, c("cart.x", "cart.y")]
     names(n.area) <- c("x", "y")
   } else {
-    n.area <- cholera::regular.cases[n.points, ]
+    sel <- cholera::regular.cases$case %in% n.points
+    n.area <- cholera::regular.cases[sel, c("x", "y")]
   }
 
   periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {
@@ -35,7 +36,7 @@ peripheryCases <- function(n.points, latlong = FALSE) {
     sum(c(N, E, S, W)) == 4
   }, logical(1L))
 
-  row.names(n.area[which(periphery.test == FALSE), ])
+  as.integer(row.names(n.area[which(periphery.test == FALSE), ]))
 }
 
 #' Compute polygon vertices via 'TSP' package.
