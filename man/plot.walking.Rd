@@ -4,7 +4,7 @@
 \alias{plot.walking}
 \title{Plot method for neighborhoodWalking().}
 \usage{
-\method{plot}{walking}(x, type = "area.polygons", add = FALSE,
+\method{plot}{walking}(x, type = "area.points", add = FALSE,
   tsp.method = "repetitive_nn", path.width = 2, alpha.level = 0.75,
   polygon.type = "solid", polygon.col = NULL, polygon.lwd = 2, ...)
 }
