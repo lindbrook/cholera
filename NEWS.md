@@ -1,3 +1,9 @@
+# cholera 0.9.1.9185
+
+- amend code for "area.points" and "area.polygons" types in plot.walking().
+- row.names for latlong and case IDs for nominal.
+
+
 # cholera 0.9.1.9184
 
 - set plot.walking(type = "area.points").
