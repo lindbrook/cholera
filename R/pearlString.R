@@ -7,7 +7,7 @@ pearlStringRadius <- function(latlong = FALSE) {
   if (latlong) {
     dat <- cholera::latlong.regular.cases[, c("cart.x", "cart.y")]
   } else {
-    dat <- cholera::regular.cases
+    dat <- cholera::regular.cases[, c("x", "y")]
   }
   c(stats::dist(dat[c(1, 2), ]))
 }
