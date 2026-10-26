@@ -1,3 +1,8 @@
+# cholera 0.9.1.9184
+
+- set plot.walking(type = "area.points").
+
+
 # cholera 0.9.1.9183
 
 - specify regular.cases variables in pearlStringRadius().
