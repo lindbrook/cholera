@@ -7,7 +7,7 @@ pearlStringRadius <- function(latlong = FALSE) {
   if (latlong) {
     dat <- cholera::latlong.regular.cases[, c("cart.x", "cart.y")]
   } else {
-    dat <- cholera::regular.cases
+    dat <- cholera::regular.cases[, c("x", "y")]
   }
   c(stats::dist(dat[c(1, 2), ]))
 }
@@ -19,7 +19,8 @@ peripheryCases <- function(n.points, latlong = FALSE) {
     n.area <- cholera::latlong.regular.cases[n.points, c("cart.x", "cart.y")]
     names(n.area) <- c("x", "y")
   } else {
-    n.area <- cholera::regular.cases[n.points, ]
+    sel <- cholera::regular.cases$case %in% n.points
+    n.area <- cholera::regular.cases[sel, c("x", "y")]
   }
 
   periphery.test <- vapply(seq_len(nrow(n.area)), function(i) {
@@ -35,7 +36,7 @@ peripheryCases <- function(n.points, latlong = FALSE) {
     sum(c(N, E, S, W)) == 4
   }, logical(1L))
 
-  row.names(n.area[which(periphery.test == FALSE), ])
+  as.integer(row.names(n.area[which(periphery.test == FALSE), ]))
 }
 
 #' Compute polygon vertices via 'TSP' package.
@@ -66,7 +67,12 @@ travelingSalesman <- function(vertices, latlong = FALSE,
     dat <- cholera::regular.cases
   }
 
-  d <- stats::dist(dat[vertices, ])
+  if (latlong) {
+    d <- stats::dist(dat[vertices, ])
+  } else {
+    d <- stats::dist(dat[dat$case %in% vertices, c("x", "y")])  
+  }
+  
   tsp <- TSP::TSP(d, labels = vertices)
   soln <- TSP::solve_TSP(tsp, method = tsp.method)
   names(soln)
