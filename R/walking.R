@@ -324,7 +324,7 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
       latlong = x$latlong)
 
     if (x$latlong) {
-      reg.cases <- cholera::latlong.regular.cases[, vars]
+      reg.cases <- cholera::latlong.regular.cases
     } else {
       reg.cases <- cholera::regular.cases
     }
@@ -359,63 +359,85 @@ plot.walking <- function(x, type = "area.points", add = FALSE,
 
       falconberg.ct.mews <- c("40-1", "41-1", "41-2", "63-1")
       FCM <- rd.segs[rd.segs$id %in% falconberg.ct.mews, ]
+      
       if (x$latlong) {
         segments(FCM$lon1, FCM$lat1, FCM$lon2, FCM$lat2, lty = "dotted")
       } else {
         segments(FCM$x1, FCM$y1, FCM$x2, FCM$y2, lty = "dotted")
       }
 
-    } else if (type == "area.points") {
+    } else if (type == "area.points") {    
       invisible(lapply(names(x$exp.pump.case), function(nm) {
-        points(reg.cases[x$exp.pump.case[[nm]] - case.fix, ], pch = 15,
-          cex = 1.25, col = x$snow.colors[paste0("p", nm)])
+        sel <- reg.cases$case %in% x$exp.pump.case[[nm]]
+        points(reg.cases[sel, vars], pch = 15, cex = 1.25,
+          col = x$snow.colors[paste0("p", nm)])
       }))
 
       if (!add) addRoads(col = "black", latlong = x$latlong)
 
     } else if (type == "area.polygons") {
-      neighborhood.cases <- lapply(x$exp.pump.case, function(x) x - case.fix)
+      neighborhood.cases <- x$exp.pump.case
 
       if (isFALSE(x$latlong)) {
-        # p8 fix with pump.select = 6:9 | pump.select = 3:9
-        # p13 fix with pump.select = -13 & x$vestry == FALSE
-
-        if (isFALSE(x$latlong)) {
-          polygon.err <- identical(x$p.sel, 6:9) |
-                         identical(x$p.sel, 3:9) |
-                         (identical(x$pump.select, -13) & isFALSE(x$vestry))
-        } else {
-          polygon.err <- FALSE
-        }
-
-        if (polygon.err) {
-          outliers <- c(206, 4022, 7131, 7277)
-          neighborhood.cases <- lapply(neighborhood.cases, function(x) {
-            if (any(outliers %in% x)) x <- x[!x %in% outliers]
-            else x
-          })
-        }
+        polygon.err <- identical(x$p.sel, 6:9) |
+                       identical(x$p.sel, 3:9) |
+                       (identical(x$pump.select, -13) & isFALSE(x$vestry))
+      } else {
+        polygon.err <- FALSE
       }
+
+      if (polygon.err) {
+        outliers <- c(206, 4022, 7131, 7277)
+        neighborhood.cases <- lapply(neighborhood.cases, function(x) {
+          if (any(outliers %in% x)) x <- x[!x %in% outliers]
+          else x
+        })
+      }      
 
       periphery.cases <- parallel::mclapply(neighborhood.cases,
         peripheryCases, latlong = x$latlong, mc.cores = x$cores)
-
+      
+      if (isFALSE(x$latlong)) {
+        periphery.cases <- lapply(periphery.cases, function(x) x + case.fix)  
+      }
+      
       pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman,
         latlong = x$latlong, tsp.method = tsp.method, mc.cores = x$cores)
 
       if (!add) addRoads(col = "black", latlong = x$latlong)
 
-      if (polygon.type == "border") {
-        invisible(lapply(names(pearl.string), function(nm) {
-          polygon(reg.cases[pearl.string[[nm]], ],
-            border = x$snow.colors[paste0("p", nm)], lwd = polygon.lwd)
-        }))
-      } else if (polygon.type == "solid") {
-        invisible(lapply(names(pearl.string), function(nm) {
-          polygon(reg.cases[pearl.string[[nm]], ],
-            col = grDevices::adjustcolor(x$snow.colors[paste0("p", nm)],
-            alpha.f = alpha.level))
-        }))
+      if (x$latlong) {
+        if (polygon.type == "border") {
+          invisible(lapply(names(pearl.string), function(nm) {
+            polygon(reg.cases[pearl.string[[nm]], vars],
+              border = x$snow.colors[paste0("p", nm)], lwd = polygon.lwd)
+          }))
+        } else if (polygon.type == "solid") {
+          invisible(lapply(names(pearl.string), function(nm) {
+            polygon(reg.cases[pearl.string[[nm]], vars],
+              col = grDevices::adjustcolor(x$snow.colors[paste0("p", nm)], 
+                alpha.f = alpha.level))
+          }))
+        }
+      } else {
+        polygon.data <- parallel::mclapply(pearl.string, function(vertices) {
+          do.call(rbind, lapply(vertices, function(case) {
+            reg.cases[reg.cases$case == case, vars]
+          }))
+        }, mc.cores = x$cores)
+
+        if (polygon.type == "border") {
+          invisible(lapply(names(polygon.data), function(nm) {
+            polygon(polygon.data[[nm]], border = x$snow.colors[paste0("p", nm)],
+              lwd = polygon.lwd)
+          }))
+        } else if (polygon.type == "solid") {
+          invisible(lapply(names(polygon.data), function(nm) {
+            polygon(polygon.data[[nm]],
+              col = grDevices::adjustcolor(x$snow.colors[paste0("p", nm)], 
+                alpha.f = alpha.level))
+          }))
+        }
       }
     }
 
