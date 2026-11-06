@@ -146,7 +146,8 @@ plot.snow <- function(x, type = "area.polygons", snow.cases = FALSE,
     } else {
       sel <- cholera::sim.ortho.proj$road.segment %in% whole
       whole.case <- cholera::sim.ortho.proj[sel, "case"]
-      sim.whole <- cholera::regular.cases[whole.case - 2000L, ]
+      sel <- cholera::regular.cases$case %in% whole.case
+      sim.whole <- cholera::regular.cases[sel, ]
     }
     
     # simulated cases on sub-segments (partially traversed segments)
@@ -213,7 +214,8 @@ plot.snow <- function(x, type = "area.polygons", snow.cases = FALSE,
     if (x$latlong) {
       sim.partial <- cholera::latlong.regular.cases[unlist(sim.partial.case), ]
     } else {
-      sim.partial <- cholera::regular.cases[unlist(sim.partial.case) - 2000L, ]  
+      sel <- cholera::regular.cases$case %in% unlist(sim.partial.case)
+      sim.partial <- cholera::regular.cases[sel, ]
     }
     
     sim.data <- rbind(sim.whole, sim.partial)
