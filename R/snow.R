@@ -228,31 +228,67 @@ plot.snow <- function(x, type = "area.polygons", snow.cases = FALSE,
       if (is.null(polygon.col)) polygon.col <- p7.col
       if (is.null(polygon.lwd)) polygon.lwd <- 1
       
-      periphery.cases <- peripheryCases(row.names(sim.data),
-        latlong = x$latlong)
-      
-      pearl.string <- travelingSalesman(periphery.cases, latlong = x$latlong)
+      periphery.cases <- peripheryCases(sim.data$case, latlong = x$latlong)
 
       if (x$latlong) {
-        if (polygon.type == "border") {
-          if (is.null(polygon.lwd)) polygon.lwd <- 3
-          polygon(cholera::latlong.regular.cases[pearl.string, vars],
-            border = polygon.col, lwd = polygon.lwd)
-        } else if (polygon.type == "solid") {
-          if (is.null(polygon.lwd)) polygon.lwd <- 1
-          polygon(cholera::latlong.regular.cases[pearl.string, vars], 
-            col = polygon.col, lwd = polygon.lwd)
-        }
+        pearl.string <- travelingSalesman(periphery.cases, latlong = x$latlong)
       } else {
-        if (polygon.type == "border") {
-          if (is.null(polygon.lwd)) polygon.lwd <- 3
-          polygon(cholera::regular.cases[pearl.string, ], border = polygon.col,
-            lwd = polygon.lwd)
-        } else if (polygon.type == "solid") {
-          if (is.null(polygon.lwd)) polygon.lwd <- 1
-          polygon(cholera::regular.cases[pearl.string, ], col = polygon.col,
-            lwd = polygon.lwd)
-        }
+        pearl.string <- cholera::pearl.string.snow
+      }
+      
+      if (x$latlong) {
+        reg.cases <- cholera::latlong.regular.cases
+      } else {
+        reg.cases <- cholera::regular.cases
+      }
+
+      # manual fix of travelling salesman solution
+
+      if (isFALSE(x$latlong)) {
+        # fix long strings and set counter-cloackwise orientation
+
+        ps <- data.frame(id = seq_along(periphery.cases), case = pearl.string)
+        ps$id2 <- NA
+        ps[ps$id %in% 1:9, "id2"] <- 9:1
+        ps[ps$id %in% 10:71, "id2"] <- 10:71
+        ps[ps$id %in% 155:205, "id2"] <- 72:122
+        ps[ps$id %in% 72:154, "id2"] <- 123:205
+
+        # 71 -> 38 : insert and shift other indices ##
+
+        tmp <- ps[ps$id2 == 71, ]
+        tmp[, "id2"] <- 38
+        ps <- ps[ps$id2 != 71, ]
+
+        splice <- ps$id2 >= 38 & ps$id2 <= 70
+        ps[splice, "id2"] <- ps[splice, "id2"] + 1
+        ps <- rbind(ps, tmp)
+
+        # 72 <-> 73 : 13200 <-> 13347 ##
+
+        ps[ps$case == 13347, "id2"] <- 72
+        ps[ps$case == 13200, "id2"] <- 73
+
+        ## 20 <-> 21 : 11747 <-> 11601 ##
+
+        ps[ps$case == 11747, "id2"] <- 21
+        ps[ps$case == 11601, "id2"] <- 20
+
+        ## 111 <-> 112 : 15072 <-> 15217 ## 
+
+        ps[ps$case == 15072, "id2"] <- 112
+        ps[ps$case == 15217, "id2"] <- 111
+        
+        ps <- ps[order(ps$id2), ]
+        pearl.string <- ps$case
+      }
+      
+      if (polygon.type == "border") {
+        polygon(reg.cases[pearl.string, vars], border = polygon.col,
+          lwd = polygon.lwd)
+      } else if (polygon.type == "solid") {
+        polygon(reg.cases[pearl.string, vars], col = polygon.col,
+          lwd = polygon.lwd)
       }
     }
 
