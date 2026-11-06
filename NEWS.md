@@ -1,3 +1,8 @@
+# cholera 0.9.1.9187
+
+- add pearl.string.snow.
+
+
 # cholera 0.9.1.9186
 
 - amend/use case IDs in simulateFatalities().
