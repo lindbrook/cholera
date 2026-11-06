@@ -222,9 +222,11 @@ plot.snow <- function(x, type = "area.polygons", snow.cases = FALSE,
     p7.col <- grDevices::adjustcolor(snowColors()["p7"], alpha.f = alpha.level)
 
     if (type == "area.points") {
-      points(sim.data[, vars], col = p7.col, pch = 16, cex = 0.25)
+      points(sim.data[, vars], col = p7.col, pch = 16, cex = 0.5)
+    
     } else if (type == "area.polygons") {
       if (is.null(polygon.col)) polygon.col <- p7.col
+      if (is.null(polygon.lwd)) polygon.lwd <- 1
       
       periphery.cases <- peripheryCases(row.names(sim.data),
         latlong = x$latlong)
