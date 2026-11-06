@@ -583,3 +583,12 @@
 #' @note Multiple matches possible: all (unique) nom.case, duplicate geo.case.
 #' @docType data
 "nominal.latlong"
+
+#' Travelling salesman solution for periphery.cases for Snow neighborhood.
+#'
+#' @format A vector of 205 "expected" nominal cases.
+#'  \describe{
+#'     \item{\code{case IDs}}{numeric case IDs for selected regular.cases}
+#'  }
+#' @docType data
+"pearl.string.snow"
