@@ -1,3 +1,7 @@
+# cholera 0.9.1.9188
+
+- add manual fix for traveling salesman solution for nominal Snow neighborhood.
+
 # cholera 0.9.1.9187
 
 - add pearl.string.snow.
