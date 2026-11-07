@@ -198,7 +198,13 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
       call. = FALSE)
   }
 
-  voronoi.case.id <- pumpCase(x)
+  if (x$location == "orthogonal") {
+    loc <- "orthogonal"
+  } else if (x$location == "nominal") {
+    loc <- "anchor" 
+  }
+
+  voronoi.case.id <- pumpCase(x, loc)
   voronoi.colors <- vector(length = length(unlist(voronoi.case.id)))
 
   if (x$location == "orthogonal") {
