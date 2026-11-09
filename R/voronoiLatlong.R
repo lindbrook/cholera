@@ -95,7 +95,6 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
 plot.voronoi_latlong <- function(x, add.pumps = TRUE,
   delaunay.voronoi = "voronoi", euclidean.paths = FALSE, ...) {
 
-  vars <- c("lon", "lat")
 
   snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE,
     add.pumps = FALSE)
@@ -132,6 +131,8 @@ plot.voronoi_latlong <- function(x, add.pumps = TRUE,
   case.partition <- lapply(x$statistic.data, function(dat) {
     cholera::fatalities.anchor$anchor[dat == 1]
   })
+
+  vars <- c("lon", "lat")
 
   if (delaunay.voronoi == "voronoi") {
     invisible(lapply(x$cells.triangles$cells, function(dat) {
