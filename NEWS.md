@@ -1,3 +1,8 @@
+# cholera 0.9.1.9190
+
+- check delaunay.voronoi earlier in neighborhoodVoronoi() plot methods.
+
+
 # cholera 0.9.1.9189
 
 - fix location in plot.voronoi_nominal().

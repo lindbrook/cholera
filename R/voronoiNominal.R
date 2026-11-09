@@ -153,6 +153,11 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
 plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
   euclidean.paths = FALSE, ...) {
 
+  if (!delaunay.voronoi %in% c("delaunay", "voronoi", "both")) {
+    stop('delaunay.voronoi must be "delaunay", "voronoi", or "both".',
+      call. = FALSE)   
+  }
+
   snowMap(add.cases = FALSE, add.pumps = FALSE)
 
   if (is.null(x$pump.select) | is.character(x$pump.select)) {
@@ -193,9 +198,6 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
     plot(x$voronoi, add = TRUE, wline = "tess", showpoints = FALSE,
       cmpnt_lty = "solid")
     plot(x$voronoi, add = TRUE, wline = "triang", showpoints = FALSE)
-  } else {
-    stop('delaunay.voronoi must be "delaunay", "voronoi", or "both".',
-      call. = FALSE)
   }
 
   if (x$location == "orthogonal") {
