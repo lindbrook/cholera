@@ -138,7 +138,7 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
 #' Plot Voronoi neighborhoods.
 #'
 #' @param x An object of class "voronoi" created by \code{voronoiNominal()}.
-#' @param delaunay.voronoi Character "delaunay", "voronoi", or "both".
+#' @param delaunay.voronoi Character. "delaunay" (trianlges), "voronoi" (cells), or "both".
 #' @param euclidean.paths Logical. Plot all Euclidean paths (star graph).
 #' @param ... Additional plotting parameters.
 #' @return A base R graph.

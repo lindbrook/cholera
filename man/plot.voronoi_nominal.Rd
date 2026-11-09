@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{An object of class "voronoi" created by \code{voronoiNominal()}.}
 
-\item{delaunay.voronoi}{Character "delaunay", "voronoi", or "both".}
+\item{delaunay.voronoi}{Character. "delaunay" (trianlges), "voronoi" (cells), or "both".}
 
 \item{euclidean.paths}{Logical. Plot all Euclidean paths (star graph).}
 
