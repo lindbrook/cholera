@@ -160,22 +160,28 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
 
   snowMap(add.cases = FALSE, add.pumps = FALSE)
 
-  if (is.null(x$pump.select) | is.character(x$pump.select)) {
-    if (x$location == "orthogonal") {
-      title(main = "Pump Neighborhoods: Voronoi (orthogonal)")
-    } else if (x$location == "nominal") {
-      title(main = "Pump Neighborhoods: Voronoi (nominal)")
-    }
-  } else if (is.numeric(x$pump.select)) {
-    if (x$location == "orthogonal") {
-      title(main = paste0("Pump Neighborhoods: Voronoi (orthogonal)", "\n",
-        "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
-    } else if (x$location == "nominal") {
-      title(main = paste0("Pump Neighborhoods: Voronoi (nominal)", "\n",
-        "Pumps ", paste(sort(x$pump.select), collapse = ", ")))
-    }
+  if (delaunay.voronoi %in% c("delaunay", "voronoi")) {
+    ttlB <- tools::toTitleCase(delaunay.voronoi)
+  } else if (delaunay.voronoi == "both") {
+    ttlB <- "Delaunay and Voronoi"
   }
 
+  if (x$location == "nominal") {
+    ttlC <- "(nominal)"
+  } else if (x$location == "orthogonal") {
+    ttlC <- "(orthogonal)"
+  }
+
+  if (is.numeric(x$pump.select)) {
+    ttlD <- paste0("\n", "Pumps ", paste(sort(x$pump.select), collapse = ", "))
+  }
+
+  if (is.null(x$pump.select) | is.character(x$pump.select)) {
+    title(main = paste("Pump Neighborhoods:", ttlB, ttlC))
+  } else if (is.numeric(x$pump.select) ) {
+    title(main = paste("Pump Neighborhoods:", ttlB, ttlC, ttlD))
+  }
+  
   if (is.character(x$pump.select)) {
     legend(x = "topleft",
          legend = shortPostfix(x$pump.select),
