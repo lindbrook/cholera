@@ -95,6 +95,10 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
 plot.voronoi_latlong <- function(x, add.pumps = TRUE,
   delaunay.voronoi = "voronoi", euclidean.paths = FALSE, ...) {
 
+  if (!delaunay.voronoi %in% c("delaunay", "voronoi", "both")) {
+    stop('delaunay.voronoi must be "delaunay", "voronoi", or "both".',
+      call. = FALSE)   
+  }
 
   snowMap(vestry = x$vestry, latlong = TRUE, add.cases = FALSE,
     add.pumps = FALSE)
@@ -149,9 +153,6 @@ plot.voronoi_latlong <- function(x, add.pumps = TRUE,
     invisible(lapply(x$cells.triangles$triangles, function(dat) {
       polygon(dat[, vars])
     }))
-  } else {
-    stop('cells.triangles must be "cells", "triangles", or "both".',
-      call. = FALSE)
   }
 
   if (euclidean.paths) {
