@@ -87,7 +87,7 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
 #' Plot method for voronoiLatlong()
 #' @param x Object.
 #' @param add.pumps Logical.
-#' @param delaunay.voronoi Character "delaunay", "voronoi", or "both".
+#' @param delaunay.voronoi Character. "delaunay" (trianlges), "voronoi" (cells), or "both".
 #' @param euclidean.paths Logical.
 #' @param ... Additional plotting parameters.
 #' @export

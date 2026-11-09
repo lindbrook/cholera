@@ -12,7 +12,7 @@
 
 \item{add.pumps}{Logical.}
 
-\item{delaunay.voronoi}{Character "delaunay", "voronoi", or "both".}
+\item{delaunay.voronoi}{Character. "delaunay" (trianlges), "voronoi" (cells), or "both".}
 
 \item{euclidean.paths}{Logical.}
 
