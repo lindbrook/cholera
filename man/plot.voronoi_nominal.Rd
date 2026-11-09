@@ -4,11 +4,13 @@
 \alias{plot.voronoi_nominal}
 \title{Plot Voronoi neighborhoods.}
 \usage{
-\method{plot}{voronoi_nominal}(x, delaunay.voronoi = "voronoi",
-  euclidean.paths = FALSE, ...)
+\method{plot}{voronoi_nominal}(x, add.pumps = TRUE,
+  delaunay.voronoi = "voronoi", euclidean.paths = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class "voronoi" created by \code{voronoiNominal()}.}
+
+\item{add.pumps}{Logical.}
 
 \item{delaunay.voronoi}{Character. "delaunay" (trianlges), "voronoi" (cells), or "both".}
 

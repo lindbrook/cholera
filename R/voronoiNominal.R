@@ -138,6 +138,7 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
 #' Plot Voronoi neighborhoods.
 #'
 #' @param x An object of class "voronoi" created by \code{voronoiNominal()}.
+#' @param add.pumps Logical.
 #' @param delaunay.voronoi Character. "delaunay" (trianlges), "voronoi" (cells), or "both".
 #' @param euclidean.paths Logical. Plot all Euclidean paths (star graph).
 #' @param ... Additional plotting parameters.
@@ -150,8 +151,8 @@ voronoiNominal <- function(pump.select = NULL, vestry = FALSE,
 #'
 #' @export
 
-plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
-  euclidean.paths = FALSE, ...) {
+plot.voronoi_nominal <- function(x, add.pumps = TRUE,
+  delaunay.voronoi = "voronoi", euclidean.paths = FALSE, ...) {
 
   if (!delaunay.voronoi %in% c("delaunay", "voronoi", "both")) {
     stop('delaunay.voronoi must be "delaunay", "voronoi", or "both".',
@@ -159,6 +160,8 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
   }
 
   snowMap(add.cases = FALSE, add.pumps = FALSE)
+
+  if (add.pumps) pumpTokens(x, type = NULL)
 
   if (delaunay.voronoi %in% c("delaunay", "voronoi")) {
     ttlB <- tools::toTitleCase(delaunay.voronoi)
@@ -192,8 +195,6 @@ plot.voronoi_nominal <- function(x, delaunay.voronoi = "voronoi",
          cex = 2/3,
          title = NULL)
   }
-
-  pumpTokens(x, NULL)
 
   if (delaunay.voronoi == "voronoi") {
     plot(x$voronoi, add = TRUE, wline = "tess", showpoints = FALSE,

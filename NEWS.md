@@ -1,3 +1,8 @@
+# cholera 0.9.1.9192
+
+- add/set plot.voronoi_nominal(add.pumps = TRUE).
+
+
 # cholera 0.9.1.9191
 
 - amend/fix titles in neighborhoodVoronoi() plot methods.
