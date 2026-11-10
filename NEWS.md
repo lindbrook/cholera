@@ -1,3 +1,8 @@
+# cholera 0.9.1.9193
+
+- add check for add.pumps argument in neighborhoodVoronoi() plot methods.
+
+
 # cholera 0.9.1.9192
 
 - add/set plot.voronoi_nominal(add.pumps = TRUE).

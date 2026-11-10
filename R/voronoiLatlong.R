@@ -95,6 +95,8 @@ voronoiLatlong <- function(pump.select = NULL, vestry = FALSE,
 plot.voronoi_latlong <- function(x, add.pumps = TRUE,
   delaunay.voronoi = "voronoi", euclidean.paths = FALSE, ...) {
 
+  if (!is.logical(add.pumps)) stop("add.pumps must be logical.", call. = FALSE)
+
   if (!delaunay.voronoi %in% c("delaunay", "voronoi", "both")) {
     stop('delaunay.voronoi must be "delaunay", "voronoi", or "both".',
       call. = FALSE)   
