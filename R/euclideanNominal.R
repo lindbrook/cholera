@@ -48,7 +48,7 @@ euclideanNominal <- function(pump.select = NULL, vestry = FALSE,
       case.num <- cholera::fatalities$case
     }
   } else if (case.set == "expected") {
-    case.num <- seq_len(nrow(cholera::regular.cases))
+    case.num <- cholera::regular.cases$case
   }
 
   if (brute.force) {
