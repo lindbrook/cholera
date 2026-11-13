@@ -157,10 +157,11 @@ plot.euclidean <- function(x, type = "star", add = FALSE,
     stop('polygon.type must be "border" or "solid".', call. = FALSE)
   }
 
-  if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
   pump.data <- x$pump.data
   case.num <- x$case.num
   nearest.pump <- x$nearest.pump
+
+  if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
 
   if (type == "star") {
     if (!add) {
@@ -257,26 +258,35 @@ euclideanAreaPoints <- function(x, case.num, nearest.pump) {
   }))
 }
 
-euclideanAreaPolygons <- function(x, nearest.pump, alpha.level, polygon.type) {
-  p.num <- sort(unique(nearest.pump))
-  neighborhood.cases <- lapply(p.num, function(n) {
-    which(nearest.pump == n)
-  })
-  periphery.cases <- lapply(neighborhood.cases, peripheryCases)
-  pearl.string <- lapply(periphery.cases, travelingSalesman)
-  names(pearl.string) <- p.num
+euclideanAreaPolygons <- function(x, nearest.pump, alpha.level, polygon.type) { 
+  neighborhood.cases <- split(x$case.num, nearest.pump)
 
+  periphery.cases <- parallel::mclapply(neighborhood.cases, peripheryCases,
+    mc.cores = x$cores)
+  
+  if (isFALSE(x$latlong)) {
+    periphery.cases <- lapply(periphery.cases, function(x) x + 2000L)
+  }
+  
+  pearl.string <- parallel::mclapply(periphery.cases, travelingSalesman, 
+    mc.cores = x$cores)
+  pearl.string <- lapply(pearl.string, as.numeric)
+  
+  vertices <- lapply(pearl.string, function(ps) {
+    do.call(rbind, parallel::mclapply(ps, function(x) {
+      cholera::regular.cases[cholera::regular.cases$case == x, c("x", "y")]
+    }, mc.cores = x$cores))
+  })
+  
   if (polygon.type == "border") {
-    invisible(lapply(names(pearl.string), function(nm) {
-      sel <- paste0("p", nm)
-      polygon(cholera::regular.cases[pearl.string[[nm]], ],
-        border = x$snow.colors[sel])
+    invisible(lapply(names(vertices), function(nm) {
+      polygon(vertices[[nm]], border = x$snow.colors[paste0("p", nm)])
     }))
   } else if (polygon.type == "solid") {
     invisible(lapply(names(pearl.string), function(nm) {
-      sel <- paste0("p", nm)
-      polygon(cholera::regular.cases[pearl.string[[nm]], ],
-        col = grDevices::adjustcolor(x$snow.colors[sel], alpha.f = alpha.level))
+      poly.col <- grDevices::adjustcolor(x$snow.colors[paste0("p", nm)],
+        alpha.f = alpha.level)
+      polygon(vertices[[nm]], col = poly.col)
     }))
   }
 }

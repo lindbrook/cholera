@@ -1,3 +1,8 @@
+# cholera 0.9.1.9195
+
+- amend euclideanAreaPolygons() in euclideanNominal().
+
+
 # cholera 0.9.1.9194
 
 - amend case number computation in euclideanNominal().
