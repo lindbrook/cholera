@@ -157,10 +157,11 @@ plot.euclidean <- function(x, type = "star", add = FALSE,
     stop('polygon.type must be "border" or "solid".', call. = FALSE)
   }
 
-  if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
   pump.data <- x$pump.data
   case.num <- x$case.num
   nearest.pump <- x$nearest.pump
+
+  if (!add) snowMap(add.cases = FALSE, add.roads = FALSE, add.pumps = FALSE)
 
   if (type == "star") {
     if (!add) {
