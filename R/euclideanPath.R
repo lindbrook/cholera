@@ -583,10 +583,12 @@ casePumpEucl <- function(orgn, orgn.nm, destination, dstn, dstn.nm, latlong,
       }
     } else {
       if (location %in% c("anchor", "nominal")) {
-        ego.coords <- cholera::regular.cases[orgn, vars]
+        sel <- cholera::regular.cases$case %in% orgn
+        ego.coords <- cholera::regular.cases[sel, vars]
       } else if (location == "orthogonal") {
         vars.ortho <- paste0(vars, ".proj")
-        ego.coords <- cholera::sim.ortho.proj[orgn, vars.ortho]
+        sel <- cholera::sim.ortho.proj$case %in% orgn
+        ego.coords <- cholera::sim.ortho.proj[sel, vars.ortho]
         names(ego.coords) <- vars
       }
     }
