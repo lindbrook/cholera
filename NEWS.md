@@ -1,3 +1,8 @@
+# cholera 0.9.1.9196
+
+- use case IDs in casePumpEucl(case.set = "expected").
+
+
 # cholera 0.9.1.9195
 
 - amend euclideanAreaPolygons() in euclideanNominal().
