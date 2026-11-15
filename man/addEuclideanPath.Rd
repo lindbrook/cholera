@@ -6,10 +6,10 @@
 \usage{
 addEuclideanPath(origin = 1, destination = NULL, type = "case-pump",
   vestry = FALSE, latlong = FALSE, case.set = "observed",
-  location = "nominal", weighted = TRUE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5, include.landmarks = TRUE,
-  long.title = FALSE, mileposts = TRUE, milepost.unit = "distance",
-  milepost.interval = NULL, alpha.level = 1)
+  location = "nominal", distance.unit = "meter", time.unit = "second",
+  walking.speed = 5, include.landmarks = TRUE, long.title = FALSE,
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL,
+  alpha.level = 1)
 }
 \arguments{
 \item{origin}{Numeric. Vector of origin(s) (numeric ID or character name landmark/pump ).}
@@ -25,8 +25,6 @@ addEuclideanPath(origin = 1, destination = NULL, type = "case-pump",
 \item{case.set}{Character. "observed" or "expected".}
 
 \item{location}{Character. For cases and pumps. "nominal", "anchor" or "orthogonal".}
-
-\item{weighted}{Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.}
 
 \item{distance.unit}{Character. Unit of distance: "meter" or "yard".}
 
