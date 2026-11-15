@@ -7,7 +7,6 @@
 #' @param latlong Logical.
 #' @param case.set Character. "observed" or "expected".
 #' @param location Character. For cases and pumps. "nominal", "anchor" or "orthogonal".
-#' @param weighted Logical. \code{TRUE} computes shortest path in terms of road length. \code{FALSE} computes shortest path in terms of the number of nodes.
 #' @param distance.unit Character. Unit of distance: "meter" or "yard".
 #' @param time.unit Character. "hour", "minute", or "second".
 #' @param walking.speed Numeric. Walking speed in km/hr.
@@ -21,10 +20,10 @@
 
 addEuclideanPath <- function(origin = 1, destination = NULL,
   type = "case-pump", vestry = FALSE, latlong = FALSE, case.set = "observed",
-  location = "nominal", weighted = TRUE, distance.unit = "meter",
-  time.unit = "second", walking.speed = 5, include.landmarks = TRUE,
-  long.title = FALSE, mileposts = TRUE, milepost.unit = "distance",
-  milepost.interval = NULL, alpha.level = 1) {
+  location = "nominal", distance.unit = "meter", time.unit = "second", 
+  walking.speed = 5, include.landmarks = TRUE, long.title = FALSE,
+  mileposts = TRUE, milepost.unit = "distance", milepost.interval = NULL, 
+  alpha.level = 1) {
 
   args <- list(origin = origin,
                destination = destination,
@@ -33,7 +32,6 @@ addEuclideanPath <- function(origin = 1, destination = NULL,
                latlong = latlong,
                case.set = case.set,
                location = location,
-               weighted = weighted,
                distance.unit = distance.unit,
                time.unit = time.unit,
                walking.speed = walking.speed,

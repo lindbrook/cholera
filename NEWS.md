@@ -1,3 +1,8 @@
+# cholera 0.9.1.9197
+
+- drop unused/deprecated 'weighted' argument in addEuclideanPath().
+
+
 # cholera 0.9.1.9196
 
 - use case IDs in casePumpEucl(case.set = "expected").
