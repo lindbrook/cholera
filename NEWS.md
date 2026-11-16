@@ -1,3 +1,8 @@
+# cholera 0.9.1.9198
+
+- remove isoPoints() and isoVertices() prototypes.
+
+
 # cholera 0.9.1.9197
 
 - drop unused/deprecated 'weighted' argument in addEuclideanPath().
