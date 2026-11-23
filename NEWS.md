@@ -1,6 +1,11 @@
+# cholera 0.9.1.9200
+
+- remove unneede order() in neighborhoodWalking().
+
+
 # cholera 0.9.1.9199
 
-- set in squareCenter(latlong = TRUE) for addLandmarkSquares(latlong = TRUE).
+- set squareCenter(latlong = TRUE) for addLandmarkSquares(latlong = TRUE).
 
 
 # cholera 0.9.1.9198
