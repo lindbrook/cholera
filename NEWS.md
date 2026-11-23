@@ -1,6 +1,6 @@
 # cholera 0.9.1.9200
 
-- remove unneede order() in neighborhoodWalking().
+- remove unneeded order() in neighborhoodWalking().
 
 
 # cholera 0.9.1.9199
