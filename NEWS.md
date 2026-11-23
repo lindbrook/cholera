@@ -1,3 +1,8 @@
+# cholera 0.9.1.9199
+
+- set in squareCenter(latlong = TRUE) for addLandmarkSquares(latlong = TRUE).
+
+
 # cholera 0.9.1.9198
 
 - remove isoPoints() and isoVertices() prototypes.
