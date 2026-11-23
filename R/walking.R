@@ -53,7 +53,6 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
 
   if (case.set == "observed") {
     case.data <- nodes[nodes$case != 0, ]
-    case.data <- case.data[order(case.data$case), ]
     case <- case.data$case
 
     ds <- igraph::distances(graph = g, v = case.data$node, to = p.select$node,
