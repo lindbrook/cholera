@@ -152,9 +152,9 @@ neighborhoodWalking <- function(pump.select = NULL, vestry = FALSE,
     d <- vapply(seq_len(nrow(ds)), function(r) min(ds[r, ]), numeric(1L))
 
     endpt.pump <- data.frame(node = eps, pump.id = nr.pmp, d = d)
+    
     endpt.data <- merge(rd.segs, endpt.pump, by.x = "n1", by.y = "node")
     endpt.data <- merge(endpt.data, endpt.pump, by.x = "n2", by.y = "node")
-
     sel <- names(endpt.data) %in% c("pump.id.x", "d.x", "pump.id.y", "d.y")
     names(endpt.data)[sel] <- c("pump1", "d1", "pump2", "d2")
 
