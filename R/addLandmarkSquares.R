@@ -29,10 +29,10 @@ addLandmarkSquares <- function(latlong = FALSE, text.size = 0.5,
     sel <- cholera::landmarks$name %in% c("Soho Square-E", "Soho Square-W")
     soho.EW <- cholera::landmarks[sel, vars]
 
-    golden <- squareCenter(golden.NS, golden.EW)
+    golden <- squareCenter(golden.NS, golden.EW, latlong = TRUE)
     text(golden, labels = "Golden\nSquare", cex = text.size, col = text.col)
 
-    soho <- squareCenter(soho.NS, soho.EW)
+    soho <- squareCenter(soho.NS, soho.EW, latlong = TRUE)
     text(soho, labels = "Soho\nSquare", cex = text.size, col = text.col)
   } else {
     # Soho Square
