@@ -1,3 +1,8 @@
+# cholera 0.9.1.9201
+
+- copyedit README and Parallelization vignette.
+
+
 # cholera 0.9.1.9200
 
 - remove unneeded order() in neighborhoodWalking().

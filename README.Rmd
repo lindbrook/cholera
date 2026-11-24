@@ -75,11 +75,11 @@ I then wrote functions that compute and visualize walking distances on the map. 
 While walking distanced based neighborhoods are based on paths that follow streets, Euclidean distance based neighborhoods are based on straight line paths between a location and the nearest (or selected) pump:
 
 ```{r, fig.align = "default", fig.width = 5.5, fig.height = 5.5, fig.show = "hold", out.width = "50%"}
-streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
+streetNameLocator(zoom = -35, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
 title(main = "Walking Distances")
 invisible(lapply(c(1, 191, 46, 363, 85), addWalkingPath))
 
-streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
+streetNameLocator(zoom = -35, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
 title(main = "Euclidean Distances")
 invisible(lapply(c(1, 191, 46, 363, 85), addEuclideanPath))
 ```
@@ -139,11 +139,13 @@ plot(neighborhoodVoronoi(pump.select = -7))
 
 #### parallelization
 
-Parallelization is implemented using the 'parallel' package, which is part of the base R distribution. Where applicable, parallelization is enabled by default via `multi.core = TRUE` (you can also set or limit the number of cores by passing an integer or by setting `multi.core = FALSE`. Note that although some precautions are taken in the R application, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("parallelization")` for details. That said, I've had few, if any, problems with using the package in parallel on macOS with either the [R application](https://www.r-project.org/) or the [RStudio IDE](https://posit.co/products/open-source/rstudio).
+Parallelization is implemented using the 'parallel' package, which is part of the base R distribution. There are three things to note. First, it is _off_ by default. To turn it on, set `multi.core = TRUE` (for all available cores) or specify the number of cores to use (e.g., `multi.core = 4`). Second, it is only available on Linux and MacOS (not Windows). Third, regardless of platform, it is unavailable in Positron.
+
+Note that while some precautions are taken in the R application, the developers of the 'parallel' package strongly discourage against using parallelization within a GUI or embedded environment. See `vignette("parallelization")` for details. That said, I've had few, if any, problems with using the package in parallel on macOS with either the [R application](https://www.r-project.org/) or the [RStudio IDE](https://posit.co/products/open-source/rstudio).
 
 #### longitude and latitude
 
-['cholera'](https://cran.r-project.org/package=cholera) now has georeferenced (longitude and latitude) versions of _nearly_ all data and functions. For functions, this works by setting `latlong = TRUE` where available.
+['cholera'](https://cran.r-project.org/package=cholera) now has georeferenced (longitude and latitude) versions of almost all data and functions. For functions, this works by setting `latlong = TRUE` where available.
 
 Here's one example:
 

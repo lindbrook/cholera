@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/cholera)](https://cran.r-project.org/package=cholera)
-[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.1.9200-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
+[![GitHub\_Status\_Badge](https://img.shields.io/badge/GitHub-0.9.1.9201-red.svg)](https://github.com/lindbrook/cholera/blob/master/NEWS.md)
 ## cholera: amend, augment and aid analysis of Snow’s cholera map
 
 #### package features
@@ -31,7 +31,8 @@
 - Support for parallel computation on Linux and macOS; limited support
   for Windows.
 - Version \>= 0.9.1, offers provisional support for (georeferenced)
-  longitude and latitude for data and functions. [Details below](#longitude-and-latitude).
+  longitude and latitude for data and functions. [Details
+  below](#longitude-and-latitude).
 
 #### getting started
 
@@ -124,16 +125,16 @@ straight line paths between a location and the nearest (or selected)
 pump:
 
 ``` r
-streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
+streetNameLocator(zoom = -35, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
 title(main = "Walking Distances")
 invisible(lapply(c(1, 191, 46, 363, 85), addWalkingPath))
 
-streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
+streetNameLocator(zoom = -35, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
 title(main = "Euclidean Distances")
 invisible(lapply(c(1, 191, 46, 363, 85), addEuclideanPath))
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-4-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" alt="" width="50%" /><img src="man/figures/README-unnamed-chunk-4-2.png" alt="" width="50%" />
 
 To build a neighborhood, we apply this algorithm to each location or
 “address” with at least one observed fatality. This builds the
@@ -144,7 +145,7 @@ plot(neighborhoodWalking())
 plot(neighborhoodEuclidean())
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-5-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" alt="" width="50%" /><img src="man/figures/README-unnamed-chunk-5-2.png" alt="" width="50%" />
 
 Ultimately, for testing purposes we want the “expected” neighborhoods.
 For walking neighborhoods, I use the same approach but use simulated
@@ -157,7 +158,7 @@ the map and then compute the shortest path to the nearest pump.
 plot(neighborhoodWalking(case.set = "expected"), type = "area.polygons")
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" alt="" width="50%" />
 
 For Euclidean distance based neighborhoods, we can use the same
 simulated data and compute the as-the-crow-flies distance to the nearest
@@ -169,7 +170,7 @@ plot(neighborhoodEuclidean(case.set = "expected"))
 plot(neighborhoodVoronoi())
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-7-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="50%" /><img src="man/figures/README-unnamed-chunk-7-2.png" alt="" width="50%" />
 
 #### exploring walking neighborhoods
 
@@ -181,7 +182,7 @@ plot(neighborhoodWalking(pump.select = 6:7))
 plot(neighborhoodWalking(pump.select = -7))
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-8-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" alt="" width="50%" /><img src="man/figures/README-unnamed-chunk-8-2.png" alt="" width="50%" />
 
 To explore “expected” walking neighborhoods, add the case.set =
 “expected” argument:
@@ -191,7 +192,7 @@ plot(neighborhoodWalking(pump.select = 6:7, case.set = "expected"), type = "area
 plot(neighborhoodWalking(pump.select = -7, case.set = "expected"), type = "area.polygons")
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-9-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-9-1.png" alt="" width="50%" /><img src="man/figures/README-unnamed-chunk-9-2.png" alt="" width="50%" />
 
 #### exploring Euclidean neighborhoods
 
@@ -203,7 +204,7 @@ plot(neighborhoodEuclidean(pump.select = 6:7))
 plot(neighborhoodEuclidean(pump.select = -7))
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-10-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" alt="" width="50%" /><img src="man/figures/README-unnamed-chunk-10-2.png" alt="" width="50%" />
 
 To explore “expected” Euclidean neighborhoods, use
 `neighborhoodVoronoi()` with the `pump.select` argument:
@@ -213,39 +214,45 @@ plot(neighborhoodVoronoi(pump.select = 6:7))
 plot(neighborhoodVoronoi(pump.select = -7))
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-11-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" alt="" width="50%" /><img src="man/figures/README-unnamed-chunk-11-2.png" alt="" width="50%" />
 
 #### parallelization
 
 Parallelization is implemented using the ‘parallel’ package, which is
-part of the base R distribution. Where applicable, parallelization is
-enabled by default via `multi.core = TRUE` (you can also set or limit
-the number of cores by passing an integer or by setting
-`multi.core = FALSE`. Note that although some precautions are taken in
-the R application, the developers of the ‘parallel’ package strongly
-discourage against using parallelization within a GUI or embedded
-environment. See `vignette("parallelization")` for details. That said,
-I’ve had few, if any, problems with using the package in parallel on
-macOS with either the [R application](https://www.r-project.org/) or the
-[RStudio IDE](https://posit.co/products/open-source/rstudio).
+part of the base R distribution. There are three things to note. First,
+it is *off* by default. To turn it on, set `multi.core = TRUE` (for all
+available cores) or specify the number of cores to use (e.g.,
+`multi.core = 4`). Second, it is only available on Linux and MacOS (not
+Windows). Third, regardless of platform, it is unavailable in Positron.
+
+Note that while some precautions are taken in the R application, the
+developers of the ‘parallel’ package strongly discourage against using
+parallelization within a GUI or embedded environment. See
+`vignette("parallelization")` for details. That said, I’ve had few, if
+any, problems with using the package in parallel on macOS with either
+the [R application](https://www.r-project.org/) or the [RStudio
+IDE](https://posit.co/products/open-source/rstudio).
 
 #### longitude and latitude
 
 [‘cholera’](https://cran.r-project.org/package=cholera) now has
-georeferenced (longitude and latitude) versions of *nearly* all data and
+georeferenced (longitude and latitude) versions of almost all data and
 functions. For functions, this works by setting `latlong = TRUE` where
 available.
 
-Here's one example:
+Here’s one example:
 
 ``` r
 plot(walkingPath(latlong = TRUE))
 plot(walkingPath())  # Dodson and Tobler native scale for comparison
 ```
 
-<img src="man/figures/README-latlong_walking_path-1.png" width="50%" /><img src="man/figures/README-latlong_walking_path-2.png" width="50%" />
+<img src="man/figures/README-latlong_walking_path-1.png" alt="" width="50%" /><img src="man/figures/README-latlong_walking_path-2.png" alt="" width="50%" />
 
-Georeferencing was done using [QGIS](https://qgis.org/) and [OpenStreetMap](https://www.openstreetmap.org). An online overview is available [here](https://github.com/lindbrook/cholera/blob/master/docs/notes/georeferencing.md).
+Georeferencing was done using [QGIS](https://qgis.org/) and
+[OpenStreetMap](https://www.openstreetmap.org). An online overview is
+available
+[here](https://github.com/lindbrook/cholera/blob/master/docs/notes/georeferencing.md).
 
 #### vignettes
 
@@ -295,7 +302,7 @@ benchmark timings.
 
 #### lab notes
 
-The lab notes, which are available online, go into detail about certain 
+The lab notes, which are available online, go into detail about certain
 issues and topics discussed in the vignettes:
 
 [note on duplicate and missing
