@@ -124,16 +124,16 @@ straight line paths between a location and the nearest (or selected)
 pump:
 
 ``` r
-streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
+streetNameLocator(zoom = -35, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
 title(main = "Walking Distances")
 invisible(lapply(c(1, 191, 46, 363, 85), addWalkingPath))
 
-streetNameLocator(zoom = 1, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
+streetNameLocator(zoom = -35, cases = NULL, highlight = FALSE, add.subtitle = FALSE, add.title = FALSE)
 title(main = "Euclidean Distances")
 invisible(lapply(c(1, 191, 46, 363, 85), addEuclideanPath))
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="50%" /><img src="man/figures/README-unnamed-chunk-4-2.png" width="50%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" alt="" width="50%" /><img src="man/figures/README-unnamed-chunk-4-2.png" alt="" width="50%" />
 
 To build a neighborhood, we apply this algorithm to each location or
 “address” with at least one observed fatality. This builds the
