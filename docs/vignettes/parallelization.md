@@ -1,7 +1,7 @@
 Parallelization
 ================
 lindbrook
-2025-03-12
+2026-11-24
 
 The ‘cholera’ package supports parallelization via the ‘parallel’ R
 package. It is *off* by default. To enable it, either set
@@ -10,18 +10,20 @@ cores the `multi.core` argument (e.g., `multi.core = 2`). To check the
 number of physical/logical cores on your system, use
 `parallel::detectCores()`.
 
-Two things to note. First, support for Windows is currently limited.
-Second, the documentation for the ‘parallel’ package discourages the use
-of parallelization in the GUI: “It is strongly discouraged to use these
-functions in GUI or embedded environments, because it leads to several
-processes sharing the same GUI which will likely cause chaos (and
-possibly crashes).” That said, with recent versions of ‘parallel’, I
-have rarely, if ever experience crashes in either the R application or
-RStudio.
+Three things to note. First, it is only available on Linux and MacOS
+(not Windows). Second, regardless of platform it is not available in
+Positron. Third, besides courtesy, parallelization is now off by
+default. In part, this is because coding changes have improved
+performance for intensive tasks like computing and plotting area
+polygons for “expected” cases in neighborhoodWalking().
 
-Besides courtesy, parallelization is now off by default because coding
-changes have improved performance for intensive tasks like computing and
-plotting area polygons for “expected” cases in neighborhoodWalking().
+Note that the documentation for the ‘parallel’ package discourages the
+use of parallelization in the GUI: “It is strongly discouraged to use
+these functions in GUI or embedded environments, because it leads to
+several processes sharing the same GUI which will likely cause chaos
+(and possibly crashes).” That said, with recent versions of ‘parallel’,
+I have rarely, if ever experience crashes in either the R application or
+RStudio.
 
 ## Benchmarks
 
