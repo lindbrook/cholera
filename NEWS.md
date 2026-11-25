@@ -1,3 +1,8 @@
+# cholera 0.9.1.9202
+
+- add pearl.string.snow.latlong.
+
+
 # cholera 0.9.1.9201
 
 - copyedit README and Parallelization vignette.

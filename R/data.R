@@ -592,3 +592,12 @@
 #'  }
 #' @docType data
 "pearl.string.snow"
+
+#' Travelling salesman solution for periphery.cases for Snow neighborhood (latlong).
+#'
+#' @format A vector of 213 "expected" nominal cases.
+#'  \describe{
+#'     \item{\code{case IDs}}{numeric case IDs for selected regular.cases}
+#'  }
+#' @docType data
+"pearl.string.snow.latlong"
