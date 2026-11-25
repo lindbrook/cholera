@@ -231,7 +231,7 @@ plot.snow <- function(x, type = "area.polygons", snow.cases = FALSE,
       periphery.cases <- peripheryCases(sim.data$case, latlong = x$latlong)
 
       if (x$latlong) {
-        pearl.string <- travelingSalesman(periphery.cases, latlong = x$latlong)
+        pearl.string <- cholera::pearl.string.snow.latlong
       } else {
         pearl.string <- cholera::pearl.string.snow
       }
