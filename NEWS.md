@@ -1,3 +1,8 @@
+# cholera 0.9.1.9203
+
+- add manual fix for traveling salesman solution for latlong Snow neighborhood.
+
+
 # cholera 0.9.1.9202
 
 - add pearl.string.snow.latlong.
