@@ -281,6 +281,11 @@ plot.snow <- function(x, type = "area.polygons", snow.cases = FALSE,
         
         ps <- ps[order(ps$id2), ]
         pearl.string <- ps$case
+      } else {
+        tmp <- pearl.string
+        tmp[tmp %in% c("11207", "11354")] <- rev(c("11207", "11354"))
+        tmp[tmp %in% c("7821", "7820")] <- rev(c("7821", "7820"))
+        pearl.string <- tmp
       }
       
       if (polygon.type == "border") {
