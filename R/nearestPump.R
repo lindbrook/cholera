@@ -65,7 +65,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
     vars <- c("lon", "lat")
     egos <- nodes[nodes$case != 0, ]
     egos <- egos[order(egos$case), ]
-    alters <- nodes[nodes$pump != 0, ]
+    alters <- nodes[nodes$pump %in% p.sel, ]
     alters <- alters[order(alters$pump), ]
 
     idx <- seq_len(nrow(egos))
@@ -75,7 +75,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
         ds <- geosphere::distGeo(egos[i, vars], alters[, vars])
         sel <- which.min(ds)
         d <- ds[sel]
-        p <- p.sel[sel]
+        p <- alters$pump[sel]
         data.frame(pump = p, d = d)
       }, mc.cores = cores)
 
@@ -102,7 +102,7 @@ nearestPump <- function(pump.select = NULL, metric = "walking",
         weights = edges$d)
 
       sel <- apply(ds, 1, which.min)
-      p <- p.sel[sel]
+      p <- alters$pump[sel]
 
       d <- vapply(seq_along(sel), function(i) ds[i, sel[i]], numeric(1L))
 
